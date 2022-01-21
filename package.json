@@ -1,0 +1,16 @@
+{
+  "name": "Huahuo_IDE",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "VincentZhang",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack serve --open"
+  },
+  "devDependencies": {
+    "webpack": "^5.66.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.3"
+  }
+}
