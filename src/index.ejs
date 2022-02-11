@@ -3,26 +3,59 @@
   <head>
     <meta charset="utf-8"/>
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <style>
+      howto-tab {
+        border: 1px solid black;
+        padding: 20px;
+      }
+      howto-panel {
+        padding: 20px;
+        background-color: lightgray;
+      }
+      howto-tab[selected] {
+        background-color: bisque;
+      }
+       howto-tabs:not(:defined), howto-tab:not(:defined), howto-panel:not(:defined) {
+          display: block;
+        }
+      </style>
   </head>
   <body>
-    <hh-panel img="img/alt.png" data-text="Your card validation code (CVC)
-                is an extra security feature — it is the last 3 or 4 numbers on the
-                back of your card.">
-<!--                 <hh-content title="Object preview title"> -->
-                    <div>
-                        Object Preview
-                    </div>
-<!--                 </hh-content> -->
-    </hh-panel>
+  <howto-tabs>
+    <howto-tab role="heading" slot="tab">Tab 1</howto-tab>
+    <howto-panel role="region" slot="panel">Content 1</howto-panel>
+    <howto-tab role="heading" slot="tab">Tab 2</howto-tab>
+    <howto-panel role="region" slot="panel">Content 2</howto-panel>
+    <howto-tab role="heading" slot="tab">Tab 3</howto-tab>
+    <howto-panel role="region" slot="panel">Content 3</howto-panel>
+  </howto-tabs>
 
-        <hh-panel img="img/alt.png" data-text="Your card validation code (CVC)
-                    is an extra security feature — it is the last 3 or 4 numbers on the
-                    back of your card.">
-                    <hh-content title="Object preview title">
-                        <div>
-                            Object Preview 2
-                        </div>
-                    </hh-content>
-        </hh-panel>
+    <howto-tabs>
+      <howto-tab role="heading" slot="tab">Tab 4</howto-tab>
+      <howto-panel role="region" slot="panel">Content 4</howto-panel>
+      <howto-tab role="heading" slot="tab">Tab 5</howto-tab>
+      <howto-panel role="region" slot="panel">Content 5</howto-panel>
+      <howto-tab role="heading" slot="tab">Tab 6</howto-tab>
+      <howto-panel role="region" slot="panel">Content 6</howto-panel>
+    </howto-tabs>
+<!--     <hh-panel img="img/alt.png" data-text="Your card validation code (CVC) -->
+<!--                 is an extra security feature — it is the last 3 or 4 numbers on the -->
+<!--                 back of your card."> -->
+<!--                 <hh-content title="Object preview title"> -->
+<!--                     <div> -->
+<!--                         Object Preview -->
+<!--                     </div> -->
+<!--                 </hh-content> -->
+<!--     </hh-panel> -->
+
+<!--         <hh-panel img="img/alt.png" data-text="Your card validation code (CVC) -->
+<!--                     is an extra security feature — it is the last 3 or 4 numbers on the -->
+<!--                     back of your card."> -->
+<!--                     <hh-content title="Object preview title"> -->
+<!--                         <div> -->
+<!--                             Object Preview 2 -->
+<!--                         </div> -->
+<!--                     </hh-content> -->
+<!--         </hh-panel> -->
   </body>
 </html>
