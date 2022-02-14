@@ -1,5 +1,5 @@
 
-let howtoTabCounter = 0;
+let contentCounter = 0;
 
 class HHContent extends HTMLElement {
     static get observedAttributes() {
@@ -13,7 +13,7 @@ class HHContent extends HTMLElement {
     connectedCallback() {
         this.setAttribute('role', 'tab');
         if (!this.id)
-            this.id = `howto-tab-generated-${howtoTabCounter++}`;
+            this.id = `hh-content-${contentCounter++}`;
 
         this.setAttribute('aria-selected', 'false');
         this.setAttribute('tabindex', -1);
@@ -38,9 +38,14 @@ class HHContent extends HTMLElement {
     set selected(value) {
         value = Boolean(value);
         if (value)
+        {
             this.setAttribute('selected', '');
-        else
+            this.hidden = false
+        }
+        else{
             this.removeAttribute('selected');
+            this.hidden = true
+        }
     }
 
     get selected() {
@@ -48,18 +53,3 @@ class HHContent extends HTMLElement {
     }
 }
 customElements.define('hh-content', HHContent);
-
-let howtoPanelCounter = 0;
-
-class HowtoPanel extends HTMLElement {
-    constructor() {
-        super();
-    }
-
-    connectedCallback() {
-        this.setAttribute('role', 'tabpanel');
-        if (!this.id)
-            this.id = `howto-panel-generated-${howtoPanelCounter++}`;
-    }
-}
-customElements.define('howto-panel', HowtoPanel);

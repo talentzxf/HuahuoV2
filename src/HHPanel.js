@@ -1,4 +1,12 @@
 import "./HHContent"
+// howto-panel {
+//     padding: 20px;
+//     background-color: lightgray;
+// }
+
+// howto-tabs:not(:defined), howto-tab:not(:defined), howto-panel:not(:defined) {
+//     display: block;
+// }
 
 const panelTemplateName = "HHPanel_Template"
 
@@ -16,20 +24,30 @@ if (!template) {
     template = document.createElement('template');
     template.innerHTML = `
     <style>
-      :host {
-        display: flex;
-        flex-wrap: wrap;
-        height: 100%;
-        align-content: baseline;
-      }
+        :host {
+            display: flex;
+            flex-wrap: wrap;
+            height: 100%;
+            align-content: baseline;
+        }
+        
+        .title_tabs{
+            padding:5px
+        }
+        
+        .title_tabs span{
+            padding: 5px
+        }
+        
+        .title_tabs span[selected='true'] {
+            background-color: bisque;
+        }
     </style>
-    <div name="tabs" style="flex-basis: 100%; height: fit-content">
+    <div class="title_tabs" style="flex-basis: 100%; height: fit-content">
     </div>
-    <div name="contents" style="flex-basis: 100%">
+    <div class="panel_contents" style="flex-basis: 100%">
     </div>
     <slot></slot>
-<!--    <slot name="tab"></slot>-->
-<!--    <slot name="panel"></slot>-->
   `;
 }
 
@@ -40,11 +58,13 @@ class HHPanel extends HTMLElement {
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
         this._contentNodes = this.querySelectorAll('hh-content');
-        this._tabs = this.shadowRoot.querySelector('div[name=tabs]');
-        this._contents = this.shadowRoot.querySelector('div[name=contents]')
+        this._tabs = this.shadowRoot.querySelector('.title_tabs');
+        this._contents = this.shadowRoot.querySelector('.panel_contents')
 
         let _titleMap = new Map();
         let _this = this
+
+        let tabIndex = 0
         this._contentNodes.forEach(
             node => {
                 let title = node.getAttribute('title') || 'No Title'
@@ -55,6 +75,15 @@ class HHPanel extends HTMLElement {
                 _this._tabs.appendChild(titleSpan)
 
                 this._contents.appendChild(node)
+
+                if(tabIndex == 0){
+                    titleSpan.setAttribute('selected', true)
+                    node.selected = true
+                }else{
+                    node.selected = false
+                }
+
+                node.setAttribute('tabindex', tabIndex++);
             }
         )
 
