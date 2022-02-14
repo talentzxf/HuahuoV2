@@ -26,7 +26,7 @@ if (!template) {
     <style>
         :host {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             height: 100%;
             align-content: baseline;
         }
@@ -42,10 +42,14 @@ if (!template) {
         .title_tabs span[selected='true'] {
             background-color: bisque;
         }
+        
+        .panel_contents {
+            border: 1px solid gray;
+        }
     </style>
-    <div class="title_tabs" style="flex-basis: 100%; height: fit-content">
+    <div class="title_tabs">
     </div>
-    <div class="panel_contents" style="flex-basis: 100%">
+    <div class="panel_contents" style="flex-basis: 100%;">
     </div>
     <slot></slot>
   `;
