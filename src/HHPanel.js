@@ -24,10 +24,8 @@ if (!template) {
       }
     </style>
     <div name="tabs" style="flex-basis: 100%; height: fit-content">
-        <span style="border:1px solid gray">Tabs</span>
     </div>
     <div name="contents" style="flex-basis: 100%">
-        <span style="border:1px solid gray">Contents</span>
     </div>
     <slot></slot>
 <!--    <slot name="tab"></slot>-->
@@ -41,9 +39,24 @@ class HHPanel extends HTMLElement {
         // this._onSlotChange = this._onSlotChange.bind(this);
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+        this._contentNodes = this.querySelectorAll('hh-content');
+        this._tabs = this.shadowRoot.querySelector('div[name=tabs]');
+        this._contents = this.shadowRoot.querySelector('div[name=contents]')
 
-        this._tabSlot = this.shadowRoot.querySelector('div[name=tabs]');
-        this._panelSlot = this.shadowRoot.querySelector('div[name=contents]');
+        let _titleMap = new Map();
+        let _this = this
+        this._contentNodes.forEach(
+            node => {
+                let title = node.getAttribute('title') || 'No Title'
+                _titleMap.set(title, node)
+
+                let titleSpan = document.createElement('span')
+                titleSpan.innerHTML = title
+                _this._tabs.appendChild(titleSpan)
+
+                this._contents.appendChild(node)
+            }
+        )
 
         // this._tabSlot.addEventListener('slotchange', this._onSlotChange);
         // this._panelSlot.addEventListener('slotchange', this._onSlotChange);
