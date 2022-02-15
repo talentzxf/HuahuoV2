@@ -35,12 +35,17 @@ if (!template) {
             padding:5px
         }
         
-        .title_tabs span{
+        .title_tabs hh-title{
             padding: 5px
         }
         
-        .title_tabs span[selected='true'] {
-            background-color: bisque;
+        .title_tabs hh-title[selected='true'] {
+            background-color: gray;
+            border-bottom: 3px blue solid;
+        }
+        
+        .title_tabs hh-title[selected='false'] {
+            background-color: darkgray;
         }
         
         .panel_contents {
@@ -55,6 +60,23 @@ if (!template) {
   `;
 }
 
+class HHTitle extends HTMLElement{
+    static get observedAttributes(){
+        return ['tabindex']
+    }
+
+    constructor() {
+        super();
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if(name == 'tabindex')
+            this.tabindex = newValue
+    }
+}
+
+customElements.define('hh-title', HHTitle);
+
 class HHPanel extends HTMLElement {
     constructor() {
         super();
@@ -65,35 +87,55 @@ class HHPanel extends HTMLElement {
         this._tabs = this.shadowRoot.querySelector('.title_tabs');
         this._contents = this.shadowRoot.querySelector('.panel_contents')
 
-        let _titleMap = new Map();
         let _this = this
 
         let tabIndex = 0
         this._contentNodes.forEach(
             node => {
                 let title = node.getAttribute('title') || 'No Title'
-                _titleMap.set(title, node)
-
-                let titleSpan = document.createElement('span')
+                let titleSpan = document.createElement('hh-title', {content: node})
                 titleSpan.innerHTML = title
+                titleSpan.setAttribute('tabindex', tabIndex)
+
                 _this._tabs.appendChild(titleSpan)
 
                 this._contents.appendChild(node)
-
-                if(tabIndex == 0){
-                    titleSpan.setAttribute('selected', true)
-                    node.selected = true
-                }else{
-                    node.selected = false
-                }
-
                 node.setAttribute('tabindex', tabIndex++);
             }
         )
 
+        _this.selectTab(0)
+
         // this._tabSlot.addEventListener('slotchange', this._onSlotChange);
         // this._panelSlot.addEventListener('slotchange', this._onSlotChange);
     }
+
+    selectTab(tabindex){
+        // if(tabIndex == 0){
+        //     titleSpan.setAttribute('selected', 'true')
+        //     node.selected = true
+        // }else{
+        //     titleSpan.setAttribute('selected', 'false')
+        //     node.selected = false
+        // }
+
+        let selectedTab = this.shadowRoot.querySelector('hh-title[tabindex="' + tabindex + '"]')
+        let selectedContent = this.shadowRoot.querySelector('hh-content[tabindex="' + tabindex + '"]')
+        selectedTab.setAttribute('selected', "true")
+        selectedContent.selected = true
+
+        let unselectedTabs = this.shadowRoot.querySelectorAll('hh-title:not([tabindex="' + tabindex + '"])')
+        let unselectedContents = this.shadowRoot.querySelectorAll('hh-content:not([tabindex="' + tabindex + '"])')
+
+        unselectedTabs.forEach(tab=>{
+            tab.setAttribute('selected','false')
+        })
+
+        unselectedContents.forEach(content=>{
+            content.selected = false
+        })
+    }
+
     //
     // connectedCallback() {
     //     this.addEventListener('keydown', this._onKeyDown);

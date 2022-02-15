@@ -39,11 +39,11 @@ class HHContent extends HTMLElement {
         value = Boolean(value);
         if (value)
         {
-            this.setAttribute('selected', '');
+            this.setAttribute('selected', 'true');
             this.hidden = false
         }
         else{
-            this.removeAttribute('selected');
+            this.setAttribute('selected', 'false');
             this.hidden = true
         }
     }
