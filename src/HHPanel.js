@@ -36,7 +36,8 @@ if (!template) {
         }
         
         .title_tabs hh-title{
-            padding: 5px
+            padding: 5px;
+            cursor: pointer;
         }
         
         .title_tabs hh-title[selected='true'] {
@@ -96,11 +97,17 @@ class HHPanel extends HTMLElement {
                 let titleSpan = document.createElement('hh-title', {content: node})
                 titleSpan.innerHTML = title
                 titleSpan.setAttribute('tabindex', tabIndex)
+                titleSpan.addEventListener('click', function(evt){
+                    let idx = titleSpan.getAttribute('tabindex')
+                    _this.selectTab(idx)
+                })
 
                 _this._tabs.appendChild(titleSpan)
 
                 this._contents.appendChild(node)
-                node.setAttribute('tabindex', tabIndex++);
+                node.setAttribute('tabindex', tabIndex);
+
+                tabIndex++;
             }
         )
 

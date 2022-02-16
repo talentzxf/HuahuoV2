@@ -9,6 +9,7 @@
     "start": "webpack serve --open"
   },
   "devDependencies": {
+    "acron": "^1.0.5",
     "ejs-loader": "^0.5.0",
     "html-webpack-plugin": "^5.5.0",
     "ts-loader": "^9.2.6",

@@ -32,7 +32,6 @@ class HHContent extends HTMLElement {
     attributeChangedCallback() {
         const value = this.hasAttribute('selected');
         this.setAttribute('aria-selected', value);
-        this.setAttribute('tabindex', value ? 0 : -1);
     }
 
     set selected(value) {
