@@ -52,6 +52,14 @@ if (!template) {
         .panel_contents {
             border: 1px solid gray;
         }
+        .title_tabs hh-title{
+           -ms-user-select:none;
+           -moz-user-select:none;
+           -webkit-user-select:none;
+           -webkit-touch-callout: none;
+           -khtml-user-select: none;
+            user-select:none;
+        }
     </style>
     <div class="title_tabs">
     </div>
