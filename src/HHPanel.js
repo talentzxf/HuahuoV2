@@ -1,12 +1,5 @@
 import "./HHContent"
-// howto-panel {
-//     padding: 20px;
-//     background-color: lightgray;
-// }
-
-// howto-tabs:not(:defined), howto-tab:not(:defined), howto-panel:not(:defined) {
-//     display: block;
-// }
+import {Vector2D} from "./math/Vector2D"
 
 const panelTemplateName = "HHPanel_Template"
 
@@ -69,17 +62,64 @@ if (!template) {
   `;
 }
 
-class HHTitle extends HTMLElement{
-    static get observedAttributes(){
+class HHTitle extends HTMLElement {
+    static get observedAttributes() {
         return ['tabindex']
     }
 
     constructor() {
         super();
+        this.addEventListener("mousedown", this.mouseDown)
+        this.addEventListener("mousemove", this.mouseMove)
+        this.addEventListener("mouseup", this.mouseUp)
+
+        this.startMoving = false
+        this.isMoving = false
+        this.startElePos = new Vector2D()
+    }
+
+    mouseDown(evt) {
+        this.startPos = new Vector2D(evt.clientX, evt.clientY)
+        this.startMoving = true
+        this.isMoving = false
+        console.log("Start:" + this.startPos.X + "," + this.startPos.Y)
+        this.startElePos = new Vector2D(this.offsetLeft, this.offsetTop);
+    }
+
+    mouseMove(evt) {
+        if (evt.buttons == 1) {
+            if (this.startMoving && !this.startPos.equals(evt.clientX, evt.clientY)) {
+                this.isMoving = true
+            }
+
+            if (this.isMoving) {
+                console.log("IsMoving!!!")
+                let offsetX = evt.clientX - this.startPos.X;
+                let offsetY = evt.clientY - this.startPos.Y;
+
+                let targetX = this.startElePos.X + offsetX;
+                let targetY = this.startElePos.Y + offsetY;
+
+                this.style.position = "absolute"
+                this.style.left = targetX + "px"
+                this.style.top = targetY + "px"
+            }
+        } else {
+            this.endMoving()
+        }
+    }
+
+    mouseUp(evt) {
+        this.endMoving()
+    }
+
+    endMoving() {
+        this.startMoving = false
+        this.isMoving = false
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        if(name == 'tabindex')
+        if (name == 'tabindex')
             this.tabindex = newValue
     }
 }
@@ -105,7 +145,7 @@ class HHPanel extends HTMLElement {
                 let titleSpan = document.createElement('hh-title', {content: node})
                 titleSpan.innerHTML = title
                 titleSpan.setAttribute('tabindex', tabIndex)
-                titleSpan.addEventListener('click', function(evt){
+                titleSpan.addEventListener('click', function (evt) {
                     let idx = titleSpan.getAttribute('tabindex')
                     _this.selectTab(idx)
                 })
@@ -125,7 +165,7 @@ class HHPanel extends HTMLElement {
         // this._panelSlot.addEventListener('slotchange', this._onSlotChange);
     }
 
-    selectTab(tabindex){
+    selectTab(tabindex) {
         // if(tabIndex == 0){
         //     titleSpan.setAttribute('selected', 'true')
         //     node.selected = true
@@ -142,11 +182,11 @@ class HHPanel extends HTMLElement {
         let unselectedTabs = this.shadowRoot.querySelectorAll('hh-title:not([tabindex="' + tabindex + '"])')
         let unselectedContents = this.shadowRoot.querySelectorAll('hh-content:not([tabindex="' + tabindex + '"])')
 
-        unselectedTabs.forEach(tab=>{
-            tab.setAttribute('selected','false')
+        unselectedTabs.forEach(tab => {
+            tab.setAttribute('selected', 'false')
         })
 
-        unselectedContents.forEach(content=>{
+        unselectedContents.forEach(content => {
             content.selected = false
         })
     }
@@ -289,6 +329,7 @@ class HHPanel extends HTMLElement {
     //     this._selectTab(event.target);
     // }
 }
+
 customElements.define('hh-panel', HHPanel);
 
 export {HHPanel}
