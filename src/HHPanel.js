@@ -1,16 +1,8 @@
 import "./HHContent"
 import {Vector2D} from "./math/Vector2D"
+import {TabMover} from "./draggable/TabMover";
 
 const panelTemplateName = "HHPanel_Template"
-
-const KEYCODE = {
-    DOWN: 40,
-    LEFT: 37,
-    RIGHT: 39,
-    UP: 38,
-    HOME: 36,
-    END: 35,
-};
 
 let template = document.getElementById(panelTemplateName)
 if (!template) {
@@ -69,8 +61,8 @@ class HHTitle extends HTMLElement {
 
     constructor() {
         super();
+
         this.addEventListener("mousedown", this.mouseDown)
-        this.addEventListener("mousemove", this.mouseMove)
         this.addEventListener("mouseup", this.mouseUp)
 
         this.startMoving = false
@@ -84,6 +76,7 @@ class HHTitle extends HTMLElement {
         this.isMoving = false
         console.log("Start:" + this.startPos.X + "," + this.startPos.Y)
         this.startElePos = new Vector2D(this.offsetLeft, this.offsetTop);
+        document.onmousemove = this.mouseMove.bind(this)
     }
 
     mouseMove(evt) {
@@ -100,9 +93,7 @@ class HHTitle extends HTMLElement {
                 let targetX = this.startElePos.X + offsetX;
                 let targetY = this.startElePos.Y + offsetY;
 
-                this.style.position = "absolute"
-                this.style.left = targetX + "px"
-                this.style.top = targetY + "px"
+                TabMover.getInstance().TryMove(this, new Vector2D(targetX, targetY))
             }
         } else {
             this.endMoving()
@@ -116,6 +107,7 @@ class HHTitle extends HTMLElement {
     endMoving() {
         this.startMoving = false
         this.isMoving = false
+        document.onmousemove = null
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
