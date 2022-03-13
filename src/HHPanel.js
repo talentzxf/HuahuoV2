@@ -1,5 +1,6 @@
 import "./HHContent"
 import {Vector2D} from "./math/Vector2D"
+import {Rect2D} from "./math/Rect2D";
 import {TabMover} from "./draggable/TabMover";
 
 const panelTemplateName = "HHPanel_Template"
@@ -153,8 +154,25 @@ class HHPanel extends HTMLElement {
 
         _this.selectTab(0)
 
+        TabMover.getInstance().AddFront(this.onTitleMoving.bind(this))
+
         // this._tabSlot.addEventListener('slotchange', this._onSlotChange);
         // this._panelSlot.addEventListener('slotchange', this._onSlotChange);
+    }
+
+    onTitleMoving(param){
+        let ele = param.ele;
+        let targetPos = param.targetPos;
+        let tabs = this._tabs;
+
+        let targetRect = new Rect2D(targetPos.X, targetPos.Y, targetPos.X + ele.offsetWidth, targetPos.Y + ele.offsetHeight);
+        let titleBarRect = Rect2D.fromDomRect(tabs.getBoundingClientRect())
+        if(titleBarRect.overlap(targetRect)){
+            ele.style.left = param.targetPos.X + "px"
+            ele.style.top = tabs.offsetTop + "px"
+
+            return true;
+        }
     }
 
     selectTab(tabindex) {
