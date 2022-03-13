@@ -1,11 +1,12 @@
 import "./HHContent"
-import {Vector2D} from "./math/Vector2D"
 import {Rect2D} from "./math/Rect2D";
-import {TabMover} from "./draggable/TabMover";
+import {TabMover, TabMoveParam} from "./draggable/TabMover";
+import {OccupiedTitleManager} from "./draggable/OccupiedTitleManager";
+import {HHTitle} from "./HHTitle";
 
 const panelTemplateName = "HHPanel_Template"
 
-let template = document.getElementById(panelTemplateName)
+let template:HTMLTemplateElement = document.getElementById(panelTemplateName) as HTMLTemplateElement
 if (!template) {
     template = document.createElement('template');
     template.innerHTML = `
@@ -55,77 +56,11 @@ if (!template) {
   `;
 }
 
-class HHTitle extends HTMLElement {
-    static get observedAttributes() {
-        return ['tabindex']
-    }
-
-    constructor() {
-        super();
-
-        this.addEventListener("mousedown", this.mouseDown)
-        this.addEventListener("mouseup", this.mouseUp)
-
-        this.startMoving = false
-        this.isMoving = false
-        this.startElePos = new Vector2D()
-    }
-
-    mouseDown(evt) {
-        this.startPos = new Vector2D(evt.clientX, evt.clientY)
-        this.startMoving = true
-        this.isMoving = false
-        console.log("Start:" + this.startPos.X + "," + this.startPos.Y)
-        this.startElePos = new Vector2D(this.offsetLeft, this.offsetTop);
-        document.onmousemove = this.mouseMove.bind(this)
-    }
-
-    mouseMove(evt) {
-        if (evt.buttons == 1) {
-            if (this.startMoving && !this.startPos.equals(evt.clientX, evt.clientY)) {
-                this.isMoving = true
-            }
-
-            if (this.isMoving) {
-                console.log("IsMoving!!!")
-                let offsetX = evt.clientX - this.startPos.X;
-                let offsetY = evt.clientY - this.startPos.Y;
-
-                let targetX = this.startElePos.X + offsetX;
-                let targetY = this.startElePos.Y + offsetY;
-
-                TabMover.getInstance().TryMove(this, new Vector2D(targetX, targetY))
-            }
-        } else {
-            this.endMoving()
-        }
-    }
-
-    setScrPos(x, y){
-        this.style.position = "absolute"
-        this.style.left = x + "px"
-        this.style.top = y + "px"
-    }
-
-    mouseUp(evt) {
-        this.endMoving()
-    }
-
-    endMoving() {
-        this.startMoving = false
-        this.isMoving = false
-        document.onmousemove = null
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name == 'tabindex')
-            this.tabindex = newValue
-    }
-}
-
-customElements.define('hh-title', HHTitle);
-
 class HHPanel extends HTMLElement {
+    private _contentNodes:NodeListOf<HTMLElement>
+    private _tabs: HTMLElement
+    private _contents: HTMLElement
+
     constructor() {
         super();
         // this._onSlotChange = this._onSlotChange.bind(this);
@@ -141,18 +76,19 @@ class HHPanel extends HTMLElement {
         this._contentNodes.forEach(
             node => {
                 let title = node.getAttribute('title') || 'No Title'
-                let titleSpan = document.createElement('hh-title', {content: node})
+                let titleSpan = document.createElement('hh-title')
+                titleSpan.appendChild(node)
                 titleSpan.innerHTML = title
-                titleSpan.setAttribute('tabindex', tabIndex)
+                titleSpan.setAttribute('tabindex', tabIndex.toString())
                 titleSpan.addEventListener('click', function (evt) {
-                    let idx = titleSpan.getAttribute('tabindex')
+                    let idx = Number(titleSpan.getAttribute('tabindex'))
                     _this.selectTab(idx)
                 })
 
                 _this._tabs.appendChild(titleSpan)
 
                 this._contents.appendChild(node)
-                node.setAttribute('tabindex', tabIndex);
+                node.setAttribute('tabindex', tabIndex.toString());
 
                 tabIndex++;
             }
@@ -166,20 +102,38 @@ class HHPanel extends HTMLElement {
         // this._panelSlot.addEventListener('slotchange', this._onSlotChange);
     }
 
-    onTitleMoving(param){
-        let ele = param.ele;
+    onTitleMoving(param:TabMoveParam){
+        let ele = param.ele as HHTitle;
         let targetPos = param.targetPos;
         let tabs = this._tabs;
 
         let targetRect = new Rect2D(targetPos.X, targetPos.Y, targetPos.X + ele.offsetWidth, targetPos.Y + ele.offsetHeight);
         let titleBarRect = Rect2D.fromDomRect(tabs.getBoundingClientRect())
         if(titleBarRect.overlap(targetRect)){
-            param.ele.setScrPos(param.targetPos.X, tabs.offsetTop)
+            ele.setScrPos(param.targetPos.X, tabs.offsetTop)
+
+            // Check clip with other tabs in the tab group
+            let overlapWithChild = false
+            let titles = this._tabs.querySelectorAll('hh-title')
+            titles.forEach( titleBar => {
+                let childTitleBarRect = Rect2D.fromDomRect(titleBar.getBoundingClientRect())
+                if(ele != titleBar){
+                    if(childTitleBarRect.overlap(targetRect)){
+                        overlapWithChild = true
+
+                        OccupiedTitleManager.getInstance().setCandidate(ele, this, Number(ele.style.width))
+                    }
+                }
+            })
+
             return true;
         }
+
+        // Let other handlers handle this event.
+        return false;
     }
 
-    selectTab(tabindex) {
+    selectTab(tabindex:number) {
         // if(tabIndex == 0){
         //     titleSpan.setAttribute('selected', 'true')
         //     node.selected = true
@@ -189,12 +143,12 @@ class HHPanel extends HTMLElement {
         // }
 
         let selectedTab = this.shadowRoot.querySelector('hh-title[tabindex="' + tabindex + '"]')
-        let selectedContent = this.shadowRoot.querySelector('hh-content[tabindex="' + tabindex + '"]')
+        let selectedContent = this.shadowRoot.querySelector('hh-content[tabindex="' + tabindex + '"]') as HHContent
         selectedTab.setAttribute('selected', "true")
         selectedContent.selected = true
 
-        let unselectedTabs = this.shadowRoot.querySelectorAll('hh-title:not([tabindex="' + tabindex + '"])')
-        let unselectedContents = this.shadowRoot.querySelectorAll('hh-content:not([tabindex="' + tabindex + '"])')
+        let unselectedTabs = this.shadowRoot.querySelectorAll('hh-title:not([tabindex="' + tabindex + '"])') as NodeListOf<HHContent>
+        let unselectedContents = this.shadowRoot.querySelectorAll('hh-content:not([tabindex="' + tabindex + '"])') as NodeListOf<HHContent>
 
         unselectedTabs.forEach(tab => {
             tab.setAttribute('selected', 'false')
@@ -344,6 +298,7 @@ class HHPanel extends HTMLElement {
     // }
 }
 
+console.log("Defining: hh-panel")
 customElements.define('hh-panel', HHPanel);
 
 export {HHPanel}

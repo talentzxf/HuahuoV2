@@ -1,11 +1,12 @@
 import {Vector2D} from "../math/Vector2D";
 import {ResponsibleChain, ChainCallback} from "./ResponsibleChain";
+import {HHTitle} from "../HHTitle";
 
 class TabMoveParam {
-    private ele: any
-    private targetPos: Vector2D
+    public ele: HHTitle
+    public targetPos: Vector2D
 
-    public constructor(inEle: any, inTargetPos: Vector2D) {
+    public constructor(inEle: HHTitle, inTargetPos: Vector2D) {
         this.ele = inEle
         this.targetPos = inTargetPos
     }
@@ -46,4 +47,4 @@ class TabMover{
     }
 }
 
-export {TabMover}
+export {TabMover, TabMoveParam}
