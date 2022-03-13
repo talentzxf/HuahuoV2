@@ -101,6 +101,12 @@ class HHTitle extends HTMLElement {
         }
     }
 
+    setScrPos(x, y){
+        this.style.position = "absolute"
+        this.style.left = x + "px"
+        this.style.top = y + "px"
+    }
+
     mouseUp(evt) {
         this.endMoving()
     }
@@ -168,9 +174,7 @@ class HHPanel extends HTMLElement {
         let targetRect = new Rect2D(targetPos.X, targetPos.Y, targetPos.X + ele.offsetWidth, targetPos.Y + ele.offsetHeight);
         let titleBarRect = Rect2D.fromDomRect(tabs.getBoundingClientRect())
         if(titleBarRect.overlap(targetRect)){
-            ele.style.left = param.targetPos.X + "px"
-            ele.style.top = tabs.offsetTop + "px"
-
+            param.ele.setScrPos(param.targetPos.X, tabs.offsetTop)
             return true;
         }
     }

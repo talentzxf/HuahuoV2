@@ -29,9 +29,7 @@ class TabMover{
     }
 
     public DefaultTitleMoving(param: any):boolean{
-        param.ele.style.position = "absolute"
-        param.ele.style.left = param.targetPos.X + "px"
-        param.ele.style.top = param.targetPos.Y + "px"
+        param.ele.setScrPos(param.targetPos.X, param.targetPos.Y)
         return true
     }
 
