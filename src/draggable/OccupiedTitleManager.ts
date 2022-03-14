@@ -34,6 +34,7 @@ class OccupiedTitleManager{
 
     private Clear():void {
         if(this.mOccupiedTitle != null){
+            this.mOccupiedTitle.setMarginLeft(0)
             this.mOccupiedTitle = null
             this.mOccupiedGroupHolder = null
         }

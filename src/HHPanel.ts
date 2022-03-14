@@ -75,7 +75,7 @@ class HHPanel extends HTMLElement {
                     if (childTitleBarRect.overlap(targetRect)) {
                         overlapWithChild = true
 
-                        OccupiedTitleManager.getInstance().setCandidate(ele, this, Number(ele.style.width))
+                        OccupiedTitleManager.getInstance().setCandidate(titleBar as HHTitle, this, Number(ele.offsetWidth))
                     }
                 }
             })
@@ -115,7 +115,7 @@ class HHPanel extends HTMLElement {
 
     connectedCallback() {
         /*
-                :host {
+            :host {
             display: flex;
             flex-direction: column;
             height: 100%;

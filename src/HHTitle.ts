@@ -64,7 +64,7 @@ class HHTitle extends HTMLElement {
     }
 
     setMarginLeft(marginLeft: number){
-        this.style.marginLeft = marginLeft.toString()
+        this.style.marginLeft = marginLeft.toString() + "px"
     }
 
     mouseUp(evt:MouseEvent) {
