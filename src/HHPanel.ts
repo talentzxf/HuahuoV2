@@ -3,21 +3,19 @@ import {Rect2D} from "./math/Rect2D";
 import {TabMover, TabMoveParam} from "./draggable/TabMover";
 import {OccupiedTitleManager} from "./draggable/OccupiedTitleManager";
 import {HHTitle} from "./HHTitle";
+import {HHContent} from "./HHContent";
+import {CustomElement} from "./CustomComponent";
 
-const panelTemplateName = "HHPanel_Template"
-
-let template:HTMLTemplateElement = document.getElementById(panelTemplateName) as HTMLTemplateElement
-if (!template) {
-    template = document.createElement('template');
-    template.innerHTML = `
-    <style>
-        :host {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            align-content: baseline;
-        }
-        
+@CustomElement({
+    selector: 'hh-panel',
+    template: `<template>
+        <div class="title_tabs">
+        </div>
+        <div class="panel_contents" style="flex-basis: 100%;">
+        </div>
+        <slot></slot>
+    </template>`,
+    style: `        
         .title_tabs{
             padding:5px
         }
@@ -47,28 +45,95 @@ if (!template) {
            -khtml-user-select: none;
             user-select:none;
         }
-    </style>
-    <div class="title_tabs">
-    </div>
-    <div class="panel_contents" style="flex-basis: 100%;">
-    </div>
-    <slot></slot>
-  `;
-}
-
+    `
+})
 class HHPanel extends HTMLElement {
-    private _contentNodes:NodeListOf<HTMLElement>
+    private _contentNodes: NodeListOf<HTMLElement>
     private _tabs: HTMLElement
     private _contents: HTMLElement
 
     constructor() {
         super();
-        // this._onSlotChange = this._onSlotChange.bind(this);
-        this.attachShadow({mode: 'open'});
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
+    }
+
+    onTitleMoving(param: TabMoveParam) {
+        let ele = param.ele as HHTitle;
+        let targetPos = param.targetPos;
+        let tabs = this._tabs;
+
+        let targetRect = new Rect2D(targetPos.X, targetPos.Y, targetPos.X + ele.offsetWidth, targetPos.Y + ele.offsetHeight);
+        let titleBarRect = Rect2D.fromDomRect(tabs.getBoundingClientRect())
+        if (titleBarRect.overlap(targetRect)) {
+            ele.setScrPos(param.targetPos.X, tabs.offsetTop)
+
+            // Check clip with other tabs in the tab group
+            let overlapWithChild = false
+            let titles = this._tabs.querySelectorAll('hh-title')
+            titles.forEach(titleBar => {
+                let childTitleBarRect = Rect2D.fromDomRect(titleBar.getBoundingClientRect())
+                if (ele != titleBar) {
+                    if (childTitleBarRect.overlap(targetRect)) {
+                        overlapWithChild = true
+
+                        OccupiedTitleManager.getInstance().setCandidate(ele, this, Number(ele.style.width))
+                    }
+                }
+            })
+
+            return true;
+        }
+
+        // Let other handlers handle this event.
+        return false;
+    }
+
+    selectTab(tabindex: number) {
+        // if(tabIndex == 0){
+        //     titleSpan.setAttribute('selected', 'true')
+        //     node.selected = true
+        // }else{
+        //     titleSpan.setAttribute('selected', 'false')
+        //     node.selected = false
+        // }
+
+        let selectedTab = this.querySelector('hh-title[tabindex="' + tabindex + '"]')
+        let selectedContent = this.querySelector('hh-content[tabindex="' + tabindex + '"]') as HHContent
+        selectedTab.setAttribute('selected', "true")
+        selectedContent.selected = true
+
+        let unselectedTabs = this.querySelectorAll('hh-title:not([tabindex="' + tabindex + '"])') as NodeListOf<HHContent>
+        let unselectedContents = this.querySelectorAll('hh-content:not([tabindex="' + tabindex + '"])') as NodeListOf<HHContent>
+
+        unselectedTabs.forEach(tab => {
+            tab.setAttribute('selected', 'false')
+        })
+
+        unselectedContents.forEach(content => {
+            content.selected = false
+        })
+    }
+
+    connectedCallback() {
+        /*
+                :host {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            align-content: baseline;
+        }
+         */
+
+        this.style.display = 'flex'
+        this.style.flexDirection = 'column'
+        this.style.height = '100%'
+        this.style.alignContent = 'baseline'
+
+        let template = this.querySelector('template');
+        this.appendChild(template.content.cloneNode(true));
+
         this._contentNodes = this.querySelectorAll('hh-content');
-        this._tabs = this.shadowRoot.querySelector('.title_tabs');
-        this._contents = this.shadowRoot.querySelector('.panel_contents')
+        this._tabs = this.querySelector('.title_tabs');
+        this._contents = this.querySelector('.panel_contents')
 
         let _this = this
 
@@ -97,81 +162,8 @@ class HHPanel extends HTMLElement {
         _this.selectTab(0)
 
         TabMover.getInstance().AddFront(this.onTitleMoving.bind(this))
-
-        // this._tabSlot.addEventListener('slotchange', this._onSlotChange);
-        // this._panelSlot.addEventListener('slotchange', this._onSlotChange);
     }
 
-    onTitleMoving(param:TabMoveParam){
-        let ele = param.ele as HHTitle;
-        let targetPos = param.targetPos;
-        let tabs = this._tabs;
-
-        let targetRect = new Rect2D(targetPos.X, targetPos.Y, targetPos.X + ele.offsetWidth, targetPos.Y + ele.offsetHeight);
-        let titleBarRect = Rect2D.fromDomRect(tabs.getBoundingClientRect())
-        if(titleBarRect.overlap(targetRect)){
-            ele.setScrPos(param.targetPos.X, tabs.offsetTop)
-
-            // Check clip with other tabs in the tab group
-            let overlapWithChild = false
-            let titles = this._tabs.querySelectorAll('hh-title')
-            titles.forEach( titleBar => {
-                let childTitleBarRect = Rect2D.fromDomRect(titleBar.getBoundingClientRect())
-                if(ele != titleBar){
-                    if(childTitleBarRect.overlap(targetRect)){
-                        overlapWithChild = true
-
-                        OccupiedTitleManager.getInstance().setCandidate(ele, this, Number(ele.style.width))
-                    }
-                }
-            })
-
-            return true;
-        }
-
-        // Let other handlers handle this event.
-        return false;
-    }
-
-    selectTab(tabindex:number) {
-        // if(tabIndex == 0){
-        //     titleSpan.setAttribute('selected', 'true')
-        //     node.selected = true
-        // }else{
-        //     titleSpan.setAttribute('selected', 'false')
-        //     node.selected = false
-        // }
-
-        let selectedTab = this.shadowRoot.querySelector('hh-title[tabindex="' + tabindex + '"]')
-        let selectedContent = this.shadowRoot.querySelector('hh-content[tabindex="' + tabindex + '"]') as HHContent
-        selectedTab.setAttribute('selected', "true")
-        selectedContent.selected = true
-
-        let unselectedTabs = this.shadowRoot.querySelectorAll('hh-title:not([tabindex="' + tabindex + '"])') as NodeListOf<HHContent>
-        let unselectedContents = this.shadowRoot.querySelectorAll('hh-content:not([tabindex="' + tabindex + '"])') as NodeListOf<HHContent>
-
-        unselectedTabs.forEach(tab => {
-            tab.setAttribute('selected', 'false')
-        })
-
-        unselectedContents.forEach(content => {
-            content.selected = false
-        })
-    }
-
-    //
-    // connectedCallback() {
-    //     this.addEventListener('keydown', this._onKeyDown);
-    //     this.addEventListener('click', this._onClick);
-    //
-    //     if (!this.hasAttribute('role'))
-    //         this.setAttribute('role', 'tablist');
-    //
-    //     Promise.all([
-    //         customElements.whenDefined('howto-tab'),
-    //         customElements.whenDefined('howto-panel'),
-    //     ]).then(_ => this._linkPanels());
-    // }
     //
     // disconnectedCallback() {
     //     this.removeEventListener('keydown', this._onKeyDown);
@@ -297,8 +289,5 @@ class HHPanel extends HTMLElement {
     //     this._selectTab(event.target);
     // }
 }
-
-console.log("Defining: hh-panel")
-customElements.define('hh-panel', HHPanel);
 
 export {HHPanel}

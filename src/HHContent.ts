@@ -1,19 +1,20 @@
+import {CustomElement} from "./CustomComponent";
 
-let contentCounter = 0;
 
+@CustomElement({
+    selector: "hh-content",
+    template:"<div></div>"
+})
 class HHContent extends HTMLElement {
+    static contentCounter:number = 0;
     static get observedAttributes() {
         return ['selected'];
-    }
-
-    constructor() {
-        super();
     }
 
     connectedCallback() {
         this.setAttribute('role', 'tab');
         if (!this.id)
-            this.id = `hh-content-${contentCounter++}`;
+            this.id = `hh-content-${HHContent.contentCounter++}`;
 
         this.setAttribute('aria-selected', 'false');
         this.setAttribute('tabindex', String(-1));
@@ -42,4 +43,5 @@ class HHContent extends HTMLElement {
         return this.hasAttribute('selected');
     }
 }
-customElements.define('hh-content', HHContent);
+
+export {HHContent}

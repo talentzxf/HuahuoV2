@@ -1,6 +1,11 @@
 import {Vector2D} from "./math/Vector2D";
 import {TabMover} from "./draggable/TabMover";
+import {CustomElement} from "./CustomComponent";
 
+@CustomElement({
+    selector:"hh-title",
+    template:`<template></template>`,
+})
 class HHTitle extends HTMLElement {
     private startMoving: Boolean = false
     private isMoving: Boolean = false
@@ -25,6 +30,10 @@ class HHTitle extends HTMLElement {
         console.log("Start:" + this.startPos.X + "," + this.startPos.Y)
         this.startElePos = new Vector2D(this.offsetLeft, this.offsetTop);
         document.onmousemove = this.mouseMove.bind(this)
+    }
+
+    connectedCallback() {
+        console.log("Title connectedCallback")
     }
 
     mouseMove(evt:MouseEvent) {
@@ -68,7 +77,5 @@ class HHTitle extends HTMLElement {
         document.onmousemove = null
     }
 }
-
-customElements.define('hh-title', HHTitle);
 
 export {HHTitle}
