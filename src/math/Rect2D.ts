@@ -22,16 +22,22 @@ class Rect2D{
     }
 
     public overlap(otherRect: Rect2D): boolean{
-        if(this.in(otherRect.leftUp) || this.in(otherRect.rightDown)){
-            return true
+
+        // Either one of the rectanges is a line
+        if(this.leftUp.Y == this.rightDown.Y || this.leftUp.X == this.rightDown.X ||
+            otherRect.leftUp.X == otherRect.rightDown.X || otherRect.leftUp.Y == otherRect.rightDown.Y)
+            return false;
+
+        if(this.leftUp.X > otherRect.rightDown.X || this.rightDown.X < otherRect.leftUp.X){
+            return false
         }
 
-        if(otherRect.in(this.leftUp) || otherRect.in(this.rightDown))
+        if(this.leftUp.Y > otherRect.rightDown.Y || this.rightDown.Y < otherRect.leftUp.Y)
         {
-            return true
+            return false
         }
 
-        return false
+        return true
     }
 
     public toString(): string{

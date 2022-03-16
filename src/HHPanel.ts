@@ -76,12 +76,20 @@ class HHPanel extends HTMLElement {
                         overlapWithChild = true
 
                         OccupiedTitleManager.getInstance().setCandidate(titleBar as HHTitle, this, Number(ele.offsetWidth))
+                        console.log("Overlapping:")
+                        console.log(titleBar)
                     }
+                }
+
+                // Didn't overlap with any child, it's in the right most
+                if(!overlapWithChild){
+                    OccupiedTitleManager.getInstance().setIsRightMost()
                 }
             })
 
             return true;
         }
+        console.log("Didn't overlap")
 
         // Let other handlers handle this event.
         return false;

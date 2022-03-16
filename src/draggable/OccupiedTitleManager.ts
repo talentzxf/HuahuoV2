@@ -4,7 +4,7 @@ class OccupiedTitleManager{
 
     private mOccupiedTitle:HHTitle;
     private mOccupiedGroupHolder:HTMLElement;
-
+    private mIsRightMost: Boolean = false;
 
     constructor() {
         this.mOccupiedTitle = null
@@ -37,7 +37,13 @@ class OccupiedTitleManager{
             this.mOccupiedTitle.setMarginLeft(0)
             this.mOccupiedTitle = null
             this.mOccupiedGroupHolder = null
+            this.mIsRightMost = false
         }
+    }
+
+    setIsRightMost() {
+        this.Clear()
+        this.mIsRightMost = true
     }
 }
 
