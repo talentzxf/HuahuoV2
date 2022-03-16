@@ -1,6 +1,7 @@
 import {Vector2D} from "../math/Vector2D";
 import {ResponsibleChain, ChainCallback} from "./ResponsibleChain";
 import {HHTitle} from "../HHTitle";
+import {OccupiedTitleManager} from "./OccupiedTitleManager";
 
 class TabMoveParam {
     public ele: HHTitle
@@ -30,6 +31,8 @@ class TabMover{
     }
 
     public DefaultTitleMoving(param: any):boolean{
+        // If we are here, the title didn't belong to any other tab groups. Should clear it's occupied slots.
+        OccupiedTitleManager.getInstance().Clear()
         param.ele.setScrPos(param.targetPos.X, param.targetPos.Y)
         return true
     }

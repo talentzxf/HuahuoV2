@@ -28,10 +28,12 @@ class Rect2D{
             otherRect.leftUp.X == otherRect.rightDown.X || otherRect.leftUp.Y == otherRect.rightDown.Y)
             return false;
 
+        // Either one is in the left of another one.
         if(this.leftUp.X > otherRect.rightDown.X || this.rightDown.X < otherRect.leftUp.X){
             return false
         }
 
+        // Either one is on top of another
         if(this.leftUp.Y > otherRect.rightDown.Y || this.rightDown.Y < otherRect.leftUp.Y)
         {
             return false

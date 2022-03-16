@@ -32,7 +32,7 @@ class OccupiedTitleManager{
         return this.mOccupiedGroupHolder === inGroupHolder
     }
 
-    private Clear():void {
+    public Clear():void {
         if(this.mOccupiedTitle != null){
             this.mOccupiedTitle.setMarginLeft(0)
             this.mOccupiedTitle = null
