@@ -51,11 +51,11 @@ class OccupiedTitleManager {
         this.mOccupiedTitle = null;
     }
 
-    adjustTabIndices(panel:HHPanel, start:number, end:number, amount:number, skipFunc:Function = null){
+    adjustTabIndices(panel: HHPanel, start: number, end: number, amount: number, skipFunc: Function = null) {
         console.log("Adjusting:" + start + "," + end + " amount:" + amount)
         let tobeAdjustedTitles: HHTitle[] = panel.getTitles(start, end)
         tobeAdjustedTitles.forEach(title => {
-            if(skipFunc == null || !skipFunc(title))
+            if (skipFunc == null || !skipFunc(title))
                 title.setTabIndex(title.tabIndex + amount)
         })
     }
@@ -75,9 +75,9 @@ class OccupiedTitleManager {
         } else {
             // If it's the left to right case, insert before the candidate.
             // Or else, take the place of the candidate.
-            if(this.mTargetPanel == oldPanel && this.mOccupiedTitle.tabIndex > oldIndex){
-                    newIndex = this.mOccupiedTitle.tabIndex - 1;
-            }else{
+            if (this.mTargetPanel == oldPanel && this.mOccupiedTitle.tabIndex > oldIndex) {
+                newIndex = this.mOccupiedTitle.tabIndex - 1;
+            } else {
                 newIndex = this.mOccupiedTitle.tabIndex
             }
         }
@@ -88,17 +88,16 @@ class OccupiedTitleManager {
             this.mTargetPanel.addChild(title);
         }
 
-        function skipFunc(inTitle:HHTitle){
+        function skipFunc(inTitle: HHTitle) {
             return inTitle == title
         }
 
         if (this.mTargetPanel == oldPanel) { // Internal adjust
-            if (oldIndex == newIndex)
-            {
+            if (oldIndex == newIndex) {
                 this.Clear()
                 return;
             }
-            
+
             // true -- left to right
             // false -- right to left
             let direction: boolean = oldIndex < newIndex;
@@ -111,7 +110,13 @@ class OccupiedTitleManager {
             let totalTitleCount = this.mTargetPanel.getTitleCount();
             this.adjustTabIndices(this.mTargetPanel, newIndex, totalTitleCount - 1, 1, skipFunc)
             this.adjustTabIndices(oldPanel, oldIndex + 1, oldPanel.getTitleCount(), -1)
+            if (oldPanel.getTitleCount() == 0) {
+                oldPanel.parentElement.removeChild(oldPanel)
+            } else if (title.getAttribute('selected') == 'true') {
+                oldPanel.selectTab(0)
+            }
         }
+
 
         this.mTargetPanel.renderTitles()
         this.mTargetPanel.selectTab(newIndex)
