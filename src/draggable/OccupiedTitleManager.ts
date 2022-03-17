@@ -73,9 +73,10 @@ class OccupiedTitleManager {
                 newIndex--;
             }
         } else {
-            if(this.mTargetPanel == oldPanel){
-                // Insert the title before the candidate.
-                newIndex = this.mOccupiedTitle.tabIndex - 1;
+            // If it's the left to right case, insert before the candidate.
+            // Or else, take the place of the candidate.
+            if(this.mTargetPanel == oldPanel && this.mOccupiedTitle.tabIndex > oldIndex){
+                    newIndex = this.mOccupiedTitle.tabIndex - 1;
             }else{
                 newIndex = this.mOccupiedTitle.tabIndex
             }
