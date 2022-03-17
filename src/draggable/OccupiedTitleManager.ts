@@ -51,11 +51,11 @@ class OccupiedTitleManager {
         this.mOccupiedTitle = null;
     }
 
-    adjustTabIndices(start:number, end:number, amount:number, skipFunc:Function = null){
+    adjustTabIndices(panel:HHPanel, start:number, end:number, amount:number, skipFunc:Function = null){
         console.log("Adjusting:" + start + "," + end + " amount:" + amount)
-        let tobeAdjustedTitles: HHTitle[] = this.mTargetPanel.getTitles(start, end)
+        let tobeAdjustedTitles: HHTitle[] = panel.getTitles(start, end)
         tobeAdjustedTitles.forEach(title => {
-            if(skipFunc != null && !skipFunc(title))
+            if(skipFunc == null || !skipFunc(title))
                 title.setTabIndex(title.tabIndex + amount)
         })
     }
@@ -94,22 +94,27 @@ class OccupiedTitleManager {
 
         if (this.mTargetPanel == oldPanel) { // Internal adjust
             if (oldIndex == newIndex)
+            {
+                this.Clear()
                 return;
-
+            }
+            
             // true -- left to right
             // false -- right to left
             let direction: boolean = oldIndex < newIndex;
             if (direction) {
-                this.adjustTabIndices(oldIndex + 1, newIndex, -1, skipFunc)
+                this.adjustTabIndices(this.mTargetPanel, oldIndex + 1, newIndex, -1, skipFunc)
             } else {
-                this.adjustTabIndices(newIndex, oldIndex, 1, skipFunc)
+                this.adjustTabIndices(this.mTargetPanel, newIndex, oldIndex, 1, skipFunc)
             }
         } else {
             let totalTitleCount = this.mTargetPanel.getTitleCount();
-            this.adjustTabIndices(newIndex, totalTitleCount - 1, 1, skipFunc)
+            this.adjustTabIndices(this.mTargetPanel, newIndex, totalTitleCount - 1, 1, skipFunc)
+            this.adjustTabIndices(oldPanel, oldIndex + 1, oldPanel.getTitleCount(), -1)
         }
 
         this.mTargetPanel.renderTitles()
+        this.mTargetPanel.selectTab(newIndex)
 
         this.Clear()
     }

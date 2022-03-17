@@ -48,7 +48,7 @@ import {CustomElement} from "./CustomComponent";
     `
 })
 class HHPanel extends HTMLElement {
-    private _contentNodes: NodeListOf<HTMLElement>
+    private _contentNodes: NodeListOf<HHContent>
     private _tabs: HTMLElement
     private _contents: HTMLElement
 
@@ -101,19 +101,16 @@ class HHPanel extends HTMLElement {
         //     node.selected = false
         // }
 
-        let selectedTab = this.querySelector('hh-title[tabindex="' + tabindex + '"]')
-        let selectedContent = this.querySelector('hh-content[tabindex="' + tabindex + '"]') as HHContent
+        let selectedTab = this.querySelector('hh-title[tabindex="' + tabindex + '"]') as HHTitle
+        let selectedContent = selectedTab.getContent();
         selectedTab.setAttribute('selected', "true")
         selectedContent.selected = true
 
-        let unselectedTabs = this.querySelectorAll('hh-title:not([tabindex="' + tabindex + '"])') as NodeListOf<HHContent>
-        let unselectedContents = this.querySelectorAll('hh-content:not([tabindex="' + tabindex + '"])') as NodeListOf<HHContent>
+        let unselectedTabs = this.querySelectorAll('hh-title:not([tabindex="' + tabindex + '"])') as NodeListOf<HHTitle>
 
         unselectedTabs.forEach(tab => {
+            let content = tab.getContent()
             tab.setAttribute('selected', 'false')
-        })
-
-        unselectedContents.forEach(content => {
             content.selected = false
         })
     }
@@ -146,19 +143,18 @@ class HHPanel extends HTMLElement {
         this._contentNodes.forEach(
             node => {
                 let title = node.getAttribute('title') || 'No Title'
-                let titleSpan = document.createElement('hh-title')
+                let titleSpan = document.createElement('hh-title') as HHTitle
                 titleSpan.appendChild(node)
                 titleSpan.innerHTML = title
                 titleSpan.setAttribute('tabindex', tabIndex.toString())
                 titleSpan.addEventListener('click', function (evt) {
                     let idx = Number(titleSpan.getAttribute('tabindex'))
-                    _this.selectTab(idx)
+                    titleSpan.getParentPanel().selectTab(idx)
                 })
 
                 _this._tabs.appendChild(titleSpan)
-
-                this._contents.appendChild(node)
-                node.setAttribute('tabindex', tabIndex.toString());
+                titleSpan.setContent(node)
+                titleSpan.setParentPanel(_this)
 
                 tabIndex++;
             }
@@ -211,6 +207,10 @@ class HHPanel extends HTMLElement {
         allTitles.forEach(title => {
             this._tabs.appendChild(title)
         })
+    }
+
+    getContentGroup() {
+        return this._contents
     }
 }
 

@@ -16,14 +16,12 @@ class HHContent extends HTMLElement {
         if (!this.id)
             this.id = `hh-content-${HHContent.contentCounter++}`;
 
-        this.setAttribute('aria-selected', 'false');
         this.setAttribute('tabindex', String(-1));
         this.style.height = 'fit-content'
     }
 
     attributeChangedCallback() {
         const value = this.hasAttribute('selected');
-        this.setAttribute('aria-selected', String(value));
     }
 
     set selected(value) {

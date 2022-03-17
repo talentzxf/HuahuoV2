@@ -3,6 +3,7 @@ import {TabMover} from "./draggable/TabMover";
 import {CustomElement} from "./CustomComponent";
 import {OccupiedTitleManager} from "./draggable/OccupiedTitleManager";
 import {HHPanel} from "./HHPanel";
+import {HHContent} from "./HHContent";
 
 @CustomElement({
     selector:"hh-title",
@@ -14,6 +15,7 @@ class HHTitle extends HTMLElement {
     private startElePos: Vector2D = new Vector2D()
     private startPos: Vector2D
     private parentPanel: HHPanel
+    private content: HHContent
 
     static get tabIndex() {
         return ['tabindex']
@@ -26,9 +28,18 @@ class HHTitle extends HTMLElement {
         this.addEventListener("mouseup", this.mouseUp)
     }
 
+    getContent():HHContent{
+        return this.content
+    }
+
+    setContent(inContent: HHContent){
+        this.content = inContent
+    }
+
     setParentPanel(panel: HHPanel){
         this.parentPanel = panel
         panel.getTabGroup().appendChild(this)
+        panel.getContentGroup().appendChild(this.content)
     }
 
     mouseDown(evt:MouseEvent) {
