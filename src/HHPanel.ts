@@ -80,8 +80,8 @@ class HHPanel extends HTMLElement {
                 }
 
                 // Didn't overlap with any child, it's in the right most
-                if(!overlapWithChild){
-                    OccupiedTitleManager.getInstance().setIsRightMost()
+                if (!overlapWithChild) {
+                    OccupiedTitleManager.getInstance().setIsRightMost(this)
                 }
             })
 
@@ -169,130 +169,49 @@ class HHPanel extends HTMLElement {
         TabMover.getInstance().AddFront(this.onTitleMoving.bind(this))
     }
 
-    //
-    // disconnectedCallback() {
-    //     this.removeEventListener('keydown', this._onKeyDown);
-    //     this.removeEventListener('click', this._onClick);
-    // }
-    //
-    // _onSlotChange() {
-    //     this._linkPanels();
-    // }
-    //
-    // _linkPanels() {
-    //     const tabs = this._allTabs();
-    //     tabs.forEach(tab => {
-    //         const panel = tab.nextElementSibling;
-    //         if (panel.tagName.toLowerCase() !== 'howto-panel') {
-    //             console.error(`Tab #${tab.id} is not a` +
-    //                 `sibling of a <howto-panel>`);
-    //             return;
-    //         }
-    //
-    //         tab.setAttribute('aria-controls', panel.id);
-    //         panel.setAttribute('aria-labelledby', tab.id);
-    //     });
-    //
-    //     const selectedTab =
-    //         tabs.find(tab => tab.selected) || tabs[0];
-    //     this._selectTab(selectedTab);
-    // }
-    //
-    // _allPanels() {
-    //     return Array.from(this.querySelectorAll('howto-panel'));
-    // }
-    //
-    // _allTabs() {
-    //     return Array.from(this.querySelectorAll('howto-tab'));
-    // }
-    //
-    // _panelForTab(tab) {
-    //     const panelId = tab.getAttribute('aria-controls');
-    //     return this.querySelector(`#${panelId}`);
-    // }
-    //
-    // _prevTab() {
-    //     const tabs = this._allTabs();
-    //     let newIdx = tabs.findIndex(tab => tab.selected) - 1;
-    //
-    //     return tabs[(newIdx + tabs.length) % tabs.length];
-    // }
-    //
-    // _firstTab() {
-    //     const tabs = this._allTabs();
-    //     return tabs[0];
-    // }
-    //
-    // _lastTab() {
-    //     const tabs = this._allTabs();
-    //     return tabs[tabs.length - 1];
-    // }
-    //
-    // _nextTab() {
-    //     const tabs = this._allTabs();
-    //     let newIdx = tabs.findIndex(tab => tab.selected) + 1;
-    //     return tabs[newIdx % tabs.length];
-    // }
-    //
-    // reset() {
-    //     const tabs = this._allTabs();
-    //     const panels = this._allPanels();
-    //
-    //     tabs.forEach(tab => tab.selected = false);
-    //     panels.forEach(panel => panel.hidden = true);
-    // }
-    //
-    // _selectTab(newTab) {
-    //     this.reset();
-    //     const newPanel = this._panelForTab(newTab);
-    //
-    //     if (!newPanel)
-    //         throw new Error(`No panel with id ${newPanelId}`);
-    //     newTab.selected = true;
-    //     newPanel.hidden = false;
-    //     newTab.focus();
-    // }
-    //
-    // _onKeyDown(event) {
-    //     if (event.target.getAttribute('role') !== 'tab')
-    //         return;
-    //     if (event.altKey)
-    //         return;
-    //
-    //     let newTab;
-    //     switch (event.keyCode) {
-    //         case KEYCODE.LEFT:
-    //         case KEYCODE.UP:
-    //             newTab = this._prevTab();
-    //             break;
-    //
-    //         case KEYCODE.RIGHT:
-    //         case KEYCODE.DOWN:
-    //             newTab = this._nextTab();
-    //             break;
-    //
-    //         case KEYCODE.HOME:
-    //             newTab = this._firstTab();
-    //             break;
-    //
-    //         case KEYCODE.END:
-    //             newTab = this._lastTab();
-    //             break;
-    //
-    //         default:
-    //             return;
-    //     }
-    //
-    //     event.preventDefault();
-    //     this._selectTab(newTab);
-    // }
-    //
-    // _onClick(event) {
-    //     if (event.target.getAttribute('role') !== 'tab')
-    //         return;
-    //
-    //     this._selectTab(event.target);
-    // }
+    getTitleCount(): number {
+        return this._tabs.querySelectorAll("hh-title").length;
+    }
+
+    addChild(title: HHTitle) {
+        title.setParentPanel(this)
+    }
+
+    getTabGroup(): HTMLElement {
+        return this._tabs
+    }
+
+    getTitles(leftIdx: number, rightIdx: number): Array<HHTitle> {
+        let resultArray: Array<HHTitle> = new Array();
+
+        this._tabs.querySelectorAll("hh-title").forEach(title => {
+            if (title instanceof HHTitle) {
+                let titleEle = title as HHTitle
+                if (titleEle.tabIndex >= leftIdx && titleEle.tabIndex <= rightIdx) {
+                    resultArray.push(titleEle)
+                }
+            }
+        })
+        return resultArray;
+    }
+
+    renderTitles() {
+        // Remove all tabs, sort and add again
+        let allTitles: HHTitle[] = Array.from(this._tabs.querySelectorAll("hh-title"))
+
+        while (this._tabs.firstChild) {
+            this._tabs.removeChild(this._tabs.firstChild)
+        }
+        allTitles.sort(function elementCompare(a, b) {
+            let idxA = a.tabIndex;
+            let idxB = b.tabIndex;
+            return idxA - idxB;
+        })
+
+        allTitles.forEach(title => {
+            this._tabs.appendChild(title)
+        })
+    }
 }
 
 export {HHPanel}

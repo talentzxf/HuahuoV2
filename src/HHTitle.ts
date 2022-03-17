@@ -1,6 +1,8 @@
 import {Vector2D} from "./math/Vector2D";
 import {TabMover} from "./draggable/TabMover";
 import {CustomElement} from "./CustomComponent";
+import {OccupiedTitleManager} from "./draggable/OccupiedTitleManager";
+import {HHPanel} from "./HHPanel";
 
 @CustomElement({
     selector:"hh-title",
@@ -11,8 +13,9 @@ class HHTitle extends HTMLElement {
     private isMoving: Boolean = false
     private startElePos: Vector2D = new Vector2D()
     private startPos: Vector2D
+    private parentPanel: HHPanel
 
-    static get observedAttributes() {
+    static get tabIndex() {
         return ['tabindex']
     }
 
@@ -21,6 +24,11 @@ class HHTitle extends HTMLElement {
 
         this.addEventListener("mousedown", this.mouseDown)
         this.addEventListener("mouseup", this.mouseUp)
+    }
+
+    setParentPanel(panel: HHPanel){
+        this.parentPanel = panel
+        panel.getTabGroup().appendChild(this)
     }
 
     mouseDown(evt:MouseEvent) {
@@ -57,8 +65,12 @@ class HHTitle extends HTMLElement {
         }
     }
 
+    setStylePosition(positionStyle:string){
+        this.style.position = positionStyle
+    }
+
     setScrPos(x:number, y:number){
-        this.style.position = "absolute"
+        this.setStylePosition("absolute")
         this.style.left = x + "px"
         this.style.top = y + "px"
     }
@@ -72,9 +84,30 @@ class HHTitle extends HTMLElement {
     }
 
     endMoving() {
+        if(this.isMoving){
+            OccupiedTitleManager.getInstance().dropTitle(this)
+        }
+
         this.startMoving = false
         this.isMoving = false
         document.onmousemove = null
+    }
+
+    getParentPanel():HHPanel {
+        if(this.parentPanel == null){
+            let parentPanelCandidate = this.parentElement
+            while(parentPanelCandidate != null && !(parentPanelCandidate instanceof HHPanel)){
+                parentPanelCandidate = parentPanelCandidate.parentElement
+            }
+            if(parentPanelCandidate == null)
+                throw "This title is not inside a panel??"
+            this.parentPanel = parentPanelCandidate as HHPanel
+        }
+        return this.parentPanel
+    }
+
+    setTabIndex(newIdx: number) {
+        this.setAttribute("tabindex", newIdx.toString())
     }
 }
 
