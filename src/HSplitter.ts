@@ -1,7 +1,8 @@
 import {CustomElement} from "./CustomComponent";
 import {Vector2D} from "./math/Vector2D";
-import {HHPanel} from "./HHPanel";
 import {Rect2D} from "./math/Rect2D";
+import {ResizeManager} from "./resize/ResizeManager";
+import {HHPanel} from "./HHPanel";
 
 @CustomElement({
     selector: "hh-hsplitter",
@@ -43,7 +44,7 @@ class HSplitter extends HTMLElement {
             rightDown.Y = evt.clientY
             let newHeight = targetPanelRect.height
 
-            this.parentElement.style.height = newHeight + "px";
+            ResizeManager.getInstance().adjustPanelSiblingsHeight(this.parentElement as HHPanel, newHeight)
         }
     }
 

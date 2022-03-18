@@ -52,7 +52,7 @@ class HHTitle extends HTMLElement {
     }
 
     connectedCallback() {
-        console.log("Title connectedCallback")
+        // console.log("Title connectedCallback")
     }
 
     mouseMove(evt:MouseEvent) {
