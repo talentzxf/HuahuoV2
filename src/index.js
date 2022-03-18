@@ -1,8 +1,9 @@
 import {HHPanel} from './HHPanel'
 import {HHContent} from './HHContent'
 import {HHTitle} from "./HHTitle";
-import {HSplitter} from "./HSplitter";
+import {HHSplitter} from "./HHSplitter";
+HHSplitter
 HHPanel
 HHContent
 HHTitle
-HSplitter
+

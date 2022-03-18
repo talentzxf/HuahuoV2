@@ -5,14 +5,16 @@ import {OccupiedTitleManager} from "./draggable/OccupiedTitleManager";
 import {HHTitle} from "./HHTitle";
 import {HHContent} from "./HHContent";
 import {CustomElement} from "./CustomComponent";
-import {HSplitter} from "./HSplitter";
+import {HHSplitter} from "./HHSplitter";
 
 @CustomElement({
     selector: 'hh-panel',
     template: `<template>
-        <div class="title_tabs">
-        </div>
-        <div class="panel_contents" style="flex-basis: 100%;">
+        <div style="display: flex; flex-direction: column; height: 100%; width: 100%">
+            <div class="title_tabs">
+            </div>
+            <div class="panel_contents" style="flex-basis: 100%;">
+            </div>
         </div>
         <slot></slot>
     </template>`,
@@ -127,8 +129,9 @@ class HHPanel extends HTMLElement {
          */
 
         this.style.display = 'flex'
-        this.style.flexDirection = 'column'
+        this.style.flexDirection = this.parentElement.style.flexDirection
         this.style.height = '100%'
+        this.style.width = '100%'
         this.style.alignContent = 'baseline'
 
         let template = this.querySelector('template');
@@ -165,9 +168,10 @@ class HHPanel extends HTMLElement {
 
         TabMover.getInstance().AddFront(this.onTitleMoving.bind(this))
 
-        if (this.nextElementSibling != null){
-            let hsplitter = document.createElement('hh-hsplitter')
-            this.appendChild(hsplitter)
+        if (this.nextElementSibling != null) {
+            let splitter = document.createElement('hh-splitter')
+            splitter.setAttribute("direction", this.parentElement.style.flexDirection)
+            this.appendChild(splitter)
         }
     }
 

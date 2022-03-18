@@ -1,30 +1,35 @@
 import {CustomElement} from "./CustomComponent";
 import {Vector2D} from "./math/Vector2D";
-import {Rect2D} from "./math/Rect2D";
 import {ResizeManager} from "./resize/ResizeManager";
 import {HHPanel} from "./HHPanel";
 
 @CustomElement({
-    selector: "hh-hsplitter",
+    selector: "hh-splitter",
     template: `<div style="
-                height:5px; 
                 /*border: 1px solid red;*/
                 background-color: lightgray;
                 "></div>`,
 })
-class HSplitter extends HTMLElement {
+class HHSplitter extends HTMLElement {
     private prevPos: Vector2D;
 
     constructor() {
         super()
+        console.log("HHSplitter created!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         this.addEventListener('mouseover', this.mouseOver)
         this.addEventListener('mouseout', this.mouseOut)
         this.addEventListener('mousedown', this.mouseDown)
         this.addEventListener('mouseup', this.mouseUp)
     }
 
-    connectedCallback() {
+    connectedCallback(){
+        let spliterDiv = this.querySelector("div")
+        spliterDiv.style.width = this.isColumn? '100%':'5px';
+        spliterDiv.style.height = this.isColumn? '5px':'100%'
+    }
 
+    private get isColumn(): boolean{
+        return this.getAttribute("direction") == "column"
     }
 
     mouseUp() {
@@ -39,15 +44,23 @@ class HSplitter extends HTMLElement {
 
     mouseMove(evt: MouseEvent) {
         if (evt.buttons == 1) {
-            let offsetY = evt.clientY - this.prevPos.Y
-            ResizeManager.getInstance().adjustPanelSiblingsHeight(this.parentElement as HHPanel, offsetY)
+            let offset = -1
+            if(this.isColumn)
+                offset = evt.clientY - this.prevPos.Y
+            else
+                offset = evt.clientX - this.prevPos.X
+
+            ResizeManager.getInstance().adjustPanelSiblingsSize(this.parentElement as HHPanel, offset, this.isColumn)
 
             this.prevPos = new Vector2D(evt.clientX, evt.clientY)
         }
     }
 
     mouseOver() {
-        this.style.cursor = 'ns-resize'
+        if (this.isColumn)
+            this.style.cursor = 'ns-resize'
+        else
+            this.style.cursor = 'ew-resize'
     }
 
     mouseOut() {
@@ -55,4 +68,4 @@ class HSplitter extends HTMLElement {
     }
 }
 
-export {HSplitter}
+export {HHSplitter}

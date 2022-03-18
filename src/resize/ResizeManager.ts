@@ -14,65 +14,72 @@ class ResizeManager {
         return ResizeManager.Instance
     }
 
-    private normalizeAllChildPanels(parentContainer: HTMLElement) {
-        let parentHeight = parentContainer.getBoundingClientRect().height
-        let panelHeightMap = new Map
+    private normalizeAllChildPanels(parentContainer: HTMLElement, isColumn: boolean) {
+        let parentContainerRect = parentContainer.getBoundingClientRect();
+        let parentSize = isColumn?parentContainerRect.height:parentContainerRect.width;
+
+        let panelSizeMap = new Map
         // Recalculate all the panel height percentage
         parentContainer.querySelectorAll('hh-panel').forEach(
             (panel: HHPanel) => {
                 let panelRect2D: Rect2D = Rect2D.fromDomRect(panel.getBoundingClientRect())
-                let heightPercentage = 100.0 * panelRect2D.height / parentHeight
-                panelHeightMap.set(panel, heightPercentage)
+                let panelSize = isColumn? panelRect2D.height: panelRect2D.width
+                let sizePercentage = 100.0 * panelSize / parentSize
+                panelSizeMap.set(panel, sizePercentage)
             }
         )
-        panelHeightMap.forEach((heightPercentage: number, panel: HHPanel) => {
-            panel.style.height = heightPercentage + "%"
+        panelSizeMap.forEach((sizePercentage: number, panel: HHPanel) => {
+            if(isColumn)
+                panel.style.height = sizePercentage + "%"
+            else
+                panel.style.width = sizePercentage + "%"
         })
     }
 
-    private getRemainingHeight(parentContainer: HTMLElement): number {
-        let parentHeight = parentContainer.getBoundingClientRect().height
-        let totalPanelHeight = 0
+    private getRemainingSize(parentContainer: HTMLElement, isColumn: boolean): number {
+        let parentContainerRect = parentContainer.getBoundingClientRect();
+        let parentSize = isColumn?parentContainerRect.height:parentContainerRect.width;
+        let totalPanelSize = 0
         parentContainer.querySelectorAll('hh-panel').forEach(
             (panel: HHPanel) => {
-                totalPanelHeight += panel.getBoundingClientRect().height
+                let panelRect = panel.getBoundingClientRect()
+                totalPanelSize += isColumn?panelRect.height:panelRect.width
             }
         )
 
-        return parentHeight - totalPanelHeight
+        return parentSize - totalPanelSize
     }
 
-    private increaseElementHeight(ele: HTMLElement, amount: number, parentHeight: number){
-        let oldHeight: number = ele.getBoundingClientRect().height
-        let newHeight = oldHeight + amount;
-        let newHeightPercentage = 100.0 * newHeight / parentHeight
-        ele.style.height = newHeightPercentage + "%"
+    private increaseElementSize(ele: HTMLElement, amount: number, parentSize: number, isColumn: boolean){
+        let boundingRect = ele.getBoundingClientRect()
+        let oldSize: number = isColumn?boundingRect.height:boundingRect.width
+        let newSize = oldSize + amount;
+        let newSizePercentage = 100.0 * newSize / parentSize
+        if(isColumn)
+            ele.style.height = newSizePercentage + "%"
+        else
+            ele.style.width = newSizePercentage + "%"
     }
 
-    public adjustPanelSiblingsHeight(targetPanel: HHPanel, heightDelta: number) {
+    public adjustPanelSiblingsSize(targetPanel: HHPanel, sizeDelta: number, isColumn: boolean) {
         let parentContainer = targetPanel.parentElement
         let parentContainerRect = Rect2D.fromDomRect(parentContainer.getBoundingClientRect())
-        let parentHeight = parentContainerRect.height
+        let parentSize = isColumn?parentContainerRect.height:parentContainerRect.width
 
-        this.normalizeAllChildPanels(parentContainer)
+        this.normalizeAllChildPanels(parentContainer, isColumn)
 
-        this.increaseElementHeight(targetPanel, heightDelta, parentHeight)
+        this.increaseElementSize(targetPanel, sizeDelta, parentSize, isColumn)
 
         if (targetPanel.nextElementSibling) {
-            this.increaseElementHeight(targetPanel.nextElementSibling as HTMLElement, -heightDelta, parentHeight)
+            this.increaseElementSize(targetPanel.nextElementSibling as HTMLElement, -sizeDelta, parentSize, isColumn)
         }
 
-        let remainingHeight = this.getRemainingHeight(parentContainer)
+        let remainingSize = this.getRemainingSize(parentContainer, isColumn)
         if(targetPanel.nextElementSibling){
-            this.increaseElementHeight(targetPanel.nextElementSibling as HTMLElement, remainingHeight, parentHeight)
+            this.increaseElementSize(targetPanel.nextElementSibling as HTMLElement, remainingSize, parentSize, isColumn)
         }else{
-            this.increaseElementHeight(targetPanel, remainingHeight, parentHeight)
+            this.increaseElementSize(targetPanel, remainingSize, parentSize, isColumn)
         }
-
-        // let targetPanelRect = Rect2D.fromDomRect(targetPanel.getBoundingClientRect())
-        //
-        // let nextPanel = targetPanel.nextElementSibling as HHPanel
-
     }
 }
 
