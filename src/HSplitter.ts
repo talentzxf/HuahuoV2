@@ -39,14 +39,8 @@ class HSplitter extends HTMLElement {
 
     mouseMove(evt: MouseEvent) {
         if (evt.buttons == 1) {
-            let targetPanelRect:Rect2D = Rect2D.fromDomRect(this.parentElement.getBoundingClientRect())
-            let rightDown:Vector2D = targetPanelRect.getRightDown()
-
             let offsetY = evt.clientY - this.prevPos.Y
-            rightDown.Y += offsetY
-            let newHeight = targetPanelRect.height
-
-            ResizeManager.getInstance().adjustPanelSiblingsHeight(this.parentElement as HHPanel, newHeight)
+            ResizeManager.getInstance().adjustPanelSiblingsHeight(this.parentElement as HHPanel, offsetY)
 
             this.prevPos = new Vector2D(evt.clientX, evt.clientY)
         }

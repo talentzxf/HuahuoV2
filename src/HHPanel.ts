@@ -165,8 +165,10 @@ class HHPanel extends HTMLElement {
 
         TabMover.getInstance().AddFront(this.onTitleMoving.bind(this))
 
-        let hsplitter = document.createElement('hh-hsplitter')
-        this.appendChild(hsplitter)
+        if (this.nextElementSibling != null){
+            let hsplitter = document.createElement('hh-hsplitter')
+            this.appendChild(hsplitter)
+        }
     }
 
     getTitleCount(): number {
