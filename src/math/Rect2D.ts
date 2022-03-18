@@ -3,6 +3,14 @@ class Rect2D{
     private leftUp: Vector2D = new Vector2D()
     private rightDown: Vector2D = new Vector2D()
 
+    get height():number{
+        return this.rightDown.Y - this.leftUp.Y
+    }
+
+    get width():number{
+        return this.rightDown.X - this.leftUp.X
+    }
+
     public static fromDomRect(domRect:DOMRect){
         return new Rect2D(domRect.x, domRect.y, domRect.x + domRect.width, domRect.y +domRect.height)
     }
@@ -12,6 +20,14 @@ class Rect2D{
         this.leftUp.Y = y1
         this.rightDown.X = x2
         this.rightDown.Y = y2
+    }
+
+    public getRightDown(){
+        return this.rightDown
+    }
+
+    public getLeftUp(){
+        this.leftUp
     }
 
     public in(p: Vector2D):boolean{

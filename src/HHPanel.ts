@@ -5,6 +5,7 @@ import {OccupiedTitleManager} from "./draggable/OccupiedTitleManager";
 import {HHTitle} from "./HHTitle";
 import {HHContent} from "./HHContent";
 import {CustomElement} from "./CustomComponent";
+import {HSplitter} from "./HSplitter";
 
 @CustomElement({
     selector: 'hh-panel',
@@ -163,6 +164,9 @@ class HHPanel extends HTMLElement {
         _this.selectTab(0)
 
         TabMover.getInstance().AddFront(this.onTitleMoving.bind(this))
+
+        let hsplitter = document.createElement('hh-hsplitter')
+        this.appendChild(hsplitter)
     }
 
     getTitleCount(): number {
