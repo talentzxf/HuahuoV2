@@ -13,7 +13,7 @@ import {HHPanel} from "./HHPanel";
                 "></div>`,
 })
 class HSplitter extends HTMLElement {
-    private startPos: Vector2D;
+    private prevPos: Vector2D;
 
     constructor() {
         super()
@@ -29,22 +29,26 @@ class HSplitter extends HTMLElement {
 
     mouseUp() {
         document.onmousemove = null
-        this.startPos = null
+        this.prevPos = null
     }
 
     mouseDown(evt: MouseEvent) {
         document.onmousemove = this.mouseMove.bind(this)
-        this.startPos = new Vector2D(evt.clientX, evt.clientY)
+        this.prevPos = new Vector2D(evt.clientX, evt.clientY)
     }
 
     mouseMove(evt: MouseEvent) {
         if (evt.buttons == 1) {
             let targetPanelRect:Rect2D = Rect2D.fromDomRect(this.parentElement.getBoundingClientRect())
             let rightDown:Vector2D = targetPanelRect.getRightDown()
-            rightDown.Y = evt.clientY
+
+            let offsetY = evt.clientY - this.prevPos.Y
+            rightDown.Y += offsetY
             let newHeight = targetPanelRect.height
 
             ResizeManager.getInstance().adjustPanelSiblingsHeight(this.parentElement as HHPanel, newHeight)
+
+            this.prevPos = new Vector2D(evt.clientX, evt.clientY)
         }
     }
 
