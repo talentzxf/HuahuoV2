@@ -50,7 +50,7 @@ class HHSplitter extends HTMLElement {
             else
                 offset = evt.clientX - this.prevPos.X
 
-            ResizeManager.getInstance().adjustPanelSiblingsSize(this.parentElement as HHPanel, offset, this.isColumn)
+            ResizeManager.getInstance().adjustSiblingsSize(this, offset, this.isColumn, this.getAttribute('siblingElementName'))
 
             this.prevPos = new Vector2D(evt.clientX, evt.clientY)
         }

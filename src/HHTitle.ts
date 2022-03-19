@@ -7,7 +7,6 @@ import {HHContent} from "./HHContent";
 
 @CustomElement({
     selector:"hh-title",
-    template:`<template></template>`,
 })
 class HHTitle extends HTMLElement {
     private startMoving: Boolean = false

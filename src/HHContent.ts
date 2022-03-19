@@ -3,7 +3,6 @@ import {CustomElement} from "./CustomComponent";
 
 @CustomElement({
     selector: "hh-content",
-    template:"<div></div>"
 })
 class HHContent extends HTMLElement {
     static contentCounter:number = 0;

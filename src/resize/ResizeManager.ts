@@ -1,5 +1,7 @@
 import {HHPanel} from "../HHPanel";
 import {Rect2D} from "../math/Rect2D";
+import {HHSplitter} from "../HHSplitter";
+import {DomHelper} from "../DomHelper";
 
 class ResizeManager {
     private static Instance: ResizeManager;
@@ -14,13 +16,13 @@ class ResizeManager {
         return ResizeManager.Instance
     }
 
-    private normalizeAllChildPanels(parentContainer: HTMLElement, isColumn: boolean) {
+    private normalizeAllChildPanels(parentContainer: HTMLElement, isColumn: boolean, nodeName: string) {
         let parentContainerRect = parentContainer.getBoundingClientRect();
         let parentSize = isColumn?parentContainerRect.height:parentContainerRect.width;
 
         let panelSizeMap = new Map
         // Recalculate all the panel height percentage
-        parentContainer.querySelectorAll('hh-panel').forEach(
+        parentContainer.querySelectorAll(nodeName.toLowerCase()).forEach(
             (panel: HHPanel) => {
                 let panelRect2D: Rect2D = Rect2D.fromDomRect(panel.getBoundingClientRect())
                 let panelSize = isColumn? panelRect2D.height: panelRect2D.width
@@ -39,15 +41,17 @@ class ResizeManager {
     private getRemainingSize(parentContainer: HTMLElement, isColumn: boolean): number {
         let parentContainerRect = parentContainer.getBoundingClientRect();
         let parentSize = isColumn?parentContainerRect.height:parentContainerRect.width;
-        let totalPanelSize = 0
-        parentContainer.querySelectorAll('hh-panel').forEach(
-            (panel: HHPanel) => {
-                let panelRect = panel.getBoundingClientRect()
-                totalPanelSize += isColumn?panelRect.height:panelRect.width
+        let totalElementSize = 0
+        parentContainer.childNodes.forEach(
+            (ele : HTMLElement) => {
+                if(ele.getBoundingClientRect){
+                    let eleRect = ele.getBoundingClientRect()
+                    totalElementSize += isColumn?eleRect.height: eleRect.width
+                }
             }
         )
 
-        return parentSize - totalPanelSize
+        return parentSize - totalElementSize
     }
 
     private increaseElementSize(ele: HTMLElement, amount: number, parentSize: number, isColumn: boolean){
@@ -61,24 +65,27 @@ class ResizeManager {
             ele.style.width = newSizePercentage + "%"
     }
 
-    public adjustPanelSiblingsSize(targetPanel: HHPanel, sizeDelta: number, isColumn: boolean) {
-        let parentContainer = targetPanel.parentElement
+    public adjustSiblingsSize(splitter: HHSplitter, sizeDelta: number, isColumn: boolean, siblingNodeName: string) {
+        let parentContainer = splitter.parentElement
         let parentContainerRect = Rect2D.fromDomRect(parentContainer.getBoundingClientRect())
+        this.normalizeAllChildPanels(parentContainer, isColumn, siblingNodeName)
+
         let parentSize = isColumn?parentContainerRect.height:parentContainerRect.width
 
-        this.normalizeAllChildPanels(parentContainer, isColumn)
+        let prevSibiling = DomHelper.getPrevSiblingElementByName(splitter, siblingNodeName)
+        this.increaseElementSize(prevSibiling, sizeDelta, parentSize, isColumn)
 
-        this.increaseElementSize(targetPanel, sizeDelta, parentSize, isColumn)
+        let nextSibiling = DomHelper.getNextSiblingElementByName(splitter, siblingNodeName)
 
-        if (targetPanel.nextElementSibling) {
-            this.increaseElementSize(targetPanel.nextElementSibling as HTMLElement, -sizeDelta, parentSize, isColumn)
+        if (nextSibiling) {
+            this.increaseElementSize(nextSibiling, -sizeDelta, parentSize, isColumn)
         }
 
         let remainingSize = this.getRemainingSize(parentContainer, isColumn)
-        if(targetPanel.nextElementSibling){
-            this.increaseElementSize(targetPanel.nextElementSibling as HTMLElement, remainingSize, parentSize, isColumn)
+        if(nextSibiling){
+            this.increaseElementSize(nextSibiling, remainingSize, parentSize, isColumn)
         }else{
-            this.increaseElementSize(targetPanel, remainingSize, parentSize, isColumn)
+            this.increaseElementSize(prevSibiling, remainingSize, parentSize, isColumn)
         }
     }
 }

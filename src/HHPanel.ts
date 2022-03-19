@@ -6,6 +6,7 @@ import {HHTitle} from "./HHTitle";
 import {HHContent} from "./HHContent";
 import {CustomElement} from "./CustomComponent";
 import {HHSplitter} from "./HHSplitter";
+import {DomHelper} from "./DomHelper";
 
 @CustomElement({
     selector: 'hh-panel',
@@ -16,7 +17,6 @@ import {HHSplitter} from "./HHSplitter";
             <div class="panel_contents" style="flex-basis: 100%;">
             </div>
         </div>
-        <slot></slot>
     </template>`,
     style: `        
         .title_tabs{
@@ -168,10 +168,12 @@ class HHPanel extends HTMLElement {
 
         TabMover.getInstance().AddFront(this.onTitleMoving.bind(this))
 
-        if (this.nextElementSibling != null) {
+        let nextSibling = DomHelper.getNextSiblingElementByName(this, "hh-panel")
+        if (nextSibling) {
             let splitter = document.createElement('hh-splitter')
             splitter.setAttribute("direction", this.parentElement.style.flexDirection)
-            this.appendChild(splitter)
+            splitter.setAttribute('siblingElementName', 'hh-panel')
+            this.parentElement.insertBefore(splitter, nextSibling)
         }
     }
 

@@ -1,6 +1,6 @@
 interface CustomElementConfig {
     selector:string;
-    template: string;
+    template?: string;
     style?: string;
     useShadow?: boolean;
 }
@@ -12,13 +12,17 @@ const validateSelector = (selector: string) => {
 const CustomElement = (config: CustomElementConfig) => (cls:any) => {
     validateSelector(config.selector);
     if (!config.template) {
-        throw new Error('You need to pass a template for the element');
+        // throw new Error('You need to pass a template for the element');
+        console.log("Template is null!")
     }
     const template = document.createElement('template');
     if (config.style) {
-        config.template = `<style>${config.style}</style> ${config.template}`;
+        if(config.template)
+            config.template = `<style>${config.style}</style> ${config.template}`;
+        else
+            config.template = `<style>${config.style}</style>`
     }
-    template.innerHTML = config.template;
+    template.innerHTML = config.template?config.template:"";
 
     const connectedCallback = cls.prototype.connectedCallback || function () {};
     const disconnectedCallback = cls.prototype.disconnectedCallback || function () {};
