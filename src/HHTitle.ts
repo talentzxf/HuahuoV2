@@ -24,7 +24,6 @@ class HHTitle extends HTMLElement {
         super();
 
         this.addEventListener("mousedown", this.mouseDown)
-        this.addEventListener("mouseup", this.mouseUp)
     }
 
     getContent():HHContent{
@@ -48,6 +47,7 @@ class HHTitle extends HTMLElement {
         console.log("Start:" + this.startPos.X + "," + this.startPos.Y)
         this.startElePos = new Vector2D(this.offsetLeft, this.offsetTop);
         document.onmousemove = this.mouseMove.bind(this)
+        document.onmouseup = this.mouseMove.bind(this)
     }
 
     connectedCallback() {
@@ -101,6 +101,7 @@ class HHTitle extends HTMLElement {
         this.startMoving = false
         this.isMoving = false
         document.onmousemove = null
+        document.onmouseup = null
     }
 
     getParentPanel():HHPanel {
