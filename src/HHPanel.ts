@@ -1,7 +1,7 @@
 import "./HHContent"
 import {Rect2D} from "./math/Rect2D";
 import {TabMover, TabMoveParam} from "./draggable/TabMover";
-import {OccupiedTitleManager} from "./draggable/OccupiedTitleManager";
+import {OccupiedTitleManager, SplitPanelDir} from "./draggable/OccupiedTitleManager";
 import {HHTitle} from "./HHTitle";
 import {HHContent} from "./HHContent";
 import {CustomElement} from "./CustomComponent";
@@ -110,17 +110,21 @@ class HHPanel extends HTMLElement {
         let shadowHeight = contentRect.height / 2
         if (contentRect.overlap(targetRect)) {
             let shadowPanelRect: Rect2D
-            if ((targetPos.X - contentLU.X) < contentRect.width * ShadowPanelManager.Bar) {
+
+            if ((targetPos.X - contentLU.X) < contentRect.width * ShadowPanelManager.Bar) {  // LEFT
                 shadowPanelRect = new Rect2D(contentLU.X, contentLU.Y,
                     contentLU.X + shadowWidth, contentRD.Y);
-            } else if (contentRD.X - targetPos.X < contentRect.width * ShadowPanelManager.Bar) {
+                OccupiedTitleManager.getInstance().setShadowCandidate(this, SplitPanelDir.LEFT)
+            } else if (contentRD.X - targetPos.X < contentRect.width * ShadowPanelManager.Bar) {  // RIGHT
                 shadowPanelRect = new Rect2D(contentLU.X + shadowWidth, contentLU.Y,
                     contentRD.X, contentRD.Y)
-            } else if (targetPos.Y - contentLU.Y < contentRect.height * ShadowPanelManager.Bar) {
+                OccupiedTitleManager.getInstance().setShadowCandidate(this, SplitPanelDir.RIGHT)
+            } else if (targetPos.Y - contentLU.Y < contentRect.height * ShadowPanelManager.Bar) {  // UP
                 shadowPanelRect = new Rect2D(contentLU.X, contentLU.Y, contentRD.X, contentLU.Y + shadowHeight)
-            } else if (contentRD.Y - targetPos.Y < contentRect.height * ShadowPanelManager.Bar) {
-                shadowPanelRect = new Rect2D(contentLU.X, contentLU.Y + shadowHeight,
-                    contentRD.X, contentRD.Y)
+                OccupiedTitleManager.getInstance().setShadowCandidate(this, SplitPanelDir.UP)
+            } else if (contentRD.Y - targetPos.Y < contentRect.height * ShadowPanelManager.Bar) {  // DOWN
+                shadowPanelRect = new Rect2D(contentLU.X, contentLU.Y + shadowHeight, contentRD.X, contentRD.Y)
+                OccupiedTitleManager.getInstance().setShadowCandidate(this, SplitPanelDir.DOWN)
             } else {
                 shadowPanelRect = new Rect2D(contentLU.X, contentLU.Y,
                     contentRD.X, contentRD.Y)

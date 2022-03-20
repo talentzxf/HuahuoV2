@@ -3,12 +3,27 @@ import {HHPanel} from "../HHPanel";
 import {DomHelper} from "../utilities/DomHelper";
 import {ShadowPanelManager} from "./ShadowPanelManager";
 
+enum SplitPanelDir{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+}
+
+enum DropTitleType{
+    NONE,
+    TITLEBAR,
+    RIGHTMOST,
+    SPLITPANEL
+}
+
 class OccupiedTitleManager {
     private static Instance: OccupiedTitleManager;
 
+    private mDropType: DropTitleType = DropTitleType.NONE;
     private mOccupiedTitle: HHTitle;
     private mTargetPanel: HHPanel;
-    private mIsRightMost: Boolean = false;
+    private mSplitPanelDir: SplitPanelDir;
 
     constructor() {
         this.mOccupiedTitle = null
@@ -25,12 +40,25 @@ class OccupiedTitleManager {
 
     public setCandidate(inCandidateEle: HHTitle, targetPanel: HHPanel, width: number): void {
         this.Clear()
-        this.mIsRightMost = false
+        this.mDropType = DropTitleType.TITLEBAR
         this.mOccupiedTitle = inCandidateEle
         this.mTargetPanel = targetPanel
         if (width != null) {
             this.mOccupiedTitle.setMarginLeft(width)
         }
+    }
+
+    public setIsRightMost(targetPanel: HHPanel) {
+        this.Clear()
+        this.mDropType = DropTitleType.RIGHTMOST
+        this.mTargetPanel = targetPanel;
+        this.mOccupiedTitle = null;
+    }
+
+    public setShadowCandidate(targetPanel: HHPanel, splitPanelDir: SplitPanelDir) {
+        this.Clear()
+        this.mDropType = DropTitleType.SPLITPANEL
+        this.mSplitPanelDir = splitPanelDir
     }
 
     public isCurrentGroupHolder(inGroupHolder: HTMLElement) {
@@ -42,15 +70,8 @@ class OccupiedTitleManager {
             this.mOccupiedTitle.setMarginLeft(0)
             this.mOccupiedTitle = null
             this.mTargetPanel = null
-            this.mIsRightMost = false
+            this.mDropType = DropTitleType.NONE
         }
-    }
-
-    setIsRightMost(targetPanel: HHPanel) {
-        this.Clear()
-        this.mIsRightMost = true
-        this.mTargetPanel = targetPanel;
-        this.mOccupiedTitle = null;
     }
 
     adjustTabIndices(panel: HHPanel, start: number, end: number, amount: number, skipFunc: Function = null) {
@@ -70,7 +91,7 @@ class OccupiedTitleManager {
 
         title.setStylePosition("static")
 
-        if (this.mIsRightMost) { // Put the title as the last one of the title group
+        if (this.mDropType == DropTitleType.RIGHTMOST) { // Put the title as the last one of the title group
             newIndex = this.mTargetPanel.getTitleCount()
             if (this.mTargetPanel == oldPanel) {
                 newIndex--;
@@ -161,4 +182,4 @@ class OccupiedTitleManager {
     }
 }
 
-export {OccupiedTitleManager}
+export {OccupiedTitleManager, SplitPanelDir}
