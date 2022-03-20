@@ -1,5 +1,6 @@
 import {HHTitle} from "../HHTitle"
 import {HHPanel} from "../HHPanel";
+import {DomHelper} from "../DomHelper";
 
 class OccupiedTitleManager {
     private static Instance: OccupiedTitleManager;
@@ -111,17 +112,42 @@ class OccupiedTitleManager {
             this.adjustTabIndices(this.mTargetPanel, newIndex, totalTitleCount - 1, 1, skipFunc)
             this.adjustTabIndices(oldPanel, oldIndex + 1, oldPanel.getTitleCount(), -1)
             if (oldPanel.getTitleCount() == 0) {
-                oldPanel.parentElement.removeChild(oldPanel)
+                let oldParent = oldPanel.parentElement
+
+                // Delete the panel and it's next splitter
+                let nextSplitter = DomHelper.getNextSiblingElementByName(oldPanel, "hh-splitter")
+                // If this is the next, delete it's previous splitter also.
+                let nextPanel = DomHelper.getNextSiblingElementByName(oldPanel, "hh-panel")
+                let prevSplitter = null
+                if(!nextPanel){
+                    prevSplitter = DomHelper.getPrevSiblingElementByName(oldPanel, "hh-splitter")
+                }
+
+                oldParent.removeChild(oldPanel)
+                if(nextSplitter)
+                    oldParent.removeChild(nextSplitter)
+                if(prevSplitter)
+                    oldParent.removeChild(prevSplitter)
+
+                this.RecursivelyRemoveEmptyParents(oldParent)
             } else if (title.getAttribute('selected') == 'true') {
                 oldPanel.selectTab(0)
             }
         }
 
-
         this.mTargetPanel.renderTitles()
         this.mTargetPanel.selectTab(newIndex)
 
         this.Clear()
+    }
+
+    RecursivelyRemoveEmptyParents(ele: HTMLElement){
+        let panel = ele.querySelector("hh-panel")
+        while(panel == null && ele.parentElement != null){
+            ele.parentElement.removeChild(ele)
+            ele = ele.parentElement
+            panel = ele.querySelector('hh-panel')
+        }
     }
 }
 
