@@ -97,7 +97,7 @@ class HHPanel extends HTMLElement {
     handleContents(ele: HHTitle, targetPos: Vector2D) {
 
         // This is the last of the parent title group and is intersecing with this panel.
-        if (ele.parentElement.querySelectorAll("title").length <= 1
+        if (ele.parentElement.querySelectorAll("hh-title").length <= 1
             && this == ele.getParentPanel())
             return;
         let contents = this._contents
