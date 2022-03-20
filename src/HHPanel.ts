@@ -124,6 +124,8 @@ class HHPanel extends HTMLElement {
             } else {
                 shadowPanelRect = new Rect2D(contentLU.X, contentLU.Y,
                     contentRD.X, contentRD.Y)
+
+                OccupiedTitleManager.getInstance().setIsRightMost(this);
             }
 
             if (shadowPanelRect)
