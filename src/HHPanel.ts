@@ -6,7 +6,9 @@ import {HHTitle} from "./HHTitle";
 import {HHContent} from "./HHContent";
 import {CustomElement} from "./CustomComponent";
 import {HHSplitter} from "./HHSplitter";
-import {DomHelper} from "./DomHelper";
+import {DomHelper} from "./utilities/DomHelper";
+import {Vector2D} from "./math/Vector2D";
+import {ShadowPanelManager} from "./draggable/ShadowPanelManager";
 
 @CustomElement({
     selector: 'hh-panel',
@@ -59,15 +61,14 @@ class HHPanel extends HTMLElement {
         super();
     }
 
-    onTitleMoving(param: TabMoveParam) {
-        let ele = param.ele as HHTitle;
-        let targetPos = param.targetPos;
+    handleTitleBar(ele: HHTitle, targetPos: Vector2D) {
         let tabs = this._tabs;
 
         let targetRect = new Rect2D(targetPos.X, targetPos.Y, targetPos.X + ele.offsetWidth, targetPos.Y + ele.offsetHeight);
         let titleBarRect = Rect2D.fromDomRect(tabs.getBoundingClientRect())
+
         if (titleBarRect.overlap(targetRect)) {
-            ele.setScrPos(param.targetPos.X, tabs.offsetTop)
+            ele.setScrPos(targetPos.X, tabs.offsetTop)
 
             // Check clip with other tabs in the tab group
             let overlapWithChild = false
@@ -90,6 +91,54 @@ class HHPanel extends HTMLElement {
 
             return true;
         }
+        return false;
+    }
+
+    handleContents(ele: HHTitle, targetPos: Vector2D) {
+
+        // This is the last of the parent title group and is intersecing with this panel.
+        if (ele.parentElement.querySelectorAll("title").length <= 1
+            && this == ele.getParentPanel())
+            return;
+        let contents = this._contents
+        let contentRect = Rect2D.fromDomRect(contents.getBoundingClientRect())
+        let targetRect = new Rect2D(targetPos.X, targetPos.Y, targetPos.X + ele.offsetWidth, targetPos.Y + ele.offsetHeight);
+
+        let contentLU: Vector2D = contentRect.getLeftUp()
+        let contentRD: Vector2D = contentRect.getRightDown()
+        let shadowWidth = contentRect.width / 2
+        let shadowHeight = contentRect.height / 2
+        if (contentRect.overlap(targetRect)) {
+            let shadowPanelRect: Rect2D
+            if ((targetPos.X - contentLU.X) < contentRect.width * ShadowPanelManager.Bar) {
+                shadowPanelRect = new Rect2D(contentLU.X, contentLU.Y,
+                    contentLU.X + shadowWidth, contentRD.Y);
+            } else if (contentRD.X - targetPos.X < contentRect.width * ShadowPanelManager.Bar) {
+                shadowPanelRect = new Rect2D(contentLU.X + shadowWidth, contentLU.Y,
+                    contentRD.X, contentRD.Y)
+            } else if (targetPos.Y - contentLU.Y < contentRect.height * ShadowPanelManager.Bar) {
+                shadowPanelRect = new Rect2D(contentLU.X, contentLU.Y, contentRD.X, contentLU.Y + shadowHeight)
+            } else if (contentRD.Y - targetPos.Y < contentRect.height * ShadowPanelManager.Bar) {
+                shadowPanelRect = new Rect2D(contentLU.X, contentLU.Y + shadowHeight,
+                    contentRD.X, contentRD.Y)
+            } else {
+                shadowPanelRect = new Rect2D(contentLU.X, contentLU.Y,
+                    contentRD.X, contentRD.Y)
+            }
+
+            if (shadowPanelRect)
+                ShadowPanelManager.getInstance().updateShadowPanel(shadowPanelRect)
+        }
+
+        return false
+    }
+
+    onTitleMoving(param: TabMoveParam) {
+        let ele = param.ele as HHTitle;
+        let targetPos = param.targetPos;
+        if (this.handleTitleBar(ele, targetPos)
+            || this.handleContents(ele, targetPos))
+            return true;
 
         // Let other handlers handle this event.
         return false;

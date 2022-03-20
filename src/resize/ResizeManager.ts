@@ -1,7 +1,7 @@
 import {HHPanel} from "../HHPanel";
 import {Rect2D} from "../math/Rect2D";
 import {HHSplitter} from "../HHSplitter";
-import {DomHelper} from "../DomHelper";
+import {DomHelper} from "../utilities/DomHelper";
 
 class ResizeManager {
     private static Instance: ResizeManager;

@@ -1,6 +1,7 @@
 import {HHTitle} from "../HHTitle"
 import {HHPanel} from "../HHPanel";
-import {DomHelper} from "../DomHelper";
+import {DomHelper} from "../utilities/DomHelper";
+import {ShadowPanelManager} from "./ShadowPanelManager";
 
 class OccupiedTitleManager {
     private static Instance: OccupiedTitleManager;
@@ -62,6 +63,7 @@ class OccupiedTitleManager {
     }
 
     dropTitle(title: HHTitle) {
+        ShadowPanelManager.getInstance().hideShadowPanel()
         let oldPanel = title.getParentPanel();
         let oldIndex: number = title.tabIndex;
         let newIndex: number = -1

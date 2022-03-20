@@ -27,7 +27,7 @@ class Rect2D{
     }
 
     public getLeftUp(){
-        this.leftUp
+        return this.leftUp
     }
 
     public in(p: Vector2D):boolean{

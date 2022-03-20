@@ -1,5 +1,5 @@
 import {CustomElement} from "./CustomComponent";
-import {DomHelper} from "./DomHelper";
+import {DomHelper} from "./utilities/DomHelper";
 import {HHSplitter} from "./HHSplitter";
 
 @CustomElement({

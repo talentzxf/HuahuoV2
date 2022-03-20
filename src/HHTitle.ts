@@ -61,7 +61,6 @@ class HHTitle extends HTMLElement {
             }
 
             if (this.isMoving) {
-                console.log("IsMoving!!!")
                 let offsetX = evt.clientX - this.startPos.X;
                 let offsetY = evt.clientY - this.startPos.Y;
 
