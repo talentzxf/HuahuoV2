@@ -27,7 +27,7 @@ function TypeIsFirst(type: SplitPanelDir): Boolean {
 }
 
 function ColumnRowString(type: SplitPanelDir): string {
-    return TypeIsColumn(type)?"column":"row"
+    return TypeIsColumn(type) ? "column" : "row"
 }
 
 class OccupiedTitleManager {
@@ -75,10 +75,6 @@ class OccupiedTitleManager {
         this.mSplitPanelDir = splitPanelDir
     }
 
-    public isCurrentGroupHolder(inGroupHolder: HTMLElement) {
-        return this.mTargetPanel === inGroupHolder
-    }
-
     public Clear(): void {
         if (this.mOccupiedTitle != null) {
             this.mOccupiedTitle.setMarginLeft(0)
@@ -97,7 +93,7 @@ class OccupiedTitleManager {
         })
     }
 
-    createContainer(direction: string, width: string, height: string):HHContainer{
+    createContainer(direction: string, width: string, height: string): HHContainer {
         // let newParentContainer = document.createElement('hh-container') as HHContainer
         // newParentContainer.id = "newParentContainer"
         // newParentContainer.setAttribute("direction", TypeIsColumn(this.mSplitPanelDir) ? "column" : "row")
@@ -106,8 +102,8 @@ class OccupiedTitleManager {
         // return newParentContainer
 
         let newParentContainer = document.createElement('hh-container') as HHContainer
-        newParentContainer.id = "newParentContainer"
         newParentContainer.setAttribute("direction", direction)
+        newParentContainer.setAttribute("size", "fit-content")
         newParentContainer.style.width = width
         newParentContainer.style.height = height
         return newParentContainer
@@ -124,7 +120,7 @@ class OccupiedTitleManager {
         panelContainer.append(newPanel)
 
         let newParentContainer = this.createContainer(ColumnRowString(this.mSplitPanelDir), parentContainer.style.width, parentContainer.style.height)
-        if(parentContainer.nextElementSibling)
+        if (parentContainer.nextElementSibling)
             grandParentElement.insertBefore(newParentContainer, parentContainer.nextElementSibling)
         else
             grandParentElement.append(newParentContainer)
@@ -142,7 +138,8 @@ class OccupiedTitleManager {
             newParentContainer.append(panelContainer)
         }
 
-
+        parentContainer.style.width = "100%"
+        parentContainer.style.height = "100%"
 
         title.setParentPanel(newPanel)
 
@@ -212,7 +209,7 @@ class OccupiedTitleManager {
             if (oldPanel.getTitleCount() == 0) {
                 let oldParent = oldPanel.parentElement
                 this.removeElementWithSplitter(oldPanel)
-                this.RecursivelyRemoveEmptyParents(oldParent)
+                this.recursivelyRemoveEmptyParents(oldParent)
             } else if (title.getAttribute('selected') == 'true') {
                 oldPanel.selectTab(0)
             }
@@ -224,7 +221,25 @@ class OccupiedTitleManager {
         this.Clear()
     }
 
-    RecursivelyRemoveEmptyParents(ele: HTMLElement) {
+    adjustSibilingSizeCausedByElementDeletion(ele: HTMLElement){
+        let oldParent = ele.parentElement
+        let isColumn:boolean = oldParent.style.flexDirection == "column"
+        DomHelper.normalizeAllChildPanels(ele, isColumn, ["hh-container"])
+        let targetContainer = DomHelper.getNextSiblingElementByName(ele, ["hh-container"])
+        if(!targetContainer){
+            targetContainer = DomHelper.getPrevSiblingElementByName(ele, ["hh-container"])
+        }
+
+        if(targetContainer && isColumn){
+            let elementHeight = ele.getBoundingClientRect().height
+            DomHelper.increaseElementSize(targetContainer, elementHeight, oldParent.getBoundingClientRect().height, true)
+        } else if(targetContainer){
+            let elementWidth = ele.getBoundingClientRect().width
+            DomHelper.increaseElementSize(targetContainer, elementWidth, oldParent.getBoundingClientRect().width, false)
+        }
+    }
+
+    recursivelyRemoveEmptyParents(ele: HTMLElement) {
         let panel = ele.querySelector("hh-panel")
         while (panel == null && ele.parentElement != null) {
             let parentElement = ele.parentElement
@@ -237,8 +252,8 @@ class OccupiedTitleManager {
     }
 
     removeElementWithSplitter(ele: HTMLElement) {
-
         let oldParent = ele.parentElement
+        this.adjustSibilingSizeCausedByElementDeletion(ele)
         // Delete the panel and it's next splitter
         let nextSplitter = DomHelper.getNextSiblingElementByName(ele, ["hh-splitter"])
         // If this is the next, delete it's previous splitter also.
@@ -253,7 +268,6 @@ class OccupiedTitleManager {
             oldParent.removeChild(nextSplitter)
         if (prevSplitter)
             oldParent.removeChild(prevSplitter)
-
     }
 }
 
