@@ -62,7 +62,6 @@ class HHPanel extends HTMLElement {
     }
 
     handleTitleBar(ele: HHTitle, targetPos: Vector2D) {
-        ShadowPanelManager.getInstance().hideShadowPanel()
         let tabs = this._tabs;
 
         let targetRect = new Rect2D(targetPos.X, targetPos.Y, targetPos.X + ele.offsetWidth, targetPos.Y + ele.offsetHeight);
@@ -90,6 +89,7 @@ class HHPanel extends HTMLElement {
                 }
             })
 
+            ShadowPanelManager.getInstance().hideShadowPanel()
             return true;
         }
         return false;
