@@ -124,7 +124,10 @@ class OccupiedTitleManager {
         panelContainer.append(newPanel)
 
         let newParentContainer = this.createContainer(ColumnRowString(this.mSplitPanelDir), parentContainer.style.width, parentContainer.style.height)
-        grandParentElement.insertBefore(newParentContainer, parentContainer)
+        if(parentContainer.nextElementSibling)
+            grandParentElement.insertBefore(newParentContainer, parentContainer.nextElementSibling)
+        else
+            grandParentElement.append(newParentContainer)
 
         let newSplitter = document.createElement("hh-splitter")
         newSplitter.setAttribute("direction", TypeIsColumn(this.mSplitPanelDir) ? "column" : "row")
