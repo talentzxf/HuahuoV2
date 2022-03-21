@@ -14,7 +14,15 @@ enum DropTitleType{
     NONE,
     TITLEBAR,
     RIGHTMOST,
-    SPLITPANEL
+    SPLITPANEL,
+}
+
+function TypeIsColumn(type:SplitPanelDir):Boolean{
+    return type == SplitPanelDir.UP || type == SplitPanelDir.DOWN
+}
+
+function TypeIsFirst(type:SplitPanelDir):Boolean{
+    return type == SplitPanelDir.LEFT || type == SplitPanelDir.UP
 }
 
 class OccupiedTitleManager {
@@ -57,6 +65,7 @@ class OccupiedTitleManager {
 
     public setShadowCandidate(targetPanel: HHPanel, splitPanelDir: SplitPanelDir) {
         this.Clear()
+        this.mTargetPanel = targetPanel
         this.mDropType = DropTitleType.SPLITPANEL
         this.mSplitPanelDir = splitPanelDir
     }
@@ -83,6 +92,32 @@ class OccupiedTitleManager {
         })
     }
 
+    splitPanel(title: HHTitle){
+        let parentContainer:HTMLElement = this.mTargetPanel.parentElement
+        let newParentContainer = document.createElement('hh-container')
+        newParentContainer.id = "newParentContainer"
+        newParentContainer.setAttribute("direction", TypeIsColumn(this.mSplitPanelDir)?"column":"row")
+        newParentContainer.style.width = this.mTargetPanel.style.width
+        newParentContainer.style.height = this.mTargetPanel.style.height
+        let newPanel = document.createElement('hh-panel') as HHPanel
+        newPanel.id = "newPanel"
+        newPanel.style.width = "100%"
+        newPanel.style.height = "100%"
+        newParentContainer.append(newPanel)
+
+        parentContainer.insertBefore(newParentContainer, this.mTargetPanel)
+
+        if(TypeIsFirst(this.mSplitPanelDir)){
+            title.setParentPanel(newPanel)
+            newParentContainer.append( this.mTargetPanel)
+        }else{
+            newParentContainer.append( this.mTargetPanel)
+            title.setParentPanel(newPanel)
+        }
+
+        this.mTargetPanel = title.getParentPanel()
+    }
+
     dropTitle(title: HHTitle) {
         ShadowPanelManager.getInstance().hideShadowPanel()
         let oldPanel = title.getParentPanel();
@@ -91,19 +126,28 @@ class OccupiedTitleManager {
 
         title.setStylePosition("static")
 
-        if (this.mDropType == DropTitleType.RIGHTMOST) { // Put the title as the last one of the title group
-            newIndex = this.mTargetPanel.getTitleCount()
-            if (this.mTargetPanel == oldPanel) {
-                newIndex--;
-            }
-        } else {
-            // If it's the left to right case, insert before the candidate.
-            // Or else, take the place of the candidate.
-            if (this.mTargetPanel == oldPanel && this.mOccupiedTitle.tabIndex > oldIndex) {
-                newIndex = this.mOccupiedTitle.tabIndex - 1;
-            } else {
-                newIndex = this.mOccupiedTitle.tabIndex
-            }
+        // Should we use enum-function map to avoid this ugly switch-case ??
+        switch(this.mDropType){
+            case DropTitleType.RIGHTMOST:
+                newIndex = this.mTargetPanel.getTitleCount()
+                if (this.mTargetPanel == oldPanel) {
+                    newIndex--;
+                }
+                break;
+            case DropTitleType.TITLEBAR:
+                // If it's the left to right case, insert before the candidate.
+                // Or else, take the place of the candidate.
+                if (this.mTargetPanel == oldPanel && this.mOccupiedTitle.tabIndex > oldIndex) {
+                    newIndex = this.mOccupiedTitle.tabIndex - 1;
+                } else {
+                    newIndex = this.mOccupiedTitle.tabIndex
+                }
+                break;
+            case DropTitleType.SPLITPANEL:
+                this.splitPanel(title)
+                newIndex = 0 // As this is a new container, this is always the first title in the panel
+            default:
+                break;
         }
 
         title.setTabIndex(newIndex);

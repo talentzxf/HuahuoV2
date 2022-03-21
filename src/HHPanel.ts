@@ -56,12 +56,14 @@ class HHPanel extends HTMLElement {
     private _contentNodes: NodeListOf<HHContent>
     private _tabs: HTMLElement
     private _contents: HTMLElement
+    private mInited:Boolean = false
 
     constructor() {
         super();
     }
 
     handleTitleBar(ele: HHTitle, targetPos: Vector2D) {
+        ShadowPanelManager.getInstance().hideShadowPanel()
         let tabs = this._tabs;
 
         let targetRect = new Rect2D(targetPos.X, targetPos.Y, targetPos.X + ele.offsetWidth, targetPos.Y + ele.offsetHeight);
@@ -173,15 +175,15 @@ class HHPanel extends HTMLElement {
         })
     }
 
-    connectedCallback() {
+    initPanel() {
         /*
-            :host {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            align-content: baseline;
-        }
-         */
+    :host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-content: baseline;
+}
+ */
 
         this.style.display = 'flex'
         this.style.flexDirection = this.parentElement.style.flexDirection
@@ -219,7 +221,8 @@ class HHPanel extends HTMLElement {
             }
         )
 
-        _this.selectTab(0)
+        if(_this._tabs.querySelector('hh-title'))
+            _this.selectTab(0)
 
         TabMover.getInstance().AddFront(this.onTitleMoving.bind(this))
 
@@ -229,6 +232,13 @@ class HHPanel extends HTMLElement {
             splitter.setAttribute("direction", this.parentElement.style.flexDirection)
             splitter.setAttribute('siblingElementName', 'hh-panel')
             this.parentElement.insertBefore(splitter, nextSibling)
+        }
+    }
+
+    connectedCallback() {
+        if(!this.mInited){
+            this.initPanel()
+            this.mInited = true
         }
     }
 

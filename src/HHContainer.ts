@@ -34,6 +34,11 @@ class HHContainer extends HTMLElement {
     constructor() {
         super();
     }
+
+    updateDirection(){
+
+    }
+
     connectedCallback(){
         this.style.display = "flex"
 
@@ -54,6 +59,13 @@ class HHContainer extends HTMLElement {
             }
         }
     }
+
+    attributeChangedCallback(name:String, oldValue:any, newValue:any){
+        if(name.toLowerCase() == "direction"){
+            this.style.flexDirection = newValue
+        }
+    }
+
 }
 
 export {HHContainer}

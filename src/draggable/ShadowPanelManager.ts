@@ -29,7 +29,6 @@ class ShadowPanelManager{
     }
 
     hideShadowPanel(){
-        console.log("Hiding shadow panel div")
         this.shadowPanelDiv.style.visibility = 'hidden'
     }
 }
