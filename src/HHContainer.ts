@@ -50,10 +50,9 @@ class HHContainer extends HTMLElement {
         this.style.flexDirection = this.isColumn?"column":"row"
 
         if(this.hasSplitter){
-            let nextSibiling = DomHelper.getNextSiblingElementByName(this, "hh-container")
+            let nextSibiling = DomHelper.getNextSiblingElementByName(this, ["hh-container"])
             if(nextSibiling){
                 let splitter = document.createElement("hh-splitter")
-                splitter.setAttribute('siblingElementName', 'hh-container')
                 splitter.setAttribute("direction", this.parentElement.style.flexDirection)
                 this.parentElement.insertBefore(splitter, nextSibiling)
             }

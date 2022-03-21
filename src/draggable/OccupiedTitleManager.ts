@@ -214,12 +214,12 @@ class OccupiedTitleManager {
 
         let oldParent = ele.parentElement
         // Delete the panel and it's next splitter
-        let nextSplitter = DomHelper.getNextSiblingElementByName(ele, "hh-splitter")
+        let nextSplitter = DomHelper.getNextSiblingElementByName(ele, ["hh-splitter"])
         // If this is the next, delete it's previous splitter also.
-        let nextPanel = DomHelper.getNextSiblingElementByName(ele, ele.nodeName.toLowerCase())
+        let nextPanel = DomHelper.getNextSiblingElementByName(ele, [ele.nodeName.toLowerCase()])
         let prevSplitter = null
         if (!nextPanel) {
-            prevSplitter = DomHelper.getPrevSiblingElementByName(ele, "hh-splitter")
+            prevSplitter = DomHelper.getPrevSiblingElementByName(ele, ["hh-splitter"])
         }
 
         oldParent.removeChild(ele)

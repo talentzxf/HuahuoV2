@@ -226,11 +226,10 @@ class HHPanel extends HTMLElement {
 
         TabMover.getInstance().AddFront(this.onTitleMoving.bind(this))
 
-        let nextSibling = DomHelper.getNextSiblingElementByName(this, "hh-panel")
+        let nextSibling = DomHelper.getNextSiblingElementByName(this, ["hh-panel"])
         if (nextSibling) {
             let splitter = document.createElement('hh-splitter')
             splitter.setAttribute("direction", this.parentElement.style.flexDirection)
-            splitter.setAttribute('siblingElementName', 'hh-panel')
             this.parentElement.insertBefore(splitter, nextSibling)
         }
     }
