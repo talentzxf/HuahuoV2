@@ -2,6 +2,7 @@ import {HHTitle} from "../HHTitle"
 import {HHPanel} from "../HHPanel";
 import {DomHelper} from "../utilities/DomHelper";
 import {ShadowPanelManager} from "./ShadowPanelManager";
+import {HHContainer} from "../HHContainer";
 
 enum SplitPanelDir {
     UP,
@@ -23,6 +24,10 @@ function TypeIsColumn(type: SplitPanelDir): Boolean {
 
 function TypeIsFirst(type: SplitPanelDir): Boolean {
     return type == SplitPanelDir.LEFT || type == SplitPanelDir.UP
+}
+
+function ColumnRowString(type: SplitPanelDir): string {
+    return TypeIsColumn(type)?"column":"row"
 }
 
 class OccupiedTitleManager {
@@ -92,31 +97,49 @@ class OccupiedTitleManager {
         })
     }
 
+    createContainer(direction: string, width: string, height: string):HHContainer{
+        // let newParentContainer = document.createElement('hh-container') as HHContainer
+        // newParentContainer.id = "newParentContainer"
+        // newParentContainer.setAttribute("direction", TypeIsColumn(this.mSplitPanelDir) ? "column" : "row")
+        // newParentContainer.style.width = this.mTargetPanel.style.width
+        // newParentContainer.style.height = this.mTargetPanel.style.height
+        // return newParentContainer
+
+        let newParentContainer = document.createElement('hh-container') as HHContainer
+        newParentContainer.id = "newParentContainer"
+        newParentContainer.setAttribute("direction", direction)
+        newParentContainer.style.width = width
+        newParentContainer.style.height = height
+        return newParentContainer
+    }
+
     splitPanel(title: HHTitle) {
         let parentContainer: HTMLElement = this.mTargetPanel.parentElement
-        let newParentContainer = document.createElement('hh-container')
-        newParentContainer.id = "newParentContainer"
-        newParentContainer.setAttribute("direction", TypeIsColumn(this.mSplitPanelDir) ? "column" : "row")
-        newParentContainer.style.width = this.mTargetPanel.style.width
-        newParentContainer.style.height = this.mTargetPanel.style.height
+        let grandParentElement: HTMLElement = parentContainer.parentElement
+        let panelContainer = this.createContainer("column", "100%", "100%")
         let newPanel = document.createElement('hh-panel') as HHPanel
         newPanel.id = "newPanel"
         newPanel.style.width = "100%"
         newPanel.style.height = "100%"
-        newParentContainer.append(newPanel)
+        panelContainer.append(newPanel)
 
-        parentContainer.insertBefore(newParentContainer, this.mTargetPanel)
+        let newParentContainer = this.createContainer(ColumnRowString(this.mSplitPanelDir), parentContainer.style.width, parentContainer.style.height)
+        grandParentElement.insertBefore(newParentContainer, parentContainer)
 
         let newSplitter = document.createElement("hh-splitter")
         newSplitter.setAttribute("direction", TypeIsColumn(this.mSplitPanelDir) ? "column" : "row")
 
         if (TypeIsFirst(this.mSplitPanelDir)) {
+            newParentContainer.append(panelContainer)
             newParentContainer.append(newSplitter)
-            newParentContainer.append(this.mTargetPanel)
+            newParentContainer.append(parentContainer)
         } else {
-            newParentContainer.insertBefore(newSplitter, newPanel)
-            newParentContainer.insertBefore(this.mTargetPanel, newSplitter)
+            newParentContainer.append(parentContainer)
+            newParentContainer.append(newSplitter)
+            newParentContainer.append(panelContainer)
         }
+
+
 
         title.setParentPanel(newPanel)
 

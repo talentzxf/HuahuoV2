@@ -5,8 +5,7 @@ import {OccupiedTitleManager, SplitPanelDir} from "./draggable/OccupiedTitleMana
 import {HHTitle} from "./HHTitle";
 import {HHContent} from "./HHContent";
 import {CustomElement} from "./CustomComponent";
-import {HHSplitter} from "./HHSplitter";
-import {DomHelper} from "./utilities/DomHelper";
+// import {HHSplitter} from "./HHSplitter";
 import {Vector2D} from "./math/Vector2D";
 import {ShadowPanelManager} from "./draggable/ShadowPanelManager";
 
@@ -226,12 +225,12 @@ class HHPanel extends HTMLElement {
 
         TabMover.getInstance().AddFront(this.onTitleMoving.bind(this))
 
-        let nextSibling = DomHelper.getNextSiblingElementByName(this, ["hh-panel"])
-        if (nextSibling) {
-            let splitter = document.createElement('hh-splitter')
-            splitter.setAttribute("direction", this.parentElement.style.flexDirection)
-            this.parentElement.insertBefore(splitter, nextSibling)
-        }
+        // let nextSibling = DomHelper.getNextSiblingElementByName(this, ["hh-panel"])
+        // if (nextSibling) {
+        //     let splitter = document.createElement('hh-splitter')
+        //     splitter.setAttribute("direction", this.parentElement.style.flexDirection)
+        //     this.parentElement.insertBefore(splitter, nextSibling)
+        // }
     }
 
     connectedCallback() {
