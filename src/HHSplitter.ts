@@ -22,14 +22,23 @@ class HHSplitter extends HTMLElement {
         this.addEventListener('mouseup', this.mouseUp)
     }
 
-    connectedCallback(){
+    resetSize(){
         let spliterDiv = this.querySelector("div")
         spliterDiv.style.width = this.isColumn? '100%':'5px';
         spliterDiv.style.height = this.isColumn? '5px':'100%'
     }
+    connectedCallback(){
+        this.resetSize()
+    }
 
     private get isColumn(): boolean{
         return this.getAttribute("direction") == "column"
+    }
+
+    private attributeChangedCallback(name: String, oldValue: any, newValue: any){
+        if(name == "direction"){
+            this.resetSize()
+        }
     }
 
     mouseUp() {

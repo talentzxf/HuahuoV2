@@ -3,25 +3,25 @@ import {HHPanel} from "../HHPanel";
 import {DomHelper} from "../utilities/DomHelper";
 import {ShadowPanelManager} from "./ShadowPanelManager";
 
-enum SplitPanelDir{
+enum SplitPanelDir {
     UP,
     DOWN,
     LEFT,
     RIGHT
 }
 
-enum DropTitleType{
+enum DropTitleType {
     NONE,
     TITLEBAR,
     RIGHTMOST,
     SPLITPANEL,
 }
 
-function TypeIsColumn(type:SplitPanelDir):Boolean{
+function TypeIsColumn(type: SplitPanelDir): Boolean {
     return type == SplitPanelDir.UP || type == SplitPanelDir.DOWN
 }
 
-function TypeIsFirst(type:SplitPanelDir):Boolean{
+function TypeIsFirst(type: SplitPanelDir): Boolean {
     return type == SplitPanelDir.LEFT || type == SplitPanelDir.UP
 }
 
@@ -92,11 +92,11 @@ class OccupiedTitleManager {
         })
     }
 
-    splitPanel(title: HHTitle){
-        let parentContainer:HTMLElement = this.mTargetPanel.parentElement
+    splitPanel(title: HHTitle) {
+        let parentContainer: HTMLElement = this.mTargetPanel.parentElement
         let newParentContainer = document.createElement('hh-container')
         newParentContainer.id = "newParentContainer"
-        newParentContainer.setAttribute("direction", TypeIsColumn(this.mSplitPanelDir)?"column":"row")
+        newParentContainer.setAttribute("direction", TypeIsColumn(this.mSplitPanelDir) ? "column" : "row")
         newParentContainer.style.width = this.mTargetPanel.style.width
         newParentContainer.style.height = this.mTargetPanel.style.height
         let newPanel = document.createElement('hh-panel') as HHPanel
@@ -107,13 +107,18 @@ class OccupiedTitleManager {
 
         parentContainer.insertBefore(newParentContainer, this.mTargetPanel)
 
-        if(TypeIsFirst(this.mSplitPanelDir)){
-            title.setParentPanel(newPanel)
-            newParentContainer.append( this.mTargetPanel)
-        }else{
-            newParentContainer.append( this.mTargetPanel)
-            title.setParentPanel(newPanel)
+        let newSplitter = document.createElement("hh-splitter")
+        newSplitter.setAttribute("direction", TypeIsColumn(this.mSplitPanelDir) ? "column" : "row")
+
+        if (TypeIsFirst(this.mSplitPanelDir)) {
+            newParentContainer.append(newSplitter)
+            newParentContainer.append(this.mTargetPanel)
+        } else {
+            newParentContainer.insertBefore(newSplitter, newPanel)
+            newParentContainer.insertBefore(this.mTargetPanel, newSplitter)
         }
+
+        title.setParentPanel(newPanel)
 
         this.mTargetPanel = title.getParentPanel()
     }
@@ -127,7 +132,7 @@ class OccupiedTitleManager {
         title.setStylePosition("static")
 
         // Should we use enum-function map to avoid this ugly switch-case ??
-        switch(this.mDropType){
+        switch (this.mDropType) {
             case DropTitleType.RIGHTMOST:
                 newIndex = this.mTargetPanel.getTitleCount()
                 if (this.mTargetPanel == oldPanel) {
@@ -193,19 +198,19 @@ class OccupiedTitleManager {
         this.Clear()
     }
 
-    RecursivelyRemoveEmptyParents(ele: HTMLElement){
+    RecursivelyRemoveEmptyParents(ele: HTMLElement) {
         let panel = ele.querySelector("hh-panel")
-        while(panel == null && ele.parentElement != null){
+        while (panel == null && ele.parentElement != null) {
             let parentElement = ele.parentElement
 
-            if(ele.nodeName.toLowerCase() == "hh-container"){
+            if (ele.nodeName.toLowerCase() == "hh-container") {
                 this.removeElementWithSplitter(ele)
             }
             panel = parentElement.querySelector('hh-panel')
         }
     }
 
-    removeElementWithSplitter(ele: HTMLElement){
+    removeElementWithSplitter(ele: HTMLElement) {
 
         let oldParent = ele.parentElement
         // Delete the panel and it's next splitter
@@ -213,14 +218,14 @@ class OccupiedTitleManager {
         // If this is the next, delete it's previous splitter also.
         let nextPanel = DomHelper.getNextSiblingElementByName(ele, ele.nodeName.toLowerCase())
         let prevSplitter = null
-        if(!nextPanel){
+        if (!nextPanel) {
             prevSplitter = DomHelper.getPrevSiblingElementByName(ele, "hh-splitter")
         }
 
         oldParent.removeChild(ele)
-        if(nextSplitter)
+        if (nextSplitter)
             oldParent.removeChild(nextSplitter)
-        if(prevSplitter)
+        if (prevSplitter)
             oldParent.removeChild(prevSplitter)
 
     }
