@@ -70,7 +70,7 @@ class ResizeManager {
     }
 
     public adjustSiblingsSize(splitter: HHSplitter, sizeDelta: number, isColumn: boolean) {
-        let sibilingNodeNames = ['hh-panel', 'hh-container']
+        let sibilingNodeNames = ['hh-container']
 
         let parentContainer = splitter.parentElement
         let parentContainerRect = Rect2D.fromDomRect(parentContainer.getBoundingClientRect())
