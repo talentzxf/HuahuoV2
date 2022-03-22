@@ -44,7 +44,6 @@ class HHTitle extends HTMLElement {
         this.startPos = new Vector2D(evt.clientX, evt.clientY)
         this.startMoving = true
         this.isMoving = false
-        console.log("Start:" + this.startPos.X + "," + this.startPos.Y)
         this.startElePos = new Vector2D(this.offsetLeft, this.offsetTop);
         document.onmousemove = this.mouseMove.bind(this)
         document.onmouseup = this.mouseMove.bind(this)

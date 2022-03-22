@@ -85,7 +85,7 @@ class OccupiedTitleManager {
     }
 
     adjustTabIndices(panel: HHPanel, start: number, end: number, amount: number, skipFunc: Function = null) {
-        console.log("Adjusting:" + start + "," + end + " amount:" + amount)
+        // console.log("Adjusting:" + start + "," + end + " amount:" + amount)
         let tobeAdjustedTitles: HHTitle[] = panel.getTitles(start, end)
         tobeAdjustedTitles.forEach(title => {
             if (skipFunc == null || !skipFunc(title))

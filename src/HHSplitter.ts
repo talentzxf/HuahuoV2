@@ -15,7 +15,6 @@ class HHSplitter extends HTMLElement {
 
     constructor() {
         super()
-        console.log("HHSplitter created!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         this.addEventListener('mouseover', this.mouseOver)
         this.addEventListener('mouseout', this.mouseOut)
         this.addEventListener('mousedown', this.mouseDown)
