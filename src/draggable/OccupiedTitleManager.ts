@@ -224,7 +224,7 @@ class OccupiedTitleManager {
     adjustSibilingSizeCausedByElementDeletion(ele: HTMLElement){
         let oldParent = ele.parentElement
         let isColumn:boolean = oldParent.style.flexDirection == "column"
-        DomHelper.normalizeAllChildPanels(ele, isColumn, ["hh-container"])
+        DomHelper.normalizeAllChildPanels(ele, isColumn, ["hh-panel"])
         let targetContainer = DomHelper.getNextSiblingElementByName(ele, ["hh-container"])
         if(!targetContainer){
             targetContainer = DomHelper.getPrevSiblingElementByName(ele, ["hh-container"])

@@ -16,16 +16,24 @@ class DomHelper {
             ele.style.width = newSizePercentage + "%"
     }
 
+    public static getContainerChildSize(container: HTMLElement, isColumn: boolean, nodeNames: Array<string>): number {
+        let containerSize = 0
+        DomHelper.getChildElements(container, nodeNames).forEach((childEle: HTMLElement) => {
+            let childRect2D: DOMRect = childEle.getBoundingClientRect()
+            containerSize += isColumn ? childRect2D.height : childRect2D.width
+        })
+
+        return containerSize
+    }
 
     public static normalizeAllChildPanels(parentContainer: HTMLElement, isColumn: boolean, nodeNames: Array<string>) {
-        let parentContainerRect = parentContainer.getBoundingClientRect();
-        let parentSize = isColumn ? parentContainerRect.height : parentContainerRect.width;
+        let parentSize = this.getContainerChildSize(parentContainer, isColumn, ["hh-panel", "hh-container"]);
 
         let panelSizeMap = new Map
         // Recalculate all the panel height percentage
         DomHelper.getChildElements(parentContainer, nodeNames).forEach(
-            (panel: HHPanel) => {
-                let panelRect2D: Rect2D = Rect2D.fromDomRect(panel.getBoundingClientRect())
+            (panel: HTMLElement) => {
+                let panelRect2D: DOMRect = panel.getBoundingClientRect()
                 let panelSize = isColumn ? panelRect2D.height : panelRect2D.width
                 let sizePercentage = 100.0 * panelSize / parentSize
                 panelSizeMap.set(panel, sizePercentage)
@@ -76,14 +84,14 @@ class DomHelper {
         return prevSibiling
     }
 
-    static getChildElements(ele: HTMLElement, nodeNames: Array<string>):Array<HTMLElement> {
+    static getChildElements(ele: HTMLElement, nodeNames: Array<string>): Array<HTMLElement> {
         let returnElements = new Array()
 
         let childElement = ele.firstElementChild
-        while(childElement != null){
+        while (childElement != null) {
             let nodeNameLC = childElement.nodeName.toLowerCase()
-            for(let nodeName in nodeNames){
-                if(nodeNameLC == nodeName.toLowerCase()){
+            for (let nodeName of nodeNames) {
+                if (nodeNameLC == nodeName.toLowerCase()) {
                     returnElements.push(childElement)
                 }
             }

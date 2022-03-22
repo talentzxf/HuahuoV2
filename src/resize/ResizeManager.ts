@@ -19,16 +19,8 @@ class ResizeManager {
     private getRemainingSize(parentContainer: HTMLElement, isColumn: boolean): number {
         let parentContainerRect = parentContainer.getBoundingClientRect();
         let parentSize = isColumn ? parentContainerRect.height : parentContainerRect.width;
-        let totalElementSize = 0
-        parentContainer.childNodes.forEach(
-            (ele: HTMLElement) => {
-                if (ele.getBoundingClientRect) {
-                    let eleRect = ele.getBoundingClientRect()
-                    totalElementSize += isColumn ? eleRect.height : eleRect.width
-                }
-            }
-        )
-
+        let totalElementSize = DomHelper.getContainerChildSize(parentContainer, isColumn, ["hh-panel", "hh-container"])
+        
         return parentSize - totalElementSize
     }
 
