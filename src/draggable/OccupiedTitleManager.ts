@@ -240,15 +240,23 @@ class OccupiedTitleManager {
     }
 
     recursivelyRemoveEmptyParents(ele: HTMLElement) {
-        let panel = ele.querySelector("hh-panel")
-        while (panel == null && ele.parentElement != null) {
-            let parentElement = ele.parentElement
+        let panel = null;
+        let currentEle = ele;
 
-            if (ele.nodeName.toLowerCase() == "hh-container") {
+        do{
+            panel = ele.querySelector("hh-panel")
+            if(panel != null){
+                break;
+            }
+
+            let parentEle = ele.parentElement
+
+            if(ele.nodeName.toLowerCase() == "hh-container"){
                 this.removeElementWithSplitter(ele)
             }
-            panel = parentElement.querySelector('hh-panel')
-        }
+
+            ele = parentEle
+        } while(ele != null)
     }
 
     removeElementWithSplitter(ele: HTMLElement) {
