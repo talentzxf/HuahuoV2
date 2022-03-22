@@ -54,11 +54,11 @@ class HHContainer extends HTMLElement {
             if(nextElement != null && nextElement.nodeName.toLowerCase() == "hh-splitter")
                 return
 
-            let nextSibiling = DomHelper.getNextSiblingElementByName(this, ["hh-container"])
-            if(nextSibiling){
+            let nextSibling = DomHelper.getNextSiblingElementByName(this, ["hh-container"])
+            if(nextSibling){
                 let splitter = document.createElement("hh-splitter")
                 splitter.setAttribute("direction", this.parentElement.style.flexDirection)
-                this.parentElement.insertBefore(splitter, nextSibiling)
+                this.parentElement.insertBefore(splitter, nextSibling)
             }
         }
     }

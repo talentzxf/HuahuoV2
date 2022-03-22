@@ -221,47 +221,43 @@ class OccupiedTitleManager {
         this.Clear()
     }
 
-    adjustSibilingSizeCausedByElementDeletion(ele: HTMLElement){
+    getNearbySibling(ele: HTMLElement): HTMLElement {
         let oldParent = ele.parentElement
-        let isColumn:boolean = oldParent.style.flexDirection == "column"
+        let isColumn: boolean = oldParent.style.flexDirection == "column"
         DomHelper.normalizeAllChildPanels(ele, isColumn, ["hh-panel"])
         let targetContainer = DomHelper.getNextSiblingElementByName(ele, ["hh-container"])
-        if(!targetContainer){
+        if (!targetContainer) {
             targetContainer = DomHelper.getPrevSiblingElementByName(ele, ["hh-container"])
         }
 
-        if(targetContainer && isColumn){
-            let elementHeight = ele.getBoundingClientRect().height
-            DomHelper.increaseElementSize(targetContainer, elementHeight, oldParent.getBoundingClientRect().height, true)
-        } else if(targetContainer){
-            let elementWidth = ele.getBoundingClientRect().width
-            DomHelper.increaseElementSize(targetContainer, elementWidth, oldParent.getBoundingClientRect().width, false)
-        }
+        return targetContainer;
     }
 
     recursivelyRemoveEmptyParents(ele: HTMLElement) {
         let panel = null;
         let currentEle = ele;
 
-        do{
+        do {
             panel = ele.querySelector("hh-panel")
-            if(panel != null){
+            if (panel != null) {
                 break;
             }
 
             let parentEle = ele.parentElement
 
-            if(ele.nodeName.toLowerCase() == "hh-container"){
+            if (ele.nodeName.toLowerCase() == "hh-container") {
                 this.removeElementWithSplitter(ele)
             }
 
             ele = parentEle
-        } while(ele != null)
+        } while (ele != null)
     }
 
     removeElementWithSplitter(ele: HTMLElement) {
         let oldParent = ele.parentElement
-        this.adjustSibilingSizeCausedByElementDeletion(ele)
+
+        let nearbySibling = this.getNearbySibling(ele)
+
         // Delete the panel and it's next splitter
         let nextSplitter = DomHelper.getNextSiblingElementByName(ele, ["hh-splitter"])
         // If this is the next, delete it's previous splitter also.
@@ -276,6 +272,15 @@ class OccupiedTitleManager {
             oldParent.removeChild(nextSplitter)
         if (prevSplitter)
             oldParent.removeChild(prevSplitter)
+
+        // Readjust the nearby sibling so it will take the size of this element
+        if (nearbySibling) {
+            let parentIsColumn = oldParent.style.flexDirection == "column" ? true : false
+            let remainingSize = DomHelper.getRemainingSize(oldParent, parentIsColumn)
+            let oldParentRect = oldParent.getBoundingClientRect()
+            let oldParentSize = parentIsColumn ? oldParentRect.height : oldParentRect.width
+            DomHelper.increaseElementSize(nearbySibling, remainingSize, oldParentSize, parentIsColumn)
+        }
     }
 }
 

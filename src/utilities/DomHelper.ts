@@ -26,6 +26,14 @@ class DomHelper {
         return containerSize
     }
 
+    public static getRemainingSize(parentContainer: HTMLElement, isColumn: boolean): number {
+        let parentContainerRect = parentContainer.getBoundingClientRect();
+        let parentSize = isColumn ? parentContainerRect.height : parentContainerRect.width;
+        let totalElementSize = DomHelper.getContainerChildSize(parentContainer, isColumn, ["hh-panel", "hh-container", "hh-splitter"])
+
+        return parentSize - totalElementSize
+    }
+
     public static normalizeAllChildPanels(parentContainer: HTMLElement, isColumn: boolean, nodeNames: Array<string>) {
         // let parentSize = this.getContainerChildSize(parentContainer, isColumn, ["hh-panel", "hh-container"]);
         let parentRect = parentContainer.getBoundingClientRect()
@@ -69,21 +77,21 @@ class DomHelper {
     }
 
     static getPrevSiblingElementByName(curElement: HTMLElement, elementNames: Array<string>) {
-        let prevSibiling: HTMLElement = curElement.previousElementSibling as HTMLElement
+        let prevSibling: HTMLElement = curElement.previousElementSibling as HTMLElement
         let foundElement: HTMLElement
-        while (prevSibiling) {
-            let nextSiblingNodeName = prevSibiling.nodeName.toLowerCase()
+        while (prevSibling) {
+            let nextSiblingNodeName = prevSibling.nodeName.toLowerCase()
             elementNames.forEach(elementName => {
                 if (nextSiblingNodeName == elementName.toLowerCase())
-                    foundElement = prevSibiling
+                    foundElement = prevSibling
             })
 
             if (foundElement)
                 return foundElement
-            prevSibiling = prevSibiling.previousElementSibling as HTMLElement
+            prevSibling = prevSibling.previousElementSibling as HTMLElement
         }
 
-        return prevSibiling
+        return prevSibling
     }
 
     static getChildElements(ele: HTMLElement, nodeNames: Array<string>): Array<HTMLElement> {

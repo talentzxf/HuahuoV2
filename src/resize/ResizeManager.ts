@@ -16,37 +16,29 @@ class ResizeManager {
         return ResizeManager.Instance
     }
 
-    private getRemainingSize(parentContainer: HTMLElement, isColumn: boolean): number {
-        let parentContainerRect = parentContainer.getBoundingClientRect();
-        let parentSize = isColumn ? parentContainerRect.height : parentContainerRect.width;
-        let totalElementSize = DomHelper.getContainerChildSize(parentContainer, isColumn, ["hh-panel", "hh-container", "hh-splitter"])
-
-        return parentSize - totalElementSize
-    }
-
     public adjustSiblingsSize(splitter: HHSplitter, sizeDelta: number, isColumn: boolean) {
-        let sibilingNodeNames = ['hh-container']
+        let siblingNodeNames = ['hh-container']
 
         let parentContainer = splitter.parentElement
         let parentContainerRect = Rect2D.fromDomRect(parentContainer.getBoundingClientRect())
-        DomHelper.normalizeAllChildPanels(parentContainer, isColumn, sibilingNodeNames)
+        DomHelper.normalizeAllChildPanels(parentContainer, isColumn, siblingNodeNames)
 
         let parentSize = isColumn ? parentContainerRect.height : parentContainerRect.width
 
-        let prevSibiling = DomHelper.getPrevSiblingElementByName(splitter, sibilingNodeNames)
-        DomHelper.increaseElementSize(prevSibiling, sizeDelta, parentSize, isColumn)
+        let prevSibling = DomHelper.getPrevSiblingElementByName(splitter, siblingNodeNames)
+        DomHelper.increaseElementSize(prevSibling, sizeDelta, parentSize, isColumn)
 
-        let nextSibiling = DomHelper.getNextSiblingElementByName(splitter, sibilingNodeNames)
+        let nextSibling = DomHelper.getNextSiblingElementByName(splitter, siblingNodeNames)
 
-        if (nextSibiling) {
-            DomHelper.increaseElementSize(nextSibiling, -sizeDelta, parentSize, isColumn)
+        if (nextSibling) {
+            DomHelper.increaseElementSize(nextSibling, -sizeDelta, parentSize, isColumn)
         }
 
-        let remainingSize = this.getRemainingSize(parentContainer, isColumn)
-        if (nextSibiling) {
-            DomHelper.increaseElementSize(nextSibiling, remainingSize, parentSize, isColumn)
+        let remainingSize = DomHelper.getRemainingSize(parentContainer, isColumn)
+        if (nextSibling) {
+            DomHelper.increaseElementSize(nextSibling, remainingSize, parentSize, isColumn)
         } else {
-            DomHelper.increaseElementSize(prevSibiling, remainingSize, parentSize, isColumn)
+            DomHelper.increaseElementSize(prevSibling, remainingSize, parentSize, isColumn)
         }
     }
 }
