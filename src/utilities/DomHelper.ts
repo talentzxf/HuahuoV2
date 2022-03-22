@@ -27,7 +27,9 @@ class DomHelper {
     }
 
     public static normalizeAllChildPanels(parentContainer: HTMLElement, isColumn: boolean, nodeNames: Array<string>) {
-        let parentSize = this.getContainerChildSize(parentContainer, isColumn, ["hh-panel", "hh-container"]);
+        // let parentSize = this.getContainerChildSize(parentContainer, isColumn, ["hh-panel", "hh-container"]);
+        let parentRect = parentContainer.getBoundingClientRect()
+        let parentSize = isColumn?parentRect.height: parentRect.width;
 
         let panelSizeMap = new Map
         // Recalculate all the panel height percentage
