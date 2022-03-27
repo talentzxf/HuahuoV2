@@ -7,6 +7,10 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "[name].bundle.js",
+        library: {
+            name: "hhpanel",
+            type: "umd"
+        }
     },
     module:{
         rules: [
