@@ -1,0 +1,12 @@
+//
+// Created by VincentZhang on 4/2/2022.
+//
+
+#ifndef PERSISTENTMANAGER_PMCONFIG_H_IN_H
+#define PERSISTENTMANAGER_PMCONFIG_H_IN_H
+
+// the configured options and settings for Tutorial
+#define PM_VERSION_MAJOR @PersistentManager_VERSION_MAJOR@
+#define PM_VERSION_MINOR @PersistentManager_VERSION_MINOR@
+
+#endif //PERSISTENTMANAGER_PMCONFIG_H_IN_H

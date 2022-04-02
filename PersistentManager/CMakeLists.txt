@@ -1,0 +1,28 @@
+macro(print_all_variables)
+    message(STATUS "print_all_variables------------------------------------------{")
+    get_cmake_property(_variableNames VARIABLES)
+    foreach (_variableName ${_variableNames})
+        message(STATUS "${_variableName}=${${_variableName}}")
+    endforeach ()
+    message(STATUS "print_all_variables------------------------------------------}")
+endmacro()
+print_all_variables()
+
+cmake_minimum_required(VERSION 3.21)
+project(PersistentManager VERSION 0.1)
+configure_file(include/PersistentManagerConfig.h.in PersistentManagerConfig.h)
+
+list(APPEND CPPFILES cpp/PersistentManager.cpp)
+
+set(CMAKE_CXX_STANDARD 23)
+set(EXTRA_INCLUDE_DIR include)
+
+set(TARGETNAME PersistentManager)
+if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
+    add_executable(${TARGETNAME} ${CPPFILES})
+else ()
+    set(TARGETNAME TestPersistentManager)
+    add_executable(TestPersistentManager test/main.cpp ${CPPFILES})
+endif ()
+
+target_include_directories(${TARGETNAME} PUBLIC "${PROJECT_BINARY_DIR}" ${EXTRA_INCLUDE_DIR})

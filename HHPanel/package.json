@@ -1,7 +1,7 @@
 {
-  "name": "Huahuo_Panel",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "hhpanel",
+  "version": "0.0.1",
+  "main": "./dist/hhpanel.bundle.js",
   "author": "VincentZhang",
   "license": "MIT",
   "scripts": {
