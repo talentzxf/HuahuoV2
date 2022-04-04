@@ -13,12 +13,14 @@ project(PersistentManager VERSION 0.1)
 configure_file(include/PersistentManagerConfig.h.in PersistentManagerConfig.h)
 
 list(APPEND CPPFILES cpp/PersistentManager.cpp)
+list(APPEND CPPFILES cpp/PersistentManagerWrapper.cpp)
 
 set(CMAKE_CXX_STANDARD 23)
 set(EXTRA_INCLUDE_DIR include)
 
 set(TARGETNAME PersistentManager)
 if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
+    add_link_options("--post-js ./emcmake/glue.js")
     add_executable(${TARGETNAME} ${CPPFILES})
 else ()
     set(TARGETNAME TestPersistentManager)
