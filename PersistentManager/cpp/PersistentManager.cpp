@@ -4,9 +4,14 @@
 
 #include "PersistentManager.h"
 
-// namespace HuaHuo{
+ namespace HuaHuo{
+     PersistentManager* PersistentManager::gInstance = new PersistentManager();
+
     PersistentManager::PersistentManager(){
         this->writeHeader();
+
+        // TODO: Delete this when PersistentManager is destructed.
+        this->pByteArray = new ByteArray(pBuffer.data());
     }
 
     void PersistentManager::writeHeader() {
@@ -15,4 +20,12 @@
         this->pBuffer.resize(sizeof(HHHeader));
         std::copy(headerPtr, headerPtr + sizeof(hhHeader), this->pBuffer.begin());
     }
-// }
+
+    ByteArray::ByteArray(BYTE* pByteArray){
+        this->mpArray = pByteArray;
+    }
+
+    BYTE ByteArray::getByte(int idx){
+        return this->mpArray[idx];
+    }
+ }

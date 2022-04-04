@@ -1,6 +1,12 @@
-// [Prefix="HuaHuo::"]
+[Prefix="HuaHuo::"]
+interface ByteArray {
+    octet getByte(long idx);
+};
+
+[Prefix="HuaHuo::"]
 interface PersistentManager {
-    void PersistentManager();
-    VoidPtr getBuffer();
+    static PersistentManager getInstance();
+    ByteArray getBuffer();
     long getBufferSize();
 };
+
