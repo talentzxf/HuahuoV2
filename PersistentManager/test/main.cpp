@@ -9,7 +9,7 @@
 
 using namespace HuaHuo;
 int main(){
-    PersistentManager* pManager = PersistentManager::getInstance();
+    PersistentManager* pManager = new PersistentManager();
     pManager->getBuffer();
 
     printf("Version: %d.%d", PM_VERSION_MAJOR, PM_VERSION_MINOR);

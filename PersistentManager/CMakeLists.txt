@@ -20,7 +20,6 @@ set(EXTRA_INCLUDE_DIR include)
 
 set(TARGETNAME PersistentManager)
 if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
-    add_link_options("--post-js ./emcmake/glue.js")
     add_executable(${TARGETNAME} ${CPPFILES})
 else ()
     set(TARGETNAME TestPersistentManager)

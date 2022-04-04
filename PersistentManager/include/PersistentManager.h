@@ -9,7 +9,7 @@
 #include <vector>
 #include "Types.h"
 
-namespace HuaHuo{
+// namespace HuaHuo{
     struct HHHeader{
         BYTE magic[4] = "HHH"; // Stands for HuaHuoHeader.
         INT32 version = 0; // Version of this Header
@@ -21,13 +21,9 @@ namespace HuaHuo{
     class PersistentManager {
     private:
         std::vector<unsigned char> pBuffer = std::vector<unsigned char>();
-        PersistentManager();
-
         void writeHeader();
-
-        static PersistentManager* pInst;
     public:
-        static PersistentManager* getInstance();
+        PersistentManager();
 
         inline BYTE* getBuffer(){
             return pBuffer.data();
@@ -37,6 +33,6 @@ namespace HuaHuo{
             return pBuffer.size();
         }
     };
-}
+// }
 
 #endif //PERSISTENTMANAGER_PERSISTENTMANAGER_H

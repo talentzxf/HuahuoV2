@@ -4,9 +4,7 @@
 
 #include "PersistentManager.h"
 
-namespace HuaHuo{
-    PersistentManager* PersistentManager::pInst = NULL;
-
+// namespace HuaHuo{
     PersistentManager::PersistentManager(){
         this->writeHeader();
     }
@@ -17,12 +15,4 @@ namespace HuaHuo{
         this->pBuffer.resize(sizeof(HHHeader));
         std::copy(headerPtr, headerPtr + sizeof(hhHeader), this->pBuffer.begin());
     }
-
-    PersistentManager* PersistentManager::getInstance(){
-        if(PersistentManager::pInst == NULL){
-            PersistentManager::pInst = new PersistentManager();
-        }
-
-        return PersistentManager::pInst;
-    }
-}
+// }

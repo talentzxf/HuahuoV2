@@ -1,6 +1,6 @@
-[Prefix="HuaHuo::"]
+// [Prefix="HuaHuo::"]
 interface PersistentManager {
-    static PersistentManager getInstance();
+    void PersistentManager();
     VoidPtr getBuffer();
     long getBufferSize();
 };
