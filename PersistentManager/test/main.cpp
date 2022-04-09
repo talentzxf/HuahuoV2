@@ -4,16 +4,18 @@
 
 #include "PersistentManager.h"
 #include "PersistentManagerConfig.h"
+#include "Transform.h"
 
 #include <cstdio>
 
-using namespace HuaHuo;
 int main(){
-    PersistentManager* pManager = new PersistentManager();
+    PersistentManager* pManager = PersistentManager::getInstance();
     pManager->getBuffer();
 
     printf("Version: %d.%d", PM_VERSION_MAJOR, PM_VERSION_MINOR);
 
+    Transform* transform = new Transform();
+    // printf("%s", transform->mRTTI.getName().c_str());
 
     return 0;
 }
