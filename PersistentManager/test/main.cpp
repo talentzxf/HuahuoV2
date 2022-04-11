@@ -4,18 +4,26 @@
 
 #include "PersistentManager.h"
 #include "PersistentManagerConfig.h"
-#include "Transform.h"
+#include "Components/Transform.h"
 
 #include <cstdio>
 
 int main(){
+    PersistentManager::InitEngine();
+
     PersistentManager* pManager = PersistentManager::getInstance();
     pManager->getBuffer();
 
-    printf("Version: %d.%d", PM_VERSION_MAJOR, PM_VERSION_MINOR);
+    printf("Version: %d.%d\n", PM_VERSION_MAJOR, PM_VERSION_MINOR);
 
-    Transform* transform = new Transform();
-    // printf("%s", transform->mRTTI.getName().c_str());
+    Transform* transform = Transform::Produce();
+    if(transform == NULL){
+        printf("ERROR\n");
+    }
+    printf("%s\n", transform->GetPPtrTypeString());
+
+    printf("%d", TypeOf<Transform>()->IsDerivedFrom<BaseComponent>());
+
 
     return 0;
 }

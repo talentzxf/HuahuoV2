@@ -43,6 +43,7 @@ private:
 
     static PersistentManager *gInstance;
 public:
+    static void InitEngine();
 
     inline static PersistentManager *getInstance() {
         return gInstance;

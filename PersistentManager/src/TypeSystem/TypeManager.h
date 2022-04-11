@@ -36,6 +36,9 @@ public:
         return *ms_Instance;
     }
 
+    static void InitializeGlobalInstance();
+    static void CleanupGlobalInstance();
+
     void RegisterType(const TypeRegistrationDesc& desc);
 
     // this is intended to be used by general code, so we're going to automatically pull RTTI from static data to keep general code needing to understand type system internals
@@ -64,7 +67,13 @@ public:
         RegisterType(desc);
     }
 
+    void RegisterNonObjectType(PersistentTypeID typeID, RTTI* destinationRTTI, const char* name, const char* nameSpace);
+
+    void InitializeAllTypes();
+
 private:
+    class Builder;
+
     struct TypeCallbackStruct
     {
         TypeCallback* initType;

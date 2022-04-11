@@ -7,14 +7,26 @@
 #include <cstddef>
 #include "BaseClasses/BaseTypes.h"
 #include "Variant.h"
+#include <string>
 class Object;
+enum ObjectCreationMode
+{
+    // Create the object from the main thread in a perfectly normal way
+    kCreateObjectDefault = 0,
+    // Create the object from another thread. Might assign an instance ID but will not register with IDToPointer map.
+    // Objects created like this, need to call,  AwakeFromLoadThraded, and Object::RegisterInstanceID and AwakeFromLoad (kDidLoadThreaded); from the main thread
+    kCreateObjectFromNonMainThread = 1,
+    // Create the object and register the instance id but do not lock the object
+    // creation mutex because the code calling it already called SetObjectLockForWrite().
+    kCreateObjectDefaultNoLock = 2
+};
 
 struct RTTI{
     enum
     {
         UndefinedPersistentTypeID = -1
     };
-    typedef Object* FactoryFunction ();
+    typedef Object* FactoryFunction (ObjectCreationMode mode);
 
     enum
     {
@@ -28,6 +40,23 @@ struct RTTI{
         RuntimeTypeIndex typeIndex;        // consecutive type index, assigned so that all descendant classes have a type index in the range [typeIndex,typeIndex+descendantCount[
         UInt32 descendantCount;
     };
+
+    static inline bool IsDerivedFrom(RuntimeTypeIndex typeIndex, RuntimeTypeIndex baseTypeIndex, UInt32 baseDescendantCount)
+    {
+        return (typeIndex - baseTypeIndex) < baseDescendantCount;
+    }
+
+    static inline bool IsDerivedFrom(RuntimeTypeIndex typeIndex, const RTTI& baseType)
+    {
+        return (typeIndex - baseType.derivedFromInfo.typeIndex) < baseType.derivedFromInfo.descendantCount;
+    }
+
+    static inline bool IsDerivedFrom(const RTTI& derivedType, const RTTI& baseType)
+    {
+        return (derivedType.derivedFromInfo.typeIndex - baseType.derivedFromInfo.typeIndex) < baseType.derivedFromInfo.descendantCount;
+    }
+
+    std::string GetFullName() const;
 
     const RTTI* base;
     FactoryFunction* factory;

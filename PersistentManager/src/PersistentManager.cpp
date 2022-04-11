@@ -3,14 +3,24 @@
 //
 
 #include "PersistentManager.h"
+#include "BaseClasses/ClassRegistration.h"
+#include "Utilities/RegisterRuntimeInitializeAndCleanup.h"
+#include "TypeSystem/TypeManager.h"
+
+void PersistentManager::InitEngine() {
+    RegisterRuntimeInitializeAndCleanup::ExecuteInitializations();
+    RegisterAllClasses();
+
+    TypeManager::Get().InitializeAllTypes();
+}
 
 PersistentManager *PersistentManager::gInstance = new PersistentManager();
 
 PersistentManager::PersistentManager() {
-    this->writeHeader();
-
     // TODO: Delete this when PersistentManager is destructed.
     this->pByteArray = new ByteArray();
+
+    this->writeHeader();
 }
 
 void PersistentManager::writeHeader() {

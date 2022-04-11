@@ -12,6 +12,7 @@
 #include "BaseClasses/InstanceID.h"
 #include "Logging/LogAssert.h"
 #include "Memory/MemoryMacros.h"
+#include "Type.h"
 
 template<UInt32 typeID>
 inline void PerformRegisterClassCompileTimeChecks()
@@ -73,22 +74,22 @@ CREATE_GET_STATIC_METHOD_FROM_TYPE_HELPER(GetCleanupClassMethodFromType, void(),
 namespace BaseObjectInternal
 {
     template<typename type>
-    inline Object* NewObject()
+    inline Object* NewObject(ObjectCreationMode mode)
     {
-        return NEW_AS_ROOT(type, "Objects", NULL) ();
+        return NEW_AS_ROOT(type, "Objects", NULL) (mode);
     }
 }
 
 template<typename T, bool isAbstract>
 struct ProduceHelper
 {
-    static Object* Produce() { AssertFormatMsg(false, "Can't produce abstract class %s", TypeOf<T>()->GetName()); return NULL; }
+    static Object* Produce(ObjectCreationMode mode) { AssertFormatMsg(false, "Can't produce abstract class %s", TypeOf<T>()->GetName()); return NULL; }
 };
 
 template<typename T>
 struct ProduceHelper<T, false>
 {
-    static Object* Produce() { return BaseObjectInternal::NewObject<T>(); }
+    static Object* Produce(ObjectCreationMode mode) { return BaseObjectInternal::NewObject<T>(mode); }
 };
 
 enum TypeFlags
@@ -110,6 +111,8 @@ public:                            \
     {                              \
         return Object::Produce<TYPE_NAME_>(instanceID);\
     }                              \
+private: \
+    virtual const HuaHuo::Type* const GetTypeVirtualInternal() const override { return TypeOf<TYPE_NAME_>(); }
 
 typedef void TypeCallback();
 struct TypeRegistrationDesc {

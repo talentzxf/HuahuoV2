@@ -4,4 +4,4 @@
 
 #include "Transform.h"
 
-IMPLEMENT_REGISTER_CLASS(Transform, 1);
+IMPLEMENT_REGISTER_CLASS(Transform, 2);

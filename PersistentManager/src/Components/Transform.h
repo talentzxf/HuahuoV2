@@ -7,10 +7,16 @@
 
 #include "TypeSystem//Object.h"
 #include "TypeSystem/ObjectDefines.h"
+#include "BaseComponent.h"
 
-class Transform : public Object {
+class Transform : public BaseComponent {
     REGISTER_CLASS(Transform)
+public:
+    Transform(ObjectCreationMode mode)
+        :Super(mode)
+    {
 
+    }
 };
 
 

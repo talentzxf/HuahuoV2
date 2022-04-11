@@ -53,18 +53,6 @@
 // computing a 32 bit hash value).
 
 
-// Compute a 32 bit hash.
-// Implementation: xxHash32.
-UInt32 ComputeHash32(const void* data, size_t dataSize)
-{
-    return XXH32(data, dataSize, 0x8f37154b);
-}
-
-UInt32 ComputeHash32(const void* data, size_t dataSize, size_t seed)
-{
-    return XXH32(data, dataSize, (unsigned int)seed);
-}
-
 //// Compute a 64 bit hash.
 //// Implementation: CityHash64.
 //UInt64 ComputeHash64(const void* data, size_t dataSize)
@@ -147,11 +135,6 @@ struct UInt32HashFunction
 // http://vigna.di.unimi.it/ftp/papers/xorshift.pdf -- original idea is from Numerical Recipes book.
 
 typedef UInt64 PointerHash;
-
-PointerHash ComputePointerHash(const void* ptr)
-{
-    return (UInt64)(1181783497276652981ULL) * (UIntPtr)ptr;
-}
 
 template<typename T>
 struct PointerHashFunction
