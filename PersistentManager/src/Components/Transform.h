@@ -10,7 +10,8 @@
 #include "BaseComponent.h"
 
 class Transform : public BaseComponent {
-    REGISTER_CLASS(Transform)
+    REGISTER_CLASS(Transform);
+    DECLARE_OBJECT_SERIALIZE();
 public:
     Transform(ObjectCreationMode mode)
         :Super(mode)

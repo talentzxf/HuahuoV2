@@ -13,6 +13,8 @@
 #include "Logging/LogAssert.h"
 #include "Memory/MemoryMacros.h"
 #include "Type.h"
+#include "Serialize/TransferFunctions/StreamedBinaryRead.h"
+#include "Serialize/TransferFunctions/StreamedBinaryWrite.h"
 
 template<UInt32 typeID>
 inline void PerformRegisterClassCompileTimeChecks()
@@ -112,7 +114,11 @@ public:                            \
         return Object::Produce<TYPE_NAME_>(instanceID);\
     }                              \
 private: \
-    virtual const HuaHuo::Type* const GetTypeVirtualInternal() const override { return TypeOf<TYPE_NAME_>(); }
+    virtual const HuaHuo::Type* const GetTypeVirtualInternal() const override { return TypeOf<TYPE_NAME_>(); } \
+protected:                         \
+    ~TYPE_NAME_ (){ }               \
+public: \
+    class MISSING_SEMICOLON_AFTER_REGISTER_CLASS_MACRO
 
 typedef void TypeCallback();
 struct TypeRegistrationDesc {
@@ -193,5 +199,43 @@ template<> void RegisterHuaHuoClass<NAMESPACE_::TYPE_NAME_>(const char* module) 
 } \
 class MISSING_SEMICOLON_AFTER_IMPLEMENT_REGISTER_CLASS_MACRO
 
+#define DECLARE_OBJECT_SERIALIZE(...) /* the "..." will be removed in the near future */ \
+    public: \
+        static const char* GetTypeString () { return TypeOf<ThisType>()->GetName(); } \
+        static bool MightContainPPtr () { return true; } \
+        static bool AllowTransferOptimization () { return false; } \
+        template<class TransferFunction> void Transfer (TransferFunction& transfer); \
+        /* virtual void VirtualRedirectTransfer (GenerateTypeTreeTransfer& transfer) override; */ \
+        virtual void VirtualRedirectTransfer (StreamedBinaryRead& transfer) override; \
+        virtual void VirtualRedirectTransfer (StreamedBinaryWrite& transfer) override; \
+        /* virtual void VirtualRedirectTransfer (RemapPPtrTransfer& transfer) override; */\
+    public: \
+        class MISSING_SEMICOLON_AFTER_DECLARE_OBJECT_SERIALIZE; /* semicolon will be removed in the near future */
+
+#define INSTANTIATE_TEMPLATE_TRANSFER_WITH_DECL(FULL_TYPENAME_, DECL_, FUNCTION_NAME_, FUNCTION_RETURN_TYPE_) \
+    template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(GenerateTypeTreeTransfer& transfer); \
+    template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(StreamedBinaryRead& transfer); \
+    template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(StreamedBinaryWrite& transfer); \
+    template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(RemapPPtrTransfer& transfer); \
+    class MISSING_SEMICOLON_AFTER_INSTANTIATE_TEMPLATE_TRANSFER; /* semicolon will be removed in the near future */
+
+#define INSTANTIATE_TEMPLATE_TRANSFER_WITH_DECL(FULL_TYPENAME_, DECL_, FUNCTION_NAME_, FUNCTION_RETURN_TYPE_) \
+    /* template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(GenerateTypeTreeTransfer& transfer); */\
+    template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(StreamedBinaryRead& transfer); \
+    template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(StreamedBinaryWrite& transfer); \
+    /* template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(RemapPPtrTransfer& transfer); */ \
+    class MISSING_SEMICOLON_AFTER_INSTANTIATE_TEMPLATE_TRANSFER; /* semicolon will be removed in the near future */
+
+#define IMPLEMENT_OBJECT_SERIALIZE_WITH_DECL(PREFIX_, DECL_) \
+    /* DECL_ void PREFIX_ VirtualRedirectTransfer (GenerateTypeTreeTransfer& transfer)     { transfer.TransferBase (*this); } */\
+    DECL_ void PREFIX_ VirtualRedirectTransfer (StreamedBinaryRead& transfer)    { /*SET_ALLOC_OWNER(GetMemoryLabel());*/ transfer.TransferBase (*this); } \
+    DECL_ void PREFIX_ VirtualRedirectTransfer (StreamedBinaryWrite& transfer)   { transfer.TransferBase (*this); } \
+    /* DECL_ void PREFIX_ VirtualRedirectTransfer (RemapPPtrTransfer& transfer)            { transfer.TransferBase (*this); }*/\
+    class MISSING_SEMICOLON_AFTER_IMPLEMENT_OBJECT_SERIALIZE; /* semicolon will be removed in the near future */
+
+#define IMPLEMENT_OBJECT_SERIALIZE(TYPE_) IMPLEMENT_OBJECT_SERIALIZE_WITH_DECL(TYPE_::, )
+
+#define INSTANTIATE_TEMPLATE_TRANSFER(FULL_TYPENAME_) INSTANTIATE_TEMPLATE_TRANSFER_WITH_DECL(FULL_TYPENAME_, ,Transfer,void)
+#define INSTANTIATE_TEMPLATE_TRANSFER_FUNCTION(FULL_TYPENAME_, FUNCTION_NAME_) INSTANTIATE_TEMPLATE_TRANSFER_WITH_DECL(FULL_TYPENAME_, ,FUNCTION_NAME_,void)
 
 #endif //PERSISTENTMANAGER_OBJECTDEFINES_H

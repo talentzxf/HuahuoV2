@@ -5,6 +5,7 @@
 #ifndef PERSISTENTMANAGER_LOGASSERT_H
 #define PERSISTENTMANAGER_LOGASSERT_H
 #include <stdarg.h>
+#include "baselib/include/CoreMacros.h"
 
 enum LogMessageFlags
 {

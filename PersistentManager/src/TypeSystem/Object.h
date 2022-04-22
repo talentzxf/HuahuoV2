@@ -72,6 +72,12 @@ public:
     friend void delete_object_internal_step2(Object* p);
 
     Object(ObjectCreationMode mode);
+
+    // Required by serialization
+    virtual void VirtualRedirectTransfer(StreamedBinaryWrite&)  { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
+    virtual void VirtualRedirectTransfer(StreamedBinaryRead&)   { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
+//    virtual void VirtualRedirectTransfer(RemapPPtrTransfer&)           { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
+//    virtual void VirtualRedirectTransfer(GenerateTypeTreeTransfer&)    { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
 protected:
     virtual ~Object();
 
