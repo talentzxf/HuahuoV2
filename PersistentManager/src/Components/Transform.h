@@ -18,6 +18,8 @@ public:
     {
 
     }
+
+    template<class TransferFunction> void CompleteTransformTransfer(TransferFunction& transfer);
 };
 
 
