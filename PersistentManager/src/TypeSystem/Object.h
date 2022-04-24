@@ -80,6 +80,8 @@ public:
 //    virtual void VirtualRedirectTransfer(GenerateTypeTreeTransfer&)    { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
 protected:
     virtual ~Object();
+    template<class TransferFunction>
+    void Transfer(TransferFunction& transfer);
 
 private:
     InstanceID              m_InstanceID;

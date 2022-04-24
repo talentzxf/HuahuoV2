@@ -341,3 +341,32 @@ Object* Object::Produce(const HuaHuo::Type* targetCastType, const HuaHuo::Type* 
 
     return newObject;
 }
+
+template<class TransferFunction>
+void Object::Transfer(TransferFunction& transfer)
+{
+#if UNITY_EDITOR
+    if (!transfer.IsSerializingForGameRelease() && SerializePrefabIgnoreProperties(transfer) && !transfer.GetBuildUsage().strippedPrefabObject)
+    {
+        UInt32 flags = m_HideFlags;
+        transfer.Transfer(flags, "m_ObjectHideFlags", kHideInEditorMask);
+        m_HideFlags = flags;
+    }
+
+    if (transfer.GetFlags() & kSerializeDebugProperties)
+    {
+        InstanceID instanceID = GetInstanceID();
+        transfer.Transfer(instanceID, "m_InstanceID");
+
+        LocalIdentifierInFileType fileID;
+        if (IsPersistent())
+            fileID = GetPersistentManager().GetLocalFileID(instanceID);
+        else
+            fileID = GetFileIDHint();
+
+        transfer.Transfer(fileID, "m_LocalIdentfierInFile");
+    }
+#endif
+}
+
+INSTANTIATE_TEMPLATE_TRANSFER(Object);

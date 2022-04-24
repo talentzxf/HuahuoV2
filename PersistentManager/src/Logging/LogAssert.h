@@ -7,6 +7,15 @@
 #include <stdarg.h>
 #include "baselib/include/CoreMacros.h"
 
+// __FILE_STRIPPED__ should be used in place of __FILE__ when you only want to embed the source filename for diagnostic
+// purposes, and don't want it to take up space in a final release.
+// (formerly part of CoreMacros)
+#if ENABLE_STRIPPING_SOURCE_FILENAMES
+#define __FILE_STRIPPED__ ""
+#else
+#define __FILE_STRIPPED__ __FILE__
+#endif
+
 enum LogMessageFlags
 {
     kNoLogMessageFlags                  = 0,
@@ -103,7 +112,8 @@ LogMessageFlags LogTypeOptionsToLogMessageFlags(LogType logType, LogOption logOp
 #define LogStringWithoutStacktrace(x)       PP_WRAP_CODE(DebugStringToFile (x, __FILE_STRIPPED__, __LINE__, -1, kDontExtractStacktrace | kLog))
 #define LogStringMsg(...)                   PP_WRAP_CODE(DebugStringToFile (Format(__VA_ARGS__), __FILE_STRIPPED__, __LINE__, -1, kLog))
 
-#define FatalErrorString(x)                 PP_WRAP_CODE(DebugStringToFile (x, __FILE_STRIPPED__, __LINE__, -1, kError | kFatal | kReportBug))
+// #define FatalErrorString(x)                 PP_WRAP_CODE(DebugStringToFile (x, __FILE_STRIPPED__, __LINE__, -1, kError | kFatal | kReportBug))
+#define FatalErrorString(x) PP_WRAP_CODE(printf("FatalError:%s", (x).c_str()))
 #define FatalErrorIf(x)                     PP_WRAP_CODE(if (x) DebugStringToFile (#x, __FILE_STRIPPED__, __LINE__, -1, kError | kFatal | kReportBug))
 #define FatalErrorStringDontReport(x)       PP_WRAP_CODE(DebugStringToFile (x, __FILE_STRIPPED__, __LINE__, -1, kError | kFatal))
 #define FatalErrorMsg(...)                  PP_WRAP_CODE(DebugStringToFile (Format(__VA_ARGS__), __FILE_STRIPPED__, __LINE__, -1, kError | kFatal))

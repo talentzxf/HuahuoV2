@@ -10,6 +10,7 @@
 
 class BaseComponent: public Object{
     REGISTER_CLASS(BaseComponent);
+    DECLARE_OBJECT_SERIALIZE();
 public:
     BaseComponent(ObjectCreationMode mode)
         :Super(mode)

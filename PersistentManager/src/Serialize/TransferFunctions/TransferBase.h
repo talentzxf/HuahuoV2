@@ -7,7 +7,12 @@
 
 extern const char * kTransferNameIdentifierBase;
 class TransferBase {
+public:
+    void AddMetaFlag(int /*mask*/) {}
 
+    /// Internal function. Should only be called from SerializeTraits
+    template<class T>
+    void TransferBasicData(T&) {}
 };
 
 

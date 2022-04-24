@@ -3,19 +3,21 @@
 //
 
 #include "Transform.h"
+#include "Utilities/TypeConversion.h"
+#include "TransformHierarchy.h"
 
 template<class TransferFunction>
 void Transform::Transfer(TransferFunction& transfer)
 {
-//    Super::Transfer(transfer);
+    Super::Transfer(transfer);
 //
 //    if (transfer.IsWriting() && IsTransformHierarchyInitialized())
 //        ApplyRuntimeToSerializedData();
-//
-//    TRANSFER(m_LocalRotation);
-//    TRANSFER(m_LocalPosition);
-//    TRANSFER(m_LocalScale);
-//
+
+    TRANSFER(m_LocalRotation);
+    TRANSFER(m_LocalPosition);
+    TRANSFER(m_LocalScale);
+
 //    // Complete the transform transfer.
 //    CompleteTransformTransfer(transfer);
 //
@@ -64,6 +66,29 @@ void Transform::CompleteTransformTransfer(TransferFunction& transfer)
 //    TRANSFER_EDITOR_ONLY_HIDDEN(m_LocalEulerAnglesHint);
 //
 //#endif
+}
+
+TransformAccessReadOnly Transform::GetTransformAccess() const
+{
+    // SyncTransformAccess(m_TransformData);
+    return m_TransformData;
+}
+
+TransformAccess Transform::GetTransformAccess()
+{
+    // SyncTransformAccess(m_TransformData);
+    return m_TransformData;
+}
+
+
+void Transform::SetLocalRotation(const Quaternionf& inRotation)
+{
+    // ABORT_INVALID_QUATERNION(inRotation, localRotation, transform);
+
+    if (SetLocalR(GetTransformAccess(), QuaternionfTofloat4(inRotation)))
+    {
+        // QueueChanges();
+    }
 }
 
 

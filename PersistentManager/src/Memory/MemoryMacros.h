@@ -7,6 +7,9 @@
 #include "MemoryMacrosDetails.h"
 
 #define NEW_AS_ROOT(type, areaName, objectName) new type
+#define NEW(type)   new type
+#define DELETE(ptr) {delete ptr; ptr = NULL;}
+#define MEMCPY memcpy
 //#define NEW_AS_ROOT(type, areaName, objectName) NewWithLabelConstructor<type>(alignof(type), __FILE__ , __LINE__).NEW_AS_ROOT_WITH_LABEL_CONSTRUCT
 
 #endif //PERSISTENTMANAGER_MEMORYMACROS_H
