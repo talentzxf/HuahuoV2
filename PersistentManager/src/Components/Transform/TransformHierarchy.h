@@ -13,6 +13,12 @@
 
 #define ASSERT_TRANSFORM_ACCESS(transformAccess) DebugAssert(transformAccess.index < transformAccess.hierarchy->transformCapacity && transformAccess.hierarchy->deepChildCount[transformAccess.index] > 0)
 
+inline UInt32 GetDeepChildCount(const TransformHierarchy& hierarchy, UInt32 index)
+{
+    DebugAssert(index < hierarchy.transformCapacity && hierarchy.deepChildCount[index] > 0);
+    return hierarchy.deepChildCount[index];
+}
+
 namespace TransformInternal {
     struct ChangeMaskCache {
         TransformChangeSystemMask localT;
@@ -41,11 +47,7 @@ namespace TransformInternal {
         return ret;
     }
 
-    inline UInt32 GetDeepChildCount(const TransformHierarchy& hierarchy, UInt32 index)
-    {
-        DebugAssert(index < hierarchy.transformCapacity && hierarchy.deepChildCount[index] > 0);
-        return hierarchy.deepChildCount[index];
-    }
+    void InitLocalTRS(TransformAccess transformAccess, const math::float3& t, const math::float4& r, const math::float3& s);
 
     // Apply transform change down the children hierarchy.
     inline void OnTransformChangedMask(TransformAccess access, TransformChangeSystemMask localOnlyMask, TransformChangeSystemMask commonMask, TransformChangeSystemMask childrenOnlyMask) {
@@ -69,6 +71,10 @@ namespace TransformInternal {
             cur = hierarchy.nextIndices[cur];
         }
     }
+
+    TransformHierarchy* CreateTransformHierarchy(UInt32 transformCapacity);
+    void DestroyTransformHierarchy(TransformHierarchy* hierarchy);
+    void AllocateTransformThread(TransformHierarchy& hierarchy, UInt32 threadFirst, UInt32 threadLast);
 }
 
 // returns true if local rotation change

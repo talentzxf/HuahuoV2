@@ -44,3 +44,66 @@ void ByteArray::write(UInt8 *pBuffer, int size) {
     std::copy(pBuffer, pBuffer + size, this->pBuffer.begin() + curPos);
 }
 
+void PersistentManager::LocalSerializedObjectIdentifierToInstanceID(const LocalSerializedObjectIdentifier& localIdentifier, InstanceID& outInstanceID, LockFlags lockedFlags)
+{
+    LocalSerializedObjectIdentifierToInstanceID(-1, localIdentifier, outInstanceID, lockedFlags);
+}
+
+void PersistentManager::LocalSerializedObjectIdentifierToInstanceID(int activeNameSpace, const LocalSerializedObjectIdentifier& localIdentifier, InstanceID& outInstanceID, LockFlags lockedFlags)
+{
+//    LocalIdentifierInFileType localIdentifierInFile = localIdentifier.localIdentifierInFile;
+//    int localSerializedFileIndex = localIdentifier.localSerializedFileIndex;
+//
+//    if (localIdentifierInFile == 0)
+//    {
+//        outInstanceID = InstanceID_None;
+//        return;
+//    }
+//
+//    //PERSISTENT_MANAGER_AUTOLOCK(autoLock, kMutexLock, lockedFlags, gIDRemappingProfiler);
+//
+//    if (activeNameSpace == -1)
+//        activeNameSpace = GetActiveNameSpace();
+//
+//    Assert(localSerializedFileIndex != -1);
+//
+//    int globalFileIndex;
+//    if (localSerializedFileIndex == 0)
+//        globalFileIndex = activeNameSpace;
+//    else
+//    {
+//        Assert(m_Streams[activeNameSpace].stream != NULL);
+//
+//        Assert(activeNameSpace < (int)m_LocalToGlobalNameSpace.size() && activeNameSpace >= 0);
+//
+//        IDRemap::iterator found = m_LocalToGlobalNameSpace[activeNameSpace].find(localSerializedFileIndex);
+//
+//        if (found != m_LocalToGlobalNameSpace[activeNameSpace].end())
+//        {
+//            globalFileIndex = found->second;
+//        }
+//        else
+//        {
+//            AssertString("illegal LocalPathID in persistentmanager");
+//            outInstanceID = InstanceID_None;
+//            return;
+//        }
+//    }
+//
+//    SerializedObjectIdentifier globalIdentifier;
+//    globalIdentifier.serializedFileIndex = globalFileIndex;
+//    globalIdentifier.localIdentifierInFile = localIdentifierInFile;
+//
+//#if SUPPORT_INSTANCE_ID_REMAP_ON_LOAD
+//    ApplyInstanceIDRemapInternal(globalIdentifier);
+//#endif
+//
+//    outInstanceID = m_Remapper->GetOrGenerateInstanceID(globalIdentifier);
+//
+//    // Preallocate all referenced objects right away this we we ensure that the loading code will actually load them.
+//    if (m_ForcePreloadReferencedObjects && outInstanceID != InstanceID_None)
+//    {
+//        autoLock.Unlock(kMutexLock);
+//        PreallocateObjectThreaded(outInstanceID, lockedFlags);
+//    }
+}

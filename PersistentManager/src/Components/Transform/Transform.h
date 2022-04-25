@@ -12,6 +12,7 @@
 #include "Math/Vector3f.h"
 #include "Math/Simd/RotationOrder.h"
 #include "TransformAccess.h"
+#include "BaseClasses/ImmediatePtr.h"
 
 class Transform : public BaseComponent {
     REGISTER_CLASS(Transform);
@@ -42,11 +43,28 @@ public:
     TransformAccessReadOnly GetTransformAccess() const;
     TransformAccess GetTransformAccess();
 
+    void RebuildTransformHierarchy();
+
+    /// Returns a ptr to the father transformcomponent (NULL if no father)
+    Transform* GetParent() const   { return m_Father; }
+
+    typedef std::vector<ImmediatePtr<Transform> > TransformComList;
+protected:
+    void ApplySerializedToRuntimeData();
+
+private:
+    UInt32 CountNodesDeep() const;
+    UInt32 InitializeTransformHierarchyRecursive(TransformHierarchy& hierarchy, int& index, int parentIndex);
+
 protected:
     TransformAccess                  m_TransformData;
     Quaternionf                      m_LocalRotation;
     Vector3f                         m_LocalPosition;
     Vector3f                         m_LocalScale;
+
+private:
+    TransformComList                 m_Children;
+    ImmediatePtr<Transform>          m_Father;
 };
 
 

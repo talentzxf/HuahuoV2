@@ -11,6 +11,37 @@
 #include <unordered_map>
 #include <unordered_set>
 
+typedef SInt64 LocalIdentifierInFileType;
+
+struct LocalSerializedObjectIdentifier
+{
+    SInt32 localSerializedFileIndex;
+    LocalIdentifierInFileType localIdentifierInFile;
+
+    LocalSerializedObjectIdentifier()
+    {
+        localIdentifierInFile = 0;
+        localSerializedFileIndex = 0;
+    }
+
+    friend bool operator<(const LocalSerializedObjectIdentifier& lhs, const LocalSerializedObjectIdentifier& rhs)
+    {
+        if (lhs.localSerializedFileIndex != rhs.localSerializedFileIndex)
+            return lhs.localSerializedFileIndex < rhs.localSerializedFileIndex;
+        else
+            return lhs.localIdentifierInFile < rhs.localIdentifierInFile;
+    }
+
+    friend bool operator==(const LocalSerializedObjectIdentifier& lhs, const LocalSerializedObjectIdentifier& rhs)
+    {
+        return lhs.localIdentifierInFile == rhs.localIdentifierInFile && lhs.localSerializedFileIndex == rhs.localSerializedFileIndex;
+    }
+};
+
+
+void InstanceIDToLocalSerializedObjectIdentifier(InstanceID id, LocalSerializedObjectIdentifier& localIdentifier);
+void LocalSerializedObjectIdentifierToInstanceID(const LocalSerializedObjectIdentifier& fileID, InstanceID& memoryID);
+
 class Object {
 public:
     typedef std::unordered_map<InstanceID, Object*> IDToPointerMap;

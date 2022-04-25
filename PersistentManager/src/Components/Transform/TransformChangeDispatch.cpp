@@ -3,3 +3,49 @@
 //
 
 #include "TransformChangeDispatch.h"
+#include "TransformHierarchy.h"
+
+TransformInternal::ChangeMaskCache TransformInternal::g_ChangeMaskCache;
+TransformHierarchyChangeDispatch* gTransformHierarchyChangeDispatch = NULL;
+
+void TransformHierarchyChangeDispatch::DispatchSelfAndAllChildren(TransformAccess transform, InterestType interestType)
+{
+    // DEBUG_ASSERT_RUNNING_ON_MAIN_THREAD;
+    ASSERT_TRANSFORM_ACCESS(transform);
+    // ASSERT_TRANSFORM_ACCESS_SYNCED(transform);
+
+    TransformHierarchy& hierarchy = *transform.hierarchy;
+    SInt32 index = transform.index;
+    UInt32 count = GetDeepChildCount(hierarchy, index);
+
+    TransformAccess* dispatchTransforms = NULL;
+    unsigned dispatchTransformCount = 0;
+    // ALLOC_TEMP_AUTO(dispatchTransforms, count);
+    // dispatchTransforms = ALLOC_ARRAY(TransformAccess, count)
+    dispatchTransforms = (TransformAccess*)malloc(sizeof(TransformAccess) * count);
+
+    for (int systemIndex = 0; systemIndex < kMaxSupportedSystems; systemIndex++)
+    {
+        if ((interestType & m_Systems[systemIndex].interestType) == 0)
+            continue;
+
+        UInt32 mask = 1U << systemIndex;
+        SInt32 cur = index;
+        for (UInt32 i = 0; i < count; i++)
+        {
+            if ((hierarchy.hierarchySystemInterested[cur] & mask) != 0)
+            {
+                dispatchTransforms[dispatchTransformCount].hierarchy = &hierarchy;
+                dispatchTransforms[dispatchTransformCount].index = cur;
+                dispatchTransformCount++;
+            }
+            cur = hierarchy.nextIndices[cur];
+        }
+
+        if (dispatchTransformCount > 0)
+        {
+            m_Systems[systemIndex].callback(dispatchTransforms, dispatchTransformCount);
+            dispatchTransformCount = 0;
+        }
+    }
+}

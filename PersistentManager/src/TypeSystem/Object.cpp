@@ -8,6 +8,7 @@
 #include "TypeManager.h"
 #include <cstring>
 #include "Utilities/RegisterRuntimeInitializeAndCleanup.h"
+#include "PersistentManager.h"
 
 Object::IDToPointerMap*    Object::ms_IDToPointer = NULL;
 Object::TypeToObjectSet*   Object::ms_TypeToObjectSet = NULL;
@@ -367,6 +368,33 @@ void Object::Transfer(TransferFunction& transfer)
         transfer.Transfer(fileID, "m_LocalIdentfierInFile");
     }
 #endif
+}
+
+
+//void InstanceIDToLocalSerializedObjectIdentifier(InstanceID id, LocalSerializedObjectIdentifier& localIdentifier)
+//{
+//    PersistentManager::getInstance()->InstanceIDToLocalSerializedObjectIdentifier(id, localIdentifier);
+//}
+
+void LocalSerializedObjectIdentifierToInstanceID(const LocalSerializedObjectIdentifier& fileID, InstanceID& memoryID)
+{
+    PersistentManager::getInstance()->LocalSerializedObjectIdentifierToInstanceID(fileID, memoryID);
+}
+
+Object* PreallocateObjectFromPersistentManager(InstanceID instanceID, bool threadedLoading)
+{
+//    Object* obj = NULL;
+//
+//    if (!threadedLoading)
+//    {
+//        obj = PPtr<Object>(instanceID);
+//    }
+//    else
+//    {
+//        obj = GetPersistentManager().PreallocateObjectThreaded(instanceID);
+//    }
+//
+//    return obj;
 }
 
 INSTANTIATE_TEMPLATE_TRANSFER(Object);

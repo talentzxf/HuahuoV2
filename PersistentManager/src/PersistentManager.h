@@ -8,6 +8,7 @@
 #include <cstddef>
 #include <vector>
 #include "BaseClasses/BaseTypes.h"
+#include "TypeSystem/Object.h"
 
 struct HHHeader {
     UInt8 magic[4] = "HHH"; // Stands for HuaHuoHeader.
@@ -56,6 +57,21 @@ public:
     inline size_t getBufferSize() {
         return pByteArray->getSize();
     }
+
+    enum LockFlags
+    {
+        kLockFlagNone = 0,
+        kMutexLock = 1 << 0,
+        kIntegrationMutexLock = 1 << 1,
+    };
+
+    // Computes the memoryID (object->GetInstanceID ()) from fileID
+// fileID is relative to the file we are currently writing/reading from.
+// It can only be called when reading/writing objects in order to
+// convert ptrs from file space to global space
+    void LocalSerializedObjectIdentifierToInstanceID(const LocalSerializedObjectIdentifier& identifier, InstanceID& memoryID, LockFlags lockedFlags = kLockFlagNone);
+    void LocalSerializedObjectIdentifierToInstanceID(int activeNameSpace, const LocalSerializedObjectIdentifier& localIdentifier, InstanceID& outInstanceID, LockFlags lockedFlags = kLockFlagNone);
+//void LocalSerializedObjectIdentifierToInstanceID(const FileIdentifier& fileIdentifier, LocalIdentifierInFileType localID, InstanceID& outInstanceID, LockFlags lockedFlags = kLockFlagNone);
 };
 
 
