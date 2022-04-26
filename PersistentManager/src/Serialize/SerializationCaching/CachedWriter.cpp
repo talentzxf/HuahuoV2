@@ -64,3 +64,25 @@ void CachedWriter::InitActiveWriter(ActiveWriter& activeWriter, CacheWriterBase&
     activeWriter.cacheBase->LockCacheBlock(activeWriter.block, &activeWriter.cacheStart, &activeWriter.cacheEnd);
     activeWriter.cachePosition = activeWriter.cacheStart;
 }
+
+bool CachedWriter::CompleteWriting()
+{
+    m_ActiveWriter.cacheBase->UnlockCacheBlock(m_ActiveWriter.block);
+
+    bool success = m_ActiveWriter.cacheBase->CompleteWriting(m_ActiveWriter.GetPosition());
+
+//#if UNITY_EDITOR
+//    if (m_ActiveResourceImageMode != kResourceImageNotSupported)
+//    {
+//        for (int i = 0; i < kNbResourceImages; i++)
+//        {
+//            if (!m_ResourceImageWriters[i].cacheBase)
+//                continue;
+//            success &= m_ResourceImageWriters[i].cacheBase->CompleteWriting(m_ResourceImageWriters[i].GetPosition());
+//            success &= m_ResourceImageWriters[i].cacheBase->WriteHeaderAndCloseFile(NULL, (UInt64)0, 0);
+//        }
+//    }
+//#endif
+
+    return success;
+}

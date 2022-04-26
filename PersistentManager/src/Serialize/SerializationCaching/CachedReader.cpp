@@ -7,6 +7,17 @@
 #include "CacheReaderBase.h"
 #include "Logging/LogAssert.h"
 
+CachedReader::CachedReader()
+{
+    m_Cacher = 0;
+    m_Block = -1;
+    m_OutOfBoundsRead = false;
+}
+
+CachedReader::~CachedReader()
+{
+    Assert(m_Block == -1);
+}
 
 void CachedReader::SetPosition(size_t position)
 {
