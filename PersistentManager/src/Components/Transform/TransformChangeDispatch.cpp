@@ -4,9 +4,33 @@
 
 #include "TransformChangeDispatch.h"
 #include "TransformHierarchy.h"
+#include "Memory/MemoryMacros.h"
+#include "Utilities/RegisterRuntimeInitializeAndCleanup.h"
 
 TransformInternal::ChangeMaskCache TransformInternal::g_ChangeMaskCache;
 TransformHierarchyChangeDispatch* gTransformHierarchyChangeDispatch = NULL;
+
+static RegisterRuntimeInitializeAndCleanup s_TransformHierarchyChangeDispatchInitialize(TransformHierarchyChangeDispatch::InitializeClass, TransformHierarchyChangeDispatch::CleanupClass, -2);
+
+TransformHierarchyChangeDispatch::TransformHierarchyChangeDispatch()
+        : m_AllRegisteredSystemsMask(0)
+        , m_PermanentInterestSystemsMask(0)
+{
+}
+
+TransformHierarchyChangeDispatch::~TransformHierarchyChangeDispatch()
+{
+}
+
+void TransformHierarchyChangeDispatch::InitializeClass(void*)
+{
+    gTransformHierarchyChangeDispatch = NEW(TransformHierarchyChangeDispatch);
+}
+
+void TransformHierarchyChangeDispatch::CleanupClass(void*)
+{
+    DELETE(gTransformHierarchyChangeDispatch);
+}
 
 void TransformHierarchyChangeDispatch::DispatchSelfAndAllChildren(TransformAccess transform, InterestType interestType)
 {
@@ -21,8 +45,7 @@ void TransformHierarchyChangeDispatch::DispatchSelfAndAllChildren(TransformAcces
     TransformAccess* dispatchTransforms = NULL;
     unsigned dispatchTransformCount = 0;
     // ALLOC_TEMP_AUTO(dispatchTransforms, count);
-    // dispatchTransforms = ALLOC_ARRAY(TransformAccess, count)
-    dispatchTransforms = (TransformAccess*)malloc(sizeof(TransformAccess) * count);
+    dispatchTransforms = ALLOC_ARRAY(TransformAccess, count);
 
     for (int systemIndex = 0; systemIndex < kMaxSupportedSystems; systemIndex++)
     {

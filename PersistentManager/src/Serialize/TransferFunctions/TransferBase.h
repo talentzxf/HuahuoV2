@@ -5,6 +5,8 @@
 #ifndef PERSISTENTMANAGER_TRANSFERBASE_H
 #define PERSISTENTMANAGER_TRANSFERBASE_H
 
+#include "Serialize/SerializationMetaFlags.h"
+
 extern const char * kTransferNameIdentifierBase;
 class TransferBase {
 public:
@@ -13,6 +15,10 @@ public:
     /// Internal function. Should only be called from SerializeTraits
     template<class T>
     void TransferBasicData(T&) {}
+
+protected:
+    TransferInstructionFlags          m_Flags;
+    void*                             m_UserData;
 };
 
 

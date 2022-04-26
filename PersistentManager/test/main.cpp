@@ -5,6 +5,7 @@
 #include "PersistentManager.h"
 #include "PersistentManagerConfig.h"
 #include "Components/Transform/Transform.h"
+#include "Serialize/SerializationCaching/BlockMemoryCacheWriter.h"
 
 #include <cstdio>
 
@@ -24,12 +25,18 @@ int main(){
 
     printf("%d", TypeOf<Transform>()->IsDerivedFrom<BaseComponent>());
 
+    transform->RebuildTransformHierarchy();
+
     // transform->SetLocalPosition();
     Quaternionf quaternionf(1.0f, 2.0f, 3.0f, 4.0f);
     transform->SetLocalRotation(quaternionf);
 
-    StreamedBinaryWrite binaryWrite;
-    transform->Transfer(binaryWrite);
+    StreamedBinaryWrite writeStream;
+    CachedWriter& writeCache = writeStream.Init(kSerializeForPrefabSystem); //, BuildTargetSelection::NoTarget());
+    BlockMemoryCacheWriter bmcw;
+    writeCache.InitWrite(bmcw);
+
+    transform->Transfer(writeStream);
 
     return 0;
 }

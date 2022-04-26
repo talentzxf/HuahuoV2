@@ -108,6 +108,9 @@ namespace TransformInternal {
         hierarchy->systemChanged = NEW_ARRAY(TransformChangeSystemMask, transformCapacity);
         hierarchy->systemInterested = NEW_ARRAY(TransformChangeSystemMask, transformCapacity);
         hierarchy->hierarchySystemInterested = NEW_ARRAY(UInt32, transformCapacity);
+        hierarchy->mainThreadOnlyTransformPointers = NEW_ARRAY(Transform*, transformCapacity);
+        hierarchy->nextIndices = NEW_ARRAY(SInt32, transformCapacity);
+        hierarchy->prevIndices = NEW_ARRAY(SInt32, transformCapacity);
 
         // ClearFenceWithoutSync(hierarchy->fence);
 
