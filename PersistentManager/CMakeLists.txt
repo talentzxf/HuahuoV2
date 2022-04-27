@@ -30,6 +30,7 @@ list(APPEND CPPFILES src/Serialize/SerializationCaching/CacheWriterBase.cpp)
 list(APPEND CPPFILES src/Serialize/SerializationCaching/CacheReaderBase.cpp)
 list(APPEND CPPFILES src/Serialize/SerializationCaching/CachedReader.cpp)
 list(APPEND CPPFILES src/Serialize/SerializationCaching/CachedWriter.cpp)
+list(APPEND CPPFILES src/Serialize/SerializationCaching/MemoryCacherReadBlocks.cpp)
 list(APPEND CPPFILES src/Containers/CommonString.cpp)
 list(APPEND CPPFILES src/Math/Quaternionf.cpp)
 

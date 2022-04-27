@@ -93,7 +93,10 @@ inline bool SetLocalR(TransformAccess transformAccess, const math::float4 &r,
     return false;
 }
 
-
-
+inline const math::trsX& GetLocalTRS(TransformAccessReadOnly transformAccess)
+{
+    ASSERT_TRANSFORM_ACCESS(transformAccess);
+    return transformAccess.hierarchy->localTransforms[transformAccess.index];
+}
 
 #endif //PERSISTENTMANAGER_TRANSFORMHIERARCHY_H

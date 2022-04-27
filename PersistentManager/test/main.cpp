@@ -6,6 +6,7 @@
 #include "PersistentManagerConfig.h"
 #include "Components/Transform/Transform.h"
 #include "Serialize/SerializationCaching/BlockMemoryCacheWriter.h"
+#include "Serialize/SerializationCaching/MemoryCacherReadBlocks.h"
 
 #include <cstdio>
 
@@ -35,9 +36,18 @@ int main() {
     writeCache.InitWrite(bmcw);
     transform->Transfer(writeStream);
     writeCache.CompleteWriting();
-//
-//    StreamedBinaryRead readStream;
-//    Transform* transform1 = Transform::Produce();
+
+    Transform *targetTransform = Transform::Produce();
+    targetTransform->RebuildTransformHierarchy();
+    MemoryCacherReadBlocks cacheReader(bmcw.GetCacheBlocks(), bmcw.GetFileLength(), bmcw.GetCacheSize());
+    StreamedBinaryRead readStream;
+    CachedReader& readCache = readStream.Init(kSerializeForPrefabSystem | kDontCreateMonoBehaviourScriptWrapper | kIsCloningObject);
+    readCache.InitRead(cacheReader, 0, writeCache.GetPosition());
+    targetTransform->Transfer(readStream);
+    readCache.End();
+
+    Quaternionf quaternionfTarget = targetTransform->GetLocalRotation();
+    printf("%f,%f,%f,%f\n", quaternionfTarget.x, quaternionfTarget.y, quaternionfTarget.z, quaternionfTarget.w);
 
     return 0;
 }

@@ -6,9 +6,12 @@
 #include "Utilities/TypeConversion.h"
 #include "TransformHierarchy.h"
 #include "TransformChangeDispatch.h"
+#include "Math/Simd/vec-transform.h"
 
 using namespace TransformInternal;
 static TransformChangeSystemHandle gHasChangedDeprecatedSystem;
+
+#define RETURN_QUATERNION(x) Quaternionf outQuat; math::vstore4f(outQuat.GetPtr(), x); return outQuat;
 
 template<class TransferFunction>
 void Transform::Transfer(TransferFunction& transfer)
@@ -27,6 +30,19 @@ void Transform::Transfer(TransferFunction& transfer)
 //
 //    if (transfer.IsReading() && IsTransformHierarchyInitialized())
 //        ApplySerializedToRuntimeData();
+}
+
+Quaternionf Transform::GetLocalRotation() const
+{
+#if UNITY_EDITOR
+    if (!IsTransformHierarchyInitialized())
+    {
+        ErrorStringObject("Illegal transform access. Are you accessing a transform localRotation from OnValidate?\n", this);
+        return Quaternionf::identity();
+    }
+#endif
+
+    RETURN_QUATERNION(math::rotation(GetLocalTRS(GetTransformAccess())));
 }
 
 

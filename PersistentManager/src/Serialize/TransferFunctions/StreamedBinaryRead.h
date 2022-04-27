@@ -15,6 +15,8 @@ private:
     CachedReader    m_Cache;
 
 public:
+    CachedReader& Init(TransferInstructionFlags flags)  { m_UserData = NULL; m_Flags = flags; return m_Cache; }
+
     template<class T>
     void TransferBase(T& data, TransferMetaFlags metaFlag = kNoTransferFlags);
     template<class T>

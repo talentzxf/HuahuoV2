@@ -19,6 +19,39 @@ CachedReader::~CachedReader()
     Assert(m_Block == -1);
 }
 
+void CachedReader::LockCacheBlockBounded()
+{
+    m_Cacher->LockCacheBlock(m_Block, &m_CacheStart, &m_CacheEnd);
+    UInt8* maxPos = m_MaximumPosition - m_Block * m_CacheSize + m_CacheStart;
+    m_CacheEnd = std::min(m_CacheEnd, maxPos);
+}
+
+void CachedReader::InitRead(CacheReaderBase& cacher, size_t position, size_t readSize)
+{
+    Assert(m_Block == -1);
+    m_Cacher = &cacher;
+    Assert(m_Cacher != NULL);
+    m_CacheSize = m_Cacher->GetCacheSize();
+    m_Block = position / m_CacheSize;
+    m_MaximumPosition = position + readSize;
+    m_MinimumPosition = position;
+
+    LockCacheBlockBounded();
+
+    SetPosition(position);
+}
+
+size_t CachedReader::End()
+{
+    Assert(m_Block != -1);
+    size_t position = GetPosition();
+    OutOfBoundsError(position, 0);
+
+    m_Cacher->UnlockCacheBlock(m_Block);
+    m_Block = -1;
+    return position;
+}
+
 void CachedReader::SetPosition(size_t position)
 {
     OutOfBoundsError(position, 0);

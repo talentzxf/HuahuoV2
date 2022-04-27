@@ -39,6 +39,8 @@ public:
     /// Sets the position in world space
     void SetPosition(const Vector3f& position);
 
+    Quaternionf GetLocalRotation() const;
+
     // Returns synced TransformAccess.
     TransformAccessReadOnly GetTransformAccess() const;
     TransformAccess GetTransformAccess();
