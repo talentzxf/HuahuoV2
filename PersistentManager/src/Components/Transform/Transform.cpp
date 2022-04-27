@@ -7,33 +7,33 @@
 #include "TransformHierarchy.h"
 #include "TransformChangeDispatch.h"
 #include "Math/Simd/vec-transform.h"
+#include "Utilities/ValidateArgs.h"
 
 using namespace TransformInternal;
 static TransformChangeSystemHandle gHasChangedDeprecatedSystem;
-
-#define RETURN_QUATERNION(x) Quaternionf outQuat; math::vstore4f(outQuat.GetPtr(), x); return outQuat;
 
 template<class TransferFunction>
 void Transform::Transfer(TransferFunction& transfer)
 {
     Super::Transfer(transfer);
 //
-//    if (transfer.IsWriting() && IsTransformHierarchyInitialized())
-//        ApplyRuntimeToSerializedData();
+    if (transfer.IsWriting() && IsTransformHierarchyInitialized())
+        ApplyRuntimeToSerializedData();
 
     TRANSFER(m_LocalRotation);
     TRANSFER(m_LocalPosition);
     TRANSFER(m_LocalScale);
 
-//    // Complete the transform transfer.
-//    CompleteTransformTransfer(transfer);
-//
-//    if (transfer.IsReading() && IsTransformHierarchyInitialized())
-//        ApplySerializedToRuntimeData();
+    // Complete the transform transfer.
+    CompleteTransformTransfer(transfer);
+
+    if (transfer.IsReading() && IsTransformHierarchyInitialized())
+        ApplySerializedToRuntimeData();
 }
 
 Quaternionf Transform::GetLocalRotation() const
 {
+    printf("Get Local Rotation!\n");
 #if UNITY_EDITOR
     if (!IsTransformHierarchyInitialized())
     {
@@ -45,6 +45,55 @@ Quaternionf Transform::GetLocalRotation() const
     RETURN_QUATERNION(math::rotation(GetLocalTRS(GetTransformAccess())));
 }
 
+void Transform::SetRotation(const Quaternionf& inRotation)
+{
+    if (SetGlobalR(GetTransformAccess(), QuaternionfTofloat4(inRotation)))
+    {
+        QueueChanges();
+    }
+}
+
+void Transform::SetLocalPosition(const Vector3f& inTranslation)
+{
+    ABORT_INVALID_VECTOR3(inTranslation, localPosition, transform);
+
+    if (SetLocalT(GetTransformAccess(), Vector3fTofloat3(inTranslation)))
+    {
+        QueueChanges();
+    }
+}
+
+void Transform::SetPosition(const Vector3f& p)
+{
+    ABORT_INVALID_VECTOR3(p, position, transform);
+
+    if (SetGlobalT(GetTransformAccess(), Vector3fTofloat3(p)))
+    {
+        QueueChanges();
+    }
+}
+
+void Transform::ApplyRuntimeToSerializedData()
+{
+    using namespace math;
+
+    TransformAccess transformAccess = GetTransformAccess();
+
+    const trsX& trs = GetLocalTRS(transformAccess);
+    vstore3f(m_LocalPosition.GetPtr(), translation(trs));
+    vstore4f(m_LocalRotation.GetPtr(), rotation(trs));
+    vstore3f(m_LocalScale.GetPtr(), scale(trs));
+
+#if UNITY_EDITOR
+    vstore3f(m_LocalEulerAnglesHint.GetPtr(), GetEulerHint(transformAccess));
+#endif
+}
+
+void Transform::QueueChanges()
+{
+//    Assert(IsTransformHierarchyInitialized());
+//    GetTransformChangeDispatch().QueueTransformChangeIfHasChanged(m_TransformData);
+}
 
 // Separate out the basic transfer properties from specialized processing during transfers.
 // This is done so that types derived from Transform can perform their own special handling of the basic
@@ -109,6 +158,19 @@ void Transform::SetLocalRotation(const Quaternionf& inRotation)
     {
         // QueueChanges();
     }
+}
+
+Vector3f Transform::GetLocalPosition() const
+{
+#if UNITY_EDITOR
+    if (!IsTransformHierarchyInitialized())
+    {
+        ErrorStringObject("Illegal transform access. Are you accessing a transform localPosition from OnValidate?\n", this);
+        return Vector3f::zero;
+    }
+#endif
+
+    RETURN_VECTOR3(math::translation(GetLocalTRS(GetTransformAccess())));
 }
 
 UInt32 Transform::InitializeTransformHierarchyRecursive(TransformHierarchy& hierarchy, int& index, int parentIndex)

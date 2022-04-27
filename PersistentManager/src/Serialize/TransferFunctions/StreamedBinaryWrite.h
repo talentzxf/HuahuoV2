@@ -30,6 +30,9 @@ public:
 
     template<class T>
     void TransferBasicData(T& data);
+
+    bool IsWriting()                 { return true; }
+    bool IsWritingPPtr()             { return true; }
 };
 
 template<class T>

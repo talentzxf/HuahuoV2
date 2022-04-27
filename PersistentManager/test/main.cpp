@@ -13,11 +13,11 @@
 int main() {
     PersistentManager::InitEngine();
 
-//    PersistentManager *pManager = PersistentManager::getInstance();
-//    pManager->getBuffer();
-//
-//    printf("Version: %d.%d\n", PM_VERSION_MAJOR, PM_VERSION_MINOR);
-//
+    PersistentManager *pManager = PersistentManager::getInstance();
+    pManager->getBuffer();
+
+    printf("Version: %d.%d\n", PM_VERSION_MAJOR, PM_VERSION_MINOR);
+
     Transform *transform = Transform::Produce();
     if (transform == NULL) {
         printf("ERROR\n");
@@ -28,7 +28,13 @@ int main() {
 
     transform->RebuildTransformHierarchy();
     Quaternionf quaternionf(1.0f, 2.0f, 3.0f, 4.0f);
-    transform->SetLocalRotation(quaternionf);
+    // transform->SetLocalRotation(quaternionf);
+    transform->SetRotation(quaternionf);
+    Vector3f vector3F(1.0f, 2.0f, 3.0f);
+    transform->SetPosition(vector3F);
+
+    Quaternionf originRotation = transform->GetLocalRotation();
+    printf("%f,%f,%f,%f\n", originRotation.x, originRotation.y, originRotation.z, originRotation.w);
 
     StreamedBinaryWrite writeStream;
     CachedWriter &writeCache = writeStream.Init(kSerializeForPrefabSystem); //, BuildTargetSelection::NoTarget());
@@ -47,7 +53,9 @@ int main() {
     readCache.End();
 
     Quaternionf quaternionfTarget = targetTransform->GetLocalRotation();
-    printf("%f,%f,%f,%f\n", quaternionfTarget.x, quaternionfTarget.y, quaternionfTarget.z, quaternionfTarget.w);
+    Vector3f positionTarget = targetTransform->GetLocalPosition();
+    printf("Rotation: %f,%f,%f,%f\n", quaternionfTarget.x, quaternionfTarget.y, quaternionfTarget.z, quaternionfTarget.w);
+    printf("Position: %f,%f,%f\n", positionTarget.x, positionTarget.y, positionTarget.z);
 
     return 0;
 }

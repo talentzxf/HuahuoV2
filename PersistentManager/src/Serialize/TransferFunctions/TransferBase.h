@@ -16,6 +16,11 @@ public:
     template<class T>
     void TransferBasicData(T&) {}
 
+    bool IsReading() { return false; }
+    bool IsReadingPPtr() { return false; }
+
+    bool IsWriting() { return false; }
+    bool IsWritingPPtr() { return false; }
 protected:
     TransferInstructionFlags          m_Flags;
     void*                             m_UserData;

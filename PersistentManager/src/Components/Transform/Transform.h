@@ -13,6 +13,7 @@
 #include "Math/Simd/RotationOrder.h"
 #include "TransformAccess.h"
 #include "BaseClasses/ImmediatePtr.h"
+#include "TransformType.h"
 
 class Transform : public BaseComponent {
     REGISTER_CLASS(Transform);
@@ -23,6 +24,8 @@ public:
     {
 
     }
+
+    bool IsTransformHierarchyInitialized() const { return m_TransformData.hierarchy != NULL; }
 
     template<class TransferFunction> void CompleteTransformTransfer(TransferFunction& transfer);
 
@@ -41,6 +44,18 @@ public:
 
     Quaternionf GetLocalRotation() const;
 
+    /// Sets the scale in local space
+    void SetLocalScale(const Vector3f& scale);
+
+    /// Sets the world position and rotation
+    void SetPositionAndRotation(const Vector3f& position, const Quaternionf& rotation);
+
+    Vector3f GetLocalPosition() const;
+
+    Vector3f GetLocalScale() const;
+
+    TransformType GetTransformType() const;
+
     // Returns synced TransformAccess.
     TransformAccessReadOnly GetTransformAccess() const;
     TransformAccess GetTransformAccess();
@@ -51,8 +66,11 @@ public:
     Transform* GetParent() const   { return m_Father; }
 
     typedef std::vector<ImmediatePtr<Transform> > TransformComList;
+
+    void QueueChanges();
 protected:
     void ApplySerializedToRuntimeData();
+    void ApplyRuntimeToSerializedData();
 
 private:
     UInt32 CountNodesDeep() const;
