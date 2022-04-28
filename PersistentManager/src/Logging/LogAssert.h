@@ -5,7 +5,11 @@
 #ifndef PERSISTENTMANAGER_LOGASSERT_H
 #define PERSISTENTMANAGER_LOGASSERT_H
 #include <stdarg.h>
+#include "Utilities/Annotations.h"
 #include "baselib/include/CoreMacros.h"
+#include "Memory/AllocatorLabels.h"
+#include "BaseClasses/InstanceID.h"
+#include <string>
 
 // __FILE_STRIPPED__ should be used in place of __FILE__ when you only want to embed the source filename for diagnostic
 // purposes, and don't want it to take up space in a final release.
@@ -79,8 +83,43 @@ enum LogOption
 #   include "Utilities/PlatformLogAssert.h"
 #endif
 
+struct DebugStringToFileData
+{
+    const char* message;
+    const char* scriptingExceptionType;
+    const char* strippedStacktrace;
+    const char* stacktrace;
+    const char* file;
+    int line;
+    int column;
+    LogMessageFlags mode;
+    InstanceID targetInstanceID;
+    int identifier;
+    // LogEntryDoubleClickCallback doubleClickCallback;
+    bool invokePostprocessCallbacks;
+
+    DebugStringToFileData()
+            : message("")
+            , scriptingExceptionType("")
+            , strippedStacktrace("")
+            , stacktrace("")
+            , file("")
+            , line(0)
+            , column(0)
+            , mode(kNoLogMessageFlags)
+            , targetInstanceID(InstanceID_None)
+            , identifier(0)
+            // , doubleClickCallback(NULL)
+            , invokePostprocessCallbacks(true)
+    {
+    }
+};
+
 struct CppLogEntry;
 typedef void (*LogEntryDoubleClickCallback)(const CppLogEntry&);
+
+EXPORT_COREMODULE void DebugStringToFile(const DebugStringToFileData& data);
+TAKES_PRINTF_ARGS(1, 2) std::string Format(const char* format, ...);
 
 void DumpCallstackConsole(const char* prefix, const char* file, int line);
 #define DUMP_CALLSTACK(message) DumpCallstackConsole(message, __FILE_STRIPPED__, __LINE__)

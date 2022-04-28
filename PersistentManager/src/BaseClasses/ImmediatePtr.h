@@ -6,6 +6,7 @@
 #define PERSISTENTMANAGER_IMMEDIATEPTR_H
 
 #include "TypeSystem/Object.h"
+#include "Utilities/Annotations.h"
 
 template<class T>
 class ImmediatePtr

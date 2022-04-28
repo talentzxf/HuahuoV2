@@ -5,6 +5,8 @@
 #ifndef PERSISTENTMANAGER_INSTANCEID_H
 #define PERSISTENTMANAGER_INSTANCEID_H
 
+#include "baselib/include/IntegerDefinitions.h"
+
 // With this switched on, you should get a compile error when you mix InstanceIDs with regular ints, or
 // do arithmetic to them, etc. Fixing the entire codebase to handle InstanceIDs correctly is quite a big
 // change to make and will be difficult to do all in one go, so we have it turned off for now, allowing
