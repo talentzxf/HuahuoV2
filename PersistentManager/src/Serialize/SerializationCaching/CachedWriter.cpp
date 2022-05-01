@@ -6,6 +6,7 @@
 #include "CacheWriterBase.h"
 #include "Logging/LogAssert.h"
 #include "memcpy_constrained.h"
+#include "Utilities/Align.h"
 
 void CachedWriter::SetPosition(size_t position)
 {
@@ -85,4 +86,12 @@ bool CachedWriter::CompleteWriting()
 //#endif
 
     return success;
+}
+
+void CachedWriter::Align4Write()
+{
+    UInt32 leftOver = Align4LeftOver(m_ActiveWriter.cachePosition - m_ActiveWriter.cacheStart);
+    UInt8 value = 0;
+    for (UInt32 i = 0; i < leftOver; i++)
+        Write(value);
 }

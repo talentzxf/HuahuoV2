@@ -2,7 +2,7 @@
 // Created by VincentZhang on 4/1/2022.
 //
 
-#include "PersistentManager.h"
+#include "HuaHuoEngine.h"
 #include "PersistentManagerConfig.h"
 #include "Components/Transform/Transform.h"
 #include "Serialize/SerializationCaching/BlockMemoryCacheWriter.h"
@@ -11,9 +11,9 @@
 #include <cstdio>
 
 int main() {
-    PersistentManager::InitEngine();
+    HuaHuoEngine::InitEngine();
 
-    PersistentManager *pManager = PersistentManager::getInstance();
+    HuaHuoEngine *pManager = HuaHuoEngine::getInstance();
     pManager->getBuffer();
 
     printf("Version: %d.%d\n", PM_VERSION_MAJOR, PM_VERSION_MINOR);

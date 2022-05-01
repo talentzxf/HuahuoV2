@@ -64,4 +64,9 @@ public:
         data.Transfer(transfer);
     }
 };
+
+#define DEFINE_GET_TYPESTRING_CONTAINER(x)                      \
+inline static const char* GetTypeString (void* p = 0)   { return CommonString(x); } \
+inline static bool MightContainPPtr ()  { return SerializeTraits<T>::MightContainPPtr(); } \
+inline static bool AllowTransferOptimization () { return false; }
 #endif //PERSISTENTMANAGER_SERIALIZETRAITSBASE_H

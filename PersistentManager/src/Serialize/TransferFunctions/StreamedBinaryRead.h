@@ -27,7 +27,39 @@ public:
 
     template<class T>
     void TransferBasicData(T& data);
+
+    template<class T>
+    void TransferSTLStyleArray(T& data, TransferMetaFlags metaFlag = kNoTransferFlags);
+
+    void EXPORT_COREMODULE Align();
+    /// Reads byteSize bytes into data. This may onle be used if UseOptimizedReading returns true.
+    void EXPORT_COREMODULE ReadDirect(void* data, int byteSize);
 };
+
+
+template<class T>
+void StreamedBinaryRead::TransferSTLStyleArray(T& data, TransferMetaFlags /*metaFlags*/)
+{
+    SInt32 size;
+    Transfer(size, "size");
+
+    SerializeTraits<T>::ResizeSTLStyleArray(data, size);
+
+    if (SerializeTraits<typename T::value_type>::AllowTransferOptimization() && SerializeTraits<T>::IsContinousMemoryArray())
+    {
+        //Assert (size == distance (data.begin (), data.end ()));
+        if (size != 0)
+            ReadDirect(&*data.begin(), size * sizeof(typename T::value_type));
+    }
+    else
+    {
+        typename T::iterator i;
+        typename T::iterator end = data.end();
+        //Assert (size == distance (data.begin (), end));
+        for (i = data.begin(); i != end; ++i)
+            Transfer(*i, "data");
+    }
+}
 
 template<class T>
 void StreamedBinaryRead::TransferBase(T& data, TransferMetaFlags metaFlag)

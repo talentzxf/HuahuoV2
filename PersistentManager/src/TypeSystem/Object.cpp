@@ -8,7 +8,7 @@
 #include "TypeManager.h"
 #include <cstring>
 #include "Utilities/RegisterRuntimeInitializeAndCleanup.h"
-#include "PersistentManager.h"
+#include "Serialize/PersistentManager.h"
 
 Object::IDToPointerMap*    Object::ms_IDToPointer = NULL;
 Object::TypeToObjectSet*   Object::ms_TypeToObjectSet = NULL;
@@ -245,7 +245,7 @@ void DestroySingleObject(Object* o)
         return;
 
     // Objects that were allocated with NEW_OBJECT_FROM_THREAD() do not have a valid instanceID.
-    // They don't have tentacles in other systems (e.g. EventManager, PersistentManager, MemoryProfilerStats),
+    // They don't have tentacles in other systems (e.g. EventManager, HuaHuoEngine, MemoryProfilerStats),
     // so can just be deleted on any thread and skip deletion preparations.
     if (!o->IsInstanceIDCreated())
     {
@@ -373,12 +373,12 @@ void Object::Transfer(TransferFunction& transfer)
 
 //void InstanceIDToLocalSerializedObjectIdentifier(InstanceID id, LocalSerializedObjectIdentifier& localIdentifier)
 //{
-//    PersistentManager::getInstance()->InstanceIDToLocalSerializedObjectIdentifier(id, localIdentifier);
+//    HuaHuoEngine::getInstance()->InstanceIDToLocalSerializedObjectIdentifier(id, localIdentifier);
 //}
 
 void LocalSerializedObjectIdentifierToInstanceID(const LocalSerializedObjectIdentifier& fileID, InstanceID& memoryID)
 {
-    PersistentManager::getInstance()->LocalSerializedObjectIdentifierToInstanceID(fileID, memoryID);
+    GetPersistentManager().LocalSerializedObjectIdentifierToInstanceID(fileID, memoryID);
 }
 
 Object* PreallocateObjectFromPersistentManager(InstanceID instanceID, bool threadedLoading)
@@ -395,6 +395,31 @@ Object* PreallocateObjectFromPersistentManager(InstanceID instanceID, bool threa
 //    }
 //
 //    return obj;
+}
+
+void InstanceIDToLocalSerializedObjectIdentifier(InstanceID id, LocalSerializedObjectIdentifier& localIdentifier)
+{
+#if UNITY_EDITOR
+    // Early out if referenced object is null
+    if (id == InstanceID_None)
+    {
+        localIdentifier.localSerializedFileIndex = 0;
+        localIdentifier.localIdentifierInFile = 0;
+        return;
+    }
+
+    if (gInstanceIDResolveCallback == NULL)
+    {
+        GetPersistentManager().InstanceIDToLocalSerializedObjectIdentifier(id, localIdentifier);
+        return;
+    }
+    else
+    {
+        gInstanceIDResolveCallback(id, localIdentifier, const_cast<void*>(gInstanceIDResolveContext));
+    }
+#else
+    GetPersistentManager().InstanceIDToLocalSerializedObjectIdentifier(id, localIdentifier);
+#endif
 }
 
 INSTANTIATE_TEMPLATE_TRANSFER(Object);

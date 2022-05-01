@@ -29,11 +29,34 @@ public:
     void TransferWithTypeString(T& data, const char* name, const char* typeName, TransferMetaFlags metaFlag = kNoTransferFlags);
 
     template<class T>
+    void TransferSTLStyleArray(T& data, TransferMetaFlags metaFlag = kNoTransferFlags);
+
+    template<class T>
     void TransferBasicData(T& data);
 
     bool IsWriting()                 { return true; }
     bool IsWritingPPtr()             { return true; }
+
+    void Align();
 };
+
+template<class T> inline
+void StreamedBinaryWrite::TransferSTLStyleArray(T& data, TransferMetaFlags /*metaFlags*/)
+{
+    const T& cdata = (const T&)data;
+
+    SInt32 size = (SInt32)cdata.size();
+    Transfer(size, "size");
+
+    typedef typename T::value_type non_const_value_type;
+
+    typename T::const_iterator end = cdata.end();
+    for (typename T::const_iterator i = cdata.begin(); i != end; ++i)
+    {
+        non_const_value_type& p = (non_const_value_type&)(*i);
+        Transfer(p, "data");
+    }
+}
 
 template<class T>
 void StreamedBinaryWrite::TransferBase(T& data, TransferMetaFlags metaFlag)

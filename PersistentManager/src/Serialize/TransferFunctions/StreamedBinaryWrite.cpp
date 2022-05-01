@@ -35,3 +35,8 @@ CachedWriter& StreamedBinaryWrite::Init(TransferInstructionFlags flags)//, Build
 #endif
     return m_Cache;
 }
+
+void StreamedBinaryWrite::Align()
+{
+    m_Cache.Align4Write();
+}

@@ -9,7 +9,12 @@
 #include "ImmediatePtr.h"
 #include "Serialize/SerializeUtility.h"
 #include "Components/BaseComponent.h"
+#include "Utilities/LinkedList.h"
+#include "TagTypes.h"
+#include "PPtr.h"
+#include "GameObjectDefines.h"
 
+class Transform;
 class GameObject : public Object{
     REGISTER_CLASS(GameObject);
     DECLARE_OBJECT_SERIALIZE();
@@ -34,7 +39,15 @@ public:
     };
 
     typedef std::vector<ComponentPair>    Container;
-    GameObject(MemLabelId label, ObjectCreationMode mode);
+    GameObject(/*MemLabelId label,*/ ObjectCreationMode mode);
+
+    static void InitializeClass();
+    static void CleanupClass();
+
+    static bool ShouldClearActiveCached(AwakeFromLoadMode mode) { return (mode == kPersistentManagerAwakeFromLoadMode); }
+    void ClearActiveCachedInternal() { m_IsActiveCached = -1; }
+
+    void UpdateActiveGONode();
 
     // Adds a new Component to the GameObject.
     // Using the PersistentObject interface so that Components,
@@ -48,6 +61,7 @@ public:
     template<class T> T* QueryComponent() const;
 
     BaseComponent* QueryComponentByType(const HuaHuo::Type* type) const;
+    BaseComponent* QueryComponentByExactType(const HuaHuo::Type* type) const;
 
     virtual char const* GetName() const override { return m_Name.c_str(); }
     virtual void SetName(char const* name) override;
@@ -63,15 +77,90 @@ public:
 
     bool IsActive() const;
     bool IsSelfActive() const { return m_IsActive; }
-    void SetSelfActive(bool state);
+//    void SetSelfActive(bool state);
+
+    virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
+
+    virtual void Reset() override;
+
+    // Internally used during object destruction to prevent double deletion etc.
+    bool IsDestroying() const { return (m_ActivationState & kDestroying) != 0; }
+    bool IsActivating() const { return (m_ActivationState & kActivatingOrDeactivating) != 0; }
+    bool IsActivatingChildren() const { return (m_ActivationState & (kActivatingChildren | kDeactivatingChildren)) != 0; }
+    bool IsDeactivatingComponents() const { return (m_ActivationState & kDeactivatingComponents) != 0; }
+
+    void ReplaceTransformComponentInternal(Transform* newTransform/*, AwakeFromLoadQueue* queue*/);
+    void AddFirstTransformComponentInternal(::Transform* newTransform/*, AwakeFromLoadQueue* queue = nullptr*/);
+
+//    const HuaHuo::Type* GetComponentTypeAtIndex(int index) const;
+//    template<class T> T& GetComponentAtIndex(int index) const;
+    template<class T> T* QueryComponentAtIndex(int index) const;
+
+    void ActivateAwakeRecursively(DeactivateOperation deactivateOperation = kNormalDeactivate);
+    void ActivateAwakeRecursivelyInternal(DeactivateOperation deactivateOperation = kNormalDeactivate/*, AwakeFromLoadQueue &queue*/);
+
+    /// Set the GameObject Layer.
+    /// This is used for collisions and messaging
+    void SetLayer(int layerIndex);
+    int GetLayer() const    { return m_Layer; }
+    UInt32 GetLayerMask() const { return 1 << m_Layer; }
+
 private:
+    enum ActivationState
+    {
+        kNotActivating          = 0,
+        kActivatingChildren     = 1 << 0,
+        kActivatingComponents   = 1 << 1,
+        kDeactivatingChildren   = 1 << 2,
+        kDeactivatingComponents = 1 << 3,
+        kDestroying             = 1 << 4,
+        kActivatingOrDeactivating = kActivatingChildren | kActivatingComponents | kDeactivatingChildren | kDeactivatingComponents,
+    };
+    ActivationState m_ActivationState;
+
     void FinalizeAddComponentInternal(BaseComponent* component, bool awake/*AwakeFromLoadQueue* queue = nullptr*/);
+
+    template<class TransferFunction>
+    void TransferComponents(TransferFunction& transfer);
+    UInt32          m_Layer;
+    UInt16          m_Tag;
     Container   m_Component;
     std::string  m_Name;
 
     bool            m_IsActive;
     mutable SInt8   m_IsActiveCached;
+
+    ListNode<GameObject> m_ActiveGONode;
 };
+
+typedef List<ListNode<GameObject> > GameObjectList;
+
+// A fast lookup for all tagged and active game objects
+class GameObjectManager
+{
+public:
+    static void StaticInitialize();
+    static void StaticDestroy();
+
+private:
+    // Nodes that are tagged and active (excluding m_MainCameraTaggedNodes because nodes may only belong to one list)
+    GameObjectList m_TaggedNodes;
+    // Main Camera Nodes that are tagged and active
+    GameObjectList m_MainCameraTaggedNodes;
+
+public:
+    // Nodes that are just active
+    // (If you want to get all active nodes you need to go through tagged and active nodes)
+    GameObjectList m_ActiveNodes;
+
+    GameObjectList& GetTaggedNodes(UInt32 tag)
+    {
+        return (tag == kMainCameraTag) ? m_MainCameraTaggedNodes : m_TaggedNodes;
+    }
+
+    static GameObjectManager* s_Instance;
+};
+GameObjectManager& GetGameObjectManager();
 
 template<class T> inline
 T& GameObject::GetComponent() const
@@ -93,6 +182,14 @@ inline GameObject::ComponentPair GameObject::ComponentPair::FromComponent(BaseCo
     ret.typeIndex = component->GetType()->GetRuntimeTypeIndex();
     ret.component = component;
     return ret;
+}
+
+template<class T> inline
+T* GameObject::QueryComponentAtIndex(int index) const
+{
+    BaseComponent* comp = m_Component[index].GetComponentPtr();
+    DebugAssert(comp != NULL);
+    return dynamic_pptr_cast<T*>(comp);
 }
 
 #endif //PERSISTENTMANAGER_GAMEOBJECT_H

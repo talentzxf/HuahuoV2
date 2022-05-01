@@ -4,8 +4,8 @@ interface ByteArray {
 };
 
 [Prefix="HuaHuo::"]
-interface PersistentManager {
-    static PersistentManager getInstance();
+interface HuaHuoEngine {
+    static HuaHuoEngine getInstance();
     ByteArray getBuffer();
     long getBufferSize();
 };

@@ -14,6 +14,7 @@
 #include "TransformAccess.h"
 #include "BaseClasses/ImmediatePtr.h"
 #include "TransformType.h"
+#include "BaseClasses/GameObject.h"
 
 class Transform : public BaseComponent {
     REGISTER_CLASS(Transform);
@@ -65,14 +66,44 @@ public:
     /// Returns a ptr to the father transformcomponent (NULL if no father)
     Transform* GetParent() const   { return m_Father; }
 
-    typedef std::vector<ImmediatePtr<Transform> > TransformComList;
-
     void QueueChanges();
+
+    Transform* GetParentPtrInternal() const { return m_Father; }
+
+    /// access to the children
+    int GetChildrenCount() const                        { return m_Children.size(); }
+
+    // Creates the transform hierarchy if it hasn't been constructed yet
+    void EnsureTransformHierarchyExists()
+    {
+        if (!IsTransformHierarchyInitialized())
+            RebuildTransformHierarchy();
+    }
+
+    typedef std::vector<ImmediatePtr<Transform> > TransformComList;
+    typedef TransformComList::iterator  iterator;
+
+    /// Finds given transform
+    iterator Find(const Transform* child);
+    Transform& GetChild(int i) const                   { Assert(i < (int)m_Children.size()); return *m_Children[i]; }
+    iterator begin()                                   { return m_Children.begin(); }
+    iterator end()                                     { return m_Children.end(); }
+
+    void SetParentPtrInternal(Transform* father) { m_Father = father; }
+
+    TransformComList& GetChildrenInternal() { return m_Children; }
+    const TransformComList& GetChildrenInternal() const { return m_Children; }
+
+    /// Reset position&rotation
+    virtual void Reset() override;
+    virtual void ResetReplacement();
 protected:
+    friend void GameObject::ReplaceTransformComponentInternal(Transform* newTransform/*, AwakeFromLoadQueue* queue*/);
     void ApplySerializedToRuntimeData();
     void ApplyRuntimeToSerializedData();
 
 private:
+    void CommonTransformReset();
     UInt32 CountNodesDeep() const;
     UInt32 InitializeTransformHierarchyRecursive(TransformHierarchy& hierarchy, int& index, int parentIndex);
 

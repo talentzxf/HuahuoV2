@@ -123,3 +123,64 @@ void CachedReader::UpdateReadCache(void* data, size_t size)
         m_CachePosition += size;
     }
 }
+
+void CachedReader::Align4Read()
+{
+    UInt32 offset = m_CachePosition - m_CacheStart;
+    offset = ((offset + 3) >> 2) << 2;
+    m_CachePosition = m_CacheStart + offset;
+}
+
+void CachedReader::Read(void* data, size_t size)
+{
+    if (m_CachePosition + size <= m_CacheEnd)
+    {
+        memcpy(data, m_CachePosition, size);
+        m_CachePosition += size;
+    }
+    else
+    {
+        // Read some data directly if it is coming in big chunks and we are not hitting the end of the file!
+        size_t position = GetPosition();
+        OutOfBoundsError(position, size);
+
+        if (m_OutOfBoundsRead)
+        {
+            memset(data, 0, size);
+            return;
+        }
+
+        // Read enough bytes from the cache to align the position with the cache size
+        if (position % m_CacheSize != 0)
+        {
+            size_t blockEnd = ((position / m_CacheSize) + 1) * m_CacheSize;
+            size_t curReadSize = std::min<size_t>(size, blockEnd - position);
+            memcpy_constrained_src(data, m_CachePosition, curReadSize, m_CacheStart, m_CacheEnd);
+            m_CachePosition += curReadSize;
+            position += curReadSize;
+            (UInt8*&)data += curReadSize;
+            size -= curReadSize;
+        }
+
+        // If we have a big block of data read directly without a cache, all aligned reads
+        size_t physicallyLimitedSize = std::min<size_t>((position + size), m_Cacher->GetFileLength()) - position;
+        size_t blocksToRead = physicallyLimitedSize / m_CacheSize;
+        if (blocksToRead > 0)
+        {
+            size_t curReadSize = blocksToRead * m_CacheSize;
+            m_Cacher->DirectRead((UInt8*)data, position, curReadSize);
+            m_CachePosition += curReadSize;
+            (UInt8*&)data += curReadSize;
+            size -= curReadSize;
+        }
+
+        // Read the rest of the data from the cache!
+        while (size != 0)
+        {
+            size_t curReadSize = std::min<size_t>(size, m_CacheSize);
+            UpdateReadCache(data, curReadSize);
+            (UInt8*&)data += curReadSize;
+            size -= curReadSize;
+        }
+    }
+}

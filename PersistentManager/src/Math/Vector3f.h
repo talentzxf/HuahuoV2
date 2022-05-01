@@ -40,6 +40,15 @@ public:
     Vector3f operator-() const                    { return Vector3f(-x, -y, -z); }
 
     Vector3f& Scale(const Vector3f& inV)           { x *= inV.x; y *= inV.y; z *= inV.z; return *this; }
+
+    EXPORT_COREMODULE static const float        epsilon;
+    EXPORT_COREMODULE static const float        infinity;
+    EXPORT_COREMODULE static const Vector3f infinityVec;
+    EXPORT_COREMODULE static const Vector3f zero;
+    EXPORT_COREMODULE static const Vector3f one;
+    EXPORT_COREMODULE static const Vector3f xAxis;
+    EXPORT_COREMODULE static const Vector3f yAxis;
+    EXPORT_COREMODULE static const Vector3f zAxis;
 };
 
 template<class TransferFunction>

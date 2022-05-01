@@ -73,6 +73,29 @@ void Transform::SetPosition(const Vector3f& p)
     }
 }
 
+void Transform::CommonTransformReset()
+{
+#if UNITY_EDITOR
+    m_LocalEulerAnglesHint = Vector3f::zero;
+#endif
+}
+
+void Transform::Reset()
+{
+    Super::Reset();
+    m_LocalRotation = Quaternionf::identity();
+    m_LocalPosition = Vector3f::zero;
+    m_LocalScale = Vector3f::one;
+
+    CommonTransformReset();
+}
+
+void Transform::ResetReplacement()
+{
+    Super::Reset();
+    CommonTransformReset();
+}
+
 void Transform::ApplyRuntimeToSerializedData()
 {
     using namespace math;
@@ -88,6 +111,18 @@ void Transform::ApplyRuntimeToSerializedData()
     vstore3f(m_LocalEulerAnglesHint.GetPtr(), GetEulerHint(transformAccess));
 #endif
 }
+
+Transform::iterator Transform::Find(const Transform* child)
+{
+    iterator it, itEnd = end();
+    for (it = begin(); it != itEnd; ++it)
+    {
+        if (*it == child)
+            return it;
+    }
+    return itEnd;
+}
+
 
 void Transform::QueueChanges()
 {
@@ -287,5 +322,5 @@ UInt32 Transform::CountNodesDeep() const
 IMPLEMENT_OBJECT_SERIALIZE(Transform);
 INSTANTIATE_TEMPLATE_TRANSFER(Transform);
 
-IMPLEMENT_REGISTER_CLASS(Transform, 2);
+IMPLEMENT_REGISTER_CLASS(Transform, 3);
 INSTANTIATE_TEMPLATE_TRANSFER_FUNCTION(Transform, CompleteTransformTransfer);

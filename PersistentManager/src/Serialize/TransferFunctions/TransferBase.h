@@ -21,6 +21,15 @@ public:
 
     bool IsWriting() { return false; }
     bool IsWritingPPtr() { return false; }
+
+    /// @name Predicates
+    /// @{
+
+    /// Get the TransferInstructionFlags.
+    /// Commonly used to special case transfer functions for specific operations.
+    TransferInstructionFlags GetFlags() const  { return m_Flags; }
+
+    bool NeedsInstanceIDRemapping()          { return m_Flags & kReadWriteFromSerializedFile; }
 protected:
     TransferInstructionFlags          m_Flags;
     void*                             m_UserData;

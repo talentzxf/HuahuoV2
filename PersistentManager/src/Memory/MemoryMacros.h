@@ -5,6 +5,7 @@
 #ifndef PERSISTENTMANAGER_MEMORYMACROS_H
 #define PERSISTENTMANAGER_MEMORYMACROS_H
 #include "MemoryMacrosDetails.h"
+#include <limits>
 
 #define NEW_AS_ROOT(type, areaName, objectName) new type
 #define NEW(type)   new type
@@ -15,4 +16,9 @@
 #define ALLOC_ARRAY(type, size) (type *)malloc(sizeof(type) * size)
 //#define NEW_AS_ROOT(type, areaName, objectName) NewWithLabelConstructor<type>(alignof(type), __FILE__ , __LINE__).NEW_AS_ROOT_WITH_LABEL_CONSTRUCT
 
+template<typename T>
+inline bool DoesAdditionOverflow(T a, T b)
+{
+    return std::numeric_limits<T>::max() - a < b;
+}
 #endif //PERSISTENTMANAGER_MEMORYMACROS_H

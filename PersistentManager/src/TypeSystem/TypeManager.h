@@ -71,6 +71,7 @@ public:
 
     void InitializeAllTypes();
 
+    const RTTI* ClassNameToRTTI(const char* name, bool caseInsensitive = false) const;
 private:
     class Builder;
 

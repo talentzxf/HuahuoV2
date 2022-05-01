@@ -30,6 +30,8 @@ public:
 
     bool CompleteWriting();
 
+    void Align4Write();
+
 private:
     struct ActiveWriter {
         UInt8 *cachePosition;

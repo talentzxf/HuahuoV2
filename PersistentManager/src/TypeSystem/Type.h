@@ -9,6 +9,7 @@
 #include "BaseClasses/BaseTypes.h"
 #include <vector>
 #include <string>
+#include "Logging/LogAssert.h"
 class Object;
 
 

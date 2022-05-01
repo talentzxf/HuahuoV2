@@ -6,6 +6,7 @@
 #define PERSISTENTMANAGER_HASHFUNCTIONS_H
 #include <utility>
 #include <stdint.h>
+#include "baselib/include/PlatformEnvironment.h"
 #include "BaseClasses/BaseTypes.h"
 #include "baselib/include/IntegerDefinitions.h"
 #include "HashFunctions/xxhash.h"
@@ -51,6 +52,18 @@
 // If you want absolute best performance, especially on large data sets, you'd probably want to use
 // different hash functions depending on CPU/architecture (e.g. CityHash64 if on 64 bit, even when
 // computing a 32 bit hash value).
+
+// Compute a 32 bit hash.
+// Implementation: xxHash32.
+FORCE_INLINE UInt32 ComputeHash32(const void* data, size_t dataSize)
+{
+    return XXH32(data, dataSize, 0x8f37154b);
+}
+
+FORCE_INLINE UInt32 ComputeHash32(const void* data, size_t dataSize, size_t seed)
+{
+    return XXH32(data, dataSize, (unsigned int)seed);
+}
 
 
 //// Compute a 64 bit hash.

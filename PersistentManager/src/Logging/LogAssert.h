@@ -121,6 +121,21 @@ typedef void (*LogEntryDoubleClickCallback)(const CppLogEntry&);
 EXPORT_COREMODULE void DebugStringToFile(const DebugStringToFileData& data);
 TAKES_PRINTF_ARGS(1, 2) std::string Format(const char* format, ...);
 
+template<typename TString>
+void DebugStringToFile(const TString& message, const char* file, int line, int column, LogMessageFlags mode, const InstanceID objectInstanceID = InstanceID_None, int identifier = 0, LogEntryDoubleClickCallback doubleClickCallback = NULL)
+{
+    DebugStringToFileData data;
+    // data.message = StringTraits::AsConstTChars(message);
+    data.file = file;
+    data.line = line;
+    data.column = column;
+    data.mode = mode;
+    data.targetInstanceID = objectInstanceID;
+    data.identifier = identifier;
+    // data.doubleClickCallback = doubleClickCallback;
+    DebugStringToFile(data);
+}
+
 void DumpCallstackConsole(const char* prefix, const char* file, int line);
 #define DUMP_CALLSTACK(message) DumpCallstackConsole(message, __FILE_STRIPPED__, __LINE__)
 

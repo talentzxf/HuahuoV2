@@ -6,7 +6,7 @@
 #define PERSISTENTMANAGER_OBJECTDEFINES_H
 
 #include "RTTI.h"
-#include "TypeUtilities.h"
+#include "Utilities/TypeUtilities.h"
 #include "RTTI.h"
 #include "baselib/include/CoreMacros.h"
 #include "BaseClasses/InstanceID.h"
@@ -45,6 +45,8 @@ class MISSING_SEMICOLON_AFTER_IMPLEMENT_CLASS_VERIFY_OBJECT_IS_REGISTERED
 class MISSING_SEMICOLON_AFTER_IMPLEMENT_CLASS_VERIFY_OBJECT_IS_REGISTERED
 
 #endif
+
+#define NEW_OBJECT(CLASS_) reinterpret_cast<CLASS_*>(::Object::AllocateAndAssignInstanceID(BaseObjectInternal::NewObject<CLASS_>(kCreateObjectDefault)))
 
 // ----------------------------------------------------------------------------
 
@@ -113,6 +115,10 @@ public:                            \
     {                              \
         return Object::Produce<TYPE_NAME_>(instanceID);\
     }                              \
+    static TYPE_NAME_* Produce(const HuaHuo::Type* type, InstanceID instanceID = InstanceID_None /*, MemLabelId memLabel = kMemBaseObject, ObjectCreationMode mode = kCreateObjectDefault*/) \
+    {                              \
+        return Object::Produce<TYPE_NAME_>(type, instanceID/*, memLabel, mode*/); \
+    } \
 private: \
     virtual const HuaHuo::Type* const GetTypeVirtualInternal() const override { return TypeOf<TYPE_NAME_>(); } \
 protected:                         \

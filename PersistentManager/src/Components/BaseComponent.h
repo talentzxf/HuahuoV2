@@ -8,12 +8,14 @@
 
 #include "TypeSystem/Object.h"
 #include "BaseClasses/ImmediatePtr.h"
+#include "BaseClasses/GameObjectDefines.h"
 
 class GameObject;
 class BaseComponent: public Object{
     REGISTER_CLASS(BaseComponent);
     DECLARE_OBJECT_SERIALIZE();
 private:
+    friend class GameObject;
 private:
     ImmediatePtr<GameObject>    m_GameObject;
 public:
@@ -53,6 +55,14 @@ public:
     void SetGameObjectInternal(GameObject* go);
 
     virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
+
+    /// Deactivate will be called just before the Component is going to be removed from a GameObject
+    /// It can still communicate with other components at this point.
+    /// Deactivate will only be called when the component is remove from the GameObject,
+    /// not if the object is persistet to disk and removed from memory
+    /// Deactivate will only be called if the GameObject the Component is being removed from is active
+    /// YOU CAN NOT RELY ON IsActive returning false inside Deactivate
+    virtual void Deactivate(DeactivateOperation /*operation*/) {}
 };
 
 

@@ -5,6 +5,7 @@
 #include "TypeManager.h"
 #include "Object.h"
 #include "Utilities/ArrayUtility.h"
+#include "Utilities/Word.h"
 
 void TypeManager::InitializeGlobalInstance()
 {
@@ -227,5 +228,24 @@ void TypeManager::InitializeAllTypes() {
                 rtti_info.typeIndex, rtti_info.typeIndex, RTTI::DefaultTypeIndex);
         m_RuntimeTypes.Types[rtti_info.typeIndex] = i1->second;
         // RegisterTypeInGlobalAttributeMap(*i1->second, attributeLookupMap);
+    }
+}
+
+
+const RTTI* TypeManager::ClassNameToRTTI(const char* name, bool caseInsensitive) const
+{
+    if (!caseInsensitive)
+    {
+        StringToTypeMap::const_iterator i = m_StringToType.find(name);
+        return i != m_StringToType.end() ? i->second : NULL;
+    }
+    else
+    {
+        for (StringToTypeMap::const_iterator i = m_StringToType.begin(); i != m_StringToType.end(); ++i)
+        {
+            if (StrIEquals(name, i->first))
+                return i->second;
+        }
+        return NULL;
     }
 }

@@ -50,6 +50,8 @@ public:
 
 //    friend Quaternionf Normalize(const Quaternionf& q) {    return q / Magnitude(q); }
     friend Quaternionf NormalizeSafe(const Quaternionf& q);
+
+    static Quaternionf identity() { return Quaternionf(0.0F, 0.0F, 0.0F, 1.0F); }
 };
 
 // operator overloads

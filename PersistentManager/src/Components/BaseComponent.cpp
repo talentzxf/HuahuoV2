@@ -6,7 +6,7 @@
 #include "Logging/LogAssert.h"
 #include "BaseClasses/GameObject.h"
 
-IMPLEMENT_REGISTER_CLASS(BaseComponent, 1);
+IMPLEMENT_REGISTER_CLASS(BaseComponent, 2);
 
 template<class TransferFunction>
 void BaseComponent::Transfer(TransferFunction& transfer)
