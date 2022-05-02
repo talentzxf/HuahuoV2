@@ -1,0 +1,8 @@
+//
+// Created by VincentZhang on 4/23/2022.
+//
+
+#ifndef HUAHUOENGINE_VEC_GENERIC_H
+#define HUAHUOENGINE_VEC_GENERIC_H
+
+#endif //HUAHUOENGINE_VEC_GENERIC_H
