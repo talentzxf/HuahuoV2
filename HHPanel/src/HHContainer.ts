@@ -43,8 +43,13 @@ class HHContainer extends HTMLElement {
         this.style.display = "flex"
 
         if(this.size != "fit-content"){
-            this.style.width = "100%"
-            this.style.height = "100%"
+            if(this.style.width == ""){
+                this.style.width = "100%"
+            }
+
+            if(this.style.height == ""){
+                this.style.height = "100%"
+            }
         }
 
         this.style.flexDirection = this.isColumn?"column":"row"

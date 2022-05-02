@@ -21,13 +21,23 @@
         <button>View</button>
     </hh-container>
 
-    <hh-container direction="row">
-        <hh-panel>
-            <hh-content title="NavTree">NavTree Content</hh-content>
-            <hh-content title="Scene">Scene Content</hh-content>
-            <hh-content title="Game">Game Content</hh-content>
+    <hh-container direction="column">
+        <hh-container direction="row">
+            <hh-container direction="row" style="width: 10%">
+                <hh-panel>
+                    <hh-content title="NavTree">NavTree Content</hh-content>
+                </hh-panel>
+            </hh-container>
+            <hh-container direction="row">
+                <hh-panel>
+                    <hh-content title="Scene">Scene Content</hh-content>
+                    <hh-content title="Game">Game Content</hh-content>
+                </hh-panel>
+            </hh-container>
+        </hh-container>
+        <hh-container direction="row" style="height:10%">
             <hh-content title="log">Log Content</hh-content>
-        </hh-panel>
+        </hh-container>
     </hh-container>
 </hh-container>
 
