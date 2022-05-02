@@ -12,8 +12,8 @@ module.exports = {
     plugins: [
         new CopyPlugin({
             patterns: [
-                { from:"../PersistentManager/emcmake/PersistentManager.wasm", to:"wasm"},
-                { from:"../PersistentManager/emcmake/PersistentManager.js", to:"wasm"}
+                { from:"../HuaHuoEngine/emcmake/HuaHuoEngine.wasm", to:"wasm"},
+                { from:"../HuaHuoEngine/emcmake/HuaHuoEngine.js", to:"wasm"}
             ]
         }),
         new HtmlWebpackPlugin({

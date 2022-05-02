@@ -83,5 +83,9 @@
 #define lhs_attr
 #define scalar_attr     mutable
 
+#if !defined(MATH_HAS_SIMD_FLOAT)
+#include <tgmath.h>
+#endif
+
 #endif
 #endif //HUAHUOENGINE_CONFIG_H

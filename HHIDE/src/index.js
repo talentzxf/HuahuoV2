@@ -5,13 +5,15 @@ import {HHTitle} from "hhpanel";
 
 console.log(Module)
 Module.onRuntimeInitialized = ()=>{
-    var persistentManager = Module.PersistentManager.prototype.getInstance();
-    console.log(persistentManager.getBufferSize())
-    console.log(persistentManager.getBuffer().getByte(0))
-    console.log(persistentManager.getBuffer().getByte(1))
-    console.log(persistentManager.getBuffer().getByte(2))
-    console.log(persistentManager.getBuffer().getByte(3))
+    // var persistentManager = Module.PersistentManager.prototype.getInstance();
+    // console.log(persistentManager.getBufferSize())
+    // console.log(persistentManager.getBuffer().getByte(0))
+    // console.log(persistentManager.getBuffer().getByte(1))
+    // console.log(persistentManager.getBuffer().getByte(2))
+    // console.log(persistentManager.getBuffer().getByte(3))
+
+    Module.HuaHuoEngine.prototype.InitEngine();
+    var huaHuoEngine = Module.HuaHuoEngine.prototype.getInstance();
+    var gameObject = huaHuoEngine.CreateGameObject("Hello");
+    console.log(gameObject.GetName())
 }
-
-
-

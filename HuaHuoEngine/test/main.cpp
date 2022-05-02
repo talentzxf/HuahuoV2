@@ -17,9 +17,12 @@ int main() {
     GameObject* go = MonoCreateGameObject("Go1");
     GameObject* go2 = MonoCreateGameObject("Go2");
 
-    go->QueryComponent<Transform>()->SetParent(go2->QueryComponent<Transform>());
+    Transform* transform1 = go->QueryComponent<Transform>();
+    Transform* transform2 = go2->QueryComponent<Transform>();
 
-    go2->QueryComponent<Transform>()->GetChildrenCount();
+    transform1->SetParent(transform2);
+    printf("Child cound:%d\n", transform2->GetChildrenCount());
+    Assert( &transform2->GetChild(0) == transform1);
 
     return 0;
 }

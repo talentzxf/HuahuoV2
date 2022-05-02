@@ -1,0 +1,12 @@
+[NoDelete]
+interface GameObject {
+    [Const] DOMString GetName();
+};
+
+interface HuaHuoEngine {
+    static HuaHuoEngine getInstance();
+    static void InitEngine();
+
+    GameObject CreateGameObject(DOMString name);
+};
+
