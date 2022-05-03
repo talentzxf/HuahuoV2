@@ -1,7 +1,6 @@
 import {CustomElement} from "./CustomComponent";
 import {Vector2D} from "./math/Vector2D";
 import {ResizeManager} from "./resize/ResizeManager";
-import {HHPanel} from "./HHPanel";
 
 @CustomElement({
     selector: "hh-splitter",

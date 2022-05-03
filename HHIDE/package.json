@@ -12,13 +12,16 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/free-brands-svg-icons": "^6.1.1",
+    "@fortawesome/free-regular-svg-icons": "^6.1.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "copy-webpack-plugin": "^10.2.4",
+    "hhpanel": "file:../HHPanel",
     "html-webpack-plugin": "^5.5.0",
+    "ts-loader": "^9.3.0",
     "webpack": "^5.70.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.7.4"
-  },
-  "dependencies": {
-    "hhpanel": "file:../HHPanel"
   }
 }

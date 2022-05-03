@@ -1,7 +1,8 @@
 {
   "name": "hhpanel",
   "version": "0.0.1",
-  "main": "./dist/hhpanel.bundle.js",
+  "main": "./dist/hhpanel.bundle",
+  "typings": "./dist/hhpanel.bundle",
   "author": "VincentZhang",
   "license": "MIT",
   "scripts": {
