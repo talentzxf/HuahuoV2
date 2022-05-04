@@ -15,7 +15,7 @@ dom.watch();
 console.log(Module)
 Module.onRuntimeInitialized = ()=>{
     Module.HuaHuoEngine.prototype.InitEngine();
-    var huaHuoEngine = Module.HuaHuoEngine.prototype.getInstance();
-    var gameObject = huaHuoEngine.CreateGameObject("Hello");
+    let huaHuoEngine = Module.HuaHuoEngine.prototype.getInstance();
+    let gameObject = huaHuoEngine.CreateGameObject("Hello");
     console.log(gameObject.GetName())
 }

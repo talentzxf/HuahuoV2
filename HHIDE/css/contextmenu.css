@@ -1,0 +1,16 @@
+.contextmenu {
+    background-color: white;
+    border: 1px solid gray;
+    box-shadow: 2px 2px #888888;
+}
+
+.contextmenu ul{
+    list-style-type: none; /* Remove bullets */
+    margin: 5px;
+    padding: 5px;
+}
+
+.contextmenu li:hover{
+    background-color: lightgray;
+    cursor: default
+}

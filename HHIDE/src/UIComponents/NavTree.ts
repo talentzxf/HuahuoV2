@@ -1,4 +1,7 @@
 import {CustomElement} from "hhpanel";
+import {ContextMenu} from "./ContextMenu";
+import {HHPanel} from "hhpanel";
+import "/css/navtree.css"
 
 console.log(CustomElement)
 
@@ -66,6 +69,8 @@ class TreeNode {
 class NavTree extends HTMLElement {
     private rootNode: TreeNode = new TreeNode("SceneRoot");
     private domRoot: HTMLElement = document.createElement("div");
+    private contextMenu: ContextMenu = new ContextMenu()
+    private currentSelectedDiv: HTMLElement;
 
     constructor() {
         super();
@@ -77,12 +82,30 @@ class NavTree extends HTMLElement {
         this.rootNode.getChild(1).appendChild(new TreeNode("Child1-1"))
     }
 
+    selectItem(targetDiv: HTMLElement){
+        let _this = this
+        return function(evt:MouseEvent){
+            evt.stopPropagation()
+
+            if(_this.currentSelectedDiv){
+                _this.currentSelectedDiv.setAttribute("selected", "false")
+            }
+
+            _this.currentSelectedDiv = targetDiv;
+            targetDiv.setAttribute("selected", "true")
+        }
+    }
+
     getOrCreateNode(treeNode: TreeNode) {
         let _this = this
 
         let div = treeNode.getHTMLElement();
+
+        let span = document.createElement("span")
+        span.innerHTML += treeNode.getName()
         if (div == null) {
             div = document.createElement("div");
+            div.className = "navtree-item"
 
             if (!treeNode.isLeaf()) {
                 let openButton = document.createElement("button")
@@ -103,8 +126,7 @@ class NavTree extends HTMLElement {
                 openButton.addEventListener('click', _this.expandTreeNode(treeNode, childrenDiv))
                 closeButton.addEventListener('click', _this.closeTreeNode(treeNode, childrenDiv))
 
-                let span = document.createElement("span")
-                span.innerHTML += treeNode.getName()
+
                 div.appendChild(span)  // Show Name
 
                 let childSuperDiv = document.createElement("div")
@@ -118,10 +140,10 @@ class NavTree extends HTMLElement {
                 childSuperDiv.appendChild(childrenDiv)
                 div.appendChild(childSuperDiv)
             } else {
-                let span = document.createElement("span")
-                span.innerHTML += treeNode.getName()
                 div.appendChild(span)  // Show Name
             }
+
+            div.addEventListener("click", this.selectItem(span).bind(_this))
 
             treeNode.setHTMLElement(div)
         }
@@ -152,7 +174,37 @@ class NavTree extends HTMLElement {
         }
     }
 
+    createGameObject(){
+        alert("CreateObject!!!!")
+    }
+
+    findParentPanel(){
+        let candidate = this.parentElement
+        while(candidate != null){
+            if(candidate instanceof HHPanel){
+                return candidate
+            }
+            candidate = candidate.parentElement
+        }
+
+        return null
+    }
+
     connectedCallback() {
+        this.domRoot.className = "navtree"
+        this.contextMenu.setItems([
+            {
+                itemName: "Create Empty Game Object",
+                onclick: this.createGameObject
+            },
+            {
+                itemName: "Delete Object",
+                onclick: ()=>{alert("Delete object")}
+            }
+        ])
+
+        let parentPanel:HTMLElement = this.findParentPanel();
+        parentPanel.oncontextmenu = this.contextMenu.onContextMenu.bind(this.contextMenu);
         this.append(this.domRoot)
 
         this.domRoot.appendChild(this.getOrCreateNode(this.rootNode))
