@@ -2,6 +2,7 @@ import {CustomElement} from "hhpanel";
 import {ContextMenu} from "./ContextMenu";
 import {HHPanel} from "hhpanel";
 import "/css/navtree.css"
+import {GameObjectManager} from "../HuaHuoEngine/GameObjectManager";
 
 console.log(CustomElement)
 
@@ -75,11 +76,11 @@ class NavTree extends HTMLElement {
     constructor() {
         super();
 
-        this.rootNode.appendChild(new TreeNode("Child1"))
-        this.rootNode.appendChild(new TreeNode("Child2"))
-
-        this.rootNode.getChild(0).appendChild(new TreeNode("Child1-1"))
-        this.rootNode.getChild(1).appendChild(new TreeNode("Child1-1"))
+        // this.rootNode.appendChild(new TreeNode("Child1"))
+        // this.rootNode.appendChild(new TreeNode("Child2"))
+        //
+        // this.rootNode.getChild(0).appendChild(new TreeNode("Child1-1"))
+        // this.rootNode.getChild(1).appendChild(new TreeNode("Child1-1"))
     }
 
     selectItem(targetDiv: HTMLElement){
@@ -174,8 +175,8 @@ class NavTree extends HTMLElement {
         }
     }
 
-    createGameObject(){
-        alert("CreateObject!!!!")
+    createEmptyGameObject(){
+        GameObjectManager.getInstance().createGameObject();
     }
 
     findParentPanel(){
@@ -195,7 +196,7 @@ class NavTree extends HTMLElement {
         this.contextMenu.setItems([
             {
                 itemName: "Create Empty Game Object",
-                onclick: this.createGameObject
+                onclick: this.createEmptyGameObject
             },
             {
                 itemName: "Delete Object",
