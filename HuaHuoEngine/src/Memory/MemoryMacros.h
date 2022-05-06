@@ -7,6 +7,7 @@
 #include "AllocatorLabels.h"
 #include "MemoryMacrosDetails.h"
 #include <limits>
+#include <cstdio>
 
 enum
 {

@@ -793,7 +793,7 @@ namespace math
 #   include "vec-sse.h"
 #endif
 
-#include "vec-generic.h"
+// #include "vec-generic.h"
 #include "vec-oper.h"
 
 namespace math
