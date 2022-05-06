@@ -264,7 +264,7 @@ static BaseComponent* AddComponentUnchecked(GameObject& go, const HuaHuo::Type* 
 
     // if (queue == nullptr)
     {
-        // go.SendMessage(kDidAddComponent, component);
+         go.SendMessage(kDidAddComponent, component);
 
         FinalizeComponentCreationFromCode(component);
 
