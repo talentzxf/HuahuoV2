@@ -14,6 +14,11 @@
 using namespace TransformInternal;
 static TransformChangeSystemHandle gHasChangedDeprecatedSystem;
 
+
+DEFINE_MESSAGE_IDENTIFIER(kBeforeTransformParentChanged, ("OnBeforeTransformParentChanged", MessageIdentifier::kSendToScripts));
+DEFINE_MESSAGE_IDENTIFIER(kTransformParentChanged, ("OnTransformParentChanged", MessageIdentifier::kSendToScripts));
+DEFINE_MESSAGE_IDENTIFIER(kTransformChildrenChanged, ("OnTransformChildrenChanged", MessageIdentifier::kSendToScripts));
+
 template<class TransferFunction>
 void Transform::Transfer(TransferFunction& transfer)
 {
@@ -540,6 +545,15 @@ void Transform::ValidateHierarchyRecursive(TransformHierarchy& hierarchy, int& h
     Assert(hierarchyOrderIndex == expectedHierarchyOrderIndex);
 }
 
+void Transform::SendTransformParentChanged()
+{
+    GetGameObject().TransformParentHasChanged();
+
+    // Send message that parenting has changed to any of the children of this.
+    // (The transforms that now have a new direct or indirect parent)
+    BroadcastMessage(kTransformParentChanged);
+}
+
 //***@TODO: kDisableTransformMessage shouldn't this require that tranfsormhierarchy = null and that it is not going to be rebuilt???
 
 bool Transform::SetParent(Transform* newFather, SetParentOption options)
@@ -605,11 +619,11 @@ bool Transform::SetParent(Transform* newFather, SetParentOption options)
     if (IsChildOrSameTransform(newFather, this))
         return false;
 
-//    if ((options & kDisableTransformMessage) == 0)
-//    {
-//        // Send a message before applying any changes that the transform parenting will be changed
-//        BroadcastMessage(kBeforeTransformParentChanged);
-//    }
+    if ((options & kDisableTransformMessage) == 0)
+    {
+        // Send a message before applying any changes that the transform parenting will be changed
+        BroadcastMessage(kBeforeTransformParentChanged);
+    }
 
     // Save the old position in worldspace - only used for kWorldPositionStays
     float3 globalPosition;
@@ -776,15 +790,15 @@ bool Transform::SetParent(Transform* newFather, SetParentOption options)
 //        if (newFather != NULL)
 //            GetTransformHierarchyChangeDispatch().DispatchSelfAndParents(newFather->GetTransformAccess(), TransformHierarchyChangeDispatch::kInterestedInChildHierarchy);
 
-//        // Send message to this and all children that parent has changed.
-//        SendTransformParentChanged();
+        // Send message to this and all children that parent has changed.
+        SendTransformParentChanged();
 
-//        // Send msg to new and old direct parent.
-//        // That it's direct children have changed.
-//        if (previousFather != NULL)
-//            previousFather->SendMessage(kTransformChildrenChanged);
-//        if (newFather != NULL)
-//            newFather->SendMessage(kTransformChildrenChanged);
+        // Send msg to new and old direct parent.
+        // That it's direct children have changed.
+        if (previousFather != NULL)
+            previousFather->SendMessage(kTransformChildrenChanged);
+        if (newFather != NULL)
+            newFather->SendMessage(kTransformChildrenChanged);
     }
     else
     {

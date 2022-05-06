@@ -9,6 +9,8 @@
 #include "TypeSystem/Object.h"
 #include "BaseClasses/ImmediatePtr.h"
 #include "BaseClasses/GameObjectDefines.h"
+#include "BaseClasses/MessageIdentifier.h"
+#include "BaseClasses/MessageData.h"
 
 class GameObject;
 class BaseComponent: public Object{
@@ -65,7 +67,29 @@ public:
     virtual void Deactivate(DeactivateOperation /*operation*/) {}
 
     bool IsPrefabAsset() const { return false; }
+
+    /// Send a message identified by messageName to every components of the gameobject
+    /// that can handle it
+    void SendMessageAny(const MessageIdentifier& messageID, MessageData& messageData);
+
+    template<class T>
+    void SendMessage(const MessageIdentifier& messageID, T messageData);
+    void SendMessage(const MessageIdentifier& messageID);
 };
+
+template<class T> inline
+void BaseComponent::SendMessage(const MessageIdentifier& messageID,
+                                   T messageData)
+{
+    MessageData data(messageData);
+    SendMessageAny(messageID, data);
+}
+
+inline void BaseComponent::SendMessage(const MessageIdentifier& messageID)
+{
+    MessageData data;
+    SendMessageAny(messageID, data);
+}
 
 
 #endif //HUAHUOENGINE_BASECOMPONENT_H

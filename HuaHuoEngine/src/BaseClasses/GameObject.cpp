@@ -8,6 +8,7 @@
 #include "Components/Transform/TransformHierarchy.h"
 #include "Utilities/RegisterRuntimeInitializeAndCleanup.h"
 #include "Components/Transform/TransformChangeDispatch.h"
+#include "MessageHandler.h"
 
 void GameObject::InitializeClass()
 {
@@ -180,6 +181,14 @@ void GameObject::Reset()
     m_TagString = GetTagManager().TagToString(m_Tag);
     m_NavMeshLayer = 0;
 #endif
+}
+
+void GameObject::TransformParentHasChanged()
+{
+    // Reactivate transform hierarchy, but only if it has been activated before,
+    // otherwise we change activation order.
+    if (m_IsActiveCached != -1)
+        ActivateAwakeRecursively();
 }
 
 void GameObject::SetLayer(int layer)
@@ -551,6 +560,56 @@ void GameObject::ComponentPair::Transfer(TransferFunction& transfer)
     if (transfer.IsReadingPPtr())
     {
         typeIndex = component ? component->GetType()->GetRuntimeTypeIndex() : 0;
+    }
+}
+
+void GameObject::SendMessageAny(const MessageIdentifier& messageIdentifier, MessageData& messageData)
+{
+    // __FAKEABLE_METHOD__(GameObject, SendMessageAny, (messageIdentifier, messageData));
+
+//    if (GetDisableSendMessage())
+//    {
+//        WarningString("SendMessage cannot be called during Awake, CheckConsistency, or OnValidate");
+//    }
+
+    Assert(messageIdentifier.GetMessageId() != -1);
+#if DEBUGMODE
+    if (messageIdentifier.parameterType != messageData.type)
+        AssertString("The messageData sent has an incorrect type.");
+#endif
+
+//#if UNITY_EDITOR
+//    const InstanceID instanceID = GetInstanceID();
+//#else
+//    ScriptingObjectPtr scriptingObject = GetCachedScriptingObject();
+//#endif
+
+    for (size_t i = 0; i < m_Component.size(); i++)
+    {
+        RuntimeTypeIndex typeIndex = m_Component[i].GetTypeIndex();
+        if (!MessageHandler::Get().HasMessageCallback(typeIndex, messageIdentifier))
+            continue;
+
+        BaseComponent& component = *(m_Component[i].GetComponentPtr());
+        MessageHandler::Get().HandleMessage(&component, typeIndex, messageIdentifier, messageData);
+
+        // Was the GameObject destroyed with DestroyImmediate in the callback?
+        // In the editor we use the InstanceID, as a domain reload can happen and then we do not have
+        // a managed GameoObject attached to the native GameObject any more.
+        // In the runtime we check this by checking whether the cachedPtr (C++ object pointer)
+        // on the managed GameObject is set to NULL, which means the native object (this) has been destroyed.
+        // Checking the cachedPtr is faster than looking up the native object by InstanceID, so
+        // thats why we have 2 different code paths here.
+//#if UNITY_EDITOR
+//        const bool gameObjectDestroyed = !PPtr<Object>(instanceID).IsValid();
+//#else
+//        const bool gameObjectDestroyed = scriptingObject != SCRIPTING_NULL && ScriptingObjectOfType<Object>(scriptingObject).GetCachedPtr() == NULL;
+//#endif
+//
+//        if (gameObjectDestroyed)
+//        {
+//            return;
+//        }
     }
 }
 

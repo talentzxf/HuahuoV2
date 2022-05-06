@@ -62,5 +62,12 @@ InstanceID BaseComponent::GetGameObjectInstanceID() const
     return m_GameObject.GetInstanceID();
 }
 
+void BaseComponent::SendMessageAny(const MessageIdentifier& messageID, MessageData& messageData)
+{
+    GameObject* go = GetGameObjectPtr();
+    if (go)
+        go->SendMessageAny(messageID, messageData);
+}
+
 IMPLEMENT_OBJECT_SERIALIZE(BaseComponent);
 INSTANTIATE_TEMPLATE_TRANSFER(BaseComponent);

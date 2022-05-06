@@ -105,6 +105,16 @@ public:
     int GetLayer() const    { return m_Layer; }
     UInt32 GetLayerMask() const { return 1 << m_Layer; }
 
+    void TransformParentHasChanged();
+
+    /// Send a message identified by messageID to all components if they can handle it
+    void SendMessageAny(const MessageIdentifier& messageID, MessageData& messageData);
+
+    /// Send a message identified by messageID to all components if they can handle it
+    template<class T>
+    void SendMessage(const MessageIdentifier& messageID, T messageData);
+    void SendMessage(const MessageIdentifier& messageID);
+
 private:
     enum ActivationState
     {
@@ -190,6 +200,20 @@ T* GameObject::QueryComponentAtIndex(int index) const
     BaseComponent* comp = m_Component[index].GetComponentPtr();
     DebugAssert(comp != NULL);
     return dynamic_pptr_cast<T*>(comp);
+}
+
+template<class T> inline
+void GameObject::SendMessage(const MessageIdentifier& messageID,
+                             T messageData)
+{
+    MessageData data(messageData);
+    SendMessageAny(messageID, data);
+}
+
+inline void GameObject::SendMessage(const MessageIdentifier& messageID)
+{
+    MessageData data;
+    SendMessageAny(messageID, data);
 }
 
 #endif //HUAHUOENGINE_GAMEOBJECT_H

@@ -5,7 +5,7 @@
 #ifndef HUAHUOENGINE_ALLOCATORLABELS_H
 #define HUAHUOENGINE_ALLOCATORLABELS_H
 
-#define EXPORT_COREMODULE
+#include "Modules/ExportModules.h"
 
 enum MemLabelIdentifier
 {

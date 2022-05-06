@@ -16,6 +16,13 @@
 #include "TransformType.h"
 #include "BaseClasses/GameObject.h"
 #include "TransformChangeSystemMask.h"
+#include "BaseClasses/MessageData.h"
+#include "BaseClasses/MessageIdentifier.h"
+
+
+DECLARE_MESSAGE_IDENTIFIER(kBeforeTransformParentChanged);
+DECLARE_MESSAGE_IDENTIFIER(kTransformParentChanged);
+DECLARE_MESSAGE_IDENTIFIER(kTransformChildrenChanged);
 
 class Transform : public BaseComponent {
     REGISTER_CLASS(Transform);
@@ -116,6 +123,11 @@ public:
     void ValidateHierarchy(TransformHierarchy& hierarchy);
 
     virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
+
+    /// Broadcasts a message to this and all child transforms
+    void BroadcastMessageAny(const MessageIdentifier& message, MessageData& data);
+    inline void BroadcastMessage(const MessageIdentifier& message) { MessageData data; BroadcastMessageAny(message, data); }
+
 protected:
     friend void GameObject::ReplaceTransformComponentInternal(Transform* newTransform/*, AwakeFromLoadQueue* queue*/);
     void ApplySerializedToRuntimeData();
@@ -123,6 +135,7 @@ protected:
     void ValidateHierarchyRecursive(TransformHierarchy& hierarchy, int& index, int& nextIndex, int parentIndex, UInt8* hasTransformBeenVisited);
 
 private:
+    void SendTransformParentChanged();
     void CommonTransformReset();
     UInt32 CountNodesDeep() const;
     UInt32 InitializeTransformHierarchyRecursive(TransformHierarchy& hierarchy, int& index, int parentIndex);
