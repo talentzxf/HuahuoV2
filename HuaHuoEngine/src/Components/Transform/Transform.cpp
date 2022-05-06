@@ -554,6 +554,16 @@ void Transform::SendTransformParentChanged()
     BroadcastMessage(kTransformParentChanged);
 }
 
+void Transform::BroadcastMessageAny(const MessageIdentifier& messageID, MessageData& data)
+{
+    GameObject* go = GetGameObjectPtr();
+    if (go)
+        go->SendMessageAny(messageID, data);
+
+    for (int i = 0; i < m_Children.size(); i++)
+        m_Children[i]->BroadcastMessageAny(messageID, data);
+}
+
 //***@TODO: kDisableTransformMessage shouldn't this require that tranfsormhierarchy = null and that it is not going to be rebuilt???
 
 bool Transform::SetParent(Transform* newFather, SetParentOption options)

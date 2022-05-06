@@ -101,14 +101,14 @@ MessageHandler& MessageHandler::Get()
     return *ms_Instance;
 }
 
-void MessageHandler::Initialize(const HuaHuo::Type* targetType)
-{
-    Assert(m_TargetType == NULL);
-
-    m_TargetType = targetType;
-
-    MessageIdentifier::CheckIntegrity();
-}
+//void MessageHandler::Initialize(const HuaHuo::Type* targetType)
+//{
+//    Assert(m_TargetType == NULL);
+//
+//    m_TargetType = targetType;
+//
+//    MessageIdentifier::CheckIntegrity();
+//}
 
 MessageHandler::~MessageHandler()
 {
