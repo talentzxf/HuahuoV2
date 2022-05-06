@@ -7,6 +7,7 @@
 #include "Utilities/RegisterRuntimeInitializeAndCleanup.h"
 #include "TypeSystem/TypeManager.h"
 #include "Serialize/PathNamePersistentManager.h"
+#include "BaseClasses/MessageHandler.h"
 
 void HuaHuoEngine::InitEngine() {
     RegisterRuntimeInitializeAndCleanup::ExecuteInitializations();
@@ -14,7 +15,12 @@ void HuaHuoEngine::InitEngine() {
 
     TypeManager::Get().InitializeAllTypes();
 
+    MessageHandler::Get().Initialize(TypeOf<Object>());
     TypeManager::Get().CallInitializeTypes();
+
+    TypeManager::Get().CallPostInitializeTypes();
+    MessageHandler::Get().ResolveCallbacks();
+
 
     InitPathNamePersistentManager();
 }

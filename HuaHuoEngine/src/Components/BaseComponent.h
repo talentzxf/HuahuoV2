@@ -12,6 +12,10 @@
 #include "BaseClasses/MessageIdentifier.h"
 #include "BaseClasses/MessageData.h"
 
+DECLARE_MESSAGE_IDENTIFIER(kLayerChanged);
+DECLARE_MESSAGE_IDENTIFIER(kDidAddComponent);
+DECLARE_MESSAGE_IDENTIFIER(kDidRemoveComponent);
+
 class GameObject;
 class BaseComponent: public Object{
     REGISTER_CLASS(BaseComponent);

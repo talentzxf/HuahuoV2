@@ -9,7 +9,9 @@
 #include "Math/Simd/vec-transform.h"
 #include "Utilities/ValidateArgs.h"
 #include "TransformSync.h"
+#include "BaseClasses/MessageHandlerRegistration.h"
 #include "Math/Vector2.h"
+#include "Components/BaseComponent.h"
 
 using namespace TransformInternal;
 static TransformChangeSystemHandle gHasChangedDeprecatedSystem;
@@ -562,6 +564,46 @@ void Transform::BroadcastMessageAny(const MessageIdentifier& messageID, MessageD
 
     for (int i = 0; i < m_Children.size(); i++)
         m_Children[i]->BroadcastMessageAny(messageID, data);
+}
+
+void Transform::OnAddComponent(BaseComponent* com)
+{
+    if (IsTransformHierarchyInitialized())
+    {
+//        GetTransformChangeDispatch().AddPermanentInterests(GetTransformAccess(), com->GetType());
+//        GetTransformHierarchyChangeDispatch().AddPermanentInterests(GetTransformAccess(), com->GetType());
+    }
+}
+
+void Transform::OnRemoveComponent(BaseComponent* com)
+{
+    if (IsTransformHierarchyInitialized())
+    {
+//        GetTransformChangeDispatch().RemovePermanentInterests(GetTransformAccess(), com->GetType());
+//        GetTransformHierarchyChangeDispatch().RemovePermanentInterests(GetTransformAccess(), com->GetType());
+    }
+}
+
+void Transform::InitializeClass()
+{
+    REGISTER_MESSAGE_PTR(kDidAddComponent, OnAddComponent, BaseComponent);
+    REGISTER_MESSAGE_PTR(kDidRemoveComponent, OnRemoveComponent, BaseComponent);
+
+#if UNITY_EDITOR
+    gDirtyIndexSystem = GetTransformChangeDispatch().RegisterPermanentInterestSystem("gDirtyIndexSystem", TypeOf<Transform>(), TransformChangeDispatch::kInterestedInLocalTRS);
+    gDirtyCallbackSystem = GetTransformChangeDispatch().RegisterPermanentInterestSystem("gDirtyCallbackSystem", TypeOf<Transform>(), TransformChangeDispatch::kInterestedInLocalTRS);
+#endif
+//    gHasChangedDeprecatedSystem = GetTransformChangeDispatch().RegisterPermanentInterestSystem("gHasChangedDeprecatedSystem", TypeOf<Transform>(), TransformChangeDispatch::kInterestedInGlobalTRS);
+//    GetTransformChangeDispatch().SetDeprecatedTransformChange(gHasChangedDeprecatedSystem);
+}
+
+void Transform::CleanupClass()
+{
+#if UNITY_EDITOR
+    GetTransformChangeDispatch().UnregisterSystem(gDirtyIndexSystem);
+    GetTransformChangeDispatch().UnregisterSystem(gDirtyCallbackSystem);
+#endif
+    // GetTransformChangeDispatch().UnregisterSystem(gHasChangedDeprecatedSystem);
 }
 
 //***@TODO: kDisableTransformMessage shouldn't this require that tranfsormhierarchy = null and that it is not going to be rebuilt???

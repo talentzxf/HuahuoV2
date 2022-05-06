@@ -34,6 +34,9 @@ public:
 
     }
 
+    static void InitializeClass();
+    static void CleanupClass();
+
     bool IsTransformHierarchyInitialized() const { return m_TransformData.hierarchy != NULL; }
 
     template<class TransferFunction> void CompleteTransformTransfer(TransferFunction& transfer);
@@ -133,6 +136,8 @@ protected:
     void ApplySerializedToRuntimeData();
     void ApplyRuntimeToSerializedData();
     void ValidateHierarchyRecursive(TransformHierarchy& hierarchy, int& index, int& nextIndex, int parentIndex, UInt8* hasTransformBeenVisited);
+    void OnAddComponent(BaseComponent* com);
+    void OnRemoveComponent(BaseComponent* com);
 
 private:
     void SendTransformParentChanged();

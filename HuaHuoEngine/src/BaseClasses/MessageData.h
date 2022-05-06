@@ -4,33 +4,34 @@
 
 struct MessageData
 {
-//    const HuaHuo::Type* type;
-//private:
-//    // Note: on Metro WinRT types cannot be located in union, so don't use union!
-//    intptr_t data;
+    const HuaHuo::Type* type;
+private:
+    // Note: on Metro WinRT types cannot be located in union, so don't use union!
+    intptr_t data;
 //    ScriptingObjectPtr scriptingObjectData;
-//public:
-//    MessageData() : type(NULL), data(0), scriptingObjectData(SCRIPTING_NULL)
-//    {
-//    }
-//
-//    template<typename T>
-//    MessageData(T inData)
+public:
+    MessageData() : type(NULL), data(0)//, scriptingObjectData(SCRIPTING_NULL)
+    {
+    }
+
+    template<typename T>
+    MessageData(T inData)
+    :data (0)
 //        : type(TypeOf<typename dense_hash_map_traits::remove_pointer<T>::type>())
 //        , data(0)
 //        , scriptingObjectData(SCRIPTING_NULL)
-//    {
-//        AssertFormatMsg(sizeof(T) <= sizeof(data), "MessageData payload exceeded %zu > %zu", sizeof(T), sizeof(data));
-//        *reinterpret_cast<T*>(&data) = inData;
-//    }
-//
-//    template<class T>
-//    T GetData() const
-//    {
+    {
+        AssertFormatMsg(sizeof(T) <= sizeof(data), "MessageData payload exceeded %zu > %zu", sizeof(T), sizeof(data));
+        *reinterpret_cast<T*>(&data) = inData;
+    }
+
+    template<class T>
+    T GetData() const
+    {
 //        // Check if GetData is used instead of GetScriptingObjectData
 //        AssertMsg(type != GetScriptingObjectDataType(), "Cannot get ScriptingObjectPtr from MessageData with type == ScriptingObjectPtr. Explicitly use GetScriptingObjectData() instead.");
-//        return *reinterpret_cast<const T*>(&data);
-//    }
+        return *reinterpret_cast<const T*>(&data);
+    }
 //
 //    static const Unity::Type* GetScriptingObjectDataType() { return TypeOf<ScriptingObjectPtr>(); }
 //

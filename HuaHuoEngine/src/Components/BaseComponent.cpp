@@ -6,6 +6,10 @@
 #include "Logging/LogAssert.h"
 #include "BaseClasses/GameObject.h"
 
+DEFINE_MESSAGE_IDENTIFIER(kLayerChanged, ("OnLayersChanged", MessageIdentifier::kDontSendToScripts));
+DEFINE_MESSAGE_IDENTIFIER(kDidAddComponent, ("OnDidAddComponent", MessageIdentifier::kDontSendToScripts, TypeOf<BaseComponent>()));
+DEFINE_MESSAGE_IDENTIFIER(kDidRemoveComponent, ("OnDidRemoveComponent", MessageIdentifier::kDontSendToScripts, TypeOf<BaseComponent>()));
+
 IMPLEMENT_REGISTER_CLASS(BaseComponent, 2);
 
 template<class TransferFunction>
