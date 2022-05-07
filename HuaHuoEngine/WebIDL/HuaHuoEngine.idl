@@ -10,3 +10,13 @@ interface HuaHuoEngine {
     GameObject CreateGameObject(DOMString name);
 };
 
+interface HuaHuoScene {
+
+};
+
+interface SceneManager {
+    static SceneManager GetSceneManager();
+    HuaHuoScene GetActiveScene();
+    HuaHuoScene CreateScene();
+    boolean SetActiveScene([Ref]HuaHuoScene scene);
+};

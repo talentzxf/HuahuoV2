@@ -12,6 +12,13 @@ cmake_minimum_required(VERSION 3.21)
 project(HuaHuoEngine VERSION 0.01)
 configure_file(src/HuaHuoEngineConfig.h.in HuaHuoEngineConfig.h)
 
+option(HuaHuoEditor "Compile HuaHuoEditor" ON)
+
+if(${HuaHuoEditor} MATCHES "ON")
+    add_compile_definitions(HUAHUO_EDITOR=1)
+endif()
+
+
 list(APPEND CPPFILES src/HuaHuoEngine.cpp)
 list(APPEND CPPFILES src/Components/Transform/Transform.cpp)
 list(APPEND CPPFILES src/Components/Transform/TransformHierarchy.cpp)
@@ -49,12 +56,22 @@ list(APPEND CPPFILES src/Math/Vector2.cpp)
 list(APPEND CPPFILES src/Misc/GameObjectUtility.cpp)
 list(APPEND CPPFILES src/Logging/LogAssert.cpp)
 list(APPEND CPPFILES src/Memory/MemoryMacros.cpp)
+list(APPEND CPPFILES src/SceneManager/HuaHuoScene.cpp)
+list(APPEND CPPFILES src/SceneManager/SceneManager.cpp)
+
+if(${HuaHuoEditor} MATCHES "ON")
+    list(APPEND CPPFILES src/Editor/SceneInspector.cpp)
+endif()
+
 
 set(CMAKE_CXX_STANDARD 23)
 set(EXTRA_INCLUDE_DIR src)
 
 set(TARGETNAME HuaHuoEngine)
+
+
 if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
+    add_compile_definitions(WEB_ENV=1)
     list(APPEND CPPFILES src/HuaHuoEngineWrapper.cpp)
     add_executable(${TARGETNAME} ${CPPFILES})
 else ()

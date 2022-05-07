@@ -24,15 +24,47 @@ DECLARE_MESSAGE_IDENTIFIER(kBeforeTransformParentChanged);
 DECLARE_MESSAGE_IDENTIFIER(kTransformParentChanged);
 DECLARE_MESSAGE_IDENTIFIER(kTransformChildrenChanged);
 
+
+class HuaHuoScene;
+// It is only supposed to be maintained by UnityScene and Transform.
+struct SceneRootNode
+{
+    ListNode<Transform>     m_ListNode;
+    HuaHuoScene*             m_Scene;
+#if UNITY_EDITOR
+    ListNode<Transform>     m_SortedListNode;
+#endif
+
+    SceneRootNode(Transform* t)
+            :   m_ListNode(t)
+            , m_Scene(NULL)
+#if UNITY_EDITOR
+    , m_SortedListNode(t)
+#endif
+    {}
+
+    inline bool IsInScene() const
+    {
+#if UNITY_EDITOR
+        // Assert data consistency
+        DebugAssert(m_ListNode.IsInList() == m_SortedListNode.IsInList());
+        DebugAssert(m_ListNode.IsInList() == (m_UnityScene != NULL));
+#endif
+        return m_ListNode.IsInList();
+    }
+};
+
 class Transform : public BaseComponent {
     REGISTER_CLASS(Transform);
     DECLARE_OBJECT_SERIALIZE();
+    friend class HuaHuoScene;
 public:
-    Transform(ObjectCreationMode mode)
-        :Super(mode), m_TransformData(TransformAccess::Null())
-    {
+    Transform(ObjectCreationMode mode);
 
-    }
+    HuaHuoScene* GetScene();
+    SceneRootNode& GetSceneRootNode() { return m_SceneRootNode; }
+    const SceneRootNode& GetSceneRootNode() const { return m_SceneRootNode; }
+    bool IsSceneRoot() const;
 
     static void InitializeClass();
     static void CleanupClass();
@@ -131,6 +163,16 @@ public:
     void BroadcastMessageAny(const MessageIdentifier& message, MessageData& data);
     inline void BroadcastMessage(const MessageIdentifier& message) { MessageData data; BroadcastMessageAny(message, data); }
 
+public:
+    typedef void TransformChangedCallback (Transform* t);
+    typedef void HierarchyChangedCallback (Transform* t);
+    typedef void HierarchyChangedCallbackSetParent (Transform* obj, Transform* oldParent, Transform* newParent);
+
+#if HUAHUO_EDITOR
+    static void RegisterHierarchyChangedCallback(HierarchyChangedCallback* callback);
+    static void RegisterHierarchyChangedSetParentCallback(HierarchyChangedCallbackSetParent* callback);
+#endif
+
 protected:
     friend void GameObject::ReplaceTransformComponentInternal(Transform* newTransform/*, AwakeFromLoadQueue* queue*/);
     void ApplySerializedToRuntimeData();
@@ -155,6 +197,7 @@ protected:
 private:
     TransformComList                 m_Children;
     ImmediatePtr<Transform>          m_Father;
+    SceneRootNode                    m_SceneRootNode;
 };
 
 /// Is transform a child of parent? Or is the transform the same.
