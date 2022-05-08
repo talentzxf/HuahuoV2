@@ -11,6 +11,7 @@
 #include "TypeSystem/Object.h"
 #include "BaseClasses/GameObject.h"
 #include "Export/Scripting/GameObjectExport.h"
+#include "Export/Events/ScriptEventManager.h"
 
 class HuaHuoEngine {
 private:
@@ -26,6 +27,10 @@ public:
 
     GameObject* CreateGameObject(const char* name){
         return MonoCreateGameObject(name);
+    }
+
+    void RegisterEvent(EventType eventType, ScriptEventHandler* pHandler){
+        GetScriptEventManager()->RegisterEventHandler(eventType, pHandler);
     }
 };
 

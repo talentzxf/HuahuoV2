@@ -3,13 +3,6 @@ interface GameObject {
     [Const] DOMString GetName();
 };
 
-interface HuaHuoEngine {
-    static HuaHuoEngine getInstance();
-    static void InitEngine();
-
-    GameObject CreateGameObject(DOMString name);
-};
-
 interface HuaHuoScene {
 
 };
@@ -19,4 +12,26 @@ interface SceneManager {
     HuaHuoScene GetActiveScene();
     HuaHuoScene CreateScene();
     boolean SetActiveScene([Ref]HuaHuoScene scene);
+};
+
+enum EventType {
+    "OnHierarchyChange"
+};
+
+interface ScriptEventHandler{
+
+};
+
+[JSImplementation="ScriptEventHandler"]
+interface ScriptEventHandlerImpl{
+    void handleEvent();
+};
+
+
+interface HuaHuoEngine {
+    static HuaHuoEngine getInstance();
+    static void InitEngine();
+
+    GameObject CreateGameObject(DOMString name);
+    void RegisterEvent(EventType eventType, ScriptEventHandler handler);
 };

@@ -1,4 +1,5 @@
 #include "SceneManager/HuaHuoScene.h"
 #include "SceneManager/SceneManager.h"
+#include "Export/Events/ScriptEventManager.h"
 #include "HuaHuoEngine.h"
 #include "glue.cpp"
