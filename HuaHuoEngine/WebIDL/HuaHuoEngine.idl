@@ -24,9 +24,9 @@ interface ScriptEventHandler{
 
 [JSImplementation="ScriptEventHandler"]
 interface ScriptEventHandlerImpl{
+    void ScriptEventHandlerImpl();
     void handleEvent();
 };
-
 
 interface HuaHuoEngine {
     static HuaHuoEngine getInstance();

@@ -1,8 +1,19 @@
 export SCRIPT_DIR=$( dirname $(realpath -s $0) )
-rm -rf $SCRIPT_DIR/emcmake
+
+export EMCMAKE_DIR=$SCRIPT_DIR/emcmake
+echo "Deleting temp dir:$EMCMAKE_DIR"
+rm -rf $EMCMAKE_DIR
+mkdir $EMCMAKE_DIR
+echo "cd $EMCMAKE_DIR"
+cd $EMCMAKE_DIR
 EMCCPATH=`which emcc`
 EMCCDIR=`dirname ${EMCCPATH}`
 WEBIDL=${EMCCDIR}/tools/webidl_binder
 ${WEBIDL} ../WebIDL/HuaHuoEngine.idl glue ./emcmake/
-emcmake cmake .. && cmake --build ./
-cat ./glue.js >> HuaHuoEngine.js
+
+if [ $? -eq 0 ]; then
+   emcmake cmake .. && cmake --build ./
+   cat ./glue.js >> HuaHuoEngine.js
+else
+   echo "Failed to run webidl_binder"
+fi
