@@ -4,6 +4,7 @@
 
 #include "SceneInspector.h"
 #include "Components/Transform/Transform.h"
+#include "Export/Events/ScriptEventManager.h"
 
 #if WEB_ENV
 #include <emscripten.h>
@@ -57,16 +58,6 @@ SceneTracker::~SceneTracker()
 //    gSceneTracker = NULL;
 }
 
-#if WEB_ENV
-EM_JS(void, JSOnHierarchyChanged, (Transform* t), {
-    alert("JSOnHierarchyChanged" + t);
-});
-#else
-void JSOnHierarchyChanged(Transform* t){
-    printf("JSOnHierarchyChanged\n");
-}
-#endif
-
 void SceneTracker::TransformHierarchyChanged(Transform* t)
 {
 //    CLEAR_ALLOC_OWNER;
@@ -77,7 +68,7 @@ void SceneTracker::TransformHierarchyChanged(Transform* t)
 //        DirtyTransformHierarchy();
 
 // VZ: Callback to javascript to refresh the hierarchy.
-    JSOnHierarchyChanged(t);
+    GetScriptEventManager()->TriggerEvent(EventType::OnHierarchyChange);
 }
 
 void SceneTracker::TransformHierarchyChangedCallback(Transform *t) {

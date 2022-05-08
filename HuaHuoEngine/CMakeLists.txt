@@ -58,7 +58,7 @@ list(APPEND CPPFILES src/Logging/LogAssert.cpp)
 list(APPEND CPPFILES src/Memory/MemoryMacros.cpp)
 list(APPEND CPPFILES src/SceneManager/HuaHuoScene.cpp)
 list(APPEND CPPFILES src/SceneManager/SceneManager.cpp)
-
+list(APPEND CPPFILES src/Export/Events/ScriptEventManager.cpp)
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES src/Editor/SceneInspector.cpp)
 endif()
