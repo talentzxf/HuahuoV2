@@ -5,7 +5,6 @@ import "/css/navtree.css"
 import {GameObjectManager} from "../HuaHuoEngine/GameObjectManager";
 import {EngineAPI} from "../EngineAPI";
 
-declare var EventType:any
 declare var ScriptEventHandlerImpl:any
 
 class TreeNode {
@@ -90,7 +89,7 @@ class NavTree extends HTMLElement {
                 console.log("Hello from nav tree")
             }
 
-            EngineAPI.getInstance().RegisterEvent(EventType.OnHierarchyChange, eventHandler)
+            EngineAPI.getInstance().RegisterEvent("OnHierarchyChange", eventHandler)
         })
     }
 
