@@ -8,10 +8,9 @@ interface HuaHuoScene {
 };
 
 interface SceneManager {
-    static SceneManager GetSceneManager();
     HuaHuoScene GetActiveScene();
     HuaHuoScene CreateScene();
-    boolean SetActiveScene([Ref]HuaHuoScene scene);
+    boolean SetActiveScene(HuaHuoScene scene);
 };
 
 enum EventType {
@@ -34,4 +33,6 @@ interface HuaHuoEngine {
 
     GameObject CreateGameObject(DOMString name);
     void RegisterEvent(EventType eventType, ScriptEventHandler handler);
+
+    SceneManager GetSceneManager();
 };

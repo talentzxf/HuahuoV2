@@ -18,9 +18,7 @@ public:
 
     HuaHuoScene* CreateScene();
     HuaHuoScene* GetActiveScene();
-    bool SetActiveScene(HuaHuoScene& scene);
-
-    static SceneManager* GetSceneManager();
+    bool SetActiveScene(HuaHuoScene* scene);
 
 protected:
     typedef std::vector<HuaHuoScene*> ScenePtrArray;
@@ -33,6 +31,7 @@ protected:
 
 RuntimeSceneManager& GetSceneManager();
 RuntimeSceneManager& GetRuntimeSceneManager();
+RuntimeSceneManager* GetSceneManagerPtr();
 
 
 #endif //HUAHUOENGINE_SCENEMANAGER_H

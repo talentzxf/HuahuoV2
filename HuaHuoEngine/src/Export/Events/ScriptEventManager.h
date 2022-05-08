@@ -10,6 +10,8 @@
 
 class ScriptEventHandler{
     friend class ScriptEventManager;
+public:
+    virtual ~ScriptEventHandler(){}
 protected:
     virtual void handleEvent() = 0;
 };

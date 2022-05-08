@@ -3,9 +3,10 @@ import {ContextMenu} from "./ContextMenu";
 import {HHPanel} from "hhpanel";
 import "/css/navtree.css"
 import {GameObjectManager} from "../HuaHuoEngine/GameObjectManager";
+import {NavTreeEventHandler} from "./NavTreeEventHandler";
 import {EngineAPI} from "../EngineAPI";
 
-declare var ScriptEventHandlerImpl:any
+
 
 class TreeNode {
     private name: String
@@ -74,6 +75,8 @@ class NavTree extends HTMLElement {
     private contextMenu: ContextMenu = new ContextMenu()
     private currentSelectedDiv: HTMLElement;
 
+    private treeEventHandler: NavTreeEventHandler;
+
     constructor() {
         super();
 
@@ -83,14 +86,18 @@ class NavTree extends HTMLElement {
         // this.rootNode.getChild(0).appendChild(new TreeNode("Child1-1"))
         // this.rootNode.getChild(1).appendChild(new TreeNode("Child1-1"))
 
+        let _this = this
         EngineAPI.ExecuteAfterInited(function(){
-            let eventHandler = new ScriptEventHandlerImpl()
-            eventHandler.handleEvent = function(){
-                console.log("Hello from nav tree")
-            }
-
-            EngineAPI.getInstance().RegisterEvent("OnHierarchyChange", eventHandler)
+            _this.treeEventHandler = new NavTreeEventHandler(_this)
         })
+    }
+
+    clearNodes(){
+        if(this.rootNode.getHTMLElement()){
+            this.domRoot.removeChild(this.rootNode.getHTMLElement())
+        }
+        this.rootNode = new TreeNode("SceneRoot")
+        this.domRoot.appendChild(this.getOrCreateNode(this.rootNode))
     }
 
     selectItem(targetDiv: HTMLElement){

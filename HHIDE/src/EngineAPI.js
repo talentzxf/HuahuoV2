@@ -17,9 +17,14 @@ class EngineAPI{
         EngineAPI.PendingInitFunctions.forEach(func=>{
             func();
         })
+
+        // TODO: Load scene from localstorage if it's not empty.
+        let sceneManager = EngineAPI.GetInstance().GetSceneManager()
+        let scene = sceneManager.CreateScene();
+        sceneManager.SetActiveScene(scene);
     }
 
-    static getInstance(){
+    static GetInstance(){
         if(EngineAPI.inited){
             return Module.HuaHuoEngine.prototype.getInstance()
         }else {

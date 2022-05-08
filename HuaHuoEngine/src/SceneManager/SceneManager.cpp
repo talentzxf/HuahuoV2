@@ -26,7 +26,7 @@ RuntimeSceneManager& GetSceneManager()
     return *g_RuntimeSceneManager;
 }
 
-SceneManager* RuntimeSceneManager::GetSceneManager(){
+RuntimeSceneManager* GetSceneManagerPtr(){
     return g_RuntimeSceneManager;
 }
 
@@ -75,7 +75,7 @@ HuaHuoScene* RuntimeSceneManager::GetActiveScene()
     return NULL;
 }
 
-bool RuntimeSceneManager::SetActiveScene(HuaHuoScene& scene)
+bool RuntimeSceneManager::SetActiveScene(HuaHuoScene* scene)
 {
 #if UNITY_EDITOR
     if (scene.IsPreviewScene())
@@ -88,13 +88,13 @@ bool RuntimeSceneManager::SetActiveScene(HuaHuoScene& scene)
 //    if (!scene.IsLoaded())
 //        return false;
 
-    if (m_ActiveScene == &scene)
+    if (m_ActiveScene == scene)
         return false;
 
 
     HuaHuoScene* oldScene = m_ActiveScene;
 
-    m_ActiveScene = &scene;
+    m_ActiveScene = scene;
 //    m_ActiveScene->RegisterLevelGameManagersWithManagerContext();
 
 //    Assert(oldScene != m_ActiveScene);

@@ -12,6 +12,7 @@
 #include "BaseClasses/GameObject.h"
 #include "Export/Scripting/GameObjectExport.h"
 #include "Export/Events/ScriptEventManager.h"
+#include "SceneManager/SceneManager.h"
 
 class HuaHuoEngine {
 private:
@@ -31,6 +32,10 @@ public:
 
     void RegisterEvent(EventType eventType, ScriptEventHandler* pHandler){
         GetScriptEventManager()->RegisterEventHandler(eventType, pHandler);
+    }
+
+    SceneManager* GetSceneManager(){
+        return ::GetSceneManagerPtr();
     }
 };
 

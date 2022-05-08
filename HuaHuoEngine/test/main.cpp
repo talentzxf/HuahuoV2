@@ -11,9 +11,7 @@
 #include <cstdio>
 #include "Export/Scripting/GameObjectExport.h"
 
-int main() {
-    HuaHuoEngine::InitEngine();
-
+void testTransform(){
     GameObject* go = MonoCreateGameObject("Go1");
     GameObject* go2 = MonoCreateGameObject("Go2");
 
@@ -23,6 +21,24 @@ int main() {
     transform1->SetParent(transform2);
     printf("Child cound:%d\n", transform2->GetChildrenCount());
     Assert( &transform2->GetChild(0) == transform1);
+}
+
+void testScene(){
+    HuaHuoScene* pScene = GetSceneManager().CreateScene();
+    GetSceneManager().SetActiveScene(pScene);
+
+    MonoCreateGameObject("Go!!!");
+
+    for(auto itr = pScene->RootBegin(); itr != pScene->RootEnd(); itr++){
+        printf("name: %s", itr->GetData()->GetName());
+    }
+    Assert(pScene->RootBegin() != pScene->RootEnd());
+}
+
+int main() {
+    HuaHuoEngine::InitEngine();
+    testTransform();
+    testScene();
 
     return 0;
 }
