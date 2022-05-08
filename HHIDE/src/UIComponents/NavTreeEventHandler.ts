@@ -1,6 +1,8 @@
-import {NavTree} from "./NavTree";
+import {NavTree, TreeNode} from "./NavTree";
 import {EngineAPI} from "../EngineAPI";
+
 declare var ScriptEventHandlerImpl:any
+declare var SceneRootTransformArray:any
 
 class NavTreeEventHandler{
     private tree:NavTree
@@ -15,7 +17,17 @@ class NavTreeEventHandler{
 
     handleEvent(){
         this.tree.clearNodes()
-        // EngineAPI.GetInstance().
+
+        let rootTreeNode = this.tree.getRootTreeNode();
+
+        let scene = EngineAPI.GetInstance().GetSceneManager().GetActiveScene();
+        if(!scene.IsEmpty()){
+            let rootTransformArray = new SceneRootTransformArray(scene)
+            let curTransform = rootTransformArray.GetCurrentTransform();
+            rootTreeNode.appendChild(new TreeNode(curTransform.GetName()))
+
+            this.tree.attachRootNode()
+        }
     }
 }
 

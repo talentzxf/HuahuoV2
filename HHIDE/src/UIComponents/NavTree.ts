@@ -92,12 +92,15 @@ class NavTree extends HTMLElement {
         })
     }
 
+    public getRootTreeNode():TreeNode{
+        return this.rootNode;
+    }
+
     clearNodes(){
         if(this.rootNode.getHTMLElement()){
             this.domRoot.removeChild(this.rootNode.getHTMLElement())
         }
         this.rootNode = new TreeNode("SceneRoot")
-        this.domRoot.appendChild(this.getOrCreateNode(this.rootNode))
     }
 
     selectItem(targetDiv: HTMLElement){
@@ -225,8 +228,12 @@ class NavTree extends HTMLElement {
         parentPanel.oncontextmenu = this.contextMenu.onContextMenu.bind(this.contextMenu);
         this.append(this.domRoot)
 
+        this.attachRootNode()
+    }
+
+    public attachRootNode(){
         this.domRoot.appendChild(this.getOrCreateNode(this.rootNode))
     }
 }
 
-export {NavTree}
+export {NavTree, TreeNode}
