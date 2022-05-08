@@ -61,6 +61,7 @@ list(APPEND CPPFILES src/SceneManager/SceneManager.cpp)
 list(APPEND CPPFILES src/Export/Events/ScriptEventManager.cpp)
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES src/Editor/SceneInspector.cpp)
+    list(APPEND CPPFILES src/Editor/Utility/SceneRootTransformArray.cpp)
 endif()
 
 

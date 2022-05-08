@@ -81,6 +81,8 @@ class PersistentManager {
     };
 
 public:
+    virtual ~PersistentManager() {};
+
     Remapper*                               m_Remapper;
 
     // On return: objects are the instanceIDs of all objects resident in the file referenced by pathName

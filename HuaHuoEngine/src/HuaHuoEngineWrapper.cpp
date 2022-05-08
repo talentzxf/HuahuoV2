@@ -2,4 +2,6 @@
 #include "SceneManager/SceneManager.h"
 #include "Export/Events/ScriptEventManager.h"
 #include "HuaHuoEngine.h"
+#include "Editor/Utility/SceneRootTransformArray.h"
+#include "Components/Transform/Transform.h"
 #include "glue.cpp"

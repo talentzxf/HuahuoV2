@@ -27,7 +27,8 @@ void testScene(){
     HuaHuoScene* pScene = GetSceneManager().CreateScene();
     GetSceneManager().SetActiveScene(pScene);
 
-    MonoCreateGameObject("Go!!!");
+    std::string goName("Go!!!");
+    MonoCreateGameObject(goName.c_str());
 
     for(auto itr = pScene->RootBegin(); itr != pScene->RootEnd(); itr++){
         printf("name: %s", itr->GetData()->GetName());

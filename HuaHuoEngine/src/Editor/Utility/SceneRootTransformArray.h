@@ -12,12 +12,12 @@ private:
     HuaHuoScene* m_pScene;
     RootTransformList::iterator m_currentItr;
 public:
-    SceneRootTransformArray();
+    SceneRootTransformArray(HuaHuoScene* pScene);
     virtual ~SceneRootTransformArray();
-
-    void SetCurrentScene(HuaHuoScene* pScene);
     bool MoveNext();
     Transform* GetCurrentTransform();
+private:
+    void SetCurrentScene(HuaHuoScene* pScene);
 };
 
 

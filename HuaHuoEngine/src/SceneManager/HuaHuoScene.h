@@ -59,6 +59,10 @@ public:
         return RootTransformList::const_iterator(&*const_cast<HuaHuoScene*>(this)->RootEnd(alphaSorted));
     }
 
+#ifdef HUAHUO_EDITOR
+
+#endif
+
 private:
     RootTransformList       m_Roots;
 };
