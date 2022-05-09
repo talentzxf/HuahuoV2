@@ -3,6 +3,7 @@ import {EngineAPI} from "../EngineAPI";
 
 declare var ScriptEventHandlerImpl: any
 declare var SceneRootTransformArray: any
+declare var TransformHierarchyEventArgs: any
 
 class NavTreeEventHandler {
     private tree: NavTree
@@ -15,7 +16,15 @@ class NavTreeEventHandler {
         EngineAPI.GetInstance().RegisterEvent("OnHierarchyChange", handler)
     }
 
-    handleEvent() {
+    constructArgsFromPointer(args){
+        let returnArgs = Module["wrapPointer"](args)
+        returnArgs.__proto__ = TransformHierarchyEventArgs.prototype
+        return returnArgs
+    }
+
+    handleEvent(argsPointer) {
+        let args = this.constructArgsFromPointer(argsPointer)
+
         this.tree.clearNodes()
 
         let rootTreeNode = this.tree.getRootTreeNode();

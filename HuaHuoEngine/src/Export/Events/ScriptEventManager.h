@@ -8,12 +8,14 @@
 #include <list>
 #include <map>
 
+class ScriptEventHandlerArgs{
+
+};
+
 class ScriptEventHandler{
     friend class ScriptEventManager;
-public:
-    virtual ~ScriptEventHandler(){}
 protected:
-    virtual void handleEvent() = 0;
+    virtual void handleEvent(ScriptEventHandlerArgs* args) = 0;
 };
 
 class ScriptEventManager {
@@ -29,7 +31,7 @@ public:
     static void CleanupClass(void *);
 
     void RegisterEventHandler(EventType eventType, ScriptEventHandler* pHandler);
-    void TriggerEvent(EventType eventType);
+    void TriggerEvent(EventType eventType, ScriptEventHandlerArgs* args);
 };
 
 ScriptEventManager* GetScriptEventManager();

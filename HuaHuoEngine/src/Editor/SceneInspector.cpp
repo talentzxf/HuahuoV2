@@ -14,6 +14,11 @@ SceneTracker * gSceneTracker = NULL;
 
 static RegisterRuntimeInitializeAndCleanup gRegisterCallbacks_SceneTracker(SceneTracker::StaticInitialize, SceneTracker::StaticDestroy, 1);
 
+TransformHierarchyEventArgs::TransformHierarchyEventArgs(Transform* t)
+:m_pTransform(t){
+
+}
+
 void SceneTracker::StaticInitialize(void*)
 {
     Assert(gSceneTracker == NULL);
@@ -68,7 +73,8 @@ void SceneTracker::TransformHierarchyChanged(Transform* t)
 //        DirtyTransformHierarchy();
 
 // VZ: Callback to javascript to refresh the hierarchy.
-    GetScriptEventManager()->TriggerEvent(EventType::OnHierarchyChange);
+    TransformHierarchyEventArgs args(t);
+    GetScriptEventManager()->TriggerEvent(EventType::OnHierarchyChange, &args);
 }
 
 void SceneTracker::TransformHierarchyChangedCallback(Transform *t) {

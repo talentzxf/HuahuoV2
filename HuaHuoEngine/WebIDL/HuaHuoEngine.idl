@@ -22,14 +22,25 @@ enum EventType {
     "OnHierarchyChange"
 };
 
+[NoDelete]
 interface ScriptEventHandler{
 
 };
 
-[JSImplementation="ScriptEventHandler"]
+[NoDelete]
+interface ScriptEventHandlerArgs{
+
+};
+
+[NoDelete]
+interface TransformHierarchyEventArgs: ScriptEventHandlerArgs{
+    Transform GetTransform();
+};
+
+[JSImplementation="ScriptEventHandler", NoDelete]
 interface ScriptEventHandlerImpl{
     void ScriptEventHandlerImpl();
-    void handleEvent();
+    void handleEvent(ScriptEventHandlerArgs args);
 };
 
 interface SceneRootTransformArray{

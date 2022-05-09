@@ -4,4 +4,5 @@
 #include "HuaHuoEngine.h"
 #include "Editor/Utility/SceneRootTransformArray.h"
 #include "Components/Transform/Transform.h"
+#include "Editor/SceneInspector.h"
 #include "glue.cpp"

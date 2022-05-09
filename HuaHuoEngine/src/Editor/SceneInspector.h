@@ -5,9 +5,21 @@
 #ifndef HUAHUOENGINE_SCENEINSPECTOR_H
 #define HUAHUOENGINE_SCENEINSPECTOR_H
 
+#include "Export/Events/ScriptEventManager.h"
+
 class Transform;
 class ISceneInspector {
 
+};
+
+class TransformHierarchyEventArgs: public ScriptEventHandlerArgs{
+public:
+    TransformHierarchyEventArgs(Transform* t);
+    Transform* GetTransform() {
+        return m_pTransform;
+    }
+private:
+    Transform* m_pTransform;
 };
 
 class SceneTracker{

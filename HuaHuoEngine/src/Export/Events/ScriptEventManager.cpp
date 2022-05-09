@@ -44,11 +44,11 @@ void ScriptEventManager::RegisterEventHandler(EventType eventType, ScriptEventHa
     m_ScriptEventHandlerLists[eventType]->push_back(pHandler);
 }
 
-void ScriptEventManager::TriggerEvent(EventType eventType){
+void ScriptEventManager::TriggerEvent(EventType eventType, ScriptEventHandlerArgs* args){
     if(m_ScriptEventHandlerLists.contains(eventType)){
         ScriptEventHandlerList* handlerList = m_ScriptEventHandlerLists[eventType];
         for(auto item : *handlerList){
-            (*item).handleEvent();
+            (*item).handleEvent(args);
         }
     }
 }
