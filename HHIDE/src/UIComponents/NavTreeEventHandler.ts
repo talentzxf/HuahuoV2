@@ -1,5 +1,6 @@
 import {NavTree, TreeNode} from "./NavTree";
 import {EngineAPI} from "../EngineAPI";
+import {IsValidWrappedObject} from "../Utilities/WrappedObjectUtils"
 
 declare var ScriptEventHandlerImpl: any
 declare var SceneRootTransformArray: any
@@ -25,19 +26,25 @@ class NavTreeEventHandler {
     handleEvent(argsPointer) {
         let args = this.constructArgsFromPointer(argsPointer)
 
-        this.tree.clearNodes()
+        let transform = args.GetTransform();
 
-        let rootTreeNode = this.tree.getRootTreeNode();
-
-        let scene = EngineAPI.GetInstance().GetSceneManager().GetActiveScene();
-        if (!scene.IsEmpty()) {
-            let rootTransformArray = new SceneRootTransformArray(scene)
-            do {
-                let curTransform = rootTransformArray.GetCurrentTransform();
-                rootTreeNode.appendChild(new TreeNode(curTransform.GetName()))
-            } while (rootTransformArray.MoveNext());
-            this.tree.attachRootNode()
+        if(!IsValidWrappedObject(transform.GetParent())){ // No Parent means this is the root object of the Scene
+            this.tree.appendTreeNode(this.tree.getRootTreeNode(), new TreeNode(transform.GetName()))
         }
+
+        // this.tree.clearNodes()
+        //
+        // let rootTreeNode = this.tree.getRootTreeNode();
+        //
+        // let scene = EngineAPI.GetInstance().GetSceneManager().GetActiveScene();
+        // if (!scene.IsEmpty()) {
+        //     let rootTransformArray = new SceneRootTransformArray(scene)
+        //     do {
+        //         let curTransform = rootTransformArray.GetCurrentTransform();
+        //         rootTreeNode.appendChild(new TreeNode(curTransform.GetName()))
+        //     } while (rootTransformArray.MoveNext());
+        //     this.tree.attachRootNode()
+        // }
     }
 }
 

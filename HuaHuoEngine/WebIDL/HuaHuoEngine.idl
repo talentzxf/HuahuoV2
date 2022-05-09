@@ -16,6 +16,7 @@ interface SceneManager {
 [NoDelete]
 interface Transform {
     [Const] DOMString GetName();
+    Transform GetParent();
 };
 
 enum EventType {

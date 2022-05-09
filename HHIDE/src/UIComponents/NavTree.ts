@@ -5,7 +5,7 @@ import "/css/navtree.css"
 import {GameObjectManager} from "../HuaHuoEngine/GameObjectManager";
 import {NavTreeEventHandler} from "./NavTreeEventHandler";
 import {EngineAPI} from "../EngineAPI";
-
+import * as assert from "assert";
 
 
 class TreeNode {
@@ -42,13 +42,15 @@ class TreeNode {
 
     setHTMLElement(element: HTMLElement) {
         this.htmlElement = element
-        this.openButton = this.htmlElement.querySelector<HTMLButtonElement>("#open-button")
-        this.closeButton = this.htmlElement.querySelector<HTMLButtonElement>("#close-button")
 
-        if(!this.isLeaf()) {
-            this.showOpenButton()
+        if(this.htmlElement){
+            this.openButton = this.htmlElement.querySelector<HTMLButtonElement>("#open-button")
+            this.closeButton = this.htmlElement.querySelector<HTMLButtonElement>("#close-button")
+
+            if (!this.isLeaf()) {
+                this.showOpenButton()
+            }
         }
-
     }
 
     showOpenButton() {
@@ -87,28 +89,28 @@ class NavTree extends HTMLElement {
         // this.rootNode.getChild(1).appendChild(new TreeNode("Child1-1"))
 
         let _this = this
-        EngineAPI.ExecuteAfterInited(function(){
+        EngineAPI.ExecuteAfterInited(function () {
             _this.treeEventHandler = new NavTreeEventHandler(_this)
         })
     }
 
-    public getRootTreeNode():TreeNode{
+    public getRootTreeNode(): TreeNode {
         return this.rootNode;
     }
 
-    clearNodes(){
-        if(this.rootNode.getHTMLElement()){
+    clearNodes() {
+        if (this.rootNode.getHTMLElement()) {
             this.domRoot.removeChild(this.rootNode.getHTMLElement())
         }
         this.rootNode = new TreeNode("SceneRoot")
     }
 
-    selectItem(targetDiv: HTMLElement){
+    selectItem(targetDiv: HTMLElement) {
         let _this = this
-        return function(evt:MouseEvent){
+        return function (evt: MouseEvent) {
             evt.stopPropagation()
 
-            if(_this.currentSelectedDiv){
+            if (_this.currentSelectedDiv) {
                 _this.currentSelectedDiv.setAttribute("selected", "false")
             }
 
@@ -146,7 +148,6 @@ class NavTree extends HTMLElement {
 
                 openButton.addEventListener('click', _this.expandTreeNode(treeNode, childrenDiv))
                 closeButton.addEventListener('click', _this.closeTreeNode(treeNode, childrenDiv))
-
 
                 div.appendChild(span)  // Show Name
 
@@ -195,14 +196,14 @@ class NavTree extends HTMLElement {
         }
     }
 
-    createEmptyGameObject(){
+    createEmptyGameObject() {
         GameObjectManager.getInstance().createGameObject();
     }
 
-    findParentPanel(){
+    findParentPanel() {
         let candidate = this.parentElement
-        while(candidate != null){
-            if(candidate instanceof HHPanel){
+        while (candidate != null) {
+            if (candidate instanceof HHPanel) {
                 return candidate
             }
             candidate = candidate.parentElement
@@ -220,18 +221,41 @@ class NavTree extends HTMLElement {
             },
             {
                 itemName: "Delete Object",
-                onclick: ()=>{alert("Delete object")}
+                onclick: () => {
+                    alert("Delete object")
+                }
             }
         ])
 
-        let parentPanel:HTMLElement = this.findParentPanel();
+        let parentPanel: HTMLElement = this.findParentPanel();
         parentPanel.oncontextmenu = this.contextMenu.onContextMenu.bind(this.contextMenu);
         this.append(this.domRoot)
 
         this.attachRootNode()
     }
 
-    public attachRootNode(){
+    appendTreeNode(parent: TreeNode, newChild: TreeNode) {
+        let isParentLeaf = parent.isLeaf();
+
+        parent.appendChild(newChild)
+        if (parent.getHTMLElement() == null) {
+            throw "Parent HTMLElement has not been inited yet!"
+        }
+
+        if(isParentLeaf){
+            let previousHTMLElement = parent.getHTMLElement()
+            let previousParentParent = previousHTMLElement.parentElement
+            previousParentParent.removeChild(previousHTMLElement)
+            parent.setHTMLElement(null)
+            previousParentParent.appendChild(this.getOrCreateNode(parent))
+        } else {
+            let htmlElement = parent.getHTMLElement()
+            let childrenHolderDiv = htmlElement.querySelector("#children-holder")
+            childrenHolderDiv.appendChild(this.getOrCreateNode(newChild))
+        }
+    }
+
+    private attachRootNode() {
         this.domRoot.appendChild(this.getOrCreateNode(this.rootNode))
     }
 }
