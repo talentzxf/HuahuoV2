@@ -15,11 +15,23 @@ class ISceneInspector {
 class TransformHierarchyEventArgs: public ScriptEventHandlerArgs{
 public:
     TransformHierarchyEventArgs(Transform* t);
+    TransformHierarchyEventArgs(Transform* t, Transform* oldParent, Transform* newParent);
     Transform* GetTransform() {
         return m_pTransform;
     }
+
+    Transform* GetOldParent(){
+        return m_pOldParent;
+    }
+
+    Transform* GetNewParent(){
+        return m_pNewParent;
+    }
+
 private:
     Transform* m_pTransform;
+    Transform* m_pOldParent;
+    Transform* m_pNewParent;
 };
 
 class SceneTracker{

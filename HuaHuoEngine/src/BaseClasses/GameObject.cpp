@@ -10,34 +10,28 @@
 #include "Components/Transform/TransformChangeDispatch.h"
 #include "MessageHandler.h"
 
-void GameObject::InitializeClass()
-{
+void GameObject::InitializeClass() {
     GameObjectManager::StaticInitialize();
 }
 
-void GameObject::CleanupClass()
-{
+void GameObject::CleanupClass() {
     GameObjectManager::StaticDestroy();
 }
 
-void GameObject::ActivateAwakeRecursivelyInternal(DeactivateOperation deactivateOperation/*, AwakeFromLoadQueue &queue*/)
-{
-    if (IsActivating())
-    {
+void
+GameObject::ActivateAwakeRecursivelyInternal(DeactivateOperation deactivateOperation/*, AwakeFromLoadQueue &queue*/) {
+    if (IsActivating()) {
         ErrorStringObject("GameObject is already being activated or deactivated.", this);
         return;
     }
     bool state;
     bool changed;
-    if (m_IsActiveCached != -1)
-    {
+    if (m_IsActiveCached != -1) {
         bool oldState = m_IsActiveCached;
         m_IsActiveCached = -1;
         state = IsActive();
         changed = oldState != state;
-    }
-    else
-    {
+    } else {
         state = IsActive();
         changed = true;
     }
@@ -45,27 +39,22 @@ void GameObject::ActivateAwakeRecursivelyInternal(DeactivateOperation deactivate
     m_ActivationState = state ? kActivatingChildren : kDeactivatingChildren;
 
     Transform *transform = QueryComponent<Transform>();
-    if (transform)
-    {
+    if (transform) {
         // use a loop by index rather than a iterator, as the children can adjust
         // the child list during the Awake call, and invalidate the iterator
         for (int i = 0; i < transform->GetChildrenCount(); i++)
             transform->GetChild(i).GetGameObject().ActivateAwakeRecursivelyInternal(deactivateOperation/*, queue*/);
     }
 
-    if (changed)
-    {
+    if (changed) {
         m_ActivationState = state ? kActivatingComponents : kDeactivatingComponents;
-        for (size_t i = 0; i < m_Component.size(); i++)
-        {
-            BaseComponent& component = *m_Component[i].GetComponentPtr();
-            if (state)
-            {
+        for (size_t i = 0; i < m_Component.size(); i++) {
+            BaseComponent &component = *m_Component[i].GetComponentPtr();
+            if (state) {
                 Assert(&*component.m_GameObject == this);
                 component.SetGameObjectInternal(this);
                 // queue.Add(*m_Component[i].GetComponentPtr());
-            }
-            else
+            } else
                 component.Deactivate(deactivateOperation);
         }
 
@@ -78,8 +67,7 @@ void GameObject::ActivateAwakeRecursivelyInternal(DeactivateOperation deactivate
 }
 
 
-void GameObject::ActivateAwakeRecursively(DeactivateOperation deactivateOperation)
-{
+void GameObject::ActivateAwakeRecursively(DeactivateOperation deactivateOperation) {
     // PROFILER_AUTO(gActivateAwakeRecursively, this);
 
     // AwakeFromLoadQueue queue(kMemTempAlloc);
@@ -87,15 +75,13 @@ void GameObject::ActivateAwakeRecursively(DeactivateOperation deactivateOperatio
     //queue.AwakeFromLoad(kActivateAwakeFromLoad);
 }
 
-void GameObject::Activate()
-{
+void GameObject::Activate() {
     if (IsActive())
         return;
 
     // PROFILER_AUTO(gActivateGameObjectProfiler, this);
 
-    if (IsDestroying())
-    {
+    if (IsDestroying()) {
         ErrorStringObject("GameObjects can not be made active when they are being destroyed.", this);
         return;
     }
@@ -111,8 +97,7 @@ void GameObject::Activate()
 GameObject::GameObject( /*MemLabelId label, */ ObjectCreationMode mode)
         : Super( /*label,*/ mode),
 //          m_Component(label),
-          m_ActiveGONode(this)
-{
+          m_ActiveGONode(this) {
 //    m_SupportedMessages = 0;
     m_ActivationState = kNotActivating;
     m_Tag = 0;
@@ -127,27 +112,23 @@ GameObject::GameObject( /*MemLabelId label, */ ObjectCreationMode mode)
 #endif
 }
 
-void GameObject::SetName(char const* name)
-{
+void GameObject::SetName(char const *name) {
     m_Name.assign(name);
 //    if (s_SetGONameCallback)
 //        s_SetGONameCallback(this);
     SetDirty();
 }
 
-void GameObject::AddComponentInternal(BaseComponent* com, bool awake /*, AwakeFromLoadQueue* queue*/)
-{
+void GameObject::AddComponentInternal(BaseComponent *com, bool awake /*, AwakeFromLoadQueue* queue*/) {
     Assert(com != NULL);
     m_Component.push_back(ComponentPair::FromComponent(com));
     FinalizeAddComponentInternal(com, awake/*, queue*/);
 }
 
-void GameObject::SetHideFlags(HideFlags flags)
-{
+void GameObject::SetHideFlags(HideFlags flags) {
     Super::SetHideFlags(flags);
-    for (size_t i = 0; i < m_Component.size(); i++)
-    {
-        BaseComponent& com = *m_Component[i].GetComponentPtr();
+    for (size_t i = 0; i < m_Component.size(); i++) {
+        BaseComponent &com = *m_Component[i].GetComponentPtr();
         com.SetHideFlags(flags);
     }
 }
@@ -171,8 +152,7 @@ void GameObject::UpdateActiveGONode() {
 }
 
 
-void GameObject::Reset()
-{
+void GameObject::Reset() {
     Super::Reset();
     m_Layer = kDefaultLayer;
     m_Tag = 0;
@@ -183,28 +163,23 @@ void GameObject::Reset()
 #endif
 }
 
-void GameObject::TransformParentHasChanged()
-{
+void GameObject::TransformParentHasChanged() {
     // Reactivate transform hierarchy, but only if it has been activated before,
     // otherwise we change activation order.
     if (m_IsActiveCached != -1)
         ActivateAwakeRecursively();
 }
 
-void GameObject::SetLayer(int layer)
-{
-    if (layer >= 0 && layer < 32)
-    {
+void GameObject::SetLayer(int layer) {
+    if (layer >= 0 && layer < 32) {
         m_Layer = layer;
         // SendMessage(kLayerChanged);
         SetDirty();
-    }
-    else
+    } else
         ErrorString("A game object can only be in one layer. The layer needs to be in the range [0...31]");
 }
 
-void GameObject::AwakeFromLoad(AwakeFromLoadMode awakeMode)
-{
+void GameObject::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
     Super::AwakeFromLoad(awakeMode);
 
     if (ShouldClearActiveCached(awakeMode))
@@ -229,19 +204,16 @@ void GameObject::AwakeFromLoad(AwakeFromLoadMode awakeMode)
 }
 
 
-bool GameObject::IsActive() const
-{
+bool GameObject::IsActive() const {
     if (m_IsActiveCached != -1)
         return m_IsActiveCached;
 
     // Calculate active state based on the hierarchy
     m_IsActiveCached = m_IsActive && !IsPersistent();
     Transform *trs = QueryComponent<Transform>();
-    if (trs)
-    {
+    if (trs) {
         Transform *parent = trs->GetParent();
-        if (parent && parent->GetGameObjectPtr())
-        {
+        if (parent && parent->GetGameObjectPtr()) {
             m_IsActiveCached = m_IsActiveCached && parent->GetGameObjectPtr()->IsActive();
         }
     }
@@ -249,8 +221,7 @@ bool GameObject::IsActive() const
     return m_IsActiveCached;
 }
 
-void GameObject::FinalizeAddComponentInternal(BaseComponent* com, bool awake = true/*, AwakeFromLoadQueue* queue*/)
-{
+void GameObject::FinalizeAddComponentInternal(BaseComponent *com, bool awake = true/*, AwakeFromLoadQueue* queue*/) {
     // Make sure it isn't already added to another GO
     Assert(com->GetGameObject().GetInstanceID() == InstanceID_None || com->GetGameObjectPtr() == this);
 
@@ -275,13 +246,11 @@ void GameObject::FinalizeAddComponentInternal(BaseComponent* com, bool awake = t
     SetDirty();
 }
 
-BaseComponent* GameObject::QueryComponentByType(const HuaHuo::Type* type) const
-{
+BaseComponent *GameObject::QueryComponentByType(const HuaHuo::Type *type) const {
     // Find a component with the requested ID
     Container::const_iterator i;
     Container::const_iterator end = m_Component.end();
-    for (i = m_Component.begin(); i != end; ++i)
-    {
+    for (i = m_Component.begin(); i != end; ++i) {
         if (type->IsBaseOf(i->GetTypeIndex()))
             return i->GetComponentPtr();
     }
@@ -289,14 +258,12 @@ BaseComponent* GameObject::QueryComponentByType(const HuaHuo::Type* type) const
     return NULL;
 }
 
-BaseComponent* GameObject::QueryComponentByExactType(const HuaHuo::Type* type) const
-{
+BaseComponent *GameObject::QueryComponentByExactType(const HuaHuo::Type *type) const {
     // Find a component with the requested ID
     Container::const_iterator i;
     Container::const_iterator end = m_Component.end();
     RuntimeTypeIndex index = type->GetRuntimeTypeIndex();
-    for (i = m_Component.begin(); i != end; ++i)
-    {
+    for (i = m_Component.begin(); i != end; ++i) {
         if (i->GetTypeIndex() == index)
             return i->GetComponentPtr();
     }
@@ -305,28 +272,25 @@ BaseComponent* GameObject::QueryComponentByExactType(const HuaHuo::Type* type) c
 }
 
 
-GameObjectManager* GameObjectManager::s_Instance = NULL;
-void GameObjectManager::StaticInitialize()
-{
+GameObjectManager *GameObjectManager::s_Instance = NULL;
+
+void GameObjectManager::StaticInitialize() {
     Assert(GameObjectManager::s_Instance == NULL);
     GameObjectManager::s_Instance = NEW(GameObjectManager/*, kMemBaseObject*/);
 }
 
-void GameObjectManager::StaticDestroy()
-{
+void GameObjectManager::StaticDestroy() {
     Assert(GameObjectManager::s_Instance);
     DELETE(GameObjectManager::s_Instance /*, kMemBaseObject*/);
 }
 
-GameObjectManager& GetGameObjectManager()
-{
+GameObjectManager &GetGameObjectManager() {
     Assert(GameObjectManager::s_Instance);
     return *GameObjectManager::s_Instance;
 }
 
 //Must not be called during consistency check as GameObjects get processed first in the queue
-static void DestroyComponentImmediate(BaseComponent* component)
-{
+static void DestroyComponentImmediate(BaseComponent *component) {
     Assert(component != NULL);
 
 #if UNITY_EDITOR
@@ -339,8 +303,8 @@ static void DestroyComponentImmediate(BaseComponent* component)
     DestroySingleObject(component);
 }
 
-void GameObject::AddFirstTransformComponentInternal(::Transform* newTransform/*, AwakeFromLoadQueue* queue = nullptr*/)
-{
+void
+GameObject::AddFirstTransformComponentInternal(::Transform *newTransform/*, AwakeFromLoadQueue* queue = nullptr*/) {
     // Add transform as first component.
     Assert(newTransform != NULL);
     Assert(QueryComponent<Transform>() == NULL);
@@ -348,13 +312,12 @@ void GameObject::AddFirstTransformComponentInternal(::Transform* newTransform/*,
     FinalizeAddComponentInternal(newTransform/*, queue*/);
 }
 
-void GameObject::ReplaceTransformComponentInternal(Transform* newTransform /*, AwakeFromLoadQueue* queue*/)
-{
+void GameObject::ReplaceTransformComponentInternal(Transform *newTransform /*, AwakeFromLoadQueue* queue*/) {
     Assert(newTransform != NULL);
     Assert(newTransform->GetParentPtrInternal() == NULL);
     Assert(newTransform->GetChildrenCount() == 0);
 
-    Transform* oldTransform = QueryComponentAtIndex<Transform>(0);
+    Transform *oldTransform = QueryComponentAtIndex<Transform>(0);
     oldTransform->EnsureTransformHierarchyExists();
 
 #if UNITY_EDITOR
@@ -363,17 +326,14 @@ void GameObject::ReplaceTransformComponentInternal(Transform* newTransform /*, A
 #endif
 
     // Remove the old transform from its parent.
-    Transform* parent = oldTransform->GetParent();
-    if (parent != NULL)
-    {
+    Transform *parent = oldTransform->GetParent();
+    if (parent != NULL) {
         // Replace old transform with new transform in parent's list of children
         Transform::iterator i = parent->Find(oldTransform);
         *i = newTransform;
         newTransform->SetParentPtrInternal(parent);
         oldTransform->SetParentPtrInternal(NULL);
-    }
-    else
-    {
+    } else {
 //        // Ensure new transform has the same scene as old transform
 //        UnityScene* scene = oldTransform->GetScene();
 //        if (scene != NULL)
@@ -385,7 +345,7 @@ void GameObject::ReplaceTransformComponentInternal(Transform* newTransform /*, A
 
     // Move the source children so they are children of the target instead.
     newTransform->GetChildrenInternal().swap(oldTransform->GetChildrenInternal());
-    Transform::TransformComList& children = newTransform->GetChildrenInternal();
+    Transform::TransformComList &children = newTransform->GetChildrenInternal();
     for (int index = 0; index < children.size(); ++index)
         children[index]->SetParentPtrInternal(newTransform);
 
@@ -420,8 +380,7 @@ void GameObject::ReplaceTransformComponentInternal(Transform* newTransform /*, A
 }
 
 template<class TransferFunction>
-void GameObject::TransferComponents(TransferFunction& transfer)
-{
+void GameObject::TransferComponents(TransferFunction &transfer) {
     // When cloning objects for prefabs and instantiate, we don't use serialization to duplicate the hierarchy,
     // we duplicate the hierarchy directly
     if (!SerializePrefabIgnoreProperties(transfer))
@@ -450,24 +409,20 @@ void GameObject::TransferComponents(TransferFunction& transfer)
     }
 #endif
 
-    transfer.Transfer(m_Component, "m_Component", kHideInEditorMask | kStrongPPtrMask | kDisallowSerializedPropertyModification);
+    transfer.Transfer(m_Component, "m_Component",
+                      kHideInEditorMask | kStrongPPtrMask | kDisallowSerializedPropertyModification);
 
 #if !UNITY_EDITOR
     bool shownWarning = false;
-    for (Container::iterator i = m_Component.begin(); i != m_Component.end();)
-    {
-        if (i->GetComponentPtr() == nullptr)
-        {
-            if (!shownWarning)
-            {
+    for (Container::iterator i = m_Component.begin(); i != m_Component.end();) {
+        if (i->GetComponentPtr() == nullptr) {
+            if (!shownWarning) {
                 WarningStringMsg("GameObject contains a component type that is not recognized");
                 shownWarning = true;
             }
 
             i = m_Component.erase(i);
-        }
-        else
-        {
+        } else {
             i++;
         }
     }
@@ -475,8 +430,7 @@ void GameObject::TransferComponents(TransferFunction& transfer)
 }
 
 template<class TransferFunction>
-void GameObject::Transfer(TransferFunction& transfer)
-{
+void GameObject::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
     TransferComponents(transfer);
 
@@ -554,17 +508,14 @@ void GameObject::Transfer(TransferFunction& transfer)
 }
 
 template<class TransferFunction>
-void GameObject::ComponentPair::Transfer(TransferFunction& transfer)
-{
+void GameObject::ComponentPair::Transfer(TransferFunction &transfer) {
     transfer.Transfer(component, "component");
-    if (transfer.IsReadingPPtr())
-    {
+    if (transfer.IsReadingPPtr()) {
         typeIndex = component ? component->GetType()->GetRuntimeTypeIndex() : 0;
     }
 }
 
-void GameObject::SendMessageAny(const MessageIdentifier& messageIdentifier, MessageData& messageData)
-{
+void GameObject::SendMessageAny(const MessageIdentifier &messageIdentifier, MessageData &messageData) {
     // __FAKEABLE_METHOD__(GameObject, SendMessageAny, (messageIdentifier, messageData));
 
 //    if (GetDisableSendMessage())
@@ -584,13 +535,12 @@ void GameObject::SendMessageAny(const MessageIdentifier& messageIdentifier, Mess
 //    ScriptingObjectPtr scriptingObject = GetCachedScriptingObject();
 //#endif
 
-    for (size_t i = 0; i < m_Component.size(); i++)
-    {
+    for (size_t i = 0; i < m_Component.size(); i++) {
         RuntimeTypeIndex typeIndex = m_Component[i].GetTypeIndex();
         if (!MessageHandler::Get().HasMessageCallback(typeIndex, messageIdentifier))
             continue;
 
-        BaseComponent& component = *(m_Component[i].GetComponentPtr());
+        BaseComponent &component = *(m_Component[i].GetComponentPtr());
         MessageHandler::Get().HandleMessage(&component, typeIndex, messageIdentifier, messageData);
 
         // Was the GameObject destroyed with DestroyImmediate in the callback?
@@ -613,7 +563,12 @@ void GameObject::SendMessageAny(const MessageIdentifier& messageIdentifier, Mess
     }
 }
 
+Transform *GameObject::GetTransform() {
+    return this->QueryComponent<Transform>();
+}
+
 
 IMPLEMENT_OBJECT_SERIALIZE(GameObject);
 IMPLEMENT_REGISTER_CLASS(GameObject, 1);
+
 INSTANTIATE_TEMPLATE_TRANSFER(GameObject);

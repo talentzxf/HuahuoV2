@@ -13,7 +13,7 @@ class GameObjectManager{
     }
 
     createGameObject(parentObject?:any){
-        EngineAPI.GetInstance().CreateGameObject("Empty");
+        return EngineAPI.GetInstance().CreateGameObject("Empty");
     }
 }
 

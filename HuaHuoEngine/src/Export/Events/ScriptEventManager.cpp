@@ -36,7 +36,7 @@ ScriptEventManager* GetScriptEventManager(){
     return g_ScriptEventManager;
 }
 
-void ScriptEventManager::RegisterEventHandler(EventType eventType, ScriptEventHandler* pHandler){
+void ScriptEventManager::RegisterEventHandler(std::string eventType, ScriptEventHandler* pHandler){
     if(!m_ScriptEventHandlerLists.contains(eventType)){
         m_ScriptEventHandlerLists[eventType] = NEW(ScriptEventHandlerList);
     }
@@ -44,7 +44,7 @@ void ScriptEventManager::RegisterEventHandler(EventType eventType, ScriptEventHa
     m_ScriptEventHandlerLists[eventType]->push_back(pHandler);
 }
 
-void ScriptEventManager::TriggerEvent(EventType eventType, ScriptEventHandlerArgs* args){
+void ScriptEventManager::TriggerEvent(std::string eventType, ScriptEventHandlerArgs* args){
     if(m_ScriptEventHandlerLists.contains(eventType)){
         ScriptEventHandlerList* handlerList = m_ScriptEventHandlerLists[eventType];
         for(auto item : *handlerList){

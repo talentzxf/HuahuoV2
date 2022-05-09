@@ -1,6 +1,7 @@
 [NoDelete]
 interface GameObject {
     [Const] DOMString GetName();
+    Transform GetTransform();
 };
 
 interface HuaHuoScene {
@@ -17,10 +18,7 @@ interface SceneManager {
 interface Transform {
     [Const] DOMString GetName();
     Transform GetParent();
-};
-
-enum EventType {
-    "OnHierarchyChange"
+    boolean SetParent(Transform parent);
 };
 
 [NoDelete]
@@ -36,6 +34,8 @@ interface ScriptEventHandlerArgs{
 [NoDelete]
 interface TransformHierarchyEventArgs: ScriptEventHandlerArgs{
     Transform GetTransform();
+    Transform GetOldParent();
+    Transform GetNewParent();
 };
 
 [JSImplementation="ScriptEventHandler", NoDelete]
@@ -55,7 +55,7 @@ interface HuaHuoEngine {
     static void InitEngine();
 
     GameObject CreateGameObject(DOMString name);
-    void RegisterEvent(EventType eventType, ScriptEventHandler handler);
+    void RegisterEvent(DOMString eventType, ScriptEventHandler handler);
 
     SceneManager GetSceneManager();
 };

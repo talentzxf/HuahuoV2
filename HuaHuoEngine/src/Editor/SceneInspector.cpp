@@ -15,8 +15,11 @@ SceneTracker * gSceneTracker = NULL;
 static RegisterRuntimeInitializeAndCleanup gRegisterCallbacks_SceneTracker(SceneTracker::StaticInitialize, SceneTracker::StaticDestroy, 1);
 
 TransformHierarchyEventArgs::TransformHierarchyEventArgs(Transform* t)
-:m_pTransform(t){
+:m_pTransform(t), m_pOldParent(NULL), m_pNewParent(NULL){
+}
 
+TransformHierarchyEventArgs::TransformHierarchyEventArgs(Transform* t, Transform* oldParent, Transform* newParent)
+        :m_pTransform(t), m_pOldParent(oldParent), m_pNewParent(newParent){
 }
 
 void SceneTracker::StaticInitialize(void*)
@@ -35,7 +38,7 @@ void SceneTracker::StaticInitialize(void*)
 }
 
 void SceneTracker::StaticDestroy(void*) {
-
+    DELETE(gSceneTracker)
 }
 
 SceneTracker::SceneTracker(/*MemLabelId label*/)
@@ -74,7 +77,7 @@ void SceneTracker::TransformHierarchyChanged(Transform* t)
 
 // VZ: Callback to javascript to refresh the hierarchy.
     TransformHierarchyEventArgs args(t);
-    GetScriptEventManager()->TriggerEvent(EventType::OnHierarchyChange, &args);
+    GetScriptEventManager()->TriggerEvent("OnHierarchyChange", &args);
 }
 
 void SceneTracker::TransformHierarchyChangedCallback(Transform *t) {
@@ -82,8 +85,29 @@ void SceneTracker::TransformHierarchyChangedCallback(Transform *t) {
     gSceneTracker->TransformHierarchyChanged(t);
 }
 
+void SceneTracker::TransformDidSetParent(Transform* obj, Transform* oldParent, Transform* newParent)
+{
+//    PPtr<Transform> pptr = obj;
+//    PPtr<Transform> oldParentPPtr = oldParent;
+//    PPtr<Transform> newParentPPtr = newParent;
+//    if (!obj->TestHideFlag(Object::kHideInHierarchy))
+//    {
+//        for (SceneInspectorIterator c = m_SceneInspectors.begin(); c != m_SceneInspectors.end(); c++)
+//        {
+//            ISceneInspector* inspector = *c;
+//            if (inspector)
+//                inspector->TransformDidSetParent(pptr, oldParentPPtr, newParentPPtr);
+//        }
+//    }
+    TransformHierarchyEventArgs args(obj, oldParent, newParent);
+    GetScriptEventManager()->TriggerEvent("OnHierarchyChangedSetParent", &args);
+}
+
 void SceneTracker::TransformHierarchyChangedSetParentCallback(Transform *obj, Transform *oldParent,
                                                               Transform *newParent) {
+    // DebugAssert(CurrentThread::EqualsID(Thread::mainThreadId));
+    gSceneTracker->TransformHierarchyChanged(obj);
+    gSceneTracker->TransformDidSetParent(obj, oldParent, newParent);
 }
 
 SceneTracker& GetSceneTracker()

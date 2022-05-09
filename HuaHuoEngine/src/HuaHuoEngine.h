@@ -30,7 +30,7 @@ public:
         return MonoCreateGameObject(name);
     }
 
-    void RegisterEvent(EventType eventType, ScriptEventHandler* pHandler){
+    void RegisterEvent(std::string eventType, ScriptEventHandler* pHandler){
         GetScriptEventManager()->RegisterEventHandler(eventType, pHandler);
     }
 

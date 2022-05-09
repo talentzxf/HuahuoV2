@@ -18,6 +18,11 @@ class ContextMenu
     }
 
     constructMenuDiv(){
+        if(!this.items){
+            console.log("Loading ... ")
+            return;
+        }
+
         if(!this.menuDiv){
             let menuDiv = document.createElement("div")
             menuDiv.className = "contextmenu"

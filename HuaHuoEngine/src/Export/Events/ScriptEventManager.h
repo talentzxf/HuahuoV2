@@ -5,6 +5,7 @@
 #ifndef HUAHUOENGINE_SCRIPTEVENTMANAGER_H
 #define HUAHUOENGINE_SCRIPTEVENTMANAGER_H
 #include "EventDefs.h"
+#include <string>
 #include <list>
 #include <map>
 
@@ -22,7 +23,7 @@ class ScriptEventManager {
     typedef std::list<ScriptEventHandler*> ScriptEventHandlerList;
     typedef ScriptEventHandlerList* ScriptEventHandlerListPtr;
 private:
-    std::map<EventType, ScriptEventHandlerList*> m_ScriptEventHandlerLists;
+    std::map<std::string, ScriptEventHandlerList*> m_ScriptEventHandlerLists;
 public:
     ScriptEventManager();
     virtual ~ScriptEventManager();
@@ -30,8 +31,8 @@ public:
     static void InitClass(void*);
     static void CleanupClass(void *);
 
-    void RegisterEventHandler(EventType eventType, ScriptEventHandler* pHandler);
-    void TriggerEvent(EventType eventType, ScriptEventHandlerArgs* args);
+    void RegisterEventHandler(std::string eventType, ScriptEventHandler* pHandler);
+    void TriggerEvent(std::string eventType, ScriptEventHandlerArgs* args);
 };
 
 ScriptEventManager* GetScriptEventManager();

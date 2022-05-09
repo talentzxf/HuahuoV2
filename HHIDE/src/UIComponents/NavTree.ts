@@ -28,6 +28,12 @@ class TreeNode {
         this.children.push(node)
     }
 
+    removeChild(node: TreeNode){
+        this.children.forEach( (item, index, array) => {
+            if(item == node) array.splice(index, 1)
+        })
+    }
+
     getChildren(): Array<TreeNode> {
         return this.children;
     }
@@ -68,6 +74,9 @@ class TreeNode {
     }
 }
 
+let childrenHolder:string = "children-holder"
+let childrenHolderId:string = "#" + childrenHolder
+
 @CustomElement({
     selector: "hh-navtree",
 })
@@ -78,6 +87,10 @@ class NavTree extends HTMLElement {
     private currentSelectedDiv: HTMLElement;
 
     private treeEventHandler: NavTreeEventHandler;
+
+    private spanNodeMap: Map<HTMLElement, TreeNode>
+
+    private selectedTreeNode: TreeNode
 
     constructor() {
         super();
@@ -91,11 +104,37 @@ class NavTree extends HTMLElement {
         let _this = this
         EngineAPI.ExecuteAfterInited(function () {
             _this.treeEventHandler = new NavTreeEventHandler(_this)
+            _this.contextMenu.setItems([
+                {
+                    itemName: "Create Empty Game Object",
+                    onclick: _this.treeEventHandler.createEmptyGameObject.bind(_this.treeEventHandler)
+                },
+                {
+                    itemName: "Delete Object",
+                    onclick: () => {
+                        alert("Delete object")
+                    }
+                }
+            ])
         })
+
+        this.spanNodeMap = new Map<HTMLElement, TreeNode>();
     }
 
     public getRootTreeNode(): TreeNode {
         return this.rootNode;
+    }
+
+    moveNode(curNode:TreeNode, oldParent:TreeNode, newParent:TreeNode){
+        if(newParent === oldParent){
+            return;
+        }
+
+        oldParent.removeChild(curNode)
+        let oldParentChildrenHolder = oldParent.getHTMLElement().querySelector(childrenHolderId)
+        oldParentChildrenHolder.removeChild(curNode.getHTMLElement())
+        newParent.appendChild(curNode)
+        this.appendTreeNode(newParent, curNode)
     }
 
     clearNodes() {
@@ -116,6 +155,7 @@ class NavTree extends HTMLElement {
 
             _this.currentSelectedDiv = targetDiv;
             targetDiv.setAttribute("selected", "true")
+            _this.selectedTreeNode = _this.spanNodeMap.get(targetDiv)
         }
     }
 
@@ -125,6 +165,8 @@ class NavTree extends HTMLElement {
         let div = treeNode.getHTMLElement();
 
         let span = document.createElement("span")
+        this.spanNodeMap.set(span, treeNode)
+
         span.innerHTML += treeNode.getName()
         if (div == null) {
             div = document.createElement("div");
@@ -143,7 +185,7 @@ class NavTree extends HTMLElement {
                 div.appendChild(closeButton)
 
                 let childrenDiv = document.createElement("div")
-                childrenDiv.id = "children-holder"
+                childrenDiv.id = childrenHolder
                 childrenDiv.style.display = "inline"
 
                 openButton.addEventListener('click', _this.expandTreeNode(treeNode, childrenDiv))
@@ -196,8 +238,8 @@ class NavTree extends HTMLElement {
         }
     }
 
-    createEmptyGameObject() {
-        GameObjectManager.getInstance().createGameObject();
+    getSelectedTreeNode(){
+        return this.selectedTreeNode
     }
 
     findParentPanel() {
@@ -214,19 +256,6 @@ class NavTree extends HTMLElement {
 
     connectedCallback() {
         this.domRoot.className = "navtree"
-        this.contextMenu.setItems([
-            {
-                itemName: "Create Empty Game Object",
-                onclick: this.createEmptyGameObject
-            },
-            {
-                itemName: "Delete Object",
-                onclick: () => {
-                    alert("Delete object")
-                }
-            }
-        ])
-
         let parentPanel: HTMLElement = this.findParentPanel();
         parentPanel.oncontextmenu = this.contextMenu.onContextMenu.bind(this.contextMenu);
         this.append(this.domRoot)
@@ -242,17 +271,24 @@ class NavTree extends HTMLElement {
             throw "Parent HTMLElement has not been inited yet!"
         }
 
+        let childrenHolderDiv
+        let parentHtmlElement
+
         if(isParentLeaf){
             let previousHTMLElement = parent.getHTMLElement()
             let previousParentParent = previousHTMLElement.parentElement
             previousParentParent.removeChild(previousHTMLElement)
             parent.setHTMLElement(null)
-            previousParentParent.appendChild(this.getOrCreateNode(parent))
+            parentHtmlElement = this.getOrCreateNode(parent)
+            previousParentParent.appendChild(parentHtmlElement)
+            childrenHolderDiv = parentHtmlElement.querySelector(childrenHolderId)
         } else {
-            let htmlElement = parent.getHTMLElement()
-            let childrenHolderDiv = htmlElement.querySelector("#children-holder")
+            parentHtmlElement = parent.getHTMLElement()
+            childrenHolderDiv = parentHtmlElement.querySelector(childrenHolderId)
             childrenHolderDiv.appendChild(this.getOrCreateNode(newChild))
         }
+
+        this.expandTreeNode(parent, childrenHolderDiv)()
     }
 
     private attachRootNode() {

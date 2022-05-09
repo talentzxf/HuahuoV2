@@ -115,6 +115,9 @@ public:
     void SendMessage(const MessageIdentifier& messageID, T messageData);
     void SendMessage(const MessageIdentifier& messageID);
 
+    // VZ: JavaScript doesn't have generic, have to think another way to query component ...
+    Transform* GetTransform();
+
 private:
     enum ActivationState
     {

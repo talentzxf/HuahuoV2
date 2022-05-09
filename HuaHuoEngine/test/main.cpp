@@ -10,6 +10,7 @@
 
 #include <cstdio>
 #include "Export/Scripting/GameObjectExport.h"
+#include "Editor/SceneInspector.h"
 
 void testTransform(){
     GameObject* go = MonoCreateGameObject("Go1");
@@ -23,12 +24,20 @@ void testTransform(){
     Assert( &transform2->GetChild(0) == transform1);
 }
 
+class TestScriptEventHandler: public ScriptEventHandler{
+    void handleEvent(ScriptEventHandlerArgs* args){
+        printf("HelloHello");
+    }
+};
+
 void testScene(){
     HuaHuoScene* pScene = GetSceneManager().CreateScene();
     GetSceneManager().SetActiveScene(pScene);
 
     std::string goName("Go!!!");
     MonoCreateGameObject(goName.c_str());
+
+    GetScriptEventManager()->RegisterEventHandler("OnHierarchyChangedSetParent", new TestScriptEventHandler());
 
     for(auto itr = pScene->RootBegin(); itr != pScene->RootEnd(); itr++){
         printf("name: %s", itr->GetData()->GetName());
@@ -38,7 +47,7 @@ void testScene(){
 
 int main() {
     HuaHuoEngine::InitEngine();
-    testTransform();
+    // testTransform();
     testScene();
 
     return 0;

@@ -5,7 +5,7 @@ function IsValidWrappedObject(obj):Boolean{
     if(!obj.hasOwnProperty('ptr')) return false
     if(!(obj instanceof WrapperObject))
         return false
-    if(obj.ptr == 0)
+    if(!obj.ptr)
         return false
 
     return true

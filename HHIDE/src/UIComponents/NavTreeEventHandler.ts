@@ -1,25 +1,33 @@
 import {NavTree, TreeNode} from "./NavTree";
 import {EngineAPI} from "../EngineAPI";
 import {IsValidWrappedObject} from "../Utilities/WrappedObjectUtils"
+import {GameObjectManager} from "../HuaHuoEngine/GameObjectManager";
 
 declare var ScriptEventHandlerImpl: any
 declare var TransformHierarchyEventArgs: any
+declare var GameObject: any
+declare var Transform: any
 
 class NavTreeEventHandler {
     private tree: NavTree
     private transformNodeMap: Map<number, TreeNode> = new Map();
+    private nodeTransformMap: Map<TreeNode, number> = new Map()
 
     public constructor(tree: NavTree) {
         this.tree = tree
 
         let handler = new ScriptEventHandlerImpl();
-        handler.handleEvent = this.handleEvent.bind(this)
+        handler.handleEvent = this.handleOnHierarchyChange.bind(this)
         EngineAPI.GetInstance().RegisterEvent("OnHierarchyChange", handler)
+
+        let setParentHandler = new ScriptEventHandlerImpl();
+        setParentHandler.handleEvent = this.handleOnHierarchyChangeSetParent.bind(this)
+        EngineAPI.GetInstance().RegisterEvent("OnHierarchyChangedSetParent", setParentHandler)
     }
 
-    constructArgsFromPointer(args){
-        let returnArgs = Module["wrapPointer"](args)
-        returnArgs.__proto__ = TransformHierarchyEventArgs.prototype
+    convertObjectFromPointer(transformPtr, classType){
+        let returnArgs = Module["wrapPointer"](transformPtr)
+        returnArgs.__proto__ = classType.prototype
         return returnArgs
     }
 
@@ -27,18 +35,39 @@ class NavTreeEventHandler {
         return this.transformNodeMap.has(transform.ptr)
     }
 
+    createEmptyGameObject() {
+        let treeNode = this.tree.getSelectedTreeNode()
+
+        let gameObject:any = GameObjectManager.getInstance().createGameObject();
+        if(treeNode){
+            let parentTransform = this.convertObjectFromPointer( this.nodeTransformMap.get(treeNode) , Transform)
+            if(IsValidWrappedObject(parentTransform))
+                gameObject.GetTransform().SetParent(parentTransform)
+        }
+    }
+
     getOrCreateTreeNode(transform){
         let cppPtr = transform.ptr
         if(!this.transformNodeMap.has(cppPtr)){
             let newNode = new TreeNode(transform.GetName())
             this.transformNodeMap.set(cppPtr, newNode)
+            this.nodeTransformMap.set(newNode, cppPtr)
             return newNode
         }
         return this.transformNodeMap.get(cppPtr)
     }
 
-    handleEvent(argsPointer) {
-        let args = this.constructArgsFromPointer(argsPointer)
+    handleOnHierarchyChangeSetParent(argsPointer){
+        let args = this.convertObjectFromPointer(argsPointer, TransformHierarchyEventArgs)
+        let oldTreeNode = this.transformNodeMap.get(args.GetOldParent())
+        let newTreeNode = this.transformNodeMap.get(args.GetNewParent())
+        let curNode = this.transformNodeMap.get(args.GetTransform())
+
+        this.tree.moveNode(curNode, oldTreeNode, newTreeNode)
+    }
+
+    handleOnHierarchyChange(argsPointer) {
+        let args = this.convertObjectFromPointer(argsPointer, TransformHierarchyEventArgs)
 
         let transform = args.GetTransform();
 
