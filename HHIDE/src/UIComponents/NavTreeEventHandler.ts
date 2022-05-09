@@ -3,11 +3,11 @@ import {EngineAPI} from "../EngineAPI";
 import {IsValidWrappedObject} from "../Utilities/WrappedObjectUtils"
 
 declare var ScriptEventHandlerImpl: any
-declare var SceneRootTransformArray: any
 declare var TransformHierarchyEventArgs: any
 
 class NavTreeEventHandler {
     private tree: NavTree
+    private transformNodeMap: Map<number, TreeNode> = new Map();
 
     public constructor(tree: NavTree) {
         this.tree = tree
@@ -23,13 +23,29 @@ class NavTreeEventHandler {
         return returnArgs
     }
 
+    treeNodeExists(transform){
+        return this.transformNodeMap.has(transform.ptr)
+    }
+
+    getOrCreateTreeNode(transform){
+        let cppPtr = transform.ptr
+        if(!this.transformNodeMap.has(cppPtr)){
+            let newNode = new TreeNode(transform.GetName())
+            this.transformNodeMap.set(cppPtr, newNode)
+            return newNode
+        }
+        return this.transformNodeMap.get(cppPtr)
+    }
+
     handleEvent(argsPointer) {
         let args = this.constructArgsFromPointer(argsPointer)
 
         let transform = args.GetTransform();
 
         if(!IsValidWrappedObject(transform.GetParent())){ // No Parent means this is the root object of the Scene
-            this.tree.appendTreeNode(this.tree.getRootTreeNode(), new TreeNode(transform.GetName()))
+            if(!this.treeNodeExists(transform)){
+                this.tree.appendTreeNode(this.tree.getRootTreeNode(), this.getOrCreateTreeNode(transform))
+            }
         }
 
         // this.tree.clearNodes()
