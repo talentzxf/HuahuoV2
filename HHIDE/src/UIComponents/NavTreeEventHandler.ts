@@ -59,9 +59,9 @@ class NavTreeEventHandler {
 
     handleOnHierarchyChangeSetParent(argsPointer){
         let args = this.convertObjectFromPointer(argsPointer, TransformHierarchyEventArgs)
-        let oldTreeNode = this.transformNodeMap.get(args.GetOldParent())
-        let newTreeNode = this.transformNodeMap.get(args.GetNewParent())
-        let curNode = this.transformNodeMap.get(args.GetTransform())
+        let oldTreeNode = this.transformNodeMap.get(args.GetOldParent().ptr)
+        let newTreeNode = this.transformNodeMap.get(args.GetNewParent().ptr)
+        let curNode = this.transformNodeMap.get(args.GetTransform().ptr)
 
         this.tree.moveNode(curNode, oldTreeNode, newTreeNode)
     }

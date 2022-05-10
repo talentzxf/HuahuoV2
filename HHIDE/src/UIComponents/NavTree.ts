@@ -130,10 +130,12 @@ class NavTree extends HTMLElement {
             return;
         }
 
-        oldParent.removeChild(curNode)
-        let oldParentChildrenHolder = oldParent.getHTMLElement().querySelector(childrenHolderId)
-        oldParentChildrenHolder.removeChild(curNode.getHTMLElement())
-        newParent.appendChild(curNode)
+        if(oldParent){
+            oldParent.removeChild(curNode)
+            let oldParentChildrenHolder = oldParent.getHTMLElement().querySelector(childrenHolderId)
+            oldParentChildrenHolder.removeChild(curNode.getHTMLElement())
+        }
+        
         this.appendTreeNode(newParent, curNode)
     }
 
