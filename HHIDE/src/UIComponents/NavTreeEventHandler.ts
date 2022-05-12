@@ -35,6 +35,10 @@ class NavTreeEventHandler {
         return this.transformNodeMap.has(transform.ptr)
     }
 
+    createCube(){
+
+    }
+
     createEmptyGameObject() {
         let treeNode = this.tree.getSelectedTreeNode()
 

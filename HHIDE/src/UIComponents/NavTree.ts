@@ -110,6 +110,10 @@ class NavTree extends HTMLElement {
                     onclick: _this.treeEventHandler.createEmptyGameObject.bind(_this.treeEventHandler)
                 },
                 {
+                    itemName: "Create Cube",
+                    onclick: _this.treeEventHandler.createCube.bind(_this.treeEventHandler)
+                },
+                {
                     itemName: "Delete Object",
                     onclick: () => {
                         alert("Delete object")
