@@ -9,7 +9,9 @@
 #include "Serialize/SerializationMetaFlags.h"
 #include "Serialize/SerializeUtility.h"
 #include "FloatConversion.h"
+#include "Matrix3x3.h"
 
+class Matrix4x4f;
 class Quaternionf;
 float Dot(const Quaternionf& q1, const Quaternionf& q2);
 
@@ -48,6 +50,64 @@ public:
     friend Quaternionf NormalizeSafe(const Quaternionf& q);
 
     static Quaternionf identity() { return Quaternionf(0.0F, 0.0F, 0.0F, 1.0F); }
+
+    friend float SqrMagnitude(const Quaternionf& q);
+    friend float Magnitude(const Quaternionf& q);
+
+    bool operator==(const Quaternionf& q) const        { return x == q.x && y == q.y && z == q.z && w == q.w; }
+    bool operator!=(const Quaternionf& q) const        { return x != q.x || y != q.y || z != q.z || w != q.w; }
+
+    Quaternionf&    operator+=(const Quaternionf&  aQuat);
+    Quaternionf&    operator-=(const Quaternionf&  aQuat);
+    Quaternionf&    operator*=(const float        aScalar);
+    Quaternionf&    operator*=(const Quaternionf&     aQuat);
+    Quaternionf&    operator/=(const float        aScalar);
+
+
+    friend Quaternionf operator+(const Quaternionf& lhs, const Quaternionf& rhs)
+    {
+        Quaternionf q(lhs);
+        return q += rhs;
+    }
+
+    friend Quaternionf  operator-(const Quaternionf& lhs, const Quaternionf& rhs)
+    {
+        Quaternionf t(lhs);
+        return t -= rhs;
+    }
+
+    Quaternionf operator-() const
+    {
+        return Quaternionf(-x, -y, -z, -w);
+    }
+
+    Quaternionf operator*(const float s) const
+    {
+        return Quaternionf(x * s, y * s, z * s, w * s);
+    }
+
+    friend Quaternionf  operator*(const float s, const Quaternionf& q)
+    {
+        Quaternionf t(q);
+        return t *= s;
+    }
+
+    friend Quaternionf  operator/(const Quaternionf& q, const float s)
+    {
+        Quaternionf t(q);
+        return t /= s;
+    }
+
+    inline friend Quaternionf operator*(const Quaternionf& lhs, const Quaternionf& rhs)
+    {
+        return Quaternionf(
+                lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y,
+                lhs.w * rhs.y + lhs.y * rhs.w + lhs.z * rhs.x - lhs.x * rhs.z,
+                lhs.w * rhs.z + lhs.z * rhs.w + lhs.x * rhs.y - lhs.y * rhs.x,
+                lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z);
+    }
+
+    friend Quaternionf Normalize(const Quaternionf& q) {    return q / Magnitude(q); }
 };
 
 // operator overloads
@@ -69,6 +129,35 @@ void Quaternionf::Transfer(TransferFunction& transfer)
     TRANSFER(y);
     TRANSFER(z);
     TRANSFER(w);
+}
+
+void EXPORT_COREMODULE QuaternionToMatrix(const Quaternionf& q, Matrix4x4f& m);
+void EXPORT_COREMODULE QuaternionToMatrix(const Quaternionf& q, Matrix3x3f& m);
+
+void EXPORT_COREMODULE MatrixToQuaternion(const Matrix3x3f& m, Quaternionf& q);
+void EXPORT_COREMODULE MatrixToQuaternion(const Matrix4x4f& m, Quaternionf& q);
+
+
+inline Quaternionf Conjugate(const Quaternionf& q)
+{
+    return Quaternionf(-q.x, -q.y, -q.z, q.w);
+}
+
+inline Quaternionf Inverse(const Quaternionf& q)
+{
+    // Is it necessary to divide by SqrMagnitude???
+    Quaternionf res = Conjugate(q);
+    return res;
+}
+
+inline Quaternionf& Quaternionf::operator/=(const float       aScalar)
+{
+    Assert(!CompareApproximately(aScalar, 0.0F));
+    x /= aScalar;
+    y /= aScalar;
+    z /= aScalar;
+    w /= aScalar;
+    return *this;
 }
 
 #endif //HUAHUOENGINE_QUATERNIONF_H

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Utilities/EnumFlags.h"
-#include "baselib/include/IntegerDefinitions.h"
 
 /// Uniform transform scales x, y, z in the same amount,
 /// NonUniform transform scales x, y, z differently and might contain skew.

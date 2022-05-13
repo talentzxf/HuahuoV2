@@ -5,7 +5,7 @@
 #include "TransformHierarchy.h"
 #include "Memory/MemoryMacros.h"
 #include "Memory/BatchAllocator.h"
-#include "TransformType.h"
+#include "Math/TransformType.h"
 
 namespace TransformInternal {
 

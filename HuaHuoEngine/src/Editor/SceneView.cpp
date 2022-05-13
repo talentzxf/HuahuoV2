@@ -44,5 +44,5 @@ void SceneView::OnUpdate() {
 }
 
 void SceneView::OnDraw() {
-
+    this->m_Camera.Render();
 }

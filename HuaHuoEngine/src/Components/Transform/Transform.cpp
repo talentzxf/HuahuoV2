@@ -10,7 +10,7 @@
 #include "Utilities/ValidateArgs.h"
 #include "TransformSync.h"
 #include "BaseClasses/MessageHandlerRegistration.h"
-#include "Math/Vector2.h"
+#include "Math/Vector2f.h"
 #include "Components/BaseComponent.h"
 #include "SceneManager/HuaHuoScene.h"
 #include "SceneManager/SceneManager.h"

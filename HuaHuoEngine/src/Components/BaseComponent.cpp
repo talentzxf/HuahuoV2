@@ -73,5 +73,10 @@ void BaseComponent::SendMessageAny(const MessageIdentifier& messageID, MessageDa
         go->SendMessageAny(messageID, messageData);
 }
 
+bool BaseComponent::IsActive() const {
+    GameObject* go = m_GameObject;
+    return go != NULL && go->IsActive();
+}
+
 IMPLEMENT_OBJECT_SERIALIZE(BaseComponent);
 INSTANTIATE_TEMPLATE_TRANSFER(BaseComponent);

@@ -13,7 +13,7 @@
 #include "Math/Simd/RotationOrder.h"
 #include "TransformAccess.h"
 #include "BaseClasses/ImmediatePtr.h"
-#include "TransformType.h"
+#include "Math/TransformType.h"
 #include "BaseClasses/GameObject.h"
 #include "TransformChangeSystemMask.h"
 #include "BaseClasses/MessageData.h"

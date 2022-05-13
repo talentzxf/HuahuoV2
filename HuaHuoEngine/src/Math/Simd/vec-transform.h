@@ -1,7 +1,7 @@
 #pragma once
 
 #include "vec-matrix.h"
-// #include "Runtime/Math/Simd/vec-svd.h"
+#include "Math/Simd/vec-svd.h"
 #include "vec-trs.h"
 // #include "Runtime/Math/Simd/vec-rigid.h"
 // #include "Runtime/Math/Simd/vec-affine.h"
@@ -102,28 +102,28 @@ namespace math
 //        return i;
 //    }
 
-//// This can be used to extract the rotation matrix
-//// from a matrix that potentially has scale in it
-//    static MATH_FORCEINLINE float3x3 rotation(float3x3 const &i)
-//    {
-//        float detI = det(i);
-//
-//        if (abs(1.0f - detI) < epsilon_determinant())
-//        {
-//            return i;
-//        }
-//        else if (abs(detI) > epsilon_determinant())
-//        {
-//            float3x3 is = mulScale(i, rsqrt(float3(dot(i.m0), dot(i.m1), dot(i.m2))));
-//
-//            if (abs(1.0f - det(is)) < epsilon_determinant())
-//            {
-//                return is;
-//            }
-//        }
-//
-//        float3x3 ret;
-//        math::quatToMatrix(svdRotation(i), ret);
-//        return ret;
-//    }
+// This can be used to extract the rotation matrix
+// from a matrix that potentially has scale in it
+    static MATH_FORCEINLINE float3x3 rotation(float3x3 const &i)
+    {
+        float detI = det(i);
+
+        if (abs(1.0f - detI) < epsilon_determinant())
+        {
+            return i;
+        }
+        else if (abs(detI) > epsilon_determinant())
+        {
+            float3x3 is = mulScale(i, rsqrt(float3(dot(i.m0), dot(i.m1), dot(i.m2))));
+
+            if (abs(1.0f - det(is)) < epsilon_determinant())
+            {
+                return is;
+            }
+        }
+
+        float3x3 ret;
+        math::quatToMatrix(svdRotation(i), ret);
+        return ret;
+    }
 }

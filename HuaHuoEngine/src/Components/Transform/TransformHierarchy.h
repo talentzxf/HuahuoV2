@@ -10,7 +10,7 @@
 #include "TransformChangeSystemMask.h"
 #include "Math/Simd/vec-trs.h"
 #include "TransformHierarchyTypes.h"
-#include "TransformType.h"
+#include "Math/TransformType.h"
 
 #if UNITY_RELEASE
 #define TRANSFORM_FORCEINLINE_IN_RELEASE UNITY_FORCEINLINE
