@@ -11,7 +11,6 @@
             padding: 0;
         }
     </style>
-    <script type="text/javascript" src="wasm/HuaHuoEngine.js"></script>
 </head>
 <body>
 <hh-container>
@@ -33,17 +32,54 @@
             </hh-container>
             <hh-container direction="row">
                 <hh-panel>
-                    <hh-content title="Scene">Scene Content</hh-content>
+                    <hh-content title="Scene">
+                        <canvas id="SceneView"></canvas>
+                    </hh-content>
                     <hh-content title="Game">Game Content</hh-content>
                 </hh-panel>
             </hh-container>
         </hh-container>
         <hh-container direction="row" style="height:10%">
-            <hh-content title="log">Log Content</hh-content>
+            <hh-panel>
+                <hh-content title="Logs" style="width:100%; height:100%">
+                    <textarea id="stdout" style="height:100%;width: 100%;resize:none;box-sizing:border-box;overflow-y:auto;overflow-x:auto;" disabled></textarea>
+                </hh-content>
+            </hh-panel>
         </hh-container>
     </hh-container>
 </hh-container>
 
+<script lang="text/javascript">
+    var Module = {
+        print: (function outputLog() {
+            var element = document.getElementById('stdout');
+            if (element) element.value = ''; // clear browser cache
+            return function (text) {
+                if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+                // These replacements are necessary if you render to raw HTML
+                //text = text.replace(/&/g, "&amp;");
+                //text = text.replace(/</g, "&lt;");
+                //text = text.replace(/>/g, "&gt;");
+                //text = text.replace('\n', '<br>', 'g');
+                console.log(text);
+                if (element) {
+                    element.value += text + "\n";
+                    element.scrollTop = element.scrollHeight; // focus on bottom
+                }
+            };
+        })()
+    }
+
+    window.onerror = function(event) {
+        // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
+        Module.setStatus('Exception thrown, see JavaScript console');
+        spinnerElement.style.display = 'none';
+        Module.setStatus = function(text) {
+            if (text) console.error('[post-exception status] ' + text);
+        };
+    };
+</script>
+<script async type="text/javascript" src="wasm/HuaHuoEngine.js"></script>
 <!--<div style="display: flex; flex-direction: column;width: 100%; height:100%">-->
 <!--  <hh-panel>-->
 <!--    <hh-content title="Tab 1-1">Content 1-1</hh-content>-->

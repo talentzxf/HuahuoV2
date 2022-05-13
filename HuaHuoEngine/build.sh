@@ -9,7 +9,12 @@ cd $EMCMAKE_DIR
 EMCCPATH=`which emcc`
 EMCCDIR=`dirname ${EMCCPATH}`
 WEBIDL=${EMCCDIR}/tools/webidl_binder
-${WEBIDL} ../WebIDL/HuaHuoEngine.idl glue ./emcmake/
+
+echo > ./MergedIDL.idl
+cat ../WebIDL/HuaHuoEngine.idl  >>  ./MergedIDL.idl
+cat ../WebIDL/HuaHuoEditor.idl >> ./MergedIDL.idl
+
+${WEBIDL} ./MergedIDL.idl glue ./emcmake/
 
 if [ $? -eq 0 ]; then
    emcmake cmake .. && cmake --build ./

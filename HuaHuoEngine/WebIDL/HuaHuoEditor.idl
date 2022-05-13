@@ -1,0 +1,4 @@
+interface SceneView{
+    static SceneView GetSceneView();
+    void InitWithCanvasId(DOMString canvasId);
+};

@@ -11,10 +11,10 @@ const validateSelector = (selector: string) => {
 };
 const CustomElement = (config: CustomElementConfig) => (cls:any) => {
     validateSelector(config.selector);
-    if (!config.template) {
-        // throw new Error('You need to pass a template for the element');
-        console.log("Template is null!")
-    }
+    // if (!config.template) {
+    //     // throw new Error('You need to pass a template for the element');
+    //     console.log("Template is null!")
+    // }
     const template = document.createElement('template');
     if (config.style) {
         if(config.template)

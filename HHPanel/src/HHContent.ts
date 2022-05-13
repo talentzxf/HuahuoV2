@@ -16,7 +16,8 @@ class HHContent extends HTMLElement {
             this.id = `hh-content-${HHContent.contentCounter++}`;
 
         this.setAttribute('tabindex', String(-1));
-        this.style.height = 'fit-content'
+        if(!this.style.height)
+            this.style.height = 'fit-content'
     }
 
     attributeChangedCallback() {

@@ -6,10 +6,6 @@
 #include "Components/Transform/Transform.h"
 #include "Export/Events/ScriptEventManager.h"
 
-#if WEB_ENV
-#include <emscripten.h>
-#endif
-
 SceneTracker * gSceneTracker = NULL;
 
 static RegisterRuntimeInitializeAndCleanup gRegisterCallbacks_SceneTracker(SceneTracker::StaticInitialize, SceneTracker::StaticDestroy, 1);
