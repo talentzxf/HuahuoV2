@@ -90,6 +90,7 @@ list(APPEND CPPFILES src/Shaders/ShaderPassContext.cpp)
 list(APPEND CPPFILES src/Shaders/ShaderPropertySheet.cpp)
 list(APPEND CPPFILES src/Graphics/ScriptableRenderLoop/ScriptableRenderContext.cpp)
 list(APPEND CPPFILES src/Profiler/TimeHelper.cpp)
+list(APPEND CPPFILES external/baselib/builds/Source/Assert.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES src/Editor/SceneInspector.cpp)
@@ -115,8 +116,7 @@ else ()
     set(TARGETNAME TestHuaHuoEngine)
 
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
-    list(APPEND CPPFILES PlatformDependent/Win/External/baselib/builds/Source/Baselib_PlatformConfig_Windows.cpp)
-    add_executable(TestHuaHuoEngine ${CPPFILES})
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp)
 endif ()
 
 target_include_directories(${TARGETNAME} PUBLIC "${PROJECT_BINARY_DIR}" ${EXTRA_INCLUDE_DIR})
