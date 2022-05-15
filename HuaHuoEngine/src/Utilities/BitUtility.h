@@ -1,7 +1,7 @@
 #pragma once
 
 #include <limits.h>
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 #include "Logging/LogAssert.h"
 #if _MSC_VER
 

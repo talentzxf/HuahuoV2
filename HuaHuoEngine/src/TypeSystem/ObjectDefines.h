@@ -8,7 +8,7 @@
 #include "RTTI.h"
 #include "Utilities/TypeUtilities.h"
 #include "RTTI.h"
-#include "baselib/include/CoreMacros.h"
+#include "Internal/CoreMacros.h"
 #include "BaseClasses/InstanceID.h"
 #include "Logging/LogAssert.h"
 #include "Memory/MemoryMacros.h"

@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdlib>
 #include <string>
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 
 class CacheWriterBase
 {

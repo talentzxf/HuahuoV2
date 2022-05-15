@@ -11,7 +11,7 @@
 
 class SceneView {
 private:
-    Camera m_Camera;
+    Camera* m_pCamera;
     std::string m_CanvasId;
     bool m_Inited;
     EMSCRIPTEN_WEBGL_CONTEXT_HANDLE m_Context;
@@ -19,7 +19,9 @@ private:
     void OnUpdate();
     void OnDraw();
 public:
-    SceneView():m_Inited(false){};
+    SceneView():m_Inited(false){
+        m_pCamera = Object::Produce<Camera>();
+    };
     ~SceneView(){};
     void OnGUI();
 

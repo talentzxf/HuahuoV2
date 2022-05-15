@@ -5,7 +5,7 @@
 #ifndef HUAHUOENGINE_TRANSFORMHIERARCHYTYPES_H
 #define HUAHUOENGINE_TRANSFORMHIERARCHYTYPES_H
 
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 
 class Transform;
 namespace math

@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<instrumentationManifest xsi:schemaLocation="http://schemas.microsoft.com/win/2004/08/events eventman.xsd" xmlns="http://schemas.microsoft.com/win/2004/08/events" xmlns:win="http://manifests.microsoft.com/win/2004/08/windows/events" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:trace="http://schemas.microsoft.com/win/2004/08/events/trace">
+	<instrumentation>
+		<events>
+			<provider name="Unity" guid="{F736823E-EEF1-49C0-83FB-D036F507B210}" symbol="UnityProviderGuid" resourceFileName="%UNITY_PROVIDER_PATH%\UnityETWProvider.dll" messageFileName="%UNITY_PROVIDER_PATH%\UnityETWProvider.dll">
+				<events>
+					<event symbol="PointerPressed" value="1" version="0" task="TouchInputTask" template="PointerData" keywords="TouchInputKeyword ">
+					</event>
+					<event symbol="PointerReleased" value="2" version="0" task="TouchInputTask" template="PointerData" keywords="TouchInputKeyword ">
+					</event>
+					<event symbol="PointerMoved" value="3" version="0" task="TouchInputTask" template="PointerData" keywords="TouchInputKeyword ">
+					</event>
+					<event symbol="Lifetime" value="4" version="0" task="LifetimeTask" template="LifetimeEventData" keywords="LifetimeEvent ">
+					</event>
+					<event symbol="Custom" value="5" version="0" task="CustomTask" template="CustomEventData" keywords="CustomEvent ">
+					</event>
+					<event symbol="ScriptingEvent" value="6" version="0" task="ScriptingTask" template="ScriptingEventData" keywords="ScriptingEventKeyword ">
+					</event>
+					<event symbol="LogEvent" value="7" version="0" task="UnityTask" template="LogEventData" keywords="LogEventKeyword ">
+					</event>
+					<event symbol="RuntimeEvent" value="8" version="0" task="UnityTask" template="RuntimeEventData" keywords="RuntimeEventKeyword ">
+					</event>
+					<event symbol="ProfilerEvent" value="9" version="0" task="ProfilerTask" template="ProfilerEventData" keywords="ProfilerEventKeyword ">
+					</event>
+				</events>
+				<tasks>
+					<task name="TouchInputTask" symbol="TouchInputTask" value="1" eventGUID="{FF130C87-276E-4B31-B6FD-C07536A0DD0D}">
+					</task>
+					<task name="LifetimeTask" symbol="LifetimeTask" value="2" eventGUID="{FFE4C5F0-D279-4793-BEF3-9F272BB77A48}">
+					</task>
+					<task name="CustomTask" symbol="CustomTask" value="3" eventGUID="{FF9FB30A-34CD-4871-9E00-A3D00AEB9F40}">
+					</task>
+					<task name="ScriptingTask" symbol="ScriptingTask" value="4" eventGUID="{FF8F6E3E-8BA6-486D-BEC9-19B058FDE9F2}">
+					</task>
+					<task name="UnityTask" symbol="UnityTask" value="5" eventGUID="{FFFDB4F3-D05E-41D5-9FC8-72099162B99A}">
+					</task>
+					<task name="RuntimeTask" symbol="RuntimeTask" value="6" eventGUID="{A7FA52BE-D76B-4F5E-905D-22AE4A0113D7}">
+					</task>
+					<task name="ProfilerTask" symbol="ProfilerTask" value="7" eventGUID="{F57C0947-DD70-41FD-88FF-F0D45CC9C91F}">
+					</task>
+				</tasks>
+				<keywords>
+					<keyword name="TouchInputKeyword" symbol="TouchInputKeyword" mask="0x1">
+					</keyword>
+					<keyword name="LifetimeEvent" symbol="LifetimeEvent" mask="0x2">
+					</keyword>
+					<keyword name="CustomEvent" symbol="CustomEvent" mask="0x4">
+					</keyword>
+					<keyword name="ScriptingEventKeyword" symbol="ScriptingEventKeyword" mask="0x10">
+					</keyword>
+					<keyword name="LogEventKeyword" symbol="LogEventKeyword" mask="0x20">
+					</keyword>
+					<keyword name="RuntimeEventKeyword" symbol="RuntimeEventKeyword" mask="0x40">
+					</keyword>
+					<keyword name="ProfilerEventKeyword" symbol="ProfilerEventKeyword" mask="0x80">
+					</keyword>
+				</keywords>
+				<maps>
+					<valueMap name="LifetimeEventType">
+						<map value="1" message="$(string.Unity.map.LifetimeEventType.1.message)">
+						</map>
+						<map value="2" message="$(string.Unity.map.LifetimeEventType.2.message)">
+						</map>
+						<map value="3" message="$(string.Unity.map.LifetimeEventType.3.message)">
+						</map>
+						<map value="4" message="$(string.Unity.map.LifetimeEventType.4.message)">
+						</map>
+					</valueMap>
+					<valueMap name="ScriptingEventType">
+						<map value="1" message="$(string.Unity.map.ScriptingEventType.1.message)">
+						</map>
+						<map value="2" message="$(string.Unity.map.ScriptingEventType.2.message)">
+						</map>
+						<map value="3" message="$(string.Unity.map.ScriptingEventType.3.message)">
+						</map>
+						<map value="4" message="$(string.Unity.map.ScriptingEventType.4.message)">
+						</map>
+						<map value="5" message="$(string.Unity.map.ScriptingEventType.5.message)">
+						</map>
+						<map value="6" message="$(string.Unity.map.ScriptingEventType.6.message)">
+						</map>
+					</valueMap>
+					<valueMap name="LogEventType">
+						<map value="0" message="$(string.Unity.map.LogEventType.0.message)">
+						</map>
+						<map value="1" message="$(string.Unity.map.LogEventType.1.message)">
+						</map>
+						<map value="2" message="$(string.Unity.map.LogEventType.2.message)">
+						</map>
+						<map value="3" message="$(string.Unity.map.LogEventType.3.message)">
+						</map>
+						<map value="4" message="$(string.Unity.map.LogEventType.4.message)">
+						</map>
+						<map value="5" message="$(string.Unity.map.LogEventType.5.message)">
+						</map>
+					</valueMap>
+					<valueMap name="ProfilerEventType">
+						<map value="1" message="$(string.Unity.map.ProfilerEventType.1.message)">
+						</map>
+						<map value="2" message="$(string.Unity.map.ProfilerEventType.2.message)">
+						</map>
+					</valueMap>
+				</maps>
+				<templates>
+					<template tid="PointerData">
+						<data name="PointerId" inType="win:UInt32" outType="xs:unsignedInt">
+						</data>
+						<data name="X" inType="win:Float" outType="xs:float">
+						</data>
+						<data name="Y" inType="win:Float" outType="xs:float">
+						</data>
+					</template>
+					<template tid="LifetimeEventData">
+						<data name="Type" inType="win:UInt32" map="LifetimeEventType">
+						</data>
+					</template>
+					<template tid="CustomEventData">
+						<data name="Value" inType="win:Int32" outType="xs:int">
+						</data>
+						<data name="Text" inType="win:UnicodeString" outType="xs:string">
+						</data>
+					</template>
+					<template tid="ScriptingEventData">
+						<data name="Name" inType="win:AnsiString" outType="xs:string">
+						</data>
+						<data name="Type" inType="win:UInt32" map="ScriptingEventType">
+						</data>
+					</template>
+					<template tid="LogEventData">
+						<data name="Type" inType="win:UInt32" map="LogEventType">
+						</data>
+						<data name="Message" inType="win:AnsiString" outType="xs:string">
+						</data>
+					</template>
+					<template tid="RuntimeEventData">
+						<data name="Category" inType="win:AnsiString" outType="xs:string">
+						</data>
+						<data name="Message" inType="win:AnsiString" outType="xs:string">
+						</data>
+					</template>
+					<template tid="ProfilerEventData">
+						<data name="Name" inType="win:AnsiString" outType="xs:string">
+						</data>
+						<data name="Type" inType="win:UInt32" map="ProfilerEventType">
+						</data>
+					</template>
+				</templates>
+			</provider>
+		</events>
+	</instrumentation>
+	<localization>
+		<resources culture="en-US">
+			<stringTable>
+				<string id="Unity.map.ScriptingEventType.6.message" value="LeaveMisc">
+				</string>
+				<string id="Unity.map.ScriptingEventType.5.message" value="EnterMisc">
+				</string>
+				<string id="Unity.map.ScriptingEventType.4.message" value="LeaveManaged">
+				</string>
+				<string id="Unity.map.ScriptingEventType.3.message" value="EnterManaged">
+				</string>
+				<string id="Unity.map.ScriptingEventType.2.message" value="LeaveNative">
+				</string>
+				<string id="Unity.map.ScriptingEventType.1.message" value="EnterNative">
+				</string>
+				<string id="Unity.map.LogEventType.5.message" value="Debug">
+				</string>
+				<string id="Unity.map.LogEventType.4.message" value="Exception">
+				</string>
+				<string id="Unity.map.LogEventType.3.message" value="Log">
+				</string>
+				<string id="Unity.map.LogEventType.2.message" value="Warning">
+				</string>
+				<string id="Unity.map.LogEventType.1.message" value="Assert">
+				</string>
+				<string id="Unity.map.LogEventType.0.message" value="Error">
+				</string>
+				<string id="Unity.map.LifetimeEventType.4.message" value="Draw">
+				</string>
+				<string id="Unity.map.LifetimeEventType.3.message" value="PrepareResources">
+				</string>
+				<string id="Unity.map.LifetimeEventType.2.message" value="Disconnect">
+				</string>
+				<string id="Unity.map.LifetimeEventType.1.message" value="Connect">
+				</string>
+				<string id="Unity.map.ProfilerEventType.2.message" value="Leave">
+				</string>
+				<string id="Unity.map.ProfilerEventType.1.message" value="Enter">
+				</string>
+			</stringTable>
+		</resources>
+	</localization>
+</instrumentationManifest>

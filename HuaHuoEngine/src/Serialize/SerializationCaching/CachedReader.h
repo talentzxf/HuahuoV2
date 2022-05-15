@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Memory/MemoryMacros.h"
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 #include "Serialize/SerializationMetaFlags.h"
 #include <string>
 #include <memory.h>

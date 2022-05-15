@@ -6,7 +6,7 @@
 #define HUAHUOENGINE_CACHEDWRITER_H
 
 #include <cstdlib>
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 #include <limits>
 #include <cstdio>
 

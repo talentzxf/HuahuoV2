@@ -4,7 +4,7 @@
 
 #ifndef HUAHUOENGINE_CACHEREADERBASE_H
 #define HUAHUOENGINE_CACHEREADERBASE_H
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 #include <cstdio>
 #include <string>
 

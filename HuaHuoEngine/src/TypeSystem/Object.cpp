@@ -4,7 +4,7 @@
 
 #include "Object.h"
 #include "Type.h"
-#include "baselib/include/AtomicOps.h"
+#include "Threads/AtomicOps.h"
 #include "TypeManager.h"
 #include <cstring>
 #include "Utilities/RegisterRuntimeInitializeAndCleanup.h"
@@ -28,6 +28,23 @@ namespace BaseObjectManager
         TypeManager::CleanupGlobalInstance();
     }
 }
+
+static ExecutionRestrictions gExecutionRestrictions = kNoRestriction;
+
+ExecutionRestrictions GetExecutionRestrictions()
+{
+    return gExecutionRestrictions;
+}
+
+ExecutionRestrictions SetExecutionRestrictions(ExecutionRestrictions desiredRestrictions)
+{
+    // ASSERT_RUNNING_ON_MAIN_THREAD;
+
+    ExecutionRestrictions originalRestrictions = gExecutionRestrictions;
+    gExecutionRestrictions = desiredRestrictions;
+    return originalRestrictions;
+}
+
 
 static RegisterRuntimeInitializeAndCleanup s_BaseObjectManagerCallbacks(BaseObjectManager::StaticInitialize, BaseObjectManager::StaticDestroy);
 

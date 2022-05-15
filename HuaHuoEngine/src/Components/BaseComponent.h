@@ -37,8 +37,8 @@ public:
     GameObject* GetGameObjectPtr()     { return m_GameObject; }
     GameObject* GetGameObjectPtr() const   { return m_GameObject; }
 
-//    template<class T> T& GetComponent() const { return m_GameObject->GetComponent<T>(); }
-//    template<class T> T* QueryComponent() const { return m_GameObject->QueryComponent<T>(); }
+    template<class T> T& GetComponent() const;
+    template<class T> T* QueryComponent() const;
 
     /// Is this component active?
     /// A component is always inactive if its not attached to a gameobject
@@ -94,6 +94,5 @@ inline void BaseComponent::SendMessage(const MessageIdentifier& messageID)
     MessageData data;
     SendMessageAny(messageID, data);
 }
-
 
 #endif //HUAHUOENGINE_BASECOMPONENT_H

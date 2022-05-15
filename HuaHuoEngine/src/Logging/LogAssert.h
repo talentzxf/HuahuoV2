@@ -6,7 +6,7 @@
 #define HUAHUOENGINE_LOGASSERT_H
 #include <stdarg.h>
 #include "Utilities/Annotations.h"
-#include "baselib/include/CoreMacros.h"
+#include "Internal/CoreMacros.h"
 #include "Memory/AllocatorLabels.h"
 #include "BaseClasses/InstanceID.h"
 #include <string>

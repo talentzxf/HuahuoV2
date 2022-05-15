@@ -2,7 +2,7 @@
 
 #include <cstring>
 #include "Annotations.h"
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 #include "StaticAssert.h"
 
 //////////////////////////////////////////////////////////////////////////

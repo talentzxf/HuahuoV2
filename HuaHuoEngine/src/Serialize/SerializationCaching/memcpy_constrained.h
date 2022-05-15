@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Memory/MemoryMacros.h"
-#include "baselib/include/IntegerDefinitions.h"
-#include "baselib/include/CoreMacros.h"
-#include "baselib/include/PlatformEnvironment.h"
+#include "BaseClasses/BaseTypes.h"
+#include "Internal/CoreMacros.h"
+#include "Internal/PlatformEnvironment.h"
 
 #include <algorithm>
 

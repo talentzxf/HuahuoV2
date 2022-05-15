@@ -5,7 +5,7 @@
 #ifndef HUAHUOENGINE_INSTANCEID_H
 #define HUAHUOENGINE_INSTANCEID_H
 
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 
 // With this switched on, you should get a compile error when you mix InstanceIDs with regular ints, or
 // do arithmetic to them, etc. Fixing the entire codebase to handle InstanceIDs correctly is quite a big

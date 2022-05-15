@@ -6,9 +6,9 @@
 #define HUAHUOENGINE_HASHFUNCTIONS_H
 #include <utility>
 #include <stdint.h>
-#include "baselib/include/PlatformEnvironment.h"
+#include "Internal/PlatformEnvironment.h"
 #include "BaseClasses/BaseTypes.h"
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 #include "HashFunctions/xxhash.h"
 
 // --------------------------------------------------------------------------

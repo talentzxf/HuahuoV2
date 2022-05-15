@@ -1,0 +1,14 @@
+//
+// Created by VincentZhang on 5/14/2022.
+//
+
+#ifndef HUAHUOENGINE_SHADERPROPERTYSHEET_H
+#define HUAHUOENGINE_SHADERPROPERTYSHEET_H
+
+
+class ShaderPropertySheet {
+
+};
+
+
+#endif //HUAHUOENGINE_SHADERPROPERTYSHEET_H

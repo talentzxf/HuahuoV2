@@ -5,14 +5,14 @@
 #ifndef HUAHUOENGINE_OBJECT_H
 #define HUAHUOENGINE_OBJECT_H
 
-#include "baselib/include/PlatformEnvironment.h"
+#include "Internal/PlatformEnvironment.h"
 #include "RTTI.h"
 #include "ObjectDefines.h"
 #include "Type.h"
 #include "Memory/AllocatorLabels.h"
 #include <unordered_map>
 #include <unordered_set>
-#include "baselib/include/CoreMacros.h"
+#include "Internal/CoreMacros.h"
 
 enum AwakeFromLoadMode
 {
@@ -68,13 +68,32 @@ struct LocalSerializedObjectIdentifier
     }
 };
 
+enum ExecutionRestrictions
+{
+    kNoRestriction                  = 0,
+    kDisableImmediateDestruction    = 1 << 0,
+    kDisableSendMessage             = 1 << 1,
+    kDisableRendering               = 1 << 2,
+};
 
 void InstanceIDToLocalSerializedObjectIdentifier(InstanceID id, LocalSerializedObjectIdentifier& localIdentifier);
 void LocalSerializedObjectIdentifierToInstanceID(const LocalSerializedObjectIdentifier& fileID, InstanceID& memoryID);
 
+ExecutionRestrictions EXPORT_COREMODULE GetExecutionRestrictions();
+ExecutionRestrictions EXPORT_COREMODULE SetExecutionRestrictions(ExecutionRestrictions desiredRestrictions);
+
+FORCE_INLINE bool GetDisableImmediateDestruction() { return (GetExecutionRestrictions() & kDisableImmediateDestruction) != 0; }
+FORCE_INLINE bool GetDisableSendMessage() { return (GetExecutionRestrictions() & kDisableSendMessage) != 0; }
+FORCE_INLINE bool GetDisableRendering() { return (GetExecutionRestrictions() & kDisableRendering) != 0; }
+
 class Object {
 public:
     typedef std::unordered_map<InstanceID, Object*> IDToPointerMap;
+
+    static Object* Produce(const HuaHuo::Type* type, InstanceID instanceID = InstanceID_None, ObjectCreationMode mode = kCreateObjectDefault)
+    {
+        return Produce(TypeOf<Object>(), type, instanceID, mode);
+    }
 
     template<typename T>
     static T* Produce(InstanceID instanceID = InstanceID_None, ObjectCreationMode mode = kCreateObjectDefault)

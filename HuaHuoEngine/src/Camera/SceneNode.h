@@ -4,8 +4,9 @@
 
 #ifndef HUAHUOENGINE_SCENENODE_H
 #define HUAHUOENGINE_SCENENODE_H
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 #include "SharedRendererDataTypes.h"
+#include <cstdlib>
 
 class BaseRenderer;
 

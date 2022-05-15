@@ -2,6 +2,7 @@
 
 #include "Vector3f.h"
 #include "Modules/ExportModules.h"
+#include "Serialize/SerializeUtility.h"
 
 class EXPORT_COREMODULE Matrix3x3f
 {

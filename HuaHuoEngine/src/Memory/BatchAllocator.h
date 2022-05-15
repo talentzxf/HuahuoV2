@@ -6,7 +6,7 @@
 #define HUAHUOENGINE_BATCHALLOCATOR_H
 
 #include <cstdlib>
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 #include "MemoryMacros.h"
 
 class BatchAllocator {

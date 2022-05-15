@@ -1,5 +1,5 @@
 #pragma once
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 
 // There are two versions of TransformChangeSystemMask, a struct and a typedef.
 // The struct can be used to check that TransformChangeSystemMask is used everywhere

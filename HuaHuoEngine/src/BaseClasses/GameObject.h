@@ -219,4 +219,7 @@ inline void GameObject::SendMessage(const MessageIdentifier& messageID)
     SendMessageAny(messageID, data);
 }
 
+template<class T> T& BaseComponent::GetComponent() const { return m_GameObject->GetComponent<T>(); }
+template<class T> T* BaseComponent::QueryComponent() const { return m_GameObject->QueryComponent<T>(); }
+
 #endif //HUAHUOENGINE_GAMEOBJECT_H

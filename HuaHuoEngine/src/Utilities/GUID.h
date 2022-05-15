@@ -1,6 +1,6 @@
 #pragma once
 
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 #include "Serialize/SerializeUtility.h"
 #include <string>
 #include "HashFunctions.h"

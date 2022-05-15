@@ -7,6 +7,7 @@
 
 #include "Logging/LogAssert.h"
 #include "Serialize/SerializationMetaFlags.h"
+#include "FloatConversion.h"
 
 
 class Vector3f {
@@ -50,6 +51,52 @@ public:
     EXPORT_COREMODULE static const Vector3f yAxis;
     EXPORT_COREMODULE static const Vector3f zAxis;
 };
+
+
+inline Vector3f operator+(const Vector3f& lhs, const Vector3f& rhs)   { return Vector3f(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z); }
+inline Vector3f operator-(const Vector3f& lhs, const Vector3f& rhs)   { return Vector3f(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z); }
+inline Vector3f Cross(const Vector3f& lhs, const Vector3f& rhs);
+inline float Dot(const Vector3f& lhs, const Vector3f& rhs)                 { return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z; }
+inline float Volume(const Vector3f& inV)                               { return inV.x * inV.y * inV.z; }
+
+inline Vector3f operator*(const Vector3f& inV, const float s)         { return Vector3f(inV.x * s, inV.y * s, inV.z * s); }
+inline Vector3f operator*(const float s, const Vector3f& inV)         { return Vector3f(inV.x * s, inV.y * s, inV.z * s); }
+inline Vector3f operator*(const Vector3f& lhs, const Vector3f& rhs)   { return Vector3f(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z); }
+inline Vector3f operator/(const Vector3f& inV, const float s)         { Vector3f temp(inV); temp /= s; return temp; }
+inline Vector3f Inverse(const Vector3f& inVec)                                 { return Vector3f(1.0F / inVec.x, 1.0F / inVec.y, 1.0F / inVec.z); }
+
+inline Vector3f& Vector3f::operator/=(float s)
+{
+    DebugAssert(!CompareApproximately(s, 0.0F));
+    x /= s;
+    y /= s;
+    z /= s;
+    return *this;
+}
+
+inline Vector3f Cross(const Vector3f& lhs, const Vector3f& rhs)
+{
+    return Vector3f(
+            lhs.y * rhs.z - lhs.z * rhs.y,
+            lhs.z * rhs.x - lhs.x * rhs.z,
+            lhs.x * rhs.y - lhs.y * rhs.x);
+}
+
+inline float SqrMagnitude(const Vector3f& inV)                                 { return Dot(inV, inV); }
+inline float Magnitude(const Vector3f& inV)                            {return SqrtImpl(Dot(inV, inV)); }
+// Normalizes a vector, asserts if the vector can be normalized
+inline Vector3f Normalize(const Vector3f& inV)                                 { return inV / Magnitude(inV); }
+// Orthonormalizes the three vectors, assuming that a orthonormal basis can be formed
+void OrthoNormalizeFast(Vector3f* inU, Vector3f* inV, Vector3f* inW);
+// Orthonormalizes the three vectors, returns false if no orthonormal basis could be formed.
+EXPORT_COREMODULE void OrthoNormalize(Vector3f* inU, Vector3f* inV, Vector3f* inW);
+// Orthonormalizes the two vectors. inV is taken as a hint and will try to be as close as possible to inV.
+EXPORT_COREMODULE void OrthoNormalize(Vector3f* inU, Vector3f* inV);
+
+
+// Calculates a vector that is orthonormal to n.
+// Assumes that n is normalized
+Vector3f OrthoNormalVectorFast(const Vector3f& n);
 
 template<class TransferFunction>
 inline void Vector3f::Transfer(TransferFunction& t)

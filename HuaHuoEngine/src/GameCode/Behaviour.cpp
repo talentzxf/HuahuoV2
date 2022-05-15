@@ -66,6 +66,6 @@ void Behaviour::CleanupClass()
 //    ReleaseInstanceUpdateManager();
 }
 
-IMPLEMENT_REGISTER_CLASS(Behaviour, 5);
+IMPLEMENT_REGISTER_CLASS(Behaviour, 7);
 IMPLEMENT_OBJECT_SERIALIZE(Behaviour);
 INSTANTIATE_TEMPLATE_TRANSFER(Behaviour);

@@ -4,6 +4,132 @@
 
 #ifndef HUAHUOENGINE_GFXDEVICE_H
 #define HUAHUOENGINE_GFXDEVICE_H
+#include "Modules/ExportModules.h"
+#include "BaseClasses/BaseTypes.h"
+#include "GfxDeviceTypes.h"
+#include "Math/Vector2f.h"
+
+class AutoGfxDeviceBeginEndFrame
+{
+public:
+    AutoGfxDeviceBeginEndFrame();
+    ~AutoGfxDeviceBeginEndFrame();
+
+    void End();
+    bool GetSuccess() const { return m_Success; }
+
+private:
+    bool m_Success;
+    bool m_NeedsEndFrame;
+};
+
+// Struct to hold all state data that needs propagation to gfx job
+// At the point where a graphics job is spawned this gets cached on the main thread
+// and a ptr to the cached instance is passed to the job.
+struct GfxContextData
+{
+    GfxContextData()
+            : m_Dirty(false)
+    {
+    }
+
+    // if this returns true we need to create a new cached instance of GfxContextData on the main thread
+    // and move the old cached instance to recycle pool
+    bool IsDirty() const
+    {
+        return m_Dirty ;//|| m_BuiltinParamValues.isDirty || m_TransformState.worldViewMatrixDirty;
+    }
+
+    // call this after creating a new cached instance on the main thread, it makes sure transform state is not stale
+    // and resets the dirty flag
+    void Update()
+    {
+//        m_TransformState.UpdateWorldViewMatrix(m_BuiltinParamValues);
+//        m_BuiltinParamValues.isDirty = false;
+        m_Dirty = false;
+    }
+
+    void SetInsideFrame(bool val) { m_InsideFrame = val; m_Dirty = true; }
+    bool GetInsideFrame() const { return m_InsideFrame; }
+
+    void SetActiveCubemapFace(CubemapFace val) { m_ActiveCubemapFace = val; m_Dirty = true; }
+    CubemapFace GetActiveCubemapFace() const { return m_ActiveCubemapFace; }
+
+    void SetActiveMipLevel(int val) { m_ActiveMipLevel = val; m_Dirty = true; }
+    int GetActiveMipLevel() const { return m_ActiveMipLevel; }
+
+    void SetActiveDepthSlice(int val) { m_ActiveDepthSlice = val; m_Dirty = true; }
+    int GetActiveDepthSlice() const { return m_ActiveDepthSlice; }
+
+//    void SetStereoActiveEye(StereoscopicEye val) { m_StereoActiveEye = val; m_Dirty = true; }
+//    StereoscopicEye GetStereoActiveEye() const { return m_StereoActiveEye; }
+
+//    void SetSinglePassStereo(SinglePassStereo val) { m_SinglePassStereo = val; m_Dirty = true; }
+//    SinglePassStereo GetSinglePassStereo() const { return m_SinglePassStereo; }
+
+    void SetInstanceCountMultiplier(int val) { m_InstanceCountMultiplier = val; m_Dirty = true; }
+    int GetInstanceCountMultiplier() const
+    {
+        if (m_InstanceCountMultiplier == 0)
+            return (m_SinglePassStereo == kSinglePassStereoInstancing ? 2 : 1);
+        return m_InstanceCountMultiplier;
+    }
+
+    void SetSinglePassStereoEyeMask(TargetEyeMask val) { m_SinglePassStereoEyeMask = val; m_Dirty = true; }
+    TargetEyeMask GetSinglePassStereoEyeMask() const { return m_SinglePassStereoEyeMask; }
+
+    void SetInvertProjectionMatrix(bool val) { m_InvertProjectionMatrix = val; m_Dirty = true; }
+    bool GetInvertProjectionMatrix() const { return m_InvertProjectionMatrix; }
+
+    void SetUserBackfaceMode(bool val) { m_UserBackfaceMode = val; m_Dirty = true; }
+    bool GetUserBackfaceMode() const { return m_UserBackfaceMode; }
+
+    void SetForceCullMode(CullMode val) { m_ForceCullMode = val; m_Dirty = true; }
+    CullMode GetForceCullMode() const { return m_ForceCullMode; }
+
+    void SetGlobalDepthBias(float val) { m_GlobalDepthBias = val; m_Dirty = true; }
+    float GetGlobalDepthBias() const { return m_GlobalDepthBias; }
+
+    void SetGlobalSlopeDepthBias(float val) { m_GlobalSlopeDepthBias = val; m_Dirty = true; }
+    float GetGlobalSlopeDepthBias() const { return m_GlobalSlopeDepthBias; }
+
+    void SetActiveScaledHeight(UInt16 val) { m_ActiveScaledHeight = val; m_Dirty = true; }
+    UInt16 GetActiveScaledHeight() const { return m_ActiveScaledHeight; }
+
+#if UNITY_EDITOR || ENABLE_PLAYERCONNECTION
+    void SetUsingAsyncDummyShader(bool val) { m_UsingAsyncDummyShader = val; m_Dirty = true; }
+    bool GetUsingAsyncDummyShader() const { return m_UsingAsyncDummyShader; }
+#endif // UNITY_EDITOR || ENABLE_PLAYERCONNECTION
+
+//    BuiltinShaderParamValues m_BuiltinParamValues;
+//    TransformState m_TransformState;
+
+private:
+    bool                m_InsideFrame;
+    CubemapFace         m_ActiveCubemapFace;
+    int                 m_ActiveMipLevel;
+    int                 m_ActiveDepthSlice;
+    StereoscopicEye     m_StereoActiveEye;
+    SinglePassStereo    m_SinglePassStereo;
+    TargetEyeMask       m_SinglePassStereoEyeMask;
+    int                 m_InstanceCountMultiplier;
+    bool                m_InvertProjectionMatrix;
+    bool                m_UserBackfaceMode;
+    // Override shader-specified cull mode with this
+    // (kCullUnknown does not override)
+    CullMode            m_ForceCullMode;
+    float               m_GlobalDepthBias;
+    float               m_GlobalSlopeDepthBias;
+    UInt16              m_ActiveScaledHeight;
+    Vector2f            m_StereoScale;
+    Vector2f            m_StereoOffset;
+#if UNITY_EDITOR || ENABLE_PLAYERCONNECTION
+    bool                m_UsingAsyncDummyShader;
+#endif // UNITY_EDITOR || ENABLE_PLAYERCONNECTION
+
+    bool m_Dirty;
+};
+
 
 
 class GfxDevice {
@@ -15,7 +141,47 @@ public:
 
     virtual void BeginFrame() = 0;
     virtual void EndFrame() = 0;
+    // Check if device is in valid state. E.g. lost device on D3D9; in this case all rendering should be skipped.
+    virtual bool    IsValidState() { return true; }
+
+    inline bool     IsInsideFrame() const { return m_GfxContextData.GetInsideFrame(); }
+
+protected:
+    // Mutable state
+    GfxContextData      m_GfxContextData;
 };
 
+// GetGfxDevice() returns the graphics device that you should use in rendering code.
+// It may be a client device which sends commands to a separate thread (to the real device),
+// or it may be a native GfxDevice used to generate command buffers in a graphics job.
+EXPORT_COREMODULE GfxDevice& GetGfxDevice();
+
+// Is the graphics device initialized? (TODO: Rename)
+bool                IsGfxDevice();
+void                SetGfxDevice(GfxDevice* device);
+
+inline AutoGfxDeviceBeginEndFrame::AutoGfxDeviceBeginEndFrame() :
+        m_Success(true), m_NeedsEndFrame(false)
+{
+    GfxDevice& device = GetGfxDevice();
+    if (!device.IsInsideFrame())
+    {
+        device.BeginFrame();
+        m_Success = device.IsValidState();
+        m_NeedsEndFrame = true;
+    }
+}
+
+inline AutoGfxDeviceBeginEndFrame::~AutoGfxDeviceBeginEndFrame()
+{
+    End();
+}
+
+inline void AutoGfxDeviceBeginEndFrame::End()
+{
+    if (m_NeedsEndFrame)
+        GetGfxDevice().EndFrame();
+    m_NeedsEndFrame = false;
+}
 
 #endif //HUAHUOENGINE_GFXDEVICE_H

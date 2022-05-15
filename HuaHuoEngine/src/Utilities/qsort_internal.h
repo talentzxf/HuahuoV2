@@ -1,7 +1,7 @@
 #pragma once
 
 #include <algorithm>
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 #include "Logging/LogAssert.h"
 
 // #include "Runtime/Jobs/Jobs.h"

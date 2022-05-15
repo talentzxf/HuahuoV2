@@ -9,8 +9,8 @@
 
 #include <vector>
 #include <cstdlib>
-#include "baselib/include/PlatformEnvironment.h"
-#include "baselib/include/CoreMacros.h"
+#include "Internal/PlatformEnvironment.h"
+#include "Internal/CoreMacros.h"
 #include "Logging/LogAssert.h"
 #include "Memory/MemoryMacros.h"
 

@@ -100,7 +100,10 @@ public:
     /// Sets the world position and rotation
     void SetPositionAndRotation(const Vector3f& position, const Quaternionf& rotation);
 
+    /// Gets the local position relative to the father
     Vector3f GetLocalPosition() const;
+    /// Gets the position in world space
+    Vector3f GetPosition() const;
 
     Vector3f GetLocalScale() const;
 

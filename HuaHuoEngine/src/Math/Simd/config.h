@@ -6,7 +6,7 @@
 #define HUAHUOENGINE_CONFIG_H
 
 #include "Utilities/Annotations.h"
-#include "baselib/include/PlatformEnvironment.h"
+#include "Internal/PlatformEnvironment.h"
 
 #ifndef PP_CAT
 #define _PP_CAT(a, b)    a##b

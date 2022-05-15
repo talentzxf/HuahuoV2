@@ -11,6 +11,7 @@
 #include <cstdio>
 #include "Export/Scripting/GameObjectExport.h"
 #include "Editor/SceneInspector.h"
+#include "Camera/Camera.h"
 
 void testTransform(){
     GameObject* go = MonoCreateGameObject("Go1");
@@ -47,8 +48,7 @@ void testScene(){
 
 int main() {
     HuaHuoEngine::InitEngine();
-    // testTransform();
+    testTransform();
     testScene();
-
     return 0;
 }

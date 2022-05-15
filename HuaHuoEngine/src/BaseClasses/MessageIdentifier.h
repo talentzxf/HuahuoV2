@@ -2,7 +2,7 @@
 
 #include "Utilities/NonCopyable.h"
 #include "BaseClasses/MessageIdentifier.h"
-#include "baselib/include/IntegerDefinitions.h"
+#include "BaseClasses/BaseTypes.h"
 #include "Logging/LogAssert.h"
 #include "Utilities/RegisterRuntimeInitializeAndCleanup.h"
 #include "Utilities/EnumFlags.h"

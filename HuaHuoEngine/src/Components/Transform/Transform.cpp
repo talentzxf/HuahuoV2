@@ -212,6 +212,19 @@ Vector3f Transform::GetLocalPosition() const {
     RETURN_VECTOR3(math::translation(GetLocalTRS(GetTransformAccess())));
 }
 
+Vector3f Transform::GetPosition() const
+{
+#if UNITY_EDITOR
+    if (!IsTransformHierarchyInitialized())
+    {
+        ErrorStringObject("Illegal transform access. Are you accessing a transform position from OnValidate?\n", this);
+        return Vector3f::zero;
+    }
+#endif
+
+    RETURN_VECTOR3(CalculateGlobalPosition(GetTransformAccess()));
+}
+
 UInt32 Transform::InitializeTransformHierarchyRecursive(TransformHierarchy &hierarchy, int &index, int parentIndex) {
     UInt32 newIndex = index;
     index = hierarchy.nextIndices[newIndex];

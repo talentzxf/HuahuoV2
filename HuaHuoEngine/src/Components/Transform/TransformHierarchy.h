@@ -396,4 +396,27 @@ inline bool SetGlobalT(TransformAccess transformAccess, const math::float3& gt)
         InverseTransformPosition(GetParent(transformAccess), lt);
     return SetLocalT(transformAccess, lt);
 }
+
+inline math::float3 CalculateGlobalPosition(TransformAccessReadOnly transformAccess)
+{
+    ASSERT_TRANSFORM_ACCESS(transformAccess);
+
+    using namespace math;
+
+    const trsX* localTransforms = transformAccess.hierarchy->localTransforms;
+
+    float3 globalT = localTransforms[transformAccess.index].t;
+
+    SInt32 *parentIndices = transformAccess.hierarchy->parentIndices;
+    SInt32 parentIndex = parentIndices[transformAccess.index];
+
+    while (parentIndex >= 0)
+    {
+        globalT = mul(localTransforms[parentIndex], globalT);
+        parentIndex = parentIndices[parentIndex];
+    }
+
+    return globalT;
+}
+
 #endif //HUAHUOENGINE_TRANSFORMHIERARCHY_H
