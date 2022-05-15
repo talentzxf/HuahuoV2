@@ -110,6 +110,10 @@ public:
         kStereoViewMatrixModeExplicitSafeForSingleCull,
     };
 public:
+    virtual void Reset() override;
+    virtual void SmartReset() override;
+    virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
+
     Vector3f GetPosition() const;
     void UpdateVelocity();
 
@@ -142,6 +146,10 @@ public:
     static float FocalLengthToFieldOfView(float focalLength, const float sensorSize);
     static float FieldOfViewToFocalLength(float fov, float sensorSize);
 
+//protected:
+//    // Behaviour stuff
+//    virtual void AddToManager() override;
+//    virtual void RemoveFromManager() override;
 private:
     Rectf GetCameraRect(bool zeroOrigin, bool adjustForDynamicScale = true) const;
     void CalculateGateFitParams();

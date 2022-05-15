@@ -82,6 +82,44 @@ Camera::CopiableState::CopiableState()
     m_Scene = NULL;
 }
 
+void Camera::CopiableState::Reset()
+{
+    m_FocalLength = 50.0f;
+    m_GateFitMode = kGateFitHorizontal;
+    m_FOVAxisMode = kVertical;
+    m_SensorSize = Vector2f(36, 24);
+    m_LensShift = Vector2f(0, 0);
+    m_NormalizedViewPortRect = Rectf(0, 0, 1, 1);
+    m_ProjectionMatrixMode = kProjectionMatrixModeImplicit;
+//    m_BackGroundColor = ColorRGBA32(49, 77, 121, 0);
+    m_Depth = 0.0F;
+    m_NearClip = 0.3F;
+    m_FarClip = 1000.0F;
+    m_RenderingPath = -1;
+    m_Aspect = 1.0F;
+    m_Orthographic = false;
+    m_AllowHDR = true;
+    m_AllowMSAA = true;
+    m_ForceIntoRT = false;
+    m_OpaqueSortMode = kOpaqueSortDefault;
+//    m_TransparencySortMode = (TransparencySortMode)GetGraphicsSettings().GetTransparencySortMode();
+//    m_TransparencySortAxis = GetGraphicsSettings().GetTransparencySortAxis();
+    m_ImplicitTransparencySortSettings = true;
+    m_CullingMask.m_Bits = 0xFFFFFFFF;
+//    m_TargetTexture = nullptr;
+    m_AllowDynamicResolution = false;
+
+    m_OrthographicSize = 5.0F;
+    m_FieldOfView = 60.0F;
+    m_FieldOfViewBeforeEnablingVRMode = 0.0f;
+//    m_ClearFlags = kSkybox;
+    m_DirtyProjectionMatrix = m_DirtySkyboxProjectionMatrix = true;
+    m_TargetDisplay = 0;
+    m_TargetEye = kTargetEyeMaskBoth;
+
+    m_Scene = NULL;
+}
+
 Camera::Camera(/*MemLabelId label,*/ ObjectCreationMode mode)
         :   Super(/*label,*/ mode)
 //        ,   m_RenderEvents(label, kRenderEventCount)
@@ -118,6 +156,74 @@ Camera::Camera(/*MemLabelId label,*/ ObjectCreationMode mode)
 //        ReadWriteSpinLock::AutoWriteLock autoLock(s_AllCameraLock);
 //        s_AllCamera->push_back(this);
 //    }
+}
+
+//void Camera::AddToManager()
+//{
+//    GetRenderManager().AddCamera(this);
+//    if (m_State.m_ImplicitAspect)
+//        ResetAspect();
+//    m_State.m_LastPosition = GetComponent<Transform>().GetPosition();
+//    m_State.m_Velocity.SetZero();
+//    InitializePreviousViewProjectionMatrix();
+//}
+//
+//void Camera::RemoveFromManager()
+//{
+//    // Clear IntermediateRenderers such that if the camera is disabled before rendering occurs we dont introduce a leak (case 819470)
+//    GetIntermediateRendererManager().ClearIntermediateRenderers(GetInstanceID());
+//    GetRenderManager().RemoveCamera(this);
+//}
+
+void Camera::AwakeFromLoad(AwakeFromLoadMode awakeMode)
+{
+    if ((awakeMode & kDidLoadFromDisk) == 0 && IsAddedToManager())
+    {
+        GetRenderManager().RemoveCamera(this);
+        GetRenderManager().AddCamera(this);
+    }
+
+//#if UNITY_EDITOR
+//    if (IsPreviewSceneObject() && IsAddedToManager())
+//        GetRenderManager().RemoveCamera(this);
+//#endif
+//
+//    // Normally MonoBehaviour::AddToManager()/RemoveFromManager() handles the image effect callbacks.
+//    // However, if camera is instantiated/created from a script we need to add callbacks for
+//    // possible components that have been enabled & added to manager before the camera.
+//    if ((awakeMode & kInstantiateOrCreateFromCodeAwakeFromLoad))
+//    {
+//        GameObject& gameObject = GetGameObject();
+//        for (int i = 0; i < gameObject.GetComponentCount(); i++)
+//        {
+//            if (gameObject.GetComponentTypeAtIndex(i)->IsDerivedFrom<MonoBehaviour>())
+//            {
+//                MonoBehaviour& behaviour = static_cast<MonoBehaviour&>(gameObject.GetComponentAtIndex(i));
+//                if (behaviour.GetEnabled() && behaviour.IsAddedToManager())
+//                    behaviour.AddImageEffectCallbacksToManagers();
+//            }
+//        }
+//    }
+//
+//    if (GetIVRDevice() && GetStereoEnabled())
+//        GetIVRDevice()->InsertCameraReferenceTransform(*this);
+//
+//    m_State.m_DirtyProjectionMatrix = m_State.m_DirtySkyboxProjectionMatrix = true;
+//    if (m_State.m_ImplicitAspect)
+//        ResetAspect();
+}
+
+void Camera::Reset()
+{
+    Super::Reset();
+
+    m_State.Reset();
+}
+
+void Camera::SmartReset()
+{
+    Super::SmartReset();
+    m_State.Reset();
 }
 
 Vector3f Camera::GetPosition() const
@@ -372,6 +478,7 @@ static inline Rectf GetCameraTargetRect(const Camera& camera, bool zeroOrigin, b
 //    if (zeroOrigin)
 //        rect.x = rect.y = 0.0f;
 //    return rect;
+    return Rectf();
 }
 
 Rectf Camera::GetCameraRect(bool zeroOrigin, bool adjustForDynamicScale) const

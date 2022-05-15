@@ -27,6 +27,9 @@ public:
     CameraStackRenderingState* GetCurrentCameraStackStatePtr() { return m_CurrentCameraStackState; }
     // void SetCurrentCameraAndStackState(PPtr<Camera> cam, CameraStackRenderingState* state);
     void SetCurrentCameraAndStackState(Camera* cam, CameraStackRenderingState* state);
+
+    void AddCamera(Camera *c);
+    void RemoveCamera(Camera *c);
 private:
     Camera* m_CurrentCamera;
     CameraStackRenderingState* m_CurrentCameraStackState;

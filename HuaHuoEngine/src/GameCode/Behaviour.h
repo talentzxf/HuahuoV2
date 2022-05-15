@@ -26,6 +26,9 @@ public:
     virtual bool HasEnabled() const override { return true; }
     virtual bool GetEnabled() const override { return m_Enabled != 0; }
     virtual void SetEnabled(bool enab) override;
+
+    bool IsAddedToManager() const { return m_IsAdded != 0; }
+
 private:
     void UpdateEnabledState(bool active);
 

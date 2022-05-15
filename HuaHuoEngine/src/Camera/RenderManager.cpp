@@ -92,3 +92,52 @@ RenderManager* GetRenderManagerPtr()
 {
     return gRenderManager;
 }
+
+void RenderManager::AddCamera(Camera *c)
+{
+    Assert(c != NULL);
+
+//    PPtr<Camera> cam(c);
+//    if (m_InsideRenderOrCull)
+//    {
+//        erase_swap_back(m_CamerasToRemove, cam);
+//        m_CamerasToAdd.push_back(cam);
+//        return;
+//    }
+//
+//    erase_swap_back(m_CamerasToAdd, cam);
+//    erase_swap_back(m_CamerasToRemove, cam);
+//
+//    m_Cameras.Remove(cam);
+//    m_OffScreenCameras.Remove(cam);
+//
+//    SortedCameraContainer& queue = (c->GetTargetTexture() == NULL) ? m_Cameras : m_OffScreenCameras;
+//    queue.Add(c);
+}
+
+void RenderManager::RemoveCamera(Camera *c)
+{
+//    PPtr<Camera> cam(c);
+
+//    erase_swap_back(m_CamerasToAdd, cam);
+//    erase_swap_back(m_CamerasToRemove, cam);
+//
+//    if (m_InsideRenderOrCull)
+//    {
+//        m_CamerasToRemove.push_back(cam);
+//    }
+//    else
+//    {
+//        m_Cameras.Remove(cam);
+//        m_OffScreenCameras.Remove(cam);
+//    }
+//
+//    Camera* currentCamera = m_CurrentCamera;
+//    if (currentCamera == c && !m_InsideRenderOrCull)
+//    {
+//        if (m_Cameras.GetSize() == 0)
+//            m_CurrentCamera = NULL;
+//        else
+//            m_CurrentCamera = m_Cameras.Get().front();  // ??? maybe better choose next
+//    }
+}
