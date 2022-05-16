@@ -18,6 +18,8 @@ private:
 
     void OnUpdate();
     void OnDraw();
+
+    void OnCreate();
 public:
     SceneView():m_Inited(false){
         m_pCamera = Object::Produce<Camera>();

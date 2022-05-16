@@ -22,6 +22,12 @@ public:
     bool IsWriting() { return false; }
     bool IsWritingPPtr() { return false; }
 
+    /// @name Versioning
+    /// @{
+
+    /// Sets the "version of the class currently transferred", default version is 1.
+    void SetVersion(int) {}
+
     /// @name Predicates
     /// @{
 
@@ -30,6 +36,10 @@ public:
     TransferInstructionFlags GetFlags() const  { return m_Flags; }
 
     bool NeedsInstanceIDRemapping()          { return m_Flags & kReadWriteFromSerializedFile; }
+
+    /// Deprecated: use IsVersionSmallerOrEqual instead.
+    bool IsOldVersion(int /*version*/) { return false; }
+    bool IsCurrentVersion() { return true; }
 protected:
     TransferInstructionFlags          m_Flags;
     void*                             m_UserData;

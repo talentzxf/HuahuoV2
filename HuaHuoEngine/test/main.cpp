@@ -12,6 +12,7 @@
 #include "Export/Scripting/GameObjectExport.h"
 #include "Editor/SceneInspector.h"
 #include "Camera/Camera.h"
+#include "Misc/GameObjectUtility.h"
 
 void testTransform(){
     GameObject* go = MonoCreateGameObject("Go1");
@@ -46,9 +47,19 @@ void testScene(){
     Assert(pScene->RootBegin() != pScene->RootEnd());
 }
 
+void testGameObject(){
+    printf("Creating camera Gameobject\n");
+    GameObject& cameraGO = CreateGameObject("SceneCamera", "Transform", "Camera");
+    printf("Camera Gameobject created!\n");
+    Camera* pCamera = cameraGO.QueryComponent<Camera>();
+    Assert(pCamera != NULL);
+    printf("Camera created!\n");
+}
+
 int main() {
     HuaHuoEngine::InitEngine();
     testTransform();
     testScene();
+    testGameObject();
     return 0;
 }

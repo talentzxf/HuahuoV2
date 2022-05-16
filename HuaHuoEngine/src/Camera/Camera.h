@@ -20,7 +20,16 @@ class Camera : public Behaviour {
     REGISTER_CLASS(Camera);
     DECLARE_OBJECT_SERIALIZE();
 public:
-    Camera(/*MemLabelId label,*/ ObjectCreationMode mode);
+    Camera(/*MemLabelId label,*/ ObjectCreationMode mode) : Super(mode)
+            ,   m_IsRendering(false)
+        ,   m_IsRenderingStereo(false)
+        ,   m_IsStandaloneCustomRendering(false)
+        ,   m_IsCulling(false)
+        ,   m_IsNonJitteredProjMatrixSet(false)
+        ,   m_UseJitteredProjMatrixForTransparent(true)
+        ,   m_BuffersSetFromScripts(false)
+        {
+        }
     // ~Camera (); declared-by-macro
 
     // Match OpaqueSortMode on C# side

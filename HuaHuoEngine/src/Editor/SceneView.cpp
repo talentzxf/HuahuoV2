@@ -3,6 +3,9 @@
 //
 
 #include "SceneView.h"
+#include "HuaHuoEngine.h"
+#include "Misc/GameObjectUtility.h"
+
 SceneView sSceneView;
 
 SceneView* SceneView::GetSceneView(){
@@ -28,6 +31,8 @@ void SceneView::InitWithCanvasId(const char* canvasId){
         printf("WebGL context initialize failed!\n");
     }
 
+    OnCreate();
+
     emscripten_set_main_loop(MainSceneViewLoop, 0, 0);
 }
 
@@ -41,6 +46,11 @@ void SceneView::OnGUI() {
 
 void SceneView::OnUpdate() {
 
+}
+
+void SceneView::OnCreate(){
+    GameObject& cameraGO = CreateGameObject("SceneCamera", "Transform", "Camera");
+    this->m_pCamera = cameraGO.QueryComponent<Camera>();
 }
 
 void SceneView::OnDraw() {

@@ -6,6 +6,7 @@
 #include "TypeSystem/TypeManager.h"
 #include "TypeSystem/ObjectDefines.h"
 #include "GameObject.h"
+#include "Camera/Camera.h"
 
 void RegisterBuiltinTypes()
 {
@@ -36,4 +37,6 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<Transform>("Core");
     RegisterHuaHuoClass<BaseComponent>("Core");
     RegisterHuaHuoClass<GameObject>("Core");
+    RegisterHuaHuoClass<Camera>("Core");
+    RegisterHuaHuoClass<Behaviour>("Core");
 }

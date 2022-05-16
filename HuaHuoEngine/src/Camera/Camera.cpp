@@ -120,43 +120,43 @@ void Camera::CopiableState::Reset()
     m_Scene = NULL;
 }
 
-Camera::Camera(/*MemLabelId label,*/ ObjectCreationMode mode)
-        :   Super(/*label,*/ mode)
-//        ,   m_RenderEvents(label, kRenderEventCount)
-//#if UNITY_EDITOR
-//        ,   m_EditorCullResults(NULL)
-//    ,   m_FilterMode(0)
-//    ,   m_IsSceneCamera(false)
-//    ,   m_StackState(NULL)
-//    ,   m_LastDrawingMode(kEditorDrawModeCount)
-//#endif
-        ,   m_IsRendering(false)
-        ,   m_IsRenderingStereo(false)
-        ,   m_IsStandaloneCustomRendering(false)
-        ,   m_IsCulling(false)
-        ,   m_IsNonJitteredProjMatrixSet(false)
-        ,   m_UseJitteredProjMatrixForTransparent(true)
-        ,   m_BuffersSetFromScripts(false)
-//        ,   m_CurrentTargetTexture(NULL)
-//        ,   m_DepthTexture(NULL)
-//        ,   m_DepthNormalsTexture(NULL)
-//        ,   m_ODSWorldTexture(NULL)
-//        ,   m_ODSWorldShader(NULL)
-//        ,   m_VRIgnoreImplicitCameraUpdate(false)
-//        ,   m_gateFittedFOV(60.0f)
-//        ,   m_gateFittedLensShift(Vector2f::zero)
-{
-//    m_RenderLoop = CreateRenderLoop(*this);
-//    m_ShadowCache = CreateShadowMapCache();
-//
-//    for (int eye = 0; eye < kStereoscopicEyeCount; ++eye)
-//        m_IsStereoNonJitteredProjMatrixCopied[eye] = false;
-//
-//    {
-//        ReadWriteSpinLock::AutoWriteLock autoLock(s_AllCameraLock);
-//        s_AllCamera->push_back(this);
-//    }
-}
+//Camera::Camera(/*MemLabelId label,*/ ObjectCreationMode mode)
+//        :   Super(/*label,*/ mode)
+////        ,   m_RenderEvents(label, kRenderEventCount)
+////#if UNITY_EDITOR
+////        ,   m_EditorCullResults(NULL)
+////    ,   m_FilterMode(0)
+////    ,   m_IsSceneCamera(false)
+////    ,   m_StackState(NULL)
+////    ,   m_LastDrawingMode(kEditorDrawModeCount)
+////#endif
+//        ,   m_IsRendering(false)
+//        ,   m_IsRenderingStereo(false)
+//        ,   m_IsStandaloneCustomRendering(false)
+//        ,   m_IsCulling(false)
+//        ,   m_IsNonJitteredProjMatrixSet(false)
+//        ,   m_UseJitteredProjMatrixForTransparent(true)
+//        ,   m_BuffersSetFromScripts(false)
+////        ,   m_CurrentTargetTexture(NULL)
+////        ,   m_DepthTexture(NULL)
+////        ,   m_DepthNormalsTexture(NULL)
+////        ,   m_ODSWorldTexture(NULL)
+////        ,   m_ODSWorldShader(NULL)
+////        ,   m_VRIgnoreImplicitCameraUpdate(false)
+////        ,   m_gateFittedFOV(60.0f)
+////        ,   m_gateFittedLensShift(Vector2f::zero)
+//{
+////    m_RenderLoop = CreateRenderLoop(*this);
+////    m_ShadowCache = CreateShadowMapCache();
+////
+////    for (int eye = 0; eye < kStereoscopicEyeCount; ++eye)
+////        m_IsStereoNonJitteredProjMatrixCopied[eye] = false;
+////
+////    {
+////        ReadWriteSpinLock::AutoWriteLock autoLock(s_AllCameraLock);
+////        s_AllCamera->push_back(this);
+////    }
+//}
 
 //void Camera::AddToManager()
 //{
@@ -555,6 +555,61 @@ float Camera::FocalLengthToFieldOfView(const float focalLength, const float sens
 {
     return kRad2Deg * 2.0f * atanf(sensorSize * .5f / focalLength);
 }
+
+IMPLEMENT_REGISTER_CLASS(Camera, 8);
+IMPLEMENT_OBJECT_SERIALIZE(Camera);
+INSTANTIATE_TEMPLATE_TRANSFER(Camera)
+
+template<class TransferFunction>
+void Camera::Transfer(TransferFunction& transfer)
+{
+    Super::Transfer(transfer);
+
+    // Note: transfer code for version 1 was just removed. It was around Unity 1.2 times,
+    // and now we're fine with losing project folder compatibility with that.
+    transfer.SetVersion(2);
+
+#define TRANSFER_STATE(x) transfer.Transfer (m_State.x, #x)
+#define TRANSFER_STATE_WITH_FLAGS(x, f) transfer.Transfer (m_State.x, #x, f)
+
+    TRANSFER_STATE(m_ClearFlags);
+//    TRANSFER_STATE(m_BackGroundColor);
+
+//    TRANSFER_ENUM_WITH_NAME(m_State.m_ProjectionMatrixMode, "m_projectionMatrixMode");
+//    TRANSFER_ENUM_WITH_NAME(m_State.m_GateFitMode, "m_GateFitMode");
+//    TRANSFER_EDITOR_ONLY_ENUM_WITH_NAME(m_State.m_FOVAxisMode, "m_FOVAxisMode");
+    transfer.Align();
+    TRANSFER_STATE(m_SensorSize);
+    TRANSFER_STATE(m_LensShift);
+    TRANSFER_STATE_WITH_FLAGS(m_FocalLength, kDontAnimate);
+
+    TRANSFER_STATE(m_NormalizedViewPortRect);
+    transfer.Transfer(m_State.m_NearClip, "near clip plane");
+    transfer.Transfer(m_State.m_FarClip, "far clip plane");
+    transfer.Transfer(m_State.m_FieldOfView, "field of view", kDontAnimate);
+    transfer.Transfer(m_State.m_Orthographic, "orthographic");
+    transfer.Align();
+    transfer.Transfer(m_State.m_OrthographicSize, "orthographic size");
+
+    TRANSFER_STATE(m_Depth);
+    TRANSFER_STATE(m_CullingMask);
+    TRANSFER_STATE_WITH_FLAGS(m_RenderingPath, kDontAnimate);
+
+//    TRANSFER_STATE(m_TargetTexture);
+    TRANSFER_STATE_WITH_FLAGS(m_TargetDisplay, kDontAnimate);   // Aligned
+//    TRANSFER_ENUM_WITH_NAME(m_State.m_TargetEye, "m_TargetEye");
+    transfer.Transfer(m_State.m_AllowHDR, "m_HDR");
+    TRANSFER_STATE(m_AllowMSAA);
+    TRANSFER_STATE_WITH_FLAGS(m_AllowDynamicResolution, kDontAnimate);
+    TRANSFER_STATE(m_ForceIntoRT);
+    TRANSFER_STATE(m_OcclusionCulling);
+    transfer.Align();
+    TRANSFER_STATE(m_StereoConvergence);
+    TRANSFER_STATE(m_StereoSeparation);
+
+#undef TRANSFER_STATE
+}
+
 
 CameraStackRenderingState::CameraStackRenderingState()
         : /*m_TempInitialEyePair(),*/
