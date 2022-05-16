@@ -184,4 +184,43 @@ inline void AutoGfxDeviceBeginEndFrame::End()
     m_NeedsEndFrame = false;
 }
 
+class GfxThreadableDevice : public GfxDevice
+{
+public:
+    GfxThreadableDevice(/*MemLabelRef label*/) {};// : GfxDevice(label) {}
+    //! Called by the worker thread on thread startup
+    virtual void    OnDeviceCreated(bool /*callingFromRenderThread*/) {}
+
+//    virtual void    SetShadersMainThread(const ShaderLab::SubPrograms& programs, const ShaderPropertySheet* local, const ShaderPropertySheet* global)
+//    {
+//        ErrorString("Don't call SetShadersMainThread on threadable device! Use GraphicsHelper instead");
+//    }
+
+//    virtual void    SetShadersThreadable(GpuProgram* programs[kShaderTypeCount], const GpuProgramParameters* params[kShaderTypeCount], UInt8 const * const paramsBuffer[kShaderTypeCount]) {}
+//
+//    virtual void    SetGeometryRayTracingShaderMainThread(RayTracingProgramHandle& rpHandle, UInt32 geometryIndex, const ShaderLab::SubProgram* subProgram, const ShaderPropertySheet* localShaderProperties, const ShaderPropertySheet* globalShaderProperties)
+//    {
+//        ErrorString("Don't call SetGeometryRayTracingShaderMainThread on threadable device! Use GraphicsHelper instead");
+//    }
+//
+//    virtual void    SetGeometryRayTracingShaderThreadable(RayTracingProgramHandle& rpHandle, UInt32 geometryIndex, GpuProgram* gpuProgram, const GpuProgramParameters* gpuProgramParameters, UInt8 const * const paramsBuffer) {}
+//
+//    // A shortcut for Client/worker threading in BeginBufferWrite(): It first attempts to call his directly (in the main thread),
+//    // and if the buffer can be mapped (or is already mapped) without getting the render thread involved at all,
+//    // this function returns the mapped pointer, or NULL if mapping is not possible from the main thread.
+//    // In this case the GfxDeviceClient will fall back to old-style threaded buffer update.
+//    virtual void*   BeginBufferWriteThreadSafe(GfxBuffer* buffer, size_t offset = 0, size_t size = 0) { return NULL; }
+//
+//    // If the previous call to BeginBufferWriteThreadSafe succeeded (returned non-NULL)
+//    // If the function returns true user needs to do no more.
+//    // If the function returns false there has to be some extra device work and EndBufferWrite will be called on the buffer
+//    virtual bool    EndBufferWriteThreadSafe(GfxBuffer* buffer, size_t bytesWritten) { return false;  }
+//
+//    virtual bool IsCPUFencePassed(UInt32 fence) const
+//    {
+//        // Same test as WaitOnCPUFence to handle wrap-around cases
+//        return SInt32(fence - m_CurrentCPUFence) <= 0;
+//    }
+};
+
 #endif //HUAHUOENGINE_GFXDEVICE_H

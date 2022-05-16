@@ -8,6 +8,7 @@
 #include "TypeSystem/TypeManager.h"
 #include "Serialize/PathNamePersistentManager.h"
 #include "BaseClasses/MessageHandler.h"
+#include "GfxDevice/GfxDeviceSetup.h"
 
 void HuaHuoEngine::InitEngine() {
     RegisterRuntimeInitializeAndCleanup::ExecuteInitializations();
@@ -23,6 +24,8 @@ void HuaHuoEngine::InitEngine() {
 
 
     InitPathNamePersistentManager();
+
+    InitializeGfxDevice();
 }
 
 HuaHuoEngine *HuaHuoEngine::gInstance = new HuaHuoEngine();
