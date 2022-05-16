@@ -71,12 +71,7 @@
     }
 
     window.onerror = function(event) {
-        // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
-        Module.setStatus('Exception thrown, see JavaScript console');
-        spinnerElement.style.display = 'none';
-        Module.setStatus = function(text) {
-            if (text) console.error('[post-exception status] ' + text);
-        };
+        console.error(event)
     };
 </script>
 <script async type="text/javascript" src="wasm/HuaHuoEngine.js"></script>

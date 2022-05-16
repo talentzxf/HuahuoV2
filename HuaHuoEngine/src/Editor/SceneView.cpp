@@ -44,5 +44,10 @@ void SceneView::OnUpdate() {
 }
 
 void SceneView::OnDraw() {
-    this->m_pCamera->Render();
+    printf("MainSceneViewLoop\n");
+    if(this->m_pCamera){
+        this->m_pCamera->Render();
+    }else{
+        printf("Camera is null!\n");
+    }
 }

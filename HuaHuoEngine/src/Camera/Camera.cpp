@@ -344,7 +344,7 @@ void Camera::StandaloneRender(RenderFlag renderFlags, const std::string& replace
     m_IsStandaloneCustomRendering = true;
     renderFlags |= kRenderFlagStandalone;
 
-     ShaderPassContext& passContext = GetDefaultPassContext();
+    ShaderPassContext& passContext = GetDefaultPassContext();
 
     //    RenderManager::UpdateAllRenderers();
 

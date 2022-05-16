@@ -1,0 +1,24 @@
+interface ScriptableRenderContext{
+
+};
+
+[NoDelete]
+interface RenderPipeline{
+};
+
+[NoDelete]
+interface Camera{
+
+};
+
+[NoDelete]
+interface RenderPipelineManager{
+    void SetRenderPipeline(RenderPipeline renderPipeline);
+};
+
+[JSImplementation="RenderPipeline", NoDelete]
+interface RenderPipelineImpl{
+    void RenderPipelineImpl();
+    void Render(ScriptableRenderContext context, Camera camera);
+};
+
