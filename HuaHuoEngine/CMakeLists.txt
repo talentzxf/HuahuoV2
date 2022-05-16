@@ -117,7 +117,7 @@ else ()
     set(TARGETNAME TestHuaHuoEngine)
 
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp)
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp src/Camera/GraphicsSettings.cpp src/Camera/GraphicsSettings.h)
 endif ()
 
 target_include_directories(${TARGETNAME} PUBLIC "${PROJECT_BINARY_DIR}" ${EXTRA_INCLUDE_DIR})

@@ -54,6 +54,7 @@ void testGameObject(){
     Camera* pCamera = cameraGO.QueryComponent<Camera>();
     Assert(pCamera != NULL);
     printf("Camera created!\n");
+    pCamera->Render();
 }
 
 int main() {

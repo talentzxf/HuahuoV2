@@ -50,7 +50,7 @@ GlobalGameManager::GlobalGameManager(/*MemLabelId label,*/ ObjectCreationMode mo
 {}
 
 
-IMPLEMENT_REGISTER_CLASS(LevelGameManager, 3);
+IMPLEMENT_REGISTER_CLASS(LevelGameManager, 11);
 IMPLEMENT_REGISTER_CLASS(GlobalGameManager, 6);
 IMPLEMENT_REGISTER_CLASS(GameManager, 9);
 
