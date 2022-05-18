@@ -5,7 +5,7 @@
 #include "GfxDeviceGLES.h"
 
 GfxDeviceGLES::GfxDeviceGLES() {
-
+    printf("%s,%d\n",__FILE__,__LINE__);
 }
 
 void GfxDeviceGLES::BeginFrame()

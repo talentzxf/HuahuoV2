@@ -13,12 +13,13 @@ interface Camera{
 
 [NoDelete]
 interface RenderPipelineManager{
+    RenderPipelineManager GetManager();
     void SetRenderPipeline(RenderPipeline renderPipeline);
 };
 
 [JSImplementation="RenderPipeline", NoDelete]
 interface RenderPipelineImpl{
     void RenderPipelineImpl();
-    void Render(ScriptableRenderContext context, Camera camera);
+    void Render(ScriptableRenderContext context);
 };
 

@@ -7,7 +7,7 @@
 #include "Components/BaseComponent.h"
 
 class Behaviour: public BaseComponent{
-    // REGISTER_CLASS_TRAITS(kTypeIsAbstract);
+    REGISTER_CLASS_TRAITS(kTypeIsAbstract);
     REGISTER_CLASS(Behaviour);
     DECLARE_OBJECT_SERIALIZE();
 public:

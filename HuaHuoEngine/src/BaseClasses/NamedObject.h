@@ -5,7 +5,7 @@
 
 class EXPORT_COREMODULE NamedObject : public BaseComponent
 {
-//    REGISTER_CLASS_TRAITS(kTypeIsAbstract);
+    REGISTER_CLASS_TRAITS(kTypeIsAbstract);
     REGISTER_CLASS(NamedObject);
     DECLARE_OBJECT_SERIALIZE();
 public:

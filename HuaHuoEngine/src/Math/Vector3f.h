@@ -107,4 +107,9 @@ inline void Vector3f::Transfer(TransferFunction& t)
     t.Transfer(z, "z");
 }
 
+// Returns a vector with the smaller of every component from v0 and v1
+inline Vector3f min(const Vector3f& lhs, const Vector3f& rhs)          { return Vector3f(FloatMin(lhs.x, rhs.x), FloatMin(lhs.y, rhs.y), FloatMin(lhs.z, rhs.z)); }
+// Returns a vector with the larger  of every component from v0 and v1
+inline Vector3f max(const Vector3f& lhs, const Vector3f& rhs)              { return Vector3f(FloatMax(lhs.x, rhs.x), FloatMax(lhs.y, rhs.y), FloatMax(lhs.z, rhs.z)); }
+
 #endif //HUAHUOENGINE_VECTOR3F_H

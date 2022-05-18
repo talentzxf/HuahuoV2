@@ -1,3 +1,5 @@
+import {DefaultRenderPipeline} from "./RenderPipeline/DefaultRenderPipeline";
+
 class EngineAPI{
     static inited = false
 
@@ -22,6 +24,13 @@ class EngineAPI{
         let sceneManager = EngineAPI.GetInstance().GetSceneManager()
         let scene = sceneManager.CreateScene();
         sceneManager.SetActiveScene(scene);
+
+        let defaultRenderPipeline = new DefaultRenderPipeline()
+        EngineAPI.SetRenderer(defaultRenderPipeline)
+    }
+
+    static SetRenderer(renderPipeline){
+        Module.RenderPipelineManager.prototype.GetManager().SetRenderPipeline(renderPipeline)
     }
 
     static GetInstance(){

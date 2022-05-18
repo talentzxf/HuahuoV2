@@ -27,6 +27,8 @@ enum AllocateOptions
 #define FREE(ptr) free(ptr)
 #define NEW_ARRAY(type, size) new type[size]
 #define ALLOC_ARRAY(type, size) (type *)malloc(sizeof(type) * size)
+#define REALLOC(type, ptr, size) (type *)realloc(ptr, size)
+#define ALLOC(type, size) (type *)malloc(size)
 //#define NEW_AS_ROOT(type, areaName, objectName) NewWithLabelConstructor<type>(alignof(type), __FILE__ , __LINE__).NEW_AS_ROOT_WITH_LABEL_CONSTRUCT
 
 EXPORT_COREMODULE void* malloc_internal(size_t size, size_t align, MemLabelRef label, AllocateOptions allocateOptions, const char* file, int line);
@@ -45,7 +47,7 @@ inline void free_alloc_internal(const void* ptr, MemLabelRef label, const char* 
 #define MALLOC_ALIGNED_NULL(label, size, align)  malloc_internal(size, align, label, kAllocateOptionReturnNullIfOutOfMemory, __FILE_STRIPPED__, __LINE__)
 #define CALLOC(label, count, size)               calloc_internal(count, size, kDefaultMemoryAlignment, label, kAllocateOptionNone, __FILE_STRIPPED__, __LINE__)
 #define CALLOC_NULL(label, count, size)          calloc_internal(count, size, kDefaultMemoryAlignment, label, kAllocateOptionReturnNullIfOutOfMemory, __FILE_STRIPPED__, __LINE__)
-#define REALLOC(label, ptr, size)                realloc_internal(ptr, size, kDefaultMemoryAlignment, label, kAllocateOptionNone, __FILE_STRIPPED__, __LINE__)
+// #define REALLOC(label, ptr, size)                realloc_internal(ptr, size, kDefaultMemoryAlignment, label, kAllocateOptionNone, __FILE_STRIPPED__, __LINE__)
 #define REALLOC_NULL(label, ptr, size)           realloc_internal(ptr, size, kDefaultMemoryAlignment, label, kAllocateOptionReturnNullIfOutOfMemory, __FILE_STRIPPED__, __LINE__)
 #define REALLOC_ALIGNED(label, ptr, size, align) realloc_internal(ptr, size, align, label, kAllocateOptionNone, __FILE_STRIPPED__, __LINE__)
 #define REALLOC_ALIGNED_NULL(label, ptr, size, align) realloc_internal(ptr, size, align, label, kAllocateOptionReturnNullIfOutOfMemory, __FILE_STRIPPED__, __LINE__)

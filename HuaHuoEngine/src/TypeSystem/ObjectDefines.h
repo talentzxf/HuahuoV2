@@ -149,6 +149,14 @@ const ConstVariantRef* RegisterAttributes(size_t& attributeCountOut)
     return NULL;
 }
 
+// ----------------------------------------------------------------------------
+
+// Register (possibly multiple) traits for a class that is registered after this Macro using REGISTER_CLASS.
+// Valid values are kTypeNoFlags, kTypeIsAbstract, kTypeIsSealed, kTypeIsEditorOnly
+#define REGISTER_CLASS_TRAITS(...) public: struct kTypeFlags { enum { value = UNSIGNED_FLAGS(__VA_ARGS__) }; }; \
+public: \
+    class MISSING_SEMICOLON_AFTER_REGISTER_CLASS_TRAITS_MACRO
+
 #define REGISTER_CLASS_WITH_MODULE_METADATA(typeName, moduleName)
 
 #define IMPLEMENT_REGISTER_CLASS(...) PP_VARG_SELECT_OVERLOAD(IMPLEMENT_REGISTER_CLASS_, (__VA_ARGS__))

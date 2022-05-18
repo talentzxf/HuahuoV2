@@ -16,7 +16,7 @@
 class HuaHuoScene;
 
 class Camera : public Behaviour {
-//    REGISTER_CLASS_TRAITS(kTypeNoFlags);
+    REGISTER_CLASS_TRAITS(kTypeNoFlags);
     REGISTER_CLASS(Camera);
     DECLARE_OBJECT_SERIALIZE();
 public:

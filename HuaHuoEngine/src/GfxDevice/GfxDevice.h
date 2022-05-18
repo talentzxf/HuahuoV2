@@ -8,6 +8,8 @@
 #include "BaseClasses/BaseTypes.h"
 #include "GfxDeviceTypes.h"
 #include "Math/Vector2f.h"
+#include "GfxDeviceAsyncCommand.h"
+#include "Job/JobTypes.h"
 
 class AutoGfxDeviceBeginEndFrame
 {
@@ -145,6 +147,8 @@ public:
     virtual bool    IsValidState() { return true; }
 
     inline bool     IsInsideFrame() const { return m_GfxContextData.GetInsideFrame(); }
+
+    void ExecuteAsync(int count, GfxDeviceAsyncCommand::Func* func, GfxDeviceAsyncCommand::ArgScratch** scratches, const GfxDeviceAsyncCommand::Arg* arg, const JobFence& depends);
 
 protected:
     // Mutable state

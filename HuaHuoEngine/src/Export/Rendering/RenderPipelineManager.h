@@ -6,12 +6,15 @@
 #define HUAHUOENGINE_RENDERPIPELINEMANAGER_H
 #include "RenderPipeline.h"
 
+class RenderPipelineManager;
+RenderPipelineManager* GetRenderPipelineManager();
+
 class RenderPipelineManager {
 private:
     RenderPipeline* m_RenderPipeline;
 public:
 
-    static RenderPipelineManager* GetManager();
+    static RenderPipelineManager* GetManager() { return GetRenderPipelineManager(); }
 
     void SetRenderPipeline(RenderPipeline* pRenderPipeline){
         m_RenderPipeline = pRenderPipeline;

@@ -9,8 +9,8 @@
 
 // The class for JS to implement
 class RenderPipeline {
-protected:
-    virtual void Render(ScriptableRenderContext* context, Camera cameras[]) = 0;
+public:
+    virtual void Render(ScriptableRenderContext* context) = 0;
 };
 
 

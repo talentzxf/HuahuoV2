@@ -9,6 +9,8 @@
 #include "Camera/Camera.h"
 #include "GameManager.h"
 #include "Camera/GraphicsSettings.h"
+#include "Input/TimeManager.h"
+#include "Graphics/Renderer.h"
 
 void RegisterBuiltinTypes()
 {
@@ -45,4 +47,6 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<GlobalGameManager>("Core");
     RegisterHuaHuoClass<GameManager>("Core");
     RegisterHuaHuoClass<GraphicsSettings>("Core");
+    RegisterHuaHuoClass<TimeManager>("Core");
+    RegisterHuaHuoClass<Renderer>("Core");
 }

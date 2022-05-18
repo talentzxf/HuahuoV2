@@ -10,4 +10,5 @@
 GfxDevice* InitializeGfxDevice(){
     GfxDevice* device = NEW(GfxDeviceGLES)();
     SetGfxDevice(device);
+    return device;
 }

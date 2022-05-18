@@ -10,6 +10,12 @@
 #include "BaseClasses/MessageHandler.h"
 #include "GfxDevice/GfxDeviceSetup.h"
 
+#ifdef HUAHUO_EDITOR
+#include "BaseClasses/ManagerContextLoading.h"
+#include "BaseClasses/ManagerContext.h"
+
+#endif
+
 void HuaHuoEngine::InitEngine() {
     RegisterRuntimeInitializeAndCleanup::ExecuteInitializations();
     RegisterAllClasses();
@@ -22,6 +28,10 @@ void HuaHuoEngine::InitEngine() {
     TypeManager::Get().CallPostInitializeTypes();
     MessageHandler::Get().ResolveCallbacks();
 
+    ManagerContextInitializeClasses();
+#ifdef HUAHUO_EDITOR
+    CreateMissingGlobalGameManagers();
+#endif
 
     InitPathNamePersistentManager();
 

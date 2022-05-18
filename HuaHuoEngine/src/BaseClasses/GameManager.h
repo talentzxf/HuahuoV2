@@ -11,7 +11,7 @@
 
 class EXPORT_COREMODULE GameManager : public Object
 {
-    // REGISTER_CLASS_TRAITS(kTypeIsAbstract);
+    REGISTER_CLASS_TRAITS(kTypeIsAbstract);
     REGISTER_CLASS(GameManager);
 public:
 
@@ -27,7 +27,7 @@ public:
 
 class EXPORT_COREMODULE LevelGameManager : public GameManager
 {
-    // REGISTER_CLASS_TRAITS(kTypeIsAbstract);
+    REGISTER_CLASS_TRAITS(kTypeIsAbstract);
     REGISTER_CLASS(LevelGameManager);
     DECLARE_OBJECT_SERIALIZE();
 public:
@@ -43,7 +43,7 @@ public:
 
 class EXPORT_COREMODULE GlobalGameManager : public GameManager
 {
-    // REGISTER_CLASS_TRAITS(kTypeIsAbstract);
+    REGISTER_CLASS_TRAITS(kTypeIsAbstract);
     REGISTER_CLASS(GlobalGameManager);
     DECLARE_OBJECT_SERIALIZE();
 public:
@@ -60,6 +60,11 @@ GameManager* GetGameManagerIfExists(int index);
 inline GameManager* CreateGameManager(const HuaHuo::Type* type)
 {
     Object* o = Object::Produce(type);
+
+    if(o == NULL){  //VZ: Work around here.
+        return NULL;
+    }
+
     o->Reset();
     o->AwakeFromLoad(kDefaultAwakeFromLoad);
     o->SetName(type->GetName());

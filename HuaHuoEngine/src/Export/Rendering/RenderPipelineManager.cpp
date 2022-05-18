@@ -16,4 +16,9 @@ void DestroyRenderPipelineManager(void*){
     g_RenderPipelineMgr = NULL;
 }
 
+RenderPipelineManager* GetRenderPipelineManager(){
+    Assert(g_RenderPipelineMgr != NULL);
+    return g_RenderPipelineMgr;
+}
+
 static RegisterRuntimeInitializeAndCleanup sInit_MessageIdentifier(CreateRenderPipelineManager, DestroyRenderPipelineManager, -1);

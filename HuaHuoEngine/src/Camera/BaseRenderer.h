@@ -12,6 +12,8 @@ class EXPORT_COREMODULE BaseRenderer {
 public:
     BaseRenderer(RendererType type);
     virtual ~BaseRenderer();
+
+    virtual int GetLayer() const = 0;
 };
 
 
