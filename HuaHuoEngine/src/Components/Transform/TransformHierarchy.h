@@ -154,35 +154,6 @@ namespace TransformInternal {
 
     TransformType CalculateTransformType(TransformAccess transformAccess);
 
-    inline void CalculateGlobalPositionAndRotation(TransformAccessReadOnly transformAccess, math::float3 &position, math::float4 &rotation)
-    {
-        ASSERT_TRANSFORM_ACCESS(transformAccess);
-
-        using namespace math;
-
-        const trsX* localTransforms = transformAccess.hierarchy->localTransforms;
-        const trsX& trs = localTransforms[transformAccess.index];
-
-        position = trs.t;
-        rotation = trs.q;
-
-        SInt32 *parentIndices = transformAccess.hierarchy->parentIndices;
-        SInt32 parentIndex = parentIndices[transformAccess.index];
-
-        while (parentIndex >= 0)
-        {
-            const trsX& ptrs = localTransforms[parentIndex];
-
-            position = mul(ptrs, position);
-            rotation = scaleMulQuat(ptrs.s, rotation);
-            rotation = quatMul(ptrs.q, rotation);
-
-            parentIndex = parentIndices[parentIndex];
-        }
-    }
-
-
-
     TRANSFORM_FORCEINLINE_IN_RELEASE void AssertTransformAccess(const TransformAccessReadOnly& transformAccess)
     {
         ASSERT_TRANSFORM_ACCESS(transformAccess);

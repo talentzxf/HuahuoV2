@@ -4,70 +4,18 @@
 
 #include "MeshRenderer.h"
 
-IMPLEMENT_REGISTER_CLASS(Renderer, 13);
-IMPLEMENT_OBJECT_SERIALIZE(Renderer);
-INSTANTIATE_TEMPLATE_TRANSFER(Renderer);
+IMPLEMENT_REGISTER_CLASS(MeshRenderer, 13);
+IMPLEMENT_OBJECT_SERIALIZE(MeshRenderer);
+INSTANTIATE_TEMPLATE_TRANSFER(MeshRenderer);
 
-template<class TransferFunction>
-void Renderer::Transfer(TransferFunction& transfer)
+template<class TransferFunction> inline
+void MeshRenderer::Transfer(TransferFunction& transfer)
 {
     Super::Transfer(transfer);
 
-    transfer.Transfer(m_Enabled, "m_Enabled", kHideInEditorMask);
+    // Changed in 2019.3: Always serialize user's additional vertex streams.
+    transfer.Transfer(m_AdditionalVertexStreams, "m_AdditionalVertexStreams", kHideInEditorMask);
 
-//    SharedRendererData& rendererData = m_RendererData;
-//    TRANSFER_BITFIELD(rendererData.m_CastShadows, "m_CastShadows");
-//    TRANSFER_BITFIELD_FLAGS(rendererData.m_ReceiveShadows, "m_ReceiveShadows", kTreatIntegerValueAsBoolean);
-//    TRANSFER_BITFIELD_FLAGS(rendererData.m_DynamicOccludee, "m_DynamicOccludee", kTreatIntegerValueAsBoolean);
-//    TRANSFER_BITFIELD(rendererData.m_MotionVectors, "m_MotionVectors");
-//    TRANSFER_BITFIELD(rendererData.m_LightProbeUsage, "m_LightProbeUsage");
-//    TRANSFER_BITFIELD(rendererData.m_ReflectionProbeUsage, "m_ReflectionProbeUsage");
-//    TRANSFER_BITFIELD(rendererData.m_RayTracingMode, "m_RayTracingMode");
-//    TRANSFER_BITFIELD_FLAGS(rendererData.m_RayTraceProcedural, "m_RayTraceProcedural", kTreatIntegerValueAsBoolean);
-//    transfer.Align();
-//
-//    transfer.Transfer(rendererData.m_RenderingLayerMask, "m_RenderingLayerMask");
-//    transfer.Transfer(rendererData.m_RendererPriority, "m_RendererPriority");
-//
-//    if ((transfer.GetFlags() & kSerializeForInspector) != 0 || transfer.IsSerializingForGameRelease())
-//    {
-//        transfer.Transfer(rendererData.m_LightmapIndex[kStaticLightmap], "m_LightmapIndex", kHideInEditorMask | kDontAnimate);
-//        transfer.Transfer(rendererData.m_LightmapIndex[kDynamicLightmap], "m_LightmapIndexDynamic", kHideInEditorMask | kDontAnimate);
-//
-//        transfer.Transfer(rendererData.m_LightmapST[kStaticLightmap], "m_LightmapTilingOffset", kHideInEditorMask | kDontAnimate);
-//        transfer.Transfer(rendererData.m_LightmapST[kDynamicLightmap], "m_LightmapTilingOffsetDynamic", kHideInEditorMask | kDontAnimate);
-//    }
-//
-//    transfer.Transfer(m_Materials, "m_Materials", kReorderable);
-//    transfer.Transfer(m_RendererData.m_StaticBatchInfo, "m_StaticBatchInfo", kHideInEditorMask);
-//    transfer.Transfer(m_StaticBatchRoot, "m_StaticBatchRoot", kHideInEditorMask);
-//
-//    TRANSFER(m_ProbeAnchor);
-//    TRANSFER(m_LightProbeVolumeOverride);
-//
-//#if UNITY_EDITOR
-//    if (!transfer.IsSerializingForGameRelease())
-//    {
-//        transfer.Transfer(m_ScaleInLightmap, "m_ScaleInLightmap", kHideInEditorMask | kDontAnimate);
-//        TRANSFER_ENUM_WITH_FLAGS(m_ReceiveGI, kHideInEditorMask | kDontAnimate);
-//        transfer.Transfer(m_PreserveUVs, "m_PreserveUVs", kHideInEditorMask | kDontAnimate);
-//        transfer.Transfer(m_IgnoreNormalsForChartDetection, "m_IgnoreNormalsForChartDetection", kHideInEditorMask | kDontAnimate);
-//        transfer.Transfer(m_ImportantGI, "m_ImportantGI", kHideInEditorMask | kDontAnimate);
-//        transfer.Transfer(m_StitchLightmapSeams, "m_StitchLightmapSeams", kHideInEditorMask | kDontAnimate);
-//        transfer.Align();
-//        TRANSFER_ENUM_WITH_NAME_AND_FLAGS(m_SelectedEditorRenderState, "m_SelectedEditorRenderState", kHideInEditorMask | kDontAnimate);
-//        transfer.Transfer(m_MinimumChartSize, "m_MinimumChartSize", kHideInEditorMask | kDontAnimate);
-//        transfer.Transfer(m_AutoUVMaxDistance, "m_AutoUVMaxDistance", kHideInEditorMask | kDontAnimate);
-//        transfer.Transfer(m_AutoUVMaxAngle, "m_AutoUVMaxAngle", kHideInEditorMask | kDontAnimate);
-//#if INCLUDE_DYNAMIC_GI
-//        transfer.Transfer(m_LightmapParameters, "m_LightmapParameters", kDontAnimate);
-//#endif
-//    }
-//#endif
-//    transfer.Align();
-//
-//    transfer.Transfer(m_SortingLayerID, "m_SortingLayerID", kHideInEditorMask | kDontAnimate);
-//    transfer.Transfer(m_SortingLayer, "m_SortingLayer", kHideInEditorMask);
-//    transfer.Transfer(m_SortingOrder, "m_SortingOrder", kHideInEditorMask);
-//    transfer.Align();
+    if (transfer.IsSerializingForGameRelease() || transfer.GetFlags() & kSerializeForInspector)
+        transfer.Transfer(m_EnlightenVertexStream, "m_EnlightenVertexStream", kHideInEditorMask);
 }

@@ -361,6 +361,7 @@ BaseComponent* AddComponent(GameObject& go, const char* name, std::string* error
 //
 //        return NULL;
 //    }
+    return NULL;
 }
 
 // varargs can only be passed around by passing the va_list, so caller is responsible for calling va_start/va_end

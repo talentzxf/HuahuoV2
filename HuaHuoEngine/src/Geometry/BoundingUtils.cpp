@@ -6,6 +6,10 @@
 #include "Math/Matrix4x4.h"
 #include "Geometry/AABB.h"
 #include "Geometry/Plane.h"
+#include "Geometry/Intersection.h"
+#include "Utilities/ArrayUtility.h"
+#include "Geometry/Sphere.h"
+#include "Geometry/Capsule.h"
 
 // --------------------------------------------------------------------------
 
@@ -299,7 +303,7 @@ void CalcHullBounds(const Vector3f* __restrict hullPoints, const UInt8* __restri
 // { -1,  1,  1 }
 
 
-void CalculateFocusedLightHull(const Vector3f* frustum, const Vector3f& lightDir, const MinMaxAABB& sceneAABB, dynamic_array<Vector3f>& points)
+void CalculateFocusedLightHull(const Vector3f* frustum, const Vector3f& lightDir, const MinMaxAABB& sceneAABB, std::vector<Vector3f>& points)
 {
     UInt32 i;
     Vector3f tempPoints[3][256];

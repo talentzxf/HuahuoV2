@@ -9,6 +9,7 @@
 #include "Logging/LogAssert.h"
 #include "BaseClasses/TagTypes.h"
 #include "Geometry/Plane.h"
+#include "Math/Matrix4x4.h"
 
 class AABB;
 

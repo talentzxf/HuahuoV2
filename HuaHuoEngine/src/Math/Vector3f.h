@@ -135,6 +135,11 @@ inline Vector3f NormalizeFast(const Vector3f& inV)
     return inV * FastInvSqrt(m);
 }
 
+inline bool IsFinite(const Vector3f& f)
+{
+    return IsFinite(f.x) & IsFinite(f.y) & IsFinite(f.z);
+}
+
 // this may be called for vectors `a' with extremely small magnitude, for
 // example the result of a cross product on two nearly perpendicular vectors.
 // we must be robust to these small vectors. to prevent numerical error,

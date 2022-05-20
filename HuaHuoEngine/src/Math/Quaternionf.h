@@ -140,6 +140,10 @@ void EXPORT_COREMODULE MatrixToQuaternion(const Matrix4x4f& m, Quaternionf& q);
 
 Vector3f EXPORT_COREMODULE QuaternionToEuler(const Quaternionf& quat, math::RotationOrder order = math::kOrderUnityDefault);
 
+inline bool IsFinite(const Quaternionf& f)
+{
+    return IsFinite(f.x) & IsFinite(f.y) & IsFinite(f.z) & IsFinite(f.w);
+}
 
 inline Quaternionf Conjugate(const Quaternionf& q)
 {

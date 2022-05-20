@@ -40,6 +40,18 @@ public:
     /// Deprecated: use IsVersionSmallerOrEqual instead.
     bool IsOldVersion(int /*version*/) { return false; }
     bool IsCurrentVersion() { return true; }
+
+    /// Are we serializing data for use by the player.
+    /// This includes reading/writing/generating typetrees. And can be when creating data from the editor for player or when simply reading/writing data in the player.
+    /// Commonly used to not serialize data that does not exist in the player.
+    bool IsSerializingForGameRelease()
+    {
+#if HUAHUO_EDITOR
+        return m_Flags & kSerializeGameRelease;
+#else
+        return true;
+#endif
+    }
 protected:
     TransferInstructionFlags          m_Flags;
     void*                             m_UserData;

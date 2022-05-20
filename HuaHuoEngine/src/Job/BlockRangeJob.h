@@ -4,6 +4,7 @@
 
 #ifndef HUAHUOENGINE_BLOCKRANGEJOB_H
 #define HUAHUOENGINE_BLOCKRANGEJOB_H
+#include <cstdlib>
 
 // Any function that receives a BlockRange* for storing outputs is expecting an array of size kMaximumBlockRangeCount
 enum { kMaximumBlockRangeCount = 16 };

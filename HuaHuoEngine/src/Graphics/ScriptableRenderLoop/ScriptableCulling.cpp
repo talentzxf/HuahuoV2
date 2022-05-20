@@ -6,6 +6,7 @@
 #include "Utilities/EnumFlags.h"
 #include "Camera/Camera.h"
 #include "Components/Transform/Transform.h"
+#include "Geometry/BoundingUtils.h"
 
 static bool CanUseProjectionForShadows(const Matrix4x4f& clipToWorld, float farNearRatio, const Vector3f& cameraPos)
 {
