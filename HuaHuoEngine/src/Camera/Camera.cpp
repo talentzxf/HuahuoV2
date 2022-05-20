@@ -10,6 +10,9 @@
 #include "RenderManager.h"
 #include "CameraStack.h"
 #include "Graphics/ScriptableRenderLoop/ScriptableRenderContext.h"
+#include "CameraUtil.h"
+#include "CullResults.h"
+#include "SceneManager/HuaHuoScene.h"
 
 Camera::CopiableState::CopiableState()
         :   m_FieldOfViewBeforeEnablingVRMode(0.0f)
@@ -118,6 +121,16 @@ void Camera::CopiableState::Reset()
     m_TargetEye = kTargetEyeMaskBoth;
 
     m_Scene = NULL;
+}
+
+// Returns true if this is a non-standard (e.g. off-center) projection.
+static bool IsNonStandardProjection(const Matrix4x4f& mat)
+{
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            if (i != j && mat.Get(i, j) != 0.0f)
+                return true;
+    return false;
 }
 
 //Camera::Camera(/*MemLabelId label,*/ ObjectCreationMode mode)
@@ -677,4 +690,418 @@ void CameraStackRenderingState::BeginRenderingOneCamera(Camera& cam)
 //    m_TargetType = CalculateCameraTargetType(cameras);
 //
 //    cam.SetCurrentTargetTexture(GetTargetTexture());
+}
+
+const Matrix4x4f& Camera::GetCullingMatrix() const
+{
+    if (m_State.m_ImplicitCullingMatrix)
+    {
+        m_State.m_CullingMatrix = GetWorldToClipMatrix();
+    }
+
+    return m_State.m_CullingMatrix;
+}
+
+void Camera::GetImplicitWorldToCameraMatrix(Matrix4x4f& outMatrix) const
+{
+    outMatrix.SetScale(Vector3f(1.0F, 1.0F, -1.0F));
+    outMatrix *= GetComponent<Transform>().GetWorldToLocalMatrixNoScale();
+}
+
+const Matrix4x4f& Camera::GetWorldToCameraMatrix() const
+{
+    if (m_State.m_ImplicitWorldToCameraMatrix)
+        GetImplicitWorldToCameraMatrix(m_State.m_WorldToCameraMatrix);
+    return m_State.m_WorldToCameraMatrix;
+}
+
+const Matrix4x4f& Camera::GetWorldToClipMatrix() const
+{
+    MultiplyMatrices4x4(&GetProjectionMatrix(), &GetWorldToCameraMatrix(), &m_State.m_WorldToClipMatrix);
+    return m_State.m_WorldToClipMatrix;
+}
+
+
+void Camera::SetNear(float n)
+{
+    if (m_State.m_NearClip != n)
+    {
+        SetDirty();
+        m_State.m_NearClip = n;
+    }
+    m_State.m_DirtyProjectionMatrix = true;
+    m_State.m_DirtySkyboxProjectionMatrix = true;
+}
+
+float Camera::GetNear() const
+{
+    // __FAKEABLE_METHOD__(Camera, GetNear, ());
+    return m_State.m_NearClip;
+}
+
+void Camera::SetFar(float f)
+{
+    if (m_State.m_FarClip != f)
+    {
+        SetDirty();
+        m_State.m_FarClip = f;
+    }
+    m_State.m_DirtyProjectionMatrix = true;
+    m_State.m_DirtySkyboxProjectionMatrix = true;
+}
+
+float Camera::GetFar() const
+{
+    // __FAKEABLE_METHOD__(Camera, GetFar, ());
+    return m_State.m_FarClip;
+}
+
+void Camera::SetCullingMask(UInt32 cullingMask)
+{
+    if (m_State.m_CullingMask.m_Bits != cullingMask)
+    {
+        m_State.m_CullingMask.m_Bits = cullingMask;
+        SetDirty();
+    }
+}
+
+float Camera::GetVerticalFieldOfView() const
+{
+    // __FAKEABLE_METHOD__(Camera, GetVerticalFieldOfView, ());
+//    if (ShouldUseVRFieldOfView())
+//    {
+//        float vrDeviceFieldOfView = GetIVRDevice()->GetFieldOfView();
+//        if (m_State.m_FieldOfView != vrDeviceFieldOfView)
+//        {
+//            m_State.m_FieldOfViewBeforeEnablingVRMode = m_State.m_FieldOfView;
+//        }
+//        m_State.m_FieldOfView = vrDeviceFieldOfView;
+//    }
+    return m_State.m_FieldOfView;
+}
+
+void Camera::CalculateProjectionMatrixFromPhysicalProperties(Matrix4x4f& out, float focalLength, const Vector2f& sensorSize, Vector2f lensShift, float nearClip, float farClip, float gateAspect, GateFitMode gateFitMode /*= kGateFitNone*/)
+{
+    float fov;
+    const float ratio = gateAspect * sensorSize.y / sensorSize.x;
+
+    if (ratio == 1.0f)
+    {
+        gateFitMode = kGateFitNone;
+    }
+    else if ((gateFitMode == kGateFitFill && ratio > 1.0f) || (gateFitMode == kGateFitOverscan && ratio < 1.0f))
+        gateFitMode = kGateFitHorizontal;
+    else if ((gateFitMode == kGateFitFill && ratio < 1.0f) || (gateFitMode == kGateFitOverscan && ratio > 1.0f))
+        gateFitMode = kGateFitVertical;
+
+    if (gateFitMode == kGateFitHorizontal)
+    {
+        fov = FocalLengthToFieldOfView(focalLength, sensorSize.x / gateAspect);
+        lensShift.y *= ratio;
+    }
+    else if (gateFitMode == kGateFitVertical)
+    {
+        fov = FocalLengthToFieldOfView(focalLength, sensorSize.y);
+        lensShift.x *= 1.0f / ratio;
+    }
+    else // gateFitMode == kGateFitNone
+    {
+        fov = FocalLengthToFieldOfView(focalLength, sensorSize.y);
+        gateAspect = sensorSize.x / sensorSize.y;
+    }
+
+    out.SetPerspective(fov, gateAspect, nearClip, farClip);
+    out.m_Data[8] = lensShift.x * 2;
+    out.m_Data[9] = lensShift.y * 2;
+}
+
+// Returns true if this an "oblique clipping" projection, e.g. as used
+// for water reflections to clip along the water surface.
+bool CameraScripting::IsObliqueProjection(const Matrix4x4f& mat)
+{
+    // If third row's x or y aren't zero this is an oblique clipping
+    // matrix. See "Oblique Near-Plane Clipping With Orthographic Camera"
+    // for example http://aras-p.info/texts/obliqueortho.html
+    if (mat.Get(2, 0) != 0)
+        return true;
+    if (mat.Get(2, 1) != 0)
+        return true;
+    return false;
+}
+
+
+void Camera::GetImplicitProjectionMatrix(float overrideNearPlane, Matrix4x4f& outMatrix) const
+{
+    if (!m_State.m_Orthographic)
+        outMatrix.SetPerspective(GetGateFittedFieldOfView(), GetAspect(), overrideNearPlane, m_State.m_FarClip);
+    else
+        outMatrix.SetOrtho(-m_State.m_OrthographicSize * m_State.m_Aspect, m_State.m_OrthographicSize * m_State.m_Aspect, -m_State.m_OrthographicSize, m_State.m_OrthographicSize, overrideNearPlane, m_State.m_FarClip);
+}
+
+void Camera::GetImplicitProjectionMatrix(float overrideNearPlane, float overrideFarPlane, float fov, float aspect, Matrix4x4f& outMatrix) const
+{
+    if (!m_State.m_Orthographic)
+        outMatrix.SetPerspective(fov, aspect, overrideNearPlane, overrideFarPlane);
+    else
+        outMatrix.SetOrtho(-m_State.m_OrthographicSize * m_State.m_Aspect, m_State.m_OrthographicSize * m_State.m_Aspect, -m_State.m_OrthographicSize, m_State.m_OrthographicSize, overrideNearPlane, overrideFarPlane);
+}
+
+const Matrix4x4f& Camera::GetProjectionMatrix() const
+{
+    if (m_State.m_DirtyProjectionMatrix)
+    {
+        if (m_State.m_ProjectionMatrixMode == kProjectionMatrixModeImplicit)
+        {
+            if (!m_State.m_Orthographic)
+                m_State.m_ProjectionMatrix.SetPerspective(GetVerticalFieldOfView(), GetAspect(), m_State.m_NearClip, m_State.m_FarClip);
+            else
+                m_State.m_ProjectionMatrix.SetOrtho(-m_State.m_OrthographicSize * m_State.m_Aspect, m_State.m_OrthographicSize * m_State.m_Aspect, -m_State.m_OrthographicSize, m_State.m_OrthographicSize, m_State.m_NearClip, m_State.m_FarClip);
+        }
+        else if (m_State.m_ProjectionMatrixMode == kProjectionMatrixModePhysicalPropertiesBased)
+        {
+            CalculateProjectionMatrixFromPhysicalProperties(m_State.m_ProjectionMatrix, m_State.m_FocalLength, m_State.m_SensorSize, m_State.m_LensShift, m_State.m_NearClip, m_State.m_FarClip, m_State.m_Aspect, m_State.m_GateFitMode);
+        }
+        m_State.m_DirtyProjectionMatrix = false;
+    }
+
+    return m_State.m_ProjectionMatrix;
+}
+
+Matrix4x4f Camera::GetCameraToWorldMatrix() const
+{
+    Matrix4x4f m;
+    Matrix4x4f::Invert_Full(GetWorldToCameraMatrix(), m);
+    return m;
+}
+
+float Camera::GetProjectionNear() const
+{
+    if (m_State.m_ProjectionMatrixMode == kProjectionMatrixModeImplicit)
+        return m_State.m_NearClip;
+
+    const Matrix4x4f& proj = GetProjectionMatrix();
+    if (IsNonStandardProjection(proj))
+        return m_State.m_NearClip;
+
+    Vector4f nearPlane = proj.GetRow(3) + proj.GetRow(2);
+    Vector3f nearNormal(nearPlane.x, nearPlane.y, nearPlane.z);
+    return -nearPlane.w / Magnitude(nearNormal);
+}
+
+float Camera::GetProjectionFar() const
+{
+    if (m_State.m_ProjectionMatrixMode == kProjectionMatrixModeImplicit)
+        return m_State.m_FarClip;
+
+    const Matrix4x4f& proj = GetProjectionMatrix();
+    if (IsNonStandardProjection(proj))
+        return m_State.m_FarClip;
+
+    Vector4f farPlane = proj.GetRow(3) - proj.GetRow(2);
+    Vector3f farNormal(farPlane.x, farPlane.y, farPlane.z);
+    return farPlane.w / Magnitude(farNormal);
+}
+
+Vector3f CameraProjectionCache::WorldToScreenPoint(const Vector3f& v, bool* canProject) const
+{
+    RectInt viewport = GetScreenViewportRectInt();
+
+    Vector3f out;
+    bool ok = CameraProject(v, m_CameraToWorldMatrix, m_WorldToClipMatrix, viewport, out, !m_IsTargetTextureNull);
+    if (canProject != NULL)
+        *canProject = ok;
+    return out;
+}
+
+Vector3f Camera::WorldToScreenPoint(const Vector3f& v, MonoOrStereoscopicEye eye, bool* canProject) const
+{
+    // CameraProjectionCache does not "cache" any data for reuse in this function, we're using it to not duplicate code
+    CameraProjectionCache cache(*this, eye);
+    return cache.WorldToScreenPoint(v, canProject);
+}
+
+
+Vector2f Camera::GetFrustumPlaneSizeAt(const float distance) const
+{
+    Vector2f planeSize;
+
+    if (m_State.m_ProjectionMatrixMode == kProjectionMatrixModeExplicit)
+    {
+        if (!IsNonStandardProjection(m_State.m_ProjectionMatrix))
+        {
+            float cotangent = m_State.m_ProjectionMatrix.m_Data[5];
+            float aspect = cotangent / m_State.m_ProjectionMatrix.m_Data[0];
+
+            float fov = atan(1.0f / cotangent) * 2.0 * kRad2Deg;
+
+            planeSize.y = 2.0f * distance * tan(Deg2Rad(fov * 0.5f));
+            planeSize.x = planeSize.y * aspect;
+        }
+        else
+        {
+            Rectf screenRect = GetScreenViewportRect();
+            Vector3f p0 = ScreenToWorldPoint(Vector3f(screenRect.x, screenRect.y, distance));
+            Vector3f p1 = ScreenToWorldPoint(Vector3f(screenRect.x + screenRect.width, screenRect.y, distance));
+            Vector3f p2 = ScreenToWorldPoint(Vector3f(screenRect.x, screenRect.y + screenRect.height, distance));
+            planeSize.x = Magnitude(p0 - p1);
+            planeSize.y = Magnitude(p0 - p2);
+        }
+        return planeSize;
+    }
+
+    if (GetOrthographic())
+    {
+        planeSize.y = GetOrthographicSize() * 2.0f;
+        planeSize.x = planeSize.y * m_State.m_Aspect;
+    }
+    else
+    {
+        if (m_State.m_ProjectionMatrixMode == kProjectionMatrixModePhysicalPropertiesBased)
+        {
+            planeSize.y = 2.0f * distance * tan(Deg2Rad(m_gateFittedFOV * 0.5f));
+
+            if (m_State.m_GateFitMode == kGateFitNone)
+                planeSize.x = planeSize.y * (m_State.m_SensorSize.x / m_State.m_SensorSize.y);
+            else
+                planeSize.x = planeSize.y * m_State.m_Aspect;
+        }
+        else
+        {
+            planeSize.y = 2.0f * distance * tan(Deg2Rad(m_State.m_FieldOfView * 0.5f));
+            planeSize.x = planeSize.y * m_State.m_Aspect;
+        }
+    }
+    return planeSize;
+}
+
+float Camera::CalculateFarPlaneWorldSpaceLength() const
+{
+    if (m_State.m_ProjectionMatrixMode == kProjectionMatrixModeExplicit)
+    {
+        Rectf screenRect = GetScreenViewportRect();
+        Vector3f p0 = ScreenToWorldPoint(Vector3f(screenRect.x, screenRect.y, m_State.m_FarClip));
+        Vector3f p1 = ScreenToWorldPoint(Vector3f(screenRect.x + screenRect.width, screenRect.y, m_State.m_FarClip));
+        return Magnitude(p0 - p1);
+    }
+    Vector2f camSize = GetFrustumPlaneSizeAt(m_State.m_FarClip);
+    return camSize.x;
+}
+
+
+void Camera::CalculateFrustumPlanes(Plane frustum[kPlaneFrustumNum], const Matrix4x4f& overrideWorldToClip, float overrideFarPlane, float& outBaseFarDistance, bool implicitNearFar) const
+{
+    ExtractProjectionPlanes(overrideWorldToClip, frustum);
+
+    Plane& nearPlane = frustum[kPlaneFrustumNear];
+    Plane& farPlane = frustum[kPlaneFrustumFar];
+
+    bool hasCustomCullingMatrix = !m_State.m_ImplicitCullingMatrix;
+    bool isImplicit = IsImplicitWorldToCameraMatrix() || implicitNearFar;
+
+    // If the user has specified a custom culling matrix, all culling
+    // decisions must be based on that, and we cannot use
+    // GetCameraToWorldMatrix(). Precision problems with the custom matrix
+    // can still be problematic.
+
+    if (!hasCustomCullingMatrix && isImplicit)
+    {
+        // Extracted near and far planes may be unsuitable for culling.
+        // E.g. oblique near plane for water refraction busts both planes.
+        // Also very large far/near ratio causes precision problems.
+        // Instead we calculate the planes from our position/direction.
+
+        Matrix4x4f cam2world = GetCameraToWorldMatrix();
+        Vector3f eyePos = cam2world.GetPosition();
+        Vector3f viewDir = -NormalizeSafe(cam2world.GetAxisZ());
+
+        nearPlane.SetNormalAndPosition(viewDir, eyePos);
+        nearPlane.distance -= m_State.m_NearClip;
+
+        farPlane.SetNormalAndPosition(-viewDir, eyePos);
+        outBaseFarDistance = farPlane.distance;
+        farPlane.distance += overrideFarPlane;
+    }
+    else
+        outBaseFarDistance = farPlane.distance - overrideFarPlane;
+}
+
+float Camera::GetGateFittedFieldOfView() const
+{
+    if (m_State.m_ProjectionMatrixMode == kProjectionMatrixModePhysicalPropertiesBased)
+        return m_gateFittedFOV;
+    else
+        return m_State.m_FieldOfView;
+}
+
+void Camera::CalculateFarCullDistances(float* farCullDistances, float baseFarDistance) const
+{
+    // baseFarDistance is the distance of the far plane shifted to the camera position
+    // This is so layer distances work properly even if the far distance is very large
+    for (int i = 0; i < kNumLayers; i++)
+    {
+        if (m_State.m_LayerCullDistances[i])
+            farCullDistances[i] = baseFarDistance + m_State.m_LayerCullDistances[i];
+        else
+            farCullDistances[i] = baseFarDistance + m_State.m_FarClip;
+    }
+}
+
+HuaHuoScene *Camera::GetScene() const
+{
+    return m_State.m_Scene;
+}
+
+UInt64 Camera::GetSceneCullingMask() const
+{
+    if (m_State.m_SceneCullingMaskOverride != 0UL)
+        return m_State.m_SceneCullingMaskOverride;
+
+    if (GetScene())
+        return GetScene()->GetSceneCullingMask();
+
+    switch (GetCameraType())
+    {
+        case kCameraTypeSceneView:
+            return kMainStageSceneViewObjects_SceneCullingMask;
+        default:
+            return kGameViewObjects_SceneCullingMask;
+    }
+}
+
+void Camera::CalculateCullingParameters(CullingParameters& cullingParameters) const
+{
+    Plane frustum[kPlaneFrustumNum];
+    float baseFarDistance;
+
+    Matrix4x4f cullingMatrix = GetCullingMatrix();
+    cullingParameters.cullingMatrix = cullingMatrix;
+    //Check if standard render pipeline is used:
+//    bool usingSRP = !GetGraphicsSettings().GetCurrentRenderPipeline().IsNull();
+//#if UNITY_EDITOR
+//    usingSRP &= GetRenderManager().GetUseScriptableRenderPipeline();
+//#endif
+//    Vector3f cullingPos = (GetStereoSingleCullEnabled() || usingSRP) ? GetCameraToWorldMatrix().GetPosition() : GetPosition();
+    Vector3f cullingPos = GetCameraToWorldMatrix().GetPosition();
+    cullingParameters.position = cullingPos;
+
+    CalculateFrustumPlanes(frustum, cullingMatrix, m_State.m_FarClip, baseFarDistance, false);
+
+    LODParameters lodParams;
+    lodParams.cameraPosition = cullingPos;
+    lodParams.fieldOfView = GetGateFittedFieldOfView();
+    lodParams.isOrthographic = GetOrthographic();
+    lodParams.orthoSize = m_State.m_OrthographicSize;
+    lodParams.cameraPixelHeight = int(GetPhysicalViewportRect().height);
+    CalculateCustomCullingParameters(cullingParameters, lodParams, GetCullingMask(), GetSceneCullingMask(), frustum, kPlaneFrustumNum);
+
+    if (m_State.m_LayerCullSpherical)
+    {
+        std::copy(m_State.m_LayerCullDistances, m_State.m_LayerCullDistances + kNumLayers, cullingParameters.layerFarCullDistances);
+        cullingParameters.layerCull = CullingParameters::kLayerCullSpherical;
+    }
+    else
+    {
+        CalculateFarCullDistances(cullingParameters.layerFarCullDistances, baseFarDistance);
+        cullingParameters.layerCull = CullingParameters::kLayerCullPlanar;
+    }
 }

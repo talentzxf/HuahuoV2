@@ -5,6 +5,7 @@
 #include "Quaternionf.h"
 #include "Matrix3x3.h"
 #include "Matrix4x4.h"
+#include "Utilities/Utility.h"
 
 inline float Dot(const Quaternionf& q1, const Quaternionf& q2)
 {
@@ -151,4 +152,240 @@ void MatrixToQuaternion(const Matrix3x3f& kRot, Quaternionf& q)
         *apkQuat[k] = (kRot.Get(k, i) + kRot.Get(i, k)) * fRoot;
     }
     q = Normalize(q);
+}
+
+namespace
+{
+    //Indexes for values used to calculate euler angles
+    enum Indexes
+    {
+        X1,
+        X2,
+        Y1,
+        Y2,
+        Z1,
+        Z2,
+        singularity_test,
+        IndexesCount
+    };
+
+    //indexes for pre-multiplied quaternion values
+    enum QuatIndexes
+    {
+        xx,
+        xy,
+        xz,
+        xw,
+        yy,
+        yz,
+        yw,
+        zz,
+        zw,
+        ww,
+        QuatIndexesCount
+    };
+
+    float qAsin(float a, float b)
+    {
+        return a * asin(clamp(b, -1.0f, 1.0f));
+    }
+
+    float qAtan2(float a, float b)
+    {
+        return atan2(a, b);
+    }
+
+    float qNull(float a, float b)
+    {
+        return 0;
+    }
+
+    typedef float (*qFunc)(float, float);
+
+    qFunc qFuncs[math::kRotationOrderCount][3] =
+            {
+                    {&qAtan2, &qAsin, &qAtan2},     //OrderXYZ
+                    {&qAtan2, &qAtan2, &qAsin},     //OrderXZY
+                    {&qAtan2, &qAtan2, &qAsin},     //OrderYZX,
+                    {&qAsin, &qAtan2, &qAtan2},     //OrderYXZ,
+                    {&qAsin, &qAtan2, &qAtan2},     //OrderZXY,
+                    {&qAtan2, &qAsin, &qAtan2},     //OrderZYX,
+            };
+}
+
+Vector3f QuaternionToEuler(const Quaternionf& q, math::RotationOrder order /*= math::kOrderUnityDefault*/)
+{
+    AssertMsg(fabsf(SqrMagnitude(q) - 1.0f) < Vector3f::epsilon, "QuaternionToEuler: Input quaternion was not normalized");
+    //setup all needed values
+    float d[QuatIndexesCount] = {q.x * q.x, q.x * q.y, q.x * q.z, q.x * q.w, q.y * q.y, q.y * q.z, q.y * q.w, q.z * q.z, q.z * q.w, q.w * q.w};
+
+    //Float array for values needed to calculate the angles
+    float v[IndexesCount] = { 0.0f };
+    qFunc f[3] = {qFuncs[order][0], qFuncs[order][1], qFuncs[order][2]}; //functions to be used to calculate angles
+
+    const float SINGULARITY_CUTOFF = 0.499999f;
+    Vector3f rot;
+    switch (order)
+    {
+        case math::kOrderZYX:
+            v[singularity_test] = d[xz] + d[yw];
+            v[Z1] = 2.0f * (-d[xy] + d[zw]);
+            v[Z2] = d[xx] - d[zz] - d[yy] + d[ww];
+            v[Y1] = 1.0f;
+            v[Y2] = 2.0f * v[singularity_test];
+            if (Abs(v[singularity_test]) < SINGULARITY_CUTOFF)
+            {
+                v[X1] = 2.0f * (-d[yz] + d[xw]);
+                v[X2] = d[zz] - d[yy] - d[xx] + d[ww];
+            }
+            else //x == xzx z == 0
+            {
+                float a, b, c, e;
+                a = d[xz] + d[yw];
+                b = -d[xy] + d[zw];
+                c = d[xz] - d[yw];
+                e = d[xy] + d[zw];
+
+                v[X1] = a * e + b * c;
+                v[X2] = b * e - a * c;
+                f[2] = &qNull;
+            }
+            break;
+        case math::kOrderXZY:
+            v[singularity_test] = d[xy] + d[zw];
+            v[X1] = 2.0f * (-d[yz] + d[xw]);
+            v[X2] = d[yy] - d[zz] - d[xx] + d[ww];
+            v[Z1] = 1.0f;
+            v[Z2] = 2.0f * v[singularity_test];
+
+            if (Abs(v[singularity_test]) < SINGULARITY_CUTOFF)
+            {
+                v[Y1] = 2.0f * (-d[xz] + d[yw]);
+                v[Y2] = d[xx] - d[zz] - d[yy] + d[ww];
+            }
+            else //y == yxy x == 0
+            {
+                float a, b, c, e;
+                a = d[xy] + d[zw];
+                b = -d[yz] + d[xw];
+                c = d[xy] - d[zw];
+                e = d[yz] + d[xw];
+
+                v[Y1] = a * e + b * c;
+                v[Y2] = b * e - a * c;
+                f[0] = &qNull;
+            }
+            break;
+
+        case math::kOrderYZX:
+            v[singularity_test] = d[xy] - d[zw];
+            v[Y1] = 2.0f * (d[xz] + d[yw]);
+            v[Y2] = d[xx] - d[zz] - d[yy] + d[ww];
+            v[Z1] = -1.0f;
+            v[Z2] = 2.0f * v[singularity_test];
+
+            if (Abs(v[singularity_test]) < SINGULARITY_CUTOFF)
+            {
+                v[X1] = 2.0f * (d[yz] + d[xw]);
+                v[X2] = d[yy] - d[xx] - d[zz] + d[ww];
+            }
+            else //x == xyx y == 0
+            {
+                float a, b, c, e;
+                a = d[xy] - d[zw];
+                b = d[xz] + d[yw];
+                c = d[xy] + d[zw];
+                e = -d[xz] + d[yw];
+
+                v[X1] = a * e + b * c;
+                v[X2] = b * e - a * c;
+                f[1] = &qNull;
+            }
+            break;
+        case math::kOrderZXY:
+        {
+            v[singularity_test] = d[yz] - d[xw];
+            v[Z1] = 2.0f * (d[xy] + d[zw]);
+            v[Z2] = d[yy] - d[zz] - d[xx] + d[ww];
+            v[X1] = -1.0f;
+            v[X2] = 2.0f * v[singularity_test];
+
+            if (Abs(v[singularity_test]) < SINGULARITY_CUTOFF)
+            {
+                v[Y1] = 2.0f * (d[xz] + d[yw]);
+                v[Y2] = d[zz] - d[xx] - d[yy] + d[ww];
+            }
+            else //x == yzy z == 0
+            {
+                float a, b, c, e;
+                a = d[xy] + d[zw];
+                b = -d[yz] + d[xw];
+                c = d[xy] - d[zw];
+                e = d[yz] + d[xw];
+
+                v[Y1] = a * e + b * c;
+                v[Y2] = b * e - a * c;
+                f[2] = &qNull;
+            }
+        }
+            break;
+        case math::kOrderYXZ:
+            v[singularity_test] = d[yz] + d[xw];
+            v[Y1] = 2.0f * (-d[xz] + d[yw]);
+            v[Y2] = d[zz] - d[yy] - d[xx] + d[ww];
+            v[X1] = 1.0f;
+            v[X2] = 2.0f * v[singularity_test];
+
+            if (Abs(v[singularity_test]) < SINGULARITY_CUTOFF)
+            {
+                v[Z1] = 2.0f * (-d[xy] + d[zw]);
+                v[Z2] = d[yy] - d[zz] - d[xx] + d[ww];
+            }
+            else //x == zyz y == 0
+            {
+                float a, b, c, e;
+                a = d[yz] + d[xw];
+                b = -d[xz] + d[yw];
+                c = d[yz] - d[xw];
+                e = d[xz] + d[yw];
+
+                v[Z1] = a * e + b * c;
+                v[Z2] = b * e - a * c;
+                f[1] = &qNull;
+            }
+            break;
+        case math::kOrderXYZ:
+            v[singularity_test] = d[xz] - d[yw];
+            v[X1] = 2.0f * (d[yz] + d[xw]);
+            v[X2] = d[zz] - d[yy] - d[xx] + d[ww];
+            v[Y1] = -1.0f;
+            v[Y2] = 2.0f * v[singularity_test];
+
+            if (Abs(v[singularity_test]) < SINGULARITY_CUTOFF)
+            {
+                v[Z1] = 2.0f * (d[xy] + d[zw]);
+                v[Z2] = d[xx] - d[zz] - d[yy] + d[ww];
+            }
+            else //x == zxz x == 0
+            {
+                float a, b, c, e;
+                a = d[xz] - d[yw];
+                b = d[yz] + d[xw];
+                c = d[xz] + d[yw];
+                e = -d[yz] + d[xw];
+
+                v[Z1] = a * e + b * c;
+                v[Z2] = b * e - a * c;
+                f[0] = &qNull;
+            }
+            break;
+    }
+
+    rot = Vector3f(f[0](v[X1], v[X2]),
+                   f[1](v[Y1], v[Y2]),
+                   f[2](v[Z1], v[Z2]));
+
+    Assert(IsFinite(rot));
+
+    return rot;
 }

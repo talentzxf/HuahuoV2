@@ -11,6 +11,7 @@
 #include "Math/Simd/vec-trs.h"
 #include "TransformHierarchyTypes.h"
 #include "Math/TransformType.h"
+#include "Math/Simd/vec-affine.h"
 
 #if UNITY_RELEASE
 #define TRANSFORM_FORCEINLINE_IN_RELEASE UNITY_FORCEINLINE
@@ -24,6 +25,15 @@
 #define RETURN_QUATERNION(x) Quaternionf outQuat; math::vstore4f(outQuat.GetPtr(), x); return outQuat;
 #define RETURN_MATRIX3X3(x) Matrix3x3f outMat; float3x3ToMatrix3x3(x,outMat.m_Data); return outMat;
 #define RETURN_AFFINE4X4(x) Matrix4x4f outMat; affineXToMatrix4x4(x,outMat.m_Data); return outMat;
+
+inline void affineXToMatrix4x4(const math::affineX& mat, float* dst)
+{
+    using namespace math;
+    vstore4f(dst + 0 , float4(mat.rs.m0, ZERO));
+    vstore4f(dst + 4 , float4(mat.rs.m1, ZERO));
+    vstore4f(dst + 8 , float4(mat.rs.m2, ZERO));
+    vstore4f(dst + 12, float4(mat.t, 1));
+}
 
 inline UInt32 GetDeepChildCount(const TransformHierarchy& hierarchy, UInt32 index)
 {
@@ -62,6 +72,20 @@ namespace TransformInternal {
         TransformChangeSystemMask globalR;
         TransformChangeSystemMask globalS;
     };
+
+    TRANSFORM_FORCEINLINE_IN_RELEASE math::float3 InverseTransformDirectionNonRecursive(TransformAccessReadOnly transformAccess, const math::float3& direction, bool scaleQuat = false)
+    {
+        ASSERT_TRANSFORM_ACCESS(transformAccess);
+
+        using namespace math;
+
+        const trsX& trs = GetLocalTRS(transformAccess);
+
+        math::float3 d = direction;
+        d = quatInvMulVec(trs.q, d);
+        d = math::cond(scaleQuat, chgsign(d, sign(trs.s)), d);
+        return d;
+    }
 
     extern ChangeMaskCache g_ChangeMaskCache;
     inline math::trsX& GetLocalTRSWritable(TransformAccess transformAccess)
@@ -417,6 +441,112 @@ inline math::float3 CalculateGlobalPosition(TransformAccessReadOnly transformAcc
     }
 
     return globalT;
+}
+
+inline void CalculateGlobalPositionAndRotation(TransformAccessReadOnly transformAccess, math::float3 &position, math::float4 &rotation)
+{
+    ASSERT_TRANSFORM_ACCESS(transformAccess);
+
+    using namespace math;
+
+    const trsX* localTransforms = transformAccess.hierarchy->localTransforms;
+    const trsX& trs = localTransforms[transformAccess.index];
+
+    position = trs.t;
+    rotation = trs.q;
+
+    SInt32 *parentIndices = transformAccess.hierarchy->parentIndices;
+    SInt32 parentIndex = parentIndices[transformAccess.index];
+
+    while (parentIndex >= 0)
+    {
+        const trsX& ptrs = localTransforms[parentIndex];
+
+        position = mul(ptrs, position);
+        rotation = scaleMulQuat(ptrs.s, rotation);
+        rotation = quatMul(ptrs.q, rotation);
+
+        parentIndex = parentIndices[parentIndex];
+    }
+}
+
+inline math::affineX CalculateInverseGlobalMatrixNoScale(TransformAccessReadOnly transformAccess)
+{
+    using namespace math;
+
+    float3 pos;
+    float4 rot;
+    float3x3 rmInv;
+
+    CalculateGlobalPositionAndRotation(transformAccess, pos, rot);
+
+    quatToMatrix(rot, rmInv);
+    rmInv = transpose(rmInv);
+    return affineX(mul(rmInv, -pos), rmInv);
+}
+
+inline math::float3 InverseTransformDirection(TransformAccessReadOnly transformAccess, const math::float3& direction, bool scaleQuat = false)
+{
+    ASSERT_TRANSFORM_ACCESS(transformAccess);
+
+    using namespace math;
+
+    float3 d = direction;
+
+    if (transformAccess.index > 0)
+        d = InverseTransformDirection(GetParent(transformAccess), d, true);
+
+    d = TransformInternal::InverseTransformDirectionNonRecursive(transformAccess, d, scaleQuat);
+    return d;
+}
+
+inline math::float3 TransformDirection(TransformAccessReadOnly transformAccess, const math::float3& direction)
+{
+    ASSERT_TRANSFORM_ACCESS(transformAccess);
+
+    using namespace math;
+
+    math::float3 d = direction;
+
+    const trsX* localTransforms = transformAccess.hierarchy->localTransforms;
+
+    d = quatMulVec(localTransforms[transformAccess.index].q, d);
+
+    SInt32 *parentIndices = transformAccess.hierarchy->parentIndices;
+    SInt32 parentIndex = parentIndices[transformAccess.index];
+
+    while (parentIndex >= 0)
+    {
+        d = chgsign(d, sign(localTransforms[parentIndex].s));
+        d = quatMulVec(localTransforms[parentIndex].q, d);
+        parentIndex = parentIndices[parentIndex];
+    }
+
+    return d;
+}
+
+inline math::float4 CalculateGlobalRotation(TransformAccessReadOnly transformAccess)
+{
+    ASSERT_TRANSFORM_ACCESS(transformAccess);
+
+    using namespace math;
+
+    const trsX* localTransforms = transformAccess.hierarchy->localTransforms;
+
+    float4 globalR = localTransforms[transformAccess.index].q;
+
+    SInt32 *parentIndices = transformAccess.hierarchy->parentIndices;
+    SInt32 parentIndex = parentIndices[transformAccess.index];
+
+    while (parentIndex >= 0)
+    {
+        globalR = scaleMulQuat(localTransforms[parentIndex].s, globalR);
+        globalR = quatMul(localTransforms[parentIndex].q, globalR);
+
+        parentIndex = parentIndices[parentIndex];
+    }
+
+    return globalR;
 }
 
 #endif //HUAHUOENGINE_TRANSFORMHIERARCHY_H

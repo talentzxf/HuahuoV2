@@ -12,8 +12,41 @@
 #include "Shaders/ShaderPassContext.h"
 #include "CullingParameters.h"
 #include "BaseClasses/BitField.h"
+#include "Math/Color.h"
+#include "Geometry/Ray.h"
+#include "BaseClasses/PPtr.h"
+#include "SceneManager/HuaHuoSceneHandle.h"
 
 class HuaHuoScene;
+class Camera;
+
+class EXPORT_COREMODULE CameraProjectionCache
+{
+    /// The projection methods perform a lot of computations that depend only on internal
+    /// camera state. If they are used in loops within which the camere state does not change
+    /// these extra computations are useless. CameraProjectionCache caches that data and allows
+    /// for large speedups (multiple percents of main thread time in case of FlareManager)
+public:
+
+    CameraProjectionCache(const Camera& cam, MonoOrStereoscopicEye = kMonoOrStereoscopicEyeMono);
+
+    Vector3f WorldToViewportPoint(const Vector3f &worldSpace) const;
+    Vector3f WorldToScreenPoint(const Vector3f& v, bool* canProject = NULL) const;
+    Vector3f ScreenToViewportPoint(const Vector3f& screenPos) const;
+
+    const Rectf& GetScreenViewportRect() const { return m_ViewPort; }
+    const RectInt& GetScreenViewportRectInt() const { return m_ViewPortInt; }
+    const Matrix4x4f& GetCameraToWorldMatrix() const { return m_CameraToWorldMatrix; }
+    const Matrix4x4f& GetWorldToClipMatrix() const { return m_WorldToClipMatrix; }
+    bool IsTargetTextureNull() const { return m_IsTargetTextureNull; }
+
+private:
+    Rectf m_ViewPort;
+    RectInt m_ViewPortInt;
+    Matrix4x4f m_CameraToWorldMatrix;
+    Matrix4x4f m_WorldToClipMatrix;
+    bool m_IsTargetTextureNull;
+};
 
 class Camera : public Behaviour {
     REGISTER_CLASS_TRAITS(kTypeNoFlags);
@@ -126,6 +159,9 @@ public:
     Vector3f GetPosition() const;
     void UpdateVelocity();
 
+    void SetUseOcclusionCulling(bool occlusionCull) { m_State.m_OcclusionCulling = occlusionCull; }
+    bool GetUseOcclusionCulling() const { return m_State.m_OcclusionCulling; }
+
     void Render();
     void StandaloneRender(RenderFlag renderFlags, const std::string& replacementTag);
     void CustomRenderWithPipeline(ShaderPassContext& passContext, RenderFlag renderFlags, PostProcessCullResults* postProcessCullResults = NULL, void* postProcessCullResultsData = NULL/*, ScriptingObjectPtr requests = NULL*/);
@@ -155,6 +191,75 @@ public:
     static float FocalLengthToFieldOfView(float focalLength, const float sensorSize);
     static float FieldOfViewToFocalLength(float fov, float sensorSize);
 
+    void CalculateCullingParameters(CullingParameters& cullingParameters) const;
+    void CalculateFrustumPlanes(Plane* frustum, const Matrix4x4f& overrideWorldToClip, float overrideFarPlane, float& outBaseFarDistance, bool implicitNearFar) const;
+    const Matrix4x4f& GetCullingMatrix() const;
+
+    void GetClipToWorldMatrix(Matrix4x4f& outMatrix) const;
+    const Matrix4x4f& GetWorldToClipMatrix() const;
+    const Matrix4x4f& GetProjectionMatrix() const;
+    const Matrix4x4f& GetWorldToCameraMatrix() const;
+    float GetVerticalFieldOfView() const;
+
+    Matrix4x4f GetCameraToWorldMatrix() const;
+    void GetImplicitWorldToCameraMatrix(Matrix4x4f& outMatrix) const;
+
+    static void CalculateProjectionMatrixFromPhysicalProperties(Matrix4x4f& out, float focalLength, const Vector2f& sensorSize, Vector2f lensShift, float nearClip, float farClip, float gateAspect, GateFitMode gateFitMode = kGateFitNone);
+
+    void SetNear(float n);
+    float GetNear() const;
+    void SetFar(float f);
+    float GetFar() const;
+
+    void SetCullingMask(UInt32 cullingMask);
+    UInt32 GetCullingMask() const { return m_State.m_CullingMask.m_Bits; }
+
+    // Projection's near and far plane (can differ from GetNear/Far() for custom projection matrix)
+    float GetProjectionNear() const;
+    float GetProjectionFar() const;
+
+    bool IsImplicitWorldToCameraMatrix() const { return m_State.m_ImplicitWorldToCameraMatrix; }
+
+    float CalculateFarPlaneWorldSpaceLength() const;
+
+    /// A screen space point is defined in pixels.
+    /// The left-bottom of the screen is (0,0). The right-top is (screenWidth,screenHeight)
+    /// The z position is between 0...1. 0 is on the near plane. 1 is on the far plane
+
+    /// A viewport space point is normalized and relative to the camera
+    /// The left-bottom of the camera is (0,0). The top-right is (1,1)
+    /// The z position is between 0...1. 0 is on the near plane. 1 is on the far plane
+
+    /// Projects a World space point into screen space.
+    /// on return: canProject is true if the point could be projected to the screen (The point is inside the frustum)
+    Vector3f WorldToScreenPoint(const Vector3f& worldSpacePoint, MonoOrStereoscopicEye = kMonoOrStereoscopicEyeMono, bool* canProject = NULL) const;
+    /// Unprojects a screen space point into world space
+    Vector3f ScreenToWorldPoint(const Vector3f& screenSpacePoint, MonoOrStereoscopicEye = kMonoOrStereoscopicEyeMono) const;
+
+    Vector2f GetFrustumPlaneSizeAt(const float distance) const;
+    bool GetOrthographic() const { return m_State.m_Orthographic; }
+    float GetOrthographicSize() const { return m_State.m_OrthographicSize; }
+
+    float GetGateFittedFieldOfView() const;
+
+    void CalculateFarCullDistances(float* farCullDistances, float baseFarDistance) const;
+
+    const Vector3f& GetVelocity() const { return m_State.m_Velocity; }
+
+    UInt64 GetSceneCullingMask() const;
+
+    HuaHuoScene *GetScene() const;
+    CameraType GetCameraType() const { return m_State.m_CameraType; }
+
+    void GetImplicitProjectionMatrix(float overrideNearPlane, Matrix4x4f& outMatrix) const;
+    void GetImplicitProjectionMatrix(float overrideNearPlane, float overrideFarPlane, float fov, float aspect, Matrix4x4f& outMatrix) const;
+
+    bool IsImplicitProjectionMatrix() const { return m_State.m_ProjectionMatrixMode != kProjectionMatrixModeExplicit; }
+
+    const float *GetLayerCullDistances() const { return m_State.m_LayerCullDistances; }
+
+    bool GetLayerCullSpherical() const { return m_State.m_LayerCullSpherical; }
+    void SetLayerCullSpherical(bool enable) { m_State.m_LayerCullSpherical = enable; }
 //protected:
 //    // Behaviour stuff
 //    virtual void AddToManager() override;
@@ -210,7 +315,7 @@ private:
         std::string            m_ReplacementTag;
 
         unsigned int        m_ClearFlags;///< enum { Skybox = 1, Solid Color = 2, Depth only = 3, Don't Clear = 4 }
-//        ColorRGBAf          m_BackGroundColor;///< The color to which camera clears the screen
+        ColorRGBAf          m_BackGroundColor;///< The color to which camera clears the screen
         Rectf               m_NormalizedViewPortRect;
 
         BitField            m_CullingMask;///< Which layers the camera renders
@@ -286,5 +391,53 @@ private:
 };
 
 ENUM_FLAGS(Camera::RenderFlag);
+
+namespace CameraScripting
+{
+    int GetPixelWidth(const Camera* cam);
+    int GetPixelHeight(const Camera* cam);
+
+    int GetScaledPixelWidth(const Camera* cam);
+    int GetScaledPixelHeight(const Camera* cam);
+
+    MonoOrStereoscopicEye GetStereoActiveEye(const Camera* cam);
+
+    void CalculateViewportRayVectors(const Camera* cam, const Rectf& vp, float z, MonoOrStereoscopicEye eye, std::vector<Vector3f>& ray);
+
+    GameObject* RaycastTry(const Camera* cam, const Ray& ray, float distance, int layerMask);
+    GameObject* RaycastTry2D(const Camera* cam, const Ray& ray, float distance, int layerMask);
+
+    Matrix4x4f  CalculateObliqueMatrix(const Camera* cam, Vector4f clipPlane);
+
+    bool IsObliqueProjection(const Matrix4x4f& mat);
+
+//    void SetTargetBuffers(Camera* cam, const ScriptingRenderBuffer& color, const ScriptingRenderBuffer& depth);
+//    void SetTargetBuffers(Camera* cam, const dynamic_array<ScriptingRenderBuffer>& color, const ScriptingRenderBuffer& depth);
+//    void SetTargetBuffers(Camera* cam, int colorCount, const ScriptingRenderBuffer* color, const ScriptingRenderBuffer& depth);
+
+    std::vector<float> GetLayerCullDistances(const Camera* cam);
+    void SetLayerCullDistances(Camera* cam, const std::vector<float> v);
+    int GetPreviewCullingLayer();
+
+    int GetAllCamerasCount();
+    int GetAllCameras(std::vector<PPtr<Camera> >& cam);
+
+    void SetupCurrent(Camera* cam);
+//    bool RenderToCubemap(Camera* cam, Texture* tex, int faceMask);
+    void Render(Camera* cam);
+//    void SubmitRenderRequests(Camera* cam, ScriptingObjectPtr requests);
+//    void RenderWithShader(Camera* cam, Shader* shader, const std::string& tag);
+    void RenderDontRestore(Camera* cam);
+
+    UnitySceneHandle GetScene(Camera* cam);
+    void             SetScene(Camera* cam, UnitySceneHandle scene);
+
+    void CopyFrom(Camera* dst, const Camera* src);
+
+//    ScriptingArrayPtr GetCommandBuffers(Camera* self, RenderCameraEventType evt);
+
+    const Matrix4x4f& GetStereoProjectionMatrix(Camera* self, StereoscopicEye eye);
+    const Matrix4x4f& GetStereoViewMatrix(Camera* self, StereoscopicEye eye);
+}
 
 #endif //HUAHUOENGINE_CAMERA_H

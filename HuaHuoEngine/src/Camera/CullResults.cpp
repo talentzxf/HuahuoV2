@@ -1,0 +1,27 @@
+//
+// Created by VincentZhang on 5/20/2022.
+//
+
+#include "CullResults.h"
+
+void SetCullingPlanes(CullingParameters& parameters, const Plane* planes, int planeCount)
+{
+    parameters.cullingPlaneCount = planeCount;
+
+    for (int i = 0; i < planeCount; i++)
+        parameters.cullingPlanes[i] = planes[i];
+}
+
+void CalculateCustomCullingParameters(CullingParameters& cullingParameters, const LODParameters& lodParams, UInt32 cullingMask, UInt64 sceneCullingMask, const Plane* planes, int planeCount)
+{
+    cullingParameters.lodParams = lodParams;
+
+    // Shadow code handles per-layer cull distances itself
+
+    Assert(planeCount <= CullingParameters::kMaxPlanes);
+    SetCullingPlanes(cullingParameters, planes, planeCount);
+    cullingParameters.cullingPlaneCount = planeCount;
+    cullingParameters.layerCull = CullingParameters::kLayerCullNone;
+    cullingParameters.cullingMask = cullingMask;
+    cullingParameters.sceneMask = sceneCullingMask;
+}

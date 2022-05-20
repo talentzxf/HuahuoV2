@@ -10,6 +10,7 @@
 #include "Serialize/SerializeUtility.h"
 #include "FloatConversion.h"
 #include "Matrix3x3.h"
+#include "Math/Simd/RotationOrder.h"
 
 class Matrix4x4f;
 class Quaternionf;
@@ -136,6 +137,8 @@ void EXPORT_COREMODULE QuaternionToMatrix(const Quaternionf& q, Matrix3x3f& m);
 
 void EXPORT_COREMODULE MatrixToQuaternion(const Matrix3x3f& m, Quaternionf& q);
 void EXPORT_COREMODULE MatrixToQuaternion(const Matrix4x4f& m, Quaternionf& q);
+
+Vector3f EXPORT_COREMODULE QuaternionToEuler(const Quaternionf& quat, math::RotationOrder order = math::kOrderUnityDefault);
 
 
 inline Quaternionf Conjugate(const Quaternionf& q)

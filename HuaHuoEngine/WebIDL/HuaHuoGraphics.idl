@@ -23,3 +23,13 @@ interface RenderPipelineImpl{
     void Render(ScriptableRenderContext context);
 };
 
+[NoDelete]
+interface Camera{
+
+}
+
+[NoDelete]
+interface ScriptableRenderContext{
+    Camera GetCamera(int index);
+    int GetNumberOfCameras();
+}

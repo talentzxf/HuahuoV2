@@ -24,4 +24,6 @@ struct BlockRange
     BlockRange(size_t _startIndex, size_t _rangeSize) : startIndex(_startIndex), rangeSize(_rangeSize) {}
 };
 
+int ConfigureBlockRanges(BlockRange* blockRanges, int arrayLength, int blockRangeCount);
+
 #endif //HUAHUOENGINE_BLOCKRANGEJOB_H

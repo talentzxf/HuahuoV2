@@ -112,4 +112,50 @@ inline Vector3f min(const Vector3f& lhs, const Vector3f& rhs)          { return 
 // Returns a vector with the larger  of every component from v0 and v1
 inline Vector3f max(const Vector3f& lhs, const Vector3f& rhs)              { return Vector3f(FloatMax(lhs.x, rhs.x), FloatMax(lhs.y, rhs.y), FloatMax(lhs.z, rhs.z)); }
 
+inline Vector3f Lerp(const Vector3f& from, const Vector3f& to, float t) { return to * t + from * (1.0F - t); }
+
+/// Returns the abs of every component of the vector
+inline Vector3f Abs(const Vector3f& v) { return Vector3f(Abs(v.x), Abs(v.y), Abs(v.z)); }
+
+inline bool IsNormalized(const Vector3f& vec, float epsilon = Vector3f::epsilon)
+{
+    return CompareApproximately(SqrMagnitude(vec), 1.0F, epsilon);
+}
+
+/// - Handles zero vector correclty
+inline Vector3f NormalizeFast(const Vector3f& inV)
+{
+    float m = SqrMagnitude(inV);
+    // GCC version of __frsqrte:
+    //  static inline double __frsqrte (double x) {
+    //      double y;
+    //      asm ( "frsqrte %0, %1" : /*OUT*/ "=f" (y) : /*IN*/ "f" (x) );
+    //      return y;
+    //  }
+    return inV * FastInvSqrt(m);
+}
+
+// this may be called for vectors `a' with extremely small magnitude, for
+// example the result of a cross product on two nearly perpendicular vectors.
+// we must be robust to these small vectors. to prevent numerical error,
+// first find the component a[i] with the largest magnitude and then scale
+// all the components by 1/a[i]. then we can compute the length of `a' and
+// scale the components by 1/l. this has been verified to work with vectors
+// containing the smallest representable numbers.
+Vector3f NormalizeRobust(const Vector3f& a);
+// This also returns vector's inverse original length, to avoid duplicate
+// invSqrt calculations when needed. If a is a zero vector, invOriginalLength will be 0.
+Vector3f NormalizeRobust(const Vector3f& a, float &invOriginalLength, float eps = Vector3f::epsilon);
+
+// Normalizes a vector, returns default vector if it can't be normalized
+inline Vector3f NormalizeSafe(const Vector3f& inV, const Vector3f& defaultV = Vector3f::zero);
+
+inline Vector3f NormalizeSafe(const Vector3f& inV, const Vector3f& defaultV)
+{
+    float mag = Magnitude(inV);
+    if (mag > Vector3f::epsilon)
+        return inV / mag;
+    else
+        return defaultV;
+}
 #endif //HUAHUOENGINE_VECTOR3F_H

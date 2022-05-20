@@ -122,13 +122,13 @@ if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
     list(APPEND CPPFILES src/Editor/SceneView.cpp)
     list(APPEND CPPFILES PlatformDependent/WebGL/External/baselib/builds/Source/Baselib_Timer_Emscripten.cpp)
 
-    add_executable(${TARGETNAME} ${CPPFILES} src/Job/JobsDebugger.h src/Geometry/AABB.cpp src/Geometry/AABB.h)
+    add_executable(${TARGETNAME} ${CPPFILES} src/Job/JobsDebugger.h src/Geometry/AABB.cpp src/Geometry/AABB.h src/Geometry/Plane.h src/Export/RenderPipeline/ScriptableRenderPipeline.bindings.h src/Geometry/BoundingUtils.cpp src/Geometry/BoundingUtils.h)
 else ()
 #    include_directories("C:\\Users\\vincentzhang\\OpenSource\\emsdk\\upstream\\emscripten\\system\\include\\")
     set(TARGETNAME TestHuaHuoEngine)
 
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp src/Camera/RenderNodeQueue.cpp src/Camera/RenderNodeQueue.h src/Camera/RenderNode.cpp src/Camera/RenderNode.h src/Camera/SharedRendererScene.cpp src/Camera/SharedRendererScene.h src/Shaders/SharedMaterialData.h src/Camera/SharedRenderData.h src/Graphics/LightmapTypes.h)
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp src/Camera/RenderNodeQueue.cpp src/Camera/RenderNodeQueue.h src/Camera/RenderNode.cpp src/Camera/RenderNode.h src/Camera/SharedRendererScene.cpp src/Camera/SharedRendererScene.h src/Shaders/SharedMaterialData.h src/Camera/SharedRenderData.h src/Graphics/LightmapTypes.h src/Job/BlockRangeJob.cpp src/Graphics/ScriptableRenderLoop/ScriptableCulling.cpp src/Graphics/ScriptableRenderLoop/ScriptableCulling.h src/Camera/CameraCullingParameters.h src/Camera/CameraUtil.cpp src/Camera/CameraUtil.h src/Camera/CullResults.h src/Camera/CullResults.cpp)
 endif ()
 
 target_include_directories(${TARGETNAME} PUBLIC "${PROJECT_BINARY_DIR}" ${EXTRA_INCLUDE_DIR})

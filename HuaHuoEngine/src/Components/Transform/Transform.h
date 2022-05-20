@@ -93,6 +93,10 @@ public:
     bool SetParent(Transform * parent, SetParentOption options = kWorldPositionStays);
 
     Quaternionf GetLocalRotation() const;
+    /// Gets the rotation from local to world space
+    Quaternionf GetRotation() const;
+    /// Gets the local euler angles (in the editor it is first ensures that they are in sync with the local rotation quaternion)
+    Vector3f GetLocalEulerAngles(math::RotationOrder order = math::kOrderUnityDefault);
 
     /// Sets the scale in local space
     void SetLocalScale(const Vector3f& scale);
@@ -165,6 +169,17 @@ public:
     /// Broadcasts a message to this and all child transforms
     void BroadcastMessageAny(const MessageIdentifier& message, MessageData& data);
     inline void BroadcastMessage(const MessageIdentifier& message) { MessageData data; BroadcastMessageAny(message, data); }
+
+    Matrix4x4f GetWorldToLocalMatrixNoScale() const;
+    Matrix4x4f GetLocalToWorldMatrixNoScale() const;
+
+    /// Transforms a direction from worldspace to localspace
+    /// (Ignores scale)
+    Vector3f InverseTransformDirection(const Vector3f& inDirection) const;
+
+    /// Transforms a direction from localspace to worldspace
+    /// (Ignores scale)
+    Vector3f TransformDirection(const Vector3f& inDirection) const;
 
 public:
     typedef void TransformChangedCallback (Transform* t);

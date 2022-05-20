@@ -912,6 +912,20 @@ TransformChangeSystemMask GetCloneChangeSystemInterestsMask() {
     // return GetTransformChangeDispatch().GetPermanentInterestMask();
 }
 
+Matrix4x4f Transform::GetWorldToLocalMatrixNoScale() const
+{
+    RETURN_AFFINE4X4(CalculateInverseGlobalMatrixNoScale(GetTransformAccess()));
+}
+
+Vector3f Transform::InverseTransformDirection(const Vector3f& inDirection) const
+{
+    RETURN_VECTOR3(::InverseTransformDirection(GetTransformAccess(), math::vload3f(inDirection.GetPtr())));
+}
+
+Vector3f Transform::TransformDirection(const Vector3f& inDirection) const
+{
+    RETURN_VECTOR3(::TransformDirection(GetTransformAccess(), math::vload3f(inDirection.GetPtr())));
+}
 
 TransformChangeSystemMask GetCloneChangeSystemChangesMask() {
     return gHasChangedDeprecatedSystem.Mask();
@@ -920,6 +934,19 @@ TransformChangeSystemMask GetCloneChangeSystemChangesMask() {
 UInt32 GetCloneHierarchyChangeSystemInterestsMask() {
     return 0;
     // return GetTransformHierarchyChangeDispatch().GetPermanentInterestMask();
+}
+
+Quaternionf Transform::GetRotation() const
+{
+#if UNITY_EDITOR
+    if (!IsTransformHierarchyInitialized())
+    {
+        ErrorStringObject("Illegal transform access. Are you accessing a transform rotation from OnValidate?\n", this);
+        return Quaternionf::identity();
+    }
+#endif
+
+    RETURN_QUATERNION(CalculateGlobalRotation(GetTransformAccess()));
 }
 
 

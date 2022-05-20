@@ -59,12 +59,16 @@ public:
         return RootTransformList::const_iterator(&*const_cast<HuaHuoScene*>(this)->RootEnd(alphaSorted));
     }
 
+    void SetSceneCullingMask(UInt64 mask);
+    UInt64 GetSceneCullingMask() const { return m_SceneCullingMask; }
+
 #ifdef HUAHUO_EDITOR
 
 #endif
 
 private:
     RootTransformList       m_Roots;
+    UInt64                  m_SceneCullingMask;
 };
 
 

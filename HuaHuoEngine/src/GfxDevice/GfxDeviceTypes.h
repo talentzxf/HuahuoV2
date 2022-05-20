@@ -28,6 +28,15 @@ enum
     kMaxSupportedMSAASamples = 32,
 };
 
+enum MonoOrStereoscopicEye
+{
+    // Keep left/right index in sync with StereoscopicEye
+    kMonoOrStereoscopicEyeLeft,
+    kMonoOrStereoscopicEyeRight,
+    kMonoOrStereoscopicEyeMono,
+    kMonoOrStereoscopicEyeCount
+};
+
 enum StereoscopicEye
 {
     kStereoscopicEyeDefault = 0,

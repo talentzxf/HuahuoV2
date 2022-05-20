@@ -7,6 +7,8 @@
 
 #include "SceneNode.h"
 #include "Logging/LogAssert.h"
+#include "BaseClasses/TagTypes.h"
+#include "Geometry/Plane.h"
 
 class AABB;
 
@@ -56,6 +58,46 @@ struct IndexList
         size = in.size;
         reservedSize = in.reservedSize;
     }
+};
+
+struct LODParameters
+{
+    int         isOrthographic;
+    Vector3f    cameraPosition;
+    float       fieldOfView;            // Vertical field of view (in degrees)
+    float       orthoSize;
+    int         cameraPixelHeight;
+};
+
+//NOTE: this must be kept in sync with
+//      Managed CullingParameters / ScriptableCullingParameters
+struct CullingParameters
+{
+    CullingParameters() = default;
+    enum { kMaxPlanes = 10 };
+    enum { kOptimizedCullingPlaneCount = 12 };
+
+    enum LayerCull
+    {
+        kLayerCullNone,
+        kLayerCullPlanar,
+        kLayerCullSpherical
+    };
+
+    int             isOrthographic; // bool for compatibility with script bindings
+    LODParameters   lodParams;
+    Plane           cullingPlanes[kMaxPlanes]; // Note: do not write to cullingPlanes directly. Use SetCullingPlanes
+    int             cullingPlaneCount;
+    UInt32          cullingMask;
+    UInt64          sceneMask;
+
+    // Note: not supported in scriptable renderloops
+    float           layerFarCullDistances[kNumLayers];
+    LayerCull       layerCull;
+
+    // Used for Umbra
+    Matrix4x4f cullingMatrix;
+    Vector3f  position;
 };
 
 enum
