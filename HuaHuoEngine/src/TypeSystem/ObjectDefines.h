@@ -46,7 +46,7 @@ class MISSING_SEMICOLON_AFTER_IMPLEMENT_CLASS_VERIFY_OBJECT_IS_REGISTERED
 
 #endif
 
-#define NEW_OBJECT(CLASS_) reinterpret_cast<CLASS_*>(::Object::AllocateAndAssignInstanceID(BaseObjectInternal::NewObject<CLASS_>(kCreateObjectDefault)))
+#define NEW_OBJECT(CLASS_) reinterpret_cast<CLASS_*>(::Object::AllocateAndAssignInstanceID(BaseObjectInternal::NewObject<CLASS_>(kMemBaseObject, kCreateObjectDefault)))
 
 // ----------------------------------------------------------------------------
 
@@ -78,22 +78,22 @@ CREATE_GET_STATIC_METHOD_FROM_TYPE_HELPER(GetCleanupClassMethodFromType, void(),
 namespace BaseObjectInternal
 {
     template<typename type>
-    inline Object* NewObject(ObjectCreationMode mode)
+    inline Object* NewObject(MemLabelId label, ObjectCreationMode mode)
     {
-        return NEW_AS_ROOT(type, "Objects", NULL) (mode);
+        return HUAHUO_NEW_AS_ROOT(type, label, "Objects", NULL) (mode);
     }
 }
 
 template<typename T, bool isAbstract>
 struct ProduceHelper
 {
-    static Object* Produce(ObjectCreationMode mode) { AssertFormatMsg(false, "Can't produce abstract class %s", TypeOf<T>()->GetName()); return NULL; }
+    static Object* Produce(MemLabelId label, ObjectCreationMode mode) { AssertFormatMsg(false, "Can't produce abstract class %s", TypeOf<T>()->GetName()); return NULL; }
 };
 
 template<typename T>
 struct ProduceHelper<T, false>
 {
-    static Object* Produce(ObjectCreationMode mode) { return BaseObjectInternal::NewObject<T>(mode); }
+    static Object* Produce(MemLabelId label, ObjectCreationMode mode) { return BaseObjectInternal::NewObject<T>(label, mode); }
 };
 
 enum TypeFlags
@@ -111,18 +111,15 @@ public:                            \
     typedef ThisType Super;  \
     typedef TYPE_NAME_ ThisType;   \
     static const char* GetPPtrTypeString () { return "PPtr<"#TYPE_NAME_">"; } \
-    static TYPE_NAME_* Produce(InstanceID instanceID = InstanceID_None)       \
-    {                              \
-        return Object::Produce<TYPE_NAME_>(instanceID);\
-    }                              \
-    static TYPE_NAME_* Produce(const HuaHuo::Type* type, InstanceID instanceID = InstanceID_None /*, MemLabelId memLabel = kMemBaseObject, ObjectCreationMode mode = kCreateObjectDefault*/) \
-    {                              \
-        return Object::Produce<TYPE_NAME_>(type, instanceID/*, memLabel, mode*/); \
-    } \
+    static TYPE_NAME_* Produce(InstanceID instanceID = InstanceID_None, MemLabelId memLabel = kMemBaseObject, ObjectCreationMode mode = kCreateObjectDefault) \
+        { return Object::Produce<TYPE_NAME_>(instanceID, memLabel, mode); } \
+    static TYPE_NAME_* Produce(const HuaHuo::Type* type, InstanceID instanceID = InstanceID_None, MemLabelId memLabel = kMemBaseObject, ObjectCreationMode mode = kCreateObjectDefault) \
+        { return Object::Produce<TYPE_NAME_>(type, instanceID, memLabel, mode); } \
 private: \
     virtual const HuaHuo::Type* const GetTypeVirtualInternal() const override { return TypeOf<TYPE_NAME_>(); } \
 protected:                         \
-    ~TYPE_NAME_ (){ }               \
+    ~TYPE_NAME_ (){ }              \
+    void ThreadedCleanup(); \
 public: \
     class MISSING_SEMICOLON_AFTER_REGISTER_CLASS_MACRO
 

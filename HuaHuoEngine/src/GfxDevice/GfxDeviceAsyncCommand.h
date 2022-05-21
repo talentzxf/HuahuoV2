@@ -4,13 +4,13 @@
 
 #ifndef HUAHUOENGINE_GFXDEVICEASYNCCOMMAND_H
 #define HUAHUOENGINE_GFXDEVICEASYNCCOMMAND_H
-
+#include "Core/SharedObject.h"
 
 class GfxDevice;
 struct GfxContextData;
 struct GfxDeviceAsyncCommand {
-    struct Arg { //: public ThreadSharedObject<Arg> {
-        Arg(/*MemLabelId label*/) {} //: ThreadSharedObject<Arg>(label) {}
+    struct Arg : public ThreadSharedObject<Arg> {
+        Arg(MemLabelId label): ThreadSharedObject<Arg>(label) {}
 
         virtual ~Arg() {}
     };
@@ -28,9 +28,9 @@ struct GfxDeviceAsyncCommand {
 #endif
         bool hasGrabPass;
 
-        ArgScratch(/*MemLabelId label*/)
-                //: Arg(label)
-                : device(NULL)
+        ArgScratch(MemLabelId label)
+                : Arg(label)
+                , device(NULL)
                 , contextData(NULL)
 #if GFXDEVICE_DEBUG_SETTINGS
                 , sleepAtStart(0.0f)

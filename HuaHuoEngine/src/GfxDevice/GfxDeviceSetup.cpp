@@ -8,7 +8,8 @@
 #include "Memory/MemoryMacros.h"
 
 GfxDevice* InitializeGfxDevice(){
-    GfxDevice* device = NEW(GfxDeviceGLES)();
+    // A simpler version of creating the device ...
+    GfxDevice* device = HUAHUO_NEW_AS_ROOT(GfxDeviceGLES, kMemGfxDevice, "Rendering", "GfxDeviceGLES") ();
     SetGfxDevice(device);
     return device;
 }

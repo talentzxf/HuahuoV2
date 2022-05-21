@@ -1,8 +1,8 @@
 #include "NamedObject.h"
 #include <cstring>
 
-NamedObject::NamedObject(ObjectCreationMode mode)
-    :   Super(mode)
+NamedObject::NamedObject(MemLabelId label, ObjectCreationMode mode)
+        :   Super(label, mode)
 {
 }
 

@@ -32,9 +32,14 @@ static Transform::HierarchyChangedCallback *gHierarchyChangedCallback = NULL;
 static CallbackArray3<Transform *, Transform *, Transform *> gHierarchyChangedSetParentCallback;
 #endif
 
-Transform::Transform(ObjectCreationMode mode)
-        : Super(mode), m_TransformData(TransformAccess::Null()), m_SceneRootNode(this) {
+Transform::Transform(MemLabelId label, ObjectCreationMode mode)
+        : Super(label, mode), m_TransformData(TransformAccess::Null()), m_SceneRootNode(this) {
 
+}
+
+void Transform::ThreadedCleanup()
+{
+    Assert(!IsTransformHierarchyInitialized());
 }
 
 template<class TransferFunction>
@@ -481,8 +486,7 @@ void Transform::ValidateHierarchy(TransformHierarchy &hierarchy) {
     int nextIndex = 0;
 
     UInt8 *hasTransformBeenVisited = 0;
-    // ALLOC_TEMP_AUTO(hasTransformBeenVisited, hierarchy.transformCapacity);
-    hasTransformBeenVisited = ALLOC_ARRAY(UInt8, hierarchy.transformCapacity);
+    ALLOC_TEMP_AUTO(hasTransformBeenVisited, hierarchy.transformCapacity);
     memset(hasTransformBeenVisited, 0, hierarchy.transformCapacity);
 
     ValidateHierarchyRecursive(hierarchy, index, nextIndex, -1, hasTransformBeenVisited);

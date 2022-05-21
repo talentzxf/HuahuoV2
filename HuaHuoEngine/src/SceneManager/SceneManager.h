@@ -13,7 +13,7 @@ typedef RuntimeSceneManager SceneManager;
 
 class EXPORT_COREMODULE RuntimeSceneManager {
 public:
-    explicit RuntimeSceneManager(/*MemLabelRef label*/);
+    explicit RuntimeSceneManager(MemLabelRef label);
     virtual ~RuntimeSceneManager();
 
     HuaHuoScene* CreateScene();

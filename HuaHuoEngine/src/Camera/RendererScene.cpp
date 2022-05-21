@@ -112,7 +112,7 @@ RendererScene& GetRendererScene()
 {
     if(gScene == NULL)
     {
-        gScene = NEW(RendererScene);
+        gScene = HUAHUO_NEW(RendererScene, kMemRenderer);
     }
     return *gScene;
 }

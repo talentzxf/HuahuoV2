@@ -39,7 +39,7 @@ public:
     };
 
     typedef std::vector<ComponentPair>    Container;
-    GameObject(/*MemLabelId label,*/ ObjectCreationMode mode);
+    GameObject(MemLabelId label, ObjectCreationMode mode);
 
     static void InitializeClass();
     static void CleanupClass();

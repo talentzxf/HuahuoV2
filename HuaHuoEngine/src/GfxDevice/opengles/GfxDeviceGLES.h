@@ -8,7 +8,8 @@
 
 class GfxDeviceGLES : public GfxThreadableDevice{
 public:
-    GfxDeviceGLES();
+    GfxDeviceGLES(MemLabelRef label);
+    virtual         ~GfxDeviceGLES();
 
     virtual void    BeginFrame();
     virtual void    EndFrame();

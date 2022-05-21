@@ -25,8 +25,8 @@ private:
 private:
     ImmediatePtr<GameObject>    m_GameObject;
 public:
-    BaseComponent(ObjectCreationMode mode)
-        :Super(mode)
+    BaseComponent(MemLabelId label, ObjectCreationMode mode)
+        :Super(label, mode)
     {
         m_GameObject = NULL;
     }

@@ -5,8 +5,8 @@
 #include "Renderer.h"
 #include "BaseClasses/GameObject.h"
 
-Renderer::Renderer(RendererType type/*, MemLabelId label*/, ObjectCreationMode mode)
-        :   Super(/*label,*/ mode)
+Renderer::Renderer(RendererType type, MemLabelId label, ObjectCreationMode mode)
+        :   Super(label, mode)
         ,   BaseRenderer(type)
 //        ,   m_Materials(GetMemoryLabel())
 //        ,   m_SceneHandle(kInvalidSceneHandle)
@@ -111,6 +111,13 @@ void Renderer::Transfer(TransferFunction& transfer)
 int Renderer::GetLayer() const
 {
     return GetGameObject().GetLayer();
+}
+
+void Renderer::BoundsChanged()
+{
+    // VZ: Open this later.
+//    if (IsInScene())
+//        GetRendererUpdateManager().DirtyDispatchUpdate(*this);
 }
 
 IMPLEMENT_REGISTER_CLASS(Renderer, 12);

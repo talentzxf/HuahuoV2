@@ -131,13 +131,14 @@ if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
     list(APPEND CPPFILES src/Editor/SceneView.cpp)
     list(APPEND CPPFILES PlatformDependent/WebGL/External/baselib/builds/Source/Baselib_Timer_Emscripten.cpp)
 
-    add_executable(${TARGETNAME} ${CPPFILES} )
+    add_executable(${TARGETNAME} ${CPPFILES} src/Core/ConstructorUtility.h src/Memory/STLAllocator.h src/Core/SharedObject.h)
 else ()
 #    include_directories("C:\\Users\\vincentzhang\\OpenSource\\emsdk\\upstream\\emscripten\\system\\include\\")
     set(TARGETNAME TestHuaHuoEngine)
 
+    add_compile_options(-Wno-deprecated-enum-enum-conversion)
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp)
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp src/Shaders/Material.cpp src/Shaders/Material.h src/Graphics/Mesh/SubMesh.h src/Utilities/EnumTraits.cpp src/Utilities/EnumTraits.h)
 endif ()
 
 target_include_directories(${TARGETNAME} PUBLIC "${PROJECT_BINARY_DIR}" ${EXTRA_INCLUDE_DIR})

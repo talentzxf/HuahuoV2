@@ -5,6 +5,7 @@
 #ifndef HUAHUOENGINE_SCRIPTEVENTMANAGER_H
 #define HUAHUOENGINE_SCRIPTEVENTMANAGER_H
 #include "EventDefs.h"
+#include "Memory/AllocatorLabels.h"
 #include <string>
 #include <list>
 #include <map>
@@ -25,7 +26,7 @@ class ScriptEventManager {
 private:
     std::map<std::string, ScriptEventHandlerList*> m_ScriptEventHandlerLists;
 public:
-    ScriptEventManager();
+    ScriptEventManager(MemLabelId memLabelId);
     virtual ~ScriptEventManager();
 public:
     static void InitClass(void*);

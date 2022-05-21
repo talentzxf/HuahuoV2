@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Internal/CoreMacros.h"
 // This header handles the selection of the correct compiler and platform
 // environment for the current build.
 

@@ -7,7 +7,7 @@
 
 void InitPathNamePersistentManager()
 {
-    SetPersistentManager(NEW(PathNamePersistentManager /*, kMemManager, "Managers", "PathNameManager"*/) ());
+    SetPersistentManager(HUAHUO_NEW_AS_ROOT(PathNamePersistentManager , kMemManager, "Managers", "PathNameManager") ());
     // InitializeStdConverters();
 }
 

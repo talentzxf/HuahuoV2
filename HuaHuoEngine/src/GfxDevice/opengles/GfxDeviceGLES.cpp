@@ -4,9 +4,15 @@
 
 #include "GfxDeviceGLES.h"
 
-GfxDeviceGLES::GfxDeviceGLES() {
-    printf("%s,%d\n",__FILE__,__LINE__);
+GfxDeviceGLES::GfxDeviceGLES(MemLabelRef label)
+        : GfxThreadableDevice(label)
+//        , m_Context(NULL)
+//        , m_ProgramUniformTimeStamp(0)
+//        , m_HintedInstancingArraySize(0)
+//        , m_sRGBWrite(false)
+{
 }
+
 
 void GfxDeviceGLES::BeginFrame()
 {

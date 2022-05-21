@@ -7,6 +7,20 @@
 
 #include "Utilities/EnumFlags.h"
 
+enum GfxPrimitiveType
+{
+    kPrimitiveInvalid = -1,
+
+    kPrimitiveTriangles = 0, kPrimitiveTypeFirst = kPrimitiveTriangles,
+    kPrimitiveTriangleStrip,
+    kPrimitiveQuads,
+    kPrimitiveLines,
+    kPrimitiveLineStrip,
+    kPrimitivePoints, kPrimitiveTypeLast = kPrimitivePoints,
+
+    kPrimitiveForce32BitInt = 0x7fffffff // force 32 bit enum size
+};
+
 enum
 {
     // Maximum number of simultaneous texture resources per shader stage that we support across the board. Actual

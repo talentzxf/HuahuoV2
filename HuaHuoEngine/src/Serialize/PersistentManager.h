@@ -81,8 +81,8 @@ class PersistentManager {
     };
 
 public:
-    virtual ~PersistentManager() {};
-
+    PersistentManager(MemLabelId label);
+    virtual ~PersistentManager(){};
     Remapper*                               m_Remapper;
 
     // On return: objects are the instanceIDs of all objects resident in the file referenced by pathName
@@ -109,6 +109,10 @@ public:
     enum ActiveNameSpaceType { kReadingNameSpace = 0, kWritingNameSpace = 1, kActiveNameSpaceCount = 2 };
 
     virtual FileIdentifier PathIDToFileIdentifierInternal(int pathID) const = 0;
+
+protected:
+    MemLabelId          GetMemoryLabel() const { return m_MemoryLabel; }
+
 private:
     typedef std::vector<StreamNameSpace> StreamContainer;
     typedef vector_map<SInt32, SInt32, std::less<SInt32> /*, STL_ALLOCATOR(kMemSerialization, IntPair)*/> IDRemap;
@@ -124,6 +128,8 @@ private:
     int  GetActiveNameSpace(ActiveNameSpaceType type = kReadingNameSpace) { Assert(m_ActiveNameSpace[type] != -1); return m_ActiveNameSpace[type]; }
 
     SInt32                                  m_ActiveNameSpace[kActiveNameSpaceCount]; // Protected by m_Mutex
+    MemLabelId                              m_MemoryLabel;
+    int                                     m_Abort;
 };
 
 PersistentManager& GetPersistentManager();

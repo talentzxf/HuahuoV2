@@ -13,21 +13,21 @@ RegisterRuntimeInitializeAndCleanup s_ScriptEventManagerInitAndCleanup(ScriptEve
 
 void ScriptEventManager::InitClass(void *) {
     Assert(g_ScriptEventManager == NULL);
-    g_ScriptEventManager = NEW(ScriptEventManager);
+    g_ScriptEventManager = HUAHUO_NEW_AS_ROOT(ScriptEventManager, kMemScriptEventManager, "Managers", "RuntimeSceneManager")();
 }
 
 void ScriptEventManager::CleanupClass(void *) {
     Assert(g_ScriptEventManager != NULL);
-    DELETE(g_ScriptEventManager);
+    HUAHUO_DELETE(g_ScriptEventManager, kMemScriptEventManager);
     g_ScriptEventManager = NULL;
 }
 
-ScriptEventManager::ScriptEventManager(){
+ScriptEventManager::ScriptEventManager(MemLabelId memLabelId){
 
 }
 ScriptEventManager::~ScriptEventManager(){
     for(auto& item : m_ScriptEventHandlerLists){
-        DELETE(item.second);
+        HUAHUO_DELETE(item.second, kMemScriptEventManager);
     }
 }
 
@@ -38,7 +38,7 @@ ScriptEventManager* GetScriptEventManager(){
 
 void ScriptEventManager::RegisterEventHandler(std::string eventType, ScriptEventHandler* pHandler){
     if(!m_ScriptEventHandlerLists.contains(eventType)){
-        m_ScriptEventHandlerLists[eventType] = NEW(ScriptEventHandlerList);
+        m_ScriptEventHandlerLists[eventType] = HUAHUO_NEW(ScriptEventHandlerList, kMemScriptEventManager);
     }
 
     m_ScriptEventHandlerLists[eventType]->push_back(pHandler);

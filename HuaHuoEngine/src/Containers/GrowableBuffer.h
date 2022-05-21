@@ -20,7 +20,7 @@ public:
         DoubleOnGrow = 1
     };
 
-    GrowableBuffer(/*MemLabelRef label = kMemUtility,*/ size_t initialSize = 256, size_t growIncrement = 8*1024, GrowMode growMode = GrowMode::Fixed);
+    GrowableBuffer(MemLabelRef label = kMemUtility, size_t initialSize = 256, size_t growIncrement = 8*1024, GrowMode growMode = GrowMode::Fixed);
     GrowableBuffer(const GrowableBuffer& other);
     ~GrowableBuffer();
 
@@ -71,7 +71,7 @@ private:
     GrowableBuffer& operator=(const GrowableBuffer&); // No assignment
 
 private:
-//    MemLabelId m_Label;
+    MemLabelId m_Label;
     char* m_Buffer;
     size_t m_Capacity;
     size_t m_Size;

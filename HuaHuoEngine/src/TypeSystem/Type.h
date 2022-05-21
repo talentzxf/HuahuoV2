@@ -44,7 +44,7 @@ namespace HuaHuo
             UndefinedPersistentTypeID = RTTI::UndefinedPersistentTypeID
         };
 
-        typedef Object* FactoryFunction (ObjectCreationMode mode);
+        typedef Object* FactoryFunction (MemLabelId label, ObjectCreationMode mode);
 
         static UInt32 GetTypeCount() { return RTTI::GetRuntimeTypes().Count; }
 

@@ -13,6 +13,10 @@ class PathNamePersistentManager: public PersistentManager {
     PathToStreamID      m_PathToStreamID; // Contains lower case pathnames
     std::vector<std::string>       m_PathNames;// Contains pathnames as they were given
 
+public:
+
+    PathNamePersistentManager(MemLabelId label)
+            : PersistentManager(label) {}
 protected:
     virtual FileIdentifier PathIDToFileIdentifierInternal(int pathID) const;
 };

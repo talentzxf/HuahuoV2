@@ -74,6 +74,7 @@ DO_LABEL(PoolAlloc)
 DO_LABEL(AI)
 DO_LABEL(TypeTree)
 DO_LABEL(ScriptManager)
+DO_LABEL(ScriptEventManager) // Added by VZ
 DO_LABEL(RuntimeInitializeOnLoadManager)
 DO_LABEL(AncestorCache)
 DO_LABEL(Sprites)

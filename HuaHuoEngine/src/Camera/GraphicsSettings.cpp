@@ -6,8 +6,8 @@
 #include "RenderManager.h"
 #include "BaseClasses/ManagerContext.h"
 
-GraphicsSettings::GraphicsSettings(/*MemLabelId label,*/ ObjectCreationMode mode)
-        :   Super(/*label,*/ mode)
+GraphicsSettings::GraphicsSettings(MemLabelId label, ObjectCreationMode mode)
+        :   Super(label, mode)
 //#if UNITY_EDITOR
 //        ,   m_NeedToInitializeDefaultShaderReferences(false)
 //    ,   m_NeedToInitializeDefaultuGUIShaders(false)

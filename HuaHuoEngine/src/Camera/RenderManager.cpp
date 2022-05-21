@@ -51,9 +51,7 @@ static RenderManager* gRenderManager = NULL;
 void RenderManager::InitializeClass()
 {
     Assert(gRenderManager == NULL);
-    // gRenderManager = UNITY_NEW(RenderManager, kMemRenderer);
-    gRenderManager = NEW(RenderManager);
-
+    gRenderManager = HUAHUO_NEW(RenderManager, kMemRenderer);
 //    InitializeHaloManager();
 //    InitializeFlareManager();
 
@@ -78,8 +76,7 @@ void RenderManager::CleanupClass()
 //    CleanupHaloManager();
 
     Assert(gRenderManager != NULL);
-    // UNITY_DELETE(gRenderManager, kMemRenderer);
-    DELETE(gRenderManager);
+    HUAHUO_DELETE(gRenderManager, kMemRenderer);
     gRenderManager = NULL;
 }
 

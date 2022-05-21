@@ -90,21 +90,27 @@ class Object {
 public:
     typedef std::unordered_map<InstanceID, Object*> IDToPointerMap;
 
-    static Object* Produce(const HuaHuo::Type* type, InstanceID instanceID = InstanceID_None, ObjectCreationMode mode = kCreateObjectDefault)
+private:
+
+    static Object* Produce(const HuaHuo::Type* targetCastType, const HuaHuo::Type* produceType, InstanceID instanceID, MemLabelId memLabel, ObjectCreationMode mode);
+
+public:
+
+    static Object* Produce(const HuaHuo::Type* type, InstanceID instanceID = InstanceID_None, MemLabelId memLabel = kMemBaseObject, ObjectCreationMode mode = kCreateObjectDefault)
     {
-        return Produce(TypeOf<Object>(), type, instanceID, mode);
+        return Produce(TypeOf<Object>(), type, instanceID, memLabel, mode);
     }
 
     template<typename T>
-    static T* Produce(InstanceID instanceID = InstanceID_None, ObjectCreationMode mode = kCreateObjectDefault)
+    static T* Produce(const HuaHuo::Type* type, InstanceID instanceID = InstanceID_None, MemLabelId memLabel = kMemBaseObject, ObjectCreationMode mode = kCreateObjectDefault)
     {
-        return static_cast<T*>(Produce(TypeOf<T>(), TypeOf<T>(), instanceID, mode));
+        return static_cast<T*>(Produce(TypeOf<T>(), type, instanceID, memLabel, mode));
     }
 
     template<typename T>
-    static T* Produce(const HuaHuo::Type* type, InstanceID instanceID = InstanceID_None, ObjectCreationMode mode = kCreateObjectDefault)
+    static T* Produce(InstanceID instanceID = InstanceID_None, MemLabelId memLabel = kMemBaseObject, ObjectCreationMode mode = kCreateObjectDefault)
     {
-        return static_cast<T*>(Produce(TypeOf<T>(), type, instanceID, mode));
+        return static_cast<T*>(Produce(TypeOf<T>(), TypeOf<T>(), instanceID, memLabel, mode));
     }
 
     struct kTypeFlags {
@@ -175,7 +181,7 @@ public:
     friend void delete_object_internal_step1(Object* p);
     friend void delete_object_internal_step2(Object* p);
 
-    Object(ObjectCreationMode mode);
+    Object(MemLabelId label, ObjectCreationMode mode);
 
     const HuaHuo::Type* GetType() const { return HuaHuo::Type::GetTypeByRuntimeTypeIndex(m_CachedTypeIndex); }
 
@@ -196,6 +202,21 @@ public:
     inline void SetAwakeCalledInternal() {}
     inline void SetAwakeDidLoadThreadedCalledInternal() {}
     inline void SetMainThreadCleanupCalledInternal() {}
+
+    /// Some classes need to deallocate resources on the main thread or deregister themselves from other objects,
+    /// for those things you want to override MainThreadCleanup.
+    /// Unless the code is thread safe, that work must be done in MainThreadCleanup as there are no guarantees about when on the other thread the destructor will be called.
+    ///
+    /// Every class implementing MainThreadCleanup must call Super::MainThreadCleanup().
+    /// void MyClass::MainThreadCleanup()
+    /// {
+    ///     Super::MainThreadCleanup();
+    ///     RemoveMeFromSomeGlobalLinkedList ();
+    /// }
+    virtual void MainThreadCleanup()
+    {
+        SetMainThreadCleanupCalledInternal();
+    }
 
     enum HideFlags
     {
@@ -266,6 +287,9 @@ public:
     // Finds the pointer to the object referenced by instanceID (NULL if none found in memory)
     /// This function may only be called from the main thread
     static Object* IDToPointer(InstanceID inInstanceID);
+
+    /// Callback support for callbacks when an object is destroyed
+    typedef void ObjectDestroyCallbackFunction (InstanceID instanceID);
 
 protected:
     virtual ~Object();

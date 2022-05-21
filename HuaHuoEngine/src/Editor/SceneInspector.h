@@ -39,7 +39,7 @@ public:
     static void StaticInitialize(void*);
     static void StaticDestroy(void*);
 
-    SceneTracker();
+    SceneTracker(MemLabelId label);
     ~SceneTracker();
 
 private:

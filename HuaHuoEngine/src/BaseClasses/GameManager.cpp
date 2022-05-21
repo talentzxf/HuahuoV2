@@ -43,10 +43,10 @@ GameManager* GetGameManagerIfExists(int index)
     return manager;
 }
 
-LevelGameManager::LevelGameManager(/*MemLabelId label,*/ ObjectCreationMode mode) : Super(/*label,*/ mode)
+LevelGameManager::LevelGameManager(MemLabelId label, ObjectCreationMode mode) : Super(label, mode)
 {}
 
-GlobalGameManager::GlobalGameManager(/*MemLabelId label,*/ ObjectCreationMode mode) : Super(/*label,*/ mode)
+GlobalGameManager::GlobalGameManager(MemLabelId label, ObjectCreationMode mode) : Super(label, mode)
 {}
 
 

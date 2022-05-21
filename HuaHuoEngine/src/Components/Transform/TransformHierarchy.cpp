@@ -9,8 +9,7 @@
 
 namespace TransformInternal {
 
-    TransformType CalculateTransformType(TransformAccess transformAccess)
-    {
+    TransformType CalculateTransformType(TransformAccess transformAccess) {
         using namespace math;
 
         float3 epsilon = float3(0.0001f);
@@ -44,7 +43,7 @@ namespace TransformInternal {
         // clear the unfiform scale bit
         transformType &= ~(!uniformScale * kUniformScaleTransform);
 
-        return (TransformType)transformType;
+        return (TransformType) transformType;
     }
 
     void AllocateTransformThread(TransformHierarchy &hierarchy, UInt32 threadFirst, UInt32 threadLast) {
@@ -55,8 +54,7 @@ namespace TransformInternal {
         hierarchy.nextIndices[threadLast] = -1;
     }
 
-    void OnScaleChangedCalculateTransformType(TransformAccess transformAccess)
-    {
+    void OnScaleChangedCalculateTransformType(TransformAccess transformAccess) {
         transformAccess.hierarchy->localTransformTypes[transformAccess.index] = CalculateTransformType(transformAccess);
     }
 
@@ -64,11 +62,11 @@ namespace TransformInternal {
     // It assumes that this is the first time any of the values are being initialized.
     // Thus comparing against previous values is invalid.
     // Particularly OnScaleChangedCalculateTransformType can't depend on a comparison against the previous value like SetLocalT does.
-    void InitLocalTRS(TransformAccess transformAccess, const math::float3& t, const math::float4& r, const math::float3& s)
-    {
+    void
+    InitLocalTRS(TransformAccess transformAccess, const math::float3 &t, const math::float4 &r, const math::float3 &s) {
         using namespace math;
 
-        trsX& trs = TransformInternal::GetLocalTRSWritable(transformAccess);
+        trsX &trs = TransformInternal::GetLocalTRSWritable(transformAccess);
 
         trs.t = t;
         trs.q = r;
@@ -77,40 +75,28 @@ namespace TransformInternal {
         OnScaleChangedCalculateTransformType(transformAccess);
     }
 
-    TransformHierarchy *CreateTransformHierarchy(UInt32 transformCapacity) {
-//    BatchAllocator batch;
-//
-//    TransformHierarchy* hierarchy = NULL;
-//    batch.AllocateRoot(hierarchy, 1);
-//    batch.AllocateField(hierarchy->localTransforms, transformCapacity);
-//    batch.AllocateField(hierarchy->parentIndices, transformCapacity);
-//    batch.AllocateField(hierarchy->deepChildCount, transformCapacity);
-//    batch.AllocateField(hierarchy->mainThreadOnlyTransformPointers, transformCapacity);
-//    batch.AllocateField(hierarchy->localTransformTypes, transformCapacity);
-//    batch.AllocateField(hierarchy->systemChanged, transformCapacity);
-//    batch.AllocateField(hierarchy->systemInterested, transformCapacity);
-//    batch.AllocateField(hierarchy->hierarchySystemInterested, transformCapacity);
-//
-//#if UNITY_EDITOR
-//    batch.AllocateField(hierarchy->eulerHints, transformCapacity);
-//#endif
-//
-//    batch.AllocateField(hierarchy->nextIndices, transformCapacity);
-//    batch.AllocateField(hierarchy->prevIndices, transformCapacity);
-//
-//    batch.Commit(label);
+    TransformHierarchy *CreateTransformHierarchy(UInt32 transformCapacity, MemLabelId label) {
+        BatchAllocator batch;
 
-        TransformHierarchy *hierarchy = NEW(TransformHierarchy);
-        hierarchy->localTransforms = NEW_ARRAY(math::trsX, transformCapacity);
-        hierarchy->parentIndices = NEW_ARRAY(SInt32, transformCapacity);
-        hierarchy->deepChildCount = NEW_ARRAY(UInt32, transformCapacity);
-        hierarchy->localTransformTypes = NEW_ARRAY(UInt8, transformCapacity);
-        hierarchy->systemChanged = NEW_ARRAY(TransformChangeSystemMask, transformCapacity);
-        hierarchy->systemInterested = NEW_ARRAY(TransformChangeSystemMask, transformCapacity);
-        hierarchy->hierarchySystemInterested = NEW_ARRAY(UInt32, transformCapacity);
-        hierarchy->mainThreadOnlyTransformPointers = NEW_ARRAY(Transform*, transformCapacity);
-        hierarchy->nextIndices = NEW_ARRAY(SInt32, transformCapacity);
-        hierarchy->prevIndices = NEW_ARRAY(SInt32, transformCapacity);
+        TransformHierarchy *hierarchy = NULL;
+        batch.AllocateRoot(hierarchy, 1);
+        batch.AllocateField(hierarchy->localTransforms, transformCapacity);
+        batch.AllocateField(hierarchy->parentIndices, transformCapacity);
+        batch.AllocateField(hierarchy->deepChildCount, transformCapacity);
+        batch.AllocateField(hierarchy->mainThreadOnlyTransformPointers, transformCapacity);
+        batch.AllocateField(hierarchy->localTransformTypes, transformCapacity);
+        batch.AllocateField(hierarchy->systemChanged, transformCapacity);
+        batch.AllocateField(hierarchy->systemInterested, transformCapacity);
+        batch.AllocateField(hierarchy->hierarchySystemInterested, transformCapacity);
+
+#if UNITY_EDITOR
+        batch.AllocateField(hierarchy->eulerHints, transformCapacity);
+#endif
+
+        batch.AllocateField(hierarchy->nextIndices, transformCapacity);
+        batch.AllocateField(hierarchy->prevIndices, transformCapacity);
+
+        batch.Commit(label);
 
         // ClearFenceWithoutSync(hierarchy->fence);
 
@@ -144,8 +130,9 @@ namespace TransformInternal {
 //    }
     }
 
-    static inline void CopyTransformMinimal(TransformHierarchy& srcHierarchy, UInt32 srcIndex, TransformHierarchy& dstHierarchy, UInt32 dstIndex)
-    {
+    static inline void
+    CopyTransformMinimal(TransformHierarchy &srcHierarchy, UInt32 srcIndex, TransformHierarchy &dstHierarchy,
+                         UInt32 dstIndex) {
         dstHierarchy.localTransforms[dstIndex] = srcHierarchy.localTransforms[srcIndex];
         dstHierarchy.localTransformTypes[dstIndex] = srcHierarchy.localTransformTypes[srcIndex];
         dstHierarchy.deepChildCount[dstIndex] = srcHierarchy.deepChildCount[srcIndex];
@@ -156,11 +143,14 @@ namespace TransformInternal {
 #endif
     }
 
-    static inline void CopyTransformForCloning(TransformHierarchy& srcHierarchy, UInt32 srcIndex, TransformHierarchy& dstHierarchy, UInt32 dstIndex, TransformChangeSystemMask interestMask, TransformChangeSystemMask changeMask, UInt32 hierarchyInterestMask)
-    {
+    static inline void
+    CopyTransformForCloning(TransformHierarchy &srcHierarchy, UInt32 srcIndex, TransformHierarchy &dstHierarchy,
+                            UInt32 dstIndex, TransformChangeSystemMask interestMask,
+                            TransformChangeSystemMask changeMask, UInt32 hierarchyInterestMask) {
         CopyTransformMinimal(srcHierarchy, srcIndex, dstHierarchy, dstIndex);
         TransformChangeSystemMask dstInterestMask = srcHierarchy.systemInterested[srcIndex] & interestMask;
-        TransformChangeSystemMask dstChangedMask = dstInterestMask & (srcHierarchy.systemChanged[srcIndex] | changeMask);
+        TransformChangeSystemMask dstChangedMask =
+                dstInterestMask & (srcHierarchy.systemChanged[srcIndex] | changeMask);
         UInt32 dstHierarchyInterestMask = srcHierarchy.hierarchySystemInterested[srcIndex] & hierarchyInterestMask;
         dstHierarchy.systemChanged[dstIndex] = dstChangedMask;
         dstHierarchy.systemInterested[dstIndex] = dstInterestMask;
@@ -169,12 +159,14 @@ namespace TransformInternal {
         dstHierarchy.combinedSystemInterest |= dstInterestMask;
     }
 
-    static inline void CopyTransform(TransformHierarchy& srcHierarchy, UInt32 srcIndex, TransformHierarchy& dstHierarchy, UInt32 dstIndex, TransformChangeSystemMask changeMask)
-    {
+    static inline void
+    CopyTransform(TransformHierarchy &srcHierarchy, UInt32 srcIndex, TransformHierarchy &dstHierarchy, UInt32 dstIndex,
+                  TransformChangeSystemMask changeMask) {
         CopyTransformMinimal(srcHierarchy, srcIndex, dstHierarchy, dstIndex);
 
         TransformChangeSystemMask dstInterestMask = srcHierarchy.systemInterested[srcIndex];
-        TransformChangeSystemMask dstChangedMask = dstInterestMask & (srcHierarchy.systemChanged[srcIndex] | changeMask);
+        TransformChangeSystemMask dstChangedMask =
+                dstInterestMask & (srcHierarchy.systemChanged[srcIndex] | changeMask);
         dstHierarchy.systemChanged[dstIndex] = dstChangedMask;
         dstHierarchy.systemInterested[dstIndex] = dstInterestMask;
         dstHierarchy.combinedSystemChanged |= dstChangedMask;
@@ -183,8 +175,8 @@ namespace TransformInternal {
         dstHierarchy.hierarchySystemInterested[dstIndex] = srcHierarchy.hierarchySystemInterested[srcIndex];
     }
 
-    void InsertTransformThreadAfter(TransformHierarchy& hierarchy, UInt32 index, UInt32 threadFirst, UInt32 threadLast)
-    {
+    void
+    InsertTransformThreadAfter(TransformHierarchy &hierarchy, UInt32 index, UInt32 threadFirst, UInt32 threadLast) {
         SInt32 next = hierarchy.nextIndices[index];
         hierarchy.nextIndices[index] = threadFirst;
         hierarchy.prevIndices[threadFirst] = index;
@@ -193,17 +185,18 @@ namespace TransformInternal {
             hierarchy.prevIndices[next] = threadLast;
     }
 
-    void CopyTransformSubhierarchy(TransformHierarchy& srcHierarchy, UInt32 srcIndex, TransformHierarchy& dstHierarchy, TransformChangeSystemMask interestMask, TransformChangeSystemMask changeMask, UInt32 hierarchyInterestMask, bool copyForCloning)
-    {
+    void CopyTransformSubhierarchy(TransformHierarchy &srcHierarchy, UInt32 srcIndex, TransformHierarchy &dstHierarchy,
+                                   TransformChangeSystemMask interestMask, TransformChangeSystemMask changeMask,
+                                   UInt32 hierarchyInterestMask, bool copyForCloning) {
         UInt32 count = GetDeepChildCount(srcHierarchy, srcIndex);
 
         AllocateTransformThread(dstHierarchy, 0, count - 1);
 
         SInt32 cur = srcIndex;
-        for (UInt32 i = 0; i < count; i++)
-        {
+        for (UInt32 i = 0; i < count; i++) {
             if (copyForCloning)
-                CopyTransformForCloning(srcHierarchy, cur, dstHierarchy, i, interestMask, changeMask, hierarchyInterestMask);
+                CopyTransformForCloning(srcHierarchy, cur, dstHierarchy, i, interestMask, changeMask,
+                                        hierarchyInterestMask);
             else
                 CopyTransform(srcHierarchy, cur, dstHierarchy, i, changeMask);
 
@@ -211,8 +204,7 @@ namespace TransformInternal {
         }
     }
 
-    void DetachTransformThread(TransformHierarchy& hierarchy, UInt32 threadFirst, UInt32 threadLast)
-    {
+    void DetachTransformThread(TransformHierarchy &hierarchy, UInt32 threadFirst, UInt32 threadLast) {
         Assert(threadFirst > 0);
         Assert(threadLast > 0);
 
@@ -225,8 +217,7 @@ namespace TransformInternal {
             hierarchy.prevIndices[next] = prev;
     }
 
-    void FreeTransformThread(TransformHierarchy& hierarchy, UInt32 threadFirst, UInt32 threadLast)
-    {
+    void FreeTransformThread(TransformHierarchy &hierarchy, UInt32 threadFirst, UInt32 threadLast) {
         Assert(threadFirst > 0);
         Assert(threadLast > 0);
         Assert(hierarchy.prevIndices[threadFirst] == -1);
@@ -244,35 +235,36 @@ namespace TransformInternal {
             hierarchy.prevIndices[next] = threadLast;
     }
 
-    void UpdateDeepChildCountUpwards(TransformHierarchy& hierarchy, SInt32 index, SInt32 addedNodeCount)
-    {
-        while (index != -1)
-        {
+    void UpdateDeepChildCountUpwards(TransformHierarchy &hierarchy, SInt32 index, SInt32 addedNodeCount) {
+        while (index != -1) {
             Assert(0 < GetDeepChildCount(hierarchy, index) + addedNodeCount);
             hierarchy.deepChildCount[index] += addedNodeCount;
             index = hierarchy.parentIndices[index];
         }
     }
 
-    void AddTransformSubhierarchy(TransformHierarchy& srcHierarchy, UInt32 srcIndex, TransformHierarchy& dstHierarchy, UInt32& dstFirst, UInt32& dstLast, TransformChangeSystemMask interestMask, TransformChangeSystemMask changeMask, UInt32 hierarchyInterestMask, bool copyForCloning)
-    {
+    void AddTransformSubhierarchy(TransformHierarchy &srcHierarchy, UInt32 srcIndex, TransformHierarchy &dstHierarchy,
+                                  UInt32 &dstFirst, UInt32 &dstLast, TransformChangeSystemMask interestMask,
+                                  TransformChangeSystemMask changeMask, UInt32 hierarchyInterestMask,
+                                  bool copyForCloning) {
         UInt32 count = GetDeepChildCount(srcHierarchy, srcIndex);
 
         UInt32 first = dstHierarchy.firstFreeIndex;
         UInt32 last = first;
 
         if (copyForCloning)
-            CopyTransformForCloning(srcHierarchy, srcIndex, dstHierarchy, last, interestMask, changeMask, hierarchyInterestMask);
+            CopyTransformForCloning(srcHierarchy, srcIndex, dstHierarchy, last, interestMask, changeMask,
+                                    hierarchyInterestMask);
         else
             CopyTransform(srcHierarchy, srcIndex, dstHierarchy, last, changeMask);
 
         SInt32 cur = srcHierarchy.nextIndices[srcIndex];
-        for (UInt32 i = 1; i < count; i++)
-        {
+        for (UInt32 i = 1; i < count; i++) {
             last = dstHierarchy.nextIndices[last];
 
             if (copyForCloning)
-                CopyTransformForCloning(srcHierarchy, cur, dstHierarchy, last, interestMask, changeMask, hierarchyInterestMask);
+                CopyTransformForCloning(srcHierarchy, cur, dstHierarchy, last, interestMask, changeMask,
+                                        hierarchyInterestMask);
             else
                 CopyTransform(srcHierarchy, cur, dstHierarchy, last, changeMask);
 

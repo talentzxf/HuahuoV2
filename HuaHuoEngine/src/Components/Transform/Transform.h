@@ -59,7 +59,7 @@ class Transform : public BaseComponent {
     DECLARE_OBJECT_SERIALIZE();
     friend class HuaHuoScene;
 public:
-    Transform(ObjectCreationMode mode);
+    Transform(MemLabelId label, ObjectCreationMode mode);
 
     HuaHuoScene* GetScene();
     SceneRootNode& GetSceneRootNode() { return m_SceneRootNode; }

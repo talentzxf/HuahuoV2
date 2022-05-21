@@ -10,12 +10,10 @@ ShaderPassContext* g_SharedPassContext = NULL;
 void ShaderPassContextInitialize()
 {
     Assert(g_SharedPassContext == NULL);
-    // g_SharedPassContext = UNITY_NEW(ShaderPassContext, kMemShader);
-    g_SharedPassContext = NEW(ShaderPassContext);//, kMemShader);
+    g_SharedPassContext = HUAHUO_NEW(ShaderPassContext, kMemShader);
 }
 
 void ShaderPassContextCleanup()
 {
-    // UNITY_DELETE(g_SharedPassContext, kMemShader);
-    DELETE(g_SharedPassContext)
+    HUAHUO_DELETE(g_SharedPassContext, kMemShader);
 }

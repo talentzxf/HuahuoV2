@@ -28,7 +28,8 @@ bool IsGfxDevice()
 }
 
 
-GfxDevice::GfxDevice()
+GfxDevice::GfxDevice(MemLabelRef label) :
+        m_MemoryLabel(label)
 {
 }
 

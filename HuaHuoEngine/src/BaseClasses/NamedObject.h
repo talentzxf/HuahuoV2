@@ -9,6 +9,7 @@ class EXPORT_COREMODULE NamedObject : public BaseComponent
     REGISTER_CLASS(NamedObject);
     DECLARE_OBJECT_SERIALIZE();
 public:
+    NamedObject(MemLabelId label, ObjectCreationMode mode);
 
     virtual char const* GetName() const override { return m_Name.c_str(); }
     virtual void SetName(char const* name) override;

@@ -33,13 +33,13 @@ struct ResourceImageGroup
 
     void AddResourceImage(int index, const std::string& path)
     {
-        resourceImages[index] = NEW(ResourceImage)(path);
+        resourceImages[index] = HUAHUO_NEW(ResourceImage, kMemFile)(path);
     }
 
     void Cleanup()
     {
         for (int i = 0; i < kNbResourceImages; i++)
-            DELETE(resourceImages[i]);
+            HUAHUO_DELETE(resourceImages[i], kMemFile);
     }
 };
 

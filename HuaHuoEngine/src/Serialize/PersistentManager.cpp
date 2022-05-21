@@ -87,14 +87,41 @@ PersistentManager* GetPersistentManagerPtr()
 
 void CleanupPersistentManager()
 {
-    DELETE(gPersistentManager);
+    HUAHUO_DELETE(gPersistentManager, kMemManager);
     gPersistentManager = NULL;
 }
-
 
 void SetPersistentManager(PersistentManager* persistentManager)
 {
     gPersistentManager = persistentManager;
+}
+
+PersistentManager::PersistentManager(MemLabelId label)
+        : m_MemoryLabel(label)
+//        , m_Streams(label)
+//        , m_ThreadedObjectActivationQueue(label)
+//        , m_PreallocatedScriptingObjectCallback(NULL)
+//        , m_PreallocatedScriptingObjectCallbackContext(NULL)
+{
+    // m_ForcePreloadReferencedObjects = false;
+
+    for (int i = 0; i < kActiveNameSpaceCount; i++)
+        m_ActiveNameSpace[i] = -1;
+
+    m_Remapper = HUAHUO_NEW_AS_ROOT(Remapper , kMemSerialization, kRemapperAllocArea, "Remapper") ();
+
+#if DEBUGMODE
+    m_PreventLoadingFromFile = -1;
+    m_AllowLoadingFromDisk = true;
+#endif
+
+#if PERSISTENT_MANAGER_VERIFY_LOCK_ORDER
+    m_MutexLockCount = 0;
+    m_IntegrationMutexLockCount = 0;
+    m_IntegrationMutexThreadID = 0;
+#endif
+
+    m_Abort = 0;
 }
 
 LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIndex(const SerializedObjectIdentifier& globalIdentifier)

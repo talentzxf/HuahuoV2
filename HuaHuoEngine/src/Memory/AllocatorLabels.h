@@ -56,6 +56,10 @@ struct EXPORT_COREMODULE MemLabelRootId
                 MemLabelId rootLabel;
         };
 
+inline EXPORT_COREMODULE MemLabelIdentifier GetLabelIdentifier(MemLabelRef label) {return label.identifier; }
+inline EXPORT_COREMODULE AllocationRootWithSalt GetRootReference(MemLabelRef label) { return label.m_RootReferenceWithSalt; }
+inline EXPORT_COREMODULE bool IsTempLabel(MemLabelRef label) { return GetLabelIdentifier(label) < kMemRegularLabels; }
+
 inline EXPORT_COREMODULE MemLabelId CreateMemLabel(MemLabelIdentifier id) { const MemLabelId memLabel = { id }; return memLabel; }
 inline EXPORT_COREMODULE MemLabelId CreateMemLabel(MemLabelIdentifier id, AllocationRootWithSalt rootRef) { const MemLabelId memLabel = { id }; return memLabel; }
 inline EXPORT_COREMODULE MemLabelId CreateMemLabel(MemLabelIdentifier id, void* memoryOwner) { const MemLabelId memLabel = { id }; return memLabel; }
@@ -63,5 +67,18 @@ inline EXPORT_COREMODULE MemLabelId CreateMemLabel(MemLabelIdentifier id, void* 
 inline EXPORT_COREMODULE MemLabelId CreateMemLabel(MemLabelId lbl, AllocationRootWithSalt rootRef) { return CreateMemLabel(lbl.identifier); }
 inline EXPORT_COREMODULE MemLabelId CreateMemLabel(MemLabelId lbl, void* memoryOwner) { return CreateMemLabel(lbl.identifier); }
 inline EXPORT_COREMODULE MemLabelId CreateMemLabel(MemLabelId lbl, MemLabelRef owner) { return lbl; }
+inline EXPORT_COREMODULE MemLabelId SetCurrentMemoryOwner(MemLabelRef label) { return label; }
 
+
+#if ENABLE_MEM_PROFILER
+#define DO_LABEL_STRUCT(Name) extern EXPORT_COREMODULE MemLabelId Name;
+#else
+#define DO_LABEL_STRUCT(Name) const MemLabelId Name =  { Name##Id };
+#endif
+#define DO_LABEL(Name) DO_LABEL_STRUCT(kMem##Name)
+#define DO_TEMP_LABEL(Name) DO_LABEL_STRUCT(kMem##Name)
+#include "AllocatorLabelNames.h"
+#undef DO_LABEL
+#undef DO_TEMP_LABEL
+#undef DO_LABEL_STRUCT
 #endif //HUAHUOENGINE_ALLOCATORLABELS_H

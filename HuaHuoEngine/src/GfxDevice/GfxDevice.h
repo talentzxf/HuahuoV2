@@ -136,7 +136,7 @@ private:
 
 class GfxDevice {
 public:
-    explicit GfxDevice();
+    explicit GfxDevice(MemLabelRef label);
     virtual ~GfxDevice();
 
     GfxDevice(GfxDevice&) = delete;
@@ -149,10 +149,11 @@ public:
     inline bool     IsInsideFrame() const { return m_GfxContextData.GetInsideFrame(); }
 
     void ExecuteAsync(int count, GfxDeviceAsyncCommand::Func* func, GfxDeviceAsyncCommand::ArgScratch** scratches, const GfxDeviceAsyncCommand::Arg* arg, const JobFence& depends);
-
+    MemLabelId GetMemoryLabel() { return m_MemoryLabel; }
 protected:
     // Mutable state
     GfxContextData      m_GfxContextData;
+    MemLabelId          m_MemoryLabel;
 };
 
 // GetGfxDevice() returns the graphics device that you should use in rendering code.
@@ -191,7 +192,7 @@ inline void AutoGfxDeviceBeginEndFrame::End()
 class GfxThreadableDevice : public GfxDevice
 {
 public:
-    GfxThreadableDevice(/*MemLabelRef label*/) {};// : GfxDevice(label) {}
+    GfxThreadableDevice(MemLabelRef label) : GfxDevice(label) {}
     //! Called by the worker thread on thread startup
     virtual void    OnDeviceCreated(bool /*callingFromRenderThread*/) {}
 

@@ -12,6 +12,11 @@
 
 Object::IDToPointerMap*    Object::ms_IDToPointer = NULL;
 Object::TypeToObjectSet*   Object::ms_TypeToObjectSet = NULL;
+
+static Object::ObjectDestroyCallbackFunction* gDestroyedCallbackFunc = NULL;
+
+static MemLabelRootId* gBaseObjectManagerContainer = NULL;
+
 static volatile size_t gLowestInstanceID = -10;
 
 namespace BaseObjectManager
@@ -54,8 +59,11 @@ static int GetIdToPointerMapInitialBucketSize()
     return 32 * 1024;
 }
 
-Object::Object(ObjectCreationMode mode)
+Object::Object(MemLabelId label, ObjectCreationMode mode)
 {
+    Assert((long)GetLabelIdentifier(label) < (long)(1 << kMemLabelBits));
+    m_MemLabelIdentifier = GetLabelIdentifier(label);
+
     m_InstanceID = InstanceID_None;
     m_CachedTypeIndex = INVALID_CACHED_TYPEINDEX;
 
@@ -66,10 +74,11 @@ Object::Object(ObjectCreationMode mode)
 
 void Object::StaticInitialize()
 {
-    Object::ms_IDToPointer = NEW_AS_ROOT(Object::IDToPointerMap, "", "Object::IDToPointerMap") (GetIdToPointerMapInitialBucketSize());
+    // Object::ms_IDToPointer = HUAHUO_NEW(Object::IDToPointerMap, gBaseObjectManagerContainer->rootLabel) (GetIdToPointerMapInitialBucketSize(), gBaseObjectManagerContainer->rootLabel);
+    Object::ms_IDToPointer = HUAHUO_NEW(Object::IDToPointerMap, kMemDefault);
 
-    // Object::ms_TypeToObjectSet = NEW_AS_ROOT(Object::TypeToObjectSet, "", "Object::TypeToObjectSet")(RTTI::RuntimeTypeArray::MAX_RUNTIME_TYPES);
-    Object::ms_TypeToObjectSet = new Object::TypeToObjectSet[RTTI::RuntimeTypeArray::MAX_RUNTIME_TYPES];
+    void* memory = HUAHUO_MALLOC(gBaseObjectManagerContainer->rootLabel, sizeof(Object::TypeToObjectSet) * RTTI::RuntimeTypeArray::MAX_RUNTIME_TYPES);
+    Object::ms_TypeToObjectSet = AutoLabelConstructor<Object::TypeToObjectSet>::construct_n(memory, RTTI::RuntimeTypeArray::MAX_RUNTIME_TYPES, gBaseObjectManagerContainer->rootLabel);
 
     TypeRegistrationDesc desc;
     memset(&desc, 0, sizeof(TypeRegistrationDesc));
@@ -277,7 +286,7 @@ void DestroySingleObject(Object* o)
     delete_object_internal(o);
 }
 
-Object* Object::Produce(const HuaHuo::Type* targetCastType, const HuaHuo::Type* produceType, InstanceID instanceID, ObjectCreationMode mode)
+Object* Object::Produce(const HuaHuo::Type* targetCastType, const HuaHuo::Type* produceType, InstanceID instanceID, MemLabelId memLabel, ObjectCreationMode mode)
 {
 #if ENABLE_ASSERTIONS
     switch (mode)
@@ -315,7 +324,7 @@ Object* Object::Produce(const HuaHuo::Type* targetCastType, const HuaHuo::Type* 
     if (factory == NULL)
         return NULL;
 
-    Object* newObject = factory(mode);
+    Object* newObject = factory(memLabel, mode);
     if (newObject == NULL)
         return NULL;
 

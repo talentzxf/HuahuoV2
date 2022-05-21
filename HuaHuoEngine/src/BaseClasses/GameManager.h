@@ -15,8 +15,8 @@ class EXPORT_COREMODULE GameManager : public Object
     REGISTER_CLASS(GameManager);
 public:
 
-    GameManager(/*MemLabelId label,*/ ObjectCreationMode mode) : Super(/*label,*/ mode) {}
-    // virtual void MainThreadCleanup() override;
+    GameManager(MemLabelId label, ObjectCreationMode mode) : Super(label, mode) {}
+    virtual void MainThreadCleanup() override;
     virtual bool ShouldWriteForBuild() const { return true; }
 
     ///@TODO: Get rid of this. I am not sure why this is not just done in the destructor / cleanup class
@@ -35,7 +35,7 @@ public:
     virtual char const* GetName() const override { return GetTypeName(); }
 
 
-    LevelGameManager(/*MemLabelId label,*/ ObjectCreationMode mode);
+    LevelGameManager(MemLabelId label, ObjectCreationMode mode);
 
     //  virtual ~LevelGameManager ();
 };
@@ -48,7 +48,7 @@ class EXPORT_COREMODULE GlobalGameManager : public GameManager
     DECLARE_OBJECT_SERIALIZE();
 public:
 
-    GlobalGameManager(/*MemLabelId label,*/ ObjectCreationMode mode);
+    GlobalGameManager(MemLabelId label, ObjectCreationMode mode);
 
     //  virtual ~GlobalGameManager ();
 

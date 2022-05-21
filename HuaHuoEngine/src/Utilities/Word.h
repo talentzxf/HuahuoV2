@@ -50,4 +50,30 @@ inline char ToUpper(char c) { return (c >= 'a' && c <= 'z') ? (c - ('a' - 'A')) 
 inline unsigned char ToLower(unsigned char c) { return (c >= 'A' && c <= 'Z') ? (c + 'a' - 'A') : c; }
 inline unsigned char ToUpper(unsigned char c) { return (c >= 'a' && c <= 'z') ? (c - ('a' - 'A')) : c; }
 
+template<typename TString1, typename TString2>
+inline bool StrEquals(const TString1& str1, const TString2& str2)
+{
+    using namespace StringTraits;
+    if ((HasConstantTimeLength<TString1>::value && HasConstantTimeLength<TString2>::value) &&
+        (GetLength(str1) != GetLength(str2)))
+        return false;
+    return StrCmp(AsConstTChars(str1), AsConstTChars(str2)) == 0;
+}
+
+template<typename TIterator, typename TString>
+TIterator FindStringInRange(TIterator begin, TIterator end, TString str, bool ignoreCase)
+{
+    if (ignoreCase)
+    {
+        while (begin != end && !StrIEquals(*begin, str))
+            ++begin;
+    }
+    else
+    {
+        while (begin != end && !StrEquals(*begin, str))
+            ++begin;
+    }
+
+    return begin;
+}
 #endif //HUAHUOENGINE_WORD_H

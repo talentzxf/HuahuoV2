@@ -1,7 +1,7 @@
 #include "MessageHandler.h"
 #include "MessageData.h"
 
-MessageHandler* MessageHandler::ms_Instance = NEW(MessageHandler); //(kMemPermanent);
+MessageHandler* MessageHandler::ms_Instance = HUAHUO_NEW(MessageHandler, kMemPermanent);
 
 MessageForwarder::MessageForwarder()
 //    : m_SupportedMessages(kMemPermanent)

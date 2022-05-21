@@ -94,9 +94,9 @@ void GameObject::Activate() {
     // So do not access it any further
 }
 
-GameObject::GameObject( /*MemLabelId label, */ ObjectCreationMode mode)
-        : Super( /*label,*/ mode),
-//          m_Component(label),
+GameObject::GameObject( MemLabelId label, ObjectCreationMode mode)
+        : Super( label, mode),
+          // m_Component(label),
           m_ActiveGONode(this) {
 //    m_SupportedMessages = 0;
     m_ActivationState = kNotActivating;
@@ -276,12 +276,12 @@ GameObjectManager *GameObjectManager::s_Instance = NULL;
 
 void GameObjectManager::StaticInitialize() {
     Assert(GameObjectManager::s_Instance == NULL);
-    GameObjectManager::s_Instance = NEW(GameObjectManager/*, kMemBaseObject*/);
+    GameObjectManager::s_Instance = HUAHUO_NEW(GameObjectManager, kMemBaseObject);
 }
 
 void GameObjectManager::StaticDestroy() {
     Assert(GameObjectManager::s_Instance);
-    DELETE(GameObjectManager::s_Instance /*, kMemBaseObject*/);
+    HUAHUO_DELETE(GameObjectManager::s_Instance , kMemBaseObject);
 }
 
 GameObjectManager &GetGameObjectManager() {

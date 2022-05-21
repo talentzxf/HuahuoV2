@@ -61,10 +61,9 @@ void ScriptableRenderContext::ExecuteCommandBuffer(RenderingCommandBuffer& comma
     commandBuffer.ValidateForSRP(m_IsInsideRenderPassForValidation);
 #endif
 
-//    // Copy the command buffer to allow the passed in one to be cleared and reused
-//    MemLabelRef memLabel = commandBuffer.GetMemLabel();
-//    RenderingCommandBuffer* clonedCommandBuffer = UNITY_NEW(RenderingCommandBuffer, memLabel)(memLabel, commandBuffer);
-    RenderingCommandBuffer* clonedCommandBuffer = NEW(RenderingCommandBuffer)(commandBuffer);
+    // Copy the command buffer to allow the passed in one to be cleared and reused
+    MemLabelRef memLabel = commandBuffer.GetMemLabel();
+    RenderingCommandBuffer* clonedCommandBuffer = HUAHUO_NEW(RenderingCommandBuffer, memLabel)(memLabel, commandBuffer);
 
     UInt32 index = static_cast<UInt32>(m_CommandBuffers.size());
     m_CommandBuffers.push_back(clonedCommandBuffer);
@@ -85,10 +84,8 @@ void ScriptableRenderContext::DrawRenderers(ScriptableCullResults *cullResults, 
         cmd.isPassTagName = isPassTagName;
 
         // tagValues and stateBlocks ownership is transferred to ScriptableRenderContextArg
-//        cmd.stateTagValues = reinterpret_cast<ShaderTagID*>(UNITY_MALLOC_ALIGNED(kMemTempJobAlloc, sizeof(ShaderTagID) * stateCount, alignof(ShaderTagID)));
-//        cmd.stateBlocks = reinterpret_cast<RenderStateBlock*>(UNITY_MALLOC_ALIGNED(kMemTempJobAlloc, sizeof(RenderStateBlock) * stateCount, alignof(RenderStateBlock)));
-        cmd.stateTagValues = ALLOC(ShaderTagID, sizeof(ShaderTagID) * stateCount);
-        cmd.stateBlocks = ALLOC(RenderStateBlock, sizeof(RenderStateBlock) * stateCount);
+        cmd.stateTagValues = reinterpret_cast<ShaderTagID*>(HUAHUO_MALLOC_ALIGNED(kMemTempJobAlloc, sizeof(ShaderTagID) * stateCount, alignof(ShaderTagID)));
+        cmd.stateBlocks = reinterpret_cast<RenderStateBlock*>(HUAHUO_MALLOC_ALIGNED(kMemTempJobAlloc, sizeof(RenderStateBlock) * stateCount, alignof(RenderStateBlock)));
         memcpy(cmd.stateTagValues, tagValues, sizeof(ShaderTagID) * stateCount);
         memcpy(cmd.stateBlocks, stateBlocks, sizeof(RenderStateBlock) * stateCount);
     }

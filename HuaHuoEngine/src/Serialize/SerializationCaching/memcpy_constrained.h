@@ -14,7 +14,7 @@ FORCE_INLINE void memcpy_constrained_src(void* dst, const void* src, int size, c
 
     int offset = fromClamped - (UInt8*)src;
     size = toClamped - fromClamped;
-    MEMCPY((UInt8*)dst + offset, (UInt8*)src + offset, size);
+    HUAHUO_MEMCPY((UInt8*)dst + offset, (UInt8*)src + offset, size);
 }
 
 FORCE_INLINE void memcpy_constrained_dst(void* dst, const void* src, int size, const void* dstFrom, void* dstTo)
@@ -24,5 +24,5 @@ FORCE_INLINE void memcpy_constrained_dst(void* dst, const void* src, int size, c
 
     int offset = fromClamped - (UInt8*)dst;
     size = toClamped - fromClamped;
-    MEMCPY((UInt8*)dst + offset, (UInt8*)src + offset, size);
+    HUAHUO_MEMCPY((UInt8*)dst + offset, (UInt8*)src + offset, size);
 }

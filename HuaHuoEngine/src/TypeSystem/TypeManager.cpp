@@ -10,13 +10,13 @@
 void TypeManager::InitializeGlobalInstance()
 {
     AssertMsg(ms_Instance == NULL, "Global TypeManager instance is already initialized");
-    ms_Instance = NEW_AS_ROOT(TypeManager, "Managers", "RTTI")(RTTI::GetRuntimeTypes());
+    ms_Instance = HUAHUO_NEW_AS_ROOT_NO_LABEL(TypeManager(RTTI::GetRuntimeTypes()), kMemBaseObject, "Managers", "RTTI");
 }
 
 void TypeManager::CleanupGlobalInstance()
 {
     AssertMsg(ms_Instance != NULL, "Global TypeManager instance is not initialized");
-    delete ms_Instance;
+    HUAHUO_DELETE(ms_Instance, kMemBaseObject);
 }
 
 static TypeRegistrationDesc InitializeTypeRegistrationDesc(PersistentTypeID typeID, RTTI* type, const char* name, const char* nameSpace, int size, bool isStripped)

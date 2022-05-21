@@ -7,12 +7,12 @@
 
 RenderPipelineManager* g_RenderPipelineMgr = NULL;
 void CreateRenderPipelineManager(void*){
-    g_RenderPipelineMgr = NEW(RenderPipelineManager);
+    g_RenderPipelineMgr = HUAHUO_NEW(RenderPipelineManager, kMemRenderer);
 }
 
 void DestroyRenderPipelineManager(void*){
     Assert(g_RenderPipelineMgr != NULL);
-    DELETE(g_RenderPipelineMgr);
+    HUAHUO_DELETE(g_RenderPipelineMgr, kMemRenderer);
     g_RenderPipelineMgr = NULL;
 }
 

@@ -53,7 +53,7 @@ class Camera : public Behaviour {
     REGISTER_CLASS(Camera);
     DECLARE_OBJECT_SERIALIZE();
 public:
-    Camera(/*MemLabelId label,*/ ObjectCreationMode mode) : Super(mode)
+    Camera(MemLabelId label, ObjectCreationMode mode) : Super(label, mode)
             ,   m_IsRendering(false)
         ,   m_IsRenderingStereo(false)
         ,   m_IsStandaloneCustomRendering(false)

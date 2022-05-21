@@ -43,8 +43,8 @@ TimeManager::TimeHolder::TimeHolder()
 {
 }
 
-TimeManager::TimeManager(/*MemLabelId label,*/ ObjectCreationMode mode)
-    :   Super(/*label,*/ mode)
+TimeManager::TimeManager(MemLabelId label, ObjectCreationMode mode)
+    :   Super(label, mode)
     ,   m_CullFrameCount(0)
 {
     m_SetTimeManually = false;

@@ -131,12 +131,12 @@ void MessageIdentifier::CheckIntegrity()
 
 static void CreateRegisteredMessageIdentifiersArray(void*)
 {
-    gRegisteredMessageIdentifiers = NEW(MessageIdentifier::RegisteredMessages);
+    gRegisteredMessageIdentifiers = HUAHUO_NEW(MessageIdentifier::RegisteredMessages, kMemPermanent);
 }
 
 static void DestroyRegisteredMessageIdentifiersArray(void*)
 {
-    DELETE(gRegisteredMessageIdentifiers);//, kMemPermanent);
+    HUAHUO_DELETE(gRegisteredMessageIdentifiers, kMemPermanent);
     gOptimizedMessageCount = 0;
 }
 

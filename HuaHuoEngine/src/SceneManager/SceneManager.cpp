@@ -9,13 +9,12 @@
 static RuntimeSceneManager* g_RuntimeSceneManager = NULL;
 static void StaticInitializeRuntimeSceneManager(void*)
 {
-    g_RuntimeSceneManager = NEW(RuntimeSceneManager);//, kMemSceneManager, "Managers", "RuntimeSceneManager")();
+    g_RuntimeSceneManager = HUAHUO_NEW_AS_ROOT(RuntimeSceneManager, kMemSceneManager, "Managers", "RuntimeSceneManager")();
 }
 
 static void StaticDestroyRuntimeSceneManager(void*)
 {
-    // UNITY_DELETE(g_RuntimeSceneManager, kMemSceneManager);
-    DELETE(g_RuntimeSceneManager)
+    HUAHUO_DELETE(g_RuntimeSceneManager, kMemSceneManager)
     g_RuntimeSceneManager = NULL;
 }
 
@@ -30,7 +29,7 @@ RuntimeSceneManager* GetSceneManagerPtr(){
     return g_RuntimeSceneManager;
 }
 
-RuntimeSceneManager::RuntimeSceneManager(/*MemLabelRef label*/)
+RuntimeSceneManager::RuntimeSceneManager(MemLabelRef label)
         : m_ActiveScene(NULL)
         // , m_DontDestroyOnLoadScene(AllocateSceneHandle(), label, "DontDestroyOnLoad", "", UnityGUID(), -1, false)
 {
@@ -57,7 +56,10 @@ RuntimeSceneManager::~RuntimeSceneManager()
 
 HuaHuoScene* RuntimeSceneManager::CreateScene()
 {
-    HuaHuoScene* scene = NEW(HuaHuoScene);
+    HuaHuoScene* scene = HUAHUO_NEW(HuaHuoScene, kMemSceneManager); // (
+//            AllocateSceneHandle(),
+//            CreateMemLabel(kMemSceneManager, &GetSceneManager()),
+//            "", "", UnityGUID(), -1, false);
     m_Scenes.push_back(scene);
     return scene;
 }

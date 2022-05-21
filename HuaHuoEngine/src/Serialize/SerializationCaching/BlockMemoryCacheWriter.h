@@ -27,6 +27,7 @@ protected:
 
     size_t      m_Size;
     SInt32      m_LockCount;
+    MemLabelId  m_AllocLabel;
 
     //  It is possible to use the custom allocator for this index as well -- however,
     //  using the tracking linear tempory allocator is most efficient, when deallocating
@@ -39,8 +40,9 @@ protected:
 
 public:
 
-    BlockMemoryCacheWriter()
-    :m_Filename("MemoryStream")
+    BlockMemoryCacheWriter(MemLabelId label)
+            : m_AllocLabel(label)
+            // , m_Blocks(label)
     {
         m_Blocks.reserve(kNumBlockReservations);
         m_Size = 0;
@@ -51,7 +53,7 @@ public:
     {
         Assert(m_LockCount == 0);
         for (BlockVector::iterator i = m_Blocks.begin(); i != m_Blocks.end(); i++)
-            FREE(*i);
+            HUAHUO_FREE(m_AllocLabel,*i);
     }
 
     void ResizeBlocks(size_t newBlockSize)
@@ -61,7 +63,7 @@ public:
         // free the excess blocks when resizing to a smaller blocksize
         if (oldBlockSize > newBlockSize)
             for (size_t block = newBlockSize; block < oldBlockSize; block++)
-                FREE(m_Blocks[block]);
+                HUAHUO_FREE(m_AllocLabel,m_Blocks[block]);
 
         if (m_Blocks.capacity() < newBlockSize)
             m_Blocks.reserve(m_Blocks.capacity() * 2);
@@ -69,7 +71,7 @@ public:
         m_Blocks.resize(newBlockSize, NULL);
 
         for (size_t block = oldBlockSize; block < newBlockSize; block++)
-            m_Blocks[block] = ALLOC_ARRAY(UInt8,kBlockCacherCacheSize);
+            m_Blocks[block] = (UInt8*)HUAHUO_MALLOC(m_AllocLabel, kBlockCacherCacheSize);
     }
 
     virtual void LockCacheBlock(size_t block, UInt8** startPos, UInt8** endPos)

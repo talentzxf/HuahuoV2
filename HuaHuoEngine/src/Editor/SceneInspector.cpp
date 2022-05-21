@@ -29,15 +29,14 @@ void SceneTracker::StaticInitialize(void*)
     Transform::RegisterHierarchyChangedCallback(TransformHierarchyChangedCallback);
     Transform::RegisterHierarchyChangedSetParentCallback(TransformHierarchyChangedSetParentCallback);
 
-    // gSceneTracker = UNITY_NEW_AS_ROOT(SceneTracker, kMemEditorUtility, "Editor", "SceneTracker") ();
-    gSceneTracker = NEW(SceneTracker);
+    gSceneTracker = HUAHUO_NEW_AS_ROOT(SceneTracker, kMemEditorUtility, "Editor", "SceneTracker") ();
 }
 
 void SceneTracker::StaticDestroy(void*) {
-    DELETE(gSceneTracker)
+    HUAHUO_DELETE(gSceneTracker, kMemEditorUtility);
 }
 
-SceneTracker::SceneTracker(/*MemLabelId label*/)
+SceneTracker::SceneTracker(MemLabelId label)
 {
 //    m_DontSendSelectionChanged = 0;
 //    m_OldActive = m_Active = m_OldActiveGameObject = m_ActiveGameObject = InstanceID_None;

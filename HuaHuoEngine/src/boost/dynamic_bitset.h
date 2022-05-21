@@ -68,7 +68,7 @@ class dynamic_bitset_base
 	{
 		if (m_num_blocks != 0)
 		{
-			m_bits = reinterpret_cast<Block*> (MALLOC_ALIGNED(m_label, m_num_blocks * sizeof(Block), sizeof(Block)));
+			m_bits = reinterpret_cast<Block*> (HUAHUO_MALLOC_ALIGNED(m_label, m_num_blocks * sizeof(Block), sizeof(Block)));
 			memset(m_bits, 0, m_num_blocks * sizeof(Block)); // G.P.S. ask to Jeremy
 		}
 		else
@@ -77,7 +77,7 @@ class dynamic_bitset_base
 	
 	~dynamic_bitset_base()
 	{
-		FREE(/*m_label,*/ m_bits);
+		HUAHUO_FREE(m_label, m_bits);
 	}
 
 	MemLabelId  m_label;
@@ -391,20 +391,20 @@ inline void dynamic_bitset::resize(size_type num_bits, bool value)
 	{
 		this->m_num_bits = 0;
 		this->m_num_blocks = 0;
-		FREE(/*m_label,*/ this->m_bits);
+		HUAHUO_FREE(m_label, this->m_bits);
 		this->m_bits = 0;
 		return;
 	}
 
 	size_type new_nblocks = this->calc_num_blocks(num_bits);
-	Block* d = reinterpret_cast<Block*> (MALLOC_ALIGNED(m_label, sizeof(Block) * new_nblocks, sizeof(Block)));
+	Block* d = reinterpret_cast<Block*> (HUAHUO_MALLOC_ALIGNED(m_label, sizeof(Block) * new_nblocks, sizeof(Block)));
 	
 	// shrink
 	if (num_bits < size())
 	{ 
 		std::copy(this->m_bits, this->m_bits + new_nblocks, d);
 		std::swap(d, this->m_bits);
-		FREE(/*m_label,*/ d);
+		HUAHUO_FREE(m_label, d);
 	}
 	// grow
 	else
@@ -418,7 +418,7 @@ inline void dynamic_bitset::resize(size_type num_bits, bool value)
 
 		if (d != 0)
 		{
-            FREE(/*m_label,*/ d);
+            HUAHUO_FREE(m_label, d);
 		}
 	}
 	this->m_num_bits = num_bits;
@@ -430,7 +430,7 @@ inline void dynamic_bitset::clear()
 {
 	if (this->m_bits != 0)
 	{
-        FREE(/*m_label,*/ this->m_bits);
+        HUAHUO_FREE(m_label, this->m_bits);
 		this->m_bits = 0;
 		this->m_num_bits = 0;
 		this->m_num_blocks = 0;

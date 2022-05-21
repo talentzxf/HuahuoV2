@@ -11,7 +11,7 @@ class Behaviour: public BaseComponent{
     REGISTER_CLASS(Behaviour);
     DECLARE_OBJECT_SERIALIZE();
 public:
-    Behaviour(ObjectCreationMode mode) : Super(mode) { m_Enabled = true; m_IsAdded = false; }
+    Behaviour(MemLabelId label, ObjectCreationMode mode) : Super(label, mode) { m_Enabled = true; m_IsAdded = false; }
 
     virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
 

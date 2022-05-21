@@ -7,6 +7,7 @@
 #include <cstddef>
 #include "BaseClasses/BaseTypes.h"
 #include "Variant.h"
+#include "Memory/AllocatorLabels.h"
 #include <string>
 class Object;
 enum ObjectCreationMode
@@ -26,7 +27,7 @@ struct RTTI{
     {
         UndefinedPersistentTypeID = -1
     };
-    typedef Object* FactoryFunction (ObjectCreationMode mode);
+    typedef Object* FactoryFunction (MemLabelId label, ObjectCreationMode mode);
 
     enum
     {

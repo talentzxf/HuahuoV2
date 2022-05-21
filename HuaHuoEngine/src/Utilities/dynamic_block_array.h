@@ -13,6 +13,7 @@
 #include "Internal/CoreMacros.h"
 #include "Logging/LogAssert.h"
 #include "Memory/MemoryMacros.h"
+#include "StaticAssert.h"
 
 
 template<typename T, size_t blockSize>
@@ -119,24 +120,24 @@ public:
     typedef internal_iterator<const T, const container> const_iterator;
     typedef ptrdiff_t difference_type;
 
-//    dynamic_block_array()
-//        : m_size(0)
-//    {
-//        m_label = SetCurrentMemoryOwner(kMemDynamicArray);
-//    }
-
-    dynamic_block_array(/*MemLabelId label*/)
+    dynamic_block_array()
         : m_size(0)
     {
-        //m_label = SetCurrentMemoryOwner(label);
-        //m_data.set_memory_label(m_label);
+        m_label = SetCurrentMemoryOwner(kMemDynamicArray);
+    }
+
+    dynamic_block_array(MemLabelId label)
+        : m_size(0)
+    {
+        m_label = SetCurrentMemoryOwner(label);
+        m_data.set_memory_label(m_label);
     }
 
     dynamic_block_array(const dynamic_block_array& rhs)
         : m_size(0)
     {
-//        m_label = SetCurrentMemoryOwner(rhs.m_label);
-//        m_data.set_memory_label(m_label);
+        m_label = SetCurrentMemoryOwner(rhs.m_label);
+        m_data.set_memory_label(m_label);
         *this = rhs;
     }
 
@@ -167,9 +168,9 @@ public:
 
     void resize_uninitialized(size_t size)
     {
-#if SUPPORTS_HAS_TRIVIAL_DESTRUCTOR
-        CompileTimeAssert(HAS_TRIVIAL_DESTRUCTOR(T), "only trivial types are allowed for resize_uninitialized");
-#endif
+//#if SUPPORTS_HAS_TRIVIAL_DESTRUCTOR
+//        CompileTimeAssert(HAS_TRIVIAL_DESTRUCTOR(T), "only trivial types are allowed for resize_uninitialized");
+//#endif
         ResizerUninitialized resizer;
         resize_with_resizer_internal(size, resizer);
     }
@@ -331,7 +332,7 @@ public:
     {
         while (newSize > capacity())
         {
-            m_data.push_back(NEW(internal_container)());
+            m_data.push_back(HUAHUO_NEW(internal_container, m_label)());
             m_data.back()->reserve(blockSize);
         }
     }
@@ -456,6 +457,6 @@ private:
     }
 
     size_t      m_size;
-//    MemLabelId  m_label;
+    MemLabelId  m_label;
     container   m_data;
 };

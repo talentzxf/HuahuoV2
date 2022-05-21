@@ -13,7 +13,7 @@ class GraphicsSettings :public GlobalGameManager{
     REGISTER_CLASS(GraphicsSettings);
     DECLARE_OBJECT_SERIALIZE();
 public:
-    GraphicsSettings(/*MemLabelId label, */ObjectCreationMode mode);
+    GraphicsSettings(MemLabelId label, ObjectCreationMode mode);
 
     static void InitializeClass();
     static void CleanupClass();

@@ -16,10 +16,10 @@
 
 struct ScriptableRenderContextArg : public GfxDeviceAsyncCommand::Arg
 {
-    ScriptableRenderContextArg(/*MemLabelId memLabel*/)
-    //: GfxDeviceAsyncCommand::Arg(memLabel)
+    ScriptableRenderContextArg(MemLabelId memLabel)
+    : GfxDeviceAsyncCommand::Arg(memLabel)
 //            , objectDatas(memLabel)
-            : sharedRendererScene(NULL)
+            , sharedRendererScene(NULL)
             , isPassTagName(false)
             , overrideMaterial(NULL)
             , stateTagValues(nullptr)
@@ -32,8 +32,7 @@ struct ScriptableRenderContextArg : public GfxDeviceAsyncCommand::Arg
 //        sharedRendererScene->Release();
 //        if (overrideMaterial && overrideMaterial->sharedMaterialData)
 //            overrideMaterial->sharedMaterialData->Release();
-//        UNITY_DELETE(overrideMaterial, kMemTempJobAlloc);
-          DELETE(overrideMaterial)
+        HUAHUO_DELETE(overrideMaterial, kMemTempJobAlloc);
 //        UNITY_FREE(kMemTempJobAlloc, stateTagValues);
 //        UNITY_FREE(kMemTempJobAlloc, stateBlocks);
         ClearFenceWithoutSync(prepareFence);
@@ -63,8 +62,8 @@ struct ScriptableRenderLoopScratch : public GfxDeviceAsyncCommand::ArgScratch
     Vector4f                    lightmapDecodeValues;
     Vector4f                    realtimeLightmapDecodeValues;
 
-    ScriptableRenderLoopScratch(/*MemLabelId label*/)
-//            : GfxDeviceAsyncCommand::ArgScratch(label)
+    ScriptableRenderLoopScratch(MemLabelId label)
+            : GfxDeviceAsyncCommand::ArgScratch(label)
 //            , passContext(label)
     {}
 
@@ -75,10 +74,8 @@ struct ScriptableRenderLoopScratch : public GfxDeviceAsyncCommand::ArgScratch
 
 void CleanupDrawRenderersCommand(DrawRenderersCommand& cmd)
 {
-//    UNITY_FREE(kMemTempJobAlloc, cmd.stateTagValues);
-//    UNITY_FREE(kMemTempJobAlloc, cmd.stateBlocks);
-    FREE(cmd.stateTagValues);
-    FREE(cmd.stateBlocks);
+    HUAHUO_FREE(kMemTempJobAlloc, cmd.stateTagValues);
+    HUAHUO_FREE(kMemTempJobAlloc, cmd.stateBlocks);
 }
 
 bool NodeHasMotion(const RenderNode& node, SInt32 motionVectorFrameIndex)
@@ -379,8 +376,7 @@ ScriptableRenderContextArg* PrepareDrawRenderersCommand(const DrawRenderersComma
 //
 //    UInt32 renderJobCount = CalculateRenderJobCount(nodeCount);
 //
-//    ScriptableRenderContextArg* arg = UNITY_NEW(ScriptableRenderContextArg, kMemTempJobAlloc)(kMemTempJobAlloc);
-    ScriptableRenderContextArg* arg = NEW(ScriptableRenderContextArg);//, kMemTempJobAlloc)(kMemTempJobAlloc);
+    ScriptableRenderContextArg* arg = HUAHUO_NEW(ScriptableRenderContextArg, kMemTempJobAlloc)(kMemTempJobAlloc);
 //    arg->command = cmd;
 //    PPtr<Material> material =  PPtr<Material>(cmd.drawSettings.overrideMaterialInstanceId);
 //    if (material.IsValid())

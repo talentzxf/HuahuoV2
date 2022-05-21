@@ -7,6 +7,7 @@
 #include "GfxDevice/GfxDeviceTypes.h"
 #include "Math/Color.h"
 #include "Containers/GrowableBuffer.h"
+#include "Core/SharedObject.h"
 
 enum RenderCommandType
 {
@@ -95,7 +96,7 @@ enum RenderCommandType
     kRenderCommandCount
 };
 
-class RenderingCommandBuffer {
+class RenderingCommandBuffer : public ThreadSharedObject<RenderingCommandBuffer>, public NonCopyable {
 public:
     enum
     {
@@ -103,6 +104,10 @@ public:
         kFlagsKeepState = 1,
     };
 public:
+    explicit RenderingCommandBuffer(MemLabelRef label);
+    RenderingCommandBuffer(MemLabelRef label, const RenderingCommandBuffer& other);
+    ~RenderingCommandBuffer();
+
     void AddClearRenderTarget(GfxClearFlags clearFlags, const ColorRGBAf& color, float depth, UInt32 stencil);
     void Release();
 

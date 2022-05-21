@@ -24,12 +24,12 @@ TransformHierarchyChangeDispatch::~TransformHierarchyChangeDispatch()
 
 void TransformHierarchyChangeDispatch::InitializeClass(void*)
 {
-    gTransformHierarchyChangeDispatch = NEW(TransformHierarchyChangeDispatch);
+    gTransformHierarchyChangeDispatch = HUAHUO_NEW(TransformHierarchyChangeDispatch, kMemDefault);
 }
 
 void TransformHierarchyChangeDispatch::CleanupClass(void*)
 {
-    DELETE(gTransformHierarchyChangeDispatch);
+    HUAHUO_DELETE(gTransformHierarchyChangeDispatch, kMemDefault);
 }
 
 void TransformHierarchyChangeDispatch::DispatchSelfAndAllChildren(TransformAccess transform, InterestType interestType)
@@ -44,8 +44,8 @@ void TransformHierarchyChangeDispatch::DispatchSelfAndAllChildren(TransformAcces
 
     TransformAccess* dispatchTransforms = NULL;
     unsigned dispatchTransformCount = 0;
-    // ALLOC_TEMP_AUTO(dispatchTransforms, count);
-    dispatchTransforms = ALLOC_ARRAY(TransformAccess, count);
+    ALLOC_TEMP_AUTO(dispatchTransforms, count);
+    // dispatchTransforms = ALLOC_ARRAY(TransformAccess, count);
 
     for (int systemIndex = 0; systemIndex < kMaxSupportedSystems; systemIndex++)
     {

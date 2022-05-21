@@ -12,7 +12,7 @@ class Remapper
 public:
     static const char *kHighestInstanceIDOverflowErrorMessage;
 
-    Remapper(/*MemLabelRef label = kMemSerialization*/);
+    Remapper(MemLabelRef label = kMemSerialization);
 
     // Allocate - or retrieve, if we already allocated - the in-memory instance ID for the given serialized object reference.
     InstanceID GetOrGenerateInstanceID(const SerializedObjectIdentifier& identifier);

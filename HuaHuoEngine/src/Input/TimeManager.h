@@ -45,7 +45,7 @@ public:
         float m_InvDeltaTime;
     };
 
-    TimeManager(/*MemLabelId label,*/ ObjectCreationMode mode);
+    TimeManager(MemLabelId label, ObjectCreationMode mode);
     // ~TimeManager (); declared-by-macro
 
     virtual void Reset() override;

@@ -3,14 +3,14 @@
 
 const char *Remapper::kHighestInstanceIDOverflowErrorMessage = "The highest instance ID in the Remapper has overflown. The application will now exit.";
 
-Remapper::Remapper(/*MemLabelRef label*/)
+Remapper::Remapper(MemLabelRef label)
     : m_HighestInstanceID(0), m_ActivePreallocatedIDBase(0), m_ActivePreallocatedIDEnd(0), m_ActivePreallocatedSerializedFileIndex(-1)
     // map node contains 3 pointers (left, right, parent)
 #if ENABLE_CUSTOM_ALLOCATORS_FOR_STDMAP
     , m_SerializedObjectIdentifierPool(label, false, "Remapper pool", sizeof(_Map_Node), 16 * 1024)
     , m_SerializedObjectToInstanceID(std::less<SerializedObjectIdentifier>(), m_SerializedObjectIdentifierPool)
 #endif
-    // , m_InstanceIDToSerializedObject(label)
+//    , m_InstanceIDToSerializedObject(label)
 {
 }
 

@@ -4,6 +4,9 @@
 
 #include "Behaviour.h"
 
+void Behaviour::ThreadedCleanup()
+{}
+
 template<class TransferFunc>
 void Behaviour::Transfer(TransferFunc& transfer)
 {

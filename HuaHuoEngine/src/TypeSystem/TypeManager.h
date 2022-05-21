@@ -31,9 +31,7 @@ public:
 
     static TypeManager& Get()
     {
-        if(ms_Instance == NULL){
-            ms_Instance = NEW_AS_ROOT(TypeManager(RTTI::GetRuntimeTypes()),"Managers","RTTI");
-        }
+        Assert(ms_Instance != NULL);
         return *ms_Instance;
     }
 

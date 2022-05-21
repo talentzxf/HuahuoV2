@@ -19,11 +19,11 @@ public:
 public:
     BatchAllocator();
 
-    void Commit(CommitClearMode clearMode);
+    void Commit(MemLabelRef label, CommitClearMode clearMode);
 
-    void Commit()
+    void Commit(MemLabelRef label)
     {
-        Commit(kLeaveUninitialized);
+        Commit(label, kLeaveUninitialized);
     }
 
     // Allocates the root object
@@ -48,7 +48,7 @@ public:
     // Use to avoid false sharing between jobs.
     void PadToCacheLine();
 
-    static void DeallocateRoot(void* dstPtr) { FREE(dstPtr); }
+    static void DeallocateRoot(MemLabelRef label, void* dstPtr) { HUAHUO_FREE(label, dstPtr); }
 
 private:
 
