@@ -37,3 +37,15 @@ int StrICmp(const char* str1, const char* str2)
     }
 }
 
+int StrCmp(const char* str1, const char* str2)
+{
+    for (;;)
+    {
+        int c1 = (unsigned char)*str1++;
+        int c2 = (unsigned char)*str2++;
+
+        if (c1 == 0 || (c1 != c2))
+            return c1 - c2;
+    }
+}
+

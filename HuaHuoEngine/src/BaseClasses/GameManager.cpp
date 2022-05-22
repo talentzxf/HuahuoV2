@@ -6,15 +6,15 @@
 //{
 //}
 //
-//void GameManager::MainThreadCleanup()
-//{
-//    for (int i = 0; i < ManagerContext::kManagerCount; i++)
-//    {
-//        if (GetManagerContext().m_Managers[i] == this)
-//            SetManagerPtrInContext(i, NULL);
-//    }
-//    Super::MainThreadCleanup();
-//}
+void GameManager::MainThreadCleanup()
+{
+    for (int i = 0; i < ManagerContext::kManagerCount; i++)
+    {
+        if (GetManagerContext().m_Managers[i] == this)
+            SetManagerPtrInContext(i, NULL);
+    }
+    Super::MainThreadCleanup();
+}
 
 //void LevelGameManager::ThreadedCleanup() {}
 //void GlobalGameManager::ThreadedCleanup() {}
