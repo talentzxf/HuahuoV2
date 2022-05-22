@@ -12,7 +12,7 @@
 #include "Camera/RenderNodeQueue.h"
 #include "Camera/SharedRendererScene.h"
 #include "Math/Simd/vec-math.h"
-#include "Camera/SharedRenderData.h"
+#include "Camera/SharedRendererData.h"
 
 struct ScriptableRenderContextArg : public GfxDeviceAsyncCommand::Arg
 {

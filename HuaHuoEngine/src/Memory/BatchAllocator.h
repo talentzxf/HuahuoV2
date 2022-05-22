@@ -8,6 +8,8 @@
 #include <cstdlib>
 #include "BaseClasses/BaseTypes.h"
 #include "MemoryMacros.h"
+#include "Utilities/remove_const.h"
+#include "Logging/LogAssert.h"
 
 class BatchAllocator {
 public:
@@ -75,5 +77,78 @@ private:
     Allocation      m_Allocations[kMaxAllocationCount];
 };
 
+template<class T>
+void BatchAllocator::AllocateRoot(T*& dstPtr, size_t count, size_t alignment)
+{
+    // NOTE: For now we assume that first allocation is root allocation
+    // If we have use cases for multiple root allocations, then we need to genaralize this code a bit more...
+    typedef typename core::remove_const<T>::type MutableT;
+    MutableT *&dstPtrMutable = const_cast<MutableT *&>(dstPtr);
+    Assert((void*)&dstPtr == (void*)&dstPtrMutable);
+
+    Assert(m_AllocationCount == 0);
+    alignment = (alignment != 0) ? alignment : alignof(MutableT);
+
+    AllocateInternal(reinterpret_cast<void**>(&dstPtrMutable), -1, sizeof(MutableT), count, alignment);
+
+    dstPtrMutable = NULL;
+}
+
+
+template<class T>
+void BatchAllocator::Allocate(T*& dstPtr, size_t count, size_t alignment)
+{
+    // NOTE: For now we assume that first allocation is root allocation
+    // If we have use cases for multiple root allocations, then we need to genaralize this code a bit more...
+    typedef typename core::remove_const<T>::type MutableT;
+    MutableT *&dstPtrMutable = const_cast<MutableT *&>(dstPtr);
+    Assert((void*)&dstPtr == (void*)&dstPtrMutable);
+
+    Assert(m_AllocationCount >= 1);
+    alignment = (alignment != 0) ? alignment : alignof(MutableT);
+
+    AllocateInternal(reinterpret_cast<void**>(&dstPtrMutable), -1, sizeof(MutableT), count, alignment);
+}
+
+template<class T>
+void BatchAllocator::Reallocate(T*& dstPtr, size_t newCount, size_t srcCount, size_t alignment)
+{
+    // NOTE: For now we assume that first allocation is root allocation
+    // If we have use cases for multiple root allocations, then we need to genaralize this code a bit more...
+    typedef typename core::remove_const<T>::type MutableT;
+    MutableT *&dstPtrMutable = const_cast<MutableT *&>(dstPtr);
+    Assert((void*)&dstPtr == (void*)&dstPtrMutable);
+
+    alignment = (alignment != 0) ? alignment : alignof(MutableT);
+
+    ReallocateInternal(reinterpret_cast<void**>(&dstPtrMutable), sizeof(MutableT), newCount, srcCount, alignment);
+}
+
+template<class T>
+void BatchAllocator::AllocateField(T*& dstPtr, size_t count, size_t alignment)
+{
+    // NOTE: For now we assume that first allocation is root allocation
+    // If we have use cases for multiple root allocations, then we need to genaralize this code a bit more...
+    Assert(m_AllocationCount >= 1);
+
+    typedef typename core::remove_const<T>::type MutableT;
+    MutableT *&dstPtrMutable = const_cast<MutableT *&>(dstPtr);
+    Assert((void*)&dstPtr == (void*)&dstPtrMutable);
+
+    alignment = (alignment != 0) ? alignment : alignof(MutableT);
+
+    AllocateInternal(reinterpret_cast<void**>(&dstPtrMutable), 0, sizeof(MutableT), count, alignment);
+}
+
+inline void BatchAllocator::AllocateField(void*& dstPtr, size_t count, size_t alignment, size_t sizeOf)
+{
+    // NOTE: For now we assume that first allocation is root allocation
+    // If we have use cases for multiple root allocations, then we need to genaralize this code a bit more...
+    Assert(m_AllocationCount >= 1);
+
+    alignment = (alignment != 0) ? alignment : sizeOf;
+
+    AllocateInternal(&dstPtr, 0, sizeOf, count, alignment);
+}
 
 #endif //HUAHUOENGINE_BATCHALLOCATOR_H

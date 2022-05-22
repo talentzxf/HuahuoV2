@@ -115,3 +115,59 @@ bool CameraProject(const Vector3f& p, const Matrix4x4f& cameraToWorld, const Mat
     outP.Set(0.0f, 0.0f, 0.0f);
     return false;
 }
+
+RectInt RectfToRectInt(const Rectf& r)
+{
+    // We have to take care that the viewport doesn't exceed the buffer size (case 569703).
+    // Bad rounding to integer makes D3D11 crash and burn.
+    RectInt result;
+    result.x = RoundfToInt(r.x);
+    result.y = RoundfToInt(r.y);
+    result.SetRight(RoundfToIntPos(r.GetRight()));
+    result.SetBottom(RoundfToIntPos(r.GetBottom()));
+    return result;
+}
+
+bool CameraUnProject(const Vector3f& p, const Matrix4x4f& cameraToWorld, const Matrix4x4f& clipToWorld, const RectInt& viewport, Vector3f& outP, bool offscreen)
+{
+    // pixels to -1..1
+    Vector3f in;
+    in.x = (p.x - viewport.x) * 2.0f / viewport.width - 1.0f;
+    in.y = (p.y - viewport.y) * 2.0f / viewport.height - 1.0f;
+    // It does not matter where the point we unproject lies in depth; so we choose 0.95, which
+    // is further than near plane and closer than far plane, for precision reasons.
+    // In a perspective camera setup (near=0.1, far=1000), a point at 0.95 projected depth is about
+    // 5 units from the camera.
+    in.z = 0.95f;
+
+    Vector3f pointOnPlane;
+    if (clipToWorld.PerspectiveMultiplyPoint3(in, pointOnPlane))
+    {
+        // Now we have a point on the plane perpendicular to the viewing direction. We need to return the one that is on the line
+        // towards this point, and at p.z distance along camera's viewing axis.
+        Vector3f cameraPos = cameraToWorld.GetPosition();
+        Vector3f dir = pointOnPlane - cameraPos;
+
+        // The camera/projection matrices follow OpenGL convention: positive Z is towards the viewer.
+        // So negate it to get into Unity convention.
+        Vector3f forward = -cameraToWorld.GetAxisZ();
+        float distToPlane = Dot(dir, forward);
+        if (Abs(distToPlane) >= 1.0e-6f)
+        {
+            const bool isPerspective = clipToWorld.IsPerspective();
+            if (isPerspective)
+            {
+                dir *= p.z / distToPlane;
+                outP = cameraPos + dir;
+            }
+            else
+            {
+                outP = pointOnPlane - forward * (distToPlane - p.z);
+            }
+            return true;
+        }
+    }
+
+    outP.Set(0.0f, 0.0f, 0.0f);
+    return false;
+}

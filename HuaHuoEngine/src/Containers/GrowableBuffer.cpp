@@ -9,8 +9,7 @@ GrowableBuffer::GrowableBuffer(MemLabelRef label, size_t initialSize, size_t gro
     , m_GrowMode(growMode)
 {
     Assert(initialSize > 0);
-    // m_Buffer = (char*)UNITY_MALLOC_ALIGNED(m_Label, initialSize, 64);
-    m_Buffer = ALLOC(char, initialSize);
+    m_Buffer = (char*)HUAHUO_MALLOC_ALIGNED(m_Label, initialSize, 64);
     m_Size = 0;
 }
 

@@ -13,6 +13,7 @@
 #include "CameraUtil.h"
 #include "CullResults.h"
 #include "SceneManager/HuaHuoScene.h"
+#include "Graphics/RenderTexture.h"
 
 Camera::CopiableState::CopiableState()
         :   m_FieldOfViewBeforeEnablingVRMode(0.0f)
@@ -109,7 +110,7 @@ void Camera::CopiableState::Reset()
 //    m_TransparencySortAxis = GetGraphicsSettings().GetTransparencySortAxis();
     m_ImplicitTransparencySortSettings = true;
     m_CullingMask.m_Bits = 0xFFFFFFFF;
-//    m_TargetTexture = nullptr;
+    m_TargetTexture = nullptr;
     m_AllowDynamicResolution = false;
 
     m_OrthographicSize = 5.0F;
@@ -283,6 +284,15 @@ bool Camera::IsValidToRender() const
     return true;
 }
 
+RectInt Camera::GetScreenViewportRectInt(bool adjustForDynamicScale) const
+{
+    return RectfToRectInt(GetScreenViewportRect(adjustForDynamicScale));
+}
+
+void Camera::GetClipToWorldMatrix(Matrix4x4f& outMatrix) const
+{
+    Matrix4x4f::Invert_Full(GetWorldToClipMatrix(), outMatrix);
+}
 
 void Camera::CustomRenderWithPipeline(ShaderPassContext& passContext, RenderFlag renderFlags, PostProcessCullResults* postProcessCullResults, void* postProcessCullResultsData/*, ScriptingObjectPtr requests*/){
     // If camera's viewport rect is empty or invalid or there's no visible nodes, do nothing.
@@ -325,16 +335,16 @@ void Camera::CustomRenderWithPipeline(ShaderPassContext& passContext, RenderFlag
     ScriptableRenderContext renderContext;
     renderContext.ExtractAndExecuteRenderPipeline(cameras, postProcessCullResults, postProcessCullResultsData);
 
-//    // Note: we setup current target texture to point to final RT, after we have done rendering. This is somewhat
-//    // confusing, as the variable is supposed to only mean something while we're rendering. However looks like quite
-//    // some code might dependent on it's value being valid even after rendering is finished (hard to say why,
-//    // the code has existed since forever). Whenever Camera gets serious refactoring (so that is only stores "settings",
-//    // and all rendering state is in some sort of "context"), would be nice to clean this stateful mess.
-//    // Stereo rendering overrides m_CurrentTargetTexture, so we shouldn't restore it here.
-//    if (!m_IsRenderingStereo)
-//    {
-//        m_CurrentTargetTexture = m_State.m_TargetTexture;
-//    }
+    // Note: we setup current target texture to point to final RT, after we have done rendering. This is somewhat
+    // confusing, as the variable is supposed to only mean something while we're rendering. However looks like quite
+    // some code might dependent on it's value being valid even after rendering is finished (hard to say why,
+    // the code has existed since forever). Whenever Camera gets serious refactoring (so that is only stores "settings",
+    // and all rendering state is in some sort of "context"), would be nice to clean this stateful mess.
+    // Stereo rendering overrides m_CurrentTargetTexture, so we shouldn't restore it here.
+    if (!m_IsRenderingStereo)
+    {
+        m_CurrentTargetTexture = m_State.m_TargetTexture;
+    }
 
     m_IsRendering = false;
 
@@ -415,7 +425,7 @@ bool Camera::GetStereoEnabled() const
 
 static inline Rectf GetCameraTargetRect(const Camera& camera, bool zeroOrigin, bool isRenderingStereo, bool adjustForDynamicScale)
 {
-//    RenderTexture* target = camera.GetTargetTexture();
+    RenderTexture* target = camera.GetTargetTexture();
 //    if (target != NULL)
 //    {
 //        if (adjustForDynamicScale)
@@ -608,7 +618,7 @@ void Camera::Transfer(TransferFunction& transfer)
     TRANSFER_STATE(m_CullingMask);
     TRANSFER_STATE_WITH_FLAGS(m_RenderingPath, kDontAnimate);
 
-//    TRANSFER_STATE(m_TargetTexture);
+    TRANSFER_STATE(m_TargetTexture);
     TRANSFER_STATE_WITH_FLAGS(m_TargetDisplay, kDontAnimate);   // Aligned
 //    TRANSFER_ENUM_WITH_NAME(m_State.m_TargetEye, "m_TargetEye");
     transfer.Transfer(m_State.m_AllowHDR, "m_HDR");
@@ -731,6 +741,39 @@ void Camera::SetNear(float n)
     }
     m_State.m_DirtyProjectionMatrix = true;
     m_State.m_DirtySkyboxProjectionMatrix = true;
+}
+
+float Camera::GetAspect() const
+{
+    // __FAKEABLE_METHOD__(Camera, GetAspect, ());
+    return m_State.m_Aspect;
+}
+
+RenderTexture *Camera::GetTargetTexture() const { return m_State.m_TargetTexture; }
+
+Vector3f Camera::ScreenToWorldPoint(const Vector3f& v, MonoOrStereoscopicEye eye) const
+{
+    RectInt viewport = GetScreenViewportRectInt();
+
+    Matrix4x4f camToWorld;
+    Matrix4x4f clipToWorld;
+//    if (eye < kMonoOrStereoscopicEyeMono)  // VZ: Won't care about VR devices for now.
+//    {
+//        Matrix4x4f::Invert_General3D(GetStereoViewMatrix(StereoscopicEye(eye)), camToWorld);
+//        Matrix4x4f::Invert_Full(GetStereoWorldToClipMatrix(StereoscopicEye(eye)), clipToWorld);
+//    }
+//    else
+    {
+        GetClipToWorldMatrix(clipToWorld);
+        camToWorld = GetCameraToWorldMatrix();
+    }
+
+    Vector3f out;
+    if (!CameraUnProject(v, camToWorld, clipToWorld, viewport, out, GetTargetTexture() != NULL))
+    {
+        ErrorString(Format("Screen position out of view frustum (screen pos %f, %f, %f) (Camera rect %d %d %d %d)", v.x, v.y, v.z, viewport.x, viewport.y, viewport.width, viewport.height));
+    }
+    return out;
 }
 
 float Camera::GetNear() const
@@ -900,6 +943,24 @@ float Camera::GetProjectionFar() const
     Vector4f farPlane = proj.GetRow(3) - proj.GetRow(2);
     Vector3f farNormal(farPlane.x, farPlane.y, farPlane.z);
     return farPlane.w / Magnitude(farNormal);
+}
+
+CameraProjectionCache::CameraProjectionCache(const Camera& cam, MonoOrStereoscopicEye eye)
+{
+    m_ViewPort = cam.GetScreenViewportRect();
+    m_ViewPortInt = RectfToRectInt(m_ViewPort);
+
+//    if (eye < kMonoOrStereoscopicEyeMono)
+//    {
+//        Matrix4x4f::Invert_General3D(cam.GetStereoViewMatrix(StereoscopicEye(eye)), m_CameraToWorldMatrix);
+//        m_WorldToClipMatrix = cam.GetStereoWorldToClipMatrix(StereoscopicEye(eye));
+//    }
+//    else
+    {
+        m_CameraToWorldMatrix = cam.GetCameraToWorldMatrix();
+        m_WorldToClipMatrix = cam.GetWorldToClipMatrix();
+    }
+    m_IsTargetTextureNull = cam.IsTargetTextureNull();
 }
 
 Vector3f CameraProjectionCache::WorldToScreenPoint(const Vector3f& v, bool* canProject) const

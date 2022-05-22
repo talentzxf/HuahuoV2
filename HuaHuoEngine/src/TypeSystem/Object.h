@@ -79,6 +79,8 @@ enum ExecutionRestrictions
 void InstanceIDToLocalSerializedObjectIdentifier(InstanceID id, LocalSerializedObjectIdentifier& localIdentifier);
 void LocalSerializedObjectIdentifierToInstanceID(const LocalSerializedObjectIdentifier& fileID, InstanceID& memoryID);
 
+EXPORT_COREMODULE Object* ReadObjectFromPersistentManager(InstanceID instanceID);
+
 ExecutionRestrictions EXPORT_COREMODULE GetExecutionRestrictions();
 ExecutionRestrictions EXPORT_COREMODULE SetExecutionRestrictions(ExecutionRestrictions desiredRestrictions);
 

@@ -8,7 +8,7 @@
 #include "Graphics/RendererType.h"
 #include "Modules/ExportModules.h"
 #include "Shaders/ShaderPropertySheet.h"
-#include "SharedRenderData.h"
+#include "SharedRendererData.h"
 #include "Shaders/Material.h"
 #include "BaseClasses/PPtr.h"
 

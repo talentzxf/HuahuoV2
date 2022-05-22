@@ -140,7 +140,7 @@ namespace TransformInternal {
         }
     }
 
-    TransformHierarchy* CreateTransformHierarchy(UInt32 transformCapacity);
+    TransformHierarchy* CreateTransformHierarchy(UInt32 transformCapacity, MemLabelId label);
     void DestroyTransformHierarchy(TransformHierarchy* hierarchy);
     void AllocateTransformThread(TransformHierarchy& hierarchy, UInt32 threadFirst, UInt32 threadLast);
 

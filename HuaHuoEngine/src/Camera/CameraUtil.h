@@ -18,4 +18,14 @@ void EXPORT_COREMODULE ExtractProjectionNearPlane(const Matrix4x4f& projection, 
 
 bool CameraProject(const Vector3f& p, const Matrix4x4f& cameraToWorld, const Matrix4x4f& worldToClip, const RectInt& viewport, Vector3f& outP, bool offscreen);
 
+// Screen point to world point
+// p = screen point (x, y = in pixels inside the viewport, z = world space distance from the camera)
+//
+// sets outP to (0,0,0) if fails.
+bool CameraUnProject(const Vector3f& p, const Matrix4x4f& cameraToWorld, const Matrix4x4f& clipToWorld, const RectInt& viewport, Vector3f& outP, bool offscreen);
+
+Rectf RectIntToRectf(const RectInt& r);
+RectInt RectfToRectInt(const Rectf& r);
+void SetGLViewport(const Rectf& pixelRect);
+
 #endif //HUAHUOENGINE_CAMERAUTIL_H

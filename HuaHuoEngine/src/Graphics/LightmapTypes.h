@@ -16,6 +16,8 @@ enum LightmapType
     kLightmapTypeCount
 };
 
+#define kDefaultLightmapST Vector4f (1.0f, 1.0f, 0.0f, 0.0f)
+
 // Object does not use lightmaps.
 #define kLightmapIndexNotLightmapped 0xFFFF
 

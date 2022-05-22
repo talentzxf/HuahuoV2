@@ -50,6 +50,10 @@ ExecutionRestrictions SetExecutionRestrictions(ExecutionRestrictions desiredRest
     return originalRestrictions;
 }
 
+Object* ReadObjectFromPersistentManager(InstanceID instanceID)
+{
+    return NULL;
+}
 
 static RegisterRuntimeInitializeAndCleanup s_BaseObjectManagerCallbacks(BaseObjectManager::StaticInitialize, BaseObjectManager::StaticDestroy);
 

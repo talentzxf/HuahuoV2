@@ -351,7 +351,7 @@ void Transform::RebuildTransformHierarchy() {
     TransformHierarchy *oldHierarchy = root->m_TransformData.hierarchy;
 
     SInt32 nodeCount = root->CountNodesDeep();
-    TransformHierarchy *hierarchy = CreateTransformHierarchy(nodeCount);
+    TransformHierarchy *hierarchy = CreateTransformHierarchy(nodeCount, GetRoot().GetMemoryLabel());
 
     AllocateTransformThread(*hierarchy, 0, nodeCount - 1);
 
@@ -459,7 +459,7 @@ void Transform::SetHierarchyCapacity(size_t capacity) {
 
     // PROFILER_AUTO(gSetCapacityProfile, this);
 
-    TransformHierarchy *newHierarchy = CreateTransformHierarchy(capacity/*, GetRoot().GetMemoryLabel()*/);
+    TransformHierarchy *newHierarchy = CreateTransformHierarchy(capacity, GetRoot().GetMemoryLabel());
     CopyTransformSubhierarchy(srcHierarchy, 0, *newHierarchy, GetCloneChangeSystemInterestsMask(),
                               TransformChangeSystemMask(0), GetCloneHierarchyChangeSystemInterestsMask(), false);
     UpdateTransformAccessors(*newHierarchy, 0);
@@ -770,7 +770,7 @@ bool Transform::SetParent(Transform *newFather, SetParentOption options) {
             TransformHierarchy *oldHierarchy = m_TransformData.hierarchy;
             UInt32 oldFirst = m_TransformData.index;
             UInt32 oldLast = FindLastChildIndex();
-            TransformHierarchy *newHierarchy = CreateTransformHierarchy(nodeCount/*, GetMemoryLabel()*/);
+            TransformHierarchy *newHierarchy = CreateTransformHierarchy(nodeCount, GetMemoryLabel());
             CopyTransformSubhierarchy(*oldHierarchy, oldFirst, *newHierarchy, GetCloneChangeSystemInterestsMask(),
                                       TransformChangeSystemMask(0), GetCloneHierarchyChangeSystemInterestsMask(),
                                       false);

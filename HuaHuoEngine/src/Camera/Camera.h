@@ -16,6 +16,7 @@
 #include "Geometry/Ray.h"
 #include "BaseClasses/PPtr.h"
 #include "SceneManager/HuaHuoSceneHandle.h"
+#include "Graphics/RenderTexture.h"
 
 class HuaHuoScene;
 class Camera;
@@ -260,6 +261,11 @@ public:
 
     bool GetLayerCullSpherical() const { return m_State.m_LayerCullSpherical; }
     void SetLayerCullSpherical(bool enable) { m_State.m_LayerCullSpherical = enable; }
+
+    // Get/Set the texture to render into.
+    RenderTexture *GetTargetTexture() const;
+    void SetTargetTexture(RenderTexture *tex);
+    bool IsTargetTextureNull() const { return GetTargetTexture() == NULL; }
 //protected:
 //    // Behaviour stuff
 //    virtual void AddToManager() override;
@@ -300,7 +306,7 @@ private:
         mutable Matrix4x4f  m_StereoWorldToClipMatrices[kStereoscopicEyeCount];
         mutable Matrix4x4f  m_CullingMatrix;
 
-//        PPtr<RenderTexture> m_TargetTexture; ///< The texture to render this camera into
+        PPtr<RenderTexture> m_TargetTexture; ///< The texture to render this camera into
 //
 //        RenderSurfaceHandle m_TargetColorBuffer[kMaxSupportedRenderTargets];
         int                 m_TargetColorBufferCount;
@@ -388,6 +394,8 @@ private:
     bool                    m_BuffersSetFromScripts;    // when true we've set the cameras m_TargetColorBuffer and m_TargetDepthBuffer from scripts so favour those values over the m_CurrentTargetTexture
     float                   m_gateFittedFOV;
     Vector2f                m_gateFittedLensShift;
+
+    RenderTexture*          m_CurrentTargetTexture; // The texture we're rendering into _right now_
 };
 
 ENUM_FLAGS(Camera::RenderFlag);

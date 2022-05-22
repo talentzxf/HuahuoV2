@@ -4,7 +4,7 @@
 
 #ifndef HUAHUOENGINE_RENDERNODE_H
 #define HUAHUOENGINE_RENDERNODE_H
-#include "SharedRenderData.h"
+#include "SharedRendererData.h"
 #include "Shaders/ShaderPropertySheet.h"
 
 class MaterialInfo;

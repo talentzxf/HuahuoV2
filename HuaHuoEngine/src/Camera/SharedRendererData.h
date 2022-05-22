@@ -1,8 +1,8 @@
 //
 // Created by VincentZhang on 5/18/2022.
 //
-#ifndef HUAHUOENGINE_SHAREDRENDERDATA_H
-#define HUAHUOENGINE_SHAREDRENDERDATA_H
+#ifndef HUAHUOENGINE_SHAREDRENDERERDATA_H
+#define HUAHUOENGINE_SHAREDRENDERERDATA_H
 
 #include "Math/Vector4f.h"
 #include "Math/Matrix4x4.h"
@@ -60,4 +60,4 @@ struct SharedRendererData
     SharedRendererData(RendererType type);
 };
 
-#endif //HUAHUOENGINE_SHAREDRENDERDATA_H
+#endif //HUAHUOENGINE_SHAREDRENDERERDATA_H
