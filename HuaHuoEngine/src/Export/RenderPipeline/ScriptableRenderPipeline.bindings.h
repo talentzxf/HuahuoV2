@@ -17,19 +17,18 @@ namespace ScriptableRenderPipeline_Bindings
         return GetScriptableCullingParameters(cullingCamera, stereoAware, cullingParameters);
     }
 
-    inline void Internal_Cull(ScriptableCullingParameters &parameters, const ScriptableRenderContextManaged &renderLoop, ManagedCullResults *results)
-    {
-        ScriptableCullResults* cullResults = CullScriptable(*renderLoop.ptr, parameters);
-
-        if (cullResults == NULL)
-            return;
-
-        results->cullResults = cullResults;
-#if ENABLE_UNITY_COLLECTIONS_CHECKS
-        results->safety = renderLoop.safety;
-#endif
-        results->allocationInfo = &cullResults->allocationInfo;
-        renderLoop.ptr->AddCullResultsCleanup(cullResults);
-    }
+//    inline void Internal_Cull(ScriptableCullingParameters &parameters, const ScriptableRenderContext* renderContext, ScriptableCullResults& results)
+//    {
+//        ScriptableCullResults* cullResults = CullScriptable(renderContext, parameters);
+//
+//        if (cullResults == NULL)
+//            return;
+//
+//#if ENABLE_UNITY_COLLECTIONS_CHECKS
+//        results->safety = renderLoop.safety;
+//#endif
+//        results->allocationInfo = &cullResults->allocationInfo;
+//        renderContext->AddCullResultsCleanup(cullResults);
+//    }
 }
 #endif //HUAHUOENGINE_SCRIPTABLERENDERPIPELINE_BINDINGS_H

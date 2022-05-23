@@ -1,3 +1,5 @@
+#include "ExtendedAtomicTypes.h"
+
 static inline void atomic_thread_fence(int)
 {
 }

@@ -6,10 +6,11 @@
 #define HUAHUOENGINE_SCRITABLECULLING_H
 
 #include "BaseClasses/InstanceID.h"
+#include "Camera/CullResults.h"
 
 struct ScriptableCullResults
 {
-//    CullResults cullResults;
+    CullResults cullResults;
 //    ScriptableCullingAllocationInfo allocationInfo;
     InstanceID cameraInstanceID;
 };

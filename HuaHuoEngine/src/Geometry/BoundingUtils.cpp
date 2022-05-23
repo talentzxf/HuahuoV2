@@ -11,6 +11,8 @@
 #include "Geometry/Sphere.h"
 #include "Geometry/Capsule.h"
 
+#include <vector>
+
 // --------------------------------------------------------------------------
 
 void GetFrustumPoints(const Matrix4x4f& clipToWorld, Vector3f* frustum)

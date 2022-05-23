@@ -7,7 +7,7 @@
 #include "ConstructorUtility.h"
 #include "SharedObjectPtr.h"
 #include "Memory/MemoryMacros.h"
-#include "Threads/ExtendedAtomicOps.h"
+// #include "Threads/ExtendedAtomicOps.h"
 
 // SharedObject should be used with SharedObjectPtr (Runtime/Core/SharedObjectPtr.h), which provides automatic
 // reference counting.
@@ -139,56 +139,56 @@ private:
     mutable int m_RefCount;
 };
 
-template<typename T, bool ThreadSafe, typename TFactoryOps>
-void SharedObject<T, ThreadSafe, TFactoryOps>::AddRef() const
-{
-    bool valid = true;
-#if VALIDATE_SHARED_OBJECTS
-    valid = (ValidateSharedObject("AddRef()") == kSharedObjectOK);
-#endif
-    // If object is invalid, thread ID probably is too
-    if (valid)
-        ValidateThreadID();
-
-    if (ThreadSafe)
-        atomic_retain(&m_RefCount);
-    else
-        ++m_RefCount;
-}
-
-template<typename T, bool ThreadSafe, typename TFactoryOps>
-void SharedObject<T, ThreadSafe, TFactoryOps>::Release() const
-{
-    bool valid = true;
-#if VALIDATE_SHARED_OBJECTS
-    int preReleaseState = ValidateSharedObject("Release()");
-    valid = (preReleaseState == kSharedObjectOK);
-#endif
-    // If object is invalid, thread ID probably is too
-    if (valid)
-        ValidateThreadID();
-
-    if ((ThreadSafe && atomic_release(&m_RefCount)) ||
-        (!ThreadSafe && --m_RefCount == 0))
-    {
-#if VALIDATE_SHARED_OBJECTS
-        if (ThreadSafe)
-        {
-            int postReleaseState = atomic_exchange_explicit(&m_SOState, 0, ::memory_order_relaxed);
-            AssertFormatMsg(postReleaseState == preReleaseState, "State changed while releasing object: %p (new state %08X)", this, postReleaseState);
-        }
-#endif
-        MemLabelId memLabel = m_MemLabel;
-        T* obj = static_cast<T*>(const_cast<SharedObject<T, ThreadSafe, TFactoryOps> *>(this));
-        TObjectFactoryOps::Destroy(obj, memLabel);
-    }
-}
-
-template<typename T, bool ThreadSafe, typename TFactoryOps>
-int SharedObject<T, ThreadSafe, TFactoryOps>::GetRefCount() const
-{
-    return ThreadSafe ? atomic_load_explicit(&m_RefCount, ::memory_order_relaxed) : m_RefCount;
-}
+//template<typename T, bool ThreadSafe, typename TFactoryOps>
+//void SharedObject<T, ThreadSafe, TFactoryOps>::AddRef() const
+//{
+//    bool valid = true;
+//#if VALIDATE_SHARED_OBJECTS
+//    valid = (ValidateSharedObject("AddRef()") == kSharedObjectOK);
+//#endif
+//    // If object is invalid, thread ID probably is too
+//    if (valid)
+//        ValidateThreadID();
+//
+//    if (ThreadSafe)
+//        atomic_retain(&m_RefCount);
+//    else
+//        ++m_RefCount;
+//}
+//
+//template<typename T, bool ThreadSafe, typename TFactoryOps>
+//void SharedObject<T, ThreadSafe, TFactoryOps>::Release() const
+//{
+//    bool valid = true;
+//#if VALIDATE_SHARED_OBJECTS
+//    int preReleaseState = ValidateSharedObject("Release()");
+//    valid = (preReleaseState == kSharedObjectOK);
+//#endif
+//    // If object is invalid, thread ID probably is too
+//    if (valid)
+//        ValidateThreadID();
+//
+//    if ((ThreadSafe && atomic_release(&m_RefCount)) ||
+//        (!ThreadSafe && --m_RefCount == 0))
+//    {
+//#if VALIDATE_SHARED_OBJECTS
+//        if (ThreadSafe)
+//        {
+//            int postReleaseState = atomic_exchange_explicit(&m_SOState, 0, ::memory_order_relaxed);
+//            AssertFormatMsg(postReleaseState == preReleaseState, "State changed while releasing object: %p (new state %08X)", this, postReleaseState);
+//        }
+//#endif
+//        MemLabelId memLabel = m_MemLabel;
+//        T* obj = static_cast<T*>(const_cast<SharedObject<T, ThreadSafe, TFactoryOps> *>(this));
+//        TObjectFactoryOps::Destroy(obj, memLabel);
+//    }
+//}
+//
+//template<typename T, bool ThreadSafe, typename TFactoryOps>
+//int SharedObject<T, ThreadSafe, TFactoryOps>::GetRefCount() const
+//{
+//    return ThreadSafe ? atomic_load_explicit(&m_RefCount, ::memory_order_relaxed) : m_RefCount;
+//}
 
 template<typename T, bool ThreadSafe, typename TFactoryOps>
 void SharedObject<T, ThreadSafe, TFactoryOps>::ValidateThreadID() const

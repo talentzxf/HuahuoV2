@@ -11,6 +11,8 @@
 #include "Math/Rect.h"
 #include "Camera/CullingParameters.h"
 #include "Camera/CameraCullingParameters.h"
+#include "ScritableCulling.h"
+#include "ScriptableRenderContext.h"
 
 class Camera;
 struct CoreCameraValues
@@ -92,5 +94,6 @@ struct ScriptableCullingParameters : public CullingParameters
 
 Camera& GetCullingCameraAndSetCullingFlag(Camera& camera, ScriptableCullingParameters& cullingParameters);
 bool GetScriptableCullingParameters(Camera& camera, bool stereoAware, ScriptableCullingParameters& cullingParameters);
+ScriptableCullResults* CullScriptable(const ScriptableRenderContext &context, const ScriptableCullingParameters& cullingParameters);
 
 #endif //HUAHUOENGINE_SCRIPTABLECULLING_H

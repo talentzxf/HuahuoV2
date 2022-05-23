@@ -6,8 +6,14 @@
 #define HUAHUOENGINE_SCENEVIEW_H
 #include "Camera/Camera.h"
 #include <string>
+
+#if WEB_ENV
 #include <emscripten.h>
 #include <emscripten/html5.h>
+#else
+#define EMSCRIPTEN_WEBGL_CONTEXT_HANDLE int
+struct EmscriptenWebGLContextAttributes{};
+#endif
 
 class SceneView {
 private:

@@ -7,6 +7,8 @@
 #include "Camera/Camera.h"
 #include "Components/Transform/Transform.h"
 #include "Geometry/BoundingUtils.h"
+#include "Camera/CullResults.h"
+#include "Camera/RendererScene.h"
 
 static bool CanUseProjectionForShadows(const Matrix4x4f& clipToWorld, float farNearRatio, const Vector3f& cameraPos)
 {
@@ -243,4 +245,126 @@ bool GetScriptableCullingParameters(Camera& camera, bool stereoAware, Scriptable
     cameraProperties.cameraType = camera.GetCameraType();
 
     return true;
+}
+
+//@TODO: replace sceneCullParameters.renderPath with a set of explicit flags.
+ScriptableCullResults* CullScriptable(const ScriptableRenderContext &context, const ScriptableCullingParameters& cullingParameters)
+{
+    // PROFILER_AUTO(gCullScriptable);
+
+    /// Parameter validation
+
+    if (cullingParameters.cullingPlaneCount <= 0 || cullingParameters.cullingPlaneCount > CullingParameters::kMaxPlanes)
+    {
+        ErrorString("Culling parameters has no valid culling planes");
+        return NULL;
+    }
+
+    if (cullingParameters.cameraProperties.coreCameraValues.instanceID == InstanceID_None)
+    {
+        ErrorString("A valid camera must be specified to provide for per-camera intermediate renderers & LOD fade");
+        return NULL;
+    }
+
+    /// Create cull results and fill parameters
+
+    ScriptableCullResults* results = HUAHUO_NEW(ScriptableCullResults, kMemTempJobAlloc);
+    results->cameraInstanceID = cullingParameters.cameraProperties.coreCameraValues.instanceID;
+    CullResults& cullResults = results->cullResults;
+
+    // VZ: Ignore terrain for now.
+//    //@TODO: jobify this
+//    ITerrainManager* terrainManager = GetITerrainManager();
+//    if (terrainManager != NULL && cullingParameters.cullingMask != 0)
+//        cullResults.terrainCullData = terrainManager->CullAllTerrains(cullingParameters);
+//
+//    SceneCullingParameters& sceneCullParameters = cullResults.sceneCullParameters;
+//    sceneCullParameters.totalRendererListsCount = CalculateTotalRenderersListCount(cullResults.terrainCullData);
+//    sceneCullParameters.maximumVisibleLights = cullingParameters.maximumVisibleLights;
+//
+//    cullResults.sceneCullingOutput.totalVisibleListsCount = sceneCullParameters.totalRendererListsCount;
+//    cullResults.sceneCullingOutput.visible = HUAHUO_NEW(IndexList, kMemTempJobAlloc)[sceneCullParameters.totalRendererListsCount];
+//
+//    const Umbra::Tome* tomeData = NULL;
+//    if (HasFlag(cullingParameters.cullingOptions, kCullFlagOcclusionCull))
+//        tomeData = GetRendererScene().GetUmbraTome();
+//    cullResults.Init(tomeData);
+//
+//    static_cast<CullingParameters&>(sceneCullParameters) = static_cast<const CullingParameters&>(cullingParameters);
+//
+//    sceneCullParameters.accurateOcclusionThreshold = cullingParameters.accurateOcclusionThreshold;
+//
+//    sceneCullParameters.sceneVisbilityForShadowCulling = &cullResults.sceneCullingOutput;
+//    //@TODO:
+//    sceneCullParameters.umbraDebugRenderer = NULL;//parameters.umbraDebugRenderer;
+//    sceneCullParameters.umbraDebugFlags = 0;//parameters.umbraDebugFlags;
+//    sceneCullParameters.umbraTome = tomeData;
+//    sceneCullParameters.umbraGateState = GetRendererScene().GetUmbraGateState();
+//    sceneCullParameters.umbraMaximumPortalJobCount = cullingParameters.maximumPortalCullingJobs;
+//#if UNITY_EDITOR
+//    sceneCullParameters.filterMode = (CullFiltering)cullingParameters.cameraProperties.coreCameraValues.filterMode;
+//#endif
+//
+//    sceneCullParameters.cullLights = HasFlag(cullingParameters.cullingOptions, kCullFlagNeedsLighting);
+//    sceneCullParameters.cullReflectionProbes = HasFlag(cullingParameters.cullingOptions, kCullFlagNeedsReflectionProbes);
+//
+//    sceneCullParameters.stereo = HasFlag(cullingParameters.cullingOptions, kCullFlagStereo);
+//    if (sceneCullParameters.stereo)
+//    {
+//        sceneCullParameters.stereoSeparation = cullingParameters.cullStereoSeparation;
+//
+//        // Might be able to delete this in future
+//        sceneCullParameters.stereoCombinedView = cullingParameters.cullStereoView;
+//        sceneCullParameters.stereoCombinedProj = cullingParameters.cullStereoProj;
+//    }
+//
+//    sceneCullParameters.excludeLightmappedShadowCasters = GetLightingSettingsOrDefaultsFallback().UsingShadowmask() && GetQualitySettings().GetCurrent().shadowmaskMode == kQSShadowmaskMode_Shadowmask;
+//    sceneCullParameters.computeShadowCasterBounds = true;
+//    sceneCullParameters.enablePerObjectCulling = !HasFlag(cullingParameters.cullingOptions, kCullFlagDisablePerObjectCulling);
+//    sceneCullParameters.includeShadowCasters = HasFlag(cullingParameters.cullingOptions, kCullFlagShadowCasters);
+//
+//    //@TODO: Refactor this so scriptable renderloop can specify what operations culling should perform
+//    sceneCullParameters.renderPath = kRenderPathForward;
+//
+//    context.SetCullingPostprocessing(sceneCullParameters);
+//
+//    // Store this to sceneCullingOutput as the status may change if Umbra culling fails
+//    cullResults.sceneCullingOutput.useUmbraOcclusionCulling = tomeData != NULL;
+//
+//    // kick off static occlusion culling
+//    if (cullResults.sceneCullingOutput.useUmbraOcclusionCulling)
+//        CullStaticSceneWithUmbra(cullResults.occlusionBufferIsReady, sceneCullParameters, cullResults.sceneCullingOutput);
+//
+//    // Perform culling group culling (depends on occlusion culling job)
+//    CullingGroupManager::Get().CullAndSendEvents(sceneCullParameters, cullingParameters.cameraProperties.coreCameraValues.instanceID, cullResults.sceneCullingOutput, cullResults.occlusionBufferIsReady);
+//
+//    // Make sure that all renderers are up to date
+//    GetRendererUpdateManager().UpdateAll(GetRendererScene());
+//    GetReflectionProbeAnchorManager().UpdateCachedReflectionProbes();
+//
+//    Camera::PrepareCullingParametersRendererArrays(cullingParameters.cameraProperties.coreCameraValues, cullResults);
+//
+//    // Prepare light culling information
+//    if (cullResults.sceneCullParameters.cullLights)
+//    {
+//        ShadowCullData& shadowCullData = *UNITY_NEW(ShadowCullData, kMemTempJobAlloc);
+//        ShadowProjection shadowProjection = kShadowProjStableFit;
+//
+//        SetupShadowCullData(cullingParameters, cullResults.shaderReplaceData, &cullResults.sceneCullParameters, cullingParameters.shadowDistance, shadowProjection, shadowCullData);
+//        cullResults.shadowCullData = &shadowCullData;
+//    }
+//
+//    // Perform actual culling
+//    CullScene(cullResults);
+//
+//    RendererCullingCallbackProperties rendererCullParams(cullingParameters, cullingParameters.cameraProperties.worldToCamera);
+//    DispatchGeometryJobs(cullResults.rendererCullCallbacks, rendererCullParams);
+//
+//    cullResults.isValid = true;
+//
+//    cullResults.sharedRendererScene = const_cast<SharedRendererScene*>(cullResults.GetOrCreateSharedRendererScene());
+//
+//    CullResultsToScriptingData(*results, cullingParameters);
+
+    return results;
 }

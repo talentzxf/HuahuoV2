@@ -25,3 +25,26 @@ void CalculateCustomCullingParameters(CullingParameters& cullingParameters, cons
     cullingParameters.cullingMask = cullingMask;
     cullingParameters.sceneMask = sceneCullingMask;
 }
+
+CullResults::CullResults() //:
+//        needsCullCallback(kMemTempJobAlloc),
+//        isShadowCastingLight(kMemTempJobAlloc),
+//        shadowedLights(kMemTempJobAlloc),
+//        lodDataArrays(kMemTempJobAlloc),
+//        terrainCullData(NULL),
+//        customCullSceneNodes(kMemTempJobAlloc),
+//        customCullBoundingBoxes(kMemTempJobAlloc),
+//        sceneCustomCullResults(kMemTempJobAlloc),
+//        shadowCullData(NULL),
+//        visibleSceneIndexListCombined(kMemTempJobAlloc),
+//        dynamicBounds(kMemTempJobAlloc),
+//        lightIndexMap(kMemTempJobAlloc),
+//        reflectionProbeIndexMap(kMemTempJobAlloc),
+//        isValid(false),
+//        hybridLights(NULL),
+//        hybridLightsCount(0),
+//        sharedRendererScene(NULL)
+{
+//    for (size_t i = 0; i < kRendererTypeCount; i++)
+//        rendererCullCallbacks[i].set_memory_label(kMemTempJobAlloc);
+}

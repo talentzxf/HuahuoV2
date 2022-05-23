@@ -6,6 +6,14 @@
 #include "HuaHuoEngine.h"
 #include "Misc/GameObjectUtility.h"
 
+#if !WEB_ENV
+typedef void (*loop)();
+void emscripten_webgl_init_context_attributes(EmscriptenWebGLContextAttributes*) {}
+EMSCRIPTEN_WEBGL_CONTEXT_HANDLE emscripten_webgl_create_context(const char*, EmscriptenWebGLContextAttributes*) { return 1;}
+void emscripten_set_main_loop(loop, int, int){}
+void emscripten_webgl_make_context_current(EMSCRIPTEN_WEBGL_CONTEXT_HANDLE){}
+#endif
+
 SceneView sSceneView;
 
 SceneView* SceneView::GetSceneView(){
