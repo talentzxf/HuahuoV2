@@ -16,6 +16,9 @@ public:
     // ~Material (); declared-by-macro
 
     virtual void Reset() override;
+
+//    /// Set the shader and calls Reset
+//    void ResetWithShader(Shader* shader);
 };
 
 

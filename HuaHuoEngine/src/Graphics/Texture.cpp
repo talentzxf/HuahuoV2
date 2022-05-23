@@ -30,6 +30,19 @@ Texture::Texture(MemLabelId label, ObjectCreationMode mode) :
 //    m_ForcedFallbackFormat = kTexFormatRGBA32;
 }
 
+void Texture::MainThreadCleanup()
+{
+//    ASSERT_RUNNING_ON_MAIN_THREAD
+//
+//            Texture::TextureIDMapErase(m_TexID);
+//    GetDefaultPassContext().properties.SetMatchingTextureIDToNone(m_TexID);
+//
+//    GetUncheckedRealGfxDevice().FreeTextureID(m_TexID);
+//    m_TexID = TextureID();
+
+    Super::MainThreadCleanup();
+}
+
 void Texture::ThreadedCleanup()
 {
 //    // Additional cleanup needed in case MainThreadCleanup() was not called, which can happen when:

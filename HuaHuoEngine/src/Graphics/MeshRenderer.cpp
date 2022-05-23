@@ -77,3 +77,13 @@ void MeshRenderer::Transfer(TransferFunction& transfer)
     if (transfer.IsSerializingForGameRelease() || transfer.GetFlags() & kSerializeForInspector)
         transfer.Transfer(m_EnlightenVertexStream, "m_EnlightenVertexStream", kHideInEditorMask);
 }
+
+void MeshRenderer::InitializeClass()
+{
+//    REGISTER_MESSAGE_VOID(kDidModifyBounds, DidModifyMeshBounds);
+//    REGISTER_MESSAGE_VOID(kDidDeleteMesh, DidDeleteMesh);
+//    REGISTER_MESSAGE_VOID(kDidModifyMesh, DidModifyMesh);
+//
+//    RegisterPrepareRenderNodesCallback(kRendererMesh, PrepareMeshRenderNodes<false>, PrepareMeshRenderNodes<true>);
+//    GetRendererUpdateManager().RegisterDispatchUpdate(kRendererMesh, TransformChangeSystemMask(0), DispatchUpdate, PrepareDispatchUpdate, PrepareSingleRendererUpdate, FinalizeUpdate);
+}
