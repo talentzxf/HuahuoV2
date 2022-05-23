@@ -4,17 +4,18 @@
 
 #include "Renderer.h"
 #include "BaseClasses/GameObject.h"
+#include "Camera/RendererScene.h"
 
 Renderer::Renderer(RendererType type, MemLabelId label, ObjectCreationMode mode)
         :   Super(label, mode)
         ,   BaseRenderer(type)
 //        ,   m_Materials(GetMemoryLabel())
-//        ,   m_SceneHandle(kInvalidSceneHandle)
+        ,   m_SceneHandle(kInvalidSceneHandle)
 //        ,   m_PerMaterialOverrideProperties(GetMemoryLabel())
 //        ,   m_LastLightProbeTetIndex(-1)
 //        ,   m_LODGroup(NULL)
         ,   m_Enabled(true)
-//        ,   m_IsRenderable(true)
+        ,   m_IsRenderable(true)
 //        ,   m_ForceRenderingOff(false)
 //#if ENABLE_TEXTURE_STREAMING
 //        ,   m_StreamingIndex(-1)
@@ -41,6 +42,26 @@ Renderer::Renderer(RendererType type, MemLabelId label, ObjectCreationMode mode)
 //    srd.m_MotionVectors = kMotionVectorObject;
 //    srd.m_TransformInfo.lateLatchIndex = kNotLateLatched;
 }
+
+void Renderer::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
+    Super::AwakeFromLoad(awakeMode);
+
+    UpdateRenderer();
+}
+
+void Renderer::UpdateRenderer()
+{
+    // Be careful of the implications on RendererScene.ApplyPendingAddRemoveNodes() when changing this behavior
+    bool shouldBeInScene = ShouldBeInScene();
+    if (IsInScene() == shouldBeInScene)
+        return;
+
+    if (shouldBeInScene)
+        AddToScene();
+    else
+        RemoveFromScene();
+}
+
 
 
 template<class TransferFunction>
@@ -119,6 +140,98 @@ void Renderer::BoundsChanged()
 //    if (IsInScene())
 //        GetRendererUpdateManager().DirtyDispatchUpdate(*this);
 }
+
+void Renderer::AddToScene()
+{
+    Assert(!IsInScene());
+    // Assert(!IsVisibleInScene());
+
+    RendererScene& scene = GetRendererScene();
+
+    m_SceneHandle = scene.AddRenderer(this);
+//    if (m_SceneHandle != kInvalidSceneHandle)
+//    {
+//        DebugAssert(scene.GetRendererNode(m_SceneHandle).renderer == this);
+//
+//        bool needsCullCallback = GetGameObject().GetSupportedMessages() & kOnWillRenderObject.GetOptimizedMask();
+//        scene.SetRendererNeedsCullCallback(m_SceneHandle, needsCullCallback);
+//        scene.SetShadowCastingMode(m_SceneHandle, GetShadowCastingMode());
+//        scene.SetIsDynamicOccludee(m_SceneHandle, m_RendererData.m_DynamicOccludee);
+//
+//        UpdateLODGroup();
+//#if ENABLE_TEXTURE_STREAMING
+//        GetTextureStreamingManager().AddRenderer(*this);
+//#endif
+//
+//        SetMotionVectorFrameIndex(-1);
+//
+//        GetRendererUpdateManager().AddRenderer(*this);
+//
+//#if GFX_SUPPORTS_RAY_TRACING
+//        if (GetGraphicsCaps().supportsRayTracing)
+//            GetRayTracingAccelerationStructureManager().AddRenderer(*this);
+//#endif
+//
+//        RendererCountOnGameObjects::iterator countIter = gRendererCountOnGameObjects->find(GetGameObjectInstanceID());
+//        if (countIter == gRendererCountOnGameObjects->end())
+//        {
+//            gRendererCountOnGameObjects->insert(RendererCountOnGameObjects::value_type(GetGameObjectInstanceID(), 1));
+//            Transform& transform = GetComponent<Transform>();
+//            GetTransformHierarchyChangeDispatch().SetSystemInterested(transform.GetTransformAccess(), kSystemParentHierarchy, true);
+//        }
+//        else
+//        {
+//            countIter->second += 1;
+//        }
+//
+//        RendererAddedToScene();
+//    }
+}
+
+void Renderer::RemoveFromScene()
+{
+    Assert(IsInScene());
+
+    RendererScene& scene = GetRendererScene();
+
+#if ENABLE_TEXTURE_STREAMING
+    GetTextureStreamingManager().RemoveRenderer(*this);
+#endif
+
+//    GetRendererUpdateManager().RemoveRenderer(*this);
+
+#if GFX_SUPPORTS_RAY_TRACING
+    if (GetGraphicsCaps().supportsRayTracing)
+        GetRayTracingAccelerationStructureManager().RemoveRenderer(*this);
+#endif
+
+//    bool wasVisible = IsVisibleInScene();
+
+    BaseRenderer* remRenderer = scene.RemoveRenderer(m_SceneHandle);
+    Assert(remRenderer == this);
+
+    // RendererScene::ApplyPendingAddRemoveNodes() relies on the immediate invalidation of the handle
+    // even though the change hasn't been applied yet and is actually pending.
+    m_SceneHandle = kInvalidSceneHandle;
+//
+//    // Important: Notify renderer after it was removed from scene.
+//    // That way it knows if it became invisible through culling or removal.
+//    // VisibilityAfterRendererRemoval in RendererSceneTests checks this path.
+//    if (wasVisible)
+//        RendererBecameInvisible();
+//
+//    RendererCountOnGameObjects::iterator countIter = gRendererCountOnGameObjects->find(GetGameObjectInstanceID());
+//    countIter->second -= 1;
+//    if (countIter->second == 0)
+//    {
+//        Transform& transform = GetComponent<Transform>();
+//        GetTransformHierarchyChangeDispatch().SetSystemInterested(transform.GetTransformAccess(), kSystemParentHierarchy, false);
+//        gRendererCountOnGameObjects->erase(countIter);
+//    }
+//
+//    RendererRemovedFromScene();
+}
+
 
 IMPLEMENT_REGISTER_CLASS(Renderer, 12);
 IMPLEMENT_OBJECT_SERIALIZE(Renderer);

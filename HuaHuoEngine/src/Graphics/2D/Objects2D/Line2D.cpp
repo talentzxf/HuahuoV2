@@ -4,8 +4,4 @@
 
 #include "Line2D.h"
 
-Line2D::Line2D(MemLabelId memLabelId, ObjectCreationMode creationMode)
-    :Super(memLabelId, creationMode)
-{
 
-}

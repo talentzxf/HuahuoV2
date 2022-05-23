@@ -29,6 +29,8 @@ enum RendererType
 
     kRendererTypeCount,
 
+    kRenderer2D,
+
     //@TODO: Why are intermediate renderers handled special???
     //  kRendererTypeMaxCount = 32
     kRendererTypeBitSize = 6

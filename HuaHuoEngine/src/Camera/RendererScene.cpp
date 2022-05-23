@@ -13,7 +13,7 @@ RendererScene::RendererScene()
 {
     // GlobalCallbacks::Get().afterCullingOutputReady.Register(&RendererScene::SceneAfterCullingOutputReady);
 
-//    m_PreventAddRemoveRenderer = 0;
+    m_PreventAddRemoveRenderer = 0;
 //    m_RequestStaticPVSRebuild = false;
 //    m_GateState = NULL;
 //    m_UmbraTome = NULL;
@@ -117,3 +117,85 @@ RendererScene& GetRendererScene()
     return *gScene;
 }
 
+
+Renderer* RendererScene::RemoveRenderer(SceneHandle handle)
+{
+    if (handle < 0 || handle >= (int)m_RendererNodes.size())
+    {
+        ErrorString("Invalid SceneHandle");
+        return NULL;
+    }
+    SceneNode& node = m_RendererNodes[handle];
+    // DebugAssert(node.renderer == NULL || node.renderer->IsRenderer());
+    Renderer* renderer = static_cast<Renderer*>(node.renderer);
+//
+//    if (m_PreventAddRemoveRenderer != 0)
+//    {
+//        node.disable = true;
+//
+//        for (size_t i = 0, n = m_PendingRemoval.size(); i < n; ++i)
+//        {
+//            if (m_PendingRemoval[i] == handle)
+//            {
+//                AssertMsg(false, "Renderer already in the pending removal queue.");
+//                return renderer;
+//            }
+//        }
+//        m_PendingRemoval.push_back(handle);
+//        return renderer;
+//    }
+//
+//    // When removing any renderer all pending removals with a lower index need to be flushed first.
+//    // Instead of checking for this every time we get here, just flush it straight away.
+//    if (!m_PendingRemoval.empty())
+//    {
+//        // Include current request in the pending changes
+//        m_PendingRemoval.push_back(handle);
+//
+//        ApplyPendingAddRemoveNodes();
+//        return renderer;
+//    }
+
+    RemoveRendererInternal(handle);
+    return renderer;
+}
+
+
+void RendererScene::RemoveRendererInternal(SceneHandle handle)
+{
+    if (handle < 0 || handle >= (int)m_RendererNodes.size())
+    {
+        ErrorString("Invalid SceneHandle");
+        return;
+    }
+
+    SceneNode& node = m_RendererNodes[handle];
+//    DebugAssert(node.renderer == NULL || node.renderer->IsRenderer());
+//
+//    // Static objects can not be removed from the array
+//    if (handle < (SceneHandle)GetStaticObjectCount())
+//    {
+//        m_VisibilityBits[handle] = 0;
+//        node.renderer = NULL;
+//        return;
+//    }
+
+    // Swap with last element (if we are not the last element)
+    int lastIndex = m_RendererNodes.size() - 1;
+    const SceneNode& lastNode = m_RendererNodes[lastIndex];
+    if (handle != lastIndex && lastNode.renderer != NULL)
+    {
+//        const AABB& lastAABB = m_BoundingBoxes[lastIndex];
+//        UInt8 lastVisibilityBits = m_VisibilityBits[lastIndex];
+        m_RendererNodes[handle] = lastNode;
+//        m_BoundingBoxes[handle] = lastAABB;
+//        m_VisibilityBits[handle] = lastVisibilityBits;
+//
+        Renderer* swapRenderer = static_cast<Renderer*>(lastNode.renderer);
+        swapRenderer->NotifySceneHandleChange(handle);
+    }
+
+    m_RendererNodes.pop_back();
+//    m_BoundingBoxes.pop_back();
+//    m_VisibilityBits.pop_back();
+}

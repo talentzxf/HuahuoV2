@@ -11,7 +11,11 @@ class Base2DObject : public Object{
     REGISTER_CLASS(Base2DObject);
     DECLARE_OBJECT_SERIALIZE();
 public:
-    Base2DObject(MemLabelId memLabelId, ObjectCreationMode);
+    Base2DObject(MemLabelId memLabelId, ObjectCreationMode creationMode)
+        :Super(memLabelId, creationMode)
+    {
+
+    }
 };
 
 

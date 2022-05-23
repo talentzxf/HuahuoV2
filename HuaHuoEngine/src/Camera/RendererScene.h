@@ -30,9 +30,11 @@ public:
 
 private:
     SceneHandle AddRendererInternal(Renderer *renderer, int layer);
+    void RemoveRendererInternal(SceneHandle handle);
 private:
     // These arrays are always kept in sync
     std::vector<SceneNode>    m_RendererNodes;
+    int                    m_PreventAddRemoveRenderer;
 };
 
 RendererScene& GetRendererScene();

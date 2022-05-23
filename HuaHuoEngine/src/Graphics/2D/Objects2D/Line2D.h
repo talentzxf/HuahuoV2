@@ -11,7 +11,11 @@ class Line2D : public Base2DObject{
     REGISTER_CLASS(Line2D);
     DECLARE_OBJECT_SERIALIZE();
 public:
-    Line2D(MemLabelId memLabelId, ObjectCreationMode creationMode);
+    Line2D(MemLabelId memLabelId, ObjectCreationMode creationMode)
+        :Super(memLabelId, creationMode)
+    {
+
+    }
 
 private:
     Vector3f p1;

@@ -18,7 +18,7 @@ public:
     }
 
 private:
-    std::vector<Base2DObject*> object2dArray;
+    std::vector<PPtr<Base2DObject>> object2dArray;
 };
 
 
