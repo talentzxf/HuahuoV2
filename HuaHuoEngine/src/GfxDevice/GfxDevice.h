@@ -11,6 +11,7 @@
 #include "GfxDeviceAsyncCommand.h"
 #include "Job/JobTypes.h"
 #include "GfxDeviceObjects.h"
+#include "Math/Rect.h"
 
 class AutoGfxDeviceBeginEndFrame
 {
@@ -164,6 +165,9 @@ public:
 
     void ExecuteAsync(int count, GfxDeviceAsyncCommand::Func* func, GfxDeviceAsyncCommand::ArgScratch** scratches, const GfxDeviceAsyncCommand::Arg* arg, const JobFence& depends);
     MemLabelId GetMemoryLabel() { return m_MemoryLabel; }
+
+    virtual void    SetViewport(const RectInt& rect) =0;
+    virtual RectInt GetViewport() const =0;
 
     virtual void SetSRGBWrite(const bool) =0;
     virtual bool GetSRGBWrite() =0;

@@ -27,6 +27,24 @@ const char* ApiGLES::GetDriverString(gl::DriverQuery Query) const
     return reinterpret_cast<const char*>(stringPointer);
 }
 
+gl::ContextHandle ApiGLES::GetContext() const
+{
+    DebugAssert(this->m_Context == gl::GetCurrentContext());
+    return this->m_Context;
+}
+
+gl::VertexArrayHandle ApiGLES::CreateVertexArray()
+{
+    // FIXME: Enable this as soon as it's passing
+    // GLES_CHECK(this, 0);
+    GLES_ASSERT(this, GetGraphicsCaps().gles.hasVertexArrayObject, "Vertex array objects are not supported");
+
+    GLuint vertexArrayName = 0;
+    GLES_CALL(this, glGenVertexArrays, 1, &vertexArrayName);
+
+    return gl::VertexArrayHandle(this->GetContext(), vertexArrayName);
+}
+
 GLint ApiGLES::Get(GLenum cap) const
 {
     GLint result = 0;

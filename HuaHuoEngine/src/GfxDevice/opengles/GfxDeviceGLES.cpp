@@ -4,6 +4,8 @@
 
 #include "GfxDeviceGLES.h"
 #include "Shaders/GraphicsCaps.h"
+#include "GfxDevice/TextureIdMap.h"
+#include "AssertGLES.h"
 
 GfxDeviceGLES::GfxDeviceGLES(MemLabelRef label)
         : GfxThreadableDevice(label)
@@ -146,6 +148,67 @@ bool GfxDeviceGLES::GetSRGBWrite()
 }
 
 extern GfxDeviceLevelGL g_RequestedGLLevel;
+
+void GfxDeviceGLES::SetViewport(const RectInt& rect)
+{
+    m_State.viewport = rect;
+
+#if GFX_SUPPORTS_SINGLE_PASS_STEREO
+    if (m_GfxContextData.GetSinglePassStereo() != kSinglePassStereoSideBySide)
+#endif
+    {
+        // Side-by-side stereo should not update the actual viewport
+        SetViewportInternal(rect);
+    }
+}
+
+void GfxDeviceGLES::SetViewportInternal(const RectInt& rect)
+{
+    m_Context->GetFramebuffer().SetViewport(rect);
+}
+
+RectInt GfxDeviceGLES::GetViewport() const
+{
+    return m_State.viewport;
+}
+
+void GfxDeviceGLES::ProcessPendingMipGens()
+{
+    // Generate mipmaps for all pending surfaces
+    for (size_t i = 0; i < m_PendingMipGens.size(); i++)
+    {
+        const GLESTexture* texInfo = (GLESTexture*)TextureIdMap::QueryNativeTexture(m_PendingMipGens[i]->textureID);
+        GLES_ASSERT(gGL, m_Api.translate.GetTextureTargetDimension(texInfo->target) == m_PendingMipGens[i]->dim, "Invalid pending mip gen dimension.");
+        m_Api.GenerateMipmap(texInfo->texture, texInfo->target);
+    }
+    m_PendingMipGens.clear_dealloc();
+}
+
+void GfxDeviceGLES::SetActiveContext(void* context)
+{
+#   if UNITY_DESKTOP
+    GraphicsContextGL* glctx = static_cast<GraphicsContextGL*>(context);
+    DebugAssert(glctx);
+    gl::ContextHandle requestedContextHandle(glctx->GetContext());
+
+    if (requestedContextHandle != gl::GetCurrentContext())
+        ActivateGraphicsContextGL(*glctx, kGLContextSkipInvalidateState | kGLContextSkipUnbindObjects | kGLContextSkipFlush);
+    DebugAssertFormatMsg(requestedContextHandle == gl::GetCurrentContext(), "The context (%p) must already be the active context (%p)", context, gl::GetCurrentContext().Get());
+#   else
+    gl::ContextHandle requestedContextHandle(context);
+#   endif
+
+    m_Context->MakeCurrent(m_Api, requestedContextHandle);
+
+    // We also invalidate the API, because we need to re-bind all objects
+    // so that their state reflects possible changes in other contexts.
+    gles::Invalidate(*m_Context, m_State);
+    this->UpdateSRGBWrite();
+
+    ProcessPendingMipGens();
+
+    m_Context->GetFramebuffer().ActiveContextChanged(&m_BackBufferColor.object, &m_BackBufferDepth.object);
+}
 
 // The content of this function should be in GfxDeviceGLES constructor
 // but GfxDeviceGLES instances are created with UNITY_NEW_AS_ROOT which doesn't allow arguments passing.

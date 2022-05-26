@@ -165,7 +165,7 @@ else ()
 #    add_compile_definitions(PLATFORM_WIN=1)
     add_compile_options(-Wno-deprecated-enum-enum-conversion)
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp src/GfxDevice/opengles/GfxDeviceCreateGLES.cpp src/GfxDevice/opengles/DeviceStateGLES.cpp src/GfxDevice/opengles/DeviceStateGLES.h src/GfxDevice/opengles/ExtensionGLES.cpp src/Graphics/Image.cpp src/Graphics/Image.h src/Graphics/GraphicsHelper.h src/Graphics/GraphicsHelper.cpp src/Graphics/RenderTextureDesc.h src/Shaders/GraphicsCapsScriptBinding.cpp src/Shaders/GraphicsCapsScriptBinding.h src/Graphics/Format.cpp)
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp src/GfxDevice/opengles/GfxDeviceCreateGLES.cpp src/GfxDevice/opengles/DeviceStateGLES.cpp src/GfxDevice/opengles/DeviceStateGLES.h src/GfxDevice/opengles/ExtensionGLES.cpp src/Graphics/Image.cpp src/Graphics/Image.h src/Graphics/GraphicsHelper.h src/Graphics/GraphicsHelper.cpp src/Graphics/RenderTextureDesc.h src/Shaders/GraphicsCapsScriptBinding.cpp src/Shaders/GraphicsCapsScriptBinding.h src/Graphics/Format.cpp src/GfxDevice/opengles/FrameBufferGLES.cpp src/GfxDevice/opengles/FrameBufferGLES.h src/GfxDevice/TextureIdMap.cpp src/GfxDevice/TextureIdMap.h)
 endif ()
 
 target_include_directories(${TARGETNAME} PUBLIC "${PROJECT_BINARY_DIR}" ${EXTRA_INCLUDE_DIR})

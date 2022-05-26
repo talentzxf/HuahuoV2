@@ -637,6 +637,125 @@ enum TextureFormat
     kTexFormatTotalCount,
 };
 
+enum
+{
+    kPrimitiveTypeCount = kPrimitiveTypeLast - kPrimitiveTypeFirst + 1
+};
+
+enum CompareFunction
+{
+    kFuncUnknown = -1,
+    kFuncDisabled = 0, kFuncFirst = kFuncDisabled,
+    kFuncNever,
+    kFuncLess,
+    kFuncEqual,
+    kFuncLEqual,
+    kFuncGreater,
+    kFuncNotEqual,
+    kFuncGEqual,
+    kFuncAlways,
+    kFuncCount
+};
+
+enum StencilOp
+{
+    kStencilOpKeep = 0, kStencilOpFirst = kStencilOpKeep,
+    kStencilOpZero,
+    kStencilOpReplace,
+    kStencilOpIncrSat,
+    kStencilOpDecrSat,
+    kStencilOpInvert,
+    kStencilOpIncrWrap,
+    kStencilOpDecrWrap,
+    kStencilOpCount
+};
+
+enum ColorWriteMask
+{
+    kColorWriteA = 1,
+    kColorWriteB = 2,
+    kColorWriteG = 4,
+    kColorWriteR = 8,
+    kColorWriteAll = (kColorWriteR | kColorWriteG | kColorWriteB | kColorWriteA)
+};
+
+enum BlendMode
+{
+    kBlendZero = 0, kBlendFirst = kBlendZero,
+    kBlendOne,
+    kBlendDstColor,
+    kBlendSrcColor,
+    kBlendOneMinusDstColor,
+    kBlendSrcAlpha,
+    kBlendOneMinusSrcColor,
+    kBlendDstAlpha,
+    kBlendOneMinusDstAlpha,
+    kBlendSrcAlphaSaturate,
+    kBlendOneMinusSrcAlpha,
+    kBlendCount
+};
+
+enum BlendOp
+{
+    kBlendOpFirst = 0,
+    kBlendOpAdd = kBlendOpFirst,
+    kBlendOpSub,
+    kBlendOpRevSub,
+    kBlendOpMin,
+    kBlendOpMax,
+    kBlendOpLogicalClear, kBlendOpLogicalFirst = kBlendOpLogicalClear,
+    kBlendOpLogicalSet,
+    kBlendOpLogicalCopy,
+    kBlendOpLogicalCopyInverted,
+    kBlendOpLogicalNoop,
+    kBlendOpLogicalInvert,
+    kBlendOpLogicalAnd,
+    kBlendOpLogicalNand,
+    kBlendOpLogicalOr,
+    kBlendOpLogicalNor,
+    kBlendOpLogicalXor,
+    kBlendOpLogicalEquiv,
+    kBlendOpLogicalAndReverse,
+    kBlendOpLogicalAndInverted,
+    kBlendOpLogicalOrReverse,
+    kBlendOpLogicalOrInverted, kBlendOpLogicalLast = kBlendOpLogicalOrInverted,
+    kBlendOpMultiply, kBlendOpAdvancedFirst = kBlendOpMultiply,
+    kBlendOpScreen,
+    kBlendOpOverlay,
+    kBlendOpDarken,
+    kBlendOpLighten,
+    kBlendOpColorDodge,
+    kBlendOpColorBurn,
+    kBlendOpHardLight,
+    kBlendOpSoftLight,
+    kBlendOpDifference,
+    kBlendOpExclusion,
+    kBlendOpHSLHue,
+    kBlendOpHSLSaturation,
+    kBlendOpHSLColor,
+    kBlendOpHSLLuminosity, kBlendOpAdvancedLast = kBlendOpHSLLuminosity,
+    kBlendOpCount,
+};
+
+enum TextureFilterMode
+{
+    kTexFilterInvalid = -1,
+    kTexFilterNearest = 0,
+    kTexFilterBilinear,
+    kTexFilterTrilinear,
+    kTexFilterCount // keep this last!
+};
+
+enum TextureWrapMode
+{
+    kTexWrapInvalid = -1,
+    kTexWrapRepeat = 0,
+    kTexWrapClamp,
+    kTexWrapMirror,
+    kTexWrapMirrorOnce,
+    kTexWrapCount // keep this last!
+};
+
 struct FormatDesc
 {
     UInt8 blockSize;
