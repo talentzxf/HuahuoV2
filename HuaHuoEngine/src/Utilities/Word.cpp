@@ -90,3 +90,50 @@ namespace core{
         SplitImpl(s, splitChar, parts, std::string::npos);
     }
 }
+
+inline UInt64 StringToIntBase(std::string& s, bool& isNegative)
+{
+    isNegative = false;
+    std::string::iterator it = s.begin();
+    while (it != s.end() && IsSpace(*it))
+        it++;
+
+    if (it == s.end())
+        return 0U;
+
+    // + or - are only allowed at the beginning of the string
+    switch (*it)
+    {
+        case '-': isNegative = true;
+        case '+': it++;
+    }
+
+    UInt64 value = 0;
+
+    for (; it != s.end(); ++it)
+    {
+        UInt32 a = *it - '0';
+
+        if (a > 9)
+            break;
+
+        value = value * 10 + a;
+    }
+
+    return value;
+}
+
+
+template<class T>
+T StringToSignedType(const std::string& s)
+{
+    bool negative = false;
+    UInt64 value = StringToIntBase(s, negative);
+
+    return negative ? -(T)value : (T)value;
+}
+
+SInt32 StringToInt(std::string& s)
+{
+    return StringToSignedType<SInt32>(s);
+}

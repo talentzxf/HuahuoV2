@@ -87,4 +87,10 @@ namespace core {
     // REMARKS: Split("1,,,,,,,,,,2", '<>', parts)  -> parts == "1","2"
     void Split(std::string& str, char splitChar, std::vector<std::string> &parts);
 }
+
+// Converts string to integer representation. First, any whitespace characters are ignored.
+// Then, optional '+' or '-' sign character determines the sign of the resulting number.
+// Then, one or more decimal digits are parsed until either non-digit character or the
+// end of the string is found. Any non-digit characters after the end of the number are ignored.
+SInt32  StringToInt(std::string& s);
 #endif //HUAHUOENGINE_WORD_H
