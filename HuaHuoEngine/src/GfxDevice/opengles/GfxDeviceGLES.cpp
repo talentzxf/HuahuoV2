@@ -3,6 +3,7 @@
 //
 
 #include "GfxDeviceGLES.h"
+#include "Shaders/GraphicsCaps.h"
 
 GfxDeviceGLES::GfxDeviceGLES(MemLabelRef label)
         : GfxThreadableDevice(label)
@@ -101,4 +102,145 @@ void GfxDeviceGLES::EndFrame()
 //#if PLATFORM_ANDROID
 //    Profiler_RenderingEnd();
 //#endif
+}
+
+void GfxDeviceGLES::UpdateSRGBWrite()
+{
+//    if (!GetGraphicsCaps().hasSRGBReadWrite)
+//        return;
+//
+//    bool enable = m_sRGBWrite;
+//
+//    // Sometimes sRGB writes happen on linear textures when FRAMEBUFFER_SRGB is set,
+//    // therefore we explicitly disable FRAMEBUFFER_SRGB for linear textures.
+//    if (GetGraphicsCaps().buggySRGBWritesOnLinearTextures && m_State.renderTargetsAreLinear > 0)
+//        enable = false;
+//
+//    if ((int)enable == m_State.actualSRGBWrite)
+//        return;
+//
+//    if (GetGraphicsCaps().gles.hasFramebufferSRGBEnable)
+//    {
+//        if (enable)
+//            this->m_Api.Enable(gl::kFramebufferSRGB);
+//        else
+//            this->m_Api.Disable(gl::kFramebufferSRGB);
+//    }
+//
+//    m_State.actualSRGBWrite = enable;
+}
+
+void GfxDeviceGLES::SetSRGBWrite(bool enable)
+{
+    m_sRGBWrite = enable;
+
+//    if (PLATFORM_WIN && enable && !GetGraphicsCaps().hasSRGBReadWrite && m_Context->GetFramebuffer().GetCurrentFramebufferName() == gl::FramebufferHandle::Default())
+//        AssertMsg(0, "Your platform doesn't support linear rendering with OpenGL ES, switch to OpenGL core graphics API");
+
+    this->UpdateSRGBWrite();
+}
+
+bool GfxDeviceGLES::GetSRGBWrite()
+{
+    return GetGraphicsCaps().hasSRGBReadWrite && GetGraphicsCaps().gles.hasFramebufferSRGBEnable && m_sRGBWrite;
+}
+
+extern GfxDeviceLevelGL g_RequestedGLLevel;
+
+// The content of this function should be in GfxDeviceGLES constructor
+// but GfxDeviceGLES instances are created with UNITY_NEW_AS_ROOT which doesn't allow arguments passing.
+bool GfxDeviceGLES::Init(GfxDeviceLevelGL deviceLevel)
+{
+    void* masterContextPointer = NULL;
+    g_RequestedGLLevel = deviceLevel;
+
+//#   if UNITY_DESKTOP
+//    #       if PLATFORM_WIN
+//    SetMasterContextClassName(L"WindowGLClassName");
+//
+//    GfxDeviceLevelGL CreateMasterGraphicsContext(GfxDeviceLevelGL level);
+//    deviceLevel = CreateMasterGraphicsContext(deviceLevel);
+//    if (deviceLevel == kGfxLevelUninitialized)
+//        return false;
+//#       endif
+//
+//    GraphicsContextHandle masterContext = GetMasterGraphicsContext();
+//    if (!masterContext.IsValid())
+//        return false;
+//
+//    SetMainGraphicsContext(masterContext);
+//    ActivateGraphicsContext(masterContext, true, kGLContextSkipGfxDeviceMakeCurrent);
+//
+//    GraphicsContextGL* context = OBJECT_FROM_HANDLE(masterContext, GraphicsContextGL);
+//    masterContextPointer = context;
+//#   else
+//    // Read in context version
+//    ContextGLES::Create(contextLevelToGLESVersion(deviceLevel));
+//    masterContextPointer = gl::ContextHandle::DummyMaster().Get();    // masterContextPointer should not be null when calling SetActiveContext
+//#   endif
+//
+//    GLES_ASSERT(&m_Api, masterContextPointer, "No master context created");
+
+    // Initialize context and states
+    g_DeviceStateGLES = &m_State;
+
+    if (IsGfxLevelES2(deviceLevel))
+        m_Renderer = kGfxRendererOpenGLES20;
+    else if (IsGfxLevelES(deviceLevel))
+        m_Renderer = kGfxRendererOpenGLES3x;
+    else if (IsGfxLevelCore(deviceLevel))
+        m_Renderer = kGfxRendererOpenGLCore;
+//    else
+//        GLES_ASSERT(&m_Api, 0, "OPENGL ERROR: Invalid device level");
+
+    m_Context = new GfxContextGLES;
+
+    m_Api.Init(*m_Context, deviceLevel);
+    gGL = m_State.api = &m_Api;
+
+    this->SetActiveContext(masterContextPointer);
+
+    m_Api.InitDebug();
+    m_Api.debug.Log(Format("OPENGL LOG: GfxDeviceGLES::Init - CreateMasterGraphicsContext\n").c_str());
+
+    printf_console("OPENGL LOG: Creating OpenGL%s%d.%d graphics device ; Context level %s ; Context handle %d\n",
+                   IsGfxLevelES(deviceLevel) ? " ES " : " ",
+                   GetGraphicsCaps().gles.majorVersion, GetGraphicsCaps().gles.minorVersion,
+                   GetGfxDeviceLevelString(deviceLevel),
+                   m_Api.GetContext().Get());
+
+#if UNITY_APPLE_PVR
+    printf_console("OPENGL LOG: OpenGLES%d is deprecated on this platform\n", GetGraphicsCaps().gles.majorVersion);
+#endif
+
+    m_FrameTimingManager = UNITY_NEW(FrameTimingManagerGLES, kMemGfxDevice)(*gGL);
+
+    InitCommonState(m_State);
+    InvalidateState();
+    m_IsThreadable = true;
+
+    m_GfxContextData.SetGlobalDepthBias(0.0f);
+    m_GfxContextData.SetGlobalSlopeDepthBias(0.0f);
+
+    m_GfxContextData.SetUserBackfaceMode(false);
+
+    m_AtomicCounterBuffer = NULL;
+    m_AtomicCounterSlots.resize_initialized(GetGraphicsCaps().gles.maxAtomicCounterBufferBindings, nullptr);
+
+#if UNITY_ANDROID
+    m_platformSettings.requiresEyeIndexArray = true;
+#endif //UNITY_ANDROID
+    m_SinglePassStereoSupport.InitSinglePassStereoSupport(this, this);
+
+    CreateDefaultVertexBuffers();
+
+    PluginsSetGraphicsDevice(NULL, m_Renderer, kGfxDeviceEventInitialize);
+
+#if SUPPORT_MULTIPLE_DISPLAYS && PLATFORM_STANDALONE
+    m_DisplayManager.Initialize();
+#endif
+
+    static_cast<FrameTimingManagerGLES*>(m_FrameTimingManager)->FrameStart();
+
+    return true;
 }

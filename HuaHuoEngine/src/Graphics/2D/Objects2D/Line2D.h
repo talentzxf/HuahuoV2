@@ -6,6 +6,12 @@
 #define HUAHUOENGINE_LINE2D_H
 #include "Base2DObject.h"
 #include "Math/Vector3f.h"
+#include "BaseClasses/PPtr.h"
+
+struct LinePoint{
+    Vector3f position;
+    bool isShadow;
+};
 
 class Line2D : public Base2DObject{
     REGISTER_CLASS(Line2D);
@@ -17,9 +23,15 @@ public:
 
     }
 
+    virtual void MainThreadCleanup() override;
+
+    void AddPoint(Vector3f* point, bool isShadow){
+        LinePoint* newPoint = HUAHUO_NEW(LinePoint, kMemRenderer);
+        points.push_back(newPoint);
+    }
+
 private:
-    Vector3f p1;
-    Vector3f p2;
+    std::vector<PPtr<LinePoint>> points;
 };
 
 

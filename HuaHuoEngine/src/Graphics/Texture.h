@@ -21,9 +21,15 @@ public:
         kAnisoCount
     };
 
+    virtual bool        HasMipMap() const                       { return m_MipCount != 1; }
+    virtual int         GetMipmapCount() const                  { return m_MipCount; }
+
 public:
     Texture(MemLabelId label, ObjectCreationMode mode);
     virtual void        MainThreadCleanup() override;
+
+protected:
+    int                     m_MipCount;
 };
 
 

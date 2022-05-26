@@ -14,6 +14,7 @@
 #include "CullResults.h"
 #include "SceneManager/HuaHuoScene.h"
 #include "Graphics/RenderTexture.h"
+#include "Camera/RenderLoops/RenderLoop.h"
 
 Camera::CopiableState::CopiableState()
         :   m_FieldOfViewBeforeEnablingVRMode(0.0f)
@@ -63,11 +64,11 @@ Camera::CopiableState::CopiableState()
     m_OcclusionCulling = true;
 
     m_TargetColorBufferCount = 1;
-//    ::memset(m_TargetColorBuffer, 0x00, sizeof(m_TargetColorBuffer));
-//    ::memset(m_TargetBuffersOriginatedFrom, 0x00, sizeof(m_TargetBuffersOriginatedFrom));
-//
-//    m_TargetColorBuffer[0] = RenderSurfaceHandle();
-//    m_TargetDepthBuffer = RenderSurfaceHandle();
+    ::memset(m_TargetColorBuffer, 0x00, sizeof(m_TargetColorBuffer));
+    ::memset(m_TargetBuffersOriginatedFrom, 0x00, sizeof(m_TargetBuffersOriginatedFrom));
+
+    m_TargetColorBuffer[0] = RenderSurfaceHandle();
+    m_TargetDepthBuffer = RenderSurfaceHandle();
 
     m_StereoSeparation = 0.022f;
     m_StereoConvergence = 10.0f;
@@ -293,6 +294,165 @@ void Camera::GetClipToWorldMatrix(Matrix4x4f& outMatrix) const
 {
     Matrix4x4f::Invert_Full(GetWorldToClipMatrix(), outMatrix);
 }
+
+float Camera::GetStereoSeparation() const
+{
+//    if (GetStereoEnabled() && m_State.m_StereoViewMatrixMode != kStereoViewMatrixModeExplicitUnsafeForSingleCull)
+//    {
+//        return GetVRDeviceStereoSeparation();
+//    }
+
+    return m_State.m_StereoSeparation;
+}
+
+CameraRenderingParams Camera::ExtractCameraRenderingParams() const
+{
+    CameraRenderingParams params;
+    params.matView = GetWorldToCameraMatrix();
+    params.matProj = GetProjectionMatrix();
+    params.worldPosition = GetCameraToWorldMatrix().GetPosition();
+    params.stereoSeparation = GetStereoSeparation();
+    return params;
+}
+
+void Camera::SetupRender(ShaderPassContext& passContext, RenderFlag renderFlags)
+{
+    SetupRender(passContext, ExtractCameraRenderingParams(), renderFlags);
+}
+
+bool Camera::ApplyRenderTexture()
+{
+    // while we could return const ref (and grab address and use uniformly)
+    // we pass non const pointer to SetActive (because surfaces can be reset internally)
+    // so create local handle copy if we draw to real texture
+    RenderSurfaceHandle rtcolor = m_CurrentTargetTexture ? m_CurrentTargetTexture->GetColorSurfaceHandle() : RenderSurfaceHandle();
+
+    RenderSurfaceHandle defaultColor[kMaxSupportedRenderTargets];
+    CompileTimeAssert(sizeof(defaultColor) == sizeof(m_State.m_TargetColorBuffer), "defaultColor array size needs to be updated!");
+    memcpy(defaultColor, m_State.m_TargetColorBuffer, sizeof(defaultColor));
+
+    if (!defaultColor[0].IsValid())
+        defaultColor[0] = GetGfxDevice().GetBackBufferColorSurface();
+    RenderSurfaceHandle defaultDepth = m_State.m_TargetDepthBuffer;
+    if (!defaultDepth.IsValid())
+        defaultDepth = GetGfxDevice().GetBackBufferDepthSurface();
+
+    RenderSurfaceHandle* color  = m_CurrentTargetTexture ? &rtcolor : defaultColor;
+    RenderSurfaceHandle  depth  = m_CurrentTargetTexture ? m_CurrentTargetTexture->GetDepthSurfaceHandle() : defaultDepth;
+    int                  count  = m_CurrentTargetTexture ? 1 : m_State.m_TargetColorBufferCount;
+    RenderTexture**      rt     = m_CurrentTargetTexture ? &m_CurrentTargetTexture : m_State.m_TargetBuffersOriginatedFrom;
+
+    // if we have configured a depth buffer in scripts be sure to favour it over the m_CurrentTargetTexture or defaultDepth
+    if (m_BuffersSetFromScripts)
+        depth = m_State.m_TargetDepthBuffer;
+
+    // if we have set buffers from scripts we don't want calls to ApplyRenderTexture to changes that behaviour (e.g. at end of RenderForwardShadowMaps)
+    if ((!m_CurrentTargetTexture) && (!m_BuffersSetFromScripts))
+        m_CurrentTargetTexture = rt[0];
+
+
+    int depthSlice = m_CurrentTargetTexture != NULL ? GetRenderLoopDefaultDepthSlice(GetSinglePassStereo()) : 0;
+    RenderTexture::SetActive(count, color, depth, rt, 0, kCubeFaceUnknown, depthSlice, RenderTexture::kFlagDontSetViewport);
+
+    bool backBuffer = color->IsValid() && color[0].object->backBuffer;
+    return backBuffer;
+}
+
+SinglePassStereo Camera::GetSinglePassStereo() const
+{
+#if GFX_SUPPORTS_SINGLE_PASS_STEREO
+    IVRDevice* vrDevice = GetIVRDevice();
+    // We can render just once for both eyes if we can single cull and we support either instancing or multiview
+    if (GetStereoEnabled() && GetStereoSingleCullEnabled() && vrDevice && vrDevice->IsSinglePassStereoAllowed())
+    {
+        return GraphicsHelper::GetSinglePassStereoForStereoRenderingPath(vrDevice->GetStereoRenderingPath());
+    }
+#endif
+    return kSinglePassStereoNone;
+}
+
+Rectf Camera::GetRenderRectangle() const
+{
+    // when we setup camera thats how we determine m_CurrentTargetTexture:
+    // 1. image filters customize if needed
+    // 2. target RenderTexture otherwise
+    // 3. we call Camera::ApplyRenderTexture where we handle case of targeting RenderBuffers
+    // we want special processing ONLY in case of image filters tweaking it
+    bool useRenderTargetSize = false;
+
+    if (m_CurrentTargetTexture)
+    {
+        const bool renderToTargetRB = m_CurrentTargetTexture == m_State.m_TargetBuffersOriginatedFrom[0];
+        const bool renderToTargetRT = m_CurrentTargetTexture == (RenderTexture*)m_State.m_TargetTexture;
+        const bool isStereoTexture = false; //m_CurrentTargetTexture->GetVRUsage() != kVRTextureUsageNone;
+        const bool isVRRenderingToNonFullScreenViewport = false; //GetIVRDevice() && GetIVRDevice()->IsCurrentlyStereoRenderTarget() && !GetIVRDevice()->IsViewportFullscreen();
+        bool currentlyRenderingInStereo = isStereoTexture && m_IsRenderingStereo;
+        bool pluginNeedsFullRTSize = false;
+
+#if GFX_SUPPORTS_RENDERING_EXT_PLUGIN
+        pluginNeedsFullRTSize = PluginsIssueRenderingExtQuery(kUnityRenderingExtQueryOverrideVRSinglePass, kGfxDeviceRenderingExtQueryMethodAny);
+#endif
+        if ((!currentlyRenderingInStereo || pluginNeedsFullRTSize) && !renderToTargetRB && !renderToTargetRT && !isVRRenderingToNonFullScreenViewport)
+            useRenderTargetSize = true;
+    }
+
+    Rectf viewRect;
+    if (useRenderTargetSize)
+    {
+        viewRect = Rectf(0.0f, 0.0f, m_CurrentTargetTexture->GetScaledWidth(), m_CurrentTargetTexture->GetScaledHeight());
+    }
+    else
+    {
+        viewRect = GetPhysicalViewportRect();
+    }
+    return viewRect;
+}
+
+void Camera::SetRenderTargetAndViewport()
+{
+    m_CurrentTargetTexture = EnsureRenderTextureIsCreated(m_CurrentTargetTexture);
+    bool backBuffer = ApplyRenderTexture();
+
+    Rectf viewport = backBuffer ? GetPhysicalViewportRect() : GetRenderRectangle();
+    RectInt viewcoord = RectfToRectInt(viewport);
+    GetGfxDevice().SetViewport(viewcoord);
+}
+
+void Camera::SetupRender(ShaderPassContext& passContext, const CameraRenderingParams& params, RenderFlag renderFlags)
+{
+    GfxDevice& device = GetGfxDevice();
+
+//    SetActiveVRUsage();
+//
+//    // Cache whether we use HDR for rendering.
+//    m_State.m_UsingHDR = CalculateUsingHDR();
+//    if (m_State.m_UsingHDR)
+//        passContext.keywords.Enable(keywords::kHDROn);
+//    else
+//        passContext.keywords.Disable(keywords::kHDROn);
+
+//    // want linear lighting?
+//    bool linearLighting = GetActiveColorSpace() == kLinearColorSpace;
+//    device.SetSRGBWrite(linearLighting);
+
+    if (renderFlags & kRenderFlagSetRenderTarget)
+        SetRenderTargetAndViewport();
+
+    GraphicsHelper::SetWorldViewAndProjection(device, NULL, &params.matView, &params.matProj);
+    SetCameraShaderProps(passContext, params);
+
+    // Setup billboard rendering.
+    BillboardBatchManager::SetBillboardShaderProps(
+            passContext.keywords,
+            device.GetBuiltinParamValues(),
+            GetQualitySettings().GetCurrent().billboardsFaceCameraPosition,
+            params.matView,
+            params.worldPosition);
+
+
+    GetRenderBufferManager().GetTextures().SetActiveVRUsage(kVRTextureUsageNone);
+}
+
 
 void Camera::CustomRenderWithPipeline(ShaderPassContext& passContext, RenderFlag renderFlags, PostProcessCullResults* postProcessCullResults, void* postProcessCullResultsData/*, ScriptingObjectPtr requests*/){
     // If camera's viewport rect is empty or invalid or there's no visible nodes, do nothing.

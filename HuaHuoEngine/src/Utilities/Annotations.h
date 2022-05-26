@@ -25,6 +25,7 @@
 #if PLATFORM_WIN
 #pragma warning(disable:6255) // _alloca
 #pragma warning(disable:6211) // leaking due to exception
+#include <cassert>
 #define OUTPUT_OPTIONAL _Out_opt_
 #define DOES_NOT_RETURN __declspec(noreturn)
 #define ANALYSIS_ASSUME(x) { __analysis_assume(x); }

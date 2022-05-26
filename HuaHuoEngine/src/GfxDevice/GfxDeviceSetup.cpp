@@ -7,9 +7,22 @@
 #include "opengles/GfxDeviceGLES.h"
 #include "Memory/MemoryMacros.h"
 
+#if GFX_SUPPORTS_OPENGL_UNIFIED
+int gDefaultFBO = -1;
+GfxDeviceLevelGL g_ForcedGLLevel = kGfxLevelUninitialized;
+GfxDeviceLevelGL g_RequestedGLLevel = kGfxLevelCoreLast;
+#endif
+
 GfxDevice* InitializeGfxDevice(){
-    // A simpler version of creating the device ...
-    GfxDevice* device = HUAHUO_NEW_AS_ROOT(GfxDeviceGLES, kMemGfxDevice, "Rendering", "GfxDeviceGLES") ();
-    SetGfxDevice(device);
-    return device;
+
+    GfxDeviceRenderer renderer = kGfxRendererOpenGLCore;
+
+#if GFX_SUPPORTS_OPENGL_UNIFIED
+    if (IsUnifiedGLRenderer(renderer))
+    {
+        extern GfxDevice* CreateGLESGfxDevice(GfxDeviceRenderer renderer);
+        return CreateGLESGfxDevice(renderer);
+    }
+#endif
+    return NULL;
 }

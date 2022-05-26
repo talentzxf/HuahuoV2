@@ -17,6 +17,7 @@
 #include "BaseClasses/PPtr.h"
 #include "SceneManager/HuaHuoSceneHandle.h"
 #include "Graphics/RenderTexture.h"
+#include "CameraTypes.h"
 
 class HuaHuoScene;
 class Camera;
@@ -266,6 +267,21 @@ public:
     RenderTexture *GetTargetTexture() const;
     void SetTargetTexture(RenderTexture *tex);
     bool IsTargetTextureNull() const { return GetTargetTexture() == NULL; }
+
+    // Set up the viewport, render target, load modelview & projection matrices
+    // Flags are a bitmask of kRenderFlagXXX
+    void SetupRender(ShaderPassContext& passContext, RenderFlag renderFlags = kRenderFlagNone);
+    void SetupRender(ShaderPassContext& passContext, const CameraRenderingParams& params, RenderFlag renderFlags = kRenderFlagNone);
+
+    // Extract parameters that are overridden for stereo rendering like position and view matrix
+    CameraRenderingParams ExtractCameraRenderingParams() const;
+
+    float GetStereoSeparation() const;
+    SinglePassStereo GetSinglePassStereo() const;
+
+    // Get the final in-rendertarget render rectangle.
+    // This takes into account any render texture setup we may have.
+    Rectf GetRenderRectangle() const;
 //protected:
 //    // Behaviour stuff
 //    virtual void AddToManager() override;
@@ -273,6 +289,8 @@ public:
 private:
     Rectf GetCameraRect(bool zeroOrigin, bool adjustForDynamicScale = true) const;
     void CalculateGateFitParams();
+    void SetRenderTargetAndViewport();
+    bool ApplyRenderTexture();
 private:
     // When generating tooltips/ranges/enums for inspector with Doxygen, we want to attribute all these to Camera class and not to CopiableState.
     // For this the struct declaration is excluded with the cond command (unless HIDDEN_SYMBOLS is defined in ENABLED_SECTIONS).
@@ -308,12 +326,12 @@ private:
 
         PPtr<RenderTexture> m_TargetTexture; ///< The texture to render this camera into
 //
-//        RenderSurfaceHandle m_TargetColorBuffer[kMaxSupportedRenderTargets];
+        RenderSurfaceHandle m_TargetColorBuffer[kMaxSupportedRenderTargets];
         int                 m_TargetColorBufferCount;
-//        RenderSurfaceHandle m_TargetDepthBuffer;
+        RenderSurfaceHandle m_TargetDepthBuffer;
         // we need to set active RenderTexture's for GfxDevice. While this is very unfortunate
         // some code paths use "active RT" to determine what to do
-//        RenderTexture*      m_TargetBuffersOriginatedFrom[kMaxSupportedRenderTargets];
+        RenderTexture*      m_TargetBuffersOriginatedFrom[kMaxSupportedRenderTargets];
 
         int                 m_TargetDisplay;        ///< Target Display Index. Can be between 1 to 8. 0 is default display {0, 8}
         TargetEyeMask       m_TargetEye;

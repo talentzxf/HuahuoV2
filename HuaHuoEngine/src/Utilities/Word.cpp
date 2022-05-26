@@ -6,6 +6,21 @@
 #include "Word.h"
 #include <string>
 
+bool BeginsWith(const char* str, const char* prefix)
+{
+    for (;;)
+    {
+        // end of prefix? we're done here (successful match).
+        char p = *prefix++;
+        if (p == 0)
+            return true;
+
+        // mismatch on current? fail.
+        if (*str++ != p)
+            return false;
+    }
+}
+
 std::string VFormat(const char* format, va_list ap)
 {
     va_list zp;
@@ -49,3 +64,29 @@ int StrCmp(const char* str1, const char* str2)
     }
 }
 
+void SplitImpl(std::string& s, char splitChar, std::vector<std::string>& parts, size_t maxSplits)
+{
+    size_t n = 0, n1 = 0;
+    while (true)
+    {
+        if (maxSplits == 1 || (n1 = s.find(splitChar, n)) == std::string::npos)
+        {
+            if (n < s.length())
+                parts.push_back(s.substr(n));
+            break;
+        }
+        if (n1 > n)
+        {
+            parts.push_back(s.substr(n, n1 - n));
+            maxSplits--;
+        }
+        n = n1 + 1;
+    }
+}
+
+namespace core{
+    void Split(std::string& s, char splitChar, std::vector<std::string>& parts)
+    {
+        SplitImpl(s, splitChar, parts, std::string::npos);
+    }
+}

@@ -25,6 +25,9 @@ public:
     virtual PPtr<Material> GetMaterial(int i) const = 0;
     virtual int GetStaticBatchIndex() const { return 0; }
 
+    // VZ: Don't want to make things even more complicated....
+    typedef void (*ExecuteCallBack)(BaseRenderer*);
+    ExecuteCallBack executeCallBack;
 protected:
     SharedRendererData      m_RendererData;
     ShaderPropertySheet*    m_RendererProperties;

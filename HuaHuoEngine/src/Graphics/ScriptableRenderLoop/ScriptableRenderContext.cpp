@@ -10,6 +10,8 @@
 #include "Graphics/CommandBuffer/RenderingCommandBuffer.h"
 #include "GfxDevice/GfxDevice.h"
 #include "Camera/RenderNodeQueue.h"
+#include "Camera/BaseRenderer.h"
+#include "Camera/RendererScene.h"
 
 Camera* ScriptableRenderContext::GetCamera(int index)
 {
@@ -98,15 +100,35 @@ void ScriptableRenderContext::DrawRenderers(ScriptableCullResults *cullResults, 
     AddCommandWithIndex(kScriptRenderCommand_DrawRenderers, index);
 }
 
+void HuaHuoRenderPipeline(ScriptableRenderContext* pContext, const std::vector<Camera *> &cameras){
+    RendererScene& rendererScene = GetRendererScene();
+    int rendererCount = rendererScene.GetNumRenderers();
+
+    ShaderPassContext& passContext = GetDefaultPassContext();
+
+    for(Camera* camera:cameras){
+        // 1. Setup the camera
+        camera->SetupRender(passContext);
+
+        // 2. Render objects
+        for(int i = 0; i < rendererCount; i++ ){
+            const SceneNode& renderNode = rendererScene.GetRendererNode(i);
+            BaseRenderer* renderer = renderNode.renderer;
+            renderer->executeCallBack(renderer);
+        }
+    }
+}
+
 void ScriptableRenderContext::ExtractAndExecuteRenderPipeline(const std::vector<Camera *> &cameras,
                                                               PostProcessCullResults *postProcessCullResults,
                                                               void *postProcessCullResultsData) {
 
     m_Cameras = &cameras;
-
     RenderPipeline* renderPipeline = GetRenderPipelineManager()->GetRenderPipeline();
     if(renderPipeline != NULL){
         renderPipeline->Render(this);
+    } else {// VZ: Really have to write own renderer, the original implementation is really really complicated ......
+        HuaHuoRenderPipeline(this, cameras);
     }
 }
 

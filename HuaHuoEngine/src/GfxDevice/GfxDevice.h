@@ -10,6 +10,7 @@
 #include "Math/Vector2f.h"
 #include "GfxDeviceAsyncCommand.h"
 #include "Job/JobTypes.h"
+#include "GfxDeviceObjects.h"
 
 class AutoGfxDeviceBeginEndFrame
 {
@@ -136,6 +137,19 @@ private:
 
 class GfxDevice {
 public:
+    enum RenderTargetFlags
+    {
+        kFlagDontRestoreColor   = (1 << 0),   // Xbox 360 specific: do not restore old contents to EDRAM
+        kFlagDontRestoreDepth   = (1 << 1),   // Xbox 360 specific: do not restore old contents to EDRAM
+        kFlagDontRestore        = kFlagDontRestoreColor | kFlagDontRestoreDepth,
+        kFlagForceResolve       = (1 << 3),   // Xbox 360 specific: force a resolve to system RAM
+        // currently this is used only in editor, so it is implemented only for editor gfx devices (gl/dx)
+        kFlagForceSetRT         = (1 << 4),   // force SetRenderTargets call (bypass any caching involved and actually set RT)
+        kFlagDontResolve        = (1 << 5),   // Skip AA resolve even when the previous RT was AA. Used when doing shenanigans with default backbuffers.
+        kFlagReadOnlyDepth      = (1 << 6),   // Bind the depth surface as read-only (if supported by the gfxdevice; see GraphicsCaps::hasReadOnlyDepth)
+        kFlagReadOnlyStencil    = (1 << 7),   // Bind the stencil surface as read-only (if supported by the gfxdevice; see GraphicsCaps::hasReadOnlyStencil)
+    };
+
     explicit GfxDevice(MemLabelRef label);
     virtual ~GfxDevice();
 
@@ -150,10 +164,33 @@ public:
 
     void ExecuteAsync(int count, GfxDeviceAsyncCommand::Func* func, GfxDeviceAsyncCommand::ArgScratch** scratches, const GfxDeviceAsyncCommand::Arg* arg, const JobFence& depends);
     MemLabelId GetMemoryLabel() { return m_MemoryLabel; }
+
+    virtual void SetSRGBWrite(const bool) =0;
+    virtual bool GetSRGBWrite() =0;
+
+    virtual RenderSurfaceBase* AllocRenderSurface(bool colorSurface);
+    // sizeof of appropriate platform struct
+    virtual size_t              RenderSurfaceStructMemorySize(bool colorSurface) =0;
+
+    virtual void DestroyRenderSurface(RenderSurfaceHandle& rs);
+    virtual void                DeallocRenderSurface(RenderSurfaceBase* rs);
+
+    // destroys platform-specific part of render surface
+    virtual void DestroyRenderSurfacePlatform(RenderSurfaceBase* rs) =0;
+
+    // TODO: we might need to extend it in the future, e.g. for multi-display
+    virtual RenderSurfaceHandle GetBackBufferColorSurface()    { return m_BackBufferColor; }
+    virtual RenderSurfaceHandle GetBackBufferDepthSurface()    { return m_BackBufferDepth; }
 protected:
     // Mutable state
     GfxContextData      m_GfxContextData;
     MemLabelId          m_MemoryLabel;
+
+    // Immutable data
+    GfxDeviceRenderer   m_Renderer;
+
+    RenderSurfaceHandle m_BackBufferColor;
+    RenderSurfaceHandle m_BackBufferDepth;
 };
 
 // GetGfxDevice() returns the graphics device that you should use in rendering code.

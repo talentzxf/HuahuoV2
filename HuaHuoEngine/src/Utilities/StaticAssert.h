@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdlib>
+#include "Utilities/ArrayUtility.h"
 
 #define CompileTimeAssertArraySize(array, size) static_assert(ARRAY_SIZE(array) == (size), "Wrong number of elements in array " #array)
 #define CompileTimeAssert static_assert

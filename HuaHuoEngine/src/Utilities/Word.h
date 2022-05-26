@@ -5,6 +5,9 @@
 #ifndef HUAHUOENGINE_WORD_H
 #define HUAHUOENGINE_WORD_H
 #include "StringTraits.h"
+#include <vector>
+
+bool BeginsWith(const char* str, const char* prefix);
 
 enum ComparisonType
 {
@@ -75,5 +78,13 @@ TIterator FindStringInRange(TIterator begin, TIterator end, TString str, bool ig
     }
 
     return begin;
+}
+
+namespace core {
+    // Split str using splitChar and store them into parts. f.ex:
+    //    Split("t,es,t", ',', parts)    -> parts == "t","es","t"
+    //    Split("t,es,t", ',', parts,2)  -> parts == "t","est"
+    // REMARKS: Split("1,,,,,,,,,,2", '<>', parts)  -> parts == "1","2"
+    void Split(std::string& str, char splitChar, std::vector<std::string> &parts);
 }
 #endif //HUAHUOENGINE_WORD_H

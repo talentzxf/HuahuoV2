@@ -6,6 +6,7 @@
 #include "Logging/LogAssert.h"
 #include "Job/Jobs.h"
 #include <cstdlib>
+#include "Graphics/RenderSurface.h"
 
 static GfxDevice* g_MainGfxDevice = NULL;
 
@@ -67,4 +68,50 @@ void GfxDevice::ExecuteAsync(int count, GfxDeviceAsyncCommand::Func* func, GfxDe
 #if ENABLE_EMULATED_JOB_ASSERT
     g_ThreadRunningEmulatedJob = false;
 #endif
+}
+
+RenderSurfaceBase* GfxDevice::AllocRenderSurface(bool colorSurface)
+{
+    const size_t memSz = RenderSurfaceStructMemorySize(colorSurface);
+    RenderSurfaceBase* ret = (RenderSurfaceBase*)HUAHUO_MALLOC_ALIGNED(kMemGfxDevice, memSz, 16);
+    ::memset(ret, 0x00, memSz);
+    ret->samples = 1;
+    ret->colorSurface = colorSurface;
+    return ret;
+}
+
+void GfxDevice::DeallocRenderSurface(RenderSurfaceBase* rs)
+{
+#if DEBUGMODE
+    const size_t memSz = RenderSurfaceStructMemorySize(rs->colorSurface);
+    ::memset(rs, 0xFD, memSz);
+#endif
+
+    HUAHUO_FREE(kMemGfxDevice, rs);
+}
+
+void GfxDevice::DestroyRenderSurface(RenderSurfaceHandle& rsh)
+{
+    RenderSurfaceBase* rs = rsh.object;
+
+    // lots of GfxDevice implementations had this if, so we keep it
+    if (rs == 0)
+        return;
+
+    // we disallow destroying backbuffer through high level interface
+    if (rs->backBuffer)
+        return;
+
+//    // TODO@MT: Waits for all async render jobs to complete before allowing the texture to be deleted.
+//    GfxDeviceWaitForAllRenderJobsToComplete();
+
+//    bool unused = (rs->flags & kSurfaceCreateNeverUsed) || (!rs->colorSurface && (rs->flags & kSurfaceCreateNoDepth));
+//    if ((rs->flags & kSurfaceCreateDynamicScale) && !unused)
+//    {
+//        ScalableBufferManager::GetInstance().UnregisterRenderSurface(rs, false);
+//    }
+
+    DestroyRenderSurfacePlatform(rs);
+    DeallocRenderSurface(rs);
+    rsh.object = 0;
 }
