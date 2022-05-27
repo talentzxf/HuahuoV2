@@ -9,6 +9,9 @@
 #include "Utilities/Word.h"
 #include "GLES3/gl3.h"
 #include "ApiConstantsGLES.h"
+#include "ApiTranslateGLES.h"
+
+#define printf_console printf
 
 namespace gl
 {
@@ -16,6 +19,119 @@ namespace gl
 }//namespace gl
 
 ApiGLES * gGL = NULL;
+
+ApiGLES::ApiGLES()
+        : ApiFuncGLES()
+        , m_Translate(new TranslateGLES)
+//        , m_Debug(new DebugGLES(*this))
+        , translate(*m_Translate)
+//        , debug(*m_Debug)
+//        , m_CurrentProgramBinding(0)
+//        , m_CurrentProgramHasTessellation(false)
+//        , m_TestTextureTargetFB(gl::FramebufferHandle::Invalid())
+//        , m_CurrentVertexArrayBinding()
+//        , m_DefaultVertexArrayName()
+//        , m_CurrentDefaultVertexArrayEnabled(0)
+//        , m_CurrentCullMode(kCullOff)
+//        , m_CurrentPatchVertices(0)
+//        , m_CurrentCapEnabled(0)
+//        , m_CurrentPolygonModeWire(false)
+        , m_CurrentTextureUnit(0)
+//        , m_CurrentStencilState(nullptr)
+//        , m_CurrentStencilRef(0)
+//        , m_EnabledClipPlanes(0)
+        , m_Context(gl::ContextHandle::Invalid())
+#   if SUPPORT_THREADS
+        , m_Thread(CurrentThread::GetID())
+#   endif
+        , m_Caching(false)
+{
+    this->m_CurrentTextureBindings.fill(0);
+    this->m_CurrentTextureTargets.fill(GL_NONE);
+    this->m_CurrentSamplerBindings.fill(0);
+    this->m_CurrentFramebufferBindings.fill(gl::FramebufferHandle());
+
+    this->m_CurrentBufferBindings.fill(0);
+    this->m_CurrentUniformBufferBindings.fill(UBOBinding(0));
+    this->m_CurrentTransformBufferBindings.fill(0);
+    this->m_CurrentStorageBufferBindings.fill(0);
+    this->m_CurrentAtomicCounterBufferBindings.fill(0);
+
+    this->m_TestTextureTargetFunc.fill(&ApiGLES::InitGetTextureTargetFunc);
+
+#   if !UNITY_RELEASE
+    printf_console("OPENGL LOG: Created ApiGLES instance for context %d\n", m_Context.Get());
+#   endif
+}
+
+ApiGLES::~ApiGLES()
+{
+    delete m_Translate;
+    m_Translate = NULL;
+
+//    delete m_Debug;
+//    m_Debug = NULL;
+}
+
+//GLenum ApiGLES::InitGetTextureTargetFunc(TextureDimension textureDimension, GLuint texture)
+//{
+//    m_TestTextureTargetFunc[textureDimension - kTexDimFirst] = &ApiGLES::GetTextureTargetDefault;
+//
+//    const int nbTargets = translate.GetTextureTargetCount(textureDimension);
+//    if (nbTargets > 1)
+//    {
+//        // Create a texture of each known texture target type for the given dimension.
+//        const GLuint restoreTextureName = m_CurrentTextureBindings[m_CurrentTextureUnit];
+//        const GLenum restoreTextureTarget = m_CurrentTextureTargets[m_CurrentTextureUnit];
+//        dynamic_array<GLuint> textures(nbTargets, kMemTempAlloc);
+//        for (int i = 0; i < nbTargets; ++i)
+//        {
+//            const GLenum target = translate.GetTextureTarget(textureDimension, i);
+//            bool immutable = false;
+//            // External textures cannot be created by Unity, so we just create a texture name for it
+//            // as we cannot ask our CreateTexture to create the storage for it. Still good enough
+//            // for the target discovery tests.
+//            textures[i] = target == GL_TEXTURE_EXTERNAL_OES ?
+//                          GenTexture(target) : CreateTexture(target, kFormatR8G8B8_UNorm, 1, 1, 1, 1, 1, immutable);
+//            // Note that a texture must be bound to finalize its type.
+//            BindTexture(textures[i], target);
+//        }
+//
+//        // For each possible function to test, check its ability to properly identify all known texture types.
+//        const GetTextureTargetFunc testFuncs[] =
+//                {
+//                        &ApiGLES::GetTextureTargetViaDirectQuery,
+//                        &ApiGLES::GetTextureTargetViaSuccessfulBinding,
+//                        &ApiGLES::GetTextureTargetViaFrameBufferStatus
+//                };
+//        for (int i = 0; i < ARRAY_SIZE(testFuncs); ++i)
+//        {
+//            bool failed = false;
+//            for (int j = 0; j < nbTargets && !failed; ++j)
+//                failed = ((this->*testFuncs[i])(textureDimension, textures[j]) != translate.GetTextureTarget(textureDimension, j));
+//            if (!failed)
+//            {
+//                m_TestTextureTargetFunc[textureDimension - kTexDimFirst] = testFuncs[i];
+//                break;
+//            }
+//        }
+//
+//        for (int i = 0, e = nbTargets; i < e; ++i)
+//        {
+//            const GLenum target = translate.GetTextureTarget(textureDimension, i);
+//            // External textures cannot be created by Unity, so we'll also delete them with the
+//            // low-level API.
+//            if (target == GL_TEXTURE_EXTERNAL_OES)
+//                GLES_CALL(this, glDeleteTextures, 1, &(textures[i]));
+//            else
+//                DeleteTexture(textures[i]);
+//        }
+//
+//        BindTexture(restoreTextureName, restoreTextureTarget);
+//    }
+//
+//    return GetTextureTarget(textureDimension, texture);
+//}
 
 const char* ApiGLES::GetDriverString(gl::DriverQuery Query) const
 {
@@ -104,6 +220,59 @@ void ApiGLES::QuerySampleCounts(GLenum target, GLenum internalFormat, std::vecto
     std::fill_n(samples.begin(), maxSampleCount, invalidSampleCount);
     GLES_CALL(this, glGetInternalformativ, target, internalFormat, GL_SAMPLES, samples.size(), samples.data());
     samples.erase(std::remove(samples.begin(), samples.end(), invalidSampleCount), samples.end());
+}
+
+void ApiGLES::ActiveTextureUnit(GLenum unit)
+{
+    GLES_CHECK(this, unit);
+    GLES_ASSERT(this, unit < GetGraphicsCaps().maxTextureBinds, "Trying to bind a texture to a unit not available");
+    GLES_ASSERT(this, this->debug.ActiveTexture(), "The context has been modified outside of ApiGLES. States tracking is lost.");
+
+    if (m_Caching && this->m_CurrentTextureUnit == unit)
+        return;
+
+    GLES_CALL(this, glActiveTexture, GL_TEXTURE0 + unit);
+    this->m_CurrentTextureUnit = unit;
+}
+
+void ApiGLES::BindTexture(GLuint textureName, GLenum textureTarget)
+{
+    GLES_CHECK(this, textureName);
+    GLES_ASSERT(this, this->debug.ActiveTexture(), "The context has been modified outside of ApiGLES. States tracking is lost.");
+
+    if (m_Caching && this->m_CurrentTextureBindings[this->m_CurrentTextureUnit] == textureName)
+        return;
+
+    GLES_CALL(this, glBindTexture, textureTarget, textureName);
+
+    m_CurrentTextureBindings[m_CurrentTextureUnit] = textureName;
+    m_CurrentTextureTargets[m_CurrentTextureUnit] = textureTarget;
+}
+
+void ApiGLES::BindTexture(GLenum unit, GLuint textureName, GLenum textureTarget)
+{
+    GLES_CHECK(this, textureName);
+
+    this->ActiveTextureUnit(unit);
+    this->BindTexture(textureName, textureTarget);
+}
+
+void ApiGLES::GenerateMipmap(GLuint textureName, GLenum textureTarget)
+{
+    GLES_CHECK(this, textureName);
+
+    if (textureTarget == GL_TEXTURE_EXTERNAL_OES)
+    {
+        // OES_EGL_image_external does not support mipmaps.
+        return;
+    }
+
+    const GLuint prevTexture = m_CurrentTextureBindings[m_CurrentTextureUnit];
+    const GLenum prevTarget = m_CurrentTextureTargets[m_CurrentTextureUnit];
+
+    this->BindTexture(textureName, textureTarget);
+    GLES_CALL(this, glGenerateMipmap, textureTarget);
+    this->BindTexture(prevTexture, prevTarget);
 }
 
 FramebufferInfoGLES ApiGLES::GetFramebufferInfo() const

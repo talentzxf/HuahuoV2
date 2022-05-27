@@ -14,6 +14,7 @@ struct ShaderPassContext : public NonCopyable
 {
     ShaderPassContext()
             : maxKeywordCount(0)
+            , properties(kMemShader)
             , allowShaderStencil(true)
 #if CAN_DO_ASYNC_COMPILATION
     , allowAsyncShaderCompilation(false)

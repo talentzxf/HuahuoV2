@@ -181,7 +181,7 @@ void GfxDeviceGLES::ProcessPendingMipGens()
         GLES_ASSERT(gGL, m_Api.translate.GetTextureTargetDimension(texInfo->target) == m_PendingMipGens[i]->dim, "Invalid pending mip gen dimension.");
         m_Api.GenerateMipmap(texInfo->texture, texInfo->target);
     }
-    m_PendingMipGens.clear_dealloc();
+    m_PendingMipGens.clear();
 }
 
 void GfxDeviceGLES::SetActiveContext(void* context)

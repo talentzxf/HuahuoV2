@@ -84,6 +84,20 @@ void SplitImpl(std::string& s, char splitChar, std::vector<std::string>& parts, 
     }
 }
 
+
+template<typename T>
+static inline std::string _ToString(const char* formatString, T value)
+{
+    char buf[255];
+    sprintf(buf, formatString, value);
+    return std::string(buf);
+}
+
+std::string IntToString(SInt32 i)
+{
+    return _ToString("%i", i);
+}
+
 namespace core{
     void Split(std::string& s, char splitChar, std::vector<std::string>& parts, std::string::size_type maxSplits)
     {

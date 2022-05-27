@@ -97,6 +97,8 @@ inline bool IsTabSpace(char c) { return c == '\t' || c == ' '; }
 inline bool IsAlphaNumeric(char c) { return IsDigit(c) || IsAlpha(c); }
 inline bool IsHex(char c) { return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'); }
 
+std::string IntToString(SInt32 i);
+
 // Converts string to integer representation. First, any whitespace characters are ignored.
 // Then, optional '+' or '-' sign character determines the sign of the resulting number.
 // Then, one or more decimal digits are parsed until either non-digit character or the

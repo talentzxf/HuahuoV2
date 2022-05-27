@@ -12,12 +12,12 @@
 #include <vector>
 #include "Utilities/vector_map.h"
 
-struct SharedMaterialData // : public ThreadSharedObject<SharedMaterialData>
+struct SharedMaterialData : public ThreadSharedObject<SharedMaterialData>
 {
-    explicit SharedMaterialData(/*/MemLabelId label*/)
-//            : ThreadSharedObject<SharedMaterialData>(label)
+    explicit SharedMaterialData(MemLabelId label)
+            : ThreadSharedObject<SharedMaterialData>(label)
 //            , shader(NULL)
-//            , properties(label)
+            , properties(label)
 //            , shadowCasterHash(0)
 //            , keywordSetHash(0)
 //            , stateKeyHash(0)

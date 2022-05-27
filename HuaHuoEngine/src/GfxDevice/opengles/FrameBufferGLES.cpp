@@ -21,7 +21,7 @@ GfxFramebufferGLES::GfxFramebufferGLES(ApiGLES & api, void* context)
         , m_Api(api)
 //        , m_BlitQuad()
 //        , m_DiscardQuad()
-//        , m_DefaultFBO()
+        , m_DefaultFBO()
 //        , m_IntermediateMSAAFBO()
 #if USES_GLES_DEFAULT_FBO
 , m_DefaultGLESFBOInited(false)
@@ -29,13 +29,45 @@ GfxFramebufferGLES::GfxFramebufferGLES(ApiGLES & api, void* context)
 {
 //    memset(&m_BackBufferColorSurface, 0, sizeof(RenderSurfaceGLES));
 //    memset(&m_BackBufferDepthSurface, 0, sizeof(RenderSurfaceGLES));
-//    using gles::internal::FillRenderTargetSetup;
-//    FillRenderTargetSetup(&m_DefaultFramebuffer, &m_BackBufferColorSurface, &m_BackBufferDepthSurface);
-//    FillRenderTargetSetup(&m_CurrentFramebuffer, &m_BackBufferColorSurface, &m_BackBufferDepthSurface);
-//    FillRenderTargetSetup(&m_PendingFramebuffer, &m_BackBufferColorSurface, &m_BackBufferDepthSurface);
+    using gles::internal::FillRenderTargetSetup;
+    FillRenderTargetSetup(&m_DefaultFramebuffer, &m_BackBufferColorSurface, &m_BackBufferDepthSurface);
+    FillRenderTargetSetup(&m_CurrentFramebuffer, &m_BackBufferColorSurface, &m_BackBufferDepthSurface);
+    FillRenderTargetSetup(&m_PendingFramebuffer, &m_BackBufferColorSurface, &m_BackBufferDepthSurface);
 //
 //    std::fill(m_CurrentFramebufferColorStoreAction.begin(), m_CurrentFramebufferColorStoreAction.end(), kGfxRTStoreActionStore);
 //    std::fill(m_PendingFramebufferColorLoadAction.begin(), m_PendingFramebufferColorLoadAction.end(), kGfxRTLoadActionLoad);
+}
+
+void GfxFramebufferGLES::ActiveContextChanged(RenderSurfaceBase** outColor, RenderSurfaceBase** outDepth)
+{
+    this->SetupDefaultFramebuffer(outColor, outDepth, GetDefaultFBO());
+    this->InvalidateActiveFramebufferState();   // force that framebuffer is rebound on next Prepare()
+    this->FallbackToValidFramebufferState();    // make sure that current and pending framebuffer have valid rendertarget, may fall back to default framebuffer
+    this->ProcessInvalidatedRenderSurfaces();
+}
+
+void GfxFramebufferGLES::SetupDefaultFramebuffer(RenderSurfaceBase** outColor, RenderSurfaceBase** outDepth, gl::FramebufferHandle inFbo)
+{
+    RenderSurfaceBase_InitColor(m_BackBufferColorSurface);
+    m_BackBufferColorSurface.backBuffer = true;
+
+    RenderSurfaceBase_InitDepth(m_BackBufferDepthSurface);
+    m_BackBufferDepthSurface.backBuffer = true;
+
+    // fill out and register default fbo
+    gles::FillRenderTargetSetup(&m_DefaultFramebuffer, &m_BackBufferColorSurface, &m_BackBufferDepthSurface);
+
+    GLESRenderTargetSetup setup(m_DefaultFramebuffer);
+    // In case of non-0 FBO this may well already exist in the map, but do it just in case.
+    m_FramebufferMap[setup] = inFbo;
+
+    m_DefaultFBO = inFbo;
+    this->UpdateDefaultFramebufferViewport();
+
+    if (outColor)
+        *outColor = &m_BackBufferColorSurface;
+    if (outDepth)
+        *outDepth = &m_BackBufferDepthSurface;
 }
 
 void GfxFramebufferGLES::Invalidate()
@@ -65,3 +97,30 @@ void GfxFramebufferGLES::SetViewport(const RectInt& rect)
     if (!m_RequiresFramebufferSetup)
         this->ApplyViewport();
 }
+
+
+namespace gles
+{
+    namespace internal
+    {
+        void FillRenderTargetSetup(GfxRenderTargetSetup *setup, RenderSurfaceBase *col, RenderSurfaceBase *depth)
+        {
+            ::memset(setup, 0x00, sizeof(GfxRenderTargetSetup));
+            setup->color[0] = col;
+            setup->depth = depth;
+            setup->colorCount = col ? 1 : 0;
+            setup->colorLoadAction[0] = kGfxRTLoadActionLoad;
+            setup->colorStoreAction[0] = kGfxRTStoreActionStore;
+            setup->depthLoadAction = kGfxRTLoadActionLoad;
+            setup->depthStoreAction = kGfxRTStoreActionStore;
+            setup->cubemapFace = kCubeFaceUnknown;
+            setup->mipLevel = 0;
+            setup->flags = 0;
+        }
+    }
+    void FillRenderTargetSetup(GfxRenderTargetSetup *setup, RenderSurfaceBase *col, RenderSurfaceBase *depth)
+    {
+        Assert(setup && col && depth);
+        internal::FillRenderTargetSetup(setup, col, depth);
+    }
+} // namespace

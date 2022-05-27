@@ -8,6 +8,7 @@
 #include "Memory/AllocatorLabels.h"
 #include "Internal/PlatformEnvironment.h"
 #include <utility>
+#include <cstdlib>
 
 #if defined(_MSC_VER)
 #define HAS_TRIVIAL_DESTRUCTOR(T) (__has_trivial_destructor(T) || !__is_class(T))

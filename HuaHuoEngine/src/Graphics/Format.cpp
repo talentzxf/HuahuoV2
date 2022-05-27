@@ -5,15 +5,14 @@
 #include <string>
 #include "GfxDevice/GfxDeviceTypes.h"
 #include "Utilities/StaticAssert.h"
+#include "Utilities/Word.h"
 
 namespace
 {
     template<typename T>
     std::string ToString(const T& value)
     {
-        std::string ss;
-        ss << value;
-        return ss; //.ToString();
+        return IntToString(value);
     }
 
     static const FormatDesc s_FormatDescTable[] = //kFormatCount
@@ -231,11 +230,6 @@ UInt32 GetColorComponentCount(GraphicsFormat format)
     return GetDesc(format).colorComponents;
 }
 
-UInt32 GetBlockSize(GraphicsFormat format)
-{
-    return GetDesc(format).blockSize;
-}
-
 bool Is16BitPackedFormat(GraphicsFormat format)
 {
     return GetColorComponentCount(format) >= 3 && GetBlockSize(format) == 2 && format < kFormatYUV2;
@@ -244,11 +238,6 @@ bool Is16BitPackedFormat(GraphicsFormat format)
 UInt32 GetAlphaComponentCount(GraphicsFormat format)
 {
     return GetDesc(format).alphaComponents;
-}
-
-bool IsAlphaOnlyFormat(GraphicsFormat format)
-{
-    return GetAlphaComponentCount(format) == 1 && GetColorComponentCount(format) == 0;
 }
 
 const FormatDesc& GetDesc(GraphicsFormat format)
