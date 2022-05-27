@@ -6,6 +6,10 @@ macro(print_all_variables)
     endforeach ()
     message(STATUS "print_all_variables------------------------------------------}")
 endmacro()
+
+set(SDL2_DIR ./external/SDL2-2.0.22)
+find_package(SDL2 REQUIRED)
+
 print_all_variables()
 
 cmake_minimum_required(VERSION 3.21)
@@ -179,6 +183,8 @@ else ()
     add_compile_options(-Wno-deprecated-enum-enum-conversion)
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
     add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp src/Shaders/ShaderKeyWords.cpp src/Shaders/ShaderKeyWords.h)
+
+    target_link_libraries(TestHuaHuoEngine ${SDL2_LIBRARIES})
 endif ()
 
 target_include_directories(${TARGETNAME} PUBLIC "${PROJECT_BINARY_DIR}" ${EXTRA_INCLUDE_DIR})
