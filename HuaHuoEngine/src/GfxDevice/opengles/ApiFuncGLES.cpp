@@ -6,6 +6,9 @@
 #include "ApiGLES.h"
 #include "GfxGetProcAddressGLES.h"
 #include "ExtensionsGLES.h"
+#include "GLES3/gl3.h"
+
+#define PLATFORM_WEBGL 1
 
 #if PLATFORM_WEBGL
 #   define HAS_GLES30_HEADER 1

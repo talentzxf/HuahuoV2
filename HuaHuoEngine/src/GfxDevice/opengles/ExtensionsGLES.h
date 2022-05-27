@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Utilities/ReflectableEnum.h"
 #include "Internal/CoreMacros.h"
 #include <cstdlib>
 #include <vector>
 #include <string>
+#include "Utilities/ReflectableEnum.h"
 
 REFLECTABLE_ENUM(GLExt,
     // AMD

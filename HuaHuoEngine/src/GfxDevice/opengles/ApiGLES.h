@@ -42,6 +42,11 @@ public:
     // Initialize debug output
     void InitDebug();
 
+    // Query whether and OpenGL extension is available
+    // This asks the driver for all extensions and then checks if the extension is present in the string / strings (depends on GL version)
+    // Use HasExtension from ExtensionsGLES.h whenever possible, it's way faster.
+    bool QueryExtensionSlow(const char* extension) const;
+
     // Return the OpenGL strings
     const char* GetDriverString(gl::DriverQuery query) const;
 

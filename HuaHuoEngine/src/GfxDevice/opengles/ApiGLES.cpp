@@ -7,9 +7,10 @@
 #include "ApiEnumGLES.h"
 #include "AssertGLES.h"
 #include "Utilities/Word.h"
-#include "GLES3/gl3.h"
 #include "ApiConstantsGLES.h"
 #include "ApiTranslateGLES.h"
+
+#include "GLES3/gl3.h"
 
 namespace gl
 {
@@ -81,6 +82,40 @@ void ApiGLES::InitDebug()
 //    this->m_Debug->Init(*this);
 //#   endif
 }
+
+bool ApiGLES::QueryExtensionSlow(const char * extension) const
+{
+    GLES_CHECK(this, -1);
+
+//    if (HasARGV("no-extensions"))
+//        return false;
+
+    if (IsGfxLevelES2(GetGraphicsCaps().gles.featureLevel))
+    {
+        const char* extensions = reinterpret_cast<const char*>(this->glGetString(GL_EXTENSIONS));
+        if (!extensions)
+            return false;
+
+        const char* match = strstr(extensions, extension);
+        if (!match)
+            return false;
+        // we need an exact match, extensions string is a list of extensions separated by spaces, e.g. "GL_EXT_draw_buffers" should not match "GL_EXT_draw_buffers_indexed"
+        const char* end = match + strlen(extension);
+        return *end == ' ' || *end == '\0';
+    }
+    else
+    {
+        const GLint numExtensions = this->Get(GL_NUM_EXTENSIONS);
+        for (GLint i = 0; i < numExtensions; ++i)
+        {
+            const char* Extension = reinterpret_cast<const char*>(this->glGetStringi(GL_EXTENSIONS, i));
+            if (!strcmp(extension, Extension))
+                return true;
+        }
+        return false;
+    }
+}
+
 
 //GLenum ApiGLES::InitGetTextureTargetFunc(TextureDimension textureDimension, GLuint texture)
 //{

@@ -32,8 +32,43 @@ public:
     bool    isAMDVegaGpu;
     bool    isVivanteGpu;
     bool    isES2Gpu;       // A GPU that supports only OpenGL ES 2.0
+    int     maxAttributes;
 
+    //      If set, uses actual buffer target for data uploads instead of COPY_WRITE_BUFFER etc.
+    bool    useActualBufferTargetForUploads;
+
+    bool    hasWireframe; // GL
+
+    bool    hasDisjointTimerQuery; // GL_EXT_disjoint_timer_query
+
+    int     maxTransformFeedbackBufferBindings;
+
+    size_t  minBufferSizeBytes; // minimum size the driver allocates for buffers (glBufferData)
+    int     maxVertexUniforms;
+
+    // Adreno 3xx's are super slow when using uniform buffers. Also they crash (at least pre-lollipop) when trying to query
+    // the bound uniform buffers with glGetIntegeri_v. If this is set, no checks will be made.
+    bool    buggyUniformBuffers;
+
+    int     maxUniformBlockSize;
+
+    int     maxUniformBufferBindings;
     int     hasVertexShaderTexUnits;
+
+    bool    hasClipDistance;                    // has gl_ClipDistance in shader. all desktops do, ES requires GL_EXT_clip_cull_distances
+
+    bool    hasDepthClamp;                      // GL_ARB_depth_clamp
+
+    bool    hasSampler2dMS;                     // GL1.5 / ES3.1
+
+    bool    hasTexStorageMultisample;           // GL 4.3 / ARB_texture_storage_multisample
+
+    bool    hasASTCDecodeMode;                  // GL_EXT_texture_compression_astc_decode_mode
+    bool    hasASTCDecodeModeRGB9E5;            // GL_EXT_texture_compression_astc_decode_mode_rgb9e5
+    bool    hasASTCSliced3D;                    // GL_KHR_texture_compression_astc_sliced_3d or GL_KHR_texture_compression_astc_hdr (implies sliced 3d)
+
+    // Different drivers like different sets of flags for mapping an entire UBO for writing
+    GLenum mapWholeUBOForWritingFlags;
 
     // Adreno 2xx: buggy depth texture & stencil attachment at once.
     bool    buggyRenderTargetDepthAndStencil;
@@ -183,6 +218,13 @@ public:
     bool    hasNVNLZ;
     bool    hasNVMRT;               // gles2: special attachment points
     bool    hasNVCSAA;              // gles2: Tegra 3 has coverage sampling anti-aliasing
+
+
+    bool    hasBinaryShader;                // GL 4.1 / ES3 / GL_ARB_get_program_binary / GL_OES_get_program_binary
+    bool    hasBinaryShaderRetrievableHint; // GL 4.1 / ES3 / GL_ARB_get_program_binary
+    bool    hasUniformBuffer;               // GL 3.2 / GL_ARB_uniform_buffer_object / ES 3.0 / GL_IMG_uniform_buffer_object
+
+    bool    hasProgramPointSizeEnable;          // GL 3.2
 
     bool    supportsManualMipmaps;  // WebGL does not support manually initializing mipmap levels other than 0.
     int     majorVersion;           // Major OpenGL version, eg OpenGL 4.2 major version is 4

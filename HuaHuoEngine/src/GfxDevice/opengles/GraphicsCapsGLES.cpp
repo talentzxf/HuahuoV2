@@ -352,11 +352,11 @@ namespace
 
     bool RequireDrawBufferNone(const ApiGLES & api, const GraphicsCaps & caps, GfxDeviceLevelGL level)
     {
-//        // Support of GL_ARB_ES2_compatibility isn't right on some Intel HD 4000 and AMD 7670M drivers
-//        // Which requires to call glDrawBuffer(GL_NONE) on depth only framebuffer
-//        if (IsGfxLevelCore(level))
-//            return !HasExtension(GLExt::kGL_ARB_ES2_compatibility) || caps.gles.isIntelGpu || caps.gles.isAMDGpu;
-//        return false;
+        // Support of GL_ARB_ES2_compatibility isn't right on some Intel HD 4000 and AMD 7670M drivers
+        // Which requires to call glDrawBuffer(GL_NONE) on depth only framebuffer
+        if (IsGfxLevelCore(level))
+            return /*!HasExtension(GLExt::kGL_ARB_ES2_compatibility) ||*/ caps.gles.isIntelGpu || caps.gles.isAMDGpu;
+        return false;
     }
 
     bool HasDrawBuffers(const ApiGLES & api, GfxDeviceLevelGL level)

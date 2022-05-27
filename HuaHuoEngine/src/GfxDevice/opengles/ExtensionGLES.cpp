@@ -3,6 +3,8 @@
 //
 
 #include "ExtensionsGLES.h"
+#include "ApiGLES.h"
+#include "Containers/fixed_bitset.h"
 
 #define DECLARE_EXT_GROUP(name)                                                                 \
 typedef fixed_bitset<EnumTraits::StaticTraits<name##Ext>::Count, UInt32> name##ExtensionSet;    \
@@ -13,7 +15,7 @@ bool HasExtension(name##Ext::ActualEnumType ext)                                
     return name##Extensions.test(ext);                                                          \
 }                                                                                               \
                                                                                                 \
-static void Initialize##name##Extension(std::string& ext)                                   \
+static void Initialize##name##Extension(std::string ext)                                   \
 {                                                                                               \
     const char* const* names = EnumTraits::GetNames<name##Ext>();                               \
     for (size_t i = 0; i < EnumTraits::StaticTraits<name##Ext>::Count; ++i)                     \
