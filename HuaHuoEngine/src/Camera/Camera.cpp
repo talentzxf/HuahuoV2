@@ -15,6 +15,16 @@
 #include "SceneManager/HuaHuoScene.h"
 #include "Graphics/RenderTexture.h"
 #include "Camera/RenderLoops/RenderLoop.h"
+#include "Graphics/GraphicsHelper.h"
+#include "Shaders/ShaderImpl/ShaderUtilities.h"
+#include "Shaders/ShaderKeyWords.h"
+
+static SHADERPROP(CameraDepthTexture);
+static SHADERPROP(CameraDepthNormalsTexture);
+static SHADERPROP(CameraODSWorldTexture);
+static SHADERPROP(LastCameraDepthTexture);
+static SHADERPROP(LastCameraDepthNormalsTexture);
+static SHADERPROP(Reflection);
 
 Camera::CopiableState::CopiableState()
         :   m_FieldOfViewBeforeEnablingVRMode(0.0f)
@@ -418,6 +428,117 @@ void Camera::SetRenderTargetAndViewport()
     GetGfxDevice().SetViewport(viewcoord);
 }
 
+void Camera::CalculateMatrixShaderProps(const Matrix4x4f& inView, Matrix4x4f& outWorldToCamera, Matrix4x4f& outCameraToWorld)
+{
+    // World to camera matrix
+    outWorldToCamera.SetScale(Vector3f(1, 1, -1));
+    outWorldToCamera *= inView;
+
+    // Camera to world matrix
+    InvertMatrix4x4_General3D(outWorldToCamera.GetPtr(), outCameraToWorld.GetPtr());
+}
+
+void Camera::SetCameraShaderProps(ShaderPassContext& passContext, const CameraRenderingParams& params)
+{
+    float overrideTime = -1.0f;
+#   if UNITY_EDITOR
+    if (m_State.m_AnimateMaterials)
+        overrideTime = m_State.m_AnimateMaterialsTime;
+#   endif // if UNITY_EDITOR
+    ShaderLab::UpdateGlobalShaderProperties(overrideTime);
+
+    GfxDevice& device = GetGfxDevice();
+    BuiltinShaderParamValues& shaderParams = device.GetBuiltinParamValues();
+
+    shaderParams.SetVectorParam(kShaderVecWorldSpaceCameraPos, Vector4f(params.worldPosition, 0.0f));
+
+    Matrix4x4f worldToCamera;
+    Matrix4x4f cameraToWorld;
+    CalculateMatrixShaderProps(params.matView, worldToCamera, cameraToWorld);
+    shaderParams.SetMatrixParam(kShaderMatWorldToCamera, worldToCamera);
+    shaderParams.SetMatrixParam(kShaderMatCameraToWorld, cameraToWorld);
+
+    // Get the matrix to use for cubemap reflections.
+    // It's camera to world matrix; rotation only, and mirrored on Y.
+    worldToCamera.SetPosition(Vector3f::zero);  // clear translation
+    Matrix4x4f invertY;
+    invertY.SetScale(Vector3f(1, -1, 1));
+    Matrix4x4f reflMat;
+    MultiplyMatrices4x4(&worldToCamera, &invertY, &reflMat);
+    passContext.properties.SetMatrix(kSLPropReflection, reflMat);
+
+    // Camera clipping planes
+    SetClippingPlaneShaderProps();
+
+    const float projNear = GetProjectionNear();
+    const float projFar = GetProjectionFar();
+    const float invNear = (projNear == 0.0f) ? 1.0f : 1.0f / projNear;
+    const float invFar = (projFar == 0.0f) ? 1.0f : 1.0f / projFar;
+    shaderParams.SetVectorParam(kShaderVecProjectionParams, Vector4f(device.GetInvertProjectionMatrix() ? -1.0f : 1.0f, projNear, projFar, invFar));
+
+    Rectf view = GetScreenViewportRect();
+    shaderParams.SetVectorParam(kShaderVecScreenParams, Vector4f(view.width, view.height, 1.0f + 1.0f / view.width, 1.0f + 1.0f / view.height));
+
+    // From http://www.humus.name/temp/Linearize%20depth.txt
+    // But as depth component textures on OpenGL always return in 0..1 range (as in D3D), we have to use
+    // the same constants for both D3D and OpenGL here.
+    double zc0, zc1;
+    // OpenGL would be this:
+    // zc0 = (1.0 - projFar / projNear) / 2.0;
+    // zc1 = (1.0 + projFar / projNear) / 2.0;
+    // D3D is this:
+    zc0 = 1.0 - projFar * invNear;
+    zc1 = projFar * invNear;
+
+    Vector4f v = Vector4f(zc0, zc1, zc0 * invFar, zc1 * invFar);
+    if (GetGraphicsCaps().usesReverseZ)
+    {
+        v.y += v.x;
+        v.x = -v.x;
+        v.w += v.z;
+        v.z = -v.z;
+    }
+    shaderParams.SetVectorParam(kShaderVecZBufferParams, v);
+
+    // Ortho params
+    Vector4f orthoParams;
+    const bool isPerspective = params.matProj.IsPerspective();
+    orthoParams.x = m_State.m_OrthographicSize * m_State.m_Aspect;
+    orthoParams.y = m_State.m_OrthographicSize;
+    orthoParams.z = 0.0f;
+    orthoParams.w = isPerspective ? 0.0f : 1.0f;
+    shaderParams.SetVectorParam(kShaderVecOrthoParams, orthoParams);
+
+    // Camera projection matrices
+    Matrix4x4f invProjMatrix;
+    InvertMatrix4x4_Full(params.matProj.GetPtr(), invProjMatrix.GetPtr());
+    shaderParams.SetMatrixParam(kShaderMatCameraProjection, params.matProj);
+    shaderParams.SetMatrixParam(kShaderMatCameraInvProjection, invProjMatrix);
+
+#if GFX_SUPPORTS_SINGLE_PASS_STEREO
+    // Set stereo matrices to make shaders with UNITY_SINGLE_PASS_STEREO enabled work in mono
+    // View and projection are handled by the device
+    device.SetStereoMatrix(kMonoOrStereoscopicEyeMono, kShaderMatCameraInvProjection, invProjMatrix);
+    device.SetStereoMatrix(kMonoOrStereoscopicEyeMono, kShaderMatWorldToCamera, worldToCamera);
+    device.SetStereoMatrix(kMonoOrStereoscopicEyeMono, kShaderMatCameraToWorld, cameraToWorld);
+#endif
+
+    if (passContext.keywords.IsEnabled(keywords::kStereoCubemapRenderOn))
+    {
+        float halfStereoSeparation = 0.5f * params.stereoSeparation;
+        GfxDevice& device = GetGfxDevice();
+        float eyeIndex = device.GetBuiltinParamValues().GetWritableVectorParam(kShaderVecStereoEyeIndex).x;
+
+        if (eyeIndex == 0)
+        {
+            //left eye gets negative separation value
+            halfStereoSeparation *= -1.0f;
+        }
+        v = Vector4f(halfStereoSeparation, 0, 0, 0);
+        shaderParams.SetVectorParam(kShaderVecHalfStereoSeparation, v);
+    }
+}
+
 void Camera::SetupRender(ShaderPassContext& passContext, const CameraRenderingParams& params, RenderFlag renderFlags)
 {
     GfxDevice& device = GetGfxDevice();
@@ -441,16 +562,16 @@ void Camera::SetupRender(ShaderPassContext& passContext, const CameraRenderingPa
     GraphicsHelper::SetWorldViewAndProjection(device, NULL, &params.matView, &params.matProj);
     SetCameraShaderProps(passContext, params);
 
-    // Setup billboard rendering.
-    BillboardBatchManager::SetBillboardShaderProps(
-            passContext.keywords,
-            device.GetBuiltinParamValues(),
-            GetQualitySettings().GetCurrent().billboardsFaceCameraPosition,
-            params.matView,
-            params.worldPosition);
+//    // Setup billboard rendering.
+//    BillboardBatchManager::SetBillboardShaderProps(
+//            passContext.keywords,
+//            device.GetBuiltinParamValues(),
+//            GetQualitySettings().GetCurrent().billboardsFaceCameraPosition,
+//            params.matView,
+//            params.worldPosition);
 
 
-    GetRenderBufferManager().GetTextures().SetActiveVRUsage(kVRTextureUsageNone);
+//    GetRenderBufferManager().GetTextures().SetActiveVRUsage(kVRTextureUsageNone);
 }
 
 

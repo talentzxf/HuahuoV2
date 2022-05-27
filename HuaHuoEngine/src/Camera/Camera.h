@@ -207,6 +207,7 @@ public:
     void GetImplicitWorldToCameraMatrix(Matrix4x4f& outMatrix) const;
 
     static void CalculateProjectionMatrixFromPhysicalProperties(Matrix4x4f& out, float focalLength, const Vector2f& sensorSize, Vector2f lensShift, float nearClip, float farClip, float gateAspect, GateFitMode gateFitMode = kGateFitNone);
+    void SetCameraShaderProps(ShaderPassContext& passContext, const CameraRenderingParams& params);
 
     void SetNear(float n);
     float GetNear() const;
@@ -291,6 +292,7 @@ private:
     void CalculateGateFitParams();
     void SetRenderTargetAndViewport();
     bool ApplyRenderTexture();
+    static void CalculateMatrixShaderProps(const Matrix4x4f& inView, Matrix4x4f& outWorldToCamera, Matrix4x4f& outCameraToWorld);
 private:
     // When generating tooltips/ranges/enums for inspector with Doxygen, we want to attribute all these to Camera class and not to CopiableState.
     // For this the struct declaration is excluded with the cond command (unless HIDDEN_SYMBOLS is defined in ENABLED_SECTIONS).

@@ -756,6 +756,87 @@ enum TextureWrapMode
     kTexWrapCount // keep this last!
 };
 
+
+// values are serialised, if they change make sure to bump shader import
+// version (ShaderVersion.h) and Gpu Program version (GpuProgramManager.cpp).
+// Console platforms with their own GfxDevice implementation can use any
+// values above kShaderGpuProgramFirstConsole as the enum isn't used for
+// directing to the right place to create the GpuProgram data.
+enum ShaderGpuProgramType
+{
+    kShaderGpuProgramUnknown = 0,
+
+    kShaderGpuProgramGLLegacy_Removed = 1,
+    kShaderGpuProgramGLES31AEP = 2,
+    kShaderGpuProgramGLES31 = 3,
+    kShaderGpuProgramGLES3 = 4,
+    kShaderGpuProgramGLES = 5,
+    kShaderGpuProgramGLCore32 = 6,
+    kShaderGpuProgramGLCore41 = 7,
+    kShaderGpuProgramGLCore43 = 8,
+    kShaderGpuProgramDX9VertexSM20_Removed = 9,
+    kShaderGpuProgramDX9VertexSM30_Removed = 10,
+    kShaderGpuProgramDX9PixelSM20_Removed = 11,
+    kShaderGpuProgramDX9PixelSM30_Removed = 12,
+    kShaderGpuProgramDX10Level9Vertex_Removed = 13,
+    kShaderGpuProgramDX10Level9Pixel_Removed = 14,
+    kShaderGpuProgramDX11VertexSM40 = 15,
+    kShaderGpuProgramDX11VertexSM50 = 16,
+    kShaderGpuProgramDX11PixelSM40 = 17,
+    kShaderGpuProgramDX11PixelSM50 = 18,
+    kShaderGpuProgramDX11GeometrySM40 = 19,
+    kShaderGpuProgramDX11GeometrySM50 = 20,
+    kShaderGpuProgramDX11HullSM50 = 21,
+    kShaderGpuProgramDX11DomainSM50 = 22,
+    kShaderGpuProgramMetalVS = 23,
+    kShaderGpuProgramMetalFS = 24,
+    kShaderGpuProgramSPIRV = 25,
+
+    kShaderGpuProgramConsoleVS = 26,
+    kShaderGpuProgramConsoleFS = 27,
+    kShaderGpuProgramConsoleHS = 28,
+    kShaderGpuProgramConsoleDS = 29,
+    kShaderGpuProgramConsoleGS = 30,
+
+    kShaderGpuProgramRayTracing = 31,
+
+    kShaderGpuProgramCount
+};
+
+
+// Shader compiler backend platforms.
+// Keep in sync with C# ShaderCompilerPlatform
+enum ShaderCompilerPlatform
+{
+    kShaderCompPlatformNone = -1,
+    kShaderCompPlatformGL_Obsolete = 0, // Removed (desktop OpenGL 2)
+    kShaderCompPlatformD3D9_Obsolete,   // Removed (Direct3D 9, compiled with MS D3DCompiler)
+    kShaderCompPlatformXbox360_Obsolete,// Removed (Xbox 360)
+    kShaderCompPlatformPS3_Obsolete,    // Removed (PS3)
+    kShaderCompPlatformD3D11,           // Direct3D 11 (FL10.0 and up) and Direct3D 12, compiled with MS D3DCompiler and dxcompiler(Ray Tracing Shaders)
+    kShaderCompPlatformGLES20,          // OpenGL ES 2.0 / WebGL 1.0, compiled with MS D3DCompiler + HLSLcc
+    kShaderCompPlatformNaCl_Obsolete,   // Removed (NativeClient)
+    kShaderCompPlatformFlash_Obsolete,  // Removed (Flash Stage3D)
+    kShaderCompPlatformD3D11_9x_Obsolete, // Removed (Direct3D 11 Feature Levels 9.x)
+    kShaderCompPlatformGLES3Plus,       // OpenGL ES 3.0+ / WebGL 2.0, compiled with MS D3DCompiler + HLSLcc
+    kShaderCompPlatformPSP2_Obsolete,   // Sony PSP2/Vita
+    kShaderCompPlatformPS4,             // Sony PS4
+    kShaderCompPlatformXboxOne,         // MS XboxOne
+    kShaderCompPlatformPSM_Obsolete,    // Removed (PlayStation Mobile)
+    kShaderCompPlatformMetal,           // Apple Metal, compiled with MS D3DCompiler + HLSLcc
+    kShaderCompPlatformOpenGLCore,      // Desktop OpenGL 3+, compiled with MS D3DCompiler + HLSLcc
+    kShaderCompPlatformN3DS_Obsolete,   // Nintendo 3DS
+    kShaderCompPlatformWiiU_Obsolete,   // Removed (Nintendo WiiU)
+    kShaderCompPlatformVulkan,          // Vulkan SPIR-V, compiled with MS D3DCompiler + HLSLcc
+    kShaderCompPlatformSwitch,          // Nintendo Switch (NVN)
+    kShaderCompPlatformXboxOneD3D12,    // Xbox One D3D12
+    kShaderCompPlatformGameCoreXboxOne, // GameCore XboxOne
+    kShaderCompPlatformGameCoreScarlett,// GameCore Scarlett
+    kShaderCompPlatformPS5,             // PS5
+    kShaderCompPlatformPS5NGGC,         // PS5 NGGC
+    kShaderCompPlatformCount,
+};
+
 struct FormatDesc
 {
     UInt8 blockSize;

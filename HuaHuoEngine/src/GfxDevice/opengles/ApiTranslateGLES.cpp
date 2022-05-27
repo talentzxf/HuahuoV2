@@ -270,7 +270,7 @@ void TranslateGLES::InitFormat(const GraphicsCaps& caps)
 
     const GLenum internalDepth16 = caps.gles.hasNVNLZ ? GL_DEPTH_COMPONENT16_NONLINEAR_NV : GL_DEPTH_COMPONENT16;
     const GLenum internalDepth24 = caps.gles.hasDepth24 ? GL_DEPTH_COMPONENT24 : internalDepth16;
-    GLenum internalDepthStencilUnsized = PLATFORM_WEBGL && IsGfxLevelES2(caps.gles.featureLevel) ? GL_DEPTH_STENCIL : GL_DEPTH24_STENCIL8;
+    GLenum internalDepthStencilUnsized = /*PLATFORM_WEBGL &&*/ IsGfxLevelES2(caps.gles.featureLevel) ? GL_DEPTH_STENCIL : GL_DEPTH24_STENCIL8;
     const GLenum internalDepthStencil = caps.gles.hasPackedDepthStencil ? internalDepthStencilUnsized : internalDepth24;
 
     const GLenum externalDepthStencil = caps.gles.hasPackedDepthStencil ? GL_DEPTH_STENCIL : GL_DEPTH_COMPONENT;
@@ -475,7 +475,7 @@ const FormatDescGLES& TranslateGLES::GetFormatDesc(GraphicsFormat format, bool a
 void TranslateGLES::InitVertexType(const GraphicsCaps & caps, GfxDeviceLevelGL level)
 {
     const GLenum halfFloatType = IsGfxLevelES2(level) ? GL_HALF_FLOAT_OES : GL_HALF_FLOAT;
-    const gl::VertexArrayFlags integerFlag = (PLATFORM_WEBGL || IsGfxLevelES2(level)) ?
+    const gl::VertexArrayFlags integerFlag = (/*PLATFORM_WEBGL ||*/ IsGfxLevelES2(level)) ?
         gl::kVertexArrayFlagNone : gl::kVertexArrayFlagInteger; // glVertexAttribIPointer unsupported in ES 2.0 and WebGL
 
     const VertexFormatDescGLES translation[] =

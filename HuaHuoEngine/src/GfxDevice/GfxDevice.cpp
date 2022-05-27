@@ -7,6 +7,7 @@
 #include "Job/Jobs.h"
 #include <cstdlib>
 #include "Graphics/RenderSurface.h"
+#include "Shaders/GraphicsCaps.h"
 
 static GfxDevice* g_MainGfxDevice = NULL;
 
@@ -37,6 +38,117 @@ GfxDevice::GfxDevice(MemLabelRef label) :
 GfxDevice::~GfxDevice()
 {
 //    OnDelete();
+}
+
+void GfxDevice::UpdateViewProjectionMatrix()
+{
+    const Matrix4x4f& viewMat = m_GfxContextData.m_BuiltinParamValues.GetMatrixParam(kShaderMatView);
+    const Matrix4x4f& projMat = m_GfxContextData.m_BuiltinParamValues.GetMatrixParam(kShaderMatProj);
+    Matrix4x4f& viewProjMat = m_GfxContextData.m_BuiltinParamValues.GetWritableMatrixParam(kShaderMatViewProj);
+    MultiplyMatrices4x4(&projMat, &viewMat, &viewProjMat);
+}
+
+void GfxDevice::SetViewMatrix(const Matrix4x4f& matrix)
+{
+    m_GfxContextData.m_TransformState.SetViewMatrix(matrix, m_GfxContextData.m_BuiltinParamValues);
+    GfxDevice::UpdateViewProjectionMatrix();
+    m_ViewProjMatrixNeedApplyFlags |= kMatricesToApplyFlagView;
+
+#if GFX_SUPPORTS_SINGLE_PASS_STEREO
+    if (GetCopyMonoTransformsToStereo())
+    {
+        SetStereoMatrix(kMonoOrStereoscopicEyeLeft, kShaderMatView, matrix);
+        SetStereoMatrix(kMonoOrStereoscopicEyeRight, kShaderMatView, matrix);
+    }
+#endif
+}
+
+const Matrix4x4f& GfxDevice::GetWorldViewMatrix() const
+{
+    m_GfxContextData.m_TransformState.UpdateWorldViewMatrix(m_GfxContextData.m_BuiltinParamValues);
+    return m_GfxContextData.m_TransformState.worldViewMatrix;
+}
+
+const Matrix4x4f& GfxDevice::GetWorldMatrix() const
+{
+    return m_GfxContextData.m_TransformState.worldMatrix;
+}
+
+const Matrix4x4f& GfxDevice::GetViewMatrix() const
+{
+    return m_GfxContextData.m_BuiltinParamValues.GetMatrixParam(kShaderMatView);
+}
+
+const Matrix4x4f& GfxDevice::GetProjectionMatrix() const
+{
+    return m_GfxContextData.m_TransformState.projectionMatrixOriginal;
+}
+
+const Matrix4x4f& GfxDevice::GetDeviceProjectionMatrix() const
+{
+    return m_GfxContextData.m_BuiltinParamValues.GetMatrixParam(kShaderMatProj);
+}
+
+void GfxDevice::SetWorldMatrix(const Matrix4x4f& matrix)
+{
+    m_GfxContextData.m_TransformState.SetWorldMatrix(matrix);
+}
+
+void GfxDevice::CalculateDeviceProjectionMatrix(Matrix4x4f& m, bool usesOpenGLTextureCoords, bool invertY) const
+{
+    bool revertZ = GetGraphicsCaps().usesReverseZ;
+
+    if (usesOpenGLTextureCoords)
+    {
+        if (revertZ)
+        {
+            m.Get(2, 0) = -m.Get(2, 0);
+            m.Get(2, 1) = -m.Get(2, 1);
+            m.Get(2, 2) = -m.Get(2, 2);
+            m.Get(2, 3) = -m.Get(2, 3);
+        }
+
+        return; // nothing else to do on OpenGL-like devices
+    }
+
+    // Otherwise, the matrix is OpenGL style, and we have to convert it to
+    // D3D-like projection matrix
+
+    if (invertY)
+    {
+        m.Get(1, 0) = -m.Get(1, 0);
+        m.Get(1, 1) = -m.Get(1, 1);
+        m.Get(1, 2) = -m.Get(1, 2);
+        m.Get(1, 3) = -m.Get(1, 3);
+    }
+
+    // Now scale&bias to get Z range from -1..1 to 0..1 or 1..0
+    // matrix = scaleBias * matrix
+    //  1   0   0   0
+    //  0   1   0   0
+    //  0   0 0.5 0.5
+    //  0   0   0   1
+    m.Get(2, 0) = m.Get(2, 0) * (revertZ ? -0.5f : 0.5f) + m.Get(3, 0) * 0.5f;
+    m.Get(2, 1) = m.Get(2, 1) * (revertZ ? -0.5f : 0.5f) + m.Get(3, 1) * 0.5f;
+    m.Get(2, 2) = m.Get(2, 2) * (revertZ ? -0.5f : 0.5f) + m.Get(3, 2) * 0.5f;
+    m.Get(2, 3) = m.Get(2, 3) * (revertZ ? -0.5f : 0.5f) + m.Get(3, 3) * 0.5f;
+}
+
+void GfxDevice::SetProjectionMatrix(const Matrix4x4f& matrix)
+{
+    Matrix4x4f& m = m_GfxContextData.m_BuiltinParamValues.GetWritableMatrixParam(kShaderMatProj);
+    m = matrix;
+    GetUncheckedRealGfxDevice().CalculateDeviceProjectionMatrix(m, GetGraphicsCaps().usesOpenGLTextureCoords, m_GfxContextData.GetInvertProjectionMatrix());
+    m_GfxContextData.m_TransformState.SetProjectionMatrix(matrix);
+    m_ViewProjMatrixNeedApplyFlags |= kMatricesToApplyFlagProj;
+
+#if GFX_SUPPORTS_SINGLE_PASS_STEREO
+    if (GetCopyMonoTransformsToStereo())
+    {
+        SetStereoMatrix(kMonoOrStereoscopicEyeLeft, kShaderMatProj, matrix);
+        SetStereoMatrix(kMonoOrStereoscopicEyeRight, kShaderMatProj, matrix);
+    }
+#endif
 }
 
 void SetGfxDevice(GfxDevice* device)
@@ -114,4 +226,21 @@ void GfxDevice::DestroyRenderSurface(RenderSurfaceHandle& rsh)
     DestroyRenderSurfacePlatform(rs);
     DeallocRenderSurface(rs);
     rsh.object = 0;
+}
+
+GfxDevice* GetUncheckedRealGfxDevicePointer()
+{
+#if ENABLE_MULTITHREADED_CODE
+    return g_RealGfxDevice;
+#else
+    return g_MainGfxDevice;
+#endif
+}
+
+
+GfxDevice& GetUncheckedRealGfxDevice()
+{
+    GfxDevice* ret = GetUncheckedRealGfxDevicePointer();
+    DebugAssert(ret); // note that making reference out of NULL is UB!
+    return *ret;
 }

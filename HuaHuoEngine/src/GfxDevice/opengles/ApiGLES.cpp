@@ -8,6 +8,7 @@
 #include "AssertGLES.h"
 #include "Utilities/Word.h"
 #include "GLES3/gl3.h"
+#include "ApiConstantsGLES.h"
 
 namespace gl
 {
@@ -92,6 +93,45 @@ void ApiGLES::FillExtensions(std::vector<std::string>& allExtensions)
             allExtensions.push_back(ext);
         }
     }
+}
+
+void ApiGLES::QuerySampleCounts(GLenum target, GLenum internalFormat, std::vector<GLint>& samples) const
+{
+    // Note: WebGL 2.0 doesn't support GL_NUM_SAMPLE_COUNTS with glGetInternalformativ
+    const GLint invalidSampleCount = -1;
+    const size_t maxSampleCount = 8; // large enough so that all supported sample counts will definitely fit
+    samples.resize(maxSampleCount);
+    std::fill_n(samples.begin(), maxSampleCount, invalidSampleCount);
+    GLES_CALL(this, glGetInternalformativ, target, internalFormat, GL_SAMPLES, samples.size(), samples.data());
+    samples.erase(std::remove(samples.begin(), samples.end(), invalidSampleCount), samples.end());
+}
+
+FramebufferInfoGLES ApiGLES::GetFramebufferInfo() const
+{
+    const GraphicsCaps& caps = GetGraphicsCaps();
+    GLES_CHECK(this, -1);
+    GLES_ASSERT(this, !IsGfxLevelCore(caps.gles.featureLevel), "Core profile doesn't support context size queries");
+
+    FramebufferInfoGLES info = {};
+
+    GLES_CALL(this, glGetIntegerv, GL_RED_BITS, &info.redBits);
+    GLES_CALL(this, glGetIntegerv, GL_GREEN_BITS, &info.greenBits);
+    GLES_CALL(this, glGetIntegerv, GL_BLUE_BITS, &info.blueBits);
+    GLES_CALL(this, glGetIntegerv, GL_ALPHA_BITS, &info.alphaBits);
+    GLES_CALL(this, glGetIntegerv, GL_DEPTH_BITS, &info.depthBits);
+    GLES_CALL(this, glGetIntegerv, GL_STENCIL_BITS, &info.stencilBits);
+    if (caps.hasMultiSample)
+    {
+        GLES_CALL(this, glGetIntegerv, GL_SAMPLES, &info.samples);
+        GLES_CALL(this, glGetIntegerv, GL_SAMPLE_BUFFERS, &info.sampleBuffers);
+    }
+    if (caps.gles.hasNVCSAA)
+    {
+        GLES_CALL(this, glGetIntegerv, GL_COVERAGE_SAMPLES_NV, &info.coverageSamples);
+        GLES_CALL(this, glGetIntegerv, GL_COVERAGE_BUFFERS_NV, &info.coverageBuffers);
+    }
+
+    return info;
 }
 
 

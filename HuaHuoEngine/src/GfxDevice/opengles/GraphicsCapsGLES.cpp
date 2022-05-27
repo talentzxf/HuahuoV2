@@ -17,6 +17,9 @@
 #include "Shaders/GraphicsCaps.h"
 //#include "Runtime/Utilities/Argv.h"
 #include "Utilities/BitUtility.h"
+#include "Utilities/Word.h"
+#include "Graphics/ColorGamut.h"
+#include "ApiTranslateGLES.h"
 
 #if PLATFORM_ANDROID
 #include "PlatformDependent/AndroidPlayer/Source/AndroidSystemInfo.h"
@@ -54,6 +57,7 @@ extern "C" int UnityDeviceGeneration();
 #if PLATFORM_LINUX && ENABLE_SDL2_WINDOWING
 #include "PlatformDependent/Linux/SDLWrapper.h"
 #endif
+#define printf_console printf
 
 bool HasWGLColorspace();
 
@@ -1685,7 +1689,8 @@ namespace
 
         pos += sizeof(versionPrefix) - 1;
 
-        int version = StringToInt(versionString.substr(pos));
+        std::string versionStr(versionString.substr(pos));
+        int version = StringToInt(versionStr);
         return version <= 0 ? -1 : version;
     }
 
@@ -1760,7 +1765,7 @@ namespace
     void InitFormatCaps(const ApiGLES& api, GraphicsCaps* caps, const GfxDeviceLevelGL level, bool clamped)
     {
         const bool hasRGB_SRGB = IsGfxLevelCore(level);
-        const bool hasRGBA_SRGB = IsGfxLevelCore(level) || IsGfxLevelES3(level, kGfxLevelES3) || (HasExtension(GLExt::kGL_EXT_sRGB) && !UNITY_APPLE_PVR);
+        const bool hasRGBA_SRGB = IsGfxLevelCore(level) || IsGfxLevelES3(level, kGfxLevelES3) || (HasExtension(GLExt::kGL_EXT_sRGB) /*&& !UNITY_APPLE_PVR*/);
         const bool hasS3TC = HasS3TC(api, level, clamped);
         const bool hasS3TC_SRGB = HasS3TC_SRGB(api, *caps, level, clamped);
         const bool hasRGTC = HasRGTC(api, level, clamped);
@@ -2044,7 +2049,7 @@ namespace gles
         if (maxSamples <= 1)
             return;
 
-        dynamic_array<GLint> samples(kMemTempAlloc);
+        std::vector<GLint> samples; //(kMemTempAlloc);
 
         for (int i = 0; i < kGraphicsFormatCount; ++i)
         {
@@ -2089,7 +2094,7 @@ namespace gles
         }
     }
 
-    void InitCaps(ApiGLES* api, GraphicsCaps* caps, GfxDeviceLevelGL &level, const dynamic_array<std::string>& allExtensions)
+    void InitCaps(ApiGLES* api, GraphicsCaps* caps, GfxDeviceLevelGL &level, const std::vector<std::string>& allExtensions)
     {
         Assert(api && caps);
         Assert(caps->gles.featureLevel == level);
@@ -2111,7 +2116,7 @@ namespace gles
         caps->rendererString = api->GetDriverString(gl::kDriverQueryRenderer);
         caps->driverVersionString = api->GetDriverString(gl::kDriverQueryVersion);
 
-        caps->gles.featureClamped = HasARGV("force-clamped");
+        caps->gles.featureClamped = false; //HasARGV("force-clamped");
         const bool clamped = caps->gles.featureClamped;
 
         // Distill
@@ -2123,9 +2128,9 @@ namespace gles
         //
         caps->driverLibraryString = "n/a";
         caps->gles.driverGLESVersion = 0;
-        dynamic_array<std::string> parts;
+        std::vector<std::string> parts;
         //int no = SplitString(parts, caps->driverVersionString, " ", 4);
-        Split(caps->driverVersionString, ' ', parts, 4);
+        core::Split(caps->driverVersionString, ' ', parts, 4);
         int no = parts.size();
 
         if (no >= 3)
@@ -2422,15 +2427,15 @@ namespace gles
 
         caps->maxRenderTextureSize          = api->Get(GL_MAX_RENDERBUFFER_SIZE);
 
-        if (UNITY_APPLE_PVR)
-        {
-            // On iOS/tvOS, we only support native shadowmaps,
-            // since everything (except iPhone4) supports it. And iPhone4 does not deserve to have realtime
-            // shadows anyway.
-            caps->hasNativeShadowMap = HasExtension(GLExt::kGL_EXT_shadow_samplers);
-            caps->hasShadows = caps->hasNativeShadowMap;
-        }
-        else if (IsGfxLevelES2(level))
+//        if (UNITY_APPLE_PVR)
+//        {
+//            // On iOS/tvOS, we only support native shadowmaps,
+//            // since everything (except iPhone4) supports it. And iPhone4 does not deserve to have realtime
+//            // shadows anyway.
+//            caps->hasNativeShadowMap = HasExtension(GLExt::kGL_EXT_shadow_samplers);
+//            caps->hasShadows = caps->hasNativeShadowMap;
+//        }
+        /*else*/ if (IsGfxLevelES2(level))
         {
             // On all GLES2.0 platforms, we always do shadowmaps manually as a depth texture.
             // We don't use EXT_shadow_samplers since almost nothing supports it (outside iOS),
@@ -2569,10 +2574,10 @@ namespace gles
         caps->gles.maxFlexibleArrayBatchSize = caps->gles.isAdrenoGpu ? 128 : 0xffffffff;
         caps->gles.defaultFlexibleArrayBatchSize = caps->gles.isAdrenoGpu ? 128 : 2;
 
-        // both gles2 and gles3 have issue with non-full mipchains (up to some ios9.x)
-        // though we can do workaround ONLY if there is texture_max_level
-        if (UNITY_APPLE_PVR)
-            caps->gles.buggyTextureStorageWithNonFullMipChain = HasMipMaxLevel(*api, level, clamped);
+//        // both gles2 and gles3 have issue with non-full mipchains (up to some ios9.x)
+//        // though we can do workaround ONLY if there is texture_max_level
+//        if (UNITY_APPLE_PVR)
+//            caps->gles.buggyTextureStorageWithNonFullMipChain = HasMipMaxLevel(*api, level, clamped);
 
         // Fill the shader language table
         caps->gles.supportedShaderTagsCount = 0;
@@ -2690,7 +2695,7 @@ namespace gles
         InitFormatCaps(*api, caps, caps->gles.featureLevel, caps->gles.featureClamped);
         InitDefaultFormat(*api, caps, caps->gles.featureLevel);
 
-        if (UNITY_WEBGL)
+        if (1)
         {
             if (caps->IsFormatSupported(kFormatR16G16B16A16_SFloat, kUsageSample))
                 caps->attenuationFormat = kFormatR16G16B16A16_SFloat;
@@ -2716,27 +2721,28 @@ namespace gles
                 const size_t pos = caps->driverVersionString.find(prefix);
                 if (pos != std::string::npos)
                 {
-                    const int version = StringToInt(caps->driverVersionString.substr(pos + sizeof(prefix) - 1));
+                    std::string versionStr(caps->driverVersionString.substr(pos + sizeof(prefix) - 1));
+                    const int version = StringToInt(versionStr);
                     if (version < 27)
                         caps->gles.buggyCopyBufferDependencyHandling = true;
                 }
             }
         }
 
-        if (PLATFORM_ANDROID && caps->gles.isMaliGpu)
-        {
-            if (BeginsWith(caps->rendererString, "Mali-G7") || BeginsWith(caps->rendererString, "Mali-5") || BeginsWith(caps->rendererString, "Mali-G3"))
-            {
-                const char prefix[] = "OpenGL ES 3.2 v1.r";
-                const size_t pos = caps->driverVersionString.find(prefix);
-                if (pos != std::string::npos)
-                {
-                    const int version = StringToInt(caps->driverVersionString.substr(pos + sizeof(prefix) - 1));
-                    if (version < 19)
-                        caps->gles.buggyMultiPassAutoresolve = true;
-                }
-            }
-        }
+//        if (PLATFORM_ANDROID && caps->gles.isMaliGpu)
+//        {
+//            if (BeginsWith(caps->rendererString, "Mali-G7") || BeginsWith(caps->rendererString, "Mali-5") || BeginsWith(caps->rendererString, "Mali-G3"))
+//            {
+//                const char prefix[] = "OpenGL ES 3.2 v1.r";
+//                const size_t pos = caps->driverVersionString.find(prefix);
+//                if (pos != std::string::npos)
+//                {
+//                    const int version = StringToInt(caps->driverVersionString.substr(pos + sizeof(prefix) - 1));
+//                    if (version < 19)
+//                        caps->gles.buggyMultiPassAutoresolve = true;
+//                }
+//            }
+//        }
 
 #if PLATFORM_ANDROID
         if ((isAdreno4 || isAdreno5) && (caps->gpuSkinningCaps & kGPUSkinningSupportsBlendShapes))

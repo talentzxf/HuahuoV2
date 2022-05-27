@@ -8,6 +8,7 @@
 #include "Utilities/EnumFlags.h"
 #include "GfxDevice/GfxDeviceTypes.h"
 #include "Graphics/Format.h"
+#include "Math/ColorSpaceConversion.h"
 #include <string>
 #include <vector>
 
@@ -139,6 +140,7 @@ inline bool IsGfxLevelCore(GfxDeviceLevelGL level, GfxDeviceLevelGL minLevel = k
 }
 
 struct GraphicsCaps {
+public:
     GraphicsCaps();
 
     // ---------- caps common for all devices
@@ -347,6 +349,12 @@ struct GraphicsCaps {
     GraphicsFormat FindUploadFormat(const GraphicsFormat requestedFormat, const FormatUsage usage) const;
     GraphicsFormat FindUploadFormat(const GraphicsFormat requestedFormat, const FormatUsage usage, bool alphaOptional) const;
 
+    void InitDefaultFormat();
+
+    // defaultFormats[kDefaultFormatLDR] changes with current color space
+    // defaultFormatLDR[] always stores the default LDR format for linear and gamma modes.
+    GraphicsFormat defaultFormatLDR[2]; // 2 == kColorSpaceCount
+
     GfxBufferTarget computeBufferTargetForGeometryBuffer; //Global common settings for vertexBuffer dedicated to compute shader bindings. SkinnedMesh & VFX are concerned by this target.
 #if PLATFORM_SUPPORTS_OPENGL_UNIFIED
     GraphicsCapsGLES    gles;
@@ -354,6 +362,24 @@ struct GraphicsCaps {
 
     void ClearMemory();
     static void CleanupGraphicsCapsMemory();
+
+    // Update the default LDR format to the new colour space
+    void UpdateDefaultLDRFormat();
+    void SetDefaultLDRFormat(GraphicsFormat format);
+
+    // Set the Default HDR format after initialisation
+    void UpdateDefaultHDRFormat();
+    void SetDefaultHDRFormat(GraphicsFormat format);
+
+    bool SupportsFormatUsagePixels32(GraphicsFormat format) const;
+    bool SupportsFormatUsageGetPixel(GraphicsFormat format) const;
+    bool SupportsFormatUsageSetPixel(GraphicsFormat format) const;
+    bool SupportsFormatUsageReadback(GraphicsFormat format) const;
+
+    // Each platform may use different graphics format for specific usages that are represented by DefaultFormat
+    GraphicsFormat GetGraphicsFormat(DefaultFormat defaultFormat, ColorSpace colorSpace = kCurrentColorSpace) const;
+private:
+    GraphicsFormat defaultFormats[kDefaultFormatCount];
 };
 
 GraphicsCaps& GetGraphicsCaps();

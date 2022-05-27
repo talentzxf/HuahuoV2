@@ -9,6 +9,7 @@
 #include "Math/Matrix4x4.h"
 #include "Geometry/Plane.h"
 #include "Math/Rect.h"
+#include "GfxDevice/GfxDevice.h"
 
 // Extract frustum planes from Projection matrix.  Use ExtractProjectionPlanesRobust() whenever zNear/zFar can be expected
 // to be extremely small.
@@ -23,6 +24,8 @@ bool CameraProject(const Vector3f& p, const Matrix4x4f& cameraToWorld, const Mat
 //
 // sets outP to (0,0,0) if fails.
 bool CameraUnProject(const Vector3f& p, const Matrix4x4f& cameraToWorld, const Matrix4x4f& clipToWorld, const RectInt& viewport, Vector3f& outP, bool offscreen);
+
+void SetClippingPlaneShaderProps(GfxDevice& device = GetGfxDevice());
 
 Rectf RectIntToRectf(const RectInt& r);
 RectInt RectfToRectInt(const Rectf& r);

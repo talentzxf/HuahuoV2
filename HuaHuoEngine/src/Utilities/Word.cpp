@@ -85,9 +85,9 @@ void SplitImpl(std::string& s, char splitChar, std::vector<std::string>& parts, 
 }
 
 namespace core{
-    void Split(std::string& s, char splitChar, std::vector<std::string>& parts)
+    void Split(std::string& s, char splitChar, std::vector<std::string>& parts, std::string::size_type maxSplits)
     {
-        SplitImpl(s, splitChar, parts, std::string::npos);
+        SplitImpl(s, splitChar, parts, maxSplits);
     }
 }
 
@@ -128,7 +128,7 @@ template<class T>
 T StringToSignedType(const std::string& s)
 {
     bool negative = false;
-    UInt64 value = StringToIntBase(s, negative);
+    UInt64 value = StringToIntBase(const_cast<std::string&>(s), negative);
 
     return negative ? -(T)value : (T)value;
 }

@@ -171,3 +171,21 @@ bool CameraUnProject(const Vector3f& p, const Matrix4x4f& cameraToWorld, const M
     outP.Set(0.0f, 0.0f, 0.0f);
     return false;
 }
+
+void SetClippingPlaneShaderProps(GfxDevice& device)
+{
+    BuiltinShaderParamValues& params = device.GetBuiltinParamValues();
+
+    const Matrix4x4f& viewMatrix = device.GetViewMatrix();
+    const Matrix4x4f& deviceProjMatrix = device.GetDeviceProjectionMatrix();
+    Matrix4x4f viewProj;
+    MultiplyMatrices4x4(&deviceProjMatrix, &viewMatrix, &viewProj);
+    Plane planes[6];
+    ExtractProjectionPlanes(viewProj, planes);
+    params.SetVectorParam(kShaderVecCameraWorldClipPlanes0, (const Vector4f&)planes[0]);
+    params.SetVectorParam(kShaderVecCameraWorldClipPlanes1, (const Vector4f&)planes[1]);
+    params.SetVectorParam(kShaderVecCameraWorldClipPlanes2, (const Vector4f&)planes[2]);
+    params.SetVectorParam(kShaderVecCameraWorldClipPlanes3, (const Vector4f&)planes[3]);
+    params.SetVectorParam(kShaderVecCameraWorldClipPlanes4, (const Vector4f&)planes[4]);
+    params.SetVectorParam(kShaderVecCameraWorldClipPlanes5, (const Vector4f&)planes[5]);
+}

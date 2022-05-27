@@ -5,7 +5,9 @@
 #ifndef HUAHUOENGINE_WORD_H
 #define HUAHUOENGINE_WORD_H
 #include "StringTraits.h"
+#include "Memory/MemoryMacros.h"
 #include <vector>
+#include <cstring>
 
 bool BeginsWith(const char* str, const char* prefix);
 
@@ -85,12 +87,28 @@ namespace core {
     //    Split("t,es,t", ',', parts)    -> parts == "t","es","t"
     //    Split("t,es,t", ',', parts,2)  -> parts == "t","est"
     // REMARKS: Split("1,,,,,,,,,,2", '<>', parts)  -> parts == "1","2"
-    void Split(std::string& str, char splitChar, std::vector<std::string> &parts);
+    void Split(std::string& str, char splitChar, std::vector<std::string> &parts, std::string::size_type maxSplits = std::string::npos);
 }
+
+inline bool IsDigit(char c) { return c >= '0' && c <= '9'; }
+inline bool IsAlpha(char c) { return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'); }
+inline bool IsSpace(char c) { return c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r' || c == ' '; }
+inline bool IsTabSpace(char c) { return c == '\t' || c == ' '; }
+inline bool IsAlphaNumeric(char c) { return IsDigit(c) || IsAlpha(c); }
+inline bool IsHex(char c) { return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'); }
 
 // Converts string to integer representation. First, any whitespace characters are ignored.
 // Then, optional '+' or '-' sign character determines the sign of the resulting number.
 // Then, one or more decimal digits are parsed until either non-digit character or the
 // end of the string is found. Any non-digit characters after the end of the number are ignored.
 SInt32  StringToInt(std::string& s);
+
+inline char* StrDup(MemLabelRef label, const char *str)
+{
+    size_t size = strlen(str) + 1;
+    char* result = (char*)HUAHUO_MALLOC(label, size);
+    if (OPTIMIZER_UNLIKELY(result == NULL))
+        return NULL;
+    return (char*)memcpy(result, str, size);
+}
 #endif //HUAHUOENGINE_WORD_H

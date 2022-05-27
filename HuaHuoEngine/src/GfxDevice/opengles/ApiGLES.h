@@ -15,6 +15,20 @@
 class TranslateGLES;
 class GfxContextGLES;
 
+struct FramebufferInfoGLES
+{
+    GLint redBits;
+    GLint greenBits;
+    GLint blueBits;
+    GLint alphaBits;
+    GLint depthBits;
+    GLint stencilBits;
+    GLint samples;
+    GLint sampleBuffers;
+    GLint coverageSamples;
+    GLint coverageBuffers;
+};
+
 class ApiGLES: public ApiFuncGLES, private NonCopyable
 {
 public:
@@ -37,11 +51,16 @@ public:
     void BindVertexArray(gl::VertexArrayHandle vertexArrayName);
     bool IsVertexArray(gl::VertexArrayHandle vertexArrayName);
 
+    FramebufferInfoGLES GetFramebufferInfo() const;
+
     // Return the current tracked context
     gl::ContextHandle GetContext() const;
 
     // Conversions from Unity enums to OpenGL enums
     const TranslateGLES & translate;
+
+    // Fills samples with a descending list of sample counts that are support for the given internFormat and target
+    void QuerySampleCounts(GLenum target, GLenum internalFormat, std::vector<GLint>& samples) const;
 
 private:
     // -- All initialization time code --

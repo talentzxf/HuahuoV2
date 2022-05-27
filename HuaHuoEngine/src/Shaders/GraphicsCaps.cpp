@@ -6,6 +6,7 @@
 #include "Utilities/RegisterRuntimeInitializeAndCleanup.h"
 #include "Memory/MemoryMacros.h"
 #include "GraphicsCapsScriptBinding.h"
+#include "Math/ColorSpaceConversion.h"
 #include <cstring>
 #include <vector>
 
@@ -166,6 +167,81 @@ bool GraphicsCaps::IsFormatSupported(const GraphicsFormat requestedFormat, const
     if (support == kSupportCaveat)
         return FindUploadFormat(requestedFormat, usage) != kFormatNone;
     return false;
+}
+
+
+void GraphicsCaps::UpdateDefaultLDRFormat()
+{
+    const ColorSpace colorSpace = GetActiveColorSpace();
+
+    AssertMsg(colorSpace != kUninitializedColorSpace, "Colorspace needs to be initialized before updating default formats");
+
+    defaultFormats[kDefaultFormatLDR] = defaultFormatLDR[colorSpace];
+}
+
+void GraphicsCaps::SetDefaultLDRFormat(GraphicsFormat format)
+{
+    AssertMsg(IsValidFormat(format), "Invalid LDR Graphics Format %i specified", format);
+    defaultFormats[kDefaultFormatLDR] = format;
+}
+
+GraphicsFormat GraphicsCaps::GetGraphicsFormat(DefaultFormat defaultFormat, ColorSpace colorSpace) const
+{
+    const GraphicsFormat format = (defaultFormat == kDefaultFormatLDR && colorSpace != kCurrentColorSpace)
+                                  ? defaultFormatLDR[colorSpace]
+                                  : defaultFormats[defaultFormat];
+
+    AssertMsg(format != kFormatNone, "Default formats haven't been initialized");
+    return format;
+}
+
+void GraphicsCaps::UpdateDefaultHDRFormat()
+{
+    if (/*GetGraphicsSettings().GetTierSettings().hdrMode == kHDRModeR11G11B10Float &&*/ IsFormatSupported(kFormatB10G11R11_UFloatPack32, kUsageRender))
+        defaultFormats[kDefaultFormatHDR] = kFormatB10G11R11_UFloatPack32;
+    else if (IsFormatSupported(kFormatR16G16B16A16_SFloat, kUsageRender))
+        defaultFormats[kDefaultFormatHDR] = kFormatR16G16B16A16_SFloat;
+    else if (IsFormatSupported(kFormatR32G32B32A32_SFloat, kUsageRender))
+        defaultFormats[kDefaultFormatHDR] = kFormatR32G32B32A32_SFloat;
+    else
+        defaultFormats[kDefaultFormatHDR] = kFormatR8G8B8A8_UNorm; // We fallback to unorm if no HDR format is supported.
+}
+
+void GraphicsCaps::SetDefaultHDRFormat(GraphicsFormat format)
+{
+    AssertMsg(IsValidFormat(format), "Invalid HDR Graphics Format %i specified", format);
+    defaultFormats[kDefaultFormatHDR] = format;
+}
+
+void GraphicsCaps::InitDefaultFormat()
+{
+    const ColorSpace colorSpace = GetActiveColorSpace();
+
+    AssertMsg(colorSpace != kUninitializedColorSpace, "Colorspace needs to be initialized before initializing default formats");
+
+    CompileTimeAssertArraySize(defaultFormatLDR, kColorSpaceCount);
+
+    defaultFormatLDR[kLinearColorSpace] = kFormatR8G8B8A8_SRGB;
+    defaultFormatLDR[kGammaColorSpace] = kFormatR8G8B8A8_UNorm;
+
+    GraphicsFormat formatHDR = kFormatR8G8B8A8_UNorm; // We fallback to unorm if no HDR format is supported.
+    if (/*GetGraphicsSettings().GetTierSettings().hdrMode == kHDRModeR11G11B10Float &&*/ IsFormatSupported(kFormatB10G11R11_UFloatPack32, kUsageRender))
+        formatHDR = kFormatB10G11R11_UFloatPack32;
+    else if (IsFormatSupported(kFormatR16G16B16A16_SFloat, kUsageRender))
+        formatHDR = kFormatR16G16B16A16_SFloat;
+    else if (IsFormatSupported(kFormatR32G32B32A32_SFloat, kUsageRender))
+        formatHDR = kFormatR32G32B32A32_SFloat;
+
+    GraphicsFormat const defaultDefaultFormats[kDefaultFormatCount] =
+            {
+                    defaultFormatLDR[colorSpace],   // kDefaultFormatLDR
+                    formatHDR,                      // kDefaultFormatHDR
+                    kFormatD24_UNorm_S8_UInt,       // kDefaultFormatDepth
+                    kFormatD16_UNorm,               // kDefaultFormatShadow
+                    kFormatYUV2,                    // kDefaultFormatVideo
+            };
+
+    memcpy(defaultFormats, defaultDefaultFormats, sizeof(defaultDefaultFormats));
 }
 
 GraphicsFormat GraphicsCaps::GetCompatibleFormat(const GraphicsFormat requestedFormat, const FormatUsage usage) const

@@ -12,6 +12,8 @@
 #include "Job/JobTypes.h"
 #include "GfxDeviceObjects.h"
 #include "Math/Rect.h"
+#include "BuiltinShaderParams.h"
+#include "TransformState.h"
 
 class AutoGfxDeviceBeginEndFrame
 {
@@ -105,8 +107,8 @@ struct GfxContextData
     bool GetUsingAsyncDummyShader() const { return m_UsingAsyncDummyShader; }
 #endif // UNITY_EDITOR || ENABLE_PLAYERCONNECTION
 
-//    BuiltinShaderParamValues m_BuiltinParamValues;
-//    TransformState m_TransformState;
+    BuiltinShaderParamValues m_BuiltinParamValues;
+    TransformState m_TransformState;
 
 private:
     bool                m_InsideFrame;
@@ -127,6 +129,7 @@ private:
     UInt16              m_ActiveScaledHeight;
     Vector2f            m_StereoScale;
     Vector2f            m_StereoOffset;
+
 #if UNITY_EDITOR || ENABLE_PLAYERCONNECTION
     bool                m_UsingAsyncDummyShader;
 #endif // UNITY_EDITOR || ENABLE_PLAYERCONNECTION
@@ -149,6 +152,14 @@ public:
         kFlagDontResolve        = (1 << 5),   // Skip AA resolve even when the previous RT was AA. Used when doing shenanigans with default backbuffers.
         kFlagReadOnlyDepth      = (1 << 6),   // Bind the depth surface as read-only (if supported by the gfxdevice; see GraphicsCaps::hasReadOnlyDepth)
         kFlagReadOnlyStencil    = (1 << 7),   // Bind the stencil surface as read-only (if supported by the gfxdevice; see GraphicsCaps::hasReadOnlyStencil)
+    };
+
+    // tracks if View/Proj matrices need to be reapplied to shader (i.e. after SetPass)
+    enum ViewProjMatrixNeedApplyFlag
+    {
+        kMatricesToApplyFlagView    = 1 << 0,
+        kMatricesToApplyFlagProj    = 1 << 1,
+        kMatricesToApplyFlagNone    = 0
     };
 
     explicit GfxDevice(MemLabelRef label);
@@ -185,6 +196,30 @@ public:
     // TODO: we might need to extend it in the future, e.g. for multi-display
     virtual RenderSurfaceHandle GetBackBufferColorSurface()    { return m_BackBufferColor; }
     virtual RenderSurfaceHandle GetBackBufferDepthSurface()    { return m_BackBufferDepth; }
+
+    virtual void    SetProjectionMatrix(const Matrix4x4f& matrix);
+
+    // Calculate a device projection matrix given a Unity projection matrix, this needs to be virtual so that platforms can override if necessary.
+    virtual void CalculateDeviceProjectionMatrix(Matrix4x4f& m, bool usesOpenGLTextureCoords, bool invertY) const;
+
+    // VP matrix (kShaderMatViewProj) is updated when setting view matrix but not when setting projection.
+    // Call UpdateViewProjectionMatrix() explicitly if you only change projection matrix.
+    virtual void    UpdateViewProjectionMatrix();
+
+    virtual void    SetViewMatrix(const Matrix4x4f& matrix);
+    virtual void    SetWorldMatrix(const Matrix4x4f& matrix);
+
+    const BuiltinShaderParamValues& GetBuiltinParamValues() const { return m_GfxContextData.m_BuiltinParamValues; }
+    BuiltinShaderParamValues& GetBuiltinParamValues() { return m_GfxContextData.m_BuiltinParamValues; }
+
+    virtual const Matrix4x4f& GetWorldViewMatrix() const;
+    virtual const Matrix4x4f& GetWorldMatrix() const;
+    virtual const Matrix4x4f& GetViewMatrix() const;
+    virtual const Matrix4x4f& GetProjectionMatrix() const; // get projection matrix as passed from Unity (OpenGL projection conventions)
+    virtual const Matrix4x4f& GetDeviceProjectionMatrix() const; // get projection matrix that will be actually used
+
+    void SetInvertProjectionMatrix(bool val) { m_InvertProjectionMatrix = val; m_Dirty = true; }
+    bool GetInvertProjectionMatrix() const { return m_InvertProjectionMatrix; }
 protected:
     // Mutable state
     GfxContextData      m_GfxContextData;
@@ -195,7 +230,15 @@ protected:
 
     RenderSurfaceHandle m_BackBufferColor;
     RenderSurfaceHandle m_BackBufferDepth;
+
+    ViewProjMatrixNeedApplyFlag m_ViewProjMatrixNeedApplyFlags;
+
+private:
+    bool                m_InvertProjectionMatrix;
+    bool m_Dirty;
 };
+
+ENUM_FLAGS(GfxDevice::ViewProjMatrixNeedApplyFlag)
 
 // GetGfxDevice() returns the graphics device that you should use in rendering code.
 // It may be a client device which sends commands to a separate thread (to the real device),
@@ -268,5 +311,7 @@ public:
 //        return SInt32(fence - m_CurrentCPUFence) <= 0;
 //    }
 };
+
+GfxDevice&          GetUncheckedRealGfxDevice();
 
 #endif //HUAHUOENGINE_GFXDEVICE_H

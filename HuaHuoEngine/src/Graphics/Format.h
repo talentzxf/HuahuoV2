@@ -291,6 +291,13 @@ enum FormatSwizzle
     kFormatSwizzle1, kFormatSwizzleMax = kFormatSwizzle1
 };
 
+enum
+{
+    kDefaultFormatCount = kDefaultFormatLast - kDefaultFormatFirst + 1,
+};
+
+bool IsValidFormat(GraphicsFormat format);
+
 struct FormatDesc;
 const FormatDesc& GetDesc(GraphicsFormat format);
 
