@@ -36,6 +36,9 @@ public:
     // Therefore we keep a list of surfaces that need mipmap generation, and call ProcessPendingMipGens() at both Prepare and right after
     // switching GL context. We'll also have to handle the case where the render texture gets deleted while the mipmaps are still in the pending list (that's what CancelPendingMipGen is for).
     void ProcessPendingMipGens(); // Generate mipmaps for all pending render textures
+    virtual size_t  RenderSurfaceStructMemorySize(bool colorSurface);
+
+    virtual void    DestroyRenderSurfacePlatform(RenderSurfaceBase* rs);
 protected:
     void UpdateSRGBWrite();
     void SetViewportInternal(const RectInt& rect);

@@ -7,6 +7,7 @@
 #include "GfxDeviceGLES.h"
 
 //#if PLATFORM_WIN
+#include <windows.h>
 #include <wingdi.h>
 //#endif
 

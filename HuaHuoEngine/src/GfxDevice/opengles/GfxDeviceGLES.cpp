@@ -210,6 +210,19 @@ void GfxDeviceGLES::SetActiveContext(void* context)
     m_Context->GetFramebuffer().ActiveContextChanged(&m_BackBufferColor.object, &m_BackBufferDepth.object);
 }
 
+//
+// render surface handling
+//
+
+size_t GfxDeviceGLES::RenderSurfaceStructMemorySize(bool /*colorSurface*/)
+{
+    return sizeof(RenderSurfaceGLES);
+}
+
+void GfxDeviceGLES::DestroyRenderSurfacePlatform(RenderSurfaceBase* rs)
+{
+    m_Context->GetFramebuffer().ReleaseFramebuffer(rs, m_Context);
+}
 
 const char* GetGfxDeviceLevelString(GfxDeviceLevelGL deviceLevel)
 {

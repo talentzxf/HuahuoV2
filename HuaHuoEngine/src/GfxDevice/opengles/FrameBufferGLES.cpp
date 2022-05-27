@@ -138,3 +138,86 @@ void GfxFramebufferGLES::SetViewport(const RectInt& rect)
     if (!m_RequiresFramebufferSetup)
         this->ApplyViewport();
 }
+
+void GfxFramebufferGLES::ReleaseFramebuffer(RenderSurfaceBase* rs, GfxContextGLES *contexts)
+{
+    GLES_ASSERT(&m_Api, !HasAsAttachment(GLESRenderTargetSetup(m_DefaultFramebuffer), rs), "Cannot delete surface of default framebuffer");
+//
+//    if (m_IntermediateMSAAFBO != gl::FramebufferHandle::Default())
+//    {
+//        m_Api.DeleteFramebuffer(m_IntermediateMSAAFBO, GetDefaultFBO());
+//        m_IntermediateMSAAFBO = gl::FramebufferHandle::Default();
+//    }
+//
+//    // When deleting a rendersurface, we'll need to notify all other GfxFramebufferGLES
+//    // instances in other contexts as well that a surface is no more (for both textures and rendersurfaces).
+//    if (contexts)
+//        contexts->AddRenderSurfaceToDeferredFBOInvalidateList((RenderSurfaceGLES*)rs);
+//
+//    // Also cancel any possible mip gens.
+//    static_cast<GfxDeviceGLES &>(GetRealGfxDevice()).CancelPendingMipGen(rs);
+//
+//    // update cache
+//    gl::FramebufferHandle curFB = m_Api.GetFramebufferBinding(gl::kDrawFramebuffer);
+//
+//    // When we release the current framebuffer, we don't rebind the current framebuffer and let the active FBO code figure it out
+//    bool rebindCurrentFramebuffer = true;
+//
+//    for (FramebufferMap::iterator fbi = m_FramebufferMap.begin(), fbend = m_FramebufferMap.end(); fbi != fbend;)
+//    {
+//        if (::HasAsAttachment(fbi->first, rs))
+//        {
+//#if DEBUG_GLES_FRAMEBUFFER
+//            printf_console("*** GLES FBO Delete %d %s\n", fbi->second, DescribeRT(GLESRenderTargetSetup(fbi->first)).c_str());
+//#endif
+//
+//            // in order to avoid leaks when we destroy rb/tex that is still attached to some FBO
+//            // we need to
+//            // 1. attach 0 to all FBO points (buggy drivers)
+//            // 2. delete fbo itself
+//            m_Api.BindFramebuffer(gl::kDrawFramebuffer, fbi->second);
+//            const GLenum target = GetGraphicsCaps().gles.framebufferTargetForBindingAttachments;
+//            for (int i = 0, n = fbi->first.m_ColorCount; i < n; ++i)
+//                GLES_CALL(&m_Api, glFramebufferTexture2D, target, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, 0, 0);
+//
+//            if (fbi->first.m_HasDepth)
+//            {
+//                GLES_CALL(&m_Api, glFramebufferRenderbuffer, target, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
+//                GLES_CALL(&m_Api, glFramebufferRenderbuffer, target, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, 0);
+//            }
+//
+//            // It turns out that we found out that we are trying to delete the currently bound framebuffer so we can't rebind it after deleting it
+//            if (fbi->second == curFB)
+//                rebindCurrentFramebuffer = false;
+//
+//            m_Api.DeleteFramebuffer(fbi->second, m_DefaultFBO);
+//            m_FramebufferMap.erase(fbi++);
+//        }
+//        else
+//        {
+//            ++fbi;
+//        }
+//    }
+//
+//    if (rebindCurrentFramebuffer)
+//        m_Api.BindFramebuffer(gl::kDrawFramebuffer, curFB);
+//
+//    m_CurrentFramebufferSetup.fbo = m_Api.GetFramebufferBinding(gl::kDrawFramebuffer); // DeleteFramebuffer may change the current binding if current is deleted
+//
+//    // update active FBOs
+//
+//    m_PendingFramebufferValid = !HasAsAttachment(GLESRenderTargetSetup(m_PendingFramebuffer), rs);
+//    m_CurrentFramebufferValid = !HasAsAttachment(GLESRenderTargetSetup(m_CurrentFramebuffer), rs);
+//    if (!m_PendingFramebufferValid && !PLATFORM_WEBGL) // With WebGL we might destroy the active render texture when we enter or leave fullscreen
+//        ErrorString("RenderTexture warning: Destroying active render texture. Switching to main context.");
+//
+//    FallbackToValidFramebufferState();
+//
+//    AssertMsg(!InvalidateSurfacePtr(m_PendingFramebuffer, rs) && !InvalidateSurfacePtr(m_CurrentFramebuffer, rs),
+//              "GfxFramebufferGLES: An active RenderTargetSetup has dangling pointers.");
+//
+//    // Effectively delete the rs object and delete the OpenGL renderbuffer of texture object it contains
+//    gles::DestroyRenderSurface(&m_Api, reinterpret_cast<RenderSurfaceGLES*>(rs));
+//
+//    AssertMsg(m_Api.GetFramebufferBinding(gl::kDrawFramebuffer) == m_CurrentFramebufferSetup.fbo, "GfxFramebufferGLES: Inconsistent framebuffer setup");
+}

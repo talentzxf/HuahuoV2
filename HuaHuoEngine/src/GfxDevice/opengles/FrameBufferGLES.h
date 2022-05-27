@@ -194,6 +194,10 @@ public:
     // will update backbuffer from window extents: it is needed in cases where we switch gl context but still drawing to default fbo
     void UpdateDefaultFramebufferViewport();
 
+    // handles deletion of RenderSurface:
+    // updates cache to kill related fbos and handles deletion of currently active fbo
+    void ReleaseFramebuffer(RenderSurfaceBase* rs, GfxContextGLES *contexts);
+
 private:
     // Update the current viewport from the pending viewport: it checks if the OpenGL states need to be
     void ApplyViewport();
