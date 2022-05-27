@@ -295,4 +295,6 @@ void RemoveErrorWithIdentifierFromConsole(int identifier);
 void EnableExtendedLogging();
 #endif
 
+#define printf_console printf
+
 #endif //HUAHUOENGINE_LOGASSERT_H

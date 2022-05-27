@@ -5,10 +5,35 @@
 #include "FrameBufferGLES.h"
 #include "AssertGLES.h"
 
+namespace gles
+{
+    namespace internal
+    {
+        void FillRenderTargetSetup(GfxRenderTargetSetup *setup, RenderSurfaceBase *col, RenderSurfaceBase *depth)
+        {
+            ::memset(setup, 0x00, sizeof(GfxRenderTargetSetup));
+            setup->color[0] = col;
+            setup->depth = depth;
+            setup->colorCount = col ? 1 : 0;
+            setup->colorLoadAction[0] = kGfxRTLoadActionLoad;
+            setup->colorStoreAction[0] = kGfxRTStoreActionStore;
+            setup->depthLoadAction = kGfxRTLoadActionLoad;
+            setup->depthStoreAction = kGfxRTStoreActionStore;
+            setup->cubemapFace = kCubeFaceUnknown;
+            setup->mipLevel = 0;
+            setup->flags = 0;
+        }
+    }
+    void FillRenderTargetSetup(GfxRenderTargetSetup *setup, RenderSurfaceBase *col, RenderSurfaceBase *depth)
+    {
+        Assert(setup && col && depth);
+        internal::FillRenderTargetSetup(setup, col, depth);
+    }
+} // namespace
 
 GfxFramebufferGLES::GfxFramebufferGLES(ApiGLES & api, void* context)
-//        : m_FramebufferMap()
-        : m_CurrentFramebufferSetup()
+        : m_FramebufferMap()
+        , m_CurrentFramebufferSetup()
 //        , m_CurrentFramebufferValid(false)
         , m_PendingFramebufferSetup()
 //        , m_PendingFramebufferValid(false)
@@ -70,9 +95,25 @@ void GfxFramebufferGLES::SetupDefaultFramebuffer(RenderSurfaceBase** outColor, R
         *outDepth = &m_BackBufferDepthSurface;
 }
 
+void GfxFramebufferGLES::UpdateDefaultFramebufferViewport()
+{
+#if PLATFORM_ANDROID || PLATFORM_WIN || PLATFORM_OSX || PLATFORM_LINUX || PLATFORM_WEBGL
+    if (GetScreenManagerPtr())
+    {
+        // do this in a more proper way.. laterTM
+        const Rectf window = GetScreenManager().GetRect();
+
+        // TODO: take care about external FBO
+        // for now this is android-only code, so no-external default fbo
+        m_BackBufferColorSurface.width  = m_BackBufferDepthSurface.width    = window.width;
+        m_BackBufferColorSurface.height = m_BackBufferDepthSurface.height   = window.height;
+    }
+#endif//PLATFORM_ANDROID || PLATFORM_WIN || PLATFORM_OSX || PLATFORM_LINUX || PLATFORM_WEBGL
+}
+
 void GfxFramebufferGLES::Invalidate()
 {
-//    m_FramebufferMap.clear();
+    m_FramebufferMap.clear();
 //
 //#if USES_GLES_DEFAULT_FBO
 //    m_DefaultGLESFBOInited = false;
@@ -97,30 +138,3 @@ void GfxFramebufferGLES::SetViewport(const RectInt& rect)
     if (!m_RequiresFramebufferSetup)
         this->ApplyViewport();
 }
-
-
-namespace gles
-{
-    namespace internal
-    {
-        void FillRenderTargetSetup(GfxRenderTargetSetup *setup, RenderSurfaceBase *col, RenderSurfaceBase *depth)
-        {
-            ::memset(setup, 0x00, sizeof(GfxRenderTargetSetup));
-            setup->color[0] = col;
-            setup->depth = depth;
-            setup->colorCount = col ? 1 : 0;
-            setup->colorLoadAction[0] = kGfxRTLoadActionLoad;
-            setup->colorStoreAction[0] = kGfxRTStoreActionStore;
-            setup->depthLoadAction = kGfxRTLoadActionLoad;
-            setup->depthStoreAction = kGfxRTStoreActionStore;
-            setup->cubemapFace = kCubeFaceUnknown;
-            setup->mipLevel = 0;
-            setup->flags = 0;
-        }
-    }
-    void FillRenderTargetSetup(GfxRenderTargetSetup *setup, RenderSurfaceBase *col, RenderSurfaceBase *depth)
-    {
-        Assert(setup && col && depth);
-        internal::FillRenderTargetSetup(setup, col, depth);
-    }
-} // namespace

@@ -185,7 +185,7 @@ public:
     bool    hasNVCSAA;              // gles2: Tegra 3 has coverage sampling anti-aliasing
 
     bool    supportsManualMipmaps;  // WebGL does not support manually initializing mipmap levels other than 0.
-    //    int     majorVersion;           // Major OpenGL version, eg OpenGL 4.2 major version is 4
+    int     majorVersion;           // Major OpenGL version, eg OpenGL 4.2 major version is 4
     int     minorVersion;           // Minor OpenGL version, eg OpenGL 4.2 minor version is 2
 };
 

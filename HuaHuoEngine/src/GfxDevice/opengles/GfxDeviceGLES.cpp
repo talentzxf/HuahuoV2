@@ -210,6 +210,56 @@ void GfxDeviceGLES::SetActiveContext(void* context)
     m_Context->GetFramebuffer().ActiveContextChanged(&m_BackBufferColor.object, &m_BackBufferDepth.object);
 }
 
+
+const char* GetGfxDeviceLevelString(GfxDeviceLevelGL deviceLevel)
+{
+    static const char* kGfxDeviceLevelNames[] = // kGfxLevelCount
+            {
+                    " <OpenGL ES 2.0>",             // kGfxLevelES2
+                    " <OpenGL ES 3.0>",             // kGfxLevelES3
+                    " <OpenGL ES 3.1>",             // kGfxLevelES31
+                    " <OpenGL ES 3.1 AEP>",         // kGfxLevelES31AEP
+                    " <OpenGL ES 3.2>",             // kGfxLevelES32
+                    " <OpenGL 3.2>",                // kGfxLevelCore32
+                    " <OpenGL 3.3>",                // kGfxLevelCore33
+                    " <OpenGL 4.0>",                // kGfxLevelCore40
+                    " <OpenGL 4.1>",                // kGfxLevelCore41
+                    " <OpenGL 4.2>",                // kGfxLevelCore42
+                    " <OpenGL 4.3>",                // kGfxLevelCore43
+                    " <OpenGL 4.4>",                // kGfxLevelCore44
+                    " <OpenGL 4.5>",                // kGfxLevelCore45
+            };
+    CompileTimeAssertArraySize(kGfxDeviceLevelNames, kGfxLevelCount);
+
+    static const char* kGfxDeviceLevelClampedNames[] = // kGfxLevelCount
+            {
+                    " <OpenGL ES 2.0 (no extensions)>",             // kGfxLevelES2
+                    " <OpenGL ES 3.0 (no extensions)>",             // kGfxLevelES3
+                    " <OpenGL ES 3.1 (no extensions)>",             // kGfxLevelES31
+                    " <OpenGL ES 3.1 AEP (no extensions)>",         // kGfxLevelES31AEP
+                    " <OpenGL ES 3.2 (no extensions)>",             // kGfxLevelES32
+                    " <OpenGL 3.2 (no extensions)>",                // kGfxLevelCore32
+                    " <OpenGL 3.3 (no extensions)>",                // kGfxLevelCore33
+                    " <OpenGL 4.0 (no extensions)>",                // kGfxLevelCore40
+                    " <OpenGL 4.1 (no extensions)>",                // kGfxLevelCore41
+                    " <OpenGL 4.2 (no extensions)>",                // kGfxLevelCore42
+                    " <OpenGL 4.3 (no extensions)>",                // kGfxLevelCore43
+                    " <OpenGL 4.4 (no extensions)>",                // kGfxLevelCore44
+                    " <OpenGL 4.5 (no extensions)>",                // kGfxLevelCore45
+            };
+    CompileTimeAssertArraySize(kGfxDeviceLevelClampedNames, kGfxLevelCount);
+
+    if (deviceLevel == kGfxLevelUninitialized)
+    {
+        return " <OpenGL>";
+    }
+    else
+    {
+        DebugAssertMsg(deviceLevel >= kGfxLevelFirst && deviceLevel <= kGfxLevelLast, "OPENGL ERROR: Invalid device level");
+        return /*HasARGV("force-clamped") ? kGfxDeviceLevelClampedNames[deviceLevel - kGfxLevelFirst] :*/ kGfxDeviceLevelNames[deviceLevel - kGfxLevelFirst];
+    }
+}
+
 // The content of this function should be in GfxDeviceGLES constructor
 // but GfxDeviceGLES instances are created with UNITY_NEW_AS_ROOT which doesn't allow arguments passing.
 bool GfxDeviceGLES::Init(GfxDeviceLevelGL deviceLevel)
@@ -263,8 +313,8 @@ bool GfxDeviceGLES::Init(GfxDeviceLevelGL deviceLevel)
 
     this->SetActiveContext(masterContextPointer);
 
-    m_Api.InitDebug();
-    m_Api.debug.Log(Format("OPENGL LOG: GfxDeviceGLES::Init - CreateMasterGraphicsContext\n").c_str());
+//    m_Api.InitDebug();
+//    m_Api.debug.Log(Format("OPENGL LOG: GfxDeviceGLES::Init - CreateMasterGraphicsContext\n").c_str());
 
     printf_console("OPENGL LOG: Creating OpenGL%s%d.%d graphics device ; Context level %s ; Context handle %d\n",
                    IsGfxLevelES(deviceLevel) ? " ES " : " ",
@@ -275,8 +325,8 @@ bool GfxDeviceGLES::Init(GfxDeviceLevelGL deviceLevel)
 #if UNITY_APPLE_PVR
     printf_console("OPENGL LOG: OpenGLES%d is deprecated on this platform\n", GetGraphicsCaps().gles.majorVersion);
 #endif
-
-    m_FrameTimingManager = UNITY_NEW(FrameTimingManagerGLES, kMemGfxDevice)(*gGL);
+/* VZ: Enable later.
+    m_FrameTimingManager = HUAHUO_NEW(FrameTimingManagerGLES, kMemGfxDevice)(*gGL);
 
     InitCommonState(m_State);
     InvalidateState();
@@ -304,6 +354,7 @@ bool GfxDeviceGLES::Init(GfxDeviceLevelGL deviceLevel)
 #endif
 
     static_cast<FrameTimingManagerGLES*>(m_FrameTimingManager)->FrameStart();
+*/
 
     return true;
 }

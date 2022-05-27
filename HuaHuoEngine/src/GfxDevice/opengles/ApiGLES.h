@@ -36,6 +36,12 @@ public:
     ~ApiGLES();
 
     void Init(const GfxContextGLES& context, GfxDeviceLevelGL &deviceLevel);
+
+    // -- Debug API --
+
+    // Initialize debug output
+    void InitDebug();
+
     // Return the OpenGL strings
     const char* GetDriverString(gl::DriverQuery query) const;
 

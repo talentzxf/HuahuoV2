@@ -61,5 +61,9 @@ inline void RenderSurfaceBase_InitColor(RenderSurfaceBase& rs)
     RenderSurfaceBase_Init(rs, true);
 }
 
+inline void RenderSurfaceBase_InitDepth(RenderSurfaceBase& rs)
+{
+    RenderSurfaceBase_Init(rs, false);
+}
 
 #endif //HUAHUOENGINE_RENDERSURFACE_H

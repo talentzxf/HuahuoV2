@@ -6,9 +6,9 @@
 #include "GfxDevice/GfxDevice.h"
 #include "GfxDeviceGLES.h"
 
-#if PLATFORM_WIN
+//#if PLATFORM_WIN
 #include <wingdi.h>
-#endif
+//#endif
 
 namespace gl
 {
@@ -16,23 +16,23 @@ namespace gl
     {
         ContextHandle currentContextHandle = gl::ContextHandle::Invalid();
 
-#       if PLATFORM_WIN
+//#       if PLATFORM_WIN
         void* currentContext = reinterpret_cast<void*>(wglGetCurrentContext());
-#       elif PLATFORM_LINUX
-        void* currentContext = GetCurrentNativeGLContext();
-#       elif PLATFORM_ANDROID || PLATFORM_LUMIN
-        void* currentContext = reinterpret_cast<void*>(eglGetCurrentContext());
-#       elif PLATFORM_OSX
-        void* currentContext = reinterpret_cast<void*>(CGLGetCurrentContext());
-#       elif UNITY_APPLE_PVR
-        void* IOSGetCurrentContext(void);
-        void* currentContext = IOSGetCurrentContext();
-#       elif PLATFORM_WEBGL
-        void* WebGLGetCurrentContext(void);
-        void* currentContext = WebGLGetCurrentContext();
-#       else
-#           error "OPENGL ERROR: Unsupported platform"
-#       endif
+//#       elif PLATFORM_LINUX
+//        void* currentContext = GetCurrentNativeGLContext();
+//#       elif PLATFORM_ANDROID || PLATFORM_LUMIN
+//        void* currentContext = reinterpret_cast<void*>(eglGetCurrentContext());
+//#       elif PLATFORM_OSX
+//        void* currentContext = reinterpret_cast<void*>(CGLGetCurrentContext());
+//#       elif UNITY_APPLE_PVR
+//        void* IOSGetCurrentContext(void);
+//        void* currentContext = IOSGetCurrentContext();
+//#       elif PLATFORM_WEBGL
+//        void* WebGLGetCurrentContext(void);
+//        void* currentContext = WebGLGetCurrentContext();
+//#       else
+//#           error "OPENGL ERROR: Unsupported platform"
+//#       endif
 
         if (currentContext != NULL)
             currentContextHandle = ContextHandle(currentContext);

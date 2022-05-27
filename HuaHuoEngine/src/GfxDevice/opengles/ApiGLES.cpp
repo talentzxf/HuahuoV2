@@ -11,8 +11,6 @@
 #include "ApiConstantsGLES.h"
 #include "ApiTranslateGLES.h"
 
-#define printf_console printf
-
 namespace gl
 {
     ContextHandle GetCurrentContext();
@@ -71,6 +69,17 @@ ApiGLES::~ApiGLES()
 
 //    delete m_Debug;
 //    m_Debug = NULL;
+}
+
+void ApiGLES::InitDebug()
+{
+//    if (!GetGraphicsCaps().gles.hasDebug)
+//        return;
+//
+//#   if !UNITY_RELEASE
+//    Assert(this->m_Debug);
+//    this->m_Debug->Init(*this);
+//#   endif
 }
 
 //GLenum ApiGLES::InitGetTextureTargetFunc(TextureDimension textureDimension, GLuint texture)

@@ -57,7 +57,6 @@ extern "C" int UnityDeviceGeneration();
 #if PLATFORM_LINUX && ENABLE_SDL2_WINDOWING
 #include "PlatformDependent/Linux/SDLWrapper.h"
 #endif
-#define printf_console printf
 
 bool HasWGLColorspace();
 

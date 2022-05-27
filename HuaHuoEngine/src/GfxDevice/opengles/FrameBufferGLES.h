@@ -12,6 +12,135 @@
 #include "Graphics/RenderSurface.h"
 #include "GfxDevice/opengles/RenderSurfaceGLES.h"
 #include "GfxDevice/GfxDeviceObjects.h"
+#include <map>
+
+
+// A struct to act as a map key for FBO map. We can't really use GfxRenderTargetSetup because those surfaces may come and go.
+struct GLESRenderTargetSetup
+{
+public:
+    explicit GLESRenderTargetSetup(const GfxRenderTargetSetup &attach)
+    {
+        ::memset(this, 0, sizeof(GLESRenderTargetSetup));
+
+        // Special case for dummy surfaces
+        if (attach.colorCount == 1 && (attach.color[0]->flags & kSurfaceCreateNeverUsed))
+        {
+            m_ColorCount = 0;
+        }
+        else
+        {
+            m_ColorCount = attach.colorCount;
+            for (unsigned i = 0; i < m_ColorCount; i++)
+            {
+                m_ColorTexIDs[i] = attach.color[i]->textureID;
+                m_ColorRBIDs[i] = ((RenderSurfaceGLES*)attach.color[i])->buffer;
+            }
+        }
+
+        // Special case for dummy surfaces
+        if (attach.depth && (attach.depth->flags & kSurfaceCreateNeverUsed))
+        {
+            m_HasDepth = false;
+        }
+        else
+        {
+            m_HasDepth = attach.depth != NULL;
+            if (m_HasDepth)
+            {
+                m_DepthTexID = attach.depth->textureID;
+                m_DepthRBID = ((RenderSurfaceGLES*)attach.depth)->buffer;
+                m_DepthStencilID = ((RenderSurfaceGLES*)attach.depth)->stencilBuffer;
+            }
+        }
+
+        m_MipLevel = attach.mipLevel;
+        m_DepthSlice = attach.depthSlice;
+        m_CubemapFace = attach.cubemapFace;
+    }
+
+    GLESRenderTargetSetup(const GLESRenderTargetSetup &src)
+    {
+        ::memcpy(this, &src, sizeof(GLESRenderTargetSetup));
+    }
+
+    bool operator<(const GLESRenderTargetSetup &b) const
+    {
+#define CMP_MEMBER(a) if(a != b.a) return a < b.a
+        CMP_MEMBER(m_ColorCount);
+        for (unsigned i = 0; i < m_ColorCount; i++)
+        {
+            CMP_MEMBER(m_ColorTexIDs[i]);
+            CMP_MEMBER(m_ColorRBIDs[i]);
+        }
+        CMP_MEMBER(m_HasDepth);
+        if (m_HasDepth)
+        {
+            CMP_MEMBER(m_DepthRBID);
+            CMP_MEMBER(m_DepthTexID);
+            CMP_MEMBER(m_DepthStencilID);
+        }
+        CMP_MEMBER(m_MipLevel);
+        CMP_MEMBER(m_DepthSlice);
+        CMP_MEMBER(m_CubemapFace);
+#undef CMP_MEMBER
+
+        return false;
+    }
+
+    bool operator==(const GLESRenderTargetSetup &b) const
+    {
+#define CMP_MEMBER(a) if(a != b.a) return false
+        CMP_MEMBER(m_ColorCount);
+        for (unsigned i = 0; i < m_ColorCount; i++)
+        {
+            CMP_MEMBER(m_ColorTexIDs[i]);
+            CMP_MEMBER(m_ColorRBIDs[i]);
+        }
+        CMP_MEMBER(m_HasDepth);
+        if (m_HasDepth)
+        {
+            CMP_MEMBER(m_DepthRBID);
+            CMP_MEMBER(m_DepthTexID);
+            CMP_MEMBER(m_DepthStencilID);
+        }
+        CMP_MEMBER(m_MipLevel);
+        CMP_MEMBER(m_DepthSlice);
+        CMP_MEMBER(m_CubemapFace);
+#undef CMP_MEMBER
+
+        return true;
+    }
+
+    // If both texid and rbid are 0, then it's the backbuffer.
+    unsigned            m_ColorCount;
+    TextureID           m_ColorTexIDs[kMaxSupportedRenderTargets];
+    GLuint              m_ColorRBIDs[kMaxSupportedRenderTargets];
+
+    TextureID           m_DepthTexID;
+    GLuint              m_DepthRBID;
+    GLuint              m_DepthStencilID;
+
+    UInt32              m_MipLevel;
+    int                 m_DepthSlice;
+    CubemapFace         m_CubemapFace;
+
+    bool                m_HasDepth;
+
+    // Create a GLESRenderTargetSetup with system default (0) color and depth. (Note that on iOS and some other platforms this is meaningless)
+    static GLESRenderTargetSetup GetZeroSetup()
+    {
+        GLESRenderTargetSetup res;
+        memset(&res, 0, sizeof(GLESRenderTargetSetup));
+        res.m_ColorCount = 1;
+        res.m_HasDepth = true;
+        res.m_CubemapFace = kCubeFaceUnknown;
+        return res;
+    }
+
+private:
+    GLESRenderTargetSetup() {}
+};
 
 
 struct FramebufferSetup
@@ -62,11 +191,21 @@ public:
 
     gl::FramebufferHandle GetDefaultFBO() const { return m_DefaultFBO; }
 
+    // will update backbuffer from window extents: it is needed in cases where we switch gl context but still drawing to default fbo
+    void UpdateDefaultFramebufferViewport();
+
 private:
     // Update the current viewport from the pending viewport: it checks if the OpenGL states need to be
     void ApplyViewport();
 
 private:
+    // we dont have an explicit link RT->FBO, because we started out with shared FBO + reattach
+    // on the other hand on tiled GPUs FBO is more then just attachments (tiler setup etc)
+    // so we really want to have FBO per RT
+    // the easiest way would be to have a map hidden in gles code
+    typedef std::map<GLESRenderTargetSetup, gl::FramebufferHandle> FramebufferMap;
+    FramebufferMap                  m_FramebufferMap;
+
     FramebufferSetup                m_CurrentFramebufferSetup;
     FramebufferSetup                m_PendingFramebufferSetup;
     // The flag to avoid redundant and to delay glViewport and glScissor calls

@@ -14,6 +14,7 @@
 #include "Math/Rect.h"
 #include "BuiltinShaderParams.h"
 #include "TransformState.h"
+#include "FrameTiming.h"
 
 class AutoGfxDeviceBeginEndFrame
 {
@@ -220,6 +221,9 @@ public:
 
     void SetInvertProjectionMatrix(bool val) { m_InvertProjectionMatrix = val; m_Dirty = true; }
     bool GetInvertProjectionMatrix() const { return m_InvertProjectionMatrix; }
+
+    const FrameTimingManager& GetFrameTimingManager() const;
+    FrameTimingManager& GetFrameTimingManager();
 protected:
     // Mutable state
     GfxContextData      m_GfxContextData;
@@ -232,6 +236,8 @@ protected:
     RenderSurfaceHandle m_BackBufferDepth;
 
     ViewProjMatrixNeedApplyFlag m_ViewProjMatrixNeedApplyFlags;
+
+    FrameTimingManager* m_FrameTimingManager;
 
 private:
     bool                m_InvertProjectionMatrix;

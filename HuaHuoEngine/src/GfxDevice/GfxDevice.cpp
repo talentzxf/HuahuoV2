@@ -32,7 +32,43 @@ bool IsGfxDevice()
 
 GfxDevice::GfxDevice(MemLabelRef label) :
         m_MemoryLabel(label)
+//        m_DynamicVBO(NULL),
+//        m_AsyncJobFences(kMemTempJobAlloc),
+#if UNITY_DEFER_GRAPHICS_JOBS_SCHEDULE
+        m_AsyncJobFunctions(m_MemoryLabel),
+    m_AsyncJobCommands(m_MemoryLabel),
+    m_AsyncJobDepends(m_MemoryLabel),
+#endif // #if UNITY_DEFER_GRAPHICS_JOBS_SCHEDULE
+//        m_ParamsScratchBuffer(m_MemoryLabel),
+//        m_ProceduralQuadIndexBuffer(NULL),
+//        m_ProceduralQuadIndexBuffer32(NULL),
+//        m_ProceduralQuadMax32(0),
+//        m_PresentFrameCallbacks(label),
+//        m_WaitForPresentSyncPoint(kGfxDeviceWaitForPresentBeginFrame),
+//        m_CurrentCPUFence(0)
 {
+//    m_IsDeviceClient = false;
+//    m_DrawImmediate = NULL;
+//    m_BufferList = NULL;
+    m_FrameTimingManager = NULL;
+
+//    m_GraphicsJobsSyncPoint = kGfxDeviceGraphicsJobsSyncPointAfterScriptUpdate;
+//
+//    // Initialize the input FB names
+//    m_InputFBNames[0].SetName("_UnityFBInput0");
+//    m_InputFBNames[1].SetName("_UnityFBInput1");
+//    m_InputFBNames[2].SetName("_UnityFBInput2");
+//    m_InputFBNames[3].SetName("_UnityFBInput3");
+//    m_InputFBNames[4].SetName("_UnityFBInput4");
+//    m_InputFBNames[5].SetName("_UnityFBInput5");
+//    m_InputFBNames[6].SetName("_UnityFBInput6");
+//    m_InputFBNames[7].SetName("_UnityFBInput7");
+
+#if SUPPORT_MULTIPLE_DISPLAYS
+    m_DisplayTarget = 0;
+#endif
+
+//    OnCreate();
 }
 
 GfxDevice::~GfxDevice()
