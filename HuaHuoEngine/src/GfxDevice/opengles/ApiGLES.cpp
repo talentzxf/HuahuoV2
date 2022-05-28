@@ -10,8 +10,6 @@
 #include "ApiConstantsGLES.h"
 #include "ApiTranslateGLES.h"
 
-#include "GLES3/gl3.h"
-
 namespace gl
 {
     ContextHandle GetCurrentContext();

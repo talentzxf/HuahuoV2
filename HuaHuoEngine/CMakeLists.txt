@@ -7,11 +7,6 @@ macro(print_all_variables)
     message(STATUS "print_all_variables------------------------------------------}")
 endmacro()
 
-set(SDL2_DIR ./external/SDL2-2.0.22)
-find_package(SDL2 REQUIRED)
-
-print_all_variables()
-
 cmake_minimum_required(VERSION 3.21)
 project(HuaHuoEngine VERSION 0.01)
 configure_file(src/HuaHuoEngineConfig.h.in HuaHuoEngineConfig.h)
@@ -29,6 +24,7 @@ include_directories(external/Umbra/source/common)
 include_directories(external/Umbra/source)
 include_directories(external/Umbra/interface)
 include_directories(PlatformDependent/WebGL/Source/Threads)
+include_directories(external/glew-1.13.0/include/)
 
 list(APPEND CPPFILES external/baselib/builds/Source/Baselib_Timer.cpp)
 list(APPEND CPPFILES src/HuaHuoEngine.cpp)
@@ -153,6 +149,7 @@ list(APPEND CPPFILES src/GfxDevice/opengles/FrameBufferGLES.cpp)
 list(APPEND CPPFILES src/GfxDevice/TextureIdMap.cpp)
 list(APPEND CPPFILES src/Graphics/ColorGamut.cpp)
 list(APPEND CPPFILES src/GfxDevice/BuiltinShaderParams.cpp)
+list(APPEND CPPFILES  src/Shaders/ShaderKeyWords.cpp)
 # list(APPEND CPPFILES external/Umbra/umbra.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
@@ -167,6 +164,9 @@ set(TARGETNAME HuaHuoEngine)
 add_compile_definitions(PLATFORM_SUPPORTS_OPENGL_UNIFIED=1)
 add_compile_definitions(GFX_SUPPORTS_OPENGL_UNIFIED=1)
 
+# Compile external dependencies
+add_subdirectory (external)
+
 if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
     add_compile_definitions(WEB_ENV=1)
     add_compile_definitions(PLATFORM_WEBGL=1)
@@ -176,15 +176,35 @@ if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
     add_compile_options(-Wno-deprecated-enum-enum-conversion)
     add_executable(${TARGETNAME} ${CPPFILES})
 else ()
-#    include_directories("C:\\Users\\vincentzhang\\OpenSource\\emsdk\\upstream\\emscripten\\system\\include\\")
+    #    include_directories("C:\\Users\\vincentzhang\\OpenSource\\emsdk\\upstream\\emscripten\\system\\include\\")
     set(TARGETNAME TestHuaHuoEngine)
 
 #    add_compile_definitions(PLATFORM_WIN=1)
     add_compile_options(-Wno-deprecated-enum-enum-conversion)
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp src/Shaders/ShaderKeyWords.cpp src/Shaders/ShaderKeyWords.h)
 
-    target_link_libraries(TestHuaHuoEngine ${SDL2_LIBRARIES})
+
+
+    add_definitions(
+            -DTW_STATIC
+            -DTW_NO_LIB_PRAGMA
+            -DTW_NO_DIRECT3D
+            -DGLEW_STATIC
+            -D_CRT_SECURE_NO_WARNINGS
+    )
+
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp)
+
+#    set(SDL2_DIR ./external/SDL2-2.0.22)
+    find_package(OPENGL REQUIRED)
+    print_all_variables()
+
+    set(ALL_LIBS
+            ${OPENGL_LIBRARY}
+            GLEW_1130
+            )
+
+    target_link_libraries(TestHuaHuoEngine ${ALL_LIBS})
 endif ()
 
 target_include_directories(${TARGETNAME} PUBLIC "${PROJECT_BINARY_DIR}" ${EXTRA_INCLUDE_DIR})

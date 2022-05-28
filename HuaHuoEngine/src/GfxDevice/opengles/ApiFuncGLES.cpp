@@ -6,7 +6,7 @@
 #include "ApiGLES.h"
 #include "GfxGetProcAddressGLES.h"
 #include "ExtensionsGLES.h"
-#include "GLES3/gl3.h"
+// #include <GL/glew.h>
 
 #define PLATFORM_WEBGL 1
 
@@ -38,12 +38,12 @@
 
 void ApiGLES::Load(GfxDeviceLevelGL level)
 {
-#   if UNITY_APPLE || PLATFORM_LINUX || PLATFORM_ANDROID || PLATFORM_WIN || PLATFORM_LUMIN
+#   if 1
 #       define GLESAPI_STRINGIFY(s) GLESAPI_STRINGIFY2(s)
 #       define GLESAPI_STRINGIFY2(s) #s
 #       define GLES_GET_FUNC(api, func)     do { api.gl ## func = reinterpret_cast<gl::func##Func>(gles::GetProcAddress_core("gl" GLESAPI_STRINGIFY(func))); } while(0)
 #   else
-#       define GLES_GET_FUNC(api, func)     do { api.gl ## func = reinterpret_cast<gl::func##Func>(::gl ## func); } while(0)
+#       define GLES_GET_FUNC(api, func)     PP_WRAP_CODE(do { api.gl ## func = reinterpret_cast<gl::func##Func>(::gl ## func); } while(0))
 #   endif
     DebugAssertMsg(IsGfxLevelES(level) || IsGfxLevelCore(level), "OPENGL ERROR: Invalid device level");
 
