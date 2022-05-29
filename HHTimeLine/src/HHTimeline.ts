@@ -70,6 +70,7 @@ class HHTimeline extends HTMLElement {
         // TODO: Save this command in the Undo stack...
         if (this.isTrackSeqIdValid(this.selectedTrackSeqId)) {
             this.timelineTracks[this.selectedTrackSeqId].mergeSelectedCells()
+            this.redrawCanvas()
         } else {
             console.log("Error seqId when trying to merge cells:" + this.selectedTrackSeqId)
         }

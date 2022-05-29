@@ -9,18 +9,41 @@ interface TimelineTrackEvent {
 }
 
 class CellManager{
-    // Multiple cells might be merged into one big cell, so record it in the cellWidthMap
-    cellWidthMap: Map<number, number> = new Map();
+    // Multiple cells might be merged into one big cell, so record how many cells are there in the cellSpanMap
+    cellSpanMap: Map<number, number> = new Map();
 
     // Map from the cellId to it's begining cell.
     mergedCells: Map<number, number> = new Map();
 
-    isMerged(cellId){
-        return false;
+    isSpanHead(cellId){
+        if(!this.mergedCells.has(cellId) || this.mergedCells.get(cellId) == cellId){
+            return true
+        }
+        return false
     }
 
     getCellSpan(cellId){
-        return 1;
+        if(!this.cellSpanMap.has(cellId))
+            return 1;
+        return this.cellSpanMap.get(cellId)
+    }
+
+    mergeCells(selectedStart, selectedEnd){
+        let minCell = Math.min(selectedStart)
+        let maxCell = Math.max(selectedEnd)
+        let currentMaxCellSpan = this.getCellSpan(maxCell)
+
+        let newMinCellSpan = maxCell - minCell + currentMaxCellSpan;
+        // Update all spans in the middle
+        for(let cellId = minCell; cellId <= maxCell; cellId++){
+            // 1. Delete all cell spans in the middle
+            if(this.cellSpanMap.get(cellId)){
+                this.cellSpanMap.delete(cellId)
+            }
+            this.mergedCells.set(cellId, minCell)
+        }
+
+        this.cellSpanMap.set(minCell, newMinCellSpan)
     }
 }
 
@@ -57,6 +80,16 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     }
 
     mergeSelectedCells(){
+        if(!this.isValidCellId(this.selectedCellStart) || !this.isValidCellId(this.selectedCellEnd)){
+            console.log("Trying to merge invalid cells")
+            return;
+        }
+
+        if(this.selectedCellStart === this.selectedCellEnd ){
+            return;
+        }
+
+        this.cellManager.mergeCells(this.selectedCellStart, this.selectedCellEnd);
     }
 
     isValidCellId(cellId: number): boolean {
@@ -85,8 +118,8 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
             return;
         }
 
-        if(this.cellManager.isMerged(cellId)){ // Won't draw merged cells
-            return
+        if(!this.cellManager.isSpanHead(cellId)){
+            return; // Won't draw merged cells
         }
 
         let spanCellCount = this.cellManager.getCellSpan(cellId);
@@ -136,7 +169,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         let absoluteX = this.canvasStartPos + relativeX;
         let cellId = this.calculateCellIdx(absoluteX);
 
-        if (this.cellManager.isMerged(cellId)) {
+        if (!this.cellManager.isSpanHead(cellId)) {
             console.log("TODO:  Merge cells !!!!")
         } else {
             this.selectedCellStart = cellId
