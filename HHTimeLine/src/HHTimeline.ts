@@ -1,6 +1,16 @@
 import {CustomElement} from "./CustomComponent";
+import * as events from "events";
+import {TypedEmitter} from 'tiny-typed-emitter';
 
-class TimelineTrack {
+enum TimelineTrackEventNames {
+    CELLSELECTED = 'cellSelected'
+}
+
+interface TimelineTrackEvent {
+    'cellSelected': (cellId: number) => void;
+}
+
+class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     static unitCellWidth: number = 20;
     static unitCellHeight: number = 30;
 
@@ -11,10 +21,11 @@ class TimelineTrack {
     // Multiple cells might be merged into one big cell, so record it in the cellWidthMap
     cellWidthMap: Map<number, number> = new Map();
     mergedCells: Set<number> = new Set();
-    selectedCells: Set<number> = new Set();
+
+    selectedCell: number = -1;
 
     cellBgStyle: string = "lightgray"
-    selectedCellBgStyle:string = "blue"
+    selectedCellBgStyle: string = "cyan"
     cellStrokeStyle: string = "black"
     cellFontSize: number = 10
     cellFontStyle: string = "black"
@@ -24,6 +35,7 @@ class TimelineTrack {
     canvasEndPos: number;
 
     constructor(sequenceId: number, frameCount: number, ctx: CanvasRenderingContext2D, trackName: string = "NoNameTrack") {
+        super();
         this.sequenceId = sequenceId;
         this.trackeName = trackName;
         this.frameCount = frameCount;
@@ -47,7 +59,7 @@ class TimelineTrack {
         return relativeOffsetX;
     }
 
-    calculateCanvasOffsetY(cellId: number){
+    calculateCanvasOffsetY(cellId: number) {
         return this.sequenceId * TimelineTrack.unitCellHeight
     }
 
@@ -65,9 +77,9 @@ class TimelineTrack {
 
         // Draw the cell
         this.ctx.beginPath()
-        if(this.selectedCells.has(cellId)){
+        if (this.selectedCell == cellId) {
             this.ctx.fillStyle = this.selectedCellBgStyle
-        }else{
+        } else {
             this.ctx.fillStyle = this.cellBgStyle
         }
 
@@ -84,11 +96,11 @@ class TimelineTrack {
 
             let cellIdStr = (cellId + 1).toString()
             let textMetrics: TextMetrics = this.ctx.measureText(cellIdStr)
-            this.ctx.fillText(cellIdStr, startOffsetX + cellWidth / 2 - textMetrics.width/2, startOffsetY + this.cellFontSize)
+            this.ctx.fillText(cellIdStr, startOffsetX + cellWidth / 2 - textMetrics.width / 2, startOffsetY + this.cellFontSize)
         }
     }
 
-    drawTrack(canvasStartPos:number, canvasEndPos:number){
+    drawTrack(canvasStartPos: number, canvasEndPos: number) {
         this.canvasStartPos = canvasStartPos
         this.canvasEndPos = canvasEndPos
 
@@ -100,15 +112,21 @@ class TimelineTrack {
         }
     }
 
-    onTrackClick(relativeX: number){
+    onTrackClick(relativeX: number) {
         let absoluteX = this.canvasStartPos + relativeX;
         let cellId = this.calculateCellIdx(absoluteX);
 
-        if(this.mergedCells.has(cellId)){
+        if (this.mergedCells.has(cellId)) {
             console.log("TODO:  Merge cells !!!!")
-        }else{
-            this.selectedCells.add(cellId)
+        } else {
+            this.selectedCell = cellId;
+
+            this.emit(TimelineTrackEventNames.CELLSELECTED, cellId)
         }
+    }
+
+    clearSelect() {
+        this.selectedCell = -1;
     }
 }
 
@@ -129,6 +147,8 @@ class HHTimeline extends HTMLElement {
     canvasHeight: number = -1;
 
     timelineTracks: Array<TimelineTrack> = new Array()
+
+    selectedTrackSeqId: number = -1;
 
     connectedCallback() {
         // canvasScrollContainer wraps canvasContainer wraps cavnas.
@@ -155,21 +175,41 @@ class HHTimeline extends HTMLElement {
         this.timelineTracks.push(new TimelineTrack(2, this.frameCount, this.canvas.getContext('2d')))
         this.canvas.addEventListener("click", this.onCanvasClick.bind(this))
 
+        this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this))
+        this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this))
+        this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this))
+
         this.Resize();
     }
 
-    calculateTrackSeqId(offsetY: number){
-        return Math.floor( offsetY / TimelineTrack.unitCellHeight );
+    onMouseDown(evt:MouseEvent){
+        this.onCanvasClick(evt)
     }
 
-    onCanvasClick(evt:MouseEvent){
-        let trackSeqId = this.calculateTrackSeqId( evt.offsetY )
-        if(trackSeqId < 0 || trackSeqId >= this.timelineTracks.length){
+    onMouseMove(evt:MouseEvent){
+
+    }
+
+    onMouseUp(evt:MouseEvent){
+
+    }
+
+    calculateTrackSeqId(offsetY: number) {
+        return Math.floor(offsetY / TimelineTrack.unitCellHeight);
+    }
+
+    onCanvasClick(evt: MouseEvent) {
+        let trackSeqId = this.calculateTrackSeqId(evt.offsetY)
+        if (trackSeqId < 0 || trackSeqId >= this.timelineTracks.length) {
             console.log("Error clientY!!!")
             return;
         }
 
+        if (this.selectedTrackSeqId >= 0 && trackSeqId != this.selectedTrackSeqId) {
+            this.timelineTracks[this.selectedTrackSeqId].clearSelect();
+        }
         this.timelineTracks[trackSeqId].onTrackClick(evt.clientX);
+        this.selectedTrackSeqId = trackSeqId;
 
         this.redrawCanvas()
     }
@@ -206,7 +246,7 @@ class HHTimeline extends HTMLElement {
         ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
         ctx.strokeRect(0, 0, this.canvasWidth, this.canvasHeight)
 
-        for(let track of this.timelineTracks){
+        for (let track of this.timelineTracks) {
             track.drawTrack(this.canvasStartPos, this.canvasEndPos);
         }
     }
