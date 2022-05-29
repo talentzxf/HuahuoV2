@@ -66,27 +66,32 @@ class HHTimeline extends HTMLElement {
         this.Resize();
     }
 
-    mergeCells(){
-
+    mergeCells() {
+        // TODO: Save this command in the Undo stack...
+        if (this.isTrackSeqIdValid(this.selectedTrackSeqId)) {
+            this.timelineTracks[this.selectedTrackSeqId].mergeSelectedCells()
+        } else {
+            console.log("Error seqId when trying to merge cells:" + this.selectedTrackSeqId)
+        }
     }
 
-    onMouseDown(evt:MouseEvent){
-        if(evt.buttons == 1){
+    onMouseDown(evt: MouseEvent) {
+        if (evt.buttons == 1) {
             this.onCanvasClick(evt)
 
             this.isSelectingRangeCell = true;
         }
     }
 
-    onMouseMove(evt:MouseEvent){
-        if(evt.buttons != 1){
+    onMouseMove(evt: MouseEvent) {
+        if (evt.buttons != 1) {
             this.isSelectingRangeCell = false;
         } else {
-            if(this.isSelectingRangeCell){
-                if(this.isTrackSeqIdValid(this.selectedTrackSeqId)){
+            if (this.isSelectingRangeCell) {
+                if (this.isTrackSeqIdValid(this.selectedTrackSeqId)) {
                     let trackSeqId = this.calculateTrackSeqId(evt.offsetY)
 
-                    if(trackSeqId == this.selectedTrackSeqId){
+                    if (trackSeqId == this.selectedTrackSeqId) {
                         this.timelineTracks[this.selectedTrackSeqId].rangeSelect(evt.offsetX)
                     }
                 }
@@ -96,16 +101,16 @@ class HHTimeline extends HTMLElement {
         }
     }
 
-    onMouseUp(evt:MouseEvent){
+    onMouseUp(evt: MouseEvent) {
         this.isSelectingRangeCell = false
     }
 
-    calculateTrackSeqId(offsetY: number) : number{
+    calculateTrackSeqId(offsetY: number): number {
         return Math.floor(offsetY / TimelineTrack.unitCellHeight);
     }
 
-    isTrackSeqIdValid(seqId: number):boolean{
-        if(seqId < 0 || seqId >= this.timelineTracks.length)
+    isTrackSeqIdValid(seqId: number): boolean {
+        if (seqId < 0 || seqId >= this.timelineTracks.length)
             return false
 
         return true
@@ -118,7 +123,7 @@ class HHTimeline extends HTMLElement {
             return;
         }
 
-        if (this.selectedTrackSeqId >= 0 && trackSeqId != this.selectedTrackSeqId) {
+        if (this.selectedTrackSeqId >= 0) {
             this.timelineTracks[this.selectedTrackSeqId].clearSelect();
         }
         this.timelineTracks[trackSeqId].onTrackClick(evt.clientX);

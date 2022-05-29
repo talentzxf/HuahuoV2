@@ -8,6 +8,22 @@ interface TimelineTrackEvent {
     'cellSelected': (cellId: number) => void;
 }
 
+class CellManager{
+    // Multiple cells might be merged into one big cell, so record it in the cellWidthMap
+    cellWidthMap: Map<number, number> = new Map();
+
+    // Map from the cellId to it's begining cell.
+    mergedCells: Map<number, number> = new Map();
+
+    isMerged(cellId){
+        return false;
+    }
+
+    getCellSpan(cellId){
+        return 1;
+    }
+}
+
 class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     static unitCellWidth: number = 20;
     static unitCellHeight: number = 30;
@@ -16,9 +32,8 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     frameCount: number;
     canvas: HTMLCanvasElement
     sequenceId: number
-    // Multiple cells might be merged into one big cell, so record it in the cellWidthMap
-    cellWidthMap: Map<number, number> = new Map();
-    mergedCells: Set<number> = new Set();
+
+    cellManager: CellManager = new CellManager()
 
     selectedCellStart: number = -1;
     selectedCellEnd: number = -1;
@@ -39,6 +54,9 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.trackeName = trackName;
         this.frameCount = frameCount;
         this.ctx = ctx
+    }
+
+    mergeSelectedCells(){
     }
 
     isValidCellId(cellId: number): boolean {
@@ -66,17 +84,20 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         if (!this.isValidCellId(cellId)) {
             return;
         }
-        if (this.mergedCells.has(cellId)) // Won's draw merged cells.
-            return;
 
-        let cellWidth = TimelineTrack.unitCellWidth;
-        if (this.cellWidthMap.has(cellId)) {
-            cellWidth = this.cellWidthMap.get(cellId);
+        if(this.cellManager.isMerged(cellId)){ // Won't draw merged cells
+            return
         }
+
+        let spanCellCount = this.cellManager.getCellSpan(cellId);
+        let cellWidth = spanCellCount * TimelineTrack.unitCellWidth;
+
+        let minSelectedCellId = Math.min(this.selectedCellStart, this.selectedCellEnd)
+        let maxSelectedCellId = Math.max(this.selectedCellStart, this.selectedCellEnd)
 
         // Draw the cell
         this.ctx.beginPath()
-        if (this.selectedCellStart <= cellId && this.selectedCellEnd >= cellId) {
+        if (minSelectedCellId <= cellId && maxSelectedCellId >= cellId) {
             this.ctx.fillStyle = this.selectedCellBgStyle
         } else {
             this.ctx.fillStyle = this.cellBgStyle
@@ -115,13 +136,11 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         let absoluteX = this.canvasStartPos + relativeX;
         let cellId = this.calculateCellIdx(absoluteX);
 
-        if (this.mergedCells.has(cellId)) {
+        if (this.cellManager.isMerged(cellId)) {
             console.log("TODO:  Merge cells !!!!")
         } else {
-            this.selectedCellStart = cellId;
-            this.selectedCellEnd = cellId;
-
-            this.emit(TimelineTrackEventNames.CELLSELECTED, cellId)
+            this.selectedCellStart = cellId
+            this.selectedCellEnd = Math.max( cellId, this.selectedCellEnd);
         }
     }
 
