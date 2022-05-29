@@ -6,6 +6,7 @@
 #include "Shaders/GraphicsCaps.h"
 #include "GfxDevice/TextureIdMap.h"
 #include "AssertGLES.h"
+#include "ApiTranslateGLES.h"
 
 GfxDeviceGLES::GfxDeviceGLES(MemLabelRef label)
         : GfxThreadableDevice(label)
@@ -222,6 +223,98 @@ size_t GfxDeviceGLES::RenderSurfaceStructMemorySize(bool /*colorSurface*/)
 void GfxDeviceGLES::DestroyRenderSurfacePlatform(RenderSurfaceBase* rs)
 {
     m_Context->GetFramebuffer().ReleaseFramebuffer(rs, m_Context);
+}
+
+int GfxDeviceGLES::GetActiveRenderTargetCount() const
+{
+    return m_Context->GetFramebuffer().GetPendingFramebuffer().colorCount;
+}
+
+RenderSurfaceHandle GfxDeviceGLES::GetActiveRenderDepthSurface() const
+{
+    return RenderSurfaceHandle(m_Context->GetFramebuffer().GetPendingFramebuffer().depth);
+}
+
+RenderSurfaceHandle GfxDeviceGLES::GetActiveRenderColorSurface(int index) const
+{
+    GLES_ASSERT(&m_Api, 0 <= index && index <= kMaxSupportedRenderTargets, "Too many render color surface used");
+
+    return RenderSurfaceHandle(m_Context->GetFramebuffer().GetPendingFramebuffer().color[index]);
+}
+
+// Call a memory barrier immediately if the resource has been asynchronously written to
+// since the previous barrier
+void GfxDeviceGLES::MemoryBarrierImmediate(BarrierTime previousWriteTime, gl::MemoryBarrierType type)
+{
+    if (m_State.barrierTimes[(int)type] < previousWriteTime)
+    {
+        GLES_CALL(&m_Api, glMemoryBarrier, gl::GetMemoryBarrierBits(type));
+        m_State.barrierTimes[(int)type] = m_State.barrierTimeCounter++; // Mark barrier time
+        m_State.requiredBarriers &= ~gl::GetMemoryBarrierBits(type); // Clear this barrier bit from the required list
+    }
+}
+
+void GfxDeviceGLES::SetRenderTargetsImpl(const GfxRenderTargetSetup& rt)
+{
+//    GfxFramebufferGLES& framebuffer = m_Context->GetFramebuffer();
+//
+//    GLESRenderTargetSetup newRT(rt);
+//    GLESRenderTargetSetup oldRT(framebuffer.GetPendingFramebuffer());
+//
+//    if (newRT == oldRT && !(rt.flags & kFlagForceSetRT))
+//        return;
+//
+//    if (!m_Context->GetFramebuffer().RequiresPrepare())
+//        static_cast<FrameTimingManagerGLES*>(m_FrameTimingManager)->RenderTargetSwitch();
+//
+//    GetRealGfxDevice().GetFrameStats().AddRenderTextureChange();
+//
+//    framebuffer.Activate(rt);
+//    if (rt.flags & kFlagForceSetRT)
+//        framebuffer.Prepare();
+//
+//    if (GetGraphicsCaps().buggySRGBWritesOnLinearTextures)
+//    {
+//        bool allLinear = true;
+//        for (int i = 0; i < rt.colorCount; i++)
+//            allLinear &= !HasFlag(rt.color[i]->flags, kSurfaceCreateSRGB);
+//        bool isBackBuffer = rt.color[0]->backBuffer;
+//        m_State.renderTargetsAreLinear = allLinear && !isBackBuffer;
+//        this->UpdateSRGBWrite();
+//    }
+//
+//#if GFX_SUPPORTS_SINGLE_PASS_STEREO
+//    const SinglePassStereo singlePassStereo = m_GfxContextData.GetSinglePassStereo();
+//    if (singlePassStereo != kSinglePassStereoNone)
+//    {
+//        // Reapply single-pass stereo viewport etc.
+//        m_SinglePassStereoSupport.SetSinglePassStereo(singlePassStereo);
+//    }
+//#endif
+}
+
+void GfxDeviceGLES::ResolveColorSurface(RenderSurfaceHandle srcHandle, RenderSurfaceHandle dstHandle)
+{
+    GLES_ASSERT(&m_Api, srcHandle.IsValid() && dstHandle.IsValid(), "Invalid RenderSurface");
+
+    RenderSurfaceGLES* src = static_cast<RenderSurfaceGLES*>(srcHandle.object);
+    RenderSurfaceGLES* dst = static_cast<RenderSurfaceGLES*>(dstHandle.object);
+
+    if (!src->colorSurface || !dst->colorSurface)
+    {
+        WarningString("RenderTexture: Resolving non-color surfaces.");
+        return;
+    }
+
+    GLESTexture* texInfo = (GLESTexture*)TextureIdMap::QueryNativeTexture(dst->textureID);
+    if (!texInfo || texInfo->texture == 0)
+    {
+        WarningString("RenderTexture: Resolving NULL buffers.");
+        return;
+    }
+    MemoryBarrierImmediate(texInfo->imageWriteTime, gl::kBarrierFramebuffer);
+//    m_Context->GetFramebuffer().Prepare();
+//    m_Context->GetFramebuffer().ReadbackResolveMSAA(dst, src);
 }
 
 const char* GetGfxDeviceLevelString(GfxDeviceLevelGL deviceLevel)

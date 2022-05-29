@@ -29,6 +29,9 @@ struct FramebufferInfoGLES
     GLint coverageBuffers;
 };
 
+// This is a simple counter type for tracking order of resource accesses that need memory barriers.
+typedef unsigned long long BarrierTime;
+
 class ApiGLES: public ApiFuncGLES, private NonCopyable
 {
 public:

@@ -10,6 +10,7 @@
 #include "Configuration/IntegerDefinitions.h"
 #include "GfxDevice/GfxDeviceTypes.h"
 #include "Format.h"
+#include "GfxDevice/HDROutputSettings.h"
 
 int CalculateMipMapCount3D(int width, int height, int depth); // Image.cpp
 
@@ -30,7 +31,7 @@ struct RenderSurfaceBase {
     bool                colorSurface;
     bool                backBuffer;
     bool                clientSurface;
-    // HDROutputSettings* hdrSettings;
+    HDROutputSettings* hdrSettings;
     RenderSurfaceBase * resolveSurface; // If storeaction is Resolve or StoreAndResolve, resolve the AA surface into this surface. Currently only used by renderpasses.
 };
 

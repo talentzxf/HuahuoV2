@@ -213,6 +213,8 @@ public:
     const BuiltinShaderParamValues& GetBuiltinParamValues() const { return m_GfxContextData.m_BuiltinParamValues; }
     BuiltinShaderParamValues& GetBuiltinParamValues() { return m_GfxContextData.m_BuiltinParamValues; }
 
+    virtual RenderSurfaceHandle GetActiveRenderColorSurface(int index) const =0;
+
     virtual const Matrix4x4f& GetWorldViewMatrix() const;
     virtual const Matrix4x4f& GetWorldMatrix() const;
     virtual const Matrix4x4f& GetViewMatrix() const;
@@ -224,7 +226,20 @@ public:
 
     const FrameTimingManager& GetFrameTimingManager() const;
     FrameTimingManager& GetFrameTimingManager();
+
+    virtual int GetActiveRenderTargetCount() const =0;
+
+    virtual RenderSurfaceHandle GetActiveRenderDepthSurface() const =0;
+
+    virtual void ResolveColorSurface(RenderSurfaceHandle srcHandle, RenderSurfaceHandle dstHandle) =0;
+
+    // Sets up render target(s), including various flags and load/store actions.
+    // Note, this is not virtual on purpose; does some common work and then calls a virtual SetRenderTargetsImpl
+    void SetRenderTargets(const GfxRenderTargetSetup& rt);
 protected:
+    // Platform-dependent part of SetRenderTargets
+    virtual void SetRenderTargetsImpl(const GfxRenderTargetSetup& rt) =0;
+
     // Mutable state
     GfxContextData      m_GfxContextData;
     MemLabelId          m_MemoryLabel;

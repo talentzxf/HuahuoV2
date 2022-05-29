@@ -9,6 +9,7 @@
 #include "RenderTextureDesc.h"
 #include "GfxDevice/GfxDevice.h"
 #include "Shaders/GraphicsCaps.h"
+#include "Utilities/BitUtility.h"
 
 class EXPORT_COREMODULE RenderTexture : public Texture{
     REGISTER_CLASS(RenderTexture);
@@ -65,6 +66,10 @@ public:
     static GfxRenderTargetSetup MakeRenderTargetSetup(RenderTexture* texture, int mipLevel, CubemapFace face, int depthSlice, SetActiveFlags flags);
     static GfxRenderTargetSetup MakeRenderTargetSetup(int count, RenderSurfaceHandle* colors, RenderSurfaceHandle depth, int mipLevel, CubemapFace face, int depthSlice, SetActiveFlags flags);
 
+    bool IsAntiAliased() const { return m_Desc.antiAliasing > 1; }
+
+    void ResolveAntiAliasedSurface();
+
     void SetWidth(int width);
     int GetWidth() const { return m_Desc.width; }
     int GetScaledWidth() const;
@@ -77,6 +82,10 @@ public:
 
     GraphicsFormat GetColorFormat() const;
     void SetColorFormat(GraphicsFormat format);
+
+    // Returns the active render texture.
+    // NULL means the main window is active.
+    static RenderTexture* GetActive(int index = 0);
 private:
     static bool IsDescPowerOfTwo(const RenderTextureDesc& desc) { return IsPowerOfTwo(desc.width) && IsPowerOfTwo(desc.height); }
     void DestroySurfaces();

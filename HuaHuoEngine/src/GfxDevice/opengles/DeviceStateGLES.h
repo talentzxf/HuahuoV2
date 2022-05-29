@@ -12,6 +12,11 @@
 struct DeviceStateGLES {
     ApiGLES*                        api;
     RectInt                         viewport;
+
+    BarrierTime                     barrierTimes[gl::kBarrierTypeCount]; // Record the times of last called barriers
+    BarrierTime                     barrierTimeCounter; // Time counter for barrier resolving. Incremented on each write/barrier
+    GLbitfield                      requiredBarriers; // Bitfield marking the required barriers before next draw/dispatch call
+    GLbitfield                      requiredBarriersMask; // Mask for temporarily enabling only a subset of barriers
 };
 
 extern DeviceStateGLES* g_DeviceStateGLES;

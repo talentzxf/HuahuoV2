@@ -76,6 +76,43 @@ GfxDevice::~GfxDevice()
 //    OnDelete();
 }
 
+void GfxDevice::SetRenderTargets(const GfxRenderTargetSetup& rt)
+{
+    // Do a bit of sanity checks to prevent crashes
+    for (int i = 0; i < rt.colorCount; ++i)
+    {
+        if (!rt.color[i]->colorSurface)
+        {
+            ErrorString("SetRenderTargets: Cannot set a depth surface as a color render target");
+            return;
+        }
+    }
+    if (rt.depth != NULL && rt.depth->colorSurface)
+    {
+        ErrorString("SetRenderTargets: Cannot set a color surface as a depth render target");
+        return;
+    }
+
+    // We need to resolve the correct scaled height and store it in the GfxContextData to avoid
+    // thread safety issues in viewport or scissor rectangle setting code which may run in graphics jobs
+    UInt16 scaledHeight = 0;
+    if (rt.colorCount > 0)
+    {
+        scaledHeight = rt.color[0]->scaledHeight;
+    }
+    else if (rt.depth)
+    {
+        scaledHeight = rt.depth->scaledHeight;
+    }
+
+    m_GfxContextData.SetActiveScaledHeight(scaledHeight);
+    m_GfxContextData.SetActiveCubemapFace(rt.cubemapFace);
+    m_GfxContextData.SetActiveMipLevel(rt.mipLevel);
+    m_GfxContextData.SetActiveDepthSlice(rt.depthSlice);
+
+    SetRenderTargetsImpl(rt);
+}
+
 void GfxDevice::UpdateViewProjectionMatrix()
 {
     const Matrix4x4f& viewMat = m_GfxContextData.m_BuiltinParamValues.GetMatrixParam(kShaderMatView);

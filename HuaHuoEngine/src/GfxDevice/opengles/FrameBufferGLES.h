@@ -198,6 +198,8 @@ public:
     // updates cache to kill related fbos and handles deletion of currently active fbo
     void ReleaseFramebuffer(RenderSurfaceBase* rs, GfxContextGLES *contexts);
 
+    const GfxRenderTargetSetup & GetPendingFramebuffer() const {return m_PendingFramebuffer; }
+
 private:
     // Update the current viewport from the pending viewport: it checks if the OpenGL states need to be
     void ApplyViewport();

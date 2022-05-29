@@ -39,7 +39,17 @@ public:
     virtual size_t  RenderSurfaceStructMemorySize(bool colorSurface);
 
     virtual void    DestroyRenderSurfacePlatform(RenderSurfaceBase* rs);
+
+    virtual int GetActiveRenderTargetCount() const;
+
+    virtual RenderSurfaceHandle GetActiveRenderColorSurface(int index) const;
+    virtual RenderSurfaceHandle GetActiveRenderDepthSurface() const;
+
+    virtual void                ResolveColorSurface(RenderSurfaceHandle srcHandle, RenderSurfaceHandle dstHandle);
+    void MemoryBarrierImmediate(BarrierTime previousWriteTime, gl::MemoryBarrierType type);
 protected:
+    // Platform-dependent part of SetRenderTargets
+    virtual void SetRenderTargetsImpl(const GfxRenderTargetSetup& rt);
     void UpdateSRGBWrite();
     void SetViewportInternal(const RectInt& rect);
 
