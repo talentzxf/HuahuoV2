@@ -1,134 +1,5 @@
 import {CustomElement} from "./CustomComponent";
-import * as events from "events";
-import {TypedEmitter} from 'tiny-typed-emitter';
-
-enum TimelineTrackEventNames {
-    CELLSELECTED = 'cellSelected'
-}
-
-interface TimelineTrackEvent {
-    'cellSelected': (cellId: number) => void;
-}
-
-class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
-    static unitCellWidth: number = 20;
-    static unitCellHeight: number = 30;
-
-    ctx: CanvasRenderingContext2D
-    frameCount: number;
-    canvas: HTMLCanvasElement
-    sequenceId: number
-    // Multiple cells might be merged into one big cell, so record it in the cellWidthMap
-    cellWidthMap: Map<number, number> = new Map();
-    mergedCells: Set<number> = new Set();
-
-    selectedCell: number = -1;
-
-    cellBgStyle: string = "lightgray"
-    selectedCellBgStyle: string = "cyan"
-    cellStrokeStyle: string = "black"
-    cellFontSize: number = 10
-    cellFontStyle: string = "black"
-
-    trackeName: string;
-    canvasStartPos: number;
-    canvasEndPos: number;
-
-    constructor(sequenceId: number, frameCount: number, ctx: CanvasRenderingContext2D, trackName: string = "NoNameTrack") {
-        super();
-        this.sequenceId = sequenceId;
-        this.trackeName = trackName;
-        this.frameCount = frameCount;
-        this.ctx = ctx
-    }
-
-    isValidCellId(cellId: number): boolean {
-        if (cellId < 0 || cellId > this.frameCount)
-            return false
-        return true;
-    }
-
-    calculateCellIdx(absoluteOffsetX: number) {
-        return Math.floor(absoluteOffsetX / TimelineTrack.unitCellWidth)
-    }
-
-    calculateCanvasOffsetX(cellId: number) {
-        let absoluteOffsetX = cellId * TimelineTrack.unitCellWidth
-        let relativeOffsetX = absoluteOffsetX - this.canvasStartPos;
-
-        return relativeOffsetX;
-    }
-
-    calculateCanvasOffsetY(cellId: number) {
-        return this.sequenceId * TimelineTrack.unitCellHeight
-    }
-
-    drawCell(cellId: number) {
-        if (!this.isValidCellId(cellId)) {
-            return;
-        }
-        if (this.mergedCells.has(cellId)) // Won's draw merged cells.
-            return;
-
-        let cellWidth = TimelineTrack.unitCellWidth;
-        if (this.cellWidthMap.has(cellId)) {
-            cellWidth = this.cellWidthMap.get(cellId);
-        }
-
-        // Draw the cell
-        this.ctx.beginPath()
-        if (this.selectedCell == cellId) {
-            this.ctx.fillStyle = this.selectedCellBgStyle
-        } else {
-            this.ctx.fillStyle = this.cellBgStyle
-        }
-
-        this.ctx.strokeStyle = this.cellStrokeStyle
-        let startOffsetX = this.calculateCanvasOffsetX(cellId)
-        let startOffsetY = this.calculateCanvasOffsetY(cellId)
-
-        this.ctx.fillRect(startOffsetX, startOffsetY, cellWidth, TimelineTrack.unitCellHeight)
-        this.ctx.strokeRect(startOffsetX, startOffsetY, cellWidth, TimelineTrack.unitCellHeight)
-
-        if (cellId == 0 || (cellId + 1) % 5 == 0) {
-            this.ctx.fillStyle = this.cellFontStyle
-            this.ctx.font = this.cellFontSize + 'px serif';
-
-            let cellIdStr = (cellId + 1).toString()
-            let textMetrics: TextMetrics = this.ctx.measureText(cellIdStr)
-            this.ctx.fillText(cellIdStr, startOffsetX + cellWidth / 2 - textMetrics.width / 2, startOffsetY + this.cellFontSize)
-        }
-    }
-
-    drawTrack(canvasStartPos: number, canvasEndPos: number) {
-        this.canvasStartPos = canvasStartPos
-        this.canvasEndPos = canvasEndPos
-
-        let startCellIdx = this.calculateCellIdx(this.canvasStartPos - TimelineTrack.unitCellWidth) // Leave one cell margin
-        let endCellIdx = this.calculateCellIdx(this.canvasEndPos + TimelineTrack.unitCellWidth)
-
-        for (let cellIdx = startCellIdx; cellIdx <= endCellIdx; cellIdx++) {
-            this.drawCell(cellIdx);
-        }
-    }
-
-    onTrackClick(relativeX: number) {
-        let absoluteX = this.canvasStartPos + relativeX;
-        let cellId = this.calculateCellIdx(absoluteX);
-
-        if (this.mergedCells.has(cellId)) {
-            console.log("TODO:  Merge cells !!!!")
-        } else {
-            this.selectedCell = cellId;
-
-            this.emit(TimelineTrackEventNames.CELLSELECTED, cellId)
-        }
-    }
-
-    clearSelect() {
-        this.selectedCell = -1;
-    }
-}
+import {TimelineTrack} from "./TimelineTrack";
 
 // TODO: Multiple tracks????
 @CustomElement({
@@ -149,6 +20,8 @@ class HHTimeline extends HTMLElement {
     timelineTracks: Array<TimelineTrack> = new Array()
 
     selectedTrackSeqId: number = -1;
+
+    isSelectingRangeCell: boolean = false;
 
     connectedCallback() {
         // canvasScrollContainer wraps canvasContainer wraps cavnas.
@@ -173,29 +46,59 @@ class HHTimeline extends HTMLElement {
         this.timelineTracks.push(new TimelineTrack(0, this.frameCount, this.canvas.getContext('2d')))
         this.timelineTracks.push(new TimelineTrack(1, this.frameCount, this.canvas.getContext('2d')))
         this.timelineTracks.push(new TimelineTrack(2, this.frameCount, this.canvas.getContext('2d')))
-        this.canvas.addEventListener("click", this.onCanvasClick.bind(this))
+        // this.canvas.addEventListener("click", this.onCanvasClick.bind(this))
 
         this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this))
         this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this))
         this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this))
+        this.canvas.addEventListener('contextmenu', this.onContextMenu.bind(this))
 
         this.Resize();
     }
 
+    onContextMenu(e:MouseEvent){
+        e.preventDefault()
+    }
+
     onMouseDown(evt:MouseEvent){
-        this.onCanvasClick(evt)
+        if(evt.buttons == 1){
+            this.onCanvasClick(evt)
+
+            this.isSelectingRangeCell = true;
+        }
     }
 
     onMouseMove(evt:MouseEvent){
+        if(evt.buttons != 1){
+            this.isSelectingRangeCell = false;
+        } else {
+            if(this.isSelectingRangeCell){
+                if(this.isTrackSeqIdValid(this.selectedTrackSeqId)){
+                    let trackSeqId = this.calculateTrackSeqId(evt.offsetY)
 
+                    if(trackSeqId == this.selectedTrackSeqId){
+                        this.timelineTracks[this.selectedTrackSeqId].rangeSelect(evt.offsetX)
+                    }
+                }
+
+                this.redrawCanvas()
+            }
+        }
     }
 
     onMouseUp(evt:MouseEvent){
-
+        this.isSelectingRangeCell = false
     }
 
-    calculateTrackSeqId(offsetY: number) {
+    calculateTrackSeqId(offsetY: number) : number{
         return Math.floor(offsetY / TimelineTrack.unitCellHeight);
+    }
+
+    isTrackSeqIdValid(seqId: number):boolean{
+        if(seqId < 0 || seqId >= this.timelineTracks.length)
+            return false
+
+        return true
     }
 
     onCanvasClick(evt: MouseEvent) {

@@ -1,5 +1,5 @@
 import {CustomElement} from "hhpanel";
-import {ContextMenu} from "./ContextMenu";
+import {ContextMenu} from "hhcommoncomponents";
 import {HHPanel} from "hhpanel";
 import "/css/navtree.css"
 import {GameObjectManager} from "../HuaHuoEngine/GameObjectManager";

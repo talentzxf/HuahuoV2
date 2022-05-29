@@ -19,6 +19,7 @@
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.7.1",
     "hhpanel": "file:../HHPanel",
+    "hhcommoncomponents": "file:../HHCommonComponents",
     "html-webpack-plugin": "^5.5.0",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.3.0",
