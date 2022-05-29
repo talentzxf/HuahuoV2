@@ -1,7 +1,7 @@
 import {CustomElement} from "./CustomComponent";
 import {TimelineTrack} from "./TimelineTrack";
+import {ContextMenu} from "hhcommoncomponents";
 
-// TODO: Multiple tracks????
 @CustomElement({
     "selector": "hh-timeline"
 })
@@ -22,6 +22,8 @@ class HHTimeline extends HTMLElement {
     selectedTrackSeqId: number = -1;
 
     isSelectingRangeCell: boolean = false;
+
+    private contextMenu: ContextMenu = new ContextMenu()
 
     connectedCallback() {
         // canvasScrollContainer wraps canvasContainer wraps cavnas.
@@ -51,13 +53,21 @@ class HHTimeline extends HTMLElement {
         this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this))
         this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this))
         this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this))
-        this.canvas.addEventListener('contextmenu', this.onContextMenu.bind(this))
+
+        this.canvas.addEventListener('contextmenu', this.contextMenu.onContextMenu.bind(this.contextMenu))
+
+        this.contextMenu.setItems([
+            {
+                itemName: "Merged Cells",
+                onclick: this.mergeCells.bind(this)
+            }
+        ])
 
         this.Resize();
     }
 
-    onContextMenu(e:MouseEvent){
-        e.preventDefault()
+    mergeCells(){
+
     }
 
     onMouseDown(evt:MouseEvent){
