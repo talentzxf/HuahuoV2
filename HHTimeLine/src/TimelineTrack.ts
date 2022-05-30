@@ -27,6 +27,7 @@ class CellManager{
         if(!this.mergedCells.has(cellId) || this.mergedCells.get(cellId) == cellId){
             return true
         }
+
         return false
     }
 
@@ -37,13 +38,13 @@ class CellManager{
     }
 
     mergeCells(selectedStart, selectedEnd){
-        let minCell = Math.min(selectedStart)
-        let maxCell = Math.max(selectedEnd)
+        let minCell = Math.min(selectedStart, selectedEnd)
+        let maxCell = Math.max(selectedStart, selectedEnd)
         let currentMaxCellSpan = this.getCellSpan(maxCell)
 
         let newMinCellSpan = maxCell - minCell + currentMaxCellSpan;
         // Update all spans in the middle
-        for(let cellId = minCell; cellId <= maxCell; cellId++){
+        for(let cellId = minCell; cellId <= minCell + newMinCellSpan - 1; cellId++){
             // 1. Delete all cell spans in the middle
             if(this.cellSpanMap.get(cellId)){
                 this.cellSpanMap.delete(cellId)
@@ -93,11 +94,14 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
             return;
         }
 
-        if(this.selectedCellStart === this.selectedCellEnd ){
+        let startSpanHead = this.cellManager.getSpanHead(this.selectedCellStart)
+        let endSpanHead = this.cellManager.getSpanHead(this.selectedCellEnd)
+
+        if(startSpanHead === endSpanHead){
             return;
         }
 
-        this.cellManager.mergeCells(this.selectedCellStart, this.selectedCellEnd);
+        this.cellManager.mergeCells(startSpanHead, endSpanHead);
     }
 
     isValidCellId(cellId: number): boolean {
@@ -187,7 +191,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         let absoluteX = this.canvasStartPos + relativeX;
         let cellId = this.calculateCellIdx(absoluteX)
 
-        this.selectedCellEnd = cellId;
+        this.selectedCellEnd = this.cellManager.getSpanHead(cellId);
     }
 
     clearSelect() {
