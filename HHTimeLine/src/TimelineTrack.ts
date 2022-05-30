@@ -130,9 +130,8 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
             return;
         }
 
-        if(!this.cellManager.isSpanHead(cellId)){
-            return; // Won't draw merged cells
-        }
+        // VZ: For merged cells, always draw it's span head. This will cause the cell be redrawn many times during redraw. But might not be a big deal ??
+        cellId = this.cellManager.getSpanHead(cellId)
 
         let spanCellCount = this.cellManager.getCellSpan(cellId);
         let cellWidth = spanCellCount * TimelineTrack.unitCellWidth;
@@ -200,4 +199,8 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     }
 }
 
-export {TimelineTrack}
+class TitleTimelineTrack extends TimelineTrack{
+
+}
+
+export {TimelineTrack, TitleTimelineTrack}

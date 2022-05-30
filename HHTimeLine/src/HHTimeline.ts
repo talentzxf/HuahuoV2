@@ -1,5 +1,5 @@
 import {CustomElement} from "./CustomComponent";
-import {TimelineTrack} from "./TimelineTrack";
+import {TimelineTrack, TitleTimelineTrack} from "./TimelineTrack";
 import {ContextMenu} from "hhcommoncomponents";
 
 @CustomElement({
