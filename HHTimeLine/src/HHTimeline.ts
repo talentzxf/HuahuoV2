@@ -1,29 +1,35 @@
 import {CustomElement} from "./CustomComponent";
-import {TimelineTrack, TitleTimelineTrack} from "./TimelineTrack";
+import {TimelineTrack, TimelineTrackEventNames, TitleTimelineTrack} from "./TimelineTrack";
 import {ContextMenu} from "hhcommoncomponents";
+import {GlobalConfig} from "./GlobalConfig";
 
 @CustomElement({
     "selector": "hh-timeline"
 })
 class HHTimeline extends HTMLElement {
-    frameCount: number = 1000000
-    canvasScrollContainer: HTMLDivElement = null // This will show the scrollbar.
-    canvasContainer: HTMLDivElement = null; // This will contain the canvas
+    private frameCount: number = 1000000
+    private canvasScrollContainer: HTMLDivElement = null // This will show the scrollbar.
+    private canvasContainer: HTMLDivElement = null; // This will contain the canvas
 
-    canvas: HTMLCanvasElement = null
-    canvasStartPos: number = 0
-    canvasEndPos: number = -1
-    ctx: CanvasRenderingContext2D = null;
-    canvasWidth: number = -1;
-    canvasHeight: number = -1;
+    private canvas: HTMLCanvasElement = null
+    private canvasStartPos: number = 0
+    private canvasEndPos: number = -1
+    private ctx: CanvasRenderingContext2D = null;
+    private canvasWidth: number = -1;
+    private canvasHeight: number = -1;
 
-    timelineTracks: Array<TimelineTrack> = new Array()
+    private timelineTracks: Array<TimelineTrack> = new Array()
 
-    selectedTrackSeqId: number = -1;
+    private selectedTrackSeqId: number = -1;
 
-    isSelectingRangeCell: boolean = false;
+    private isSelectingRangeCell: boolean = false;
 
     private contextMenu: ContextMenu = new ContextMenu()
+
+    private titleTrack: TitleTimelineTrack;
+    private totalTrackHeight: number;
+
+    public elapsedTime:number = 0.0
 
     connectedCallback() {
         // canvasScrollContainer wraps canvasContainer wraps cavnas.
@@ -44,11 +50,11 @@ class HHTimeline extends HTMLElement {
         this.canvasScrollContainer.addEventListener("scroll", this.onScroll.bind(this))
         window.addEventListener("resize", this.Resize.bind(this))
 
+        let titleTimeLineTrack = new TitleTimelineTrack(0, this.frameCount, this.canvas.getContext('2d'), 0, "Frames")
+        this.titleTrack = titleTimeLineTrack
         // Add one timelinetrack
-        this.timelineTracks.push(new TimelineTrack(0, this.frameCount, this.canvas.getContext('2d'), "Track 0"))
-        this.timelineTracks.push(new TimelineTrack(1, this.frameCount, this.canvas.getContext('2d'), "Track 1"))
-        this.timelineTracks.push(new TimelineTrack(2, this.frameCount, this.canvas.getContext('2d'), "Track 2"))
-        // this.canvas.addEventListener("click", this.onCanvasClick.bind(this))
+        this.timelineTracks.push(titleTimeLineTrack)
+        this.totalTrackHeight = titleTimeLineTrack.getCellHeight()
 
         this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this))
         this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this))
@@ -60,10 +66,43 @@ class HHTimeline extends HTMLElement {
             {
                 itemName: "Merged Cells",
                 onclick: this.mergeCells.bind(this)
+            },
+            {
+                itemName: "Create New Track",
+                onclick: this.addNewTrack.bind(this)
             }
         ])
+        this.addNewTrack()
+
+        this.setTimeElapsed(0.5/GlobalConfig.fps)
+    }
+
+    setTimeElapsed(timeElapsed){
+        this.elapsedTime = timeElapsed
+        for(let tracks of this.timelineTracks){
+            tracks.setElapsedTime(timeElapsed)
+        }
+
+        this.redrawCanvas()
+    }
+
+    addNewTrack(){
+        let seqId = this.timelineTracks.length;
+
+        let track = new TimelineTrack(seqId, this.frameCount, this.canvas.getContext('2d'), this.totalTrackHeight, "Track " + seqId)
+        track.setElapsedTime(this.elapsedTime)
+        this.timelineTracks.push(track)
+        this.totalTrackHeight += track.getCellHeight()
 
         this.Resize();
+        this.redrawCanvas()
+
+        track.on(TimelineTrackEventNames.CELLCLICKED, this.onCellClicked.bind(this))
+    }
+
+    onCellClicked(track, cellId){
+        let elapsedTime = (cellId + 0.5) / GlobalConfig.fps
+        this.setTimeElapsed(elapsedTime)
     }
 
     mergeCells() {
@@ -107,7 +146,10 @@ class HHTimeline extends HTMLElement {
     }
 
     calculateTrackSeqId(offsetY: number): number {
-        return Math.floor(offsetY / TimelineTrack.unitCellHeight);
+        for(let track of this.timelineTracks){
+            if(track.hasYOffset(offsetY))
+                return track.getSeqId()
+        }
     }
 
     isTrackSeqIdValid(seqId: number): boolean {
@@ -135,10 +177,9 @@ class HHTimeline extends HTMLElement {
 
     Resize() {
         console.log("On Resize")
-        let widthPixel: number = this.frameCount * TimelineTrack.unitCellWidth;
+        let widthPixel: number = this.frameCount * this.titleTrack.getCellWidth();
 
-        let trackNumber = this.timelineTracks.length;
-        let heightPixel: number = trackNumber * TimelineTrack.unitCellHeight;
+        let heightPixel: number =  this.totalTrackHeight;
         this.canvasContainer.style.width = widthPixel + "px";
         this.canvasContainer.style.height = heightPixel + "px";
         this.canvas.width = this.canvasScrollContainer.clientWidth;

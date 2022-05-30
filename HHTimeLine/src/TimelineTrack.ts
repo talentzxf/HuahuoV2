@@ -1,11 +1,14 @@
 import {TypedEmitter} from 'tiny-typed-emitter';
+import {GlobalConfig} from "./GlobalConfig";
 
 enum TimelineTrackEventNames {
-    CELLSELECTED = 'cellSelected'
+    CELLCLICKED = 'cellClicked'
 }
 
+declare class TimeLineTrack {}
+
 interface TimelineTrackEvent {
-    'cellSelected': (cellId: number) => void;
+    'cellClicked': (track:TimeLineTrack, cellId: number) => void;
 }
 
 class CellManager{
@@ -57,40 +60,78 @@ class CellManager{
 }
 
 class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
-    static unitCellWidth: number = 20;
-    static unitCellHeight: number = 30;
+    static defaultUnitCellWidth: number = 20;
+    static defaultUnitCellHeight: number = 30;
 
-    ctx: CanvasRenderingContext2D
-    frameCount: number;
-    canvas: HTMLCanvasElement
-    sequenceId: number
+    protected unitCellWidth: number = -1;
+    protected unitCellHeight: number = -1;
+    protected selectable: boolean = true;
+    protected cellFontSize: number = 10
+    protected cellBgStyle: string = "lightgray"
 
-    cellManager: CellManager = new CellManager()
+    private ctx: CanvasRenderingContext2D
+    private frameCount: number;
+    private sequenceId: number
 
-    selectedCellStart: number = -1;
-    selectedCellEnd: number = -1;
+    private cellManager: CellManager = new CellManager()
 
-    cellBgStyle: string = "lightgray"
-    selectedCellBgStyle: string = "cyan"
-    cellStrokeStyle: string = "black"
-    cellFontSize: number = 10
-    cellFontStyle: string = "black"
+    private selectedCellStart: number = -1;
+    private selectedCellEnd: number = -1;
 
-    trackeName: string;
-    canvasStartPos: number;
-    canvasEndPos: number;
 
-    constructor(sequenceId: number, frameCount: number, ctx: CanvasRenderingContext2D, trackName: string = "NoNameTrack") {
+    private selectedCellBgStyle: string = "cyan"
+    private cellStrokeStyle: string = "black"
+    private cellFontStyle: string = "black"
+
+    private trackeName: string;
+    private canvasStartPos: number;
+    private canvasEndPos: number;
+
+    private yOffset: number;
+
+    private elapsedTime: number = 0.0; // In seconds.
+
+    constructor(sequenceId: number, frameCount: number, ctx: CanvasRenderingContext2D, yOffset = 0, trackName: string = "NoNameTrack") {
         super();
         this.sequenceId = sequenceId;
         this.trackeName = trackName;
         this.frameCount = frameCount;
         this.ctx = ctx
+
+        this.unitCellWidth = TimelineTrack.defaultUnitCellWidth
+        this.unitCellHeight = TimelineTrack.defaultUnitCellHeight
+        this.yOffset = yOffset
+    }
+
+    setElapsedTime(elapsedTime){
+        this.elapsedTime = elapsedTime
+    }
+
+    getYOffset():number{
+        return this.yOffset;
+    }
+
+    getCellHeight():number{
+        return this.unitCellHeight
+    }
+
+    getCellWidth():number{
+        return this.unitCellWidth
+    }
+
+    hasYOffset(offsetY: number):boolean{
+        if(offsetY >= this.yOffset && offsetY <= this.yOffset + this.unitCellHeight)
+            return true;
+        return false;
     }
 
     getTitleLength():number{
         this.ctx.font = this.cellFontSize + 'px serif';
         return this.ctx.measureText(this.trackeName).width * 1.1
+    }
+
+    getSeqId():number{
+        return this.sequenceId
     }
 
     mergeSelectedCells(){
@@ -116,18 +157,14 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     }
 
     calculateCellIdx(absoluteOffsetX: number) {
-        return Math.floor(absoluteOffsetX / TimelineTrack.unitCellWidth)
+        return Math.floor(absoluteOffsetX / this.unitCellWidth)
     }
 
     calculateCanvasOffsetX(cellId: number) {
-        let absoluteOffsetX = cellId * TimelineTrack.unitCellWidth
+        let absoluteOffsetX = cellId * this.unitCellWidth
         let relativeOffsetX = absoluteOffsetX - this.canvasStartPos;
 
         return relativeOffsetX;
-    }
-
-    calculateCanvasOffsetY(cellId: number) {
-        return this.sequenceId * TimelineTrack.unitCellHeight
     }
 
     drawCell(cellId: number) {
@@ -139,7 +176,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         cellId = this.cellManager.getSpanHead(cellId)
 
         let spanCellCount = this.cellManager.getCellSpan(cellId);
-        let cellWidth = spanCellCount * TimelineTrack.unitCellWidth;
+        let cellWidth = spanCellCount * this.unitCellWidth;
 
         let minSelectedCellId = Math.min(this.selectedCellStart, this.selectedCellEnd)
         let maxSelectedCellId = Math.max(this.selectedCellStart, this.selectedCellEnd)
@@ -154,10 +191,10 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
         this.ctx.strokeStyle = this.cellStrokeStyle
         let startOffsetX = this.calculateCanvasOffsetX(cellId)
-        let startOffsetY = this.calculateCanvasOffsetY(cellId)
+        let startOffsetY = this.yOffset
 
-        this.ctx.fillRect(startOffsetX, startOffsetY, cellWidth, TimelineTrack.unitCellHeight)
-        this.ctx.strokeRect(startOffsetX, startOffsetY, cellWidth, TimelineTrack.unitCellHeight)
+        this.ctx.fillRect(startOffsetX, startOffsetY, cellWidth, this.unitCellHeight)
+        this.ctx.strokeRect(startOffsetX, startOffsetY, cellWidth, this.unitCellHeight)
 
         if (this.sequenceId == 0 && (cellId == 0 || (cellId + 1) % 5 == 0)) {
             this.ctx.fillStyle = this.cellFontStyle
@@ -173,21 +210,34 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.canvasStartPos = canvasStartPos
         this.canvasEndPos = canvasEndPos
 
-        let startCellIdx = this.calculateCellIdx(this.canvasStartPos - TimelineTrack.unitCellWidth) // Leave one cell margin
-        let endCellIdx = this.calculateCellIdx(this.canvasEndPos + TimelineTrack.unitCellWidth)
+        let startCellIdx = this.calculateCellIdx(this.canvasStartPos - this.unitCellWidth) // Leave one cell margin
+        let endCellIdx = this.calculateCellIdx(this.canvasEndPos + this.unitCellWidth)
 
-        // Draw track name.
-        let yOffset = this.calculateCanvasOffsetY(0)
         this.ctx.fillStyle = "black"
         this.ctx.font = this.cellFontSize + 'px serif'
-        this.ctx.fillText(this.trackeName, 0, yOffset + this.cellFontSize)
+        this.ctx.fillText(this.trackeName, 0, this.yOffset + this.cellFontSize)
+
+        let firstCellX = this.calculateCanvasOffsetX(0);
+        this.ctx.strokeStyle = "black"
+        this.ctx.strokeRect(0, this.yOffset, firstCellX, this.getCellHeight())
 
         for (let cellIdx = startCellIdx; cellIdx <= endCellIdx; cellIdx++) {
             this.drawCell(cellIdx);
         }
+
+        // Draw the red time line indicator
+        let offsetX = this.calculateCanvasOffsetX(this.elapsedTime * GlobalConfig.fps)
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = "red"
+        this.ctx.moveTo(offsetX, this.yOffset);
+        this.ctx.lineTo(offsetX, this.yOffset + this.getCellHeight())
+        this.ctx.stroke()
     }
 
     onTrackClick(relativeX: number) {
+        if(!this.selectable)
+            return;
+
         let absoluteX = this.canvasStartPos + relativeX;
         let cellId = this.calculateCellIdx(absoluteX);
 
@@ -195,9 +245,14 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
         this.selectedCellStart = cellId
         this.selectedCellEnd = cellId;
+
+        this.emit(TimelineTrackEventNames.CELLCLICKED, this, cellId)
     }
 
     rangeSelect(relativeX: number){
+        if(!this.selectable)
+            return;
+
         let absoluteX = this.canvasStartPos + relativeX;
         let cellId = this.calculateCellIdx(absoluteX)
 
@@ -205,13 +260,23 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     }
 
     clearSelect() {
+        if(!this.selectable)
+            return;
+
         this.selectedCellStart = -1;
         this.selectedCellEnd = -1;
     }
 }
 
 class TitleTimelineTrack extends TimelineTrack{
+    constructor(sequenceId: number, frameCount: number, ctx: CanvasRenderingContext2D, yOffset = 0, trackName: string = "NoNameTrack") {
+        super(sequenceId, frameCount, ctx, yOffset, trackName);
 
+        this.unitCellHeight = this.cellFontSize * 1.2
+        this.selectable = false
+
+        this.cellBgStyle = "silver"
+    }
 }
 
-export {TimelineTrack, TitleTimelineTrack}
+export {TimelineTrack, TitleTimelineTrack, TimelineTrackEventNames}
