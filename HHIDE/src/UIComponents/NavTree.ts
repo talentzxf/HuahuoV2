@@ -1,12 +1,8 @@
-import {CustomElement} from "hhpanel";
-import {ContextMenu} from "hhcommoncomponents";
+import {ContextMenu, CustomElement} from "hhcommoncomponents";
 import {HHPanel} from "hhpanel";
 import "/css/navtree.css"
-import {GameObjectManager} from "../HuaHuoEngine/GameObjectManager";
 import {NavTreeEventHandler} from "./NavTreeEventHandler";
 import {EngineAPI} from "../EngineAPI";
-import * as assert from "assert";
-
 
 class TreeNode {
     private name: String
@@ -28,9 +24,9 @@ class TreeNode {
         this.children.push(node)
     }
 
-    removeChild(node: TreeNode){
-        this.children.forEach( (item, index, array) => {
-            if(item == node) array.splice(index, 1)
+    removeChild(node: TreeNode) {
+        this.children.forEach((item, index, array) => {
+            if (item == node) array.splice(index, 1)
         })
     }
 
@@ -49,7 +45,7 @@ class TreeNode {
     setHTMLElement(element: HTMLElement) {
         this.htmlElement = element
 
-        if(this.htmlElement){
+        if (this.htmlElement) {
             this.openButton = this.htmlElement.querySelector<HTMLButtonElement>("#open-button")
             this.closeButton = this.htmlElement.querySelector<HTMLButtonElement>("#close-button")
 
@@ -74,8 +70,8 @@ class TreeNode {
     }
 }
 
-let childrenHolder:string = "children-holder"
-let childrenHolderId:string = "#" + childrenHolder
+let childrenHolder: string = "children-holder"
+let childrenHolderId: string = "#" + childrenHolder
 
 @CustomElement({
     selector: "hh-navtree",
@@ -129,12 +125,12 @@ class NavTree extends HTMLElement {
         return this.rootNode;
     }
 
-    moveNode(curNode:TreeNode, oldParent:TreeNode, newParent:TreeNode){
-        if(newParent === oldParent){
+    moveNode(curNode: TreeNode, oldParent: TreeNode, newParent: TreeNode) {
+        if (newParent === oldParent) {
             return;
         }
 
-        if(!oldParent){
+        if (!oldParent) {
             oldParent = this.rootNode
         }
 
@@ -246,7 +242,7 @@ class NavTree extends HTMLElement {
         }
     }
 
-    getSelectedTreeNode(){
+    getSelectedTreeNode() {
         return this.selectedTreeNode
     }
 
@@ -282,7 +278,7 @@ class NavTree extends HTMLElement {
         let childrenHolderDiv
         let parentHtmlElement
 
-        if(isParentLeaf){
+        if (isParentLeaf) {
             let previousHTMLElement = parent.getHTMLElement()
             let previousParentParent = previousHTMLElement.parentElement
 
