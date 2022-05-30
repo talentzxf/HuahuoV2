@@ -15,6 +15,14 @@ class CellManager{
     // Map from the cellId to it's begining cell.
     mergedCells: Map<number, number> = new Map();
 
+    getSpanHead(cellId){
+        if(!this.mergedCells.has(cellId)){
+            return cellId
+        }
+
+        return this.mergedCells.get(cellId)
+    }
+
     isSpanHead(cellId){
         if(!this.mergedCells.has(cellId) || this.mergedCells.get(cellId) == cellId){
             return true
@@ -169,12 +177,10 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         let absoluteX = this.canvasStartPos + relativeX;
         let cellId = this.calculateCellIdx(absoluteX);
 
-        if (!this.cellManager.isSpanHead(cellId)) {
-            console.log("TODO:  Merge cells !!!!")
-        } else {
-            this.selectedCellStart = cellId
-            this.selectedCellEnd = Math.max( cellId, this.selectedCellEnd);
-        }
+        cellId = this.cellManager.getSpanHead(cellId)
+
+        this.selectedCellStart = cellId
+        this.selectedCellEnd = cellId;
     }
 
     rangeSelect(relativeX: number){
