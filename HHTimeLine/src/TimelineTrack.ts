@@ -1,5 +1,6 @@
 import {TypedEmitter} from 'tiny-typed-emitter';
 import {GlobalConfig} from "./GlobalConfig";
+import {Logger} from "hhcommoncomponents";
 
 enum TimelineTrackEventNames {
     CELLCLICKED = 'cellClicked'
@@ -136,7 +137,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
     mergeSelectedCells(){
         if(!this.isValidCellId(this.selectedCellStart) || !this.isValidCellId(this.selectedCellEnd)){
-            console.log("Trying to merge invalid cells")
+            Logger.error("Trying to merge invalid cells")
             return;
         }
 

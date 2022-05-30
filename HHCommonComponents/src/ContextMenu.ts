@@ -1,5 +1,7 @@
 import "/css/contextmenu.css"
 
+import {Logger} from "./Logger"
+
 class MenuItem{
     public itemName: string;
     public onclick: EventListener;
@@ -19,7 +21,7 @@ class ContextMenu
 
     constructMenuDiv(){
         if(!this.items){
-            console.log("Loading ... ")
+            Logger.info("Loading ... ")
             return;
         }
 

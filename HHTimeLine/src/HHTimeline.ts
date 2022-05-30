@@ -1,5 +1,5 @@
 import {TimelineTrack, TimelineTrackEventNames, TitleTimelineTrack} from "./TimelineTrack";
-import {ContextMenu, CustomElement} from "hhcommoncomponents";
+import {ContextMenu, CustomElement, Logger} from "hhcommoncomponents";
 import {GlobalConfig} from "./GlobalConfig";
 
 @CustomElement({
@@ -110,7 +110,7 @@ class HHTimeline extends HTMLElement {
             this.timelineTracks[this.selectedTrackSeqId].mergeSelectedCells()
             this.redrawCanvas()
         } else {
-            console.log("Error seqId when trying to merge cells:" + this.selectedTrackSeqId)
+            Logger.error("Error seqId when trying to merge cells:" + this.selectedTrackSeqId)
         }
     }
 
@@ -161,7 +161,7 @@ class HHTimeline extends HTMLElement {
     onCanvasClick(evt: MouseEvent) {
         let trackSeqId = this.calculateTrackSeqId(evt.offsetY)
         if (trackSeqId < 0 || trackSeqId >= this.timelineTracks.length) {
-            console.log("Error clientY!!!")
+            Logger.error("Error clientY!!!")
             return;
         }
 
@@ -175,7 +175,7 @@ class HHTimeline extends HTMLElement {
     }
 
     Resize() {
-        console.log("On Resize")
+        Logger.info("On Resize")
         let widthPixel: number = this.frameCount * this.titleTrack.getCellWidth();
 
         let heightPixel: number =  this.totalTrackHeight;
