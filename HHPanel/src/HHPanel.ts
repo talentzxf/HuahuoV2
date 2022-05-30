@@ -4,7 +4,7 @@ import {TabMover, TabMoveParam} from "./draggable/TabMover";
 import {OccupiedTitleManager, SplitPanelDir} from "./draggable/OccupiedTitleManager";
 import {HHTitle} from "./HHTitle";
 import {HHContent} from "./HHContent";
-import {CustomElement} from "./CustomComponent";
+import {CustomElement} from "hhcommoncomponents";
 // import {HHSplitter} from "./HHSplitter";
 import {Vector2D} from "./math/Vector2D";
 import {ShadowPanelManager} from "./draggable/ShadowPanelManager";

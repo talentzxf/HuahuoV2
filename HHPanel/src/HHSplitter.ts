@@ -1,4 +1,4 @@
-import {CustomElement} from "./CustomComponent";
+import {CustomElement} from "hhcommoncomponents";
 import {Vector2D} from "./math/Vector2D";
 import {ResizeManager} from "./resize/ResizeManager";
 

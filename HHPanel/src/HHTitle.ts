@@ -1,6 +1,6 @@
 import {Vector2D} from "./math/Vector2D";
 import {TabMover} from "./draggable/TabMover";
-import {CustomElement} from "./CustomComponent";
+import {CustomElement} from "hhcommoncomponents";
 import {OccupiedTitleManager} from "./draggable/OccupiedTitleManager";
 import {HHPanel} from "./HHPanel";
 import {HHContent} from "./HHContent";

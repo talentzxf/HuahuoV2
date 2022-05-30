@@ -1,3 +1,4 @@
 import {ContextMenu} from "./ContextMenu";
+import {CustomElement} from "./CustomComponent";
 
-export {ContextMenu}
+export {ContextMenu, CustomElement}

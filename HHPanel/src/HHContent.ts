@@ -1,4 +1,4 @@
-import {CustomElement} from "./CustomComponent";
+import {CustomElement} from "hhcommoncomponents";
 
 
 @CustomElement({

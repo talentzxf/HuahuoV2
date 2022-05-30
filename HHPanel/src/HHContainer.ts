@@ -1,4 +1,4 @@
-import {CustomElement} from "./CustomComponent";
+import {CustomElement} from "hhcommoncomponents";
 import {DomHelper} from "./utilities/DomHelper";
 import {HHSplitter} from "./HHSplitter";
 

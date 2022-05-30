@@ -16,7 +16,7 @@ library.add(faPlus)
 dom.watch();
 
 Module.onRuntimeInitialized = ()=>{
-    Module.HuaHuoEngine.prototype.InitEngine();
-    EngineAPI.OnInit()
-    Module["SceneView"].prototype.GetSceneView().InitWithCanvasId("SceneView")
+    // Module.HuaHuoEngine.prototype.InitEngine();
+    // EngineAPI.OnInit()
+    // Module["SceneView"].prototype.GetSceneView().InitWithCanvasId("SceneView")
 }
