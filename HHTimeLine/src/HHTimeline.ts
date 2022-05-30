@@ -45,9 +45,9 @@ class HHTimeline extends HTMLElement {
         window.addEventListener("resize", this.Resize.bind(this))
 
         // Add one timelinetrack
-        this.timelineTracks.push(new TimelineTrack(0, this.frameCount, this.canvas.getContext('2d')))
-        this.timelineTracks.push(new TimelineTrack(1, this.frameCount, this.canvas.getContext('2d')))
-        this.timelineTracks.push(new TimelineTrack(2, this.frameCount, this.canvas.getContext('2d')))
+        this.timelineTracks.push(new TimelineTrack(0, this.frameCount, this.canvas.getContext('2d'), "Track 0"))
+        this.timelineTracks.push(new TimelineTrack(1, this.frameCount, this.canvas.getContext('2d'), "Track 1"))
+        this.timelineTracks.push(new TimelineTrack(2, this.frameCount, this.canvas.getContext('2d'), "Track 2"))
         // this.canvas.addEventListener("click", this.onCanvasClick.bind(this))
 
         this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this))
@@ -153,6 +153,7 @@ class HHTimeline extends HTMLElement {
 
     updateStartEndPos() {
         this.canvasWidth = this.canvasScrollContainer.clientWidth
+        this.canvasHeight = this.canvasScrollContainer.clientHeight
         this.canvasStartPos = this.canvasScrollContainer.scrollLeft;
         this.canvasEndPos = this.canvasStartPos + this.canvasWidth;
 
@@ -165,8 +166,13 @@ class HHTimeline extends HTMLElement {
         ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
         ctx.strokeRect(0, 0, this.canvasWidth, this.canvasHeight)
 
+        let maxTrackNameLength = -1;
+        for(let track of this.timelineTracks){
+            maxTrackNameLength = Math.max(maxTrackNameLength, track.getTitleLength())
+        }
+
         for (let track of this.timelineTracks) {
-            track.drawTrack(this.canvasStartPos, this.canvasEndPos);
+            track.drawTrack(this.canvasStartPos - maxTrackNameLength, this.canvasEndPos);
         }
     }
 }

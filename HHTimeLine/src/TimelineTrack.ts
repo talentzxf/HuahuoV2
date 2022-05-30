@@ -88,6 +88,11 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.ctx = ctx
     }
 
+    getTitleLength():number{
+        this.ctx.font = this.cellFontSize + 'px serif';
+        return this.ctx.measureText(this.trackeName).width * 1.1
+    }
+
     mergeSelectedCells(){
         if(!this.isValidCellId(this.selectedCellStart) || !this.isValidCellId(this.selectedCellEnd)){
             console.log("Trying to merge invalid cells")
@@ -170,6 +175,12 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
         let startCellIdx = this.calculateCellIdx(this.canvasStartPos - TimelineTrack.unitCellWidth) // Leave one cell margin
         let endCellIdx = this.calculateCellIdx(this.canvasEndPos + TimelineTrack.unitCellWidth)
+
+        // Draw track name.
+        let yOffset = this.calculateCanvasOffsetY(0)
+        this.ctx.fillStyle = "black"
+        this.ctx.font = this.cellFontSize + 'px serif'
+        this.ctx.fillText(this.trackeName, 0, yOffset + this.cellFontSize)
 
         for (let cellIdx = startCellIdx; cellIdx <= endCellIdx; cellIdx++) {
             this.drawCell(cellIdx);
