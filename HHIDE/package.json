@@ -20,6 +20,7 @@
     "css-loader": "^6.7.1",
     "hhpanel": "file:../HHPanel",
     "hhcommoncomponents": "file:../HHCommonComponents",
+    "hhtimeline": "file:../HHTimeLine",
     "html-webpack-plugin": "^5.5.0",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.3.0",

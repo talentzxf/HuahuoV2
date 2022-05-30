@@ -2,7 +2,9 @@ import {HHContainer} from "hhpanel";
 import {HHPanel} from 'hhpanel'
 import {HHContent} from 'hhpanel'
 import {HHTitle} from "hhpanel";
+import {HHTimeline} from "hhtimeline";
 import {NavTree} from "./UIComponents/NavTree"
+
 
 import { library, dom } from "@fortawesome/fontawesome-svg-core";
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
