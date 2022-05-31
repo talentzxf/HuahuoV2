@@ -244,10 +244,12 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
         cellId = this.cellManager.getSpanHead(cellId)
 
-        this.selectedCellStart = cellId
-        this.selectedCellEnd = cellId;
+        if(this.isValidCellId(cellId)){
+            this.selectedCellStart = cellId
+            this.selectedCellEnd = cellId;
 
-        this.emit(TimelineTrackEventNames.CELLCLICKED, this, cellId)
+            this.emit(TimelineTrackEventNames.CELLCLICKED, this, cellId)
+        }
     }
 
     rangeSelect(relativeX: number){
