@@ -5,6 +5,7 @@ import {HHTitle} from "hhpanel";
 import {HHTimeline} from "hhtimeline";
 import {NavTree} from "./UIComponents/NavTree"
 import {DrawToolBar} from "./UIComponents/DrawToolBar";
+import {SceneView} from "./SceneView/SceneView";
 
 
 import { library, dom } from "@fortawesome/fontawesome-svg-core";

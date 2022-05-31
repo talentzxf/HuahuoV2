@@ -1,47 +1,42 @@
 import {Logger} from "hhcommoncomponents";
-import {TypedEmitter} from "tiny-typed-emitter";
+import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {Vector2} from "../Math/Vector2";
 
-enum BaseShapeEventNames{
-    DRAWSHAPEBEGINS = 'drawShapeBegins'
-}
-
-interface ShapeEvents{
-    drawShapeBegins:(shapeDrawer: BaseShapeDrawer)=>void;
-}
-
-class BaseShapeDrawer extends TypedEmitter<ShapeEvents>{
+class BaseShapeDrawer{
     name = "unknown_shape"
     imgClass = "unknown_img"
 
     isDrawing = false
     isSelected = false
 
-    onClicked(isSelected){
-        Logger.Debug(this.name + " clicked!")
-        this.emit(BaseShapeEventNames.DRAWSHAPEBEGINS, this)
+    canvasWidth = -1;
+    canvasHeight = -1;
+
+    onClicked(isSelected){ // The button is clicked
+        Logger.debug(this.name + " clicked!")
         if(isSelected)
             this.isSelected = true
+
+        EventBus.getInstance().emit(EventNames.DRAWSHAPEBEGINS, this)
     }
 
-    onDrawShape(){
+    onBeginToDrawShape(canvas: HTMLCanvasElement){
+        this.canvasWidth = canvas.width
+        this.canvasHeight = canvas.height
     }
 
-    onMouseDown(){
-
+    onMouseDown(evt: MouseEvent){
     }
 
-    onMouseUp(){
-        this.isSelected = false
+    getRelativePosition(x, y): Vector2{
+        return new Vector2(x/this.canvasWidth, y/this.canvasHeight)
     }
 
-    onMouseMove(){
-
+    onMouseUp(evt: MouseEvent){
     }
 
-    getBackgroundColor(){
-        if(this.isSelected)
-            return "#42b983";
-        return 'white';
+    onMouseMove(evt: MouseEvent){
+
     }
 }
 
