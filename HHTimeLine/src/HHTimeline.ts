@@ -202,10 +202,6 @@ class HHTimeline extends HTMLElement {
 
     redrawCanvas() {
         this.updateStartEndPos()
-        let ctx = this.ctx
-        ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
-        ctx.strokeRect(0, 0, this.canvasWidth, this.canvasHeight)
-
         let maxTrackNameLength = -1;
         for(let track of this.timelineTracks){
             maxTrackNameLength = Math.max(maxTrackNameLength, track.getTitleLength())

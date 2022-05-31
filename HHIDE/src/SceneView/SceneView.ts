@@ -1,6 +1,8 @@
 import {CustomElement, Logger} from "hhcommoncomponents"
+import {EngineJS} from "hhenginejs"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
+import {EngineAPI} from "../EngineAPI";
 
 @CustomElement({
     selector: "hh-sceneview"
@@ -36,8 +38,10 @@ class SceneView extends HTMLElement{
         EventBus.getInstance().on(EventNames.DRAWSHAPEENDS, this.endOfDrawingShape.bind(this))
 
         this.canvas.addEventListener("mousedown", this.onMouseDown.bind(this))
-        this.canvas.addEventListener("mousemove", this.onMouseDown.bind(this))
+        this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this))
         this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this))
+
+        EngineJS.prototype.getInstance().init(this.canvas)
     }
 
     onMouseDown(evt:MouseEvent){

@@ -1,6 +1,6 @@
 import {Logger} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
-import {Vector2} from "../Math/Vector2";
+import {Vector2} from "../../../HHCommonComponents/src/Math/Vector2";
 
 class BaseShapeDrawer{
     name = "unknown_shape"
