@@ -28,7 +28,7 @@ class HHTimeline extends HTMLElement {
     private titleTrack: TitleTimelineTrack;
     private totalTrackHeight: number;
 
-    public elapsedTime:number = 0.0
+    public elapsedTime: number = 0.0
 
     connectedCallback() {
         // canvasScrollContainer wraps canvasContainer wraps cavnas.
@@ -73,19 +73,19 @@ class HHTimeline extends HTMLElement {
         ])
         this.addNewTrack()
 
-        this.setTimeElapsed(0.5/GlobalConfig.fps)
+        this.setTimeElapsed(0.5 / GlobalConfig.fps)
     }
 
-    setTimeElapsed(timeElapsed){
+    setTimeElapsed(timeElapsed) {
         this.elapsedTime = timeElapsed
-        for(let tracks of this.timelineTracks){
+        for (let tracks of this.timelineTracks) {
             tracks.setElapsedTime(timeElapsed)
         }
 
         this.redrawCanvas()
     }
 
-    addNewTrack(){
+    addNewTrack() {
         let seqId = this.timelineTracks.length;
 
         let track = new TimelineTrack(seqId, this.frameCount, this.canvas.getContext('2d'), this.totalTrackHeight, "Track " + seqId)
@@ -99,7 +99,7 @@ class HHTimeline extends HTMLElement {
         track.on(TimelineTrackEventNames.CELLCLICKED, this.onCellClicked.bind(this))
     }
 
-    onCellClicked(track, cellId){
+    onCellClicked(track, cellId) {
         let elapsedTime = (cellId + 0.5) / GlobalConfig.fps
         this.setTimeElapsed(elapsedTime)
     }
@@ -145,8 +145,8 @@ class HHTimeline extends HTMLElement {
     }
 
     calculateTrackSeqId(offsetY: number): number {
-        for(let track of this.timelineTracks){
-            if(track.hasYOffset(offsetY))
+        for (let track of this.timelineTracks) {
+            if (track.hasYOffset(offsetY))
                 return track.getSeqId()
         }
     }
@@ -168,7 +168,11 @@ class HHTimeline extends HTMLElement {
         if (this.selectedTrackSeqId >= 0) {
             this.timelineTracks[this.selectedTrackSeqId].clearSelect();
         }
-        this.timelineTracks[trackSeqId].onTrackClick(evt.clientX);
+        this.timelineTracks[trackSeqId].onTrackSelected(evt.clientX);
+
+        if(this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId){
+            this.timelineTracks[this.selectedTrackSeqId].onTrackUnSelected();
+        }
         this.selectedTrackSeqId = trackSeqId;
 
         this.redrawCanvas()
@@ -178,7 +182,7 @@ class HHTimeline extends HTMLElement {
         Logger.info("On Resize")
         let widthPixel: number = this.frameCount * this.titleTrack.getCellWidth();
 
-        let heightPixel: number =  this.totalTrackHeight;
+        let heightPixel: number = this.totalTrackHeight;
         this.canvasContainer.style.width = widthPixel + "px";
         this.canvasContainer.style.height = heightPixel + "px";
         this.canvas.width = this.canvasScrollContainer.clientWidth;
@@ -202,8 +206,13 @@ class HHTimeline extends HTMLElement {
 
     redrawCanvas() {
         this.updateStartEndPos()
+
+        // Clear bg
+        this.ctx.fillStyle = "white"
+        this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight)
+
         let maxTrackNameLength = -1;
-        for(let track of this.timelineTracks){
+        for (let track of this.timelineTracks) {
             maxTrackNameLength = Math.max(maxTrackNameLength, track.getTitleLength())
         }
 
