@@ -411,7 +411,7 @@ template<typename Derived> struct MatrixExponentialReturnValue
 
     /** \brief Compute the matrix exponential.
       *
-      * \param[out] result the matrix exponential of \p src in the
+      * \param[out] result the matrix exponential of \p Runtime in the
       * constructor.
       */
     template <typename ResultType>

@@ -38,7 +38,7 @@ class EngineJS{
         rect.fillColor = new paper.Color("white")
 
         // Init a default store
-        ShapeStoreManager.getInstance().createStore(new uuidv4())
+        ShapeStoreManager.getInstance().createStore(uuidv4())
     }
 }
 

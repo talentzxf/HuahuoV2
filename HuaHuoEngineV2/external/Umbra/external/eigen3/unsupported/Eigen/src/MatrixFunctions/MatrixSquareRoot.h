@@ -426,7 +426,7 @@ template<typename Derived> class MatrixSquareRootReturnValue
 
     /** \brief Compute the matrix square root.
       *
-      * \param[out]  result  the matrix square root of \p src in the
+      * \param[out]  result  the matrix square root of \p Runtime in the
       * constructor.
       */
     template <typename ResultType>

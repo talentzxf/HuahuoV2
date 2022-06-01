@@ -37,7 +37,7 @@
 #include "../../Eigen/Householder"
 #include "src/IterativeSolvers/GMRES.h"
 #include "src/IterativeSolvers/IncompleteCholesky.h"
-//#include "src/IterativeSolvers/SSORPreconditioner.h"
+//#include "Runtime/IterativeSolvers/SSORPreconditioner.h"
 #include "src/IterativeSolvers/MINRES.h"
 
 //@}

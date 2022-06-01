@@ -326,7 +326,7 @@ extern DECLSPEC void SDLCALL SDL_UnlockSurface(SDL_Surface * surface);
  * The new surface should be freed with SDL_FreeSurface(). Not doing so will
  * result in a memory leak.
  *
- * src is an open SDL_RWops buffer, typically loaded with SDL_RWFromFile.
+ * Runtime is an open SDL_RWops buffer, typically loaded with SDL_RWFromFile.
  * Alternitavely, you might also use the macro SDL_LoadBMP to load a bitmap
  * from a file, convert it to an SDL_Surface and then close the file.
  *
@@ -703,7 +703,7 @@ extern DECLSPEC SDL_Surface *SDLCALL SDL_ConvertSurfaceFormat
  *
  * \param width the width of the block to copy, in pixels
  * \param height the height of the block to copy, in pixels
- * \param src_format an SDL_PixelFormatEnum value of the `src` pixels format
+ * \param src_format an SDL_PixelFormatEnum value of the `Runtime` pixels format
  * \param src a pointer to the source pixels
  * \param src_pitch the pitch of the source pixels, in bytes
  * \param dst_format an SDL_PixelFormatEnum value of the `dst` pixels format
@@ -723,13 +723,13 @@ extern DECLSPEC int SDLCALL SDL_ConvertPixels(int width, int height,
 /**
  * Premultiply the alpha on a block of pixels.
  *
- * This is safe to use with src == dst, but not for other overlapping areas.
+ * This is safe to use with Runtime == dst, but not for other overlapping areas.
  *
  * This function is currently only implemented for SDL_PIXELFORMAT_ARGB8888.
  *
  * \param width the width of the block to convert, in pixels
  * \param height the height of the block to convert, in pixels
- * \param src_format an SDL_PixelFormatEnum value of the `src` pixels format
+ * \param src_format an SDL_PixelFormatEnum value of the `Runtime` pixels format
  * \param src a pointer to the source pixels
  * \param src_pitch the pitch of the source pixels, in bytes
  * \param dst_format an SDL_PixelFormatEnum value of the `dst` pixels format
@@ -804,7 +804,7 @@ extern DECLSPEC int SDLCALL SDL_FillRects
  *
  *  This assumes that the source and destination rectangles are
  *  the same size.  If either \c srcrect or \c dstrect are NULL, the entire
- *  surface (\c src or \c dst) is copied.  The final blit rectangles are saved
+ *  surface (\c Runtime or \c dst) is copied.  The final blit rectangles are saved
  *  in \c srcrect and \c dstrect after all clipping is performed.
  *
  *  \returns 0 if the blit is successful, otherwise it returns -1.

@@ -119,7 +119,7 @@ umeyama(const MatrixBase<Derived>& src, const MatrixBase<OtherDerived>& dst, boo
   const VectorType src_mean = src.rowwise().sum() * one_over_n;
   const VectorType dst_mean = dst.rowwise().sum() * one_over_n;
 
-  // demeaning of src and dst points
+  // demeaning of Runtime and dst points
   const RowMajorMatrixType src_demean = src.colwise() - src_mean;
   const RowMajorMatrixType dst_demean = dst.colwise() - dst_mean;
 

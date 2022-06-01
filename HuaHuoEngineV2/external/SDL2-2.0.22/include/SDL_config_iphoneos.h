@@ -110,10 +110,10 @@
 
 /* enable iPhone version of Core Audio driver */
 #define SDL_AUDIO_DRIVER_COREAUDIO 1
-/* Enable the dummy audio driver (src/audio/dummy/\*.c) */
+/* Enable the dummy audio driver (Runtime/audio/dummy/\*.c) */
 #define SDL_AUDIO_DRIVER_DUMMY  1
 
-/* Enable the stub haptic driver (src/haptic/dummy/\*.c) */
+/* Enable the stub haptic driver (Runtime/haptic/dummy/\*.c) */
 #define SDL_HAPTIC_DUMMY 1
 
 /* Enable MFi joystick support */
@@ -156,7 +156,7 @@
 #define SDL_IPHONE_LAUNCHSCREEN 1
 
 /* Set max recognized G-force from accelerometer
-   See src/joystick/uikit/SDL_sysjoystick.m for notes on why this is needed
+   See Runtime/joystick/uikit/SDL_sysjoystick.m for notes on why this is needed
  */
 #define SDL_IPHONE_MAX_GFORCE 5.0
 

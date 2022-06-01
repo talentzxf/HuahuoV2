@@ -71,7 +71,7 @@
 #ifdef EIGEN_FFTW_DEFAULT
 // FFTW: faster, GPL -- incompatible with Eigen in LGPL form, bigger code size
 #  include <fftw3.h>
-#  include "src/FFT/ei_fftw_impl.h"
+#  include "Runtime/FFT/ei_fftw_impl.h"
    namespace Eigen {
      //template <typename T> typedef struct internal::fftw_impl  default_fft_impl; this does not work
      template <typename T> struct default_fft_impl : public internal::fftw_impl<T> {};
@@ -79,7 +79,7 @@
 #elif defined EIGEN_MKL_DEFAULT
 // TODO 
 // intel Math Kernel Library: fastest, commercial -- may be incompatible with Eigen in GPL form
-#  include "src/FFT/ei_imklfft_impl.h"
+#  include "Runtime/FFT/ei_imklfft_impl.h"
    namespace Eigen {
      template <typename T> struct default_fft_impl : public internal::imklfft_impl {};
    }
@@ -199,9 +199,9 @@ class FFT
 
     /*
     inline 
-    void fwd2(Complex * dst, const Complex * src, int n0,int n1)
+    void fwd2(Complex * dst, const Complex * Runtime, int n0,int n1)
     {
-      m_impl.fwd2(dst,src,n0,n1);
+      m_impl.fwd2(dst,Runtime,n0,n1);
     }
     */
 
@@ -358,9 +358,9 @@ class FFT
     /*
     // TODO: multi-dimensional FFTs
     inline 
-    void inv2(Complex * dst, const Complex * src, int n0,int n1)
+    void inv2(Complex * dst, const Complex * Runtime, int n0,int n1)
     {
-      m_impl.inv2(dst,src,n0,n1);
+      m_impl.inv2(dst,Runtime,n0,n1);
       if ( HasFlag( Unscaled ) == false)
           scale(dst,1./(n0*n1),n0*n1);
     }

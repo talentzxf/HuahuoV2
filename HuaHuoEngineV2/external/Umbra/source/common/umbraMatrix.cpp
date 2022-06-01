@@ -220,7 +220,7 @@ Matrix4x3 MatrixFactory::transformBase (const Vector3& origin, const Vector3& fo
 Matrix4x4 MatrixFactory::orthonormalBasis(const Vector3& dir)
 {
     // Build perpendicular vector, see
-    // Hughes, J. F., Möller, T., “Building an Orthonormal Basis from a Unit Vector”, Journal of Graphics Tools 4:4 (1999), 33-35.
+    // Hughes, J. F., Mï¿½ller, T., ï¿½Building an Orthonormal Basis from a Unit Vectorï¿½, Journal of Graphics Tools 4:4 (1999), 33-35.
 
     Vector3 w = normalize(dir);
 
@@ -457,7 +457,7 @@ bool Matrix4x3::isUniform (void) const
 /*----------------------------------------------------------------------*//*!
  * \brief
  * \note            TIME-CRITICAL
- * \note            m may be equal to src...
+ * \note            m may be equal to Runtime...
  * \review
  *//*----------------------------------------------------------------------*/
 
@@ -759,7 +759,7 @@ Matrix4x4& Matrix4x4::scale (const Vector3& v)
 
 /*----------------------------------------------------------------------*//*!
  * \brief           Matrix4x4 inversion code
- * \note            this == &src is supported
+ * \note            this == &Runtime is supported
  * \review
  *//*----------------------------------------------------------------------*/
 
@@ -1038,7 +1038,7 @@ Matrix3x3& Matrix3x3::scale (const Vector3& v)
 
 /*----------------------------------------------------------------------*//*!
  * \brief           Matrix3x3 inversion code
- * \note            this == &src is supported
+ * \note            this == &Runtime is supported
  *//*----------------------------------------------------------------------*/
 
 Matrix3x3& Matrix3x3::invert    (const Matrix3x3& src)
@@ -1201,7 +1201,7 @@ Matrix2x2& Matrix2x2::scale (const Vector2& v)
 
 /*----------------------------------------------------------------------*//*!
  * \brief           Matrix2x2 inversion code
- * \note            this == &src is supported
+ * \note            this == &Runtime is supported
  * \todo [wili 310502] Maybe deal with d == 0 case otherwise?
  *//*----------------------------------------------------------------------*/
 

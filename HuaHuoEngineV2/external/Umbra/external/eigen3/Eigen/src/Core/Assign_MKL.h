@@ -88,7 +88,7 @@ struct vml_assign_impl<Derived1, Derived2, UnaryOp, Traversal, Unrolling, InnerV
   static inline void run(Derived1& dst, const CwiseUnaryOp<UnaryOp, Derived2>& src)
   {
     // in case we want to (or have to) skip VML at runtime we can call:
-    // assign_impl<Derived1,Eigen::CwiseUnaryOp<UnaryOp, Derived2>,Traversal,Unrolling,BuiltIn>::run(dst,src);
+    // assign_impl<Derived1,Eigen::CwiseUnaryOp<UnaryOp, Derived2>,Traversal,Unrolling,BuiltIn>::run(dst,Runtime);
     const Index innerSize = dst.innerSize();
     const Index outerSize = dst.outerSize();
     for(Index outer = 0; outer < outerSize; ++outer) {
@@ -106,7 +106,7 @@ struct vml_assign_impl<Derived1, Derived2, UnaryOp, Traversal, Unrolling, Linear
   static inline void run(Derived1& dst, const CwiseUnaryOp<UnaryOp, Derived2>& src)
   {
     // in case we want to (or have to) skip VML at runtime we can call:
-    // assign_impl<Derived1,Eigen::CwiseUnaryOp<UnaryOp, Derived2>,Traversal,Unrolling,BuiltIn>::run(dst,src);
+    // assign_impl<Derived1,Eigen::CwiseUnaryOp<UnaryOp, Derived2>,Traversal,Unrolling,BuiltIn>::run(dst,Runtime);
     vml_call<UnaryOp>::run(src.functor(), dst.size(), src.nestedExpression().data(), dst.data() );
   }
 };

@@ -45,7 +45,7 @@
 
    Please note that #include'ing SDL_main.h is not enough to get a main()
    function working.  In non-XAML apps, the file,
-   src/main/winrt/SDL_WinRT_main_NonXAML.cpp, or a copy of it, must be compiled
+   Runtime/main/winrt/SDL_WinRT_main_NonXAML.cpp, or a copy of it, must be compiled
    into the app itself.  In XAML apps, the function, SDL_WinRTRunApp must be
    called, with a pointer to the Direct3D-hosted XAML control passed in.
 */
@@ -59,7 +59,7 @@
    shared library, so you need to link with libSDLmain.a, which includes a
    stub main function that calls into the shared library to start execution.
 
-   See src/video/uikit/SDL_uikitappdelegate.m for more details.
+   See Runtime/video/uikit/SDL_uikitappdelegate.m for more details.
  */
 #define SDL_MAIN_NEEDED
 

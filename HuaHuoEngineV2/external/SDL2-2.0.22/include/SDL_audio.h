@@ -751,7 +751,7 @@ extern DECLSPEC void SDLCALL SDL_PauseAudioDevice(SDL_AudioDeviceID dev,
 /**
  * Load the audio data of a WAVE file into memory.
  *
- * Loading a WAVE file requires `src`, `spec`, `audio_buf` and `audio_len` to
+ * Loading a WAVE file requires `Runtime`, `spec`, `audio_buf` and `audio_len` to
  * be valid pointers. The entire data portion of the file is then loaded into
  * memory and decoded if necessary.
  *
@@ -785,7 +785,7 @@ extern DECLSPEC void SDLCALL SDL_PauseAudioDevice(SDL_AudioDeviceID dev,
  * the headers), too big, or unsupported causes an error. Additionally, any
  * critical I/O error from the data source will terminate the loading process
  * with an error. The function returns NULL on error and in all cases (with
- * the exception of `src` being NULL), an appropriate error message will be
+ * the exception of `Runtime` being NULL), an appropriate error message will be
  * set.
  *
  * It is required that the data source supports seeking.
@@ -1088,7 +1088,7 @@ extern DECLSPEC void SDLCALL SDL_FreeAudioStream(SDL_AudioStream *stream);
  * This function is equivalent to calling...
  *
  * ```c
- * SDL_MixAudioFormat(dst, src, format, len, volume);
+ * SDL_MixAudioFormat(dst, Runtime, format, len, volume);
  * ```
  *
  * ...where `format` is the obtained format of the audio device from the
@@ -1110,7 +1110,7 @@ extern DECLSPEC void SDLCALL SDL_MixAudio(Uint8 * dst, const Uint8 * src,
 /**
  * Mix audio data in a specified format.
  *
- * This takes an audio buffer `src` of `len` bytes of `format` data and mixes
+ * This takes an audio buffer `Runtime` of `len` bytes of `format` data and mixes
  * it into `dst`, performing addition, volume adjustment, and overflow
  * clipping. The buffer pointed to by `dst` must also be `len` bytes of
  * `format` data.

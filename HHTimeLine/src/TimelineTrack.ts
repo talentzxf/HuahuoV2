@@ -105,7 +105,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.trackName = trackName;
         this.frameCount = frameCount;
         this.ctx = ctx
-        this.trackId = new uuidv4();
+        this.trackId = uuidv4();
 
         this.unitCellWidth = TimelineTrack.defaultUnitCellWidth
         this.unitCellHeight = TimelineTrack.defaultUnitCellHeight

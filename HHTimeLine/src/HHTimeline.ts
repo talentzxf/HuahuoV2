@@ -1,7 +1,6 @@
 import {TimelineTrack, TimelineTrackEventNames, TitleTimelineTrack} from "./TimelineTrack";
 import {ContextMenu, CustomElement, Logger} from "hhcommoncomponents";
 import {GlobalConfig} from "./GlobalConfig";
-import {TypedEmitter} from "tiny-typed-emitter";
 import {TimelineEventNames} from "./HHTimelineEvents";
 
 @CustomElement({
@@ -74,8 +73,6 @@ class HHTimeline extends HTMLElement {
                 onclick: this.addNewTrack.bind(this)
             }
         ])
-        this.addNewTrack()
-
         this.setTimeElapsed(0.5 / GlobalConfig.fps)
     }
 
@@ -101,7 +98,7 @@ class HHTimeline extends HTMLElement {
 
         track.on(TimelineTrackEventNames.CELLCLICKED, this.onCellClicked.bind(this))
 
-        let customEvent = new CustomElement(TimelineEventNames.NEWTRACKADDED, {
+        let customEvent = new CustomEvent(TimelineEventNames.NEWTRACKADDED, {
             detail: {
                 targetObj: track
             }

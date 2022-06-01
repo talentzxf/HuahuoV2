@@ -8,7 +8,6 @@
 #include "TypeSystem/TypeManager.h"
 #include "Serialize/PathNamePersistentManager.h"
 #include "BaseClasses/MessageHandler.h"
-#include "GfxDevice/GfxDeviceSetup.h"
 
 #ifdef HUAHUO_EDITOR
 #include "BaseClasses/ManagerContextLoading.h"
@@ -35,7 +34,6 @@ void HuaHuoEngine::InitEngine() {
 
     InitPathNamePersistentManager();
 
-    InitializeGfxDevice();
 }
 
 HuaHuoEngine *HuaHuoEngine::gInstance = new HuaHuoEngine();

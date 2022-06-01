@@ -745,7 +745,7 @@ bool Matrix4x4f::ValidTRS() const
 }
 
 #if ENABLE_UNIT_TESTS
-#include "External/UnitTest++/src/MemoryOutStream.h"
+#include "External/UnitTest++/Runtime/MemoryOutStream.h"
 UnitTest::MemoryOutStream& operator<<(UnitTest::MemoryOutStream& stream, const Matrix4x4f& m)
 {
     stream << "(" <<

@@ -646,8 +646,8 @@ unsigned __int64 neon_umovq64(__n128, const __int32);
 #define vget_lane_s16(Dm, lane)  neon_smov16(Dm, lane)
 #define vget_lane_u16(Dm, lane)  neon_umov16(Dm, lane)
 #define vget_lane_s32(Dm, lane)  static_cast<int>(neon_umov32(Dm, lane))  // there's no smov32 into 32bit core reg (only into 64bit core reg)
-// umov32 is equivalent though because src/dst type size is the same
-#define vget_lane_s64(Dm, lane)  neon_umov64(Dm, lane)  // there's no smov64, umov64 is equivalent though because src/dst type size is the same
+// umov32 is equivalent though because Runtime/dst type size is the same
+#define vget_lane_s64(Dm, lane)  neon_umov64(Dm, lane)  // there's no smov64, umov64 is equivalent though because Runtime/dst type size is the same
 #define vget_lane_u32(Dm, lane)  neon_umov32(Dm, lane)
 #define vget_lane_u64(Dm, lane)  neon_umov64(Dm, lane)
 #define vgetq_lane_p8(Dm, lane)  neon_smovq8(Dm, lane)
@@ -657,8 +657,8 @@ unsigned __int64 neon_umovq64(__n128, const __int32);
 #define vgetq_lane_s16(Dm, lane) neon_smovq16(Dm, lane)
 #define vgetq_lane_u16(Dm, lane) neon_umovq16(Dm, lane)
 #define vgetq_lane_s32(Dm, lane) neon_umovq32(Dm, lane)  // there's no smov32 into 32bit core reg (only into 64bit core reg)
-                                                         // umov32 is equivalent though because src/dst type size is the same
-#define vgetq_lane_s64(Dm, lane) neon_umovq64(Dm, lane)  // there's no smov64, umov64 is equivalent though because src/dst type size is the same
+                                                         // umov32 is equivalent though because Runtime/dst type size is the same
+#define vgetq_lane_s64(Dm, lane) neon_umovq64(Dm, lane)  // there's no smov64, umov64 is equivalent though because Runtime/dst type size is the same
 #define vgetq_lane_u32(Dm, lane) neon_umovq32(Dm, lane)
 #define vgetq_lane_u64(Dm, lane) neon_umovq64(Dm, lane)
 

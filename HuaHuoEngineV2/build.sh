@@ -12,8 +12,8 @@ WEBIDL=${EMCCDIR}/tools/webidl_binder
 
 echo > ./MergedIDL.idl
 cat ../WebIDL/HuaHuoEngine.idl  >>  ./MergedIDL.idl
-cat ../WebIDL/HuaHuoEditor.idl >> ./MergedIDL.idl
-cat ../WebIDL/HuaHuoGraphics.idl >> ./MergedIDL.idl
+#cat ../WebIDL/HuaHuoEditor.idl >> ./MergedIDL.idl
+#cat ../WebIDL/HuaHuoGraphics.idl >> ./MergedIDL.idl
 
 ${WEBIDL} ./MergedIDL.idl glue ./emcmake/
 

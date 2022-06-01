@@ -109,7 +109,7 @@ private:
     struct Entry
     {
         Handle      next;                   //!< next pointer in linked list
-        S           s;                      //!< src val
+        S           s;                      //!< Runtime val
     };
 
 public:

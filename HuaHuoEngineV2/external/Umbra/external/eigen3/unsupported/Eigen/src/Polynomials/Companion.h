@@ -12,7 +12,7 @@
 
 // This file requires the user to include
 // * Eigen/Core
-// * Eigen/src/PolynomialSolver.h
+// * Eigen/Runtime/PolynomialSolver.h
 
 namespace Eigen { 
 

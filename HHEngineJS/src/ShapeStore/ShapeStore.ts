@@ -8,7 +8,7 @@ class FrameObject{
 }
 
 class Layer{
-    private shapes: Array<BaseShape>
+    private shapes: Array<BaseShape> = new Array
     public addShape(shape: BaseShape){
         this.shapes.push(shape)
     }
@@ -17,18 +17,17 @@ class Layer{
 // We might have compounded elements. So we might have more than one store in the scene.
 // Every shape store might contain multiple tracks/layers.
 class ShapeStore{
-    trackLayerMap: Map<uuidv4, Layer> = new Map()
+    trackLayerMap: Map<uuidv4, Layer>
     currentLayer: Layer
 
     constructor() {
-        let emitter = TimelineEventFactory.getInstance().getEventEmitter()
-        emitter.on(TimelineEventNames.NEWTRACKADDED, this.onNewTrackAdded.bind(this))
+        this.trackLayerMap = new Map();
     }
 
-    onNewTrackAdded(track: TimelineTrack){
-        let newLayer = new Layer()
-        this.trackLayerMap.set(track.getId(), newLayer)
-        this.currentLayer = newLayer
+    createLayer(trackId: uuidv4){
+        let layer = new Layer();
+        this.currentLayer = layer;
+        this.trackLayerMap.set(trackId, layer)
     }
 
     getCurrentLayer(){
@@ -44,7 +43,7 @@ class ShapeStoreManager{
         return this._instance
     }
 
-    shapeStoreMap:Map<uuidv4, ShapeStore>
+    shapeStoreMap:Map<uuidv4, ShapeStore> = new Map()
     currentStore: ShapeStore
 
     createStore(id:uuidv4){

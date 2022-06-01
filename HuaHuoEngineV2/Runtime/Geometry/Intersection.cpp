@@ -6,7 +6,6 @@
 #include "Capsule.h"
 #include "Logging/LogAssert.h"
 #include "TriTriIntersect.h"
-#include "Camera/CullingParameters.h"
 #include "Math/Simd/vec-math.h"
 #include "Math/Vector2f.h"
 #include "Utilities/Utility.h"

@@ -298,7 +298,7 @@ struct kissfft_impl
     }
 
   // real-to-complex forward FFT
-  // perform two FFTs of src even and src odd
+  // perform two FFTs of Runtime even and Runtime odd
   // then twiddle to recombine them into the half-spectrum format
   // then fill in the conjugate symmetric half
   inline

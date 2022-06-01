@@ -2,7 +2,8 @@ import {CustomElement, Logger} from "hhcommoncomponents"
 import {EngineJS} from "hhenginejs"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
-import {EngineAPI} from "../EngineAPI";
+import {HHTimeline, TimelineEventNames, TimelineTrack} from "hhtimeline"
+import {ShapeStoreManager} from "hhenginejs"
 
 @CustomElement({
     selector: "hh-sceneview"
@@ -42,6 +43,17 @@ class SceneView extends HTMLElement{
         this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this))
 
         EngineJS.prototype.getInstance().init(this.canvas)
+
+
+        let timeline:HHTimeline = document.querySelector("hh-timeline")
+        timeline.addEventListener(TimelineEventNames.NEWTRACKADDED, this.onNewTrackAdded.bind(this))
+
+        timeline.addNewTrack()
+    }
+
+    onNewTrackAdded(trackEvent: CustomEvent){
+        let track = trackEvent.detail.targetObj
+        ShapeStoreManager.getInstance().getStore().createLayer(track.getId())
     }
 
     onMouseDown(evt:MouseEvent){

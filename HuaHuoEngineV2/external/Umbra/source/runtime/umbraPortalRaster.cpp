@@ -292,17 +292,17 @@ void BlockRasterBuffer::dump (void)
     }
 }
 
-void BlockRasterBuffer::dump (const BlockRasterBuffer& src)
+void BlockRasterBuffer::dump (const BlockRasterBuffer& Runtime)
 {
     int minX = m_blockRect.minX << RectBlockWidthLog2;
     int maxX = m_blockRect.maxX << RectBlockWidthLog2;
     int minY = m_blockRect.minY << RectBlockHeightLog2;
     int maxY = m_blockRect.maxY << RectBlockHeightLog2;
 
-    int srcMinX = src.m_blockRect.minX << RectBlockWidthLog2;
-    int srcMaxX = src.m_blockRect.maxX << RectBlockWidthLog2;
-    int srcMinY = src.m_blockRect.minY << RectBlockHeightLog2;
-    int srcMaxY = src.m_blockRect.maxY << RectBlockHeightLog2;
+    int srcMinX = Runtime.m_blockRect.minX << RectBlockWidthLog2;
+    int srcMaxX = Runtime.m_blockRect.maxX << RectBlockWidthLog2;
+    int srcMinY = Runtime.m_blockRect.minY << RectBlockHeightLog2;
+    int srcMaxY = Runtime.m_blockRect.maxY << RectBlockHeightLog2;
 
     for (int y = 0; y < UMBRA_PORTAL_RASTER_SIZE; y++)
     {
@@ -311,7 +311,7 @@ void BlockRasterBuffer::dump (const BlockRasterBuffer& src)
         {
             bool isInside   = (y >= minY && y < maxY && x >= minX && x < maxX);
             bool isEnabled  = isInside && testPixel(x, y);
-            bool isSrcOn    = (y >= srcMinY && y < srcMaxY && x >= srcMinX && x < srcMaxX) && src.testPixel(x, y);
+            bool isSrcOn    = (y >= srcMinY && y < srcMaxY && x >= srcMinX && x < srcMaxX) && Runtime.testPixel(x, y);
 
             char c;
             if      (isEnabled && isSrcOn)  c = 'X';
@@ -444,8 +444,8 @@ bool RasterOps::blitOr(BlockRasterBuffer& dst, const BlockRasterBuffer& src)
 }
 
 /*-------------------------------------------------------------------*//*!
- * \brief   Fills dst with src where they overlap, 0 elsewhere.
- *          Supports in-place operation where src and dst point to same
+ * \brief   Fills dst with Runtime where they overlap, 0 elsewhere.
+ *          Supports in-place operation where Runtime and dst point to same
  *          memory.
  *//*-------------------------------------------------------------------*/
 
@@ -1271,7 +1271,7 @@ private:
     }
 
     // Fully-featured rasterblock processing. Avoids SIMD register read stalls, and does early exits for
-    // completely inside and outside blocks and for 0 src mask blocks.
+    // completely inside and outside blocks and for 0 Runtime mask blocks.
     UMBRA_FORCE_INLINE UINT32 processRasterBlocks(BlockIterator& iter, const SIMDRegister& nearCornerOfs, const SIMDRegister& farCornerOfs)
     {
         UINT32 changedMask = 0;
