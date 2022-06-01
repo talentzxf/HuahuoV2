@@ -1,8 +1,14 @@
 export SCRIPT_DIR=$( dirname $(realpath -s $0) )
 
-function buildComponent(componentName){
-  cd $SCRIPT_DIR/HHCommonComponents
+buildComponent(){
+  cd $SCRIPT_DIR/$1
+  npm install
+  npm run build
 }
 
-cd $SCRIPT_DIR
-cd HHCommonComponents
+buildComponent HHCommonComponents
+buildComponent HHPanel
+buildComponent HHTimeLine
+buildComponent HHEngineJS
+buildComponent HHIDE
+

@@ -107,7 +107,7 @@ CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=
 CMAKE_GNUtoMS:BOOL=OFF
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/HuaHuoEngineV2
+CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/HuaHuoEngine
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/ld.exe
@@ -152,6 +152,21 @@ CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
 CMAKE_PROJECT_NAME:STATIC=HuaHuoEngineV2
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION:STATIC=0.01
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MAJOR:STATIC=0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MINOR:STATIC=01
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_PATCH:STATIC=
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_TWEAK:STATIC=
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/ranlib.exe
@@ -233,6 +248,9 @@ CMAKE_STRIP:FILEPATH=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/str
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Compile HuaHuoEditor
+HuaHuoEditor:BOOL=ON
+
 //Value Computed by CMake
 HuaHuoEngineV2_BINARY_DIR:STATIC=C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug
 
@@ -241,6 +259,21 @@ HuaHuoEngineV2_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 HuaHuoEngineV2_SOURCE_DIR:STATIC=C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2
+
+//Value Computed by CMake
+HuaHuoEngine_BINARY_DIR:STATIC=C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug
+
+//Value Computed by CMake
+HuaHuoEngine_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+HuaHuoEngine_SOURCE_DIR:STATIC=C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2
+
+//OpenGL library for win32
+OPENGL_gl_LIBRARY:STRING=opengl32
+
+//GLU library for win32
+OPENGL_glu_LIBRARY:STRING=glu32
 
 
 ########################
@@ -345,7 +378,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=1
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -399,4 +432,10 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 CMAKE_STRIP-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding OpenGL
+FIND_PACKAGE_MESSAGE_DETAILS_OpenGL:INTERNAL=[opengl32][c ][v()]
+//ADVANCED property for variable: OPENGL_gl_LIBRARY
+OPENGL_gl_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OPENGL_glu_LIBRARY
+OPENGL_glu_LIBRARY-ADVANCED:INTERNAL=1
 

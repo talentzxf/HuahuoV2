@@ -1,2 +1,4 @@
 import {HHTimeline} from "./HHTimeline";
-export {HHTimeline}
+import {TimelineEventFactory, TimelineEventNames} from "./HHTimelineEvents";
+
+export {HHTimeline, TimelineEventFactory, TimelineEventNames}

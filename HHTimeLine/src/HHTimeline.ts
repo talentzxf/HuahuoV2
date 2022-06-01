@@ -2,8 +2,7 @@ import {TimelineTrack, TimelineTrackEventNames, TitleTimelineTrack} from "./Time
 import {ContextMenu, CustomElement, Logger} from "hhcommoncomponents";
 import {GlobalConfig} from "./GlobalConfig";
 import {TypedEmitter} from "tiny-typed-emitter";
-import {TimelineEvent, TimelineEventFactory, TimelineEventNames} from "./HHTimelineEvents";
-import {v4 as uuidv4} from 'uuid';
+import {TimelineEventNames} from "./HHTimelineEvents";
 
 @CustomElement({
     "selector": "hh-timeline"
@@ -33,9 +32,6 @@ class HHTimeline extends HTMLElement {
 
     public elapsedTime: number = 0.0
 
-    private timelineId: uuidv4 = null
-    private emitter: TypedEmitter<TimelineEvent>
-
     connectedCallback() {
         // canvasScrollContainer wraps canvasContainer wraps cavnas.
         // Because canvas has a width limit. So the canvas can't be very big: https://www.tutorialspoint.com/Maximum-size-of-a-canvas-element-in-HTML#:~:text=All%20web%20browsers%20limit%20the,allowable%20area%20is%20268%2C435%2C456%20pixels.
@@ -60,9 +56,6 @@ class HHTimeline extends HTMLElement {
         // Add one timelinetrack
         this.timelineTracks.push(titleTimeLineTrack)
         this.totalTrackHeight = titleTimeLineTrack.getCellHeight()
-
-        this.id = new uuidv4
-        this.emitter = TimelineEventFactory.getInstance().createTimelineEvent(this.id)
 
         //
         this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this))
@@ -108,7 +101,12 @@ class HHTimeline extends HTMLElement {
 
         track.on(TimelineTrackEventNames.CELLCLICKED, this.onCellClicked.bind(this))
 
-        this.emitter.emit(TimelineEventNames.NEWTRACKADDED, track)
+        let customEvent = new CustomElement(TimelineEventNames.NEWTRACKADDED, {
+            detail: {
+                targetObj: track
+            }
+        })
+        this.dispatchEvent(customEvent)
     }
 
     onCellClicked(track, cellId) {

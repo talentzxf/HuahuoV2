@@ -28,8 +28,8 @@ module.exports = {
     plugins: [
         new CopyPlugin({
             patterns: [
-                { from:"../HuaHuoEngine/emcmake/HuaHuoEngine.wasm", to:"wasm"},
-                { from:"../HuaHuoEngine/emcmake/HuaHuoEngine.js", to:"wasm"}
+                { from:"../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to:"wasm"},
+                { from:"../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to:"wasm"}
             ]
         }),
         new HtmlWebpackPlugin({

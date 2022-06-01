@@ -12,9 +12,27 @@
 # =============================================================================
 
 #############################################
+# Rule for running custom commands.
+
+rule CUSTOM_COMMAND
+  command = $COMMAND
+  description = $DESC
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER__TestHuaHuoEngine_Debug
+  depfile = $DEP_FILE
+  deps = gcc
+  command = C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
 # Rule for compiling CXX files.
 
-rule CXX_COMPILER__HuaHuoEngineV2_Debug
+rule CXX_COMPILER__TestHuaHuoEngine_Debug
   depfile = $DEP_FILE
   deps = gcc
   command = C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -24,18 +42,29 @@ rule CXX_COMPILER__HuaHuoEngineV2_Debug
 #############################################
 # Rule for linking CXX executable.
 
-rule CXX_EXECUTABLE_LINKER__HuaHuoEngineV2_Debug
+rule CXX_EXECUTABLE_LINKER__TestHuaHuoEngine_Debug
   command = cmd.exe /C "$PRE_LINK && C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\G__~1.EXE $FLAGS $LINK_FLAGS $in -o $TARGET_FILE -Wl,--out-implib,$TARGET_IMPLIB -Wl,--major-image-version,0,--minor-image-version,0 $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
 
 
 #############################################
-# Rule for running custom commands.
+# Rule for compiling C files.
 
-rule CUSTOM_COMMAND
-  command = $COMMAND
-  description = $DESC
+rule C_COMPILER__GLEW_1130_Debug
+  depfile = $DEP_FILE
+  deps = gcc
+  command = C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER__GLEW_1130_Debug
+  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\JetBrains\CLion 2021.3.4\bin\cmake\win\bin\cmake.exe" -E rm -f $TARGET_FILE && C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\PROGRA~1\JETBRA~1\CLION2~1.4\bin\mingw\bin\ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
 
 
 #############################################
