@@ -2,6 +2,7 @@ import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {Vector2} from "../../../HHCommonComponents/src/Math/Vector2";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {LineShape} from "hhenginejs"
+import {ShapeStoreManager, Layer} from "hhenginejs"
 
 class LineDrawer extends BaseShapeDrawer {
     name = 'Line'
@@ -39,6 +40,11 @@ class LineDrawer extends BaseShapeDrawer {
 
         this.isDrawing = false
         EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, this)
+
+        let currentLayer = ShapeStoreManager.getInstance().getStore().getCurrentLayer()
+        currentLayer.addShape(this.tempShape)
+
+        this.tempShape = new LineShape();
     }
 }
 

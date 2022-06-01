@@ -1,5 +1,7 @@
 import * as paper from "paper"
 import {view} from "paper";
+import {ShapeStoreManager} from "./ShapeStore/ShapeStore";
+import {v4 as uuidv4} from "uuid"
 
 class EngineJS{
     private static _instance: EngineJS = null
@@ -34,6 +36,9 @@ class EngineJS{
         })
         rect.sendToBack()
         rect.fillColor = new paper.Color("white")
+
+        // Init a default store
+        ShapeStoreManager.getInstance().createStore(new uuidv4())
     }
 }
 

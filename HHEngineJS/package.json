@@ -11,9 +11,11 @@
   "license": "ISC",
   "devDependencies": {
     "hhcommoncomponents": "file:../HHCommonComponents",
+    "hhtimeline": "file:../HHTimeLine",
     "paper": "^0.12.15",
     "ts-loader": "^9.3.0",
     "typescript": "^4.7.2",
+    "uuid": "^8.3.2",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2"
   }
