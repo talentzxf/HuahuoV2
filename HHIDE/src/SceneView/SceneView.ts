@@ -16,10 +16,12 @@ class SceneView extends HTMLElement{
 
     currentShapeDrawer: BaseShapeDrawer = null;
 
-    connectedCallback(){
-        this.style.width = "100%"
-        this.style.height = "100%"
+    gizmoContainer: HTMLDivElement = null;
+    zoomInBtn: HTMLButtonElement = null;
+    zoomOutBtn: HTMLButtonElement = null;
 
+
+    createCanvasContainer(){
         this.canvasContainer = document.createElement("div")
         // this.canvasContainer.style.width = "100%"
         // this.canvasContainer.style.height = "100%"
@@ -30,7 +32,9 @@ class SceneView extends HTMLElement{
         this.canvasContainer.style.overflowY = "auto"
 
         this.appendChild(this.canvasContainer)
+    }
 
+    createCanvas(){
         this.canvas = document.createElement("canvas")
         this.canvas.setAttribute("resize", "true")
         this.canvas.style.padding = "0"
@@ -38,9 +42,9 @@ class SceneView extends HTMLElement{
         this.canvasContainer.appendChild(this.canvas)
 
         this.ctx = this.canvas.getContext("2d")
+    }
 
-        EngineJS.prototype.getInstance().init(this.canvas)
-
+    setupEventsAndCreateFirstTrack(){
         window.addEventListener("resize", this.OnResize.bind(this))
 
         let resizeObserver = new ResizeObserver( this.OnResize.bind(this) )
@@ -57,6 +61,41 @@ class SceneView extends HTMLElement{
         timeline.addEventListener(TimelineEventNames.NEWTRACKADDED, this.onNewTrackAdded.bind(this))
 
         timeline.addNewTrack()
+    }
+
+    createGizmos(){
+        this.gizmoContainer = document.createElement("div")
+        this.gizmoContainer.style.position = "absolute"
+        this.gizmoContainer.style.display = "flex"
+        this.gizmoContainer.style.flexDirection = "column"
+        this.appendChild(this.gizmoContainer)
+
+        this.zoomInBtn = document.createElement("button")
+        this.zoomInBtn.innerHTML = "ZoomIn"
+        this.zoomInBtn.onclick = ()=>{EngineJS.prototype.getInstance().zoomIn()}
+        this.gizmoContainer.appendChild(this.zoomInBtn)
+
+        this.zoomOutBtn = document.createElement("button")
+        this.zoomOutBtn.innerHTML = "ZoomOut"
+        this.zoomOutBtn.onclick = ()=>{EngineJS.prototype.getInstance().zoomOut()}
+        this.gizmoContainer.appendChild(this.zoomOutBtn)
+
+        this.zoomOutBtn = document.createElement("button")
+        this.zoomOutBtn.innerHTML = "Reset"
+        this.zoomOutBtn.onclick = ()=>{EngineJS.prototype.getInstance().zoomReset()}
+        this.gizmoContainer.appendChild(this.zoomOutBtn)
+    }
+
+    connectedCallback(){
+        this.style.width = "100%"
+        this.style.height = "100%"
+
+        this.createCanvasContainer()
+        this.createCanvas()
+        EngineJS.prototype.getInstance().init(this.canvas)
+
+        this.createGizmos();
+        this.setupEventsAndCreateFirstTrack()
     }
 
     onNewTrackAdded(trackEvent: CustomEvent){
