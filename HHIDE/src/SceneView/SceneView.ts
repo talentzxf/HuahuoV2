@@ -10,7 +10,6 @@ import { ResizeObserver } from 'resize-observer';
     selector: "hh-sceneview"
 })
 class SceneView extends HTMLElement{
-    aspectRatio:number = 4/3  //  W:H = 4:3
     canvasContainer: HTMLDivElement
     canvas: HTMLCanvasElement
     ctx: CanvasRenderingContext2D = null;
@@ -33,13 +32,15 @@ class SceneView extends HTMLElement{
         this.appendChild(this.canvasContainer)
 
         this.canvas = document.createElement("canvas")
+        this.canvas.setAttribute("resize", "true")
         this.canvas.style.padding = "0"
         this.canvas.style.margin = "0"
         this.canvasContainer.appendChild(this.canvas)
 
         this.ctx = this.canvas.getContext("2d")
 
-        this.OnResize()
+        EngineJS.prototype.getInstance().init(this.canvas)
+
         window.addEventListener("resize", this.OnResize.bind(this))
 
         let resizeObserver = new ResizeObserver( this.OnResize.bind(this) )
@@ -51,8 +52,6 @@ class SceneView extends HTMLElement{
         this.canvas.addEventListener("mousedown", this.onMouseDown.bind(this))
         this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this))
         this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this))
-
-        EngineJS.prototype.getInstance().init(this.canvas)
 
         let timeline:HHTimeline = document.querySelector("hh-timeline")
         timeline.addEventListener(TimelineEventNames.NEWTRACKADDED, this.onNewTrackAdded.bind(this))
@@ -121,6 +120,8 @@ class SceneView extends HTMLElement{
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
         this.ctx.fillStyle = "white"
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+
+        EngineJS.prototype.getInstance().clearBackground()
     }
 
 }
