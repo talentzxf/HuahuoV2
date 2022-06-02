@@ -197,6 +197,11 @@ class HHPanel extends HTMLElement {
         this._tabs = this.querySelector('.title_tabs');
         this._contents = this.querySelector('.panel_contents')
 
+        if(this.getAttribute("content-style")){
+            let style = this.getAttribute("content-style")
+            this._contents.style.cssText = style
+        }
+
         let _this = this
 
         let tabIndex = 0

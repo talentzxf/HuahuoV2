@@ -4,6 +4,7 @@ import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {HHTimeline, TimelineEventNames, TimelineTrack} from "hhtimeline"
 import {ShapeStoreManager} from "hhenginejs"
+import { ResizeObserver } from 'resize-observer';
 
 @CustomElement({
     selector: "hh-sceneview"
@@ -21,19 +22,28 @@ class SceneView extends HTMLElement{
         this.style.height = "100%"
 
         this.canvasContainer = document.createElement("div")
-        this.canvasContainer.style.width = "100%"
-        this.canvasContainer.style.height = "100%"
+        // this.canvasContainer.style.width = "100%"
+        // this.canvasContainer.style.height = "100%"
+        this.canvasContainer.style.padding = "0"
+        this.canvasContainer.style.margin = "0"
         this.canvasContainer.style.backgroundColor = "gray"
+        this.canvasContainer.style.flexBasis = "100%"
+        this.canvasContainer.style.overflowY = "auto"
 
         this.appendChild(this.canvasContainer)
 
         this.canvas = document.createElement("canvas")
+        this.canvas.style.padding = "0"
+        this.canvas.style.margin = "0"
         this.canvasContainer.appendChild(this.canvas)
 
         this.ctx = this.canvas.getContext("2d")
 
         this.OnResize()
         window.addEventListener("resize", this.OnResize.bind(this))
+
+        let resizeObserver = new ResizeObserver( this.OnResize.bind(this) )
+        resizeObserver.observe(this.canvasContainer)
 
         EventBus.getInstance().on(EventNames.DRAWSHAPEBEGINS, this.beginToDrawShape.bind(this))
         EventBus.getInstance().on(EventNames.DRAWSHAPEENDS, this.endOfDrawingShape.bind(this))
@@ -43,7 +53,6 @@ class SceneView extends HTMLElement{
         this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this))
 
         EngineJS.prototype.getInstance().init(this.canvas)
-
 
         let timeline:HHTimeline = document.querySelector("hh-timeline")
         timeline.addEventListener(TimelineEventNames.NEWTRACKADDED, this.onNewTrackAdded.bind(this))
@@ -89,18 +98,22 @@ class SceneView extends HTMLElement{
         let containerHeight = this.canvasContainer.clientHeight
         Logger.debug("OnResize: ContainerWidth:" + containerWidth + ", ContainerHeight:" + containerHeight)
 
-        let canvasWidth = containerWidth
-        let canvasHeight = canvasWidth/this.aspectRatio
+        let margin = 10
+        let canvasWidth = containerWidth - margin
+        let canvasHeight = containerHeight - margin
 
-        if(canvasHeight > containerHeight){
-            canvasHeight = containerHeight
-            canvasWidth = canvasHeight * this.aspectRatio
-        }
+        // if(canvasHeight > containerHeight){
+        //     canvasHeight = containerHeight * margin
+        //     canvasWidth = canvasHeight * this.aspectRatio
+        // }
 
         this.canvas.width = canvasWidth
         this.canvas.height = canvasHeight
+        this.canvas.style.width = canvasWidth + "px"
+        this.canvas.style.height = canvasHeight + "px"
         this.canvas.style.position = "relative"
         this.canvas.style.left = (containerWidth - canvasWidth)/2 + "px"
+        this.canvas.style.top = (containerHeight - canvasHeight)/2 + "px"
         this.Redraw()
     }
 

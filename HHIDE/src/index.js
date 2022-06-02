@@ -7,7 +7,6 @@ import {NavTree} from "./UIComponents/NavTree"
 import {DrawToolBar} from "./UIComponents/DrawToolBar";
 import {SceneView} from "./SceneView/SceneView";
 
-
 import { library, dom } from "@fortawesome/fontawesome-svg-core";
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
 import {faMinus} from "@fortawesome/free-solid-svg-icons/faMinus"
