@@ -9,6 +9,7 @@
 #include "Serialize/SerializationMetaFlags.h"
 #include "Serialize/SerializeTraits.h"
 #include "Serialize/SerializationCaching/CachedReader.h"
+#include "Utilities/ContainerUtility.h"
 
 class StreamedBinaryRead : public TransferBase {
 private:
@@ -31,10 +32,31 @@ public:
     template<class T>
     void TransferSTLStyleArray(T& data, TransferMetaFlags metaFlag = kNoTransferFlags);
 
+    template<class T>
+    void TransferSTLStyleMap(T& data, TransferMetaFlags metaFlag = kNoTransferFlags);
+
     void EXPORT_COREMODULE Align();
     /// Reads byteSize bytes into data. This may onle be used if UseOptimizedReading returns true.
     void EXPORT_COREMODULE ReadDirect(void* data, int byteSize);
 };
+
+template<class T>
+void StreamedBinaryRead::TransferSTLStyleMap(T& data, TransferMetaFlags)
+{
+    SInt32 size;
+    Transfer(size, "size");
+
+    // maps value_type is: pair<const First, Second>
+    // So we have to write to maps non-const value type
+    typename NonConstContainerValueType<T>::value_type p;
+
+    ContainerClear(data);
+    for (int i = 0; i < size; i++)
+    {
+        Transfer(p, "data");
+        data.insert(std::move(p));
+    }
+}
 
 
 template<class T>

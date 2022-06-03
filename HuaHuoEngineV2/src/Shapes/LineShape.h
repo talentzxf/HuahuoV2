@@ -16,6 +16,18 @@ public:
     {
 
     }
+
+    void SetStartPoint(float x,float y,float z){
+        p1.x = x;
+        p1.y = y;
+        p1.z = z;
+    }
+
+    void SetEndPoint(float x, float y, float z){
+        p2.x = x;
+        p2.y = y;
+        p2.z = z;
+    }
 private:
     Vector3f p1;
     Vector3f p2;

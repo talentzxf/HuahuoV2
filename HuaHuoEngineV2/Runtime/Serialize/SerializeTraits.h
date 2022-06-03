@@ -7,6 +7,8 @@
 #include "SerializeTraitsBase.h"
 #include "Containers/CommonString.h"
 #include <vector>
+#include <set>
+#include <map>
 #include "Utilities/vector_utility.h"
 
 #define DEFINE_GET_TYPESTRING_BASIC_TYPE(x)     \
@@ -180,6 +182,111 @@ public:
 
     static bool IsContinousMemoryArray()   { return true; }
     static void ResizeSTLStyleArray(value_type& data, int rs)        { resize_trimmed(data, rs); }
+};
+
+template<class T>
+struct NonConstContainerValueType
+{
+    typedef typename T::value_type value_type;
+};
+
+template<class T>
+struct NonConstContainerValueType<std::set<T> >
+{
+    typedef T value_type;
+};
+
+//template<class T, class HashFunction, class EqualFunction>
+//struct NonConstContainerValueType<core::hash_set<T, HashFunction, EqualFunction> >
+//{
+//    typedef T value_type;
+//};
+
+template<class T0, class T1, class Compare, class Allocator>
+struct NonConstContainerValueType<std::map<T0, T1, Compare, Allocator> >
+{
+    typedef std::pair<T0, T1> value_type;
+};
+
+template<class T0, class T1, class Compare, class Allocator>
+struct NonConstContainerValueType<std::multimap<T0, T1, Compare, Allocator> >
+{
+    typedef std::pair<T0, T1> value_type;
+};
+
+//template<class T0, class T1, class HashFunction, class Compare>
+//struct NonConstContainerValueType<core::hash_map<T0, T1, HashFunction, Compare> >
+//{
+//    typedef core::pair<T0, T1> value_type;
+//    static_assert(!core::is_const<T0>::value && !core::is_const<T1>::value, "NonConstContainerValueType does not work with const parameters! Are you passing const at decleration?");
+//};
+
+template<class FirstClass, class SecondClass>
+class SerializeTraits<std::pair<FirstClass, SecondClass> > : public SerializeTraitsBase<std::pair<FirstClass, SecondClass> >
+{
+public:
+
+    typedef std::pair<FirstClass, SecondClass>  value_type;
+    inline static const char* GetTypeString(void* x = NULL)    { return CommonString(pair); }
+    inline static bool MightContainPPtr()  { return SerializeTraits<FirstClass>::MightContainPPtr() || SerializeTraits<SecondClass>::MightContainPPtr(); }
+    //  inline static bool AllowTransferOptimization () { return SerializeTraits<FirstClass>::AllowTransferOptimization() || SerializeTraits<SecondClass>::AllowTransferOptimization(); }
+    inline static bool AllowTransferOptimization() { return false; }
+
+    template<class TransferFunction> inline
+    static void Transfer(value_type& data, TransferFunction& transfer)
+    {
+        transfer.Transfer(data.first, CommonString(first));
+        transfer.Transfer(data.second, CommonString(second));
+    }
+};
+
+template<class FirstClass, class SecondClass, class Compare, class Allocator>
+class SerializeTraits<std::map<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsBase<std::map<FirstClass, SecondClass, Compare, Allocator> >
+{
+public:
+
+    typedef std::map<FirstClass, SecondClass, Compare, Allocator>   value_type;
+    DEFINE_GET_TYPESTRING_MAP_CONTAINER(map)
+
+    template<class TransferFunction> inline
+    static void Transfer(value_type& data, TransferFunction& transfer)
+    {
+        Assert(!(transfer.IsRemapPPtrTransfer() && SerializeTraits<FirstClass>::MightContainPPtr() && transfer.IsReadingPPtr()));
+        transfer.TransferSTLStyleMap(data);
+    }
+};
+
+template<class FirstClass, class SecondClass, class Compare, class Allocator>
+class SerializeTraits<std::multimap<FirstClass, SecondClass, Compare, Allocator> > : public SerializeTraitsBase<std::multimap<FirstClass, SecondClass, Compare, Allocator> >
+{
+public:
+
+    typedef std::multimap<FirstClass, SecondClass, Compare, Allocator>  value_type;
+    DEFINE_GET_TYPESTRING_MAP_CONTAINER(map)
+
+    template<class TransferFunction> inline
+    static void Transfer(value_type& data, TransferFunction& transfer)
+    {
+        Assert(!(transfer.IsRemapPPtrTransfer() && SerializeTraits<FirstClass>::MightContainPPtr() && transfer.IsReadingPPtr()));
+        transfer.TransferSTLStyleMap(data);
+    }
+};
+
+
+template<class T, class Compare, class Allocator>
+class SerializeTraits<std::set<T, Compare, Allocator> > : public SerializeTraitsBase<std::set<T, Compare, Allocator> >
+{
+public:
+
+    typedef std::set<T, Compare, Allocator> value_type;
+    DEFINE_GET_TYPESTRING_CONTAINER(set)
+
+    template<class TransferFunction> inline
+    static void Transfer(value_type& data, TransferFunction& transfer)
+    {
+        Assert(!(transfer.IsRemapPPtrTransfer() && transfer.IsReadingPPtr()));
+        transfer.TransferSTLStyleMap(data);
+    }
 };
 
 #endif //HUAHUOENGINE_SERIALIZETRAITS_H

@@ -1,4 +1,16 @@
 "C:\Program Files\JetBrains\CLion 2021.3.4\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2021.3.4/bin/ninja/win/ninja.exe" -G Ninja C:\Users\vincentzhang\MyProjects\HuahuoV2\HuaHuoEngineV2
+-- The C compiler identification is GNU 11.2.0
+-- The CXX compiler identification is GNU 11.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/g++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
 CMake Warning (dev) at C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
   The package name passed to `find_package_handle_standard_args` (OpenGL)
   does not match the name of the calling package (OPENGL).  This can lead to
@@ -6,9 +18,10 @@ CMake Warning (dev) at C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win/s
   (e.g., `_FOUND`) to follow a certain pattern.
 Call Stack (most recent call first):
   C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/FindOpenGL.cmake:443 (FIND_PACKAGE_HANDLE_STANDARD_ARGS)
-  CMakeLists.txt:143 (find_package)
+  CMakeLists.txt:147 (find_package)
 This warning is for project developers.  Use -Wno-dev to suppress it.
 
+-- Found OpenGL: opengl32   
 -- print_all_variables------------------------------------------{
 -- CMAKE_ADDR2LINE=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/addr2line.exe
 -- CMAKE_AR=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/ar.exe
@@ -39,10 +52,6 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- CMAKE_C99_EXTENSION_COMPILE_OPTION=-std=gnu99
 -- CMAKE_C99_STANDARD_COMPILE_OPTION=-std=c99
 -- CMAKE_C99_STANDARD__HAS_FULL_SUPPORT=ON
--- CMAKE_CACHEFILE_DIR=c:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug
--- CMAKE_CACHE_MAJOR_VERSION=3
--- CMAKE_CACHE_MINOR_VERSION=21
--- CMAKE_CACHE_PATCH_VERSION=1
 -- CMAKE_CFG_INTDIR=.
 -- CMAKE_COMMAND=C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win/bin/cmake.exe
 -- CMAKE_COMPILER_IS_GNUCC=1
@@ -90,15 +99,357 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- CMAKE_CXX_COMPILER_ABI=
 -- CMAKE_CXX_COMPILER_AR=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/gcc-ar.exe
 -- CMAKE_CXX_COMPILER_AR=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/gcc-ar.exe
+-- CMAKE_CXX_COMPILER_ARCHITECTURE_ID=
 -- CMAKE_CXX_COMPILER_ARG1=
 -- CMAKE_CXX_COMPILER_ENV_VAR=CXX
+-- CMAKE_CXX_COMPILER_EXCLUDE=CC;aCC;xlC
 -- CMAKE_CXX_COMPILER_FRONTEND_VARIANT=
 -- CMAKE_CXX_COMPILER_ID=GNU
+-- CMAKE_CXX_COMPILER_ID_PLATFORM_CONTENT=#define STRINGIFY_HELPER(X) #X
+#define STRINGIFY(X) STRINGIFY_HELPER(X)
+
+/* Identify known platforms by name.  */
+#if defined(__linux) || defined(__linux__) || defined(linux)
+# define PLATFORM_ID "Linux"
+
+#elif defined(__MSYS__)
+# define PLATFORM_ID "MSYS"
+
+#elif defined(__CYGWIN__)
+# define PLATFORM_ID "Cygwin"
+
+#elif defined(__MINGW32__)
+# define PLATFORM_ID "MinGW"
+
+#elif defined(__APPLE__)
+# define PLATFORM_ID "Darwin"
+
+#elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+# define PLATFORM_ID "Windows"
+
+#elif defined(__FreeBSD__) || defined(__FreeBSD)
+# define PLATFORM_ID "FreeBSD"
+
+#elif defined(__NetBSD__) || defined(__NetBSD)
+# define PLATFORM_ID "NetBSD"
+
+#elif defined(__OpenBSD__) || defined(__OPENBSD)
+# define PLATFORM_ID "OpenBSD"
+
+#elif defined(__sun) || defined(sun)
+# define PLATFORM_ID "SunOS"
+
+#elif defined(_AIX) || defined(__AIX) || defined(__AIX__) || defined(__aix) || defined(__aix__)
+# define PLATFORM_ID "AIX"
+
+#elif defined(__hpux) || defined(__hpux__)
+# define PLATFORM_ID "HP-UX"
+
+#elif defined(__HAIKU__)
+# define PLATFORM_ID "Haiku"
+
+#elif defined(__BeOS) || defined(__BEOS__) || defined(_BEOS)
+# define PLATFORM_ID "BeOS"
+
+#elif defined(__QNX__) || defined(__QNXNTO__)
+# define PLATFORM_ID "QNX"
+
+#elif defined(__tru64) || defined(_tru64) || defined(__TRU64__)
+# define PLATFORM_ID "Tru64"
+
+#elif defined(__riscos) || defined(__riscos__)
+# define PLATFORM_ID "RISCos"
+
+#elif defined(__sinix) || defined(__sinix__) || defined(__SINIX__)
+# define PLATFORM_ID "SINIX"
+
+#elif defined(__UNIX_SV__)
+# define PLATFORM_ID "UNIX_SV"
+
+#elif defined(__bsdos__)
+# define PLATFORM_ID "BSDOS"
+
+#elif defined(_MPRAS) || defined(MPRAS)
+# define PLATFORM_ID "MP-RAS"
+
+#elif defined(__osf) || defined(__osf__)
+# define PLATFORM_ID "OSF1"
+
+#elif defined(_SCO_SV) || defined(SCO_SV) || defined(sco_sv)
+# define PLATFORM_ID "SCO_SV"
+
+#elif defined(__ultrix) || defined(__ultrix__) || defined(_ULTRIX)
+# define PLATFORM_ID "ULTRIX"
+
+#elif defined(__XENIX__) || defined(_XENIX) || defined(XENIX)
+# define PLATFORM_ID "Xenix"
+
+#elif defined(__WATCOMC__)
+# if defined(__LINUX__)
+#  define PLATFORM_ID "Linux"
+
+# elif defined(__DOS__)
+#  define PLATFORM_ID "DOS"
+
+# elif defined(__OS2__)
+#  define PLATFORM_ID "OS2"
+
+# elif defined(__WINDOWS__)
+#  define PLATFORM_ID "Windows3x"
+
+# elif defined(__VXWORKS__)
+#  define PLATFORM_ID "VxWorks"
+
+# else /* unknown platform */
+#  define PLATFORM_ID
+# endif
+
+#elif defined(__INTEGRITY)
+# if defined(INT_178B)
+#  define PLATFORM_ID "Integrity178"
+
+# else /* regular Integrity */
+#  define PLATFORM_ID "Integrity"
+# endif
+
+#else /* unknown platform */
+# define PLATFORM_ID
+
+#endif
+
+/* For windows compilers MSVC and Intel we can determine
+   the architecture of the compiler being used.  This is because
+   the compilers do not have flags that can change the architecture,
+   but rather depend on which compiler is being used
+*/
+#if defined(_WIN32) && defined(_MSC_VER)
+# if defined(_M_IA64)
+#  define ARCHITECTURE_ID "IA64"
+
+# elif defined(_M_ARM64EC)
+#  define ARCHITECTURE_ID "ARM64EC"
+
+# elif defined(_M_X64) || defined(_M_AMD64)
+#  define ARCHITECTURE_ID "x64"
+
+# elif defined(_M_IX86)
+#  define ARCHITECTURE_ID "X86"
+
+# elif defined(_M_ARM64)
+#  define ARCHITECTURE_ID "ARM64"
+
+# elif defined(_M_ARM)
+#  if _M_ARM == 4
+#   define ARCHITECTURE_ID "ARMV4I"
+#  elif _M_ARM == 5
+#   define ARCHITECTURE_ID "ARMV5I"
+#  else
+#   define ARCHITECTURE_ID "ARMV" STRINGIFY(_M_ARM)
+#  endif
+
+# elif defined(_M_MIPS)
+#  define ARCHITECTURE_ID "MIPS"
+
+# elif defined(_M_SH)
+#  define ARCHITECTURE_ID "SHx"
+
+# else /* unknown architecture */
+#  define ARCHITECTURE_ID ""
+# endif
+
+#elif defined(__WATCOMC__)
+# if defined(_M_I86)
+#  define ARCHITECTURE_ID "I86"
+
+# elif defined(_M_IX86)
+#  define ARCHITECTURE_ID "X86"
+
+# else /* unknown architecture */
+#  define ARCHITECTURE_ID ""
+# endif
+
+#elif defined(__IAR_SYSTEMS_ICC__) || defined(__IAR_SYSTEMS_ICC)
+# if defined(__ICCARM__)
+#  define ARCHITECTURE_ID "ARM"
+
+# elif defined(__ICCRX__)
+#  define ARCHITECTURE_ID "RX"
+
+# elif defined(__ICCRH850__)
+#  define ARCHITECTURE_ID "RH850"
+
+# elif defined(__ICCRL78__)
+#  define ARCHITECTURE_ID "RL78"
+
+# elif defined(__ICCRISCV__)
+#  define ARCHITECTURE_ID "RISCV"
+
+# elif defined(__ICCAVR__)
+#  define ARCHITECTURE_ID "AVR"
+
+# elif defined(__ICC430__)
+#  define ARCHITECTURE_ID "MSP430"
+
+# elif defined(__ICCV850__)
+#  define ARCHITECTURE_ID "V850"
+
+# elif defined(__ICC8051__)
+#  define ARCHITECTURE_ID "8051"
+
+# elif defined(__ICCSTM8__)
+#  define ARCHITECTURE_ID "STM8"
+
+# else /* unknown architecture */
+#  define ARCHITECTURE_ID ""
+# endif
+
+#elif defined(__ghs__)
+# if defined(__PPC64__)
+#  define ARCHITECTURE_ID "PPC64"
+
+# elif defined(__ppc__)
+#  define ARCHITECTURE_ID "PPC"
+
+# elif defined(__ARM__)
+#  define ARCHITECTURE_ID "ARM"
+
+# elif defined(__x86_64__)
+#  define ARCHITECTURE_ID "x64"
+
+# elif defined(__i386__)
+#  define ARCHITECTURE_ID "X86"
+
+# else /* unknown architecture */
+#  define ARCHITECTURE_ID ""
+# endif
+
+#elif defined(__TI_COMPILER_VERSION__)
+# if defined(__TI_ARM__)
+#  define ARCHITECTURE_ID "ARM"
+
+# elif defined(__MSP430__)
+#  define ARCHITECTURE_ID "MSP430"
+
+# elif defined(__TMS320C28XX__)
+#  define ARCHITECTURE_ID "TMS320C28x"
+
+# elif defined(__TMS320C6X__) || defined(_TMS320C6X)
+#  define ARCHITECTURE_ID "TMS320C6x"
+
+# else /* unknown architecture */
+#  define ARCHITECTURE_ID ""
+# endif
+
+#else
+#  define ARCHITECTURE_ID
+#endif
+
+/* Convert integer to decimal digit literals.  */
+#define DEC(n)                   \
+  ('0' + (((n) / 10000000)%10)), \
+  ('0' + (((n) / 1000000)%10)),  \
+  ('0' + (((n) / 100000)%10)),   \
+  ('0' + (((n) / 10000)%10)),    \
+  ('0' + (((n) / 1000)%10)),     \
+  ('0' + (((n) / 100)%10)),      \
+  ('0' + (((n) / 10)%10)),       \
+  ('0' +  ((n) % 10))
+
+/* Convert integer to hex digit literals.  */
+#define HEX(n)             \
+  ('0' + ((n)>>28 & 0xF)), \
+  ('0' + ((n)>>24 & 0xF)), \
+  ('0' + ((n)>>20 & 0xF)), \
+  ('0' + ((n)>>16 & 0xF)), \
+  ('0' + ((n)>>12 & 0xF)), \
+  ('0' + ((n)>>8  & 0xF)), \
+  ('0' + ((n)>>4  & 0xF)), \
+  ('0' + ((n)     & 0xF))
+
+/* Construct a string literal encoding the version number. */
+#ifdef COMPILER_VERSION
+char const* info_version = "INFO" ":" "compiler_version[" COMPILER_VERSION "]";
+
+/* Construct a string literal encoding the version number components. */
+#elif defined(COMPILER_VERSION_MAJOR)
+char const info_version[] = {
+  'I', 'N', 'F', 'O', ':',
+  'c','o','m','p','i','l','e','r','_','v','e','r','s','i','o','n','[',
+  COMPILER_VERSION_MAJOR,
+# ifdef COMPILER_VERSION_MINOR
+  '.', COMPILER_VERSION_MINOR,
+#  ifdef COMPILER_VERSION_PATCH
+   '.', COMPILER_VERSION_PATCH,
+#   ifdef COMPILER_VERSION_TWEAK
+    '.', COMPILER_VERSION_TWEAK,
+#   endif
+#  endif
+# endif
+  ']','\0'};
+#endif
+
+/* Construct a string literal encoding the internal version number. */
+#ifdef COMPILER_VERSION_INTERNAL
+char const info_version_internal[] = {
+  'I', 'N', 'F', 'O', ':',
+  'c','o','m','p','i','l','e','r','_','v','e','r','s','i','o','n','_',
+  'i','n','t','e','r','n','a','l','[',
+  COMPILER_VERSION_INTERNAL,']','\0'};
+#elif defined(COMPILER_VERSION_INTERNAL_STR)
+char const* info_version_internal = "INFO" ":" "compiler_version_internal[" COMPILER_VERSION_INTERNAL_STR "]";
+#endif
+
+/* Construct a string literal encoding the version number components. */
+#ifdef SIMULATE_VERSION_MAJOR
+char const info_simulate_version[] = {
+  'I', 'N', 'F', 'O', ':',
+  's','i','m','u','l','a','t','e','_','v','e','r','s','i','o','n','[',
+  SIMULATE_VERSION_MAJOR,
+# ifdef SIMULATE_VERSION_MINOR
+  '.', SIMULATE_VERSION_MINOR,
+#  ifdef SIMULATE_VERSION_PATCH
+   '.', SIMULATE_VERSION_PATCH,
+#   ifdef SIMULATE_VERSION_TWEAK
+    '.', SIMULATE_VERSION_TWEAK,
+#   endif
+#  endif
+# endif
+  ']','\0'};
+#endif
+
+/* Construct the string literal in pieces to prevent the source from
+   getting matched.  Store it in a pointer rather than an array
+   because some compilers will just produce instructions to fill the
+   array rather than assigning a pointer to a static array.  */
+char const* info_platform = "INFO" ":" "platform[" PLATFORM_ID "]";
+char const* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";
+
 -- CMAKE_CXX_COMPILER_ID_RUN=1
+-- CMAKE_CXX_COMPILER_ID_TEST_FLAGS=-c;--c++;--ec++;--target=arm-arm-none-eabi -mcpu=cortex-m3;-c -I__does_not_exist__
+-- CMAKE_CXX_COMPILER_ID_TOOL_MATCH_INDEX=2
+-- CMAKE_CXX_COMPILER_ID_TOOL_MATCH_REGEX=
+Ld[^
+]*(
+[ 	]+[^
+]*)*
+[ 	]+([^ 	
+]+)[^
+]*-o[^
+]*CompilerIdCXX/(\./)?(CompilerIdCXX.(framework|xctest|build/[^ 	
+]+)/)?CompilerIdCXX[ 	
+\"]
+-- CMAKE_CXX_COMPILER_ID_VENDORS=IAR
+-- CMAKE_CXX_COMPILER_ID_VENDOR_REGEX_IAR=IAR .+ Compiler
+-- CMAKE_CXX_COMPILER_INIT=NOTFOUND
+-- CMAKE_CXX_COMPILER_LIST=c++;g++;cl;bcc;icpx;icx;clang++
 -- CMAKE_CXX_COMPILER_LOADED=1
+-- CMAKE_CXX_COMPILER_NAMES=c++
 -- CMAKE_CXX_COMPILER_PREDEFINES_COMMAND=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/g++.exe;-dM;-E;-c;C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXCompilerABI.cpp
+-- CMAKE_CXX_COMPILER_PRODUCED_FILES=a.exe
+-- CMAKE_CXX_COMPILER_PRODUCED_OUTPUT=
 -- CMAKE_CXX_COMPILER_RANLIB=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/gcc-ranlib.exe
 -- CMAKE_CXX_COMPILER_RANLIB=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/gcc-ranlib.exe
+-- CMAKE_CXX_COMPILER_SYSROOT=
 -- CMAKE_CXX_COMPILER_VERSION=11.2.0
 -- CMAKE_CXX_COMPILER_VERSION_INTERNAL=
 -- CMAKE_CXX_COMPILER_WORKS=TRUE
@@ -156,6 +507,7 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- CMAKE_CXX_USE_RESPONSE_FILE_FOR_LIBRARIES=1
 -- CMAKE_CXX_USE_RESPONSE_FILE_FOR_OBJECTS=1
 -- CMAKE_CXX_VERBOSE_FLAG=-v
+-- CMAKE_CXX_XCODE_ARCHS=
 -- CMAKE_C_ABI_COMPILED=TRUE
 -- CMAKE_C_ARCHIVE_APPEND=<CMAKE_AR> q <TARGET> <LINK_FLAGS> <OBJECTS>
 -- CMAKE_C_ARCHIVE_APPEND_IPO="C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/gcc-ar.exe" r <TARGET> <LINK_FLAGS> <OBJECTS>
@@ -170,15 +522,356 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- CMAKE_C_COMPILER_ABI=
 -- CMAKE_C_COMPILER_AR=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/gcc-ar.exe
 -- CMAKE_C_COMPILER_AR=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/gcc-ar.exe
+-- CMAKE_C_COMPILER_ARCHITECTURE_ID=
 -- CMAKE_C_COMPILER_ARG1=
 -- CMAKE_C_COMPILER_ENV_VAR=CC
 -- CMAKE_C_COMPILER_FRONTEND_VARIANT=
 -- CMAKE_C_COMPILER_ID=GNU
+-- CMAKE_C_COMPILER_ID_PLATFORM_CONTENT=#define STRINGIFY_HELPER(X) #X
+#define STRINGIFY(X) STRINGIFY_HELPER(X)
+
+/* Identify known platforms by name.  */
+#if defined(__linux) || defined(__linux__) || defined(linux)
+# define PLATFORM_ID "Linux"
+
+#elif defined(__MSYS__)
+# define PLATFORM_ID "MSYS"
+
+#elif defined(__CYGWIN__)
+# define PLATFORM_ID "Cygwin"
+
+#elif defined(__MINGW32__)
+# define PLATFORM_ID "MinGW"
+
+#elif defined(__APPLE__)
+# define PLATFORM_ID "Darwin"
+
+#elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+# define PLATFORM_ID "Windows"
+
+#elif defined(__FreeBSD__) || defined(__FreeBSD)
+# define PLATFORM_ID "FreeBSD"
+
+#elif defined(__NetBSD__) || defined(__NetBSD)
+# define PLATFORM_ID "NetBSD"
+
+#elif defined(__OpenBSD__) || defined(__OPENBSD)
+# define PLATFORM_ID "OpenBSD"
+
+#elif defined(__sun) || defined(sun)
+# define PLATFORM_ID "SunOS"
+
+#elif defined(_AIX) || defined(__AIX) || defined(__AIX__) || defined(__aix) || defined(__aix__)
+# define PLATFORM_ID "AIX"
+
+#elif defined(__hpux) || defined(__hpux__)
+# define PLATFORM_ID "HP-UX"
+
+#elif defined(__HAIKU__)
+# define PLATFORM_ID "Haiku"
+
+#elif defined(__BeOS) || defined(__BEOS__) || defined(_BEOS)
+# define PLATFORM_ID "BeOS"
+
+#elif defined(__QNX__) || defined(__QNXNTO__)
+# define PLATFORM_ID "QNX"
+
+#elif defined(__tru64) || defined(_tru64) || defined(__TRU64__)
+# define PLATFORM_ID "Tru64"
+
+#elif defined(__riscos) || defined(__riscos__)
+# define PLATFORM_ID "RISCos"
+
+#elif defined(__sinix) || defined(__sinix__) || defined(__SINIX__)
+# define PLATFORM_ID "SINIX"
+
+#elif defined(__UNIX_SV__)
+# define PLATFORM_ID "UNIX_SV"
+
+#elif defined(__bsdos__)
+# define PLATFORM_ID "BSDOS"
+
+#elif defined(_MPRAS) || defined(MPRAS)
+# define PLATFORM_ID "MP-RAS"
+
+#elif defined(__osf) || defined(__osf__)
+# define PLATFORM_ID "OSF1"
+
+#elif defined(_SCO_SV) || defined(SCO_SV) || defined(sco_sv)
+# define PLATFORM_ID "SCO_SV"
+
+#elif defined(__ultrix) || defined(__ultrix__) || defined(_ULTRIX)
+# define PLATFORM_ID "ULTRIX"
+
+#elif defined(__XENIX__) || defined(_XENIX) || defined(XENIX)
+# define PLATFORM_ID "Xenix"
+
+#elif defined(__WATCOMC__)
+# if defined(__LINUX__)
+#  define PLATFORM_ID "Linux"
+
+# elif defined(__DOS__)
+#  define PLATFORM_ID "DOS"
+
+# elif defined(__OS2__)
+#  define PLATFORM_ID "OS2"
+
+# elif defined(__WINDOWS__)
+#  define PLATFORM_ID "Windows3x"
+
+# elif defined(__VXWORKS__)
+#  define PLATFORM_ID "VxWorks"
+
+# else /* unknown platform */
+#  define PLATFORM_ID
+# endif
+
+#elif defined(__INTEGRITY)
+# if defined(INT_178B)
+#  define PLATFORM_ID "Integrity178"
+
+# else /* regular Integrity */
+#  define PLATFORM_ID "Integrity"
+# endif
+
+#else /* unknown platform */
+# define PLATFORM_ID
+
+#endif
+
+/* For windows compilers MSVC and Intel we can determine
+   the architecture of the compiler being used.  This is because
+   the compilers do not have flags that can change the architecture,
+   but rather depend on which compiler is being used
+*/
+#if defined(_WIN32) && defined(_MSC_VER)
+# if defined(_M_IA64)
+#  define ARCHITECTURE_ID "IA64"
+
+# elif defined(_M_ARM64EC)
+#  define ARCHITECTURE_ID "ARM64EC"
+
+# elif defined(_M_X64) || defined(_M_AMD64)
+#  define ARCHITECTURE_ID "x64"
+
+# elif defined(_M_IX86)
+#  define ARCHITECTURE_ID "X86"
+
+# elif defined(_M_ARM64)
+#  define ARCHITECTURE_ID "ARM64"
+
+# elif defined(_M_ARM)
+#  if _M_ARM == 4
+#   define ARCHITECTURE_ID "ARMV4I"
+#  elif _M_ARM == 5
+#   define ARCHITECTURE_ID "ARMV5I"
+#  else
+#   define ARCHITECTURE_ID "ARMV" STRINGIFY(_M_ARM)
+#  endif
+
+# elif defined(_M_MIPS)
+#  define ARCHITECTURE_ID "MIPS"
+
+# elif defined(_M_SH)
+#  define ARCHITECTURE_ID "SHx"
+
+# else /* unknown architecture */
+#  define ARCHITECTURE_ID ""
+# endif
+
+#elif defined(__WATCOMC__)
+# if defined(_M_I86)
+#  define ARCHITECTURE_ID "I86"
+
+# elif defined(_M_IX86)
+#  define ARCHITECTURE_ID "X86"
+
+# else /* unknown architecture */
+#  define ARCHITECTURE_ID ""
+# endif
+
+#elif defined(__IAR_SYSTEMS_ICC__) || defined(__IAR_SYSTEMS_ICC)
+# if defined(__ICCARM__)
+#  define ARCHITECTURE_ID "ARM"
+
+# elif defined(__ICCRX__)
+#  define ARCHITECTURE_ID "RX"
+
+# elif defined(__ICCRH850__)
+#  define ARCHITECTURE_ID "RH850"
+
+# elif defined(__ICCRL78__)
+#  define ARCHITECTURE_ID "RL78"
+
+# elif defined(__ICCRISCV__)
+#  define ARCHITECTURE_ID "RISCV"
+
+# elif defined(__ICCAVR__)
+#  define ARCHITECTURE_ID "AVR"
+
+# elif defined(__ICC430__)
+#  define ARCHITECTURE_ID "MSP430"
+
+# elif defined(__ICCV850__)
+#  define ARCHITECTURE_ID "V850"
+
+# elif defined(__ICC8051__)
+#  define ARCHITECTURE_ID "8051"
+
+# elif defined(__ICCSTM8__)
+#  define ARCHITECTURE_ID "STM8"
+
+# else /* unknown architecture */
+#  define ARCHITECTURE_ID ""
+# endif
+
+#elif defined(__ghs__)
+# if defined(__PPC64__)
+#  define ARCHITECTURE_ID "PPC64"
+
+# elif defined(__ppc__)
+#  define ARCHITECTURE_ID "PPC"
+
+# elif defined(__ARM__)
+#  define ARCHITECTURE_ID "ARM"
+
+# elif defined(__x86_64__)
+#  define ARCHITECTURE_ID "x64"
+
+# elif defined(__i386__)
+#  define ARCHITECTURE_ID "X86"
+
+# else /* unknown architecture */
+#  define ARCHITECTURE_ID ""
+# endif
+
+#elif defined(__TI_COMPILER_VERSION__)
+# if defined(__TI_ARM__)
+#  define ARCHITECTURE_ID "ARM"
+
+# elif defined(__MSP430__)
+#  define ARCHITECTURE_ID "MSP430"
+
+# elif defined(__TMS320C28XX__)
+#  define ARCHITECTURE_ID "TMS320C28x"
+
+# elif defined(__TMS320C6X__) || defined(_TMS320C6X)
+#  define ARCHITECTURE_ID "TMS320C6x"
+
+# else /* unknown architecture */
+#  define ARCHITECTURE_ID ""
+# endif
+
+#else
+#  define ARCHITECTURE_ID
+#endif
+
+/* Convert integer to decimal digit literals.  */
+#define DEC(n)                   \
+  ('0' + (((n) / 10000000)%10)), \
+  ('0' + (((n) / 1000000)%10)),  \
+  ('0' + (((n) / 100000)%10)),   \
+  ('0' + (((n) / 10000)%10)),    \
+  ('0' + (((n) / 1000)%10)),     \
+  ('0' + (((n) / 100)%10)),      \
+  ('0' + (((n) / 10)%10)),       \
+  ('0' +  ((n) % 10))
+
+/* Convert integer to hex digit literals.  */
+#define HEX(n)             \
+  ('0' + ((n)>>28 & 0xF)), \
+  ('0' + ((n)>>24 & 0xF)), \
+  ('0' + ((n)>>20 & 0xF)), \
+  ('0' + ((n)>>16 & 0xF)), \
+  ('0' + ((n)>>12 & 0xF)), \
+  ('0' + ((n)>>8  & 0xF)), \
+  ('0' + ((n)>>4  & 0xF)), \
+  ('0' + ((n)     & 0xF))
+
+/* Construct a string literal encoding the version number. */
+#ifdef COMPILER_VERSION
+char const* info_version = "INFO" ":" "compiler_version[" COMPILER_VERSION "]";
+
+/* Construct a string literal encoding the version number components. */
+#elif defined(COMPILER_VERSION_MAJOR)
+char const info_version[] = {
+  'I', 'N', 'F', 'O', ':',
+  'c','o','m','p','i','l','e','r','_','v','e','r','s','i','o','n','[',
+  COMPILER_VERSION_MAJOR,
+# ifdef COMPILER_VERSION_MINOR
+  '.', COMPILER_VERSION_MINOR,
+#  ifdef COMPILER_VERSION_PATCH
+   '.', COMPILER_VERSION_PATCH,
+#   ifdef COMPILER_VERSION_TWEAK
+    '.', COMPILER_VERSION_TWEAK,
+#   endif
+#  endif
+# endif
+  ']','\0'};
+#endif
+
+/* Construct a string literal encoding the internal version number. */
+#ifdef COMPILER_VERSION_INTERNAL
+char const info_version_internal[] = {
+  'I', 'N', 'F', 'O', ':',
+  'c','o','m','p','i','l','e','r','_','v','e','r','s','i','o','n','_',
+  'i','n','t','e','r','n','a','l','[',
+  COMPILER_VERSION_INTERNAL,']','\0'};
+#elif defined(COMPILER_VERSION_INTERNAL_STR)
+char const* info_version_internal = "INFO" ":" "compiler_version_internal[" COMPILER_VERSION_INTERNAL_STR "]";
+#endif
+
+/* Construct a string literal encoding the version number components. */
+#ifdef SIMULATE_VERSION_MAJOR
+char const info_simulate_version[] = {
+  'I', 'N', 'F', 'O', ':',
+  's','i','m','u','l','a','t','e','_','v','e','r','s','i','o','n','[',
+  SIMULATE_VERSION_MAJOR,
+# ifdef SIMULATE_VERSION_MINOR
+  '.', SIMULATE_VERSION_MINOR,
+#  ifdef SIMULATE_VERSION_PATCH
+   '.', SIMULATE_VERSION_PATCH,
+#   ifdef SIMULATE_VERSION_TWEAK
+    '.', SIMULATE_VERSION_TWEAK,
+#   endif
+#  endif
+# endif
+  ']','\0'};
+#endif
+
+/* Construct the string literal in pieces to prevent the source from
+   getting matched.  Store it in a pointer rather than an array
+   because some compilers will just produce instructions to fill the
+   array rather than assigning a pointer to a static array.  */
+char const* info_platform = "INFO" ":" "platform[" PLATFORM_ID "]";
+char const* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";
+
 -- CMAKE_C_COMPILER_ID_RUN=1
+-- CMAKE_C_COMPILER_ID_TEST_FLAGS=-c;-Aa;-D__CLASSIC_C__;--target=arm-arm-none-eabi -mcpu=cortex-m3;-c -I__does_not_exist__
+-- CMAKE_C_COMPILER_ID_TOOL_MATCH_INDEX=2
+-- CMAKE_C_COMPILER_ID_TOOL_MATCH_REGEX=
+Ld[^
+]*(
+[ 	]+[^
+]*)*
+[ 	]+([^ 	
+]+)[^
+]*-o[^
+]*CompilerIdC/(\./)?(CompilerIdC.(framework|xctest|build/[^ 	
+]+)/)?CompilerIdC[ 	
+\"]
+-- CMAKE_C_COMPILER_ID_VENDORS=IAR
+-- CMAKE_C_COMPILER_ID_VENDOR_REGEX_IAR=IAR .+ Compiler
+-- CMAKE_C_COMPILER_INIT=NOTFOUND
+-- CMAKE_C_COMPILER_LIST=cc;gcc;cl;bcc;xlc;icx;clang
 -- CMAKE_C_COMPILER_LOADED=1
+-- CMAKE_C_COMPILER_NAMES=cc
 -- CMAKE_C_COMPILER_PREDEFINES_COMMAND=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/gcc.exe;-dM;-E;-c;C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXCompilerABI.cpp
+-- CMAKE_C_COMPILER_PRODUCED_FILES=a.exe
+-- CMAKE_C_COMPILER_PRODUCED_OUTPUT=
 -- CMAKE_C_COMPILER_RANLIB=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/gcc-ranlib.exe
 -- CMAKE_C_COMPILER_RANLIB=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/gcc-ranlib.exe
+-- CMAKE_C_COMPILER_SYSROOT=
 -- CMAKE_C_COMPILER_VERSION=11.2.0
 -- CMAKE_C_COMPILER_VERSION_INTERNAL=
 -- CMAKE_C_COMPILER_WORKS=TRUE
@@ -237,6 +930,7 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- CMAKE_C_USE_RESPONSE_FILE_FOR_LIBRARIES=1
 -- CMAKE_C_USE_RESPONSE_FILE_FOR_OBJECTS=1
 -- CMAKE_C_VERBOSE_FLAG=-v
+-- CMAKE_C_XCODE_ARCHS=
 -- CMAKE_DEPFILE_FLAGS_C=-MD -MT <DEP_TARGET> -MF <DEP_FILE>
 -- CMAKE_DEPFILE_FLAGS_CXX=-MD -MT <DEP_TARGET> -MF <DEP_FILE>
 -- CMAKE_DLLTOOL=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/dlltool.exe
@@ -280,7 +974,8 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- CMAKE_INCLUDE_SYSTEM_FLAG_C=-isystem 
 -- CMAKE_INCLUDE_SYSTEM_FLAG_CXX=-isystem 
 -- CMAKE_INSTALL_DEFAULT_COMPONENT_NAME=Unspecified
--- CMAKE_INSTALL_PREFIX=C:/Program Files (x86)/HuaHuoEngine
+-- CMAKE_INSTALL_PREFIX=C:/Program Files (x86)/HuaHuoEngineV2
+-- CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT=1
 -- CMAKE_LIBRARY_PATH_FLAG=-L
 -- CMAKE_LIBRARY_PATH_TERMINATOR=
 -- CMAKE_LINKER=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/ld.exe
@@ -291,6 +986,10 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- CMAKE_MAJOR_VERSION=3
 -- CMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2021.3.4/bin/ninja/win/ninja.exe
 -- CMAKE_MATCH_0=ON
+-- CMAKE_MATCH_1=
+-- CMAKE_MATCH_2=
+-- CMAKE_MATCH_6=
+-- CMAKE_MATCH_7=
 -- CMAKE_MATCH_COUNT=0
 -- CMAKE_MINIMUM_REQUIRED_VERSION=3.21
 -- CMAKE_MINOR_VERSION=21
@@ -302,7 +1001,6 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO=
 -- CMAKE_MT=
 -- CMAKE_NM=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/nm.exe
--- CMAKE_NUMBER_OF_MAKEFILES=2
 -- CMAKE_OBJCOPY=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/objcopy.exe
 -- CMAKE_OBJDUMP=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/objdump.exe
 -- CMAKE_PARENT_LIST_FILE=C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/CMakeLists.txt
@@ -326,6 +1024,7 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- CMAKE_RC_COMPILER_ARG1=
 -- CMAKE_RC_COMPILER_ENV_VAR=RC
 -- CMAKE_RC_COMPILER_INIT=windres
+-- CMAKE_RC_COMPILER_LIST=windres
 -- CMAKE_RC_COMPILER_LOADED=1
 -- CMAKE_RC_COMPILER_WORKS=1
 -- CMAKE_RC_COMPILE_OBJECT=<CMAKE_RC_COMPILER> -O coff <DEFINES> <INCLUDES> <FLAGS> <SOURCE> <OBJECT>
@@ -382,10 +1081,10 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- CMAKE_SYSTEM=Windows-10.0.19044
 -- CMAKE_SYSTEM_AND_RC_COMPILER_INFO_FILE=C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-windres.cmake
 -- CMAKE_SYSTEM_INFO_FILE=Platform/Windows
--- CMAKE_SYSTEM_LIBRARY_PATH=C:/Program Files (x86)/HuaHuoEngine/bin;C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win/bin;/bin
+-- CMAKE_SYSTEM_LIBRARY_PATH=C:/Program Files (x86)/HuaHuoEngineV2/bin;C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win/bin;/bin
 -- CMAKE_SYSTEM_LOADED=1
 -- CMAKE_SYSTEM_NAME=Windows
--- CMAKE_SYSTEM_PREFIX_PATH=C:/Program Files;C:/Program Files (x86);C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win;C:/Program Files (x86)/HuaHuoEngine
+-- CMAKE_SYSTEM_PREFIX_PATH=C:/Program Files;C:/Program Files (x86);C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win;C:/Program Files (x86)/HuaHuoEngineV2
 -- CMAKE_SYSTEM_PROCESSOR=AMD64
 -- CMAKE_SYSTEM_SPECIFIC_INFORMATION_LOADED=1
 -- CMAKE_SYSTEM_SPECIFIC_INITIALIZE_LOADED=1
@@ -393,7 +1092,8 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- CMAKE_TWEAK_VERSION=0
 -- CMAKE_VERBOSE_MAKEFILE=FALSE
 -- CMAKE_VERSION=3.21.1
--- CPPFILES=external/baselib/builds/Source/Baselib_Timer.cpp;Runtime/HuaHuoEngine.cpp;Runtime/Components/Transform/Transform.cpp;Runtime/Components/Transform/TransformHierarchy.cpp;Runtime/Components/Transform/TransformChangeDispatch.cpp;Runtime/TypeSystem/Object.cpp;Runtime/TypeSystem/RTTI.cpp;Runtime/TypeSystem/TypeManager.cpp;Runtime/TypeSystem/Type.cpp;Runtime/Utilities/HashFunctions/xxhash.c;Runtime/Utilities/RegisterRuntimeInitializeAndCleanup.cpp;Runtime/Utilities/Word.cpp;Runtime/Utilities/Hash128.cpp;Runtime/BaseClasses/GameObject.cpp;Runtime/BaseClasses/ClassRegistration.cpp;Runtime/BaseClasses/MessageIdentifier.cpp;Runtime/BaseClasses/MessageHandler.cpp;Runtime/BaseClasses/NamedObject.cpp;Runtime/BaseClasses/GameManager.cpp;Runtime/BaseClasses/ManagerContext.cpp;Runtime/BaseClasses/IsPlaying.cpp;Runtime/Components/BaseComponent.cpp;Runtime/Serialize/PersistentManager.cpp;Runtime/Serialize/PathNamePersistentManager.cpp;Runtime/Serialize/Remapper.cpp;Runtime/Serialize/SerializedFile.cpp;Runtime/Serialize/TransferFunctions/StreamedBinaryRead.cpp;Runtime/Serialize/TransferFunctions/StreamedBinaryWrite.cpp;Runtime/Serialize/TransferFunctions/TransferBase.cpp;Runtime/Serialize/SerializationCaching/CacheWriterBase.cpp;Runtime/Serialize/SerializationCaching/CacheReaderBase.cpp;Runtime/Serialize/SerializationCaching/CachedReader.cpp;Runtime/Serialize/SerializationCaching/CachedWriter.cpp;Runtime/Serialize/SerializationCaching/MemoryCacherReadBlocks.cpp;Runtime/Export/Scripting/GameObjectExport.cpp;Runtime/Containers/CommonString.cpp;Runtime/Containers/GrowableBuffer.cpp;Runtime/Math/Simd/vec-svd.cpp;Runtime/Math/Quaternionf.cpp;Runtime/Math/Vector3f.cpp;Runtime/Math/Vector4f.cpp;Runtime/Math/Vector2f.cpp;Runtime/Math/Matrix3x3.cpp;Runtime/Math/Matrix4x4.cpp;Runtime/Math/Matrix4x4_REF.cpp;Runtime/Math/FloatConversion.cpp;Runtime/Misc/GameObjectUtility.cpp;Runtime/Logging/LogAssert.cpp;Runtime/Memory/MemoryMacros.cpp;Runtime/Memory/BatchAllocator.cpp;Runtime/Memory/MemoryManager.cpp;Runtime/SceneManager/HuaHuoScene.cpp;Runtime/SceneManager/SceneManager.cpp;Runtime/Export/Events/ScriptEventManager.cpp;Runtime/GameCode/Behaviour.cpp;Runtime/Input/TimeManager.cpp;Runtime/Input/TargetFrameRate.cpp;Runtime/Shaders/ShaderPassContext.cpp;Runtime/Shaders/ShaderPropertySheet.cpp;Runtime/Profiler/TimeHelper.cpp;external/baselib/builds/Source/Assert.cpp;Runtime/BaseClasses/ManagerContextLoading.cpp;Runtime/Shaders/ShaderTags.cpp;Runtime/Job/Jobs.cpp;Runtime/Job/JobBatchDispatcher.cpp;Runtime/Geometry/AABB.cpp;Runtime/Geometry/BoundingUtils.cpp;Runtime/Geometry/Intersection.cpp;Runtime/Geometry/TriTriIntersect.cpp;Runtime/Job/BlockRangeJob.cpp;Runtime/Utilities/EnumTraits.cpp;Runtime/Editor/SceneView.cpp;Runtime/Editor/SceneInspector.cpp;Runtime/Editor/Utility/SceneRootTransformArray.cpp
+-- COMPILER_BASENAME=g++.exe
+-- CPPFILES=external/baselib/builds/Source/Baselib_Timer.cpp;Runtime/HuaHuoEngine.cpp;Runtime/Components/Transform/Transform.cpp;Runtime/Components/Transform/TransformHierarchy.cpp;Runtime/Components/Transform/TransformChangeDispatch.cpp;Runtime/TypeSystem/Object.cpp;Runtime/TypeSystem/RTTI.cpp;Runtime/TypeSystem/TypeManager.cpp;Runtime/TypeSystem/Type.cpp;Runtime/Utilities/HashFunctions/xxhash.c;Runtime/Utilities/RegisterRuntimeInitializeAndCleanup.cpp;Runtime/Utilities/Word.cpp;Runtime/Utilities/Hash128.cpp;Runtime/BaseClasses/GameObject.cpp;Runtime/BaseClasses/ClassRegistration.cpp;Runtime/BaseClasses/MessageIdentifier.cpp;Runtime/BaseClasses/MessageHandler.cpp;Runtime/BaseClasses/NamedObject.cpp;Runtime/BaseClasses/GameManager.cpp;Runtime/BaseClasses/ManagerContext.cpp;Runtime/BaseClasses/IsPlaying.cpp;Runtime/Components/BaseComponent.cpp;Runtime/Serialize/PersistentManager.cpp;Runtime/Serialize/PathNamePersistentManager.cpp;Runtime/Serialize/Remapper.cpp;Runtime/Serialize/SerializedFile.cpp;Runtime/Serialize/TransferFunctions/StreamedBinaryRead.cpp;Runtime/Serialize/TransferFunctions/StreamedBinaryWrite.cpp;Runtime/Serialize/TransferFunctions/TransferBase.cpp;Runtime/Serialize/SerializationCaching/CacheWriterBase.cpp;Runtime/Serialize/SerializationCaching/CacheReaderBase.cpp;Runtime/Serialize/SerializationCaching/CachedReader.cpp;Runtime/Serialize/SerializationCaching/CachedWriter.cpp;Runtime/Serialize/SerializationCaching/MemoryCacherReadBlocks.cpp;Runtime/Export/Scripting/GameObjectExport.cpp;Runtime/Containers/CommonString.cpp;Runtime/Containers/GrowableBuffer.cpp;Runtime/Math/Simd/vec-svd.cpp;Runtime/Math/Quaternionf.cpp;Runtime/Math/Vector3f.cpp;Runtime/Math/Vector4f.cpp;Runtime/Math/Vector2f.cpp;Runtime/Math/Matrix3x3.cpp;Runtime/Math/Matrix4x4.cpp;Runtime/Math/Matrix4x4_REF.cpp;Runtime/Math/FloatConversion.cpp;Runtime/Misc/GameObjectUtility.cpp;Runtime/Logging/LogAssert.cpp;Runtime/Memory/MemoryMacros.cpp;Runtime/Memory/BatchAllocator.cpp;Runtime/Memory/MemoryManager.cpp;Runtime/SceneManager/HuaHuoScene.cpp;Runtime/SceneManager/SceneManager.cpp;Runtime/Export/Events/ScriptEventManager.cpp;Runtime/GameCode/Behaviour.cpp;Runtime/Input/TimeManager.cpp;Runtime/Input/TargetFrameRate.cpp;Runtime/Shaders/ShaderPassContext.cpp;Runtime/Shaders/ShaderPropertySheet.cpp;Runtime/Profiler/TimeHelper.cpp;external/baselib/builds/Source/Assert.cpp;Runtime/BaseClasses/ManagerContextLoading.cpp;Runtime/Shaders/ShaderTags.cpp;Runtime/Job/Jobs.cpp;Runtime/Job/JobBatchDispatcher.cpp;Runtime/Geometry/AABB.cpp;Runtime/Geometry/BoundingUtils.cpp;Runtime/Geometry/Intersection.cpp;Runtime/Geometry/TriTriIntersect.cpp;Runtime/Job/BlockRangeJob.cpp;Runtime/Utilities/EnumTraits.cpp;Runtime/Editor/SceneView.cpp;src/ObjectStore.cpp;src/Shapes/BaseShape.cpp;src/Shapes/LineShape.cpp;Runtime/Editor/SceneInspector.cpp;Runtime/Editor/Utility/SceneRootTransformArray.cpp
 -- EXTRA_INCLUDE_DIR=Runtime
 -- FIND_PACKAGE_MESSAGE_DETAILS_OpenGL=[opengl32][c ][v()]
 -- HuaHuoEditor=ON
@@ -407,10 +1107,9 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- HuaHuoEngineV2_VERSION_MINOR=01
 -- HuaHuoEngineV2_VERSION_PATCH=
 -- HuaHuoEngineV2_VERSION_TWEAK=
--- HuaHuoEngine_BINARY_DIR=C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug
--- HuaHuoEngine_IS_TOP_LEVEL=ON
--- HuaHuoEngine_SOURCE_DIR=C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2
 -- MINGW=1
+-- MSVC_CXX_ARCHITECTURE_ID=
+-- MSVC_C_ARCHITECTURE_ID=
 -- OPENGL_FOUND=TRUE
 -- OPENGL_GLU_FOUND=YES
 -- OPENGL_LIBRARIES=opengl32;glu32
@@ -422,6 +1121,7 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- OpenGL_FOUND=TRUE
 -- OpenGL_GLX_FOUND=FALSE
 -- OpenGL_OpenGL_FOUND=TRUE
+-- PRESET_CMAKE_SYSTEM_NAME=FALSE
 -- PROJECT_BINARY_DIR=C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug
 -- PROJECT_DESCRIPTION=
 -- PROJECT_HOMEPAGE_URL=
@@ -443,19 +1143,28 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 -- _CMAKE_C_IPO_SUPPORTED_BY_CMAKE=YES
 -- _CMAKE_C_PIE_MAY_BE_SUPPORTED_BY_LINKER=NO
 -- _CMAKE_INSTALL_DIR=C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win
+-- _CMAKE_RC_COMPILER_NAME_WE=windres
+-- _CMAKE_TOOLCHAIN_LOCATION=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin
 -- _INCLUDED_FILE=C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX.cmake
 -- _INCLUDED_SYSTEM_INFO_FILE=C:/Program Files/JetBrains/CLion 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows.cmake
 -- _IN_TC=0
+-- _SET_CMAKE_CXX_COMPILER_ARCHITECTURE_ID=
+-- _SET_CMAKE_CXX_COMPILER_SYSROOT=
+-- _SET_CMAKE_C_COMPILER_ARCHITECTURE_ID=
+-- _SET_CMAKE_C_COMPILER_SYSROOT=
 -- __COMPILER_CMAKE_COMMON_COMPILER_MACROS=1
 -- __COMPILER_GNU=1
 -- __WINDOWS_GNU=1
 -- __WINDOWS_GNU_LD_RESPONSE=1
 -- __WINDOWS_PATHS_INCLUDED=1
+-- __gcc_hints=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin
 -- __lto_flags=-flto;-fno-fat-lto-objects
 -- __pch_header_C=c-header
 -- __pch_header_CXX=c++-header
 -- __pch_header_OBJC=objective-c-header
 -- __pch_header_OBJCXX=objective-c++-header
+-- __version_x=11
+-- __version_x_y=11.2
 -- _help=GNU ld (GNU Binutils) 2.37
 
 -- _ver=g++.exe (GCC) 11.2.0

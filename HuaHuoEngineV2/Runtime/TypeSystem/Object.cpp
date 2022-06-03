@@ -23,6 +23,7 @@ namespace BaseObjectManager
 {
     void StaticInitialize(void*)
     {
+        gBaseObjectManagerContainer = HUAHUO_NEW_AS_ROOT(MemLabelRootId, kMemBaseObject, "Managers", "BaseObjectManager") ();
         TypeManager::InitializeGlobalInstance();
         Object::StaticInitialize();
     }
@@ -31,6 +32,7 @@ namespace BaseObjectManager
     {
         Object::StaticDestroy();
         TypeManager::CleanupGlobalInstance();
+        HUAHUO_DELETE(gBaseObjectManagerContainer, kMemBaseObject);
     }
 }
 

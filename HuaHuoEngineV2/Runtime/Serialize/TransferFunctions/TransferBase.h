@@ -52,6 +52,9 @@ public:
         return true;
 #endif
     }
+
+    /// Is this a RemapPPtrTransfer backend. Commonly used to do very specialized code when generating dependencies using RemapPPtrTransfer.
+    bool IsRemapPPtrTransfer() { return false; }
 protected:
     TransferInstructionFlags          m_Flags;
     void*                             m_UserData;

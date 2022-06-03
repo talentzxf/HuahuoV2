@@ -107,7 +107,7 @@ CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=
 CMAKE_GNUtoMS:BOOL=OFF
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/HuaHuoEngine
+CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/HuaHuoEngineV2
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=C:/Program Files/JetBrains/CLion 2021.3.4/bin/mingw/bin/ld.exe
@@ -259,15 +259,6 @@ HuaHuoEngineV2_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 HuaHuoEngineV2_SOURCE_DIR:STATIC=C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2
-
-//Value Computed by CMake
-HuaHuoEngine_BINARY_DIR:STATIC=C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug
-
-//Value Computed by CMake
-HuaHuoEngine_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-HuaHuoEngine_SOURCE_DIR:STATIC=C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2
 
 //OpenGL library for win32
 OPENGL_gl_LIBRARY:STRING=opengl32

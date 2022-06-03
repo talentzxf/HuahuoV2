@@ -3,6 +3,27 @@
 //
 
 #include "ObjectStore.h"
+#include "Memory/MemoryMacros.h"
+#include "Serialize/SerializeUtility.h"
+
+ObjectStoreManager* gDefaultObjectStoreManager = NULL;
+
+ObjectStoreManager* GetDefaultObjectStoreManager(){
+    if(gDefaultObjectStoreManager == NULL)
+        gDefaultObjectStoreManager = Object::Produce<ObjectStoreManager>();
+    return gDefaultObjectStoreManager;
+}
+
+IMPLEMENT_REGISTER_CLASS(ObjectStoreManager, 10004);
+
+IMPLEMENT_OBJECT_SERIALIZE(ObjectStoreManager);
+INSTANTIATE_TEMPLATE_TRANSFER(ObjectStoreManager);
+template<class TransferFunction>
+void ObjectStoreManager::Transfer(TransferFunction &transfer) {
+    Super::Transfer(transfer);
+    TRANSFER(allStores);
+    TRANSFER(currentStore);
+}
 
 IMPLEMENT_REGISTER_CLASS(ObjectStore, 10000);
 
@@ -12,6 +33,8 @@ INSTANTIATE_TEMPLATE_TRANSFER(ObjectStore);
 template<class TransferFunction>
 void ObjectStore::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
+    TRANSFER(layerMap);
+    TRANSFER(currentLayer);
 }
 
 
@@ -22,5 +45,6 @@ INSTANTIATE_TEMPLATE_TRANSFER(Layer);
 
 template<class TransferFunction>
 void Layer::Transfer(TransferFunction &transfer) {
-
+    Super::Transfer(transfer);
+    TRANSFER(shapes);
 }

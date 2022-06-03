@@ -17,6 +17,7 @@ if(${HuaHuoEditor} MATCHES "ON")
     add_compile_definitions(HUAHUO_EDITOR=1)
 endif()
 
+include_directories(src)
 include_directories(external/baselib/builds)
 include_directories(external/baselib/builds/Include)
 include_directories(external/Umbra/source/common)
@@ -140,7 +141,7 @@ else ()
             -D_CRT_SECURE_NO_WARNINGS
     )
 
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp)
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp Runtime/Utilities/ContainerUtility.h)
 
 #    set(SDL2_DIR ./external/SDL2-2.0.22)
     find_package(OPENGL REQUIRED)

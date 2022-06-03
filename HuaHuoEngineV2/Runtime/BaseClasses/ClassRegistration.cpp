@@ -8,6 +8,8 @@
 #include "GameObject.h"
 #include "GameManager.h"
 #include "Input/TimeManager.h"
+#include "ObjectStore.h"
+#include "Shapes/LineShape.h"
 
 void RegisterBuiltinTypes()
 {
@@ -42,4 +44,10 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<GlobalGameManager>("Core");
     RegisterHuaHuoClass<GameManager>("Core");
     RegisterHuaHuoClass<TimeManager>("Core");
+
+    RegisterHuaHuoClass<ObjectStoreManager>("ObjectStore");
+    RegisterHuaHuoClass<ObjectStore>("ObjectStore");
+    RegisterHuaHuoClass<Layer>("ObjectStore");
+    RegisterHuaHuoClass<BaseShape>("ObjectStore");
+    RegisterHuaHuoClass<LineShape>("ObjectStore");
 }

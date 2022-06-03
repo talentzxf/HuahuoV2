@@ -32,6 +32,9 @@ public:
     void TransferSTLStyleArray(T& data, TransferMetaFlags metaFlag = kNoTransferFlags);
 
     template<class T>
+    void TransferSTLStyleMap(T& data, TransferMetaFlags metaFlag = kNoTransferFlags);
+
+    template<class T>
     void TransferBasicData(T& data);
 
     bool IsWriting()                 { return true; }
@@ -52,6 +55,24 @@ void StreamedBinaryWrite::TransferSTLStyleArray(T& data, TransferMetaFlags /*met
 
     typename T::const_iterator end = cdata.end();
     for (typename T::const_iterator i = cdata.begin(); i != end; ++i)
+    {
+        non_const_value_type& p = (non_const_value_type&)(*i);
+        Transfer(p, "data");
+    }
+}
+
+template<class T> inline
+void StreamedBinaryWrite::TransferSTLStyleMap(T& data, TransferMetaFlags)
+{
+    SInt32 size = data.size();
+    Transfer(size, "size");
+
+    // maps value_type is: pair<const First, Second>
+    // So we have to write to maps non-const value type
+    typedef typename NonConstContainerValueType<T>::value_type non_const_value_type;
+
+    typename T::iterator end = data.end();
+    for (typename T::iterator i = data.begin(); i != end; ++i)
     {
         non_const_value_type& p = (non_const_value_type&)(*i);
         Transfer(p, "data");
