@@ -1,6 +1,6 @@
-import {Logger} from "hhcommoncomponents";
+import {Logger, Vector2} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
-import {Vector2} from "../../../HHCommonComponents/src/Math/Vector2";
+import {EngineJS} from "hhenginejs"
 
 class BaseShapeDrawer{
     name = "unknown_shape"
@@ -28,8 +28,8 @@ class BaseShapeDrawer{
     onMouseDown(evt: MouseEvent){
     }
 
-    getRelativePosition(x, y): Vector2{
-        return new Vector2(x/this.canvasWidth, y/this.canvasHeight)
+    getWorldPosFromView(x, y): Vector2{
+        return EngineJS.prototype.getInstance().getWorldPosFromView(x,y)
     }
 
     onMouseUp(evt: MouseEvent){

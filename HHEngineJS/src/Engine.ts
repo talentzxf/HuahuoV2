@@ -1,6 +1,6 @@
 import * as paper from "paper"
 import {view} from "paper";
-import {Logger} from "hhcommoncomponents"
+import {Logger, Vector2} from "hhcommoncomponents"
 import {ShapeStoreManager} from "./ShapeStore/ShapeStore";
 import {v4 as uuidv4} from "uuid"
 
@@ -124,6 +124,11 @@ class EngineJS{
         }
 
         this.restoreContentLayer()
+    }
+
+    getWorldPosFromView(x:number, y:number):Vector2{
+        let worldPos = paper.view.viewToProject(new paper.Point(x,y))
+        return new Vector2(worldPos.x, worldPos.y)
     }
 
     init(canvas: HTMLCanvasElement){

@@ -18,7 +18,7 @@ class LineDrawer extends BaseShapeDrawer {
 
     onMouseDown(evt:MouseEvent) {
         super.onMouseDown(evt);
-        this.startPosition = this.getRelativePosition(evt.offsetX, evt.offsetY)
+        this.startPosition = this.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.isDrawing = true
 
         this.tempShape.setStartPoint(this.startPosition)
@@ -28,7 +28,7 @@ class LineDrawer extends BaseShapeDrawer {
     onMouseMove(evt: MouseEvent) {
         super.onMouseMove(evt);
         if(this.isDrawing){
-            let currentPos = this.getRelativePosition(evt.offsetX, evt.offsetY)
+            let currentPos = this.getWorldPosFromView(evt.offsetX, evt.offsetY)
 
             this.tempShape.setEndPoint(currentPos)
             this.tempShape.update()

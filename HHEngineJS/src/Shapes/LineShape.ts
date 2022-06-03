@@ -1,6 +1,5 @@
 import {BaseShape} from "./BaseShape";
 import {Vector2} from "hhcommoncomponents"
-import {DrawUtils} from "../DrawUtils/DrawUtils";
 import * as paper from "paper";
 
 class LineShape extends BaseShape{
@@ -10,15 +9,12 @@ class LineShape extends BaseShape{
     line: paper.Path.Line
 
     update() {
-        let globalStartPoint = this.getGlobalPositionFromVec(this.startPoint)
-        let globalEndPoint = this.getGlobalPositionFromVec(this.endPoint)
-
         if(this.line == null){
-            this.line = new paper.Path.Line( globalStartPoint, globalEndPoint)
+            this.line = new paper.Path.Line( this.startPoint, this.endPoint)
             this.line.strokeColor = new paper.Color("black")
         }else{
             this.line.removeSegments()
-            this.line.add(globalStartPoint, globalEndPoint)
+            this.line.add(this.startPoint, this.endPoint)
         }
     }
 
