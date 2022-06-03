@@ -1,6 +1,6 @@
 import {Logger, Vector2} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
-import {EngineJS} from "hhenginejs"
+import {renderEngine2D} from "hhenginejs"
 
 class BaseShapeDrawer{
     name = "unknown_shape"
@@ -29,7 +29,7 @@ class BaseShapeDrawer{
     }
 
     getWorldPosFromView(x, y): Vector2{
-        return EngineJS.prototype.getInstance().getWorldPosFromView(x,y)
+        return renderEngine2D.getWorldPosFromView(x,y)
     }
 
     onMouseUp(evt: MouseEvent){

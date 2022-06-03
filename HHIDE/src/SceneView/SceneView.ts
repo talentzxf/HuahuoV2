@@ -1,5 +1,5 @@
 import {CustomElement, Logger} from "hhcommoncomponents"
-import {EngineJS} from "hhenginejs"
+import {renderEngine2D} from "hhenginejs"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {HHTimeline, TimelineEventNames, TimelineTrack} from "hhtimeline"
@@ -72,17 +72,17 @@ class SceneView extends HTMLElement{
 
         this.zoomInBtn = document.createElement("button")
         this.zoomInBtn.innerHTML = "ZoomIn"
-        this.zoomInBtn.onclick = ()=>{EngineJS.prototype.getInstance().zoomIn()}
+        this.zoomInBtn.onclick = ()=>{renderEngine2D.zoomIn()}
         this.gizmoContainer.appendChild(this.zoomInBtn)
 
         this.zoomOutBtn = document.createElement("button")
         this.zoomOutBtn.innerHTML = "ZoomOut"
-        this.zoomOutBtn.onclick = ()=>{EngineJS.prototype.getInstance().zoomOut()}
+        this.zoomOutBtn.onclick = ()=>{renderEngine2D.zoomOut()}
         this.gizmoContainer.appendChild(this.zoomOutBtn)
 
         this.zoomOutBtn = document.createElement("button")
         this.zoomOutBtn.innerHTML = "Reset"
-        this.zoomOutBtn.onclick = ()=>{EngineJS.prototype.getInstance().zoomReset()}
+        this.zoomOutBtn.onclick = ()=>{renderEngine2D.zoomReset()}
         this.gizmoContainer.appendChild(this.zoomOutBtn)
     }
 
@@ -92,7 +92,7 @@ class SceneView extends HTMLElement{
 
         this.createCanvasContainer()
         this.createCanvas()
-        EngineJS.prototype.getInstance().init(this.canvas)
+        renderEngine2D.init(this.canvas)
 
         this.createGizmos();
         this.setupEventsAndCreateFirstTrack()
@@ -160,7 +160,7 @@ class SceneView extends HTMLElement{
         this.ctx.fillStyle = "white"
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
 
-        EngineJS.prototype.getInstance().clearBackground()
+        renderEngine2D.clearBackground()
     }
 
 }

@@ -52,9 +52,17 @@ class ShapeStoreManager{
         this.currentStore = newStore
     }
 
+    getCurrentStore(){
+        if(!this.currentStore){
+            this.createStore(uuidv4())
+        }
+
+        return this.currentStore
+    }
+
     getStore(id:uuidv4 = null){
         if(!id)
-            return this.currentStore
+            return this.getCurrentStore()
         if(!this.shapeStoreMap.has(id)){
             Logger.error("Can't find the id:" + id)
         }else{

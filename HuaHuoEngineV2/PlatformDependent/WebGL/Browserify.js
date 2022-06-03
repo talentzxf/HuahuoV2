@@ -26,7 +26,7 @@ const Framework = {
   resolveLocal: function (path) {
     var parts = [];
     path = path.split("/").every(function (p) { return p == ".." ? parts.pop() : p == "." || p == "" ? true : parts.push(p); }) ? parts.join("/") : null;
-    return path ? modules[path] || modules[path + ".js"] || modules[path + "/index.js"] : null;
+    return path ? modules[path] || modules[path + ".js"] || modules[path + "/index.ts"] : null;
   },
   resolveGlobal: function (module, path) {
     return module ? resolveLocal(module.folder + "node_modules/" + path) || resolveGlobal(module.parent, path) : null;

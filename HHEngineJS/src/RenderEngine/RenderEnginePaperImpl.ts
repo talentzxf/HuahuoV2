@@ -1,18 +1,11 @@
 import * as paper from "paper"
 import {view} from "paper";
 import {Logger, Vector2} from "hhcommoncomponents"
-import {ShapeStoreManager} from "./ShapeStore/ShapeStore";
+import {ShapeStoreManager} from "../ShapeStore/ShapeStore";
 import {v4 as uuidv4} from "uuid"
+import {RenderEngine2D} from "./RenderEngine2D";
 
-class EngineJS{
-    private static _instance: EngineJS = null
-
-    getInstance(){
-        if(!EngineJS._instance)
-            EngineJS._instance = new EngineJS()
-
-        return EngineJS._instance
-    }
+class RenderEnginePaperJs implements RenderEngine2D{
 
     private canvas: HTMLCanvasElement = null
     private bgRect: paper.Path.Rectangle;
@@ -23,22 +16,11 @@ class EngineJS{
     private isPlayer = false
     private aspectRatio:number = 4/3  //  W:H = 4:3
 
-    setIsPlayer(){
-        this.isPlayer = true
-    }
-    getCanvasWidth(){
-        return this.canvas.width
-    }
-
-    getCanvasHeight(){
-        return this.canvas.height
-    }
-
-    getProject(){
+    private getProject(){
         return paper.project
     }
 
-    activateBgLayer(){
+    private activateBgLayer(){
         if(!this.bgLayer){
             this.bgLayer = new paper.Layer();
             this.contentLayer = this.getProject().activeLayer
@@ -47,11 +29,11 @@ class EngineJS{
         this.bgLayer.activate()
     }
 
-    restoreContentLayer(){
+    private restoreContentLayer(){
         this.contentLayer.activate()
     }
 
-    createViewRectangle(x, y, w, h, fillColor){
+    private createViewRectangle(x, y, w, h, fillColor){
         this.activateBgLayer()
         // Convert all points from view->project coordinate
         let leftUp = view.viewToProject(new paper.Point(x,y))
@@ -66,7 +48,7 @@ class EngineJS{
         })
     }
 
-    getContentWH(canvasWidth, canvasHeight){
+    private getContentWH(canvasWidth, canvasHeight){
         let returnWidth = canvasWidth
         let returnHeight = canvasWidth / this.aspectRatio
         if(returnHeight > canvasHeight){
@@ -77,26 +59,26 @@ class EngineJS{
         return [returnWidth, returnHeight]
     }
 
-    zoomIn(step = 1.05){
+    public zoomIn(step = 1.05){
         view.zoom *= step;
         this.clearBackground()
 
         Logger.debug("Current view zoom:" + view.zoom)
     }
 
-    zoomOut(step = 1.05){
+    public zoomOut(step = 1.05){
         view.zoom /= step;
         this.clearBackground()
 
         Logger.debug("Current view zoom:" + view.zoom)
     }
 
-    zoomReset(){
+    public zoomReset(){
         view.zoom = 1.0
         this.clearBackground()
     }
 
-    clearBackground(){
+    public clearBackground(){
 
         let canvasWidth = view.element.width
         let canvasHeight = view.element.height
@@ -126,20 +108,18 @@ class EngineJS{
         this.restoreContentLayer()
     }
 
-    getWorldPosFromView(x:number, y:number):Vector2{
+    public getWorldPosFromView(x:number, y:number):Vector2{
         let worldPos = paper.view.viewToProject(new paper.Point(x,y))
         return new Vector2(worldPos.x, worldPos.y)
     }
 
-    init(canvas: HTMLCanvasElement){
+    public init(canvas: HTMLCanvasElement, isPlayer: boolean = false){
+        this.isPlayer = isPlayer
         this.canvas = canvas
         paper.setup(canvas)
 
         this.clearBackground()
-
-        // Init a default store
-        ShapeStoreManager.getInstance().createStore(uuidv4())
     }
 }
 
-export {EngineJS}
+export {RenderEnginePaperJs}
