@@ -19,6 +19,12 @@ public:
             : PersistentManager(label) {}
 protected:
     virtual FileIdentifier PathIDToFileIdentifierInternal(int pathID) const;
+
+    virtual int InsertPathNameInternal(std::string pathname, bool create);
+    virtual int InsertFileIdentifierInternal(FileIdentifier file, FileIdentifier::InsertMode mode);
+
+    virtual std::string PathIDToPathNameInternal(int pathID, bool /*trackNativeLoadedAsset*/) const;
+
 };
 
 void InitPathNamePersistentManager();

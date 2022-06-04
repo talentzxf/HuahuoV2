@@ -6,6 +6,8 @@
 #include "Memory/MemoryMacros.h"
 #include "Serialize/SerializeUtility.h"
 
+std::string StoreFilePath("C:\\Users\\vincentzhang\\MyProjects\\HuahuoV2\\HuaHuoEngineV2\\cmake-build-debug\\tmp\\objectstore.data");
+
 ObjectStoreManager* gDefaultObjectStoreManager = NULL;
 
 ObjectStoreManager* GetDefaultObjectStoreManager(){

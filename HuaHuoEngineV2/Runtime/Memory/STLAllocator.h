@@ -96,12 +96,12 @@ public:
 
     pointer allocate(size_type count, void const* /*hint*/ = 0)
     {
-        return (pointer)UNITY_MALLOC_ALIGNED(CreateMemLabel(memlabel, get_root_ref()), count * sizeof(T), align);
+        return (pointer)HUAHUO_MALLOC_ALIGNED(CreateMemLabel(memlabel, get_root_ref()), count * sizeof(T), align);
     }
 
     void deallocate(pointer p, size_type /*n*/)
     {
-        UNITY_FREE(CreateMemLabel(memlabel, get_root_ref()), p);
+        HUAHUO_FREE(CreateMemLabel(memlabel, get_root_ref()), p);
     }
 
     template<typename U, MemLabelIdentifier _memlabel, int _align>

@@ -9,9 +9,12 @@
 #include "TypeSystem/ObjectDefines.h"
 #include "BaseClasses/PPtr.h"
 #include "Shapes/BaseShape.h"
+#include "Serialize/PersistentManager.h"
 #include <vector>
 #include <map>
 #include <string>
+
+extern std::string StoreFilePath;
 
 class Layer: public Object{
     REGISTER_CLASS(Layer);
@@ -23,12 +26,20 @@ public:
 
     }
 
+    typedef std::vector<PPtr<BaseShape>> ShapePPtrVector;
+
     void addShape(BaseShape* newShape){
         shapes.push_back(newShape);
+
+        GetPersistentManager().MakeObjectPersistent(newShape->GetInstanceID(), StoreFilePath);
+    }
+
+    ShapePPtrVector& GetShapes(){
+        return shapes;
     }
 
 private:
-    std::vector<PPtr<BaseShape>> shapes;
+    ShapePPtrVector shapes;
 };
 
 class ObjectStore : public Object{
@@ -45,6 +56,7 @@ public:
         Layer* layer = Object::Produce<Layer>();
         currentLayer = layer;
         layerMap.insert(std::pair<std::string, PPtr<Layer>>(uuid, layer));
+        GetPersistentManager().MakeObjectPersistent(layer->GetInstanceID(), StoreFilePath);
     }
 
     Layer* GetCurrentLayer(){
@@ -69,6 +81,8 @@ public:
     ObjectStore* GetCurrentStore(){
         if(!currentStore.IsValid()){
             currentStore = Object::Produce<ObjectStore>();
+            GetPersistentManager().MakeObjectPersistent(currentStore.GetInstanceID(), StoreFilePath);
+            allStores.push_back(currentStore);
         }
         return currentStore;
     }
@@ -79,6 +93,7 @@ private:
 };
 
 ObjectStoreManager* GetDefaultObjectStoreManager();
+
 
 
 #endif //HUAHUOENGINEV2_OBJECTSTORE_H

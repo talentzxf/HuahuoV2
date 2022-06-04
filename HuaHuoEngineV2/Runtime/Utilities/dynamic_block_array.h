@@ -130,7 +130,7 @@ public:
         : m_size(0)
     {
         m_label = SetCurrentMemoryOwner(label);
-        m_data.set_memory_label(m_label);
+        // m_data.set_memory_label(m_label);
     }
 
     dynamic_block_array(const dynamic_block_array& rhs)
@@ -149,8 +149,8 @@ public:
     void clear_dealloc()
     {
         for (size_t i = 0; i < m_data.size(); i++)
-            DELETE(m_data[i]);//, m_label);
-        m_data.clear_dealloc();
+            HUAHUO_DELETE(m_data[i], m_label);
+        m_data.clear();
         m_size = 0;
     }
 

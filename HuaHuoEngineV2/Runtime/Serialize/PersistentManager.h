@@ -7,9 +7,10 @@
 #include "Utilities/vector_map.h"
 #include "TypeSystem/Object.h"
 #include "SerializedFileLoadError.h"
+#include "SerializedFile.h"
+#include "Utilities/StringComparison.h"
 #include <set>
 
-class FileIdentifier;
 class SerializedFile;
 
 struct StreamNameSpace
@@ -72,6 +73,20 @@ struct SerializedObjectIdentifier
     }
 };
 
+enum UnpersistMode
+{
+    kDontDestroyFromFile = 0,
+    kDestroyFromFile = 1
+};
+
+enum
+{
+    kNoError = 0,
+    kFileCouldNotBeRead = 1,
+    kTypeTreeIsDifferent = 2,
+    kFileCouldNotBeWritten = 3
+};
+
 class PersistentManager {
     enum LockFlags
     {
@@ -80,10 +95,31 @@ class PersistentManager {
         kIntegrationMutexLock = 1 << 1,
     };
 
+    enum
+    {
+#if PLATFORM_WINRT
+        kCacheSize = 1024 * 64
+#elif PLATFORM_PLAYSTATION
+        kCacheSize = 1024 * 64  // Important this matches the psarc block size (64KB)
+#elif UNITY_SWITCH
+        kCacheSize = 1024 * 64
+#else
+        kCacheSize = 1024 * 7
+#endif
+    };
+
 public:
     PersistentManager(MemLabelId label);
     virtual ~PersistentManager(){};
     Remapper*                               m_Remapper;
+
+    typedef std::pair<SInt32, SInt32> IntPair;
+    typedef std::pair<std::string, std::string> StringPair;
+    typedef std::vector<StreamNameSpace> StreamContainer;
+    typedef vector_map<SInt32, SInt32, std::less<SInt32>, STL_ALLOCATOR(kMemSerialization, IntPair)> IDRemap;
+    typedef vector_map<std::string, std::string, compare_string_insensitive, STL_ALLOCATOR(kMemSerialization, StringPair)> UserPathRemap;
+
+    std::string RemapToAbsolutePath(const std::string& path);
 
     // On return: objects are the instanceIDs of all objects resident in the file referenced by pathName
     typedef std::set<InstanceID> ObjectIDs;
@@ -110,14 +146,57 @@ public:
 
     virtual FileIdentifier PathIDToFileIdentifierInternal(int pathID) const = 0;
 
+    // Creates the object at instanceID or returns the pointer to one that has already been created.
+    // Can be called during serialization, it will not read any data but all read functions will make sure that all PreallocatedObjects will be fully read before returning.
+    // (Must be surrounded by SetObjectLockForRead()  / UnlockObjectCreation)
+    Object* PreallocateObjectThreaded(InstanceID instanceID, LockFlags lockedFlags = kLockFlagNone);
+
+#if HUAHUO_EDITOR
+    // Makes an object persistent and generates a unique fileID in pathName
+    // The object can now be referenced by other objects that write to disk
+    void MakeObjectPersistent(InstanceID heapID, std::string pathName);
+    // Makes an object persistent if fileID == 0 a new unique fileID in pathName will be generated
+    // The object can now be referenced by other objects that write to disk
+    // If the object is already persistent in another file or another fileID it will be destroyed from that file.
+    void MakeObjectPersistentAtFileID(InstanceID heapID, LocalIdentifierInFileType fileID, std::string pathName);
+
+    /// Batch multiple heapID's and fileID's into one path name.
+    /// on return fileID's will contain the file id's that were generated (if fileIds[i] is non-zero that fileID will be used instead)
+    enum { kMakePersistentDontRequireToBeLoadedAndDontUnpersist = 1 << 0, kAllowDontSaveObjectsToBePersistent = 1 << 1  };
+    void MakeObjectsPersistent(const InstanceID* heapIDs, LocalIdentifierInFileType* fileIDs, int size, std::string pathName, int options = 0);
+#endif
+    // Makes an object unpersistent
+    void MakeObjectUnpersistent(InstanceID memoryID, UnpersistMode unpersistMode);
+
+    //// Subclasses have to override these methods which map from PathIDs to FileIdentifier
+    /// Maps a pathname/fileidentifier to a pathID. If the pathname is not yet known, you have to call AddStream ().
+    /// The pathIDs start at 0 and increment by 1
+    virtual int InsertFileIdentifierInternal(FileIdentifier file, FileIdentifier::InsertMode mode) = 0;
+    virtual int InsertPathNameInternal(std::string pathname, bool create) = 0;
+
+    /// Adds a new empty stream. Used by subclasses inside InsertPathName when a new pathID has to be added
+    void AddStream();
+
+    bool InstanceIDToSerializedObjectIdentifier(InstanceID instanceID, SerializedObjectIdentifier& identifier);
+
+    void DestroyFromFile(InstanceID memoryID);
+
+    ///  maps a pathID to a pathname/file guid/fileidentifier.
+    /// (pathID can be assumed to be allocated before with InsertPathName)
+    std::string PathIDToPathNameInternal(int pathID);
+
+    // VZ: Created for HuaHuo Store.
+    void BeginFileWriting(std::string path);
 protected:
+    ///  maps a pathID to a pathname/file guid/fileidentifier.
+    /// (pathID can be assumed to be allocated before with InsertPathName)
+    virtual std::string PathIDToPathNameInternal(int pathID, bool trackNativeLoadedAsset) const = 0;
+
     MemLabelId          GetMemoryLabel() const { return m_MemoryLabel; }
 
 private:
-    typedef std::vector<StreamNameSpace> StreamContainer;
-    typedef vector_map<SInt32, SInt32, std::less<SInt32> /*, STL_ALLOCATOR(kMemSerialization, IntPair)*/> IDRemap;
-
     StreamContainer                         m_Streams;
+    bool m_ForcePreloadReferencedObjects;
 
     std::vector<IDRemap> m_GlobalToLocalNameSpace;
     std::vector<IDRemap> m_LocalToGlobalNameSpace;
@@ -126,6 +205,13 @@ private:
     void ClearActiveNameSpace(ActiveNameSpaceType type = kReadingNameSpace);
 
     int  GetActiveNameSpace(ActiveNameSpaceType type = kReadingNameSpace) { Assert(m_ActiveNameSpace[type] != -1); return m_ActiveNameSpace[type]; }
+
+    StreamNameSpace& GetStreamNameSpaceInternal(int nameSpaceID);
+    StreamNameSpace* GetStreamNameSpaceInternal(std::string path);
+
+    void PostLoadStreamNameSpaceInternal(StreamNameSpace& nameSpace, int namespaceID);
+
+    UserPathRemap                           m_UserPathRemap;
 
     SInt32                                  m_ActiveNameSpace[kActiveNameSpaceCount]; // Protected by m_Mutex
     MemLabelId                              m_MemoryLabel;

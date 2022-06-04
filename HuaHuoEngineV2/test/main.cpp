@@ -14,6 +14,8 @@
 #include "Editor/SceneView.h"
 #include "ObjectStore.h"
 #include "Shapes/LineShape.h"
+#include "Utilities/File.h"
+#include "Utilities/PathNameUtility.h"
 
 void testTransform() {
     GameObject *go = MonoCreateGameObject("Go1");
@@ -63,11 +65,15 @@ void testShapeStore() {
     lineShape->SetEndPoint(1, 0, 0);
     currentLayer->addShape(lineShape);
 
+    std::string path = StoreFilePath;
+    CreateDirectory(DeleteLastPathNameComponent(path));
+    GetPersistentManager().BeginFileWriting(path);
+
     BlockMemoryCacheWriter memoryCacheWriter(kMemDefault);
     StreamedBinaryWrite writeStream;
     CachedWriter& writeCache = writeStream.Init(kReadWriteFromSerializedFile);
     writeCache.InitWrite(memoryCacheWriter);
-    GetDefaultObjectStoreManager()->Transfer(writeStream);
+    GetDefaultObjectStoreManager()->VirtualRedirectTransfer(writeStream);
     writeCache.CompleteWriting();
 
     UInt32 length = memoryCacheWriter.GetFileLength() * sizeof(UInt8);
@@ -80,16 +86,19 @@ void testShapeStore() {
     readCache.InitRead(memoryCacherReader, 0 , writeCache.GetPosition());
     Object* clonedObj = Object::Produce(GetDefaultObjectStoreManager()->GetType());
     clonedObj->VirtualRedirectTransfer(readStream);
-//    ObjectStoreManager* storeManager = (ObjectStoreManager*)clonedObj;
-//
-//    Assert(storeManager->GetCurrentStore()->GetCurrentLayer() != NULL);
+    ObjectStoreManager* storeManager = (ObjectStoreManager*)clonedObj;
+    Assert(storeManager->GetCurrentStore()->GetCurrentLayer() != NULL);
+
+    Layer* layer = storeManager->GetCurrentStore()->GetCurrentLayer();
+//    BaseShape* firstShape = layer->GetShapes()[0];
+//    Assert(firstShape != NULL);
 }
 
 int main() {
     HuaHuoEngine::InitEngine();
-    testTransform();
-    testScene();
-    testGameObject();
+//    testTransform();
+//    testScene();
+//    testGameObject();
     testShapeStore();
     return 0;
 }

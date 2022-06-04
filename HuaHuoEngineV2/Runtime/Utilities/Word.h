@@ -49,11 +49,28 @@ inline int StrICmp(std::string str1, const TString& str2)
     return str1.compare(str2, kComparisonIgnoreCase);
 }
 
+
 // $TODO#scobi(9-dec-14) fix name - this only works on A-Z and is not intended for even a latin char set, yet it has the same name as a std function and no guidance given on when it should be used.
 inline char ToLower(char c) { return (c >= 'A' && c <= 'Z') ? (c + 'a' - 'A') : c; }
 inline char ToUpper(char c) { return (c >= 'a' && c <= 'z') ? (c - ('a' - 'A')) : c; }
 inline unsigned char ToLower(unsigned char c) { return (c >= 'A' && c <= 'Z') ? (c + 'a' - 'A') : c; }
 inline unsigned char ToUpper(unsigned char c) { return (c >= 'a' && c <= 'z') ? (c - ('a' - 'A')) : c; }
+
+// Converts string to integer representation. First, any whitespace characters are ignored.
+// Then, optional '+' or '-' sign character determines the sign of the resulting number.
+// Then, one or more decimal digits are parsed until either non-digit character or the
+// end of the string is found. Any non-digit characters after the end of the number are ignored.
+SInt32  StringToInt(std::string s);
+SInt64  StringToSInt64(std::string s);
+
+template<typename TString>
+TString ToLower(const TString& input)
+{
+    TString s = input;
+    for (typename TString::iterator i = s.begin(); i != s.end(); i++)
+        *i = ToLower(*i);
+    return s;
+}
 
 template<typename TString1, typename TString2>
 inline bool StrEquals(const TString1& str1, const TString2& str2)

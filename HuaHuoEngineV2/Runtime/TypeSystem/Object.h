@@ -293,6 +293,12 @@ public:
     /// Callback support for callbacks when an object is destroyed
     typedef void ObjectDestroyCallbackFunction (InstanceID instanceID);
 
+    void SetIsPersistent(bool p);
+#ifdef HUAHUO_EDITOR
+    void SetFileIDHint(LocalIdentifierInFileType hint) { m_FileIDHint = hint; }
+    LocalIdentifierInFileType GetFileIDHint() const { return m_FileIDHint; }
+#endif
+
 protected:
     virtual ~Object();
     template<class TransferFunction>
@@ -318,6 +324,10 @@ private:
     UInt32                m_HideFlags         : kHideFlagsBits;
     UInt32                m_IsPersistent      : kIsPersistentBits;
     UInt32                m_CachedTypeIndex   : kCachedTypeIndexBits;
+
+#ifdef HUAHUO_EDITOR
+    LocalIdentifierInFileType m_FileIDHint;
+#endif
 
     virtual const HuaHuo::Type*const GetTypeVirtualInternal() const
     {

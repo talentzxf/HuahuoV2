@@ -147,7 +147,8 @@ T StringToSignedType(const std::string& s)
     return negative ? -(T)value : (T)value;
 }
 
-SInt32 StringToInt(std::string& s)
+SInt32 StringToInt(std::string s)
 {
     return StringToSignedType<SInt32>(s);
 }
+

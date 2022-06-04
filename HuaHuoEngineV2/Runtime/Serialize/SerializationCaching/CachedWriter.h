@@ -57,6 +57,8 @@ private:
 
     void SetPosition(size_t position);
 
+    void PreallocateForWrite(size_t sizeOfWrite);
+
     static void InitActiveWriter(CachedWriter::ActiveWriter &activeWriter, CacheWriterBase &cacher);
 };
 

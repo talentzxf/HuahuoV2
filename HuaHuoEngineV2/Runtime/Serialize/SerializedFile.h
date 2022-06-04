@@ -11,6 +11,9 @@
 #include "TypeSystem/Type.h"
 #include "SerializedFileFormatVersion.h"
 #include "Utilities/dynamic_block_array.h"
+#include "TypeSystem/Object.h"
+#include "Utilities/vector_map.h"
+#include "SerializedFileLoadError.h"
 
 struct FileIdentifier
 {
@@ -64,6 +67,20 @@ struct FileIdentifier
 
 class SerializedFile {
 public:
+    enum
+    {
+        kLittleEndian = 0,
+        kBigEndian = 1,
+
+#if PLATFORM_ARCH_BIG_ENDIAN
+        kActiveEndianess = kBigEndian,
+        kOppositeEndianess = kLittleEndian
+#else
+        kActiveEndianess = kLittleEndian,
+        kOppositeEndianess = kBigEndian
+#endif
+    };
+
     class SerializedType
     {
         friend class SerializedFile;
@@ -152,6 +169,12 @@ public:
         template<bool kSwap, bool kReadTypeDependencies>
         bool ReadType(SerializedFileFormatVersion version, bool enableTypeTree, UInt8 const*& iterator, UInt8 const* end, int* originalTypeId = NULL, bool ignoreScriptTypeForHash = false);
     };
+    explicit SerializedFile(MemLabelRef label);
+    ~SerializedFile();
+
+    // options: kSerializeGameRelease, kSwapEndianess, kBuildPlayerOnlySerializeBuildProperties
+    SerializedFileLoadError InitializeWrite(CachedWriter& cachedWriter/*, BuildTargetSelection target*/, TransferInstructionFlags options);
+    SerializedFileLoadError InitializeRead(const std::string& path, ResourceImageGroup& resourceImage, size_t cacheSize, bool prefetch, TransferInstructionFlags options, size_t readOffset = 0, size_t readEndOffset = 0);
 
     typedef SerializedType::TypeVector TypeVector;
     typedef dynamic_block_array<FileIdentifier, 64> FileIdentifierArray;
@@ -161,8 +184,50 @@ public:
     // Get/Set the list of FileIdentifiers this file uses
     const FileIdentifierArray& GetExternalRefs() const { return m_Externals; }
 
+    // Returns the biggest id of all the objects in the file.
+    // if no objects are in the file 0 is returned
+    LocalIdentifierInFileType GetHighestID() const;
+
+    void Release();
 private:
+    void FinalizeInitCommon(TransferInstructionFlags options);
+
+    SerializedFileLoadError FinalizeInitRead(TransferInstructionFlags options);
+    SerializedFileLoadError FinalizeInitWrite(TransferInstructionFlags options);
+
+    MemLabelId                          m_MemLabel;
+
+    UInt8                               m_FileEndianess;
+
     FileIdentifierArray m_Externals;
+
+    TransferInstructionFlags            m_Options;
+    struct ObjectInfo
+    {
+        size_t byteStart;
+        UInt32 byteSize;
+        UInt32 typeID;
+
+#if SUPPORT_TEXT_SERIALIZATION
+        SInt64 debugLineStart;
+#endif
+    };
+
+    size_t                       m_ReadOffset;
+    size_t                       m_ReadEndOffset;
+    size_t                       m_WriteDataOffset;
+
+    CacheReaderBase*                    m_ReadFile;
+
+    typedef vector_map<LocalIdentifierInFileType, ObjectInfo>   ObjectMap;
+    ObjectMap                           m_Object;
+
+
+    SerializedFileLoadError ReadHeader();
+
+    CachedWriter*                       m_CachedWriter;
+
+    ResourceImageGroup                  m_ResourceImageGroup;
 };
 
 

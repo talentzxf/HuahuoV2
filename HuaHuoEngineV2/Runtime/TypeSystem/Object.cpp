@@ -454,4 +454,10 @@ void InstanceIDToLocalSerializedObjectIdentifier(InstanceID id, LocalSerializedO
 #endif
 }
 
+void Object::SetIsPersistent(bool p)
+{
+    // PROFILER_CHANGE_PERSISTENCE(GetInstanceID(), m_IsPersistent, p);
+    m_IsPersistent = p;
+}
+
 INSTANTIATE_TEMPLATE_TRANSFER(Object);

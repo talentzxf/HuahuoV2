@@ -107,7 +107,7 @@ typedef enum
     kSerializeMonoReload = 1 << 12, // Should we backupmono mono variables for an assembly reload?
     kDontRequireAllMetaFlags = 1 << 13, // Can we fast path calculating all meta data. This lets us skip a bunch of code when serializing mono data.
     kSerializeForPrefabSystem = 1 << 14,
-#if UNITY_EDITOR
+#if HUAHUO_EDITOR
     kSerializeForSlimPlayer = 1 << 15,
     kLoadPrefabAsScene = 1 << 16,
     kSerializeCopyPasteTransfer = 1 << 17, // Used when duplicating object in the Editor via commands like Ctrl + D, etc.

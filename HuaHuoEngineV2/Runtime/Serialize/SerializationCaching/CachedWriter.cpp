@@ -88,6 +88,33 @@ bool CachedWriter::CompleteWriting()
     return success;
 }
 
+void CachedWriter::PreallocateForWrite(size_t sizeOfWrite)
+{
+    size_t position = GetPosition();
+    m_ActiveWriter.cacheBase->PreallocateForWrite(m_ActiveWriter.block, &m_ActiveWriter.cacheStart, &m_ActiveWriter.cacheEnd, sizeOfWrite);
+    m_ActiveWriter.cachePosition = position - m_ActiveWriter.block * m_ActiveWriter.cacheBase->GetCacheSize() + m_ActiveWriter.cacheStart;
+}
+
+void CachedWriter::Write(const void* data, size_t size)
+{
+    if (m_ActiveWriter.cachePosition + size < m_ActiveWriter.cacheEnd)
+    {
+        memcpy(m_ActiveWriter.cachePosition, data, size);
+        m_ActiveWriter.cachePosition += size;
+    }
+    else
+    {
+        PreallocateForWrite(size);
+        while (size != 0)
+        {
+            size_t curWriteSize = std::min(size, m_ActiveWriter.cacheBase->GetCacheSize());
+            UpdateWriteCache(data, curWriteSize);
+            (UInt8*&)data += curWriteSize;
+            size -= curWriteSize;
+        }
+    }
+}
+
 void CachedWriter::Align4Write()
 {
     UInt32 leftOver = Align4LeftOver(m_ActiveWriter.cachePosition - m_ActiveWriter.cacheStart);

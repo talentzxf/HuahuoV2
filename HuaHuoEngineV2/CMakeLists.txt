@@ -24,7 +24,6 @@ include_directories(external/Umbra/source/common)
 include_directories(external/Umbra/source)
 include_directories(external/Umbra/interface)
 include_directories(PlatformDependent/WebGL/Source/Threads)
-include_directories(external/glew-1.13.0/include/)
 
 list(APPEND CPPFILES external/baselib/builds/Source/Baselib_Timer.cpp)
 list(APPEND CPPFILES Runtime/HuaHuoEngine.cpp)
@@ -101,6 +100,9 @@ list(APPEND CPPFILES Runtime/Editor/SceneView.cpp)
 list(APPEND CPPFILES src/ObjectStore.cpp)
 list(APPEND CPPFILES src/Shapes/BaseShape.cpp)
 list(APPEND CPPFILES src/Shapes/LineShape.cpp)
+list(APPEND CPPFILES Runtime/Serialize/SerializationCaching/FileCacherRead.cpp)
+list(APPEND CPPFILES Runtime/Serialize/SerializationCaching/FileCacherWrite.cpp)
+list(APPEND CPPFILES Runtime/Utilities/File.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)
@@ -111,8 +113,6 @@ set(CMAKE_CXX_STANDARD 23)
 set(EXTRA_INCLUDE_DIR Runtime)
 
 set(TARGETNAME HuaHuoEngineV2)
-add_compile_definitions(PLATFORM_SUPPORTS_OPENGL_UNIFIED=1)
-add_compile_definitions(GFX_SUPPORTS_OPENGL_UNIFIED=1)
 
 # Compile external dependencies
 add_subdirectory (external)
@@ -141,16 +141,7 @@ else ()
             -D_CRT_SECURE_NO_WARNINGS
     )
 
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp Runtime/Utilities/ContainerUtility.h)
-
-#    set(SDL2_DIR ./external/SDL2-2.0.22)
-    find_package(OPENGL REQUIRED)
-    print_all_variables()
-
-    set(ALL_LIBS
-            ${OPENGL_LIBRARY}
-            GLEW_1130
-            )
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp Runtime/Utilities/PathNameUtility.cpp Runtime/Utilities/PathNameUtility.h)
 
     target_link_libraries(TestHuaHuoEngine ${ALL_LIBS})
 endif ()
