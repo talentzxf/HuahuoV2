@@ -1,8 +1,6 @@
 import * as paper from "paper"
 import {view} from "paper";
 import {Logger, Vector2} from "hhcommoncomponents"
-import {ShapeStoreManager} from "../ShapeStore/ShapeStore";
-import {v4 as uuidv4} from "uuid"
 import {RenderEngine2D} from "./RenderEngine2D";
 
 class RenderEnginePaperJs implements RenderEngine2D{

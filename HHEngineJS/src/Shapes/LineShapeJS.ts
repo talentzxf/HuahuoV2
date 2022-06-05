@@ -1,8 +1,8 @@
-import {BaseShape} from "./BaseShape";
+import {BaseShapeJS} from "./BaseShapeJS";
 import {Vector2} from "hhcommoncomponents"
 import * as paper from "paper";
 
-class LineShape extends BaseShape{
+class LineShapeJS extends BaseShapeJS{
     startPoint: Vector2
     endPoint: Vector2
 
@@ -27,4 +27,4 @@ class LineShape extends BaseShape{
     }
 }
 
-export {LineShape}
+export {LineShapeJS}

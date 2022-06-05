@@ -62,7 +62,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 build cmake_object_order_depends_target_TestHuaHuoEngine: phony || CMakeFiles/TestHuaHuoEngine.dir
 
 build CMakeFiles/TestHuaHuoEngine.dir/external/baselib/builds/Source/Baselib_Timer.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Source/Baselib_Timer.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\external\baselib\builds\Source\Baselib_Timer.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -70,7 +70,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/external/baselib/builds/Source/Baselib_Tim
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\external\baselib\builds\Source
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/HuaHuoEngine.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/HuaHuoEngine.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\HuaHuoEngine.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -78,7 +78,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/HuaHuoEngine.cpp.obj: CXX_COMPILER
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/Transform.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Components/Transform/Transform.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Components\Transform\Transform.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -86,7 +86,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/Transform.cpp
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Components\Transform
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/TransformHierarchy.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Components/Transform/TransformHierarchy.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Components\Transform\TransformHierarchy.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -94,7 +94,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/TransformHier
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Components\Transform
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/TransformChangeDispatch.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Components/Transform/TransformChangeDispatch.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Components\Transform\TransformChangeDispatch.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -102,7 +102,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/TransformChan
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Components\Transform
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/Object.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/TypeSystem/Object.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\TypeSystem\Object.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -110,7 +110,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/Object.cpp.obj: CXX_COM
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\TypeSystem
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/RTTI.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/TypeSystem/RTTI.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\TypeSystem\RTTI.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -118,7 +118,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/RTTI.cpp.obj: CXX_COMPI
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\TypeSystem
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/TypeManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/TypeSystem/TypeManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\TypeSystem\TypeManager.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -126,7 +126,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/TypeManager.cpp.obj: CX
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\TypeSystem
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/Type.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/TypeSystem/Type.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\TypeSystem\Type.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -134,7 +134,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/Type.cpp.obj: CXX_COMPI
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\TypeSystem
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/HashFunctions/xxhash.c.obj: C_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/HashFunctions/xxhash.c || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities\HashFunctions\xxhash.c.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -142,7 +142,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/HashFunctions/xxhash.c.o
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities\HashFunctions
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/RegisterRuntimeInitializeAndCleanup.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/RegisterRuntimeInitializeAndCleanup.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities\RegisterRuntimeInitializeAndCleanup.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -150,7 +150,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/RegisterRuntimeInitializ
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/Word.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/Word.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities\Word.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -158,7 +158,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/Word.cpp.obj: CXX_COMPIL
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/Hash128.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/Hash128.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities\Hash128.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -166,7 +166,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/Hash128.cpp.obj: CXX_COM
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/GameObject.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/GameObject.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses\GameObject.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -174,7 +174,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/GameObject.cpp.obj: CX
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ClassRegistration.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/ClassRegistration.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses\ClassRegistration.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -182,7 +182,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ClassRegistration.cpp.
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/MessageIdentifier.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/MessageIdentifier.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses\MessageIdentifier.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -190,7 +190,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/MessageIdentifier.cpp.
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/MessageHandler.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/MessageHandler.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses\MessageHandler.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -198,7 +198,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/MessageHandler.cpp.obj
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/NamedObject.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/NamedObject.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses\NamedObject.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -206,7 +206,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/NamedObject.cpp.obj: C
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/GameManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/GameManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses\GameManager.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -214,7 +214,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/GameManager.cpp.obj: C
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ManagerContext.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/ManagerContext.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses\ManagerContext.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -222,7 +222,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ManagerContext.cpp.obj
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/IsPlaying.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/IsPlaying.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses\IsPlaying.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -230,7 +230,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/IsPlaying.cpp.obj: CXX
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/BaseComponent.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Components/BaseComponent.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Components\BaseComponent.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -238,7 +238,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/BaseComponent.cpp.obj: 
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Components
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/PersistentManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/PersistentManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\PersistentManager.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -246,7 +246,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/PersistentManager.cpp.ob
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/PathNamePersistentManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/PathNamePersistentManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\PathNamePersistentManager.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -254,7 +254,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/PathNamePersistentManage
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/Remapper.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/Remapper.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\Remapper.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -262,7 +262,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/Remapper.cpp.obj: CXX_CO
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializedFile.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializedFile.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializedFile.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -270,7 +270,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializedFile.cpp.obj: 
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/StreamedBinaryRead.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/TransferFunctions/StreamedBinaryRead.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\TransferFunctions\StreamedBinaryRead.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -278,7 +278,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/Stream
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\TransferFunctions
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/StreamedBinaryWrite.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/TransferFunctions/StreamedBinaryWrite.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\TransferFunctions\StreamedBinaryWrite.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -286,7 +286,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/Stream
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\TransferFunctions
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/TransferBase.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/TransferFunctions/TransferBase.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\TransferFunctions\TransferBase.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -294,7 +294,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/Transf
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\TransferFunctions
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CacheWriterBase.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/CacheWriterBase.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching\CacheWriterBase.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -302,7 +302,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Cac
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CacheReaderBase.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/CacheReaderBase.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching\CacheReaderBase.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -310,7 +310,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Cac
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CachedReader.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/CachedReader.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching\CachedReader.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -318,7 +318,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Cac
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CachedWriter.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/CachedWriter.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching\CachedWriter.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -326,7 +326,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Cac
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/MemoryCacherReadBlocks.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/MemoryCacherReadBlocks.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching\MemoryCacherReadBlocks.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -334,7 +334,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Mem
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Export/Scripting/GameObjectExport.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Export/Scripting/GameObjectExport.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Export\Scripting\GameObjectExport.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -342,7 +342,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Export/Scripting/GameObjectExport.
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Export\Scripting
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Containers/CommonString.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Containers/CommonString.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Containers\CommonString.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -350,7 +350,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Containers/CommonString.cpp.obj: C
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Containers
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Containers/GrowableBuffer.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Containers/GrowableBuffer.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Containers\GrowableBuffer.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -358,7 +358,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Containers/GrowableBuffer.cpp.obj:
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Containers
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Simd/vec-svd.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Simd/vec-svd.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math\Simd\vec-svd.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -366,7 +366,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Simd/vec-svd.cpp.obj: CXX_COM
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math\Simd
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Quaternionf.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Quaternionf.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math\Quaternionf.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -374,7 +374,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Quaternionf.cpp.obj: CXX_COMP
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector3f.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Vector3f.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math\Vector3f.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -382,7 +382,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector3f.cpp.obj: CXX_COMPILE
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector4f.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Vector4f.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math\Vector4f.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -390,7 +390,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector4f.cpp.obj: CXX_COMPILE
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector2f.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Vector2f.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math\Vector2f.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -398,7 +398,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector2f.cpp.obj: CXX_COMPILE
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix3x3.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Matrix3x3.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math\Matrix3x3.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -406,7 +406,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix3x3.cpp.obj: CXX_COMPIL
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix4x4.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Matrix4x4.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math\Matrix4x4.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -414,7 +414,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix4x4.cpp.obj: CXX_COMPIL
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix4x4_REF.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Matrix4x4_REF.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math\Matrix4x4_REF.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -422,7 +422,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix4x4_REF.cpp.obj: CXX_CO
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/FloatConversion.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/FloatConversion.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math\FloatConversion.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -430,7 +430,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/FloatConversion.cpp.obj: CXX_
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Misc/GameObjectUtility.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Misc/GameObjectUtility.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Misc\GameObjectUtility.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -438,7 +438,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Misc/GameObjectUtility.cpp.obj: CX
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Misc
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Logging/LogAssert.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Logging/LogAssert.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Logging\LogAssert.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -446,7 +446,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Logging/LogAssert.cpp.obj: CXX_COM
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Logging
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/MemoryMacros.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Memory/MemoryMacros.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Memory\MemoryMacros.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -454,7 +454,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/MemoryMacros.cpp.obj: CXX_C
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Memory
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/BatchAllocator.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Memory/BatchAllocator.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Memory\BatchAllocator.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -462,7 +462,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/BatchAllocator.cpp.obj: CXX
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Memory
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/MemoryManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Memory/MemoryManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Memory\MemoryManager.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -470,7 +470,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/MemoryManager.cpp.obj: CXX_
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Memory
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/SceneManager/HuaHuoScene.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/SceneManager/HuaHuoScene.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\SceneManager\HuaHuoScene.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -478,7 +478,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/SceneManager/HuaHuoScene.cpp.obj: 
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\SceneManager
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/SceneManager/SceneManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/SceneManager/SceneManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\SceneManager\SceneManager.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -486,7 +486,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/SceneManager/SceneManager.cpp.obj:
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\SceneManager
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Export/Events/ScriptEventManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Export/Events/ScriptEventManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Export\Events\ScriptEventManager.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -494,7 +494,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Export/Events/ScriptEventManager.c
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Export\Events
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/GameCode/Behaviour.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/GameCode/Behaviour.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\GameCode\Behaviour.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -502,7 +502,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/GameCode/Behaviour.cpp.obj: CXX_CO
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\GameCode
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Input/TimeManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Input/TimeManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Input\TimeManager.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -510,7 +510,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Input/TimeManager.cpp.obj: CXX_COM
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Input
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Input/TargetFrameRate.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Input/TargetFrameRate.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Input\TargetFrameRate.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -518,7 +518,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Input/TargetFrameRate.cpp.obj: CXX
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Input
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderPassContext.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Shaders/ShaderPassContext.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Shaders\ShaderPassContext.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -526,7 +526,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderPassContext.cpp.obj:
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Shaders
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderPropertySheet.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Shaders/ShaderPropertySheet.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Shaders\ShaderPropertySheet.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -534,7 +534,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderPropertySheet.cpp.ob
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Shaders
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Profiler/TimeHelper.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Profiler/TimeHelper.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Profiler\TimeHelper.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -542,7 +542,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Profiler/TimeHelper.cpp.obj: CXX_C
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Profiler
 
 build CMakeFiles/TestHuaHuoEngine.dir/external/baselib/builds/Source/Assert.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Source/Assert.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\external\baselib\builds\Source\Assert.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -550,7 +550,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/external/baselib/builds/Source/Assert.cpp.
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\external\baselib\builds\Source
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ManagerContextLoading.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/ManagerContextLoading.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses\ManagerContextLoading.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -558,7 +558,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ManagerContextLoading.
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderTags.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Shaders/ShaderTags.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Shaders\ShaderTags.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -566,7 +566,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderTags.cpp.obj: CXX_CO
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Shaders
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/Jobs.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Job/Jobs.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Job\Jobs.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -574,7 +574,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/Jobs.cpp.obj: CXX_COMPILER__Te
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Job
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/JobBatchDispatcher.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Job/JobBatchDispatcher.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Job\JobBatchDispatcher.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -582,7 +582,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/JobBatchDispatcher.cpp.obj: CX
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Job
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/AABB.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Geometry/AABB.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Geometry\AABB.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -590,7 +590,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/AABB.cpp.obj: CXX_COMPILE
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Geometry
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/BoundingUtils.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Geometry/BoundingUtils.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Geometry\BoundingUtils.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -598,7 +598,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/BoundingUtils.cpp.obj: CX
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Geometry
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/Intersection.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Geometry/Intersection.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Geometry\Intersection.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -606,7 +606,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/Intersection.cpp.obj: CXX
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Geometry
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/TriTriIntersect.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Geometry/TriTriIntersect.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Geometry\TriTriIntersect.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -614,7 +614,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/TriTriIntersect.cpp.obj: 
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Geometry
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/BlockRangeJob.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Job/BlockRangeJob.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Job\BlockRangeJob.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -622,7 +622,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/BlockRangeJob.cpp.obj: CXX_COM
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Job
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/EnumTraits.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/EnumTraits.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities\EnumTraits.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -630,7 +630,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/EnumTraits.cpp.obj: CXX_
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/SceneView.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Editor/SceneView.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Editor\SceneView.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -638,7 +638,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/SceneView.cpp.obj: CXX_COMP
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Editor
 
 build CMakeFiles/TestHuaHuoEngine.dir/src/ObjectStore.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src/ObjectStore.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\src\ObjectStore.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -646,7 +646,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/src/ObjectStore.cpp.obj: CXX_COMPILER__Tes
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\src
 
 build CMakeFiles/TestHuaHuoEngine.dir/src/Shapes/BaseShape.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src/Shapes/BaseShape.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\src\Shapes\BaseShape.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -654,7 +654,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/src/Shapes/BaseShape.cpp.obj: CXX_COMPILER
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\src\Shapes
 
 build CMakeFiles/TestHuaHuoEngine.dir/src/Shapes/LineShape.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src/Shapes/LineShape.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\src\Shapes\LineShape.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -662,7 +662,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/src/Shapes/LineShape.cpp.obj: CXX_COMPILER
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\src\Shapes
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/FileCacherRead.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/FileCacherRead.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching\FileCacherRead.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -670,7 +670,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Fil
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/FileCacherWrite.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/FileCacherWrite.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching\FileCacherWrite.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -678,15 +678,23 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Fil
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/File.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/File.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities\File.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
 
+build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/PathNameUtility.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/PathNameUtility.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
+  DEFINES = -DHUAHUO_EDITOR=1
+  DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities\PathNameUtility.cpp.obj.d
+  FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
+  INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
+  OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
+  OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
+
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/SceneInspector.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Editor/SceneInspector.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Editor\SceneInspector.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -694,7 +702,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/SceneInspector.cpp.obj: CXX
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Editor
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/Utility/SceneRootTransformArray.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Editor/Utility/SceneRootTransformArray.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Editor\Utility\SceneRootTransformArray.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
@@ -702,20 +710,12 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/Utility/SceneRootTransformA
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Editor\Utility
 
 build CMakeFiles/TestHuaHuoEngine.dir/test/main.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/test/main.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
+  DEFINES = -DHUAHUO_EDITOR=1
   DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\test\main.cpp.obj.d
   FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\test
-
-build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/PathNameUtility.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/PathNameUtility.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
-  DEP_FILE = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities\PathNameUtility.cpp.obj.d
-  FLAGS = -g -Wno-deprecated-enum-enum-conversion -std=gnu++23
-  INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
-  OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
-  OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
 
 
 # =============================================================================
@@ -725,7 +725,7 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/PathNameUtility.cpp.obj:
 #############################################
 # Link the executable TestHuaHuoEngine.exe
 
-build TestHuaHuoEngine.exe: CXX_EXECUTABLE_LINKER__TestHuaHuoEngine_Debug CMakeFiles/TestHuaHuoEngine.dir/external/baselib/builds/Source/Baselib_Timer.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/HuaHuoEngine.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/Transform.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/TransformHierarchy.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/TransformChangeDispatch.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/Object.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/RTTI.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/TypeManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/Type.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/HashFunctions/xxhash.c.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/RegisterRuntimeInitializeAndCleanup.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/Word.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/Hash128.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/GameObject.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ClassRegistration.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/MessageIdentifier.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/MessageHandler.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/NamedObject.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/GameManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ManagerContext.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/IsPlaying.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/BaseComponent.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/PersistentManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/PathNamePersistentManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/Remapper.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializedFile.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/StreamedBinaryRead.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/StreamedBinaryWrite.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/TransferBase.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CacheWriterBase.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CacheReaderBase.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CachedReader.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CachedWriter.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/MemoryCacherReadBlocks.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Export/Scripting/GameObjectExport.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Containers/CommonString.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Containers/GrowableBuffer.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Simd/vec-svd.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Quaternionf.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector3f.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector4f.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector2f.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix3x3.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix4x4.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix4x4_REF.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/FloatConversion.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Misc/GameObjectUtility.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Logging/LogAssert.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/MemoryMacros.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/BatchAllocator.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/MemoryManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/SceneManager/HuaHuoScene.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/SceneManager/SceneManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Export/Events/ScriptEventManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/GameCode/Behaviour.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Input/TimeManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Input/TargetFrameRate.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderPassContext.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderPropertySheet.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Profiler/TimeHelper.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/external/baselib/builds/Source/Assert.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ManagerContextLoading.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderTags.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/Jobs.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/JobBatchDispatcher.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/AABB.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/BoundingUtils.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/Intersection.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/TriTriIntersect.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/BlockRangeJob.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/EnumTraits.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/SceneView.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/src/ObjectStore.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/src/Shapes/BaseShape.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/src/Shapes/LineShape.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/FileCacherRead.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/FileCacherWrite.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/File.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/SceneInspector.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/Utility/SceneRootTransformArray.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/test/main.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/PathNameUtility.cpp.obj
+build TestHuaHuoEngine.exe: CXX_EXECUTABLE_LINKER__TestHuaHuoEngine_Debug CMakeFiles/TestHuaHuoEngine.dir/external/baselib/builds/Source/Baselib_Timer.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/HuaHuoEngine.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/Transform.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/TransformHierarchy.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/TransformChangeDispatch.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/Object.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/RTTI.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/TypeManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/Type.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/HashFunctions/xxhash.c.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/RegisterRuntimeInitializeAndCleanup.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/Word.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/Hash128.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/GameObject.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ClassRegistration.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/MessageIdentifier.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/MessageHandler.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/NamedObject.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/GameManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ManagerContext.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/IsPlaying.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/BaseComponent.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/PersistentManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/PathNamePersistentManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/Remapper.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializedFile.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/StreamedBinaryRead.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/StreamedBinaryWrite.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/TransferBase.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CacheWriterBase.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CacheReaderBase.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CachedReader.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CachedWriter.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/MemoryCacherReadBlocks.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Export/Scripting/GameObjectExport.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Containers/CommonString.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Containers/GrowableBuffer.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Simd/vec-svd.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Quaternionf.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector3f.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector4f.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector2f.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix3x3.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix4x4.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix4x4_REF.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/FloatConversion.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Misc/GameObjectUtility.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Logging/LogAssert.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/MemoryMacros.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/BatchAllocator.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/MemoryManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/SceneManager/HuaHuoScene.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/SceneManager/SceneManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Export/Events/ScriptEventManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/GameCode/Behaviour.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Input/TimeManager.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Input/TargetFrameRate.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderPassContext.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderPropertySheet.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Profiler/TimeHelper.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/external/baselib/builds/Source/Assert.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ManagerContextLoading.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderTags.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/Jobs.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/JobBatchDispatcher.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/AABB.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/BoundingUtils.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/Intersection.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/TriTriIntersect.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/BlockRangeJob.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/EnumTraits.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/SceneView.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/src/ObjectStore.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/src/Shapes/BaseShape.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/src/Shapes/LineShape.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/FileCacherRead.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/FileCacherWrite.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/File.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/PathNameUtility.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/SceneInspector.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/Utility/SceneRootTransformArray.cpp.obj CMakeFiles/TestHuaHuoEngine.dir/test/main.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
@@ -747,74 +747,9 @@ build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
 build edit_cache: phony CMakeFiles/edit_cache.util
 
 # =============================================================================
-# Write statements declared in CMakeLists.txt:
-# C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/CMakeLists.txt
-# =============================================================================
-
-# =============================================================================
-# Object build statements for STATIC_LIBRARY target GLEW_1130
-
-
-#############################################
-# Order-only phony target for GLEW_1130
-
-build cmake_object_order_depends_target_GLEW_1130: phony || external/CMakeFiles/GLEW_1130.dir
-
-build external/CMakeFiles/GLEW_1130.dir/glew-1.13.0/src/glew.c.obj: C_COMPILER__GLEW_1130_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/glew-1.13.0/src/glew.c || cmake_object_order_depends_target_GLEW_1130
-  DEFINES = -DGLEW_STATIC -DHUAHUO_EDITOR=1 -DTW_NO_DIRECT3D -DTW_NO_LIB_PRAGMA -DTW_STATIC -D_CRT_SECURE_NO_WARNINGS
-  DEP_FILE = external\CMakeFiles\GLEW_1130.dir\glew-1.13.0\src\glew.c.obj.d
-  FLAGS = -g
-  INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/glew-1.13.0/include
-  OBJECT_DIR = external\CMakeFiles\GLEW_1130.dir
-  OBJECT_FILE_DIR = external\CMakeFiles\GLEW_1130.dir\glew-1.13.0\src
-
-
-# =============================================================================
-# Link build statements for STATIC_LIBRARY target GLEW_1130
-
-
-#############################################
-# Link the static library external\libGLEW_1130.a
-
-build external/libGLEW_1130.a: C_STATIC_LIBRARY_LINKER__GLEW_1130_Debug external/CMakeFiles/GLEW_1130.dir/glew-1.13.0/src/glew.c.obj
-  LANGUAGE_COMPILE_FLAGS = -g
-  OBJECT_DIR = external\CMakeFiles\GLEW_1130.dir
-  POST_BUILD = cd .
-  PRE_LINK = cd .
-  TARGET_FILE = external\libGLEW_1130.a
-  TARGET_PDB = GLEW_1130.a.dbg
-
-
-#############################################
-# Utility command for edit_cache
-
-build external/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\Users\vincentzhang\MyProjects\HuahuoV2\HuaHuoEngineV2\cmake-build-debug\external && "C:\Program Files\JetBrains\CLion 2021.3.4\bin\cmake\win\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
-  DESC = No interactive CMake dialog available...
-  restat = 1
-
-build external/edit_cache: phony external/CMakeFiles/edit_cache.util
-
-
-#############################################
-# Utility command for rebuild_cache
-
-build external/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\Users\vincentzhang\MyProjects\HuahuoV2\HuaHuoEngineV2\cmake-build-debug\external && "C:\Program Files\JetBrains\CLion 2021.3.4\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -SC:\Users\vincentzhang\MyProjects\HuahuoV2\HuaHuoEngineV2 -BC:\Users\vincentzhang\MyProjects\HuahuoV2\HuaHuoEngineV2\cmake-build-debug"
-  DESC = Running CMake to regenerate build system...
-  pool = console
-  restat = 1
-
-build external/rebuild_cache: phony external/CMakeFiles/rebuild_cache.util
-
-# =============================================================================
 # Target aliases.
 
-build GLEW_1130: phony external/libGLEW_1130.a
-
 build TestHuaHuoEngine: phony TestHuaHuoEngine.exe
-
-build libGLEW_1130.a: phony external/libGLEW_1130.a
 
 # =============================================================================
 # Folder targets.
@@ -824,14 +759,7 @@ build libGLEW_1130.a: phony external/libGLEW_1130.a
 #############################################
 # Folder: C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug
 
-build all: phony TestHuaHuoEngine.exe external/all
-
-# =============================================================================
-
-#############################################
-# Folder: C:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug/external
-
-build external/all: phony external/libGLEW_1130.a
+build all: phony TestHuaHuoEngine.exe
 
 # =============================================================================
 # Built-in targets
@@ -840,14 +768,14 @@ build external/all: phony external/libGLEW_1130.a
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../Runtime/HuaHuoEngineConfig.h.in ../external/CMakeLists.txt C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeRCCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../Runtime/HuaHuoEngineConfig.h.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeRCCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build ../CMakeLists.txt ../Runtime/HuaHuoEngineConfig.h.in ../external/CMakeLists.txt C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeRCCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake: phony
+build ../CMakeLists.txt ../Runtime/HuaHuoEngineConfig.h.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeRCCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake: phony
 
 
 #############################################

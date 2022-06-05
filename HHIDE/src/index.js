@@ -13,7 +13,7 @@ import {faMinus} from "@fortawesome/free-solid-svg-icons/faMinus"
 import {faSlash} from "@fortawesome/free-solid-svg-icons/faSlash";
 import {faCircle} from "@fortawesome/free-solid-svg-icons/faCircle";
 import {faBezierCurve} from "@fortawesome/free-solid-svg-icons/faBezierCurve";
-import {EngineAPI} from "./EngineAPI";
+import {huahuoEngine} from "hhenginejs/src/EngineAPI";
 
 library.add(faMinus)
 library.add(faPlus)
@@ -22,8 +22,12 @@ library.add(faCircle)
 library.add(faBezierCurve)
 dom.watch();
 
-Module.onRuntimeInitialized = ()=>{
-    // Module.HuaHuoEngine.prototype.InitEngine();
-    // EngineAPI.OnInit()
-    // Module["SceneView"].prototype.GetSceneView().InitWithCanvasId("SceneView")
+function save(){
+    let int8Array = Module.WritePersistentManagerInMemory()
+
+    Logger.info("Good!!")
+}
+
+window.menuoperations = {
+    save: save
 }

@@ -7,6 +7,8 @@
 #include "SerializedFile.h"
 #include "Utilities/File.h"
 #include "Serialize/SerializationCaching/FileCacherWrite.h"
+#include "Serialize/SerializationCaching/MemoryCacheWriter.h"
+#include "ObjectStore.h"
 
 #if DEBUGMODE
 #define CheckedAssert(x) Assert(x)
@@ -584,5 +586,49 @@ void PersistentManager::MakeObjectUnpersistent(InstanceID memoryID, UnpersistMod
     if (o)
         o->SetIsPersistent(false);
 }
+
+size_t PersistentManager::WriteStoreFileInMemory(){
+    size_t arrayBufferSize = WriteStoreFileInMemoryInternal(this->m_Buffer, GetDefaultObjectStoreManager());
+    return arrayBufferSize;
+}
+
+size_t PersistentManager::WriteStoreFileInMemoryInternal(std::vector<UInt8> &memory, Object* storeManager) {
+    MemoryCacheWriter memoryCacheWriter(memory);
+    StreamedBinaryWrite writeStream;
+    CachedWriter& writerCache = writeStream.Init(kReadWriteFromSerializedFile);
+    writerCache.InitWrite(memoryCacheWriter);
+
+    HuahuoHeader huahuoHeader;
+    const char* magic = "HUAHUO";
+    memcpy(huahuoHeader.magic, magic, 6);
+    huahuoHeader.dataOffset = sizeof(huahuoHeader);
+
+    writerCache.Write(huahuoHeader);
+    writerCache.Write(*storeManager);
+
+    return writerCache.GetPosition();
+}
+
+PersistentManager* PersistentManager::GetPersistentManager() {
+    return ::GetPersistentManagerPtr();
+}
+
+#if WEB_ENV
+#include <emscripten/bind.h>
+
+
+emscripten::val writePersistentManagerInMemory(){
+    int bufferSize = GetPersistentManager().WriteStoreFileInMemory();
+    UInt8* bufferPtr = GetPersistentManager().GetBufferPtr();
+
+    return emscripten::val(
+                emscripten::typed_memory_view(bufferSize, bufferPtr)
+                );
+    }
+
+EMSCRIPTEN_BINDINGS(my_module) {
+    function("WritePersistentManagerInMemory", &writePersistentManagerInMemory);
+}
+#endif
 
 #endif

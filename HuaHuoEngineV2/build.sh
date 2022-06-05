@@ -19,7 +19,7 @@ ${WEBIDL} ./MergedIDL.idl glue ./emcmake/
 
 if [ $? -eq 0 ]; then
    emcmake cmake .. && cmake --build ./
-   cat ./glue.js >> HuaHuoEngine.js
+   cat ./glue.js >> HuaHuoEngineV2.js
 else
    echo "Failed to run webidl_binder"
 fi

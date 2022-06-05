@@ -13,6 +13,12 @@
 
 class SerializedFile;
 
+struct HuahuoHeader{
+    char magic[6];
+    int version = 1;
+    size_t dataOffset = 0;
+};
+
 struct StreamNameSpace
 {
     SerializedFile* stream;
@@ -188,6 +194,15 @@ public:
     // VZ: Created for HuaHuo Store.
     void BeginFileWriting(std::string path);
     void BeginFileReading(std::string path);
+
+    size_t WriteStoreFileInMemory();
+
+
+    static PersistentManager* GetPersistentManager();
+
+    UInt8* GetBufferPtr(){
+        return m_Buffer.data();
+    }
 protected:
     ///  maps a pathID to a pathname/file guid/fileidentifier.
     /// (pathID can be assumed to be allocated before with InsertPathName)
@@ -195,7 +210,11 @@ protected:
 
     MemLabelId          GetMemoryLabel() const { return m_MemoryLabel; }
 
+    size_t WriteStoreFileInMemoryInternal(std::vector<UInt8>& memory, Object* managerObj);
+
 private:
+    std::vector<UInt8> m_Buffer;
+
     StreamContainer                         m_Streams;
     bool m_ForcePreloadReferencedObjects;
 
@@ -220,8 +239,8 @@ private:
 };
 
 PersistentManager& GetPersistentManager();
+PersistentManager* GetPersistentManagerPtr();
 void CleanupPersistentManager();
 void SetPersistentManager(PersistentManager* persistentManager);
-
 
 #endif //HUAHUOENGINE_PERSISTENTMANAGER_H

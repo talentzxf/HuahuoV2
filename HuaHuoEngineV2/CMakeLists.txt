@@ -103,6 +103,7 @@ list(APPEND CPPFILES src/Shapes/LineShape.cpp)
 list(APPEND CPPFILES Runtime/Serialize/SerializationCaching/FileCacherRead.cpp)
 list(APPEND CPPFILES Runtime/Serialize/SerializationCaching/FileCacherWrite.cpp)
 list(APPEND CPPFILES Runtime/Utilities/File.cpp)
+list(APPEND CPPFILES Runtime/Utilities/PathNameUtility.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)
@@ -114,8 +115,8 @@ set(EXTRA_INCLUDE_DIR Runtime)
 
 set(TARGETNAME HuaHuoEngineV2)
 
-# Compile external dependencies
-add_subdirectory (external)
+## Compile external dependencies
+#add_subdirectory (external)
 
 if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
     add_compile_definitions(WEB_ENV=1)
@@ -124,6 +125,7 @@ if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
     list(APPEND CPPFILES Runtime/HuaHuoEngineWrapper.cpp)
     list(APPEND CPPFILES PlatformDependent/WebGL/External/baselib/builds/Source/Baselib_Timer_Emscripten.cpp)
     add_compile_options(-Wno-deprecated-enum-enum-conversion)
+    add_link_options(--bind)
     add_executable(${TARGETNAME} ${CPPFILES})
 else ()
     #    include_directories("C:\\Users\\vincentzhang\\OpenSource\\emsdk\\upstream\\emscripten\\system\\include\\")
@@ -133,15 +135,7 @@ else ()
     add_compile_options(-Wno-deprecated-enum-enum-conversion)
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
 
-    add_definitions(
-            -DTW_STATIC
-            -DTW_NO_LIB_PRAGMA
-            -DTW_NO_DIRECT3D
-            -DGLEW_STATIC
-            -D_CRT_SECURE_NO_WARNINGS
-    )
-
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp Runtime/Utilities/PathNameUtility.cpp Runtime/Utilities/PathNameUtility.h)
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp)
 
     target_link_libraries(TestHuaHuoEngine ${ALL_LIBS})
 endif ()

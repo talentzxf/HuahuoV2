@@ -35,20 +35,20 @@ class TestScriptEventHandler : public ScriptEventHandler {
     }
 };
 
-void testScene() {
-    HuaHuoScene *pScene = GetSceneManager().CreateScene();
-    GetSceneManager().SetActiveScene(pScene);
-
-    std::string goName("Go!!!");
-    MonoCreateGameObject(goName.c_str());
-
-    GetScriptEventManager()->RegisterEventHandler("OnHierarchyChangedSetParent", new TestScriptEventHandler());
-
-    for (auto itr = pScene->RootBegin(); itr != pScene->RootEnd(); itr++) {
-        printf("name: %s", itr->GetData()->GetName());
-    }
-    Assert(pScene->RootBegin() != pScene->RootEnd());
-}
+//void testScene() {
+//    HuaHuoScene *pScene = GetSceneManager().CreateScene();
+//    GetSceneManager().SetActiveScene(pScene);
+//
+//    std::string goName("Go!!!");
+//    MonoCreateGameObject(goName.c_str());
+//
+//    GetScriptEventManager()->RegisterEventHandler("OnHierarchyChangedSetParent", new TestScriptEventHandler());
+//
+//    for (auto itr = pScene->RootBegin(); itr != pScene->RootEnd(); itr++) {
+//        printf("name: %s", itr->GetData()->GetName());
+//    }
+//    Assert(pScene->RootBegin() != pScene->RootEnd());
+//}
 
 void testGameObject() {
     printf("Creating camera Gameobject\n");
@@ -82,18 +82,22 @@ void testShapeStore() {
 
     GetPersistentManager().BeginFileReading(path);
 
-    MemoryCacherReadBlocks memoryCacherReader(memoryCacheWriter.GetCacheBlocks(), memoryCacheWriter.GetFileLength(), memoryCacheWriter.GetCacheSize());
+    MemoryCacherReadBlocks memoryCacheReader(memoryCacheWriter.GetCacheBlocks(), memoryCacheWriter.GetFileLength(), memoryCacheWriter.GetCacheSize());
     StreamedBinaryRead readStream;
     CachedReader& readCache = readStream.Init(kReadWriteFromSerializedFile);
-    readCache.InitRead(memoryCacherReader, 0 , writeCache.GetPosition());
+    readCache.InitRead(memoryCacheReader, 0 , writeCache.GetPosition());
     Object* clonedObj = Object::Produce(GetDefaultObjectStoreManager()->GetType());
     clonedObj->VirtualRedirectTransfer(readStream);
     ObjectStoreManager* storeManager = (ObjectStoreManager*)clonedObj;
     Assert(storeManager->GetCurrentStore()->GetCurrentLayer() != NULL);
 
     Layer* layer = storeManager->GetCurrentStore()->GetCurrentLayer();
-//    BaseShape* firstShape = layer->GetShapes()[0];
-//    Assert(firstShape != NULL);
+    BaseShape* firstShape = layer->GetShapes()[0];
+    Assert(firstShape != NULL);
+
+    std::vector<UInt8> memoryStream;
+    size_t size = GetPersistentManager().WriteStoreFileInMemory();
+    Assert(size != 0);
 }
 
 int main() {

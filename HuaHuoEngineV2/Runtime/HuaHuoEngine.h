@@ -7,12 +7,8 @@
 
 #include <cstddef>
 #include <vector>
-#include "BaseClasses/BaseTypes.h"
-#include "TypeSystem/Object.h"
-#include "BaseClasses/GameObject.h"
-#include "Export/Scripting/GameObjectExport.h"
 #include "Export/Events/ScriptEventManager.h"
-#include "SceneManager/SceneManager.h"
+#include "Serialize/PersistentManager.h"
 
 class HuaHuoEngine {
 private:
@@ -26,16 +22,12 @@ public:
         return gInstance;
     }
 
-    GameObject* CreateGameObject(const char* name){
-        return MonoCreateGameObject(name);
+    PersistentManager* GetPersistentManager(){
+        return ::GetPersistentManagerPtr();
     }
 
     void RegisterEvent(std::string eventType, ScriptEventHandler* pHandler){
         GetScriptEventManager()->RegisterEventHandler(eventType, pHandler);
-    }
-
-    SceneManager* GetSceneManager(){
-        return ::GetSceneManagerPtr();
     }
 };
 
