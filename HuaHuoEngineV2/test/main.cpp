@@ -80,6 +80,8 @@ void testShapeStore() {
     Assert(length != 0);
     printf("Length is:%d\n", length);
 
+    GetPersistentManager().BeginFileReading(path);
+
     MemoryCacherReadBlocks memoryCacherReader(memoryCacheWriter.GetCacheBlocks(), memoryCacheWriter.GetFileLength(), memoryCacheWriter.GetCacheSize());
     StreamedBinaryRead readStream;
     CachedReader& readCache = readStream.Init(kReadWriteFromSerializedFile);

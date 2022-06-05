@@ -187,6 +187,7 @@ public:
 
     // VZ: Created for HuaHuo Store.
     void BeginFileWriting(std::string path);
+    void BeginFileReading(std::string path);
 protected:
     ///  maps a pathID to a pathname/file guid/fileidentifier.
     /// (pathID can be assumed to be allocated before with InsertPathName)

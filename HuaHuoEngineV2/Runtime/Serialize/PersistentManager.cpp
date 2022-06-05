@@ -199,6 +199,12 @@ void PersistentManager::BeginFileWriting(std::string path){
     SetActiveNameSpace(serializedFileIndex, kWritingNameSpace);
 }
 
+void PersistentManager::BeginFileReading(std::string path){
+    int serializedFileIndex;
+    serializedFileIndex = InsertPathNameInternal(path, false);
+    SetActiveNameSpace(serializedFileIndex, kReadingNameSpace);
+}
+
 void PersistentManager::SetActiveNameSpace(int activeNameSpace, ActiveNameSpaceType type)
 {
     // Recursive serialization is not allowed for threaded serialization.
