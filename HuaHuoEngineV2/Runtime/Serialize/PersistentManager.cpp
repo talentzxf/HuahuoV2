@@ -600,7 +600,9 @@ size_t PersistentManager::WriteStoreFileInMemoryInternal(std::vector<UInt8> &mem
 
     HuahuoHeader huahuoHeader;
     const char* magic = "HUAHUO";
+    memset(&huahuoHeader, 0, sizeof(HuahuoHeader));
     memcpy(huahuoHeader.magic, magic, 6);
+    huahuoHeader.version = 1;
     huahuoHeader.dataOffset = sizeof(huahuoHeader);
 
     writerCache.Write(huahuoHeader);

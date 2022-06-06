@@ -15,7 +15,7 @@ class SerializedFile;
 
 struct HuahuoHeader{
     char magic[6];
-    int version = 1;
+    int version;
     size_t dataOffset = 0;
 };
 

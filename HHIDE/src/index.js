@@ -13,7 +13,8 @@ import {faMinus} from "@fortawesome/free-solid-svg-icons/faMinus"
 import {faSlash} from "@fortawesome/free-solid-svg-icons/faSlash";
 import {faCircle} from "@fortawesome/free-solid-svg-icons/faCircle";
 import {faBezierCurve} from "@fortawesome/free-solid-svg-icons/faBezierCurve";
-import {huahuoEngine} from "hhenginejs/src/EngineAPI";
+import { saveAs } from 'file-saver';
+
 
 library.add(faMinus)
 library.add(faPlus)
@@ -24,7 +25,8 @@ dom.watch();
 
 function save(){
     let int8Array = Module.WritePersistentManagerInMemory()
-
+    let blob = new Blob([int8Array], {type:"application/octet-stream"})
+    saveAs(blob, "huahuo.data")
     Logger.info("Good!!")
 }
 
