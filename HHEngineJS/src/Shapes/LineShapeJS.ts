@@ -8,6 +8,10 @@ class LineShapeJS extends BaseShapeJS{
 
     line: paper.Path.Line
 
+    getShapeName(){
+        return "LineShape"
+    }
+
     update() {
         if(this.line == null){
             this.line = new paper.Path.Line( this.startPoint, this.endPoint)

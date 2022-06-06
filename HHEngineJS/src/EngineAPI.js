@@ -5,6 +5,8 @@ class EngineAPI{
 
     PendingInitFunctions = []
 
+    cppEngine = null
+
     constructor() {
         Logger.error("Creating Engine API!!!!")
     }
@@ -19,6 +21,7 @@ class EngineAPI{
 
     OnInit(){
         Module.HuaHuoEngine.prototype.InitEngine();
+        this.cppEngine = Module.HuaHuoEngine.prototype.GetInstance();
         this.inited = true
         Logger.error("Engine inited!!!!!")
 
@@ -27,8 +30,31 @@ class EngineAPI{
         })
     }
 
+    CreateShape(shapeName){
+        return this.cppEngine.CreateShape(shapeName)
+    }
+
     GetPersistentManager(){
         return Module.PersistentManager.prototype.GetPersistentManager()
+    }
+
+    GetDefaultObjectStoreManager(){
+        return Module.ObjectStoreManager.prototype.GetDefaultObjectStoreManager()
+    }
+
+    GetCurrentStore(){
+        return this.GetDefaultObjectStoreManager().GetCurrentStore()
+    }
+
+    GetCurrentLayer(){
+        let layer = this.GetCurrentStore().GetCurrentLayer();
+        if(!layer.addShape){
+            layer.addShape = (shape)=>{
+                layer.AddShapeInternal(shape.getRawShape())
+                Logger.debug("Currently there're:" + layer.GetShapeCount() + " shapes in the layer.")
+            }
+        }
+        return layer
     }
 }
 

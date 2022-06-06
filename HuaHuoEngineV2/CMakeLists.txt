@@ -104,6 +104,7 @@ list(APPEND CPPFILES Runtime/Serialize/SerializationCaching/FileCacherRead.cpp)
 list(APPEND CPPFILES Runtime/Serialize/SerializationCaching/FileCacherWrite.cpp)
 list(APPEND CPPFILES Runtime/Utilities/File.cpp)
 list(APPEND CPPFILES Runtime/Utilities/PathNameUtility.cpp)
+list(APPEND CPPFILES Runtime/Utilities/MemoryFileSystem.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)

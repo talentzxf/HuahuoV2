@@ -36,7 +36,7 @@ std::string PathNamePersistentManager::PathIDToPathNameInternal(int pathID, bool
 
 int PathNamePersistentManager::InsertPathNameInternal(std::string pathname, bool create)
 {
-            SET_ALLOC_OWNER(GetMemoryLabel());
+    SET_ALLOC_OWNER(GetMemoryLabel());
     Assert(!(!pathname.empty() && (pathname[0] == '/' || pathname[0] == '\\')));
 
     std::string lowerCasePathName = ToLower(pathname);

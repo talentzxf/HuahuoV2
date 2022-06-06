@@ -9,6 +9,7 @@
 #include "Serialize/SerializationCaching/FileCacherWrite.h"
 #include "Serialize/SerializationCaching/MemoryCacheWriter.h"
 #include "ObjectStore.h"
+#include "Serialize/SerializationCaching/BlockMemoryCacheWriter.h"
 
 #if DEBUGMODE
 #define CheckedAssert(x) Assert(x)
@@ -179,25 +180,27 @@ void PersistentManager::BeginFileWriting(std::string path){
     int serializedFileIndex;
     serializedFileIndex = InsertPathNameInternal(path, false);
 
-    // Create writable stream
-    SerializedFile* tempSerialize = HUAHUO_NEW_AS_ROOT(SerializedFile, kMemSerialization, kSerializedFileArea, "") ();
+    if(m_Streams[serializedFileIndex].stream == NULL){
+        // Create writable stream
+        SerializedFile* tempSerialize = HUAHUO_NEW_AS_ROOT(SerializedFile, kMemSerialization, kSerializedFileArea, "") ();
 #if UNITY_EDITOR
-    tempSerialize->SetDebugPath(PathIDToPathNameInternal(serializedFileIndex, false));
+        tempSerialize->SetDebugPath(PathIDToPathNameInternal(serializedFileIndex, false));
 #if ENABLE_MEM_PROFILER
     GetMemoryProfiler()->SetRootAllocationObjectName(tempSerialize, kMemSerialization, tempSerialize->GetDebugPath().c_str());
 #endif
 #endif
-    // Create writing tools
-    CachedWriter writer;
-    FileCacherWrite serializedFileWriter;
+        // Create writing tools
+        CachedWriter writer;
+        FileCacherWrite serializedFileWriter;
 
-    if (!InitTempWriteFile(serializedFileWriter,path, kCacheSize, false))
-        return;
-    writer.InitWrite(serializedFileWriter);
+//    if (!InitTempWriteFile(serializedFileWriter,path, kCacheSize, false))
+//        return;
+        serializedFileWriter.InitWriteFile(path, kCacheSize);
+        writer.InitWrite(serializedFileWriter);
 
-    tempSerialize->InitializeWrite(writer, /*target,*/ kReadWriteFromSerializedFile);
-    m_Streams[serializedFileIndex].stream = tempSerialize;
-
+        tempSerialize->InitializeWrite(writer, /*target,*/ kReadWriteFromSerializedFile);
+        m_Streams[serializedFileIndex].stream = tempSerialize;
+    }
     SetActiveNameSpace(serializedFileIndex, kWritingNameSpace);
 }
 
@@ -227,38 +230,62 @@ LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIn
     LocalIdentifierInFileType localIdentifierInFile = globalIdentifier.localIdentifierInFile;
     int localSerializedFileIndex;
 
+    printf("%s, %d\n", __FILE__, __LINE__);
     // Remap globalPathID to localPathID
     int activeNameSpace = GetActiveNameSpace(kWritingNameSpace);
+
+    printf("Active name space is:%d\n", activeNameSpace);
 
     IDRemap& globalToLocalNameSpace = m_GlobalToLocalNameSpace[activeNameSpace];
     IDRemap& localToGlobalNameSpace = m_LocalToGlobalNameSpace[activeNameSpace];
 
+    printf("%s, %d\n", __FILE__, __LINE__);
     IDRemap::iterator found = globalToLocalNameSpace.find(globalIdentifier.serializedFileIndex);
+    printf("%s, %d\n", __FILE__, __LINE__);
     if (found == globalToLocalNameSpace.end())
     {
+        printf("%s, %d\n", __FILE__, __LINE__);
         // SET_ALLOC_OWNER(m_MemoryLabel);
         Assert(activeNameSpace < (int)m_Streams.size());
         Assert(m_Streams[activeNameSpace].stream != NULL);
+
+        if(NULL == m_Streams[activeNameSpace].stream){
+            printf("Stream is null!!\n");
+        }
+
+        printf("Get stream from active namespace:%d\n", activeNameSpace);
+
         SerializedFile& serialize = *m_Streams[activeNameSpace].stream;
 
+        printf("%s, %d\n", __FILE__, __LINE__);
+
         FileIdentifier fileIdentifier = PathIDToFileIdentifierInternal(globalIdentifier.serializedFileIndex);
+
+        printf("%s, %d\n", __FILE__, __LINE__);
         serialize.AddExternalRef(fileIdentifier);
+
+        printf("%s, %d\n", __FILE__, __LINE__);
 
         // localIdentifierInFile mapping is not zero based. zero is reserved for mapping into the same file.
         localSerializedFileIndex = serialize.GetExternalRefs().size();
 
+        printf("%s, %d\n", __FILE__, __LINE__);
+
         globalToLocalNameSpace[globalIdentifier.serializedFileIndex] = localSerializedFileIndex;
+        printf("%s, %d\n", __FILE__, __LINE__);
         localToGlobalNameSpace[localSerializedFileIndex] = globalIdentifier.serializedFileIndex;
+        printf("%s, %d\n", __FILE__, __LINE__);
     }
     else
         localSerializedFileIndex = found->second;
+    printf("%s, %d\n", __FILE__, __LINE__);
 
     // Setup local identifier
     LocalSerializedObjectIdentifier localIdentifier;
-
+    printf("%s, %d\n", __FILE__, __LINE__);
     localIdentifier.localSerializedFileIndex = localSerializedFileIndex;
     localIdentifier.localIdentifierInFile = localIdentifierInFile;
-
+    printf("%s, %d\n", __FILE__, __LINE__);
     return localIdentifier;
 }
 
@@ -266,7 +293,7 @@ LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIn
 void PersistentManager::InstanceIDToLocalSerializedObjectIdentifier(InstanceID instanceID, LocalSerializedObjectIdentifier& localIdentifier)
 {
     // PERSISTENT_MANAGER_AUTOLOCK2(autoLock, HuaHuoEngine::kMutexLock, NULL, &gIDRemappingProfiler);
-
+    printf("%s, %d\n", __FILE__, __LINE__);
     if (instanceID == InstanceID_None)
     {
         localIdentifier.localSerializedFileIndex = 0;
@@ -274,15 +301,20 @@ void PersistentManager::InstanceIDToLocalSerializedObjectIdentifier(InstanceID i
         return;
     }
 
+    printf("%s, %d\n", __FILE__, __LINE__);
     SerializedObjectIdentifier globalIdentifier;
+    printf("%s, %d\n", __FILE__, __LINE__);
     if (!m_Remapper->InstanceIDToSerializedObjectIdentifier(instanceID, globalIdentifier))
     {
+        printf("%s, %d\n", __FILE__, __LINE__);
         localIdentifier.localSerializedFileIndex = 0;
         localIdentifier.localIdentifierInFile = 0;
         return;
     }
 
+    printf("%s, %d\n", __FILE__, __LINE__);
     localIdentifier = GlobalToLocalSerializedFileIndex(globalIdentifier);
+    printf("%s, %d\n", __FILE__, __LINE__);
 }
 
 #if HUAHUO_EDITOR
@@ -390,17 +422,22 @@ StreamNameSpace& PersistentManager::GetStreamNameSpaceInternal(int nameSpaceID)
 #endif
     if (!IsFileCreated(absolutePath))
     {
+        printf("File can't be created!!!!!!!!!! Path:%s\n", absolutePath.c_str());
 #if !UNITY_EDITOR
         AssertString("PersistentManager: File '" + pathName + "' was expected to exist at absolute path '" + absolutePath + "'");
 #endif
-        return nameSpace;
+        // return nameSpace;
+        CreateFile(absolutePath);
     }
+
+    printf("File has been created!!!!!!!! Namespace:%d\n", nameSpaceID);
 
     // Is Builtin resource file?
     TransferInstructionFlags options = kNoTransferInstructionFlags;
 //    if (IsPathBuiltinResourceFile(pathName))
 //        options |= kIsBuiltinResourcesFile;
 
+    printf("Creating stream here\n");
     nameSpace.stream = HUAHUO_NEW_AS_ROOT(SerializedFile, kMemSerialization, kSerializedFileArea, pathName.c_str()) ();
             SET_ALLOC_OWNER(CreateMemLabel(kMemSerialization, nameSpace.stream));
 #if UNITY_EDITOR
@@ -593,6 +630,9 @@ size_t PersistentManager::WriteStoreFileInMemory(){
 }
 
 size_t PersistentManager::WriteStoreFileInMemoryInternal(std::vector<UInt8> &memory, Object* storeManager) {
+
+    BeginFileWriting(StoreFilePath);
+
     MemoryCacheWriter memoryCacheWriter(memory);
     StreamedBinaryWrite writeStream;
     CachedWriter& writerCache = writeStream.Init(kReadWriteFromSerializedFile);
@@ -605,8 +645,12 @@ size_t PersistentManager::WriteStoreFileInMemoryInternal(std::vector<UInt8> &mem
     huahuoHeader.version = 1;
     huahuoHeader.dataOffset = sizeof(huahuoHeader);
 
+    printf("Writing header, size:%d\n", huahuoHeader.dataOffset);
     writerCache.Write(huahuoHeader);
-    writerCache.Write(*storeManager);
+    printf("Writing storeManager\n");
+
+    GetDefaultObjectStoreManager()->VirtualRedirectTransfer(writeStream);
+    writerCache.CompleteWriting();
 
     return writerCache.GetPosition();
 }
@@ -628,9 +672,19 @@ emscripten::val writePersistentManagerInMemory(){
                 );
     }
 
-EMSCRIPTEN_BINDINGS(my_module) {
-    function("WritePersistentManagerInMemory", &writePersistentManagerInMemory);
+emscripten::val resizeAndGetPersistentManagerBuffer(int size){
+    GetPersistentManager().CleanupAndResizeBuffer(size);
+    UInt8* bufferPtr = GetPersistentManager().GetBufferPtr();
+
+    return emscripten::val(
+                emscripten::typed_memory_view(size, bufferPtr)
+                );
 }
+EMSCRIPTEN_BINDINGS(my_module) {
+    function("writePersistentManagerInMemory", &writePersistentManagerInMemory);
+    function("resizeAndGetPersistentManagerBuffer", &resizeAndGetPersistentManagerBuffer);
+}
+
 #endif
 
 #endif

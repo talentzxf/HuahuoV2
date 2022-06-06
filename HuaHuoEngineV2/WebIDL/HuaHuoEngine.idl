@@ -16,11 +16,44 @@ interface ScriptEventHandlerImpl{
 
 interface PersistentManager{
     static PersistentManager GetPersistentManager();
+
+    void LoadFromBuffer();
+};
+
+[NoDelete]
+interface LineShape{
+    void SetStartPoint(float x,float y,float z);
+    void SetEndPoint(float x,float y,float z);
+};
+
+[NoDelete]
+interface Layer{
+    void AddShapeInternal(BaseShape newShape);
+    long long GetShapeCount();
+    void SetName(DOMString name);
+};
+
+[NoDelete]
+interface ObjectStore{
+    Layer GetCurrentLayer();
+    Layer CreateLayer(DOMString trackId);
+    long long GetLayerCount();
+};
+
+[NoDelete]
+interface ObjectStoreManager{
+    static ObjectStoreManager GetDefaultObjectStoreManager();
+    ObjectStore GetCurrentStore();
+};
+
+[NoDelete]
+interface BaseShape{
+
 };
 
 interface HuaHuoEngine {
-    static HuaHuoEngine getInstance();
+    static HuaHuoEngine GetInstance();
     static void InitEngine();
     void RegisterEvent(DOMString eventType, ScriptEventHandler handler);
-    PersistentManager GetPersistentManager();
+    BaseShape CreateShape(DOMString shapeName);
 };

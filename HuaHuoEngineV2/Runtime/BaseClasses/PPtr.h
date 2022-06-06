@@ -346,9 +346,12 @@ void TransferPPtr(InstanceID& instanceId, TransferFunction& transfer)
         }
         else if (transfer.IsWriting())
         {
+            printf("Transfering PPTr\n");
             InstanceIDToLocalSerializedObjectIdentifier(instanceId, localIdentifier);
             transfer.Transfer(localIdentifier.localSerializedFileIndex, "m_FileID", kHideInEditorMask | kDontAnimate);
             transfer.Transfer(localIdentifier.localIdentifierInFile, "m_PathID", kHideInEditorMask | kDontAnimate);
+
+            printf("Transfered PPTr\n");
         }
         else
         {

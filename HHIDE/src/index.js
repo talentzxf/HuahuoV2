@@ -24,12 +24,31 @@ library.add(faBezierCurve)
 dom.watch();
 
 function save(){
-    let int8Array = Module.WritePersistentManagerInMemory()
-    let blob = new Blob([int8Array], {type:"application/octet-stream"})
+    let Uint8Array = Module.writePersistentManagerInMemory()
+    let blob = new Blob([Uint8Array], {type:"application/octet-stream"})
     saveAs(blob, "huahuo.data")
     Logger.info("Good!!")
 }
 
+function load(e){
+    var file = e.target.files[0];
+    var reader = new FileReader()
+
+    let fileContent = new Blob([Uint8Array], {type:"application/octet-stream"});
+    reader.onload = function(e){
+        let fileSize = fileContent.size;
+        let Uint8Array = Module.resizeAndGetPersistentManagerBuffer(fileSize);
+        let arrayBuffer = fileContent.arrayBuffer()
+        for(let i = 0 ; i < fileSize; i++){
+            Uint8Array[i] = arrayBuffer[i];
+        }
+
+        huahuoEngine.GetPersistentManager().LoadFromBuffer();
+    }
+    reader.readAsArrayBuffer(fileContent)
+}
+
 window.menuoperations = {
-    save: save
+    save: save,
+    load: load
 }

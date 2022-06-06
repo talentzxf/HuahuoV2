@@ -63,18 +63,17 @@ void testShapeStore() {
     LineShape* lineShape = Object::Produce<LineShape>();
     lineShape->SetStartPoint(0, 1, 0);
     lineShape->SetEndPoint(1, 0, 0);
-    currentLayer->addShape(lineShape);
+    currentLayer->AddShapeInternal(lineShape);
 
     std::string path = StoreFilePath;
-    CreateDirectory(DeleteLastPathNameComponent(path));
     GetPersistentManager().BeginFileWriting(path);
 
     BlockMemoryCacheWriter memoryCacheWriter(kMemDefault);
     StreamedBinaryWrite writeStream;
-    CachedWriter& writeCache = writeStream.Init(kReadWriteFromSerializedFile);
-    writeCache.InitWrite(memoryCacheWriter);
+    CachedWriter* writeCache = &writeStream.Init(kReadWriteFromSerializedFile);
+    writeCache->InitWrite(memoryCacheWriter);
     GetDefaultObjectStoreManager()->VirtualRedirectTransfer(writeStream);
-    writeCache.CompleteWriting();
+    writeCache->CompleteWriting();
 
     UInt32 length = memoryCacheWriter.GetFileLength() * sizeof(UInt8);
     Assert(length != 0);
@@ -84,8 +83,8 @@ void testShapeStore() {
 
     MemoryCacherReadBlocks memoryCacheReader(memoryCacheWriter.GetCacheBlocks(), memoryCacheWriter.GetFileLength(), memoryCacheWriter.GetCacheSize());
     StreamedBinaryRead readStream;
-    CachedReader& readCache = readStream.Init(kReadWriteFromSerializedFile);
-    readCache.InitRead(memoryCacheReader, 0 , writeCache.GetPosition());
+    CachedReader* readCache = &readStream.Init(kReadWriteFromSerializedFile);
+    readCache->InitRead(memoryCacheReader, 0 , writeCache->GetPosition());
     Object* clonedObj = Object::Produce(GetDefaultObjectStoreManager()->GetType());
     clonedObj->VirtualRedirectTransfer(readStream);
     ObjectStoreManager* storeManager = (ObjectStoreManager*)clonedObj;

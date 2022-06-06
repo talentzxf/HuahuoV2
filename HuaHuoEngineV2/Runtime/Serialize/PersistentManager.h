@@ -203,6 +203,16 @@ public:
     UInt8* GetBufferPtr(){
         return m_Buffer.data();
     }
+
+    void CleanupAndResizeBuffer(int size){
+        m_Buffer.clear();
+        m_Buffer.resize(size);
+    }
+
+    void LoadFromBuffer(){
+
+    }
+
 protected:
     ///  maps a pathID to a pathname/file guid/fileidentifier.
     /// (pathID can be assumed to be allocated before with InsertPathName)

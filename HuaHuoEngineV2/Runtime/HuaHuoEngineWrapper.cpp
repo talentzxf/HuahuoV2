@@ -3,6 +3,7 @@
 #include "Export/Events/ScriptEventManager.h"
 #include "HuaHuoEngine.h"
 #include "Components/Transform/Transform.h"
+#include "ObjectStore.h"
 #ifdef HUAHUO_EDITOR
 #include "Editor/SceneInspector.h"
 #include "Editor/SceneView.h"

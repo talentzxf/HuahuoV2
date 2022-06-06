@@ -7,27 +7,44 @@
 #include "Word.h"
 #include <filesystem>
 #include <iostream>
+#include <fstream>
+#include "MemoryFileSystem.h"
 namespace fs = std::filesystem;
 
 std::string PathToAbsolutePath(std::string path)
 {
+    if(GetMemoryFileSystem()->IsMemoryFile(path))
+        return path;
     return std::filesystem::absolute(path).string();
 }
 
 bool IsFileCreated(std::string path)
 {
+    if(GetMemoryFileSystem()->IsMemoryFile(path))
+        return GetMemoryFileSystem()->IsFileCreated(path);
+
     return std::filesystem::exists(path);
 }
 
 size_t GetFileLength(std::string path){
+    if(GetMemoryFileSystem()->IsMemoryFile(path))
+        return GetMemoryFileSystem()->GetFileLength(path);
+
     return std::filesystem::file_size(path);
 }
 
 File::File(){
+    isMemoryFile = false;
     m_FileAccessor = NULL;
 }
 
 bool File::Open(std::string path, FilePermission perm, FileAutoBehavior behavior) {
+    if(GetMemoryFileSystem()->IsMemoryFile(path)){
+        isMemoryFile = true;
+        m_MemFileAccessor = GetMemoryFileSystem()->OpenFile(path, perm);
+        return m_MemFileAccessor != NULL;
+    }
+
     const char* permission;
     switch (perm) {
         case kReadPermission:
@@ -50,25 +67,49 @@ bool File::Open(std::string path, FilePermission perm, FileAutoBehavior behavior
 }
 
 bool File::Write(const void *buffer, size_t size) {
+    if(this->isMemoryFile){
+        return this->m_MemFileAccessor->Write(buffer, size);
+    }
+
     size_t written = fwrite(buffer, size, 1, m_FileAccessor);
     return written > 0;
 }
 
 bool File::Write(size_t pos, const void *buffer, size_t size) {
+    if(this->isMemoryFile){
+        return this->m_MemFileAccessor->Write(pos, buffer, size);
+    }
+
     size_t written = fwrite((const char*)buffer + pos, size, 1, m_FileAccessor);
     return written > 0;
 }
 
 bool File::Close(){
+    if(this->isMemoryFile){
+        GetMemoryFileSystem()->CloseFile(this->m_MemFileAccessor);
+    }
     int closeRes = fclose(m_FileAccessor);
     return closeRes == 0;
 }
 
 File::~File() {}
 
+void CreateFile(std::string path){
+    if(GetMemoryFileSystem()->IsMemoryFile(path))
+        GetMemoryFileSystem()->CreateFile(path);
+    else{
+        std::fstream fs;
+        fs.open(path, std::ios::out);
+        fs.close();
+    }
+}
+
 bool IsPathCreated(std::string path)
 {
     // __FAKEABLE_FUNCTION__(IsPathCreated, (path));
+
+    if(GetMemoryFileSystem()->IsMemoryFile(path))
+        return true;
 
     if (path.empty())
         return false;
@@ -79,11 +120,17 @@ bool IsPathCreated(std::string path)
 
 bool IsDirectoryCreated(std::string path)
 {
+    if(GetMemoryFileSystem()->IsMemoryFile(path))
+        return true;
+
     return std::filesystem::exists(path) && std::filesystem::is_directory(path);
 }
 
 bool CreateDirectory(std::string pathName)
 {
+    if(GetMemoryFileSystem()->IsMemoryFile(pathName))
+        return true;
+
     // __FAKEABLE_FUNCTION__(CreateDirectory, (pathName));
 
     std::string absolutePath = PathToAbsolutePath(pathName);

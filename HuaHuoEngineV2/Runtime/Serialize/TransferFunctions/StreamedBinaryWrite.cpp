@@ -25,14 +25,18 @@ CachedWriter& StreamedBinaryWrite::Init(const CachedWriter& cachedWriter, Transf
 
 CachedWriter& StreamedBinaryWrite::Init(TransferInstructionFlags flags)//, BuildTargetSelection target, void * manageReferenceToReuse)
 {
+    printf("Running in streamedbinary write init\n");
     m_Flags = flags;
+    printf("%s,%d",__FILE__, __LINE__);
     m_UserData = NULL;
+    printf("%s,%d",__FILE__, __LINE__);
 //    m_Target = target;
 //    m_ReferenceFromIDCache = manageReferenceToReuse;
 
 #if UNITY_EDITOR && CHECK_SERIALIZE_ALIGNMENT
     m_Cache.m_CheckSerializeAlignment = true;
 #endif
+    printf("%s,%d",__FILE__, __LINE__);
     return m_Cache;
 }
 

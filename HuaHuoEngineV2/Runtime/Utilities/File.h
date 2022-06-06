@@ -76,16 +76,22 @@ bool IsDirectoryEmpty(std::string path);
 
 bool IsPathCreated(std::string path);
 
+void CreateFile(std::string path);
+
 size_t GetFileLength(std::string path);
 
+class MemoryFileAccessor;
 class File : public NonCopyable
 {
 //    FileSystemEntry* m_entry;
 //    FileAccessor*    m_accessor;
 
+    bool isMemoryFile;
+
     size_t    m_Position;
     std::string     m_Path;
     FILE* m_FileAccessor;
+    MemoryFileAccessor* m_MemFileAccessor;
 
 public:
     File();
