@@ -68,8 +68,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/external/baselib/builds/Source/Baselib_Tim
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\external\baselib\builds\Source
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/HuaHuoEngine.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/HuaHuoEngine.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -78,8 +76,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/HuaHuoEngine.cpp.obj: CXX_COMPILER
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/Transform.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Components/Transform/Transform.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -88,8 +84,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/Transform.cpp
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Components\Transform
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/TransformHierarchy.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Components/Transform/TransformHierarchy.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -98,8 +92,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/TransformHier
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Components\Transform
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/TransformChangeDispatch.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Components/Transform/TransformChangeDispatch.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -108,8 +100,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/Transform/TransformChan
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Components\Transform
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/Object.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/TypeSystem/Object.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -118,8 +108,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/Object.cpp.obj: CXX_COM
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\TypeSystem
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/RTTI.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/TypeSystem/RTTI.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -128,8 +116,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/RTTI.cpp.obj: CXX_COMPI
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\TypeSystem
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/TypeManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/TypeSystem/TypeManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -138,8 +124,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/TypeManager.cpp.obj: CX
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\TypeSystem
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/Type.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/TypeSystem/Type.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -148,8 +132,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/TypeSystem/Type.cpp.obj: CXX_COMPI
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\TypeSystem
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/HashFunctions/xxhash.c.obj: C_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/HashFunctions/xxhash.c || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -158,8 +140,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/HashFunctions/xxhash.c.o
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities\HashFunctions
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/RegisterRuntimeInitializeAndCleanup.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/RegisterRuntimeInitializeAndCleanup.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -168,8 +148,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/RegisterRuntimeInitializ
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/Word.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/Word.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -178,8 +156,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/Word.cpp.obj: CXX_COMPIL
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/Hash128.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/Hash128.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -188,8 +164,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/Hash128.cpp.obj: CXX_COM
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/GameObject.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/GameObject.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -198,8 +172,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/GameObject.cpp.obj: CX
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ClassRegistration.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/ClassRegistration.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -208,8 +180,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ClassRegistration.cpp.
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/MessageIdentifier.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/MessageIdentifier.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -218,8 +188,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/MessageIdentifier.cpp.
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/MessageHandler.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/MessageHandler.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -228,8 +196,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/MessageHandler.cpp.obj
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/NamedObject.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/NamedObject.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -238,8 +204,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/NamedObject.cpp.obj: C
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/GameManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/GameManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -248,8 +212,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/GameManager.cpp.obj: C
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ManagerContext.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/ManagerContext.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -258,8 +220,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ManagerContext.cpp.obj
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/IsPlaying.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/IsPlaying.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -268,8 +228,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/IsPlaying.cpp.obj: CXX
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/BaseComponent.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Components/BaseComponent.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -278,8 +236,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Components/BaseComponent.cpp.obj: 
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Components
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/PersistentManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/PersistentManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -288,8 +244,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/PersistentManager.cpp.ob
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/PathNamePersistentManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/PathNamePersistentManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -298,8 +252,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/PathNamePersistentManage
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/Remapper.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/Remapper.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -308,8 +260,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/Remapper.cpp.obj: CXX_CO
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializedFile.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializedFile.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -318,8 +268,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializedFile.cpp.obj: 
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/StreamedBinaryRead.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/TransferFunctions/StreamedBinaryRead.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -328,8 +276,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/Stream
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\TransferFunctions
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/StreamedBinaryWrite.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/TransferFunctions/StreamedBinaryWrite.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -338,8 +284,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/Stream
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\TransferFunctions
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/TransferBase.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/TransferFunctions/TransferBase.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -348,8 +292,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/TransferFunctions/Transf
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\TransferFunctions
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CacheWriterBase.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/CacheWriterBase.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -358,8 +300,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Cac
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CacheReaderBase.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/CacheReaderBase.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -368,8 +308,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Cac
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CachedReader.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/CachedReader.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -378,8 +316,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Cac
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/CachedWriter.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/CachedWriter.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -388,8 +324,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Cac
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/MemoryCacherReadBlocks.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/MemoryCacherReadBlocks.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -398,8 +332,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Mem
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Export/Scripting/GameObjectExport.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Export/Scripting/GameObjectExport.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -408,8 +340,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Export/Scripting/GameObjectExport.
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Export\Scripting
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Containers/CommonString.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Containers/CommonString.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -418,8 +348,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Containers/CommonString.cpp.obj: C
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Containers
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Containers/GrowableBuffer.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Containers/GrowableBuffer.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -428,8 +356,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Containers/GrowableBuffer.cpp.obj:
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Containers
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Simd/vec-svd.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Simd/vec-svd.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -438,8 +364,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Simd/vec-svd.cpp.obj: CXX_COM
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math\Simd
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Quaternionf.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Quaternionf.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -448,8 +372,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Quaternionf.cpp.obj: CXX_COMP
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector3f.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Vector3f.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -458,8 +380,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector3f.cpp.obj: CXX_COMPILE
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector4f.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Vector4f.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -468,8 +388,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector4f.cpp.obj: CXX_COMPILE
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector2f.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Vector2f.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -478,8 +396,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Vector2f.cpp.obj: CXX_COMPILE
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix3x3.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Matrix3x3.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -488,8 +404,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix3x3.cpp.obj: CXX_COMPIL
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix4x4.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Matrix4x4.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -498,8 +412,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix4x4.cpp.obj: CXX_COMPIL
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix4x4_REF.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/Matrix4x4_REF.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -508,8 +420,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/Matrix4x4_REF.cpp.obj: CXX_CO
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/FloatConversion.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Math/FloatConversion.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -518,8 +428,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Math/FloatConversion.cpp.obj: CXX_
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Math
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Misc/GameObjectUtility.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Misc/GameObjectUtility.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -528,8 +436,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Misc/GameObjectUtility.cpp.obj: CX
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Misc
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Logging/LogAssert.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Logging/LogAssert.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -538,8 +444,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Logging/LogAssert.cpp.obj: CXX_COM
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Logging
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/MemoryMacros.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Memory/MemoryMacros.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -548,8 +452,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/MemoryMacros.cpp.obj: CXX_C
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Memory
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/BatchAllocator.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Memory/BatchAllocator.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -558,8 +460,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/BatchAllocator.cpp.obj: CXX
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Memory
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/MemoryManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Memory/MemoryManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -568,8 +468,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Memory/MemoryManager.cpp.obj: CXX_
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Memory
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/SceneManager/HuaHuoScene.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/SceneManager/HuaHuoScene.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -578,8 +476,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/SceneManager/HuaHuoScene.cpp.obj: 
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\SceneManager
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/SceneManager/SceneManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/SceneManager/SceneManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -588,8 +484,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/SceneManager/SceneManager.cpp.obj:
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\SceneManager
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Export/Events/ScriptEventManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Export/Events/ScriptEventManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -598,8 +492,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Export/Events/ScriptEventManager.c
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Export\Events
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/GameCode/Behaviour.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/GameCode/Behaviour.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -608,8 +500,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/GameCode/Behaviour.cpp.obj: CXX_CO
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\GameCode
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Input/TimeManager.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Input/TimeManager.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -618,8 +508,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Input/TimeManager.cpp.obj: CXX_COM
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Input
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Input/TargetFrameRate.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Input/TargetFrameRate.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -628,8 +516,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Input/TargetFrameRate.cpp.obj: CXX
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Input
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderPassContext.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Shaders/ShaderPassContext.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -638,8 +524,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderPassContext.cpp.obj:
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Shaders
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderPropertySheet.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Shaders/ShaderPropertySheet.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -648,8 +532,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderPropertySheet.cpp.ob
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Shaders
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Profiler/TimeHelper.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Profiler/TimeHelper.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -658,8 +540,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Profiler/TimeHelper.cpp.obj: CXX_C
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Profiler
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/external/baselib/builds/Source/Assert.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Source/Assert.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -668,8 +548,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/external/baselib/builds/Source/Assert.cpp.
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\external\baselib\builds\Source
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ManagerContextLoading.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/BaseClasses/ManagerContextLoading.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -678,8 +556,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/BaseClasses/ManagerContextLoading.
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\BaseClasses
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderTags.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Shaders/ShaderTags.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -688,8 +564,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Shaders/ShaderTags.cpp.obj: CXX_CO
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Shaders
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/Jobs.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Job/Jobs.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -698,8 +572,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/Jobs.cpp.obj: CXX_COMPILER__Te
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Job
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/JobBatchDispatcher.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Job/JobBatchDispatcher.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -708,8 +580,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/JobBatchDispatcher.cpp.obj: CX
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Job
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/AABB.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Geometry/AABB.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -718,8 +588,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/AABB.cpp.obj: CXX_COMPILE
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Geometry
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/BoundingUtils.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Geometry/BoundingUtils.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -728,8 +596,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/BoundingUtils.cpp.obj: CX
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Geometry
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/Intersection.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Geometry/Intersection.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -738,8 +604,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/Intersection.cpp.obj: CXX
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Geometry
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/TriTriIntersect.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Geometry/TriTriIntersect.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -748,8 +612,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Geometry/TriTriIntersect.cpp.obj: 
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Geometry
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/BlockRangeJob.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Job/BlockRangeJob.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -758,8 +620,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Job/BlockRangeJob.cpp.obj: CXX_COM
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Job
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/EnumTraits.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/EnumTraits.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -768,8 +628,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/EnumTraits.cpp.obj: CXX_
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/SceneView.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Editor/SceneView.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -778,8 +636,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/SceneView.cpp.obj: CXX_COMP
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Editor
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/src/ObjectStore.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src/ObjectStore.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -788,8 +644,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/src/ObjectStore.cpp.obj: CXX_COMPILER__Tes
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\src
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/src/Shapes/BaseShape.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src/Shapes/BaseShape.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -798,8 +652,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/src/Shapes/BaseShape.cpp.obj: CXX_COMPILER
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\src\Shapes
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/src/Shapes/LineShape.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src/Shapes/LineShape.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -808,8 +660,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/src/Shapes/LineShape.cpp.obj: CXX_COMPILER
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\src\Shapes
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/FileCacherRead.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/FileCacherRead.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -818,8 +668,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Fil
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/FileCacherWrite.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Serialize/SerializationCaching/FileCacherWrite.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -828,8 +676,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Serialize/SerializationCaching/Fil
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Serialize\SerializationCaching
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/File.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/File.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -838,8 +684,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/File.cpp.obj: CXX_COMPIL
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/PathNameUtility.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/PathNameUtility.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -848,8 +692,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/PathNameUtility.cpp.obj:
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/MemoryFileSystem.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Utilities/MemoryFileSystem.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -858,8 +700,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Utilities/MemoryFileSystem.cpp.obj
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Utilities
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/SceneInspector.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Editor/SceneInspector.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -868,8 +708,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/SceneInspector.cpp.obj: CXX
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Editor
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/Utility/SceneRootTransformArray.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime/Editor/Utility/SceneRootTransformArray.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -878,8 +716,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/Runtime/Editor/Utility/SceneRootTransformA
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\Runtime\Editor\Utility
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 build CMakeFiles/TestHuaHuoEngine.dir/test/main.cpp.obj: CXX_COMPILER__TestHuaHuoEngine_Debug C$:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/test/main.cpp || cmake_object_order_depends_target_TestHuaHuoEngine
   DEFINES = -DHUAHUO_EDITOR=1
@@ -888,8 +724,6 @@ build CMakeFiles/TestHuaHuoEngine.dir/test/main.cpp.obj: CXX_COMPILER__TestHuaHu
   INCLUDES = -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/src -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source/common -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/source -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/external/Umbra/interface -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/WebGL/Source/Threads -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/PlatformDependent/Win/External/baselib/builds/Include -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/cmake-build-debug -IC:/Users/vincentzhang/MyProjects/HuahuoV2/HuaHuoEngineV2/Runtime
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   OBJECT_FILE_DIR = CMakeFiles\TestHuaHuoEngine.dir\test
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
-  TARGET_PDB = TestHuaHuoEngine.pdb
 
 
 # =============================================================================
@@ -905,10 +739,9 @@ build TestHuaHuoEngine.exe: CXX_EXECUTABLE_LINKER__TestHuaHuoEngine_Debug CMakeF
   OBJECT_DIR = CMakeFiles\TestHuaHuoEngine.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = CMakeFiles\TestHuaHuoEngine.dir\
   TARGET_FILE = TestHuaHuoEngine.exe
   TARGET_IMPLIB = libTestHuaHuoEngine.dll.a
-  TARGET_PDB = TestHuaHuoEngine.pdb
+  TARGET_PDB = TestHuaHuoEngine.exe.dbg
 
 
 #############################################
@@ -943,14 +776,14 @@ build all: phony TestHuaHuoEngine.exe
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../Runtime/HuaHuoEngineConfig.h.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCCompiler.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCCompilerABI.c C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXCompiler.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXCompilerABI.cpp C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCompilerIdDetection.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineCCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineCXXCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineCompileFeatures.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineCompilerABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineCompilerId.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineRCCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeFindBinUtils.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeParseImplicitIncludeInfo.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeParseImplicitLinkInfo.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeParseLibraryArchitecture.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeRCCompiler.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystem.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeTestCCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeTestCXXCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeTestCompilerCommon.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeTestRCCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/ADSP-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/ARMCC-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/ARMClang-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/AppleClang-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Borland-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Bruce-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Clang-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Clang-DetermineCompilerInternal.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Compaq-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Cray-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Embarcadero-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Fujitsu-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GHS-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-FindBinUtils.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/HP-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/HP-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/IAR-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Intel-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/MSVC-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/NVHPC-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/NVIDIA-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/PGI-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/PathScale-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/ROCMClang-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/SCO-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/SDCC-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/SunPro-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/TI-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Watcom-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/XL-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/XL-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/XLClang-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/zOS-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Internal/FeatureTesting.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-Determine-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeRCCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../Runtime/HuaHuoEngineConfig.h.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeRCCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build ../CMakeLists.txt ../Runtime/HuaHuoEngineConfig.h.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCCompiler.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCCompilerABI.c C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXCompiler.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXCompilerABI.cpp C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCompilerIdDetection.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineCCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineCXXCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineCompileFeatures.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineCompilerABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineCompilerId.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineRCCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeDetermineSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeFindBinUtils.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeParseImplicitIncludeInfo.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeParseImplicitLinkInfo.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeParseLibraryArchitecture.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeRCCompiler.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystem.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeTestCCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeTestCXXCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeTestCompilerCommon.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeTestRCCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/ADSP-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/ARMCC-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/ARMClang-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/AppleClang-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Borland-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Bruce-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Clang-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Clang-DetermineCompilerInternal.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Compaq-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Cray-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Embarcadero-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Fujitsu-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GHS-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-FindBinUtils.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/HP-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/HP-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/IAR-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Intel-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/MSVC-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/NVHPC-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/NVIDIA-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/PGI-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/PathScale-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/ROCMClang-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/SCO-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/SDCC-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/SunPro-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/TI-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/Watcom-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/XL-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/XL-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/XLClang-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/zOS-C-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Internal/FeatureTesting.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-Determine-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeRCCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake: phony
+build ../CMakeLists.txt ../Runtime/HuaHuoEngineConfig.h.in C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2021.3.4/bin/cmake/win/share/cmake-3.21/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeRCCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake: phony
 
 
 #############################################

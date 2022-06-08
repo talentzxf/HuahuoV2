@@ -10,6 +10,7 @@
 #include "Serialize/SerializationCaching/MemoryCacheWriter.h"
 #include "ObjectStore.h"
 #include "Serialize/SerializationCaching/BlockMemoryCacheWriter.h"
+#include "WriteData.h"
 
 #if DEBUGMODE
 #define CheckedAssert(x) Assert(x)
@@ -19,6 +20,30 @@
 
 #if HUAHUO_EDITOR || SUPPORT_RESOURCE_IMAGE_LOADING
 static const char* kResourceImageExtensions[] = { "resG", "res", "resS" };
+#endif
+
+#if HUAHUO_EDITOR
+class AutoResetInstanceIDResolver : NonCopyable
+{
+public:
+    AutoResetInstanceIDResolver() : m_WasSet(false) {}
+    ~AutoResetInstanceIDResolver()
+    {
+        if (m_WasSet)
+            SetInstanceIDResolveCallback(NULL);
+    }
+
+    void Set(const InstanceIDResolver& resolver)
+    {
+        DebugAssert(!m_WasSet);
+        SetInstanceIDResolveCallback(resolver.callback, resolver.context);
+        m_WasSet = true;
+    }
+
+private:
+    bool m_WasSet;
+};
+
 #endif
 
 void PersistentManager::LocalSerializedObjectIdentifierToInstanceID(const LocalSerializedObjectIdentifier& localIdentifier, InstanceID& outInstanceID, LockFlags lockedFlags)
@@ -167,6 +192,15 @@ PersistentManager::PersistentManager(MemLabelId label)
     m_Abort = 0;
 }
 
+bool StreamNameSpace::IsDestroyed(LocalIdentifierInFileType id)
+{
+    if (destroyedObjects == NULL)
+        return false;
+
+    return std::find(destroyedObjects->begin(), destroyedObjects->end(), id) != destroyedObjects->end();
+}
+
+
 static bool InitTempWriteFile(FileCacherWrite& writer, const std::string& path, unsigned cacheSize, bool shouldBeOnMemoryFileSystem)
 {
     std::string tempWriteFileName = GenerateUniquePathSafe(std::string(shouldBeOnMemoryFileSystem ? "mem:/" + path : path));
@@ -176,39 +210,50 @@ static bool InitTempWriteFile(FileCacherWrite& writer, const std::string& path, 
     return writer.InitWriteFile(shouldBeOnMemoryFileSystem ? "mem:/" + path : path, cacheSize);
 }
 
-void PersistentManager::BeginFileWriting(std::string path){
-    int serializedFileIndex;
-    serializedFileIndex = InsertPathNameInternal(path, false);
+//static bool InitTempWriteFile(FileCacherWrite& writer, unsigned cacheSize, bool shouldBeOnMemoryFileSystem)
+//{
+//    core::string tempWriteFileName = shouldBeOnMemoryFileSystem ? GetUniqueTempPath("mem:/Temp/UnityTempFile-") : GetUniqueTempPathInProject();
+//    if (tempWriteFileName.empty())
+//        return false;
+//
+//    return writer.InitWriteFile(tempWriteFileName, cacheSize);
+//}
 
-    if(m_Streams[serializedFileIndex].stream == NULL){
-        // Create writable stream
-        SerializedFile* tempSerialize = HUAHUO_NEW_AS_ROOT(SerializedFile, kMemSerialization, kSerializedFileArea, "") ();
-#if UNITY_EDITOR
-        tempSerialize->SetDebugPath(PathIDToPathNameInternal(serializedFileIndex, false));
-#if ENABLE_MEM_PROFILER
-    GetMemoryProfiler()->SetRootAllocationObjectName(tempSerialize, kMemSerialization, tempSerialize->GetDebugPath().c_str());
-#endif
-#endif
-        // Create writing tools
-        CachedWriter writer;
-        FileCacherWrite serializedFileWriter;
-
-//    if (!InitTempWriteFile(serializedFileWriter,path, kCacheSize, false))
-//        return;
-        serializedFileWriter.InitWriteFile(path, kCacheSize);
-        writer.InitWrite(serializedFileWriter);
-
-        tempSerialize->InitializeWrite(writer, /*target,*/ kReadWriteFromSerializedFile);
-        m_Streams[serializedFileIndex].stream = tempSerialize;
-    }
-    SetActiveNameSpace(serializedFileIndex, kWritingNameSpace);
-}
-
-void PersistentManager::BeginFileReading(std::string path){
-    int serializedFileIndex;
-    serializedFileIndex = InsertPathNameInternal(path, false);
-    SetActiveNameSpace(serializedFileIndex, kReadingNameSpace);
-}
+//int PersistentManager::BeginFileWriting(std::string& path){
+//    int serializedFileIndex;
+//    serializedFileIndex = InsertPathNameInternal(path, false);
+//
+//    if(m_Streams[serializedFileIndex].stream == NULL){
+//        // Create writable stream
+//        SerializedFile* tempSerialize = HUAHUO_NEW_AS_ROOT(SerializedFile, kMemSerialization, kSerializedFileArea, "") ();
+//#if UNITY_EDITOR
+//        tempSerialize->SetDebugPath(PathIDToPathNameInternal(serializedFileIndex, false));
+//#if ENABLE_MEM_PROFILER
+//    GetMemoryProfiler()->SetRootAllocationObjectName(tempSerialize, kMemSerialization, tempSerialize->GetDebugPath().c_str());
+//#endif
+//#endif
+//        // Create writing tools
+//        CachedWriter writer;
+//        FileCacherWrite serializedFileWriter;
+//
+////    if (!InitTempWriteFile(serializedFileWriter,path, kCacheSize, false))
+////        return;
+//        serializedFileWriter.InitWriteFile(path, kCacheSize);
+//        writer.InitWrite(serializedFileWriter);
+//
+//        tempSerialize->InitializeWrite(writer, /*target,*/ kReadWriteFromSerializedFile);
+//        m_Streams[serializedFileIndex].stream = tempSerialize;
+//    }
+//    SetActiveNameSpace(serializedFileIndex, kWritingNameSpace);
+//
+//    return serializedFileIndex;
+//}
+//
+//void PersistentManager::BeginFileReading(std::string& path){
+//    int serializedFileIndex;
+//    serializedFileIndex = InsertPathNameInternal(path, false);
+//    SetActiveNameSpace(serializedFileIndex, kReadingNameSpace);
+//}
 
 void PersistentManager::SetActiveNameSpace(int activeNameSpace, ActiveNameSpaceType type)
 {
@@ -624,39 +669,371 @@ void PersistentManager::MakeObjectUnpersistent(InstanceID memoryID, UnpersistMod
         o->SetIsPersistent(false);
 }
 
-size_t PersistentManager::WriteStoreFileInMemory(){
-    size_t arrayBufferSize = WriteStoreFileInMemoryInternal(this->m_Buffer, GetDefaultObjectStoreManager());
-    return arrayBufferSize;
+// Returns fileIDs from path.
+void PersistentManager::GetAllFileIDs(std::string& pathName, std::vector<LocalIdentifierInFileType>& fileIDs){
+    // AutoLock autoLock(*this);
+
+    StreamNameSpace* streamNameSpace = GetStreamNameSpaceInternal(pathName);
+    if (streamNameSpace == NULL || streamNameSpace->stream == NULL)
+        return;
+
+    streamNameSpace->stream->GetAllFileIDs(fileIDs);
+
+    for (std::vector<LocalIdentifierInFileType>::iterator it = fileIDs.begin(); it != fileIDs.end();)
+    {
+        // If it's destroyed.
+        if (streamNameSpace->IsDestroyed(*it))
+        {
+            it = fileIDs.erase(it);
+            continue;
+        }
+
+        ++it;
+    }
 }
 
-size_t PersistentManager::WriteStoreFileInMemoryInternal(std::vector<UInt8> &memory, Object* storeManager) {
+void PersistentManager::GetInstanceIDsAtPath(std::string& pathName, ObjectIDs* objects)
+{
+    // AutoLock autoLock(*this);
 
-    BeginFileWriting(StoreFilePath);
+    Assert(objects != NULL);
 
-    MemoryCacheWriter memoryCacheWriter(memory);
-    StreamedBinaryWrite writeStream;
-    CachedWriter& writerCache = writeStream.Init(kReadWriteFromSerializedFile);
-    writerCache.InitWrite(memoryCacheWriter);
+    int serializedFileIndex = InsertPathNameInternal(pathName, true);
+    if (serializedFileIndex == -1)
+        return;
 
-    HuahuoHeader huahuoHeader;
-    const char* magic = "HUAHUO";
-    memset(&huahuoHeader, 0, sizeof(HuahuoHeader));
-    memcpy(huahuoHeader.magic, magic, 6);
-    huahuoHeader.version = 1;
-    huahuoHeader.dataOffset = sizeof(huahuoHeader);
+    std::vector<LocalIdentifierInFileType> fileIDs;//(kMemTempAlloc);
+    GetAllFileIDs(pathName, fileIDs);
 
-    printf("Writing header, size:%d\n", huahuoHeader.dataOffset);
-    writerCache.Write(huahuoHeader);
-    printf("Writing storeManager\n");
+    for (std::vector<LocalIdentifierInFileType>::iterator i = fileIDs.begin(); i != fileIDs.end(); ++i)
+    {
+        SerializedObjectIdentifier identifier(serializedFileIndex, *i);
+        InstanceID memoryID = m_Remapper->GetOrGenerateInstanceID(identifier);
 
-    GetDefaultObjectStoreManager()->VirtualRedirectTransfer(writeStream);
-    writerCache.CompleteWriting();
+        if (memoryID != InstanceID_None)
+            objects->emplace(memoryID);
+    }
 
-    return writerCache.GetPosition();
+    // Get all objects that were made persistent but might not already be written to the file
+    m_Remapper->GetAllLoadedObjectsForSerializedFileIndex(serializedFileIndex, objects);
+}
+
+void PersistentManager::GetLoadedInstanceIDsAtPath(std::string& pathName, ObjectIDs* objects)
+{
+    // AutoLock autoLock(*this);
+
+    Assert(objects != NULL);
+
+    int serializedFileIndex = InsertPathNameInternal(pathName, false);
+    if (serializedFileIndex != -1)
+    {
+        // Get all objects that were made persistent but might not already be written to the file
+        m_Remapper->GetAllLoadedObjectsForSerializedFileIndex(serializedFileIndex, objects);
+    }
 }
 
 PersistentManager* PersistentManager::GetPersistentManager() {
     return ::GetPersistentManagerPtr();
+}
+
+int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, const WriteData* writeData, int size, /*const GlobalBuildData& globalBuildData,*/ VerifyWriteObjectCallback* verifyCallback, BuildTargetSelection target, TransferInstructionFlags options, const InstanceIDResolver* instanceIDResolver, LockFlags lockedFlags, ReportWriteObjectCallback* reportCallback, void* reportCallbackUserData)
+{
+    WriteInformation writeInfo;
+    return WriteFile(path, serializedFileIndex, writeData, size, /*globalBuildData,*/ verifyCallback, target, options, writeInfo, instanceIDResolver, lockedFlags, reportCallback, reportCallbackUserData);
+}
+
+void PersistentManager::CleanupStreamAndNameSpaceMapping(unsigned serializedFileIndex, bool cleanupDestroyedList)
+{
+    // Unload the file any way
+    // This saves memory - especially when reimporting lots of assets like when rebuilding the library
+    CleanupStream(m_Streams[serializedFileIndex], cleanupDestroyedList);
+
+    m_GlobalToLocalNameSpace[serializedFileIndex].clear();
+    m_LocalToGlobalNameSpace[serializedFileIndex].clear();
+}
+
+int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, const WriteData* writeData, int size, /*const GlobalBuildData& globalBuildData,*/ VerifyWriteObjectCallback* verifyCallback, BuildTargetSelection target, TransferInstructionFlags options, WriteInformation& writeInfo, const InstanceIDResolver* instanceIDResolver, LockFlags lockedFlags, ReportWriteObjectCallback* reportCallback, void* reportCallbackUserData)
+{
+#if UNITY_EDITOR
+    if (options & kAllowTextSerialization)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            Object* o = writeData[i].objectPtr;
+            if (o == nullptr)
+            {
+                o = dynamic_instanceID_cast<Object*>(writeData[i].instanceID);
+                if (o == nullptr)
+                    continue;
+            }
+
+            if (IsTypeNonTextSerialized(o->GetType()) || IsObjectNonTextSerialized(o))
+                options &= ~kAllowTextSerialization;
+        }
+    }
+#endif
+
+//    internal::ScopedWriteFileBuildStep writeFileStep(reportCallback, reportCallbackUserData, core::Join("Write file:", path));
+
+//    AutoLock autoLock(*this, kMutexLock, &lockedFlags);
+    //printf_console("Writing file %s\n", pathName.c_str());
+
+    AutoResetInstanceIDResolver autoResetIDResolver;
+    if (instanceIDResolver)
+        autoResetIDResolver.Set(*instanceIDResolver);
+
+    // Create writing tools
+    CachedWriter writer;
+
+    FileCacherWrite serializedFileWriter;
+    FileCacherWrite resourceImageWriters[kNbResourceImages];
+
+    bool isTempFileOnMemoryFileSystem = options & kTempFileOnMemoryFileSystem;
+
+    // ScopedMemoryMount scopedMemoryMount(isTempFileOnMemoryFileSystem);
+
+    if (!InitTempWriteFile(serializedFileWriter, path, kCacheSize, isTempFileOnMemoryFileSystem))
+        return kFileCouldNotBeWritten;
+    writer.InitWrite(serializedFileWriter);
+
+//    if (options & kBuildResourceImage)
+//    {
+//        for (int i = 0; i < kNbResourceImages; i++)
+//        {
+//            core::string tempPath = AppendPathNameExtension("Temp/tempFile", kResourceImageExtensions[i]);
+//            if (!InitTempWriteFile(resourceImageWriters[i], tempPath, kCacheSize, isTempFileOnMemoryFileSystem))
+//                return kFileCouldNotBeWritten;
+//
+//            core::string dstResourcePath = AppendPathNameExtension(path, kResourceImageExtensions[i]);
+//            writer.InitResourceImage((ActiveResourceImage)i, resourceImageWriters[i], dstResourcePath);
+//        }
+//    }
+
+//    if (options & kResolveStreamedResourceSources)
+//        writer.SetStreamedResourceSource(core::Join(path, ".resource"));
+
+    // Cleanup old stream and mapping
+    // We are about to write the file so it is safe to tell the function to cleanup the list of destroyed objects
+    CleanupStreamAndNameSpaceMapping(serializedFileIndex, true);
+
+    // Setup global to self namespace mapping
+    m_GlobalToLocalNameSpace[serializedFileIndex][serializedFileIndex] = 0;
+    m_LocalToGlobalNameSpace[serializedFileIndex][0] = serializedFileIndex;
+
+    // Create writable stream
+    SerializedFile* tempSerialize = HUAHUO_NEW_AS_ROOT(SerializedFile, kMemSerialization, kSerializedFileArea, "") ();
+#if UNITY_EDITOR
+    tempSerialize->SetDebugPath(PathIDToPathNameInternal(serializedFileIndex, false));
+#if ENABLE_MEM_PROFILER
+    GetMemoryProfiler()->SetRootAllocationObjectName(tempSerialize, kMemSerialization, tempSerialize->GetDebugPath().c_str());
+#endif
+#endif
+
+    tempSerialize->InitializeWrite(writer/*, target*/, options);
+    m_Streams[serializedFileIndex].stream = tempSerialize;
+
+    // Generate all uniqueScriptTypeReferences
+    // This way we can produce monobehaviours and their C# class without reading the actual data.
+    // (See PreallocatObjectThreaded)
+    SetActiveNameSpace(serializedFileIndex, kWritingNameSpace);
+
+    std::vector<LocalSerializedObjectIdentifier> scriptTypeReferences;
+    LocalSerializedObjectIdentifier scriptLocalIdentifier;
+    for (int i = 0; i < size; i++)
+    {
+        Object* o = writeData[i].objectPtr;
+        if (o == NULL)
+            o = Object::IDToPointer(writeData[i].instanceID);
+
+//        scriptLocalIdentifier = GetScriptLocalIdentifier(o);
+//        if (scriptLocalIdentifier.localIdentifierInFile != 0)
+//            scriptTypeReferences.push_back(scriptLocalIdentifier);
+    }
+//    vector_set<LocalSerializedObjectIdentifier> uniqueScriptTypeReferences;
+//    uniqueScriptTypeReferences.assign_clear_duplicates(scriptTypeReferences.begin(), scriptTypeReferences.end());
+
+    bool reportObjectNames = false;
+    if (reportCallback)
+        reportObjectNames = reportCallback(PersistentManager::ReportWriteObjectStep_CheckReportability, 0, "", 0, reportCallbackUserData);
+
+    bool writeSuccess = true;
+    writeInfo.locations.resize(size);
+    // Write Objects in fileID order
+    for (int i = 0; i < size; i++)
+    {
+        LocalIdentifierInFileType localIdentifierInFile = writeData[i].localIdentifierInFile;
+        InstanceID instanceID = writeData[i].instanceID;
+
+        SerializedObjectIdentifier identifier(serializedFileIndex, localIdentifierInFile);
+
+        bool shouldUnloadImmediately = false;
+
+        // internal::ScopedWriteFileBuildStep writeObjectStep(reportCallback, reportCallbackUserData, "Write object", instanceID);
+
+        Object* o = writeData[i].objectPtr;
+        if (o == NULL)
+            o = Object::IDToPointer(instanceID);
+
+        if (o == NULL)
+        {
+//            if (options & kLoadAndUnloadAssetsDuringBuild)
+//            {
+//                internal::ScopedWriteFileBuildStep loadStep(reportCallback, reportCallbackUserData, "Load object", instanceID);
+//
+//                o = ReadObject(instanceID, kPersistentManagerAwakeFromLoadMode | kWillUnloadAfterWritingBuildData);
+//                shouldUnloadImmediately = true;
+//            }
+
+            // Object can not be loaded, don't write it
+            if (o == NULL)
+            {
+                continue;
+            }
+        }
+
+        if (verifyCallback != NULL)
+        {
+            VerifyWriteObjectResult result = verifyCallback(o, target.platform);
+            if (result == kFailBuild)
+                writeSuccess = false;
+            if (result == kSkipObject)
+                continue;
+        }
+
+//        // Extract script type index for monobehaviours
+//        SInt16 scriptTypeIndex = -1;
+//        scriptLocalIdentifier = GetScriptLocalIdentifier(o);
+//        if (scriptLocalIdentifier.localIdentifierInFile != 0)
+//        {
+//            vector_set<LocalSerializedObjectIdentifier>::iterator found = uniqueScriptTypeReferences.find(scriptLocalIdentifier);
+//            if (found == uniqueScriptTypeReferences.end())
+//            {
+//                ErrorString("Failed to write script type references");
+//                writeSuccess = false;
+//            }
+//
+//            scriptTypeIndex = distance(uniqueScriptTypeReferences.begin(), found);
+//        }
+
+#if UNITY_EDITOR
+        if ((options & kHandleDrivenProperties) && GetDrivenPropertyManager().HasDrivenProperty(o))
+        {
+            dynamic_array<UInt8> buffer(kMemTempAlloc);
+            WriteObjectToVector(*o, buffer, kSerializeForPrefabSystem);
+
+            dynamic_array<UInt8> patchedBuffer(buffer);
+            TypeTree typeTree;
+            TypeTreeCache::GetTypeTree(o, kSerializeForPrefabSystem, typeTree);
+            GetDrivenPropertyManager().PatchSerializedDataWithOriginalValues(o, typeTree, patchedBuffer);
+            ReadObjectFromVector(*o, patchedBuffer, kSerializeForPrefabSystem);
+
+            // Write
+            tempSerialize->WriteObject(*o, localIdentifierInFile, scriptTypeIndex, writeData[i].buildUsage, globalBuildData);
+
+            ReadObjectFromVector(*o, buffer, kSerializeForPrefabSystem);
+        }
+        else
+#endif
+        {
+            tempSerialize->WriteObject(*o, localIdentifierInFile); //, scriptTypeIndex, writeData[i].buildUsage, globalBuildData);
+        }
+
+        writeInfo.locations[i].offset = tempSerialize->GetByteStart(localIdentifierInFile);
+        writeInfo.locations[i].size = (UInt64)tempSerialize->GetByteSize(localIdentifierInFile);
+
+        o->ClearPersistentDirty();
+
+//        if (reportObjectNames)
+//        {
+//            std::string objectName = "[unnamed]";
+//            NamedObject* namedObject = dynamic_pptr_cast<NamedObject*>(o);
+//            if (namedObject)
+//            {
+//                char const* tmpObjectName = namedObject->GetName();
+//                if (tmpObjectName && tmpObjectName[0] != '\0')
+//                    objectName = tmpObjectName;
+//            }
+//            TempString objectTypeName = "";
+//            const char* tmpTypeName = o->GetTypeName();
+//            if (tmpTypeName && tmpTypeName[0] != '\0')
+//                objectTypeName = core::Join(" (", tmpTypeName, ")");
+//            writeObjectStep.UpdateStepName(core::Join("Write object - ", objectName, objectTypeName), instanceID);
+//        }
+
+        // Unload
+        if (shouldUnloadImmediately)
+        {
+            // internal::ScopedWriteFileBuildStep unloadStep(reportCallback, reportCallbackUserData, "Unload object", instanceID);
+            UnloadObject(o);
+        }
+    }
+
+    ClearActiveNameSpace(kWritingNameSpace);
+
+    // tempSerialize->SetScriptTypeReferences(&uniqueScriptTypeReferences.get_vector()[0], uniqueScriptTypeReferences.size());
+
+    {
+        // internal::ScopedWriteFileBuildStep finishWritingStep(reportCallback, reportCallbackUserData, "Finish writing");
+        writeSuccess = writeSuccess && tempSerialize->FinishWriting(&writeInfo.headerOffset) ; //&& !tempSerialize->HasErrors();
+    }
+
+
+    // Delete temp stream
+    if (m_Streams[serializedFileIndex].stream != tempSerialize)
+    {
+        writeSuccess = false;
+        if (tempSerialize)
+            tempSerialize->Release();
+        tempSerialize = NULL;
+    }
+
+    // Delete mappings
+    // There should not be any destroyed object on the stream at this point, so there is no point in telling the function to clean them up
+    CleanupStreamAndNameSpaceMapping(serializedFileIndex, false);
+
+    if (!writeSuccess)
+    {
+        //      ErrorString ("Writing file: " + path + " failed. The temporary file " + serializedFileWriter.GetPathName() + " couldn't be written.");
+        return kFileCouldNotBeWritten;
+    }
+
+    // Atomically move the serialized file into the target location
+    core::string actualNewPathName = RemapToAbsolutePath(path);
+
+    // make sure the file is not in the async read manager cache
+    AsyncReadForceCloseAllFiles();
+
+    if (!MoveReplaceFile(serializedFileWriter.GetPathName(), actualNewPathName))
+    {
+        ErrorString("File " + path + " couldn't be written. Because moving " + serializedFileWriter.GetPathName() + " to " + actualNewPathName + " failed.");
+        return kFileCouldNotBeWritten;
+    }
+    SetFileFlags(actualNewPathName, kFileFlagTemporary, 0);
+
+
+    if (options & kBuildResourceImage)
+    {
+        // Move the resource images into the target location
+        for (int i = 0; i < kNbResourceImages; i++)
+        {
+            core::string targetPath = AppendPathNameExtension(actualNewPathName, kResourceImageExtensions[i]);
+            core::string tempWriteFileName(resourceImageWriters[i].GetPathName(), kMemTempAlloc);
+
+            if (!GetFileLength(tempWriteFileName).IsZero())
+            {
+                if (!MoveReplaceFile(tempWriteFileName, targetPath))
+                {
+                    ErrorString("File " + path + " couldn't be written. Because moving " + tempWriteFileName + " to " + actualNewPathName + " failed.");
+                    return kFileCouldNotBeWritten;
+                }
+                SetFileFlags(targetPath, kFileFlagTemporary, 0);
+            }
+            else
+                ::DeleteFile(targetPath);
+        }
+    }
+
+    return kNoError;
 }
 
 #if WEB_ENV

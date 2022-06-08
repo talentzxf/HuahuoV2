@@ -9,6 +9,9 @@ endmacro()
 
 cmake_minimum_required(VERSION 3.21)
 project(HuaHuoEngineV2 VERSION 0.01)
+
+set(HUAHUOENGINE_VERSION_MAJOR 0)
+set(HUAHUOENGINE_VERSION_MINOR 0.01)
 configure_file(Runtime/HuaHuoEngineConfig.h.in HuaHuoEngineConfig.h)
 
 option(HuaHuoEditor "Compile HuaHuoEditor" ON)
@@ -136,7 +139,7 @@ else ()
     add_compile_options(-Wno-deprecated-enum-enum-conversion)
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
 
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp)
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp Runtime/Serialize/WriteData.h)
 
     target_link_libraries(TestHuaHuoEngine ${ALL_LIBS})
 endif ()

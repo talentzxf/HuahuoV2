@@ -1,5 +1,6 @@
 #include "Remapper.h"
 #include <limits>
+#include "PersistentManager.h"
 
 const char *Remapper::kHighestInstanceIDOverflowErrorMessage = "The highest instance ID in the Remapper has overflown. The application will now exit.";
 
@@ -180,30 +181,30 @@ void Remapper::SetupRemapping(InstanceID instanceID, const SerializedObjectIdent
     */
 }
 
-//void Remapper::GetAllLoadedObjectsForSerializedFileIndex(int serializedFileIndex, HuaHuoEngine::ObjectIDs* objects)
-//{
-//    Assert(m_ActivePreallocatedSerializedFileIndex == -1);
-//    Assert(objects != NULL);
-//
-//    SerializedObjectIdentifier proxy;
-//    proxy.localIdentifierInFile = std::numeric_limits<LocalIdentifierInFileType>::min();
-//    proxy.serializedFileIndex = serializedFileIndex;
-//    SerializedObjectToInstanceIDIterator begin = m_SerializedObjectToInstanceID.lower_bound(proxy);
-//    proxy.localIdentifierInFile = std::numeric_limits<LocalIdentifierInFileType>::max();
-//    SerializedObjectToInstanceIDIterator end = m_SerializedObjectToInstanceID.upper_bound(proxy);
-//
-//    SetObjectLockForRead();
-//    for (auto i = begin; i != end; ++i)
-//    {
-//        InstanceID instanceID = i->second;
-//        Object* o = Object::IDToPointerLockTaken(instanceID);
-//        if (o)
-//            objects->emplace_back_unsorted(instanceID);
-//    }
-//    ReleaseObjectLock();
-//
-//    objects->sort_and_remove_duplicates();
-//}
+void Remapper::GetAllLoadedObjectsForSerializedFileIndex(int serializedFileIndex, PersistentManager::ObjectIDs* objects)
+{
+    Assert(m_ActivePreallocatedSerializedFileIndex == -1);
+    Assert(objects != NULL);
+
+    SerializedObjectIdentifier proxy;
+    proxy.localIdentifierInFile = std::numeric_limits<LocalIdentifierInFileType>::min();
+    proxy.serializedFileIndex = serializedFileIndex;
+    SerializedObjectToInstanceIDIterator begin = m_SerializedObjectToInstanceID.lower_bound(proxy);
+    proxy.localIdentifierInFile = std::numeric_limits<LocalIdentifierInFileType>::max();
+    SerializedObjectToInstanceIDIterator end = m_SerializedObjectToInstanceID.upper_bound(proxy);
+
+    // SetObjectLockForRead();
+    for (auto i = begin; i != end; ++i)
+    {
+        InstanceID instanceID = i->second;
+        Object* o = Object::IDToPointerLockTaken(instanceID);
+        if (o)
+            objects->emplace(instanceID);
+    }
+    // ReleaseObjectLock();
+
+    // objects->sort_and_remove_duplicates();
+}
 
 void Remapper::IncreaseHighestInstanceIDAndCrashInCaseOfOverflow(int increment)
 {

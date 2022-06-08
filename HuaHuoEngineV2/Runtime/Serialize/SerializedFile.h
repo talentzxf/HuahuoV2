@@ -188,7 +188,34 @@ public:
     // if no objects are in the file 0 is returned
     LocalIdentifierInFileType GetHighestID() const;
 
+    // objects: On return, all fileIDs to all objects in this Serialize
+    void GetAllFileIDs(std::vector<LocalIdentifierInFileType>& objects) const;
+
     void Release();
+
+    inline bool ShouldSwapEndian() const { return m_FileEndianess != kActiveEndianess; }
+
+#if SUPPORT_TEXT_SERIALIZATION
+    bool IsTextFile() const { return m_IsTextFile; }
+#else
+    bool IsTextFile() const { return false; }
+#endif
+
+    template<bool kSwap> void BuildMetadataSection(std::vector<UInt8>& cache, size_t dataOffsetInFile);
+    template<bool kSwap> bool WriteHeader(std::vector<UInt8>& cache, size_t* outDataOffset = NULL);
+
+
+    // Returns the seek position in the file where the object with id is stored
+    size_t GetByteStart(LocalIdentifierInFileType id) const;
+
+    // Returns the size the object takes up on the disk
+    UInt32 GetByteSize(LocalIdentifierInFileType id) const;
+
+    // Writes an object with id to the file.
+    // Writing to a stream which includes objects with an older typetree version is not possible and false will be returned
+    void WriteObject(Object& object, LocalIdentifierInFileType fileID /*,SInt16 scriptTypeIndex, const BuildUsageTag& buildUsage, const GlobalBuildData& globalBuildData*/);
+
+    bool FinishWriting(size_t* outDataOffset = NULL);
 private:
     void FinalizeInitCommon(TransferInstructionFlags options);
 
@@ -222,6 +249,9 @@ private:
     typedef vector_map<LocalIdentifierInFileType, ObjectInfo>   ObjectMap;
     ObjectMap                           m_Object;
 
+    TypeVector m_Types;
+    TypeVector m_RefTypes;
+    bool                                m_EnableTypeTree;
 
     SerializedFileLoadError ReadHeader();
 
@@ -229,6 +259,16 @@ private:
 
     ResourceImageGroup                  m_ResourceImageGroup;
 };
+
+template<bool kSwap, class T>
+void WriteHeaderCache(const T& t, std::vector<UInt8>& vec)
+{
+    vec.resize(vec.size() + sizeof(T));//, kDoubleOnResize);
+    T& dst = *reinterpret_cast<T*>(&vec[vec.size() - sizeof(T)]);
+    dst = t;
+    if (kSwap)
+        SwapEndianBytes(dst);
+}
 
 
 #endif //HUAHUOENGINE_SERIALIZEDFILE_H

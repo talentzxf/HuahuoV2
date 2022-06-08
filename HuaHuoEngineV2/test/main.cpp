@@ -65,6 +65,11 @@ void testShapeStore() {
     lineShape->SetEndPoint(1, 0, 0);
     currentLayer->AddShapeInternal(lineShape);
 
+    LineShape* lineShape1 = Object::Produce<LineShape>();
+    lineShape1->SetStartPoint(2,2,2);
+    lineShape1->SetEndPoint(3,3,3);
+    currentLayer->AddShapeInternal(lineShape1);
+
     std::string path = StoreFilePath;
     GetPersistentManager().BeginFileWriting(path);
 

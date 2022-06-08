@@ -9,6 +9,7 @@
 #include <cstring>
 #include "Utilities/RegisterRuntimeInitializeAndCleanup.h"
 #include "Serialize/PersistentManager.h"
+#include "BaseClasses/PPtr.h"
 
 Object::IDToPointerMap*    Object::ms_IDToPointer = NULL;
 Object::TypeToObjectSet*   Object::ms_TypeToObjectSet = NULL;
@@ -415,18 +416,18 @@ void LocalSerializedObjectIdentifierToInstanceID(const LocalSerializedObjectIden
 
 Object* PreallocateObjectFromPersistentManager(InstanceID instanceID, bool threadedLoading)
 {
-//    Object* obj = NULL;
-//
-//    if (!threadedLoading)
-//    {
-//        obj = PPtr<Object>(instanceID);
-//    }
-//    else
-//    {
-//        obj = GetPersistentManager().PreallocateObjectThreaded(instanceID);
-//    }
-//
-//    return obj;
+    Object* obj = NULL;
+
+    if (!threadedLoading)
+    {
+        obj = PPtr<Object>(instanceID);
+    }
+    else
+    {
+        obj = GetPersistentManager().PreallocateObjectThreaded(instanceID);
+    }
+
+    return obj;
 }
 
 void InstanceIDToLocalSerializedObjectIdentifier(InstanceID id, LocalSerializedObjectIdentifier& localIdentifier)
@@ -452,6 +453,14 @@ void InstanceIDToLocalSerializedObjectIdentifier(InstanceID id, LocalSerializedO
 #else
     GetPersistentManager().InstanceIDToLocalSerializedObjectIdentifier(id, localIdentifier);
 #endif
+}
+
+void Object::ClearPersistentDirty()
+{
+    m_DirtyIndex = 0;
+
+//    if (gDiagObjectSetDirty && !TestHideFlag(kDontSaveInEditor))
+//        LogStringMsg("Clear Dirty(%d) : [%d] %s (%s)", m_DirtyIndex, GetInstanceID(), GetName(), GetTypeName());
 }
 
 void Object::SetIsPersistent(bool p)

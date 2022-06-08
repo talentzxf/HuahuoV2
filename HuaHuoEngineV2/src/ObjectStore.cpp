@@ -11,8 +11,10 @@ std::string StoreFilePath("mem://objectstore.data");
 ObjectStoreManager* gDefaultObjectStoreManager = NULL;
 
 ObjectStoreManager* GetDefaultObjectStoreManager(){
-    if(gDefaultObjectStoreManager == NULL)
+    if(gDefaultObjectStoreManager == NULL){
         gDefaultObjectStoreManager = Object::Produce<ObjectStoreManager>();
+    }
+
     return gDefaultObjectStoreManager;
 }
 

@@ -4,6 +4,12 @@
 
 #include "SerializedFile.h"
 #include "Serialize/SerializationCaching/FileCacherRead.h"
+#include "HuaHuoEngineConfig.h"
+#include "Utilities/Align.h"
+#include "Serialize/SerializationCaching/CachedWriter.h"
+#include "Serialize/SerializationCaching/CacheWriterBase.h"
+
+const char* kAssetBundleVersionNumber = "2";
 
 void SerializedFile::AddExternalRef(const FileIdentifier& pathName)
 {
@@ -39,6 +45,19 @@ void SerializedFile::FinalizeInitCommon(TransferInstructionFlags options)
         m_FileEndianess = kOppositeEndianess;
     else
         m_FileEndianess = kActiveEndianess;
+}
+
+// objects: On return, all fileIDs to all objects in this Serialize
+void SerializedFile::GetAllFileIDs(std::vector<LocalIdentifierInFileType>& objects) const
+{
+    objects.reserve(m_Object.size());
+    ObjectMap::const_iterator i;
+    for (i = m_Object.begin(); i != m_Object.end(); i++)
+    {
+        const HuaHuo::Type* unityType = m_Types[i->second.typeID].GetType();
+        if (unityType != NULL && unityType->GetFactory() != NULL)
+            objects.push_back(i->first);
+    }
 }
 
 
@@ -221,7 +240,7 @@ SerializedFile::SerializedFile(MemLabelRef label)
 //    m_HasErrors = false;
 //    m_CachedFileStream = false;
 //    m_TargetPlatform = BuildTargetSelection(kBuildNoTargetPlatform, 0, false);
-//    m_EnableTypeTree = false;
+    m_EnableTypeTree = false;
 
 #if SUPPORT_TEXT_SERIALIZATION
     m_IsTextFile = false;
@@ -293,4 +312,400 @@ SerializedFileLoadError SerializedFile::InitializeWrite(CachedWriter& cachedWrit
 //    }
 
     return FinalizeInitWrite(options);
+}
+
+static SInt32 FindOrCreateSerializedTypeForUnityType(SerializedFile::TypeVector& serializedTypes, const HuaHuo::Type* unityType, bool isStripped, SInt16 scriptTypeIndex, SInt32 originalTypeId = -1)
+{
+    PersistentTypeID findPersistentTypeID = (unityType == NULL) ? HuaHuo::Type::UndefinedPersistentTypeID : unityType->GetPersistentTypeID();
+    for (int i = 0; i < serializedTypes.size(); ++i)
+    {
+        const SerializedFile::SerializedType& serializedType = serializedTypes[i];
+        PersistentTypeID serializedPersistentTypeID = serializedType.GetPersistentTypeID();
+        if (serializedPersistentTypeID == findPersistentTypeID &&
+            serializedType.IsStripped() == isStripped &&
+            serializedType.GetScriptTypeIndex() == scriptTypeIndex &&
+            (originalTypeId < 0 || serializedTypes[originalTypeId].GetPersistentTypeID() == findPersistentTypeID))
+        {
+            return i;
+        }
+    }
+
+    SerializedFile::SerializedType serializedType(unityType, isStripped, scriptTypeIndex);
+    serializedTypes.push_back(serializedType);
+
+    if (originalTypeId >= 0 && serializedTypes[originalTypeId].GetOldTypeHash() != serializedTypes[serializedTypes.size() - 1].GetOldTypeHash())
+    {
+#if SUPPORT_SERIALIZED_TYPETREES
+        if (serializedTypes[originalTypeId].GetOldType() != NULL)
+        {
+            TypeTree* typeTreeCopy = UNITY_NEW(TypeTree, kMemTypeTree);
+            *typeTreeCopy = *serializedTypes[originalTypeId].GetOldType();
+
+            serializedTypes[serializedTypes.size() - 1].SetOldType(typeTreeCopy);
+        }
+#endif // SUPPORT_SERIALIZED_TYPETREES
+        serializedTypes[serializedTypes.size() - 1].SetOldTypeHash(serializedTypes[originalTypeId].GetOldTypeHash());
+    }
+
+    return serializedTypes.size() - 1;
+}
+
+size_t SerializedFile::GetByteStart(LocalIdentifierInFileType id) const
+{
+    ObjectMap::const_iterator i = m_Object.find(id);
+    Assert(i != m_Object.end());
+    return i->second.byteStart;
+}
+
+UInt32 SerializedFile::GetByteSize(LocalIdentifierInFileType id) const
+{
+    ObjectMap::const_iterator i = m_Object.find(id);
+    Assert(i != m_Object.end());
+    return i->second.byteSize;
+}
+
+void SerializedFile::WriteObject(Object& object, LocalIdentifierInFileType fileID/*, SInt16 scriptTypeIndex, const BuildUsageTag& buildUsage, const GlobalBuildData& globalBuildData*/)
+{
+    Assert(m_CachedWriter != NULL);
+            SET_ALLOC_OWNER(m_MemLabel);
+
+    TransferInstructionFlags mask = kReadWriteFromSerializedFile | m_Options;
+
+#if UNITY_EDITOR
+    object.SetFileIDHint(fileID);
+#endif
+
+    const HuaHuo::Type* objectType = object.GetType();
+    const PersistentTypeID objectPersistentTypeID = objectType->GetPersistentTypeID();
+    SInt32 typeID = -1;
+
+
+//    if (!IsTextFile())
+//    {
+//        // Native C++ object typetrees share typetree by class id
+//        bool perObjectTypeTree = object.GetNeedsPerObjectTypeTree(); // || buildUsage.strippedPrefabObject;
+//        if (!perObjectTypeTree)
+//        {
+//            // typeID = FindOrCreateSerializedTypeForUnityType(m_Types, objectType, buildUsage.strippedPrefabObject, scriptTypeIndex);
+//            typeID = FindOrCreateSerializedTypeForUnityType(m_Types, objectType, false, 0);// , scriptTypeIndex);
+//            SerializedType& serializedType = m_Types[typeID];
+//            if (serializedType.GetOldType() == NULL)
+//            {
+//                TypeTree* typeTree = UNITY_NEW(TypeTree, kMemTypeTree);
+//                TypeTreeCache::GetTypeTree(&object, mask | kDontRequireAllMetaFlags, *typeTree);
+//                serializedType.SetOldType(typeTree);
+//
+//                Hash128 tempHash;
+//                if ((mask & kBuildPlayerOnlySerializeBuildProperties) != 0 && TypeNeedsRemappingToNewTypeForBuild(objectType))
+//                {
+//                    SetObjectLockForWrite();
+//                    tempHash = CalculateClassHash(objectType, mask | kDontRequireAllMetaFlags);
+//                    ReleaseObjectLock();
+//                }
+//                else
+//                {
+//                    tempHash = TypeTreeQueries::HashTypeTree(typeTree->Root());
+//                }
+//
+//                serializedType.SetOldTypeHash(tempHash);
+//                serializedType.m_ScriptTypeIndex = scriptTypeIndex;
+//            }
+//        }
+//            // Scripted objects we search the registered typetrees for duplicates and share
+//            // or otherwise allocate a new typetree.
+//        else
+//        {
+//            Hash128 scriptID;
+//            Hash128 typeHash;
+//
+//            TypeTree* typeTree = UNITY_NEW(TypeTree, kMemTypeTree);
+//            if (buildUsage.strippedPrefabObject)
+//            {
+//                // As strippedPrefabObject is only used when writing scene, so we just generate the hash from the type tree
+//                // to eliminate duplicate type trees.
+//                GenerateStrippedTypeTree(object, *typeTree, buildUsage, mask | kDontRequireAllMetaFlags);
+//                typeHash = TypeTreeQueries::HashTypeTree(typeTree->Root());
+//            }
+//            else
+//            {
+//                TypeTreeCache::GetTypeTree(&object, mask | kDontRequireAllMetaFlags, *typeTree);
+//
+//                // For now, only IManagedObjectHost has per-object type tree: assert to make sure the typeHash is generated correctly
+//                // if anyone introduces a new type which has per-object type tree.
+//                Assert(IManagedObjectHost::IsObjectsTypeAHost(&object));
+//                MonoScript* script = IManagedObjectHost::GetManagedReference(object)->GetScript();
+//                if (script != NULL)
+//                {
+//                    scriptID = script->GenerateScriptID();
+//                    typeHash = script->GetPropertiesHash(); // Generate the script hash in exactly same way as when we generate the script hashes for BuildSettings.
+//                }
+//            }
+//
+//            if (typeID < 0)
+//            {
+//                // Find the type id if there is one matches.
+//                for (int i = 0; i < m_Types.size(); ++i)
+//                {
+//                    const SerializedType& serializedType = m_Types[i];
+//
+//                    if (serializedType.GetPersistentTypeID() != objectPersistentTypeID)
+//                        continue;
+//
+//                    if (serializedType.GetOldTypeHash().IsValid() && serializedType.GetOldTypeHash() == typeHash && serializedType.IsStripped() == buildUsage.strippedPrefabObject && serializedType.GetScriptTypeIndex() == scriptTypeIndex)
+//                    {
+//                        typeID = i;
+//                        UNITY_DELETE(typeTree, kMemTypeTree);
+//                        break;
+//                    }
+//                }
+//            }
+//
+//            // If no, generate a new type id and set the type tree and type tree hash.
+//            if (typeID < 0)
+//            {
+//                typeID = m_Types.size();
+//                m_Types.push_back(SerializedType(objectType, buildUsage.strippedPrefabObject));
+//                SerializedType& serializedType = m_Types[typeID];
+//
+//                if (m_EnableTypeTree)
+//                    serializedType.SetOldType(typeTree);
+//                else
+//                    UNITY_DELETE(typeTree, kMemTypeTree);
+//
+//                serializedType.SetOldTypeHash(typeHash);
+//                serializedType.SetScriptID(scriptID);
+//                serializedType.m_ScriptTypeIndex = scriptTypeIndex;
+//            }
+//
+//            // For IManagedObjectHost, register all type trees of the ManagedReferences
+//            if (IManagedObjectHost::IsObjectsTypeAHost(object))
+//            {
+//                DependencyCollectorForSerializeRef serializedRefs;
+//
+//                RemapPPtrTransfer transferFunction(mask, true);
+//                transferFunction.SetReferencedObjectFunctor(&serializedRefs);
+//                transferFunction.SetGenerateIDFunctor(&serializedRefs);
+//
+//                object.VirtualRedirectTransfer(transferFunction);
+//                for (auto& j: serializedRefs.m_ScriptObjects)
+//                {
+//                    AddSerializedTypeForManagedReference(typeID, buildUsage.strippedPrefabObject, ::scripting_object_get_class(j), mask);
+//                }
+//            }
+//        }
+//    }
+//    else
+    {
+        typeID = FindOrCreateSerializedTypeForUnityType(m_Types, objectType, false, /* buildUsage.strippedPrefabObject, scriptTypeIndex*/ 0);
+        // AssertMsg(m_Types[typeID].GetScriptTypeIndex() == scriptTypeIndex, "Type has not the requested ScriptTypeIndex.");
+    }
+
+    // We are not taking care of fragmentation.
+    const size_t kFileAlignment = 8;
+
+    UInt64 unalignedByteStart = m_CachedWriter->GetPosition();//.Cast<UInt64>();
+
+    // Align the object to a kFileAlignment byte boundary
+    UInt64 alignedByteStart = unalignedByteStart;
+    if (unalignedByteStart % kFileAlignment != 0)
+        alignedByteStart += kFileAlignment - unalignedByteStart % kFileAlignment;
+
+    ObjectMap::const_iterator tmpObject = m_Object.find(fileID);
+    AssertFormatMsg(!(tmpObject != m_Object.end() && m_Types[tmpObject->second.typeID].GetPersistentTypeID() != objectPersistentTypeID),
+                    "File contains the same file identifier (%d) for multiple object types (%s) (%s). Object may be overwritten.", fileID, objectType->GetName(), m_Types[tmpObject->second.typeID].GetType()->GetName());
+
+    ObjectInfo& info = m_Object[fileID];
+    info.byteStart = alignedByteStart;
+    info.typeID = typeID;
+//    Assert(m_Types[typeID].GetScriptTypeIndex() == scriptTypeIndex);
+//    Assert(m_Types[typeID].IsStripped() == buildUsage.strippedPrefabObject);
+
+
+    /*  ////// PRINT OUT serialized Data as ascii to console
+        if (false && gPrintfDataHack)
+        {
+            printf_console ("\n\nPrinting object: %d\n", fileID);
+
+            // Set write marker to end of file and register the objects position in file
+            StreamedTextWrite writeStream;
+            CachedWriter& cache = writeStream.Init (kReadWriteFromSerializedFile);
+            cache.Init (m_FileCacher, alignedByteStart, 0, false);
+
+            // Write the object
+            object.VirtualRedirectTransfer (writeStream);
+            cache.End ();
+        }
+    */
+
+#if SUPPORT_TEXT_SERIALIZATION
+    if (m_IsTextFile)
+    {
+        core::string label;
+        if (buildUsage.strippedPrefabObject)
+            label = Format("--- !u!%d &%lld stripped\n", m_Types[info.typeID].GetPersistentTypeID(), fileID);
+        else
+            label = Format("--- !u!%d &%lld\n", m_Types[info.typeID].GetPersistentTypeID(), fileID);
+
+        WriteTextSerialized(label, object, buildUsage, mask);
+    }
+    else
+#endif
+    if (!ShouldSwapEndian())
+    {
+        // Set write marker to end of file and register the objects position in file
+        StreamedBinaryWrite writeStream;
+
+        CachedWriter& cache = writeStream.Init(*m_CachedWriter, mask/*, m_TargetPlatform, buildUsage, globalBuildData*/);
+        char kZeroAlignment[kFileAlignment] = {0, 0, 0, 0, 0, 0, 0, 0};
+        cache.Write(kZeroAlignment, alignedByteStart - unalignedByteStart);
+
+        // Write the object
+//        if (buildUsage.strippedPrefabObject)
+//            object.VirtualStrippedRedirectTransfer(writeStream);
+//        else
+            object.VirtualRedirectTransfer(writeStream);
+
+        *m_CachedWriter = cache;
+    }
+    else
+    {
+        AssertString("Writing endian swapped data is not supported.");
+    }
+
+    info.byteSize = (m_CachedWriter->GetPosition() - info.byteStart); //.Cast<UInt32>();
+}
+
+template<bool kSwap>
+void WriteHeaderCache(const std::string & str, std::vector<UInt8>& cache)
+{
+    int size = cache.size();
+    cache.resize(size + str.size() + 1); //, kDoubleOnResize);
+    memcpy(&cache[size], str.data(), str.size());
+    cache.back() = '\0';
+}
+
+static void Write4Alignment(std::vector<UInt8>& cache)
+{
+    UInt32 leftOver = Align4LeftOver(cache.size());
+    UInt8 value = 0;
+    for (UInt32 i = 0; i < leftOver; ++i)
+    {
+        WriteHeaderCache<true>(value, cache);
+    }
+}
+
+template<bool kSwap>
+void SerializedFile::BuildMetadataSection(std::vector<UInt8>& cache, size_t dataOffsetInFile)
+{
+    // Write Unity version file is being built with
+    std::string version = HHE_VERSION_STR;
+
+//    if (HasFlag(m_Options, kDontWriteUnityVersion))
+//        version = UNITY_STRIPPED_VERSION;
+
+    if (m_Options & kSerializedAssetBundleVersion)
+    {
+        version += "\n";
+        version += kAssetBundleVersionNumber;
+    }
+
+    WriteHeaderCache<kSwap>(version, cache);
+//    WriteHeaderCache<kSwap>(static_cast<UInt32>(m_TargetPlatform.platform), cache);
+//    WriteHeaderCache<kSwap>(m_EnableTypeTree, cache);
+
+    // Write number of type info.
+    SInt32 typeCount = m_Types.size();
+    WriteHeaderCache<kSwap>(typeCount, cache);
+
+    // Write non-referenced type info.
+    for (int i = 0; i < typeCount; ++i)
+    {
+        m_Types[i].WriteType<kSwap, false>(m_RefTypes, m_EnableTypeTree, cache);
+    }
+
+    // Write number of objects
+    SInt32 objectCount = m_Object.size();
+    WriteHeaderCache<kSwap>(objectCount, cache);
+    for (ObjectMap::iterator i = m_Object.begin(); i != m_Object.end(); i++)
+    {
+        Write4Alignment(cache);
+        WriteHeaderCache<kSwap>(i->first, cache);
+
+        WriteHeaderCache<kSwap>((i->second.byteStart - dataOffsetInFile)/*.Cast<UInt64>()*/, cache);
+        WriteHeaderCache<kSwap>(i->second.byteSize, cache);
+        WriteHeaderCache<kSwap>(i->second.typeID, cache);
+        //printf_console ("fileID: %d byteStart: %d typeID: %d \n", i->first, i->second.byteStart, i->second.typeID);
+    }
+
+//    // Write Script Types
+//    objectCount = m_ScriptTypes.size();
+//    WriteHeaderCache<kSwap>(objectCount, cache);
+//    for (int i = 0; i < objectCount; i++)
+//    {
+//        WriteHeaderCache<kSwap>(m_ScriptTypes[i].localSerializedFileIndex, cache);
+//        Write4Alignment(cache);
+//        WriteHeaderCache<kSwap>(m_ScriptTypes[i].localIdentifierInFile, cache);
+//    }
+
+    // Write externals
+    objectCount = m_Externals.size();
+    WriteHeaderCache<kSwap>(objectCount, cache);
+    for (int i = 0; i < objectCount; i++)
+    {
+        std::string tempEmpty;
+        WriteHeaderCache<kSwap>(tempEmpty, cache);
+        for (int g = 0; g < 4; g++)
+            WriteHeaderCache<kSwap>(m_Externals[i].guid.data[g], cache);
+        WriteHeaderCache<kSwap>(m_Externals[i].type, cache);
+        WriteHeaderCache<kSwap>(m_Externals[i].pathName, cache);
+    }
+    // Write Ref Types
+    // Write number of type info.
+    typeCount = m_RefTypes.size();
+    WriteHeaderCache<kSwap>(typeCount, cache);
+
+    // Write ref types info.
+    for (int i = 0; i < typeCount; ++i)
+    {
+        m_RefTypes[i].WriteType<kSwap, true>(m_RefTypes, m_EnableTypeTree, cache);
+    }
+
+    // Write User info
+    std::string tempUserInformation;
+    WriteHeaderCache<kSwap>(tempUserInformation, cache);
+}
+
+
+bool SerializedFile::FinishWriting(size_t* outDataOffset)
+{
+    Assert(m_CachedWriter != NULL);
+
+    if (m_CachedWriter != NULL)
+    {
+        if (!IsTextFile())
+        {
+            std::vector<UInt8> metadataBuffer; //(kMemSerialization);
+
+            if (!ShouldSwapEndian())
+            {
+                BuildMetadataSection<false>(metadataBuffer, m_WriteDataOffset);
+                return WriteHeader<false>(metadataBuffer, outDataOffset);
+            }
+            else
+            {
+                BuildMetadataSection<true>(metadataBuffer, m_WriteDataOffset);
+                return WriteHeader<true>(metadataBuffer, outDataOffset);
+            }
+        }
+        else
+        {
+            bool success = m_CachedWriter->CompleteWriting();
+            success &= m_CachedWriter->GetCacheBase().WriteHeaderAndCloseFile(NULL, 0, 0);
+            if (outDataOffset != NULL)
+                (*outDataOffset) = (UInt64)0;
+            return success;
+        }
+    }
+
+    return false;
 }

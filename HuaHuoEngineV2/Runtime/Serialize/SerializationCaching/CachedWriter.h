@@ -32,6 +32,8 @@ public:
 
     void Align4Write();
 
+    CacheWriterBase& GetCacheBase() { return *m_ActiveWriter.cacheBase; }
+
 private:
     struct ActiveWriter {
         UInt8 *cachePosition;

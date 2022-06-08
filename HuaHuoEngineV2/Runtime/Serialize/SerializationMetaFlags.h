@@ -89,12 +89,12 @@ typedef enum
     kReadWriteFromSerializedFile = 1 << 0, // Are we reading or writing a serialized file
     kAssetMetaDataOnly = 1 << 1, // Only serialize data needed for .meta files
     kHandleDrivenProperties = 1 << 2, // Do not serialize scene values for DrivenProperties, save backup values instead
-#if UNITY_EDITOR
+#if HUAHUO_EDITOR
     kLoadAndUnloadAssetsDuringBuild = 1 << 3,
     kSerializeDebugProperties = 1 << 4, // Should we serialize debug properties (eg. Serialize mono private variables)
 #endif
     kIgnoreDebugPropertiesForIndex = 1 << 5, // Should we ignore Debug properties when calculating the TypeTree index
-#if UNITY_EDITOR
+#if HUAHUO_EDITOR
     kBuildPlayerOnlySerializeBuildProperties = 1 << 6, // Used by eg. build player to make materials cull any properties are aren't used anymore !
 #endif
     // Specify that we are currently cloning an object and that remapping of PPtrs has no happend yet and

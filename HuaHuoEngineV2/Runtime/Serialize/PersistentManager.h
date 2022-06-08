@@ -9,6 +9,7 @@
 #include "SerializedFileLoadError.h"
 #include "SerializedFile.h"
 #include "Utilities/StringComparison.h"
+#include "BuildTarget.h"
 #include <set>
 
 class SerializedFile;
@@ -17,6 +18,7 @@ struct HuahuoHeader{
     char magic[6];
     int version;
     size_t dataOffset = 0;
+    size_t totalObjects = 0;
 };
 
 struct StreamNameSpace
@@ -92,6 +94,25 @@ enum
     kTypeTreeIsDifferent = 2,
     kFileCouldNotBeWritten = 3
 };
+
+enum VerifyWriteObjectResult
+{
+    kWriteObject,
+    kSkipObject,
+    kFailBuild
+};
+
+
+#if HUAHUO_EDITOR
+struct InstanceIDResolver
+{
+    InstanceIDResolveCallback* callback;
+    const void* context;
+};
+#endif
+
+struct WriteData;
+struct WriteInformation;
 
 class PersistentManager {
     enum LockFlags
@@ -191,27 +212,36 @@ public:
     /// (pathID can be assumed to be allocated before with InsertPathName)
     std::string PathIDToPathNameInternal(int pathID);
 
+    void GetInstanceIDsAtPath(std::string& pathName, ObjectIDs* objects);
+
+    // Returns fileIDs from path.
+    void GetAllFileIDs(std::string& pathName, std::vector<LocalIdentifierInFileType>& fileIDs);
+
+    void GetLoadedInstanceIDsAtPath(std::string& pathName, ObjectIDs* objects);
+
     // VZ: Created for HuaHuo Store.
-    void BeginFileWriting(std::string path);
-    void BeginFileReading(std::string path);
-
-    size_t WriteStoreFileInMemory();
-
-
     static PersistentManager* GetPersistentManager();
 
-    UInt8* GetBufferPtr(){
-        return m_Buffer.data();
-    }
+    typedef VerifyWriteObjectResult VerifyWriteObjectCallback (Object* verifyDeployment, BuildTargetPlatform target);
 
-    void CleanupAndResizeBuffer(int size){
-        m_Buffer.clear();
-        m_Buffer.resize(size);
-    }
+    enum ReportWriteObjectStep
+    {
+        ReportWriteObjectStep_CheckReportability,  // when called with this ReportWriteObjectStep type, ReportWriteObjectCallback should return a value specifying if it accepts (1) further reports for this step, or not (0)
+        ReportWriteObjectStep_Begin,
+        ReportWriteObjectStep_UpdateName,
+        ReportWriteObjectStep_End,
+    };
+    typedef int ReportWriteObjectCallback (ReportWriteObjectStep reportType, int reportStep, const std::string& stepName, InstanceID assetInstanceID, void* userData);
 
-    void LoadFromBuffer(){
+    // Writes all persistent objects in memory that are made persistent at pathname to the file
+    // And completes all write operation (including writing the header)
+    // Returns the error (kNoError)
+    // options: kSerializeGameRelease, kSwapEndianess, kBuildPlayerOnlySerializeBuildProperties
+    int WriteFile(std::string& path, BuildTargetSelection target = BuildTargetSelection::NoTarget(), TransferInstructionFlags options = kNoTransferInstructionFlags);
 
-    }
+    int WriteFile(std::string& path, int serializedFileIndex, const WriteData* writeData, int size, /*const GlobalBuildData& globalBuildData,*/ VerifyWriteObjectCallback* verifyCallback, BuildTargetSelection target, TransferInstructionFlags options, const InstanceIDResolver* instanceIDResolver = NULL, LockFlags lockedFlags = kLockFlagNone, ReportWriteObjectCallback* reportCallback = NULL, void* reportCallbackUserData = NULL);
+    int WriteFile(std::string& path, int serializedFileIndex, const WriteData* writeData, int size, /*const GlobalBuildData& globalBuildData,*/ VerifyWriteObjectCallback* verifyCallback, BuildTargetSelection target, TransferInstructionFlags options, WriteInformation& writeInfo, const InstanceIDResolver* instanceIDResolver = NULL, LockFlags lockedFlags = kLockFlagNone, ReportWriteObjectCallback* reportCallback = NULL, void* reportCallbackUserData = NULL);
+
 
 protected:
     ///  maps a pathID to a pathname/file guid/fileidentifier.
@@ -219,12 +249,8 @@ protected:
     virtual std::string PathIDToPathNameInternal(int pathID, bool trackNativeLoadedAsset) const = 0;
 
     MemLabelId          GetMemoryLabel() const { return m_MemoryLabel; }
-
-    size_t WriteStoreFileInMemoryInternal(std::vector<UInt8>& memory, Object* managerObj);
-
+    void                CleanupStreamAndNameSpaceMapping(unsigned serializedFileIndex, bool cleanupDestroyedList);
 private:
-    std::vector<UInt8> m_Buffer;
-
     StreamContainer                         m_Streams;
     bool m_ForcePreloadReferencedObjects;
 

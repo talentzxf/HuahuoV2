@@ -141,7 +141,37 @@ public:
     static Object* AllocateAndAssignInstanceID(Object* obj);
     static Object* AllocateAndAssignInstanceIDNoLock(Object* obj);
 
+#if HUAHUO_EDITOR
+    /// Has this object been synced with the PersistentManager
+    bool IsPersistentDirty() const                     { return m_DirtyIndex != 0; }
+
+    virtual void SetPersistentDirtyIndex(UInt32 dirtyIndex);
+    void IncrementPersistentDirtyIndex();
+    virtual UInt32 GetPersistentDirtyIndex();
+
+    /// @TODO: Rename this to SetPersistentDirty
+    /// Whenever variables that are being serialized in Transfer change, SetDirty () should be called
+    /// This will allow tracking of objects that have changed since the last saving to disk or over the network
+    void SetDirty();
+
+    /// This method can be called if you need to unload an object from memory even if it's dirty. Editor-only!
+    virtual void ClearPersistentDirty();
+
+    // Callback support for callbacks when SetDirty is called
+    typedef void ObjectDirtyCallbackFunction (Object * const * objectsToDirty, size_t count);
+    static void RegisterDirtyCallback(ObjectDirtyCallbackFunction* callback);
+    static ObjectDirtyCallbackFunction* GetDirtyCallback();
+    static void BatchSetPersistentDirty(Object * const * objectsToDirty, size_t count);
+
+    void SetFileIDHint(LocalIdentifierInFileType hint) { m_FileIDHint = hint; }
+    LocalIdentifierInFileType GetFileIDHint() const { return m_FileIDHint; }
+
+    virtual void SetIsPreviewSceneObject(bool isPreviewSceneObject) { m_IsPreviewSceneObject = isPreviewSceneObject; }
+    bool IsPreviewSceneObject() const { return m_IsPreviewSceneObject; }
+
+#else
     void SetDirty() {}
+#endif
 
     typedef std::unordered_set<Object*> TypeToObjectSet;
     bool Is(const HuaHuo::Type* type) const { return type->IsBaseOf(m_CachedTypeIndex); }
@@ -204,6 +234,8 @@ public:
     inline void SetAwakeCalledInternal() {}
     inline void SetAwakeDidLoadThreadedCalledInternal() {}
     inline void SetMainThreadCleanupCalledInternal() {}
+
+
 
     /// Some classes need to deallocate resources on the main thread or deregister themselves from other objects,
     /// for those things you want to override MainThreadCleanup.
@@ -294,10 +326,19 @@ public:
     typedef void ObjectDestroyCallbackFunction (InstanceID instanceID);
 
     void SetIsPersistent(bool p);
-#ifdef HUAHUO_EDITOR
-    void SetFileIDHint(LocalIdentifierInFileType hint) { m_FileIDHint = hint; }
-    LocalIdentifierInFileType GetFileIDHint() const { return m_FileIDHint; }
-#endif
+
+    /// This function may not be called unless you use SetObjectLockForRead  / ReleaseObjectLock
+    /// or SetObjectLookupReadOnly/ReleaseObjectLookupReadOnly on main thread while the job is running
+    /// If you don't know 100% what you are doing use: IDToPointerThreadSafe instead
+    static Object* IDToPointerLockTaken(InstanceID inInstanceID);
+
+    /// Returns whether or not the class needs one typetree per object, not per persistentTypeID
+    /// Having a per object typetree makes serialization considerably slower because safeBinaryTransfer is always used
+    /// Since no TypeTree can be generated before reading the object.
+    /// The File size will also increase because the typetree is not shared among the same classes.
+    /// It is used for example in PythonBehaviour
+    /// Also for one class you have to always returns true or always false.
+    virtual bool GetNeedsPerObjectTypeTree() const { return false; }
 
 protected:
     virtual ~Object();
@@ -306,6 +347,13 @@ protected:
 
 
 private:
+
+#if HUAHUO_EDITOR
+    UInt32                    m_DirtyIndex;
+    LocalIdentifierInFileType m_FileIDHint;
+    bool                      m_IsPreviewSceneObject;
+#endif
+
     InstanceID              m_InstanceID;
 
     enum Bits
@@ -325,10 +373,6 @@ private:
     UInt32                m_IsPersistent      : kIsPersistentBits;
     UInt32                m_CachedTypeIndex   : kCachedTypeIndexBits;
 
-#ifdef HUAHUO_EDITOR
-    LocalIdentifierInFileType m_FileIDHint;
-#endif
-
     virtual const HuaHuo::Type*const GetTypeVirtualInternal() const
     {
         AssertString("Object::GetTypeVirtualInternal called. GetTypeVirtualInternal should always be overriden in derived classes");
@@ -342,6 +386,9 @@ private:
 
     static Object* IDToPointerInternal(InstanceID inInstanceID);
 };
+
+typedef void InstanceIDResolveCallback (InstanceID id, LocalSerializedObjectIdentifier& localIdentifier, void* context);
+void SetInstanceIDResolveCallback(InstanceIDResolveCallback* callback, const void* context = NULL);
 
 //Implementation
 FORCE_INLINE Object* Object::IDToPointer(InstanceID instanceID)
@@ -370,6 +417,13 @@ FORCE_INLINE Object* Object::IDToPointerInternal(InstanceID instanceID)
     return NULL;
 }
 
+FORCE_INLINE Object* Object::IDToPointerLockTaken(InstanceID instanceID)
+{
+    //@TODO: Assert against this...
+    //@TODO: handle 0 case specifically?
+    // AssertObjectLockTaken(false);
+    return IDToPointerInternal(instanceID);
+}
 
 // Destroys a Object removing from memory and disk when needed.
 // Might load the object as part of destruction which is probably unwanted.
