@@ -105,7 +105,11 @@ size_t File::Read(size_t position, void* buffer, size_t size, FileReadFlags flag
 
 bool File::Close(){
     if(this->isMemoryFile){
-        GetMemoryFileSystem()->CloseFile(this->m_MemFileAccessor);
+        if(this->m_MemFileAccessor){
+            GetMemoryFileSystem()->CloseFile(this->m_MemFileAccessor);
+            this->m_MemFileAccessor = NULL;
+        }
+        return true;
     }
     int closeRes = fclose(m_FileAccessor);
     return closeRes == 0;

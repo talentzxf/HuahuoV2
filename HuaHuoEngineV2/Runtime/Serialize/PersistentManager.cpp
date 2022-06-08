@@ -208,11 +208,12 @@ bool StreamNameSpace::IsDestroyed(LocalIdentifierInFileType id)
 
 static bool InitTempWriteFile(FileCacherWrite& writer, const std::string& path, unsigned cacheSize, bool shouldBeOnMemoryFileSystem)
 {
-    std::string tempWriteFileName = GenerateUniquePathSafe(std::string(shouldBeOnMemoryFileSystem ? "mem:/" + path : path));
-    if (tempWriteFileName.empty())
-        return false;
-
-    return writer.InitWriteFile(shouldBeOnMemoryFileSystem ? "mem:/" + path : path, cacheSize);
+//    std::string tempWriteFileName = GenerateUniquePathSafe(std::string(shouldBeOnMemoryFileSystem ? "mem:/" + path : path));
+//    if (tempWriteFileName.empty())
+//        return false;
+//
+//    return writer.InitWriteFile(shouldBeOnMemoryFileSystem ? "mem:/" + path : path, cacheSize);
+    return writer.InitWriteFile(path, cacheSize);
 }
 
 int PersistentManager::WriteFile(std::string& path, BuildTargetSelection target /*= BuildTargetSelection::NoTarget()*/, TransferInstructionFlags options /*= 0*/)
@@ -864,7 +865,7 @@ int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, con
     CachedWriter writer;
 
     FileCacherWrite serializedFileWriter;
-    FileCacherWrite resourceImageWriters[kNbResourceImages];
+    // FileCacherWrite resourceImageWriters[kNbResourceImages];
 
     bool isTempFileOnMemoryFileSystem = options & kTempFileOnMemoryFileSystem;
 

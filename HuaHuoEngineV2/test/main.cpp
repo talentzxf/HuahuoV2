@@ -16,6 +16,7 @@
 #include "Shapes/LineShape.h"
 #include "Utilities/File.h"
 #include "Utilities/PathNameUtility.h"
+#include "Utilities/MemoryFileSystem.h"
 
 void testTransform() {
     GameObject *go = MonoCreateGameObject("Go1");
@@ -71,6 +72,9 @@ void testShapeStore() {
     currentLayer->AddShapeInternal(lineShape1);
 
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
+
+    size_t length = GetMemoryFileSystem()->GetFileLength(StoreFilePath);
+    printf("File length:%d\n", length);
 
 //    std::string path = StoreFilePath;
 //    GetPersistentManager().BeginFileWriting(path);

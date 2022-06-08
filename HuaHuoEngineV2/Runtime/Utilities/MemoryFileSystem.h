@@ -85,7 +85,7 @@ public:
             memoryFile->data.resize(newSize);
         }
 
-        memcpy( (void*)memoryFile->data[pos], buffer, size);
+        memcpy( (void*)(memoryFile->data.data() + pos), buffer, size);
         offset = pos + size;
         return true;
     }
