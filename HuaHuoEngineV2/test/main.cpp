@@ -76,6 +76,11 @@ void testShapeStore() {
     size_t length = GetMemoryFileSystem()->GetFileLength(StoreFilePath);
     printf("File length:%d\n", length);
 
+    const char* filename = "objectstore.data";
+    FILE* fp = fopen(filename, "w+b");
+    fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath),length,1, fp);
+    fclose(fp);
+
 //    std::string path = StoreFilePath;
 //    GetPersistentManager().BeginFileWriting(path);
 //

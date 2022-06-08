@@ -24,6 +24,10 @@ public:
         data.clear();
     }
 
+    UInt8* GetDataPtr(){
+        return data.data();
+    }
+
     friend class MemoryFileAccessor;
 private:
     std::vector<UInt8> data;
@@ -107,6 +111,15 @@ public:
     bool CloseFile(MemoryFileAccessor* fileAccessor);
 
     MemoryFileAccessor* OpenFile(std::string path, FilePermission perm);
+
+    UInt8* GetDataPtr(std::string path){
+        auto fileItr = m_files.find(path);
+        if(fileItr == m_files.end()){
+            return NULL;
+        }
+
+        return fileItr->second.GetDataPtr();
+    }
 private:
     std::map<std::string, MemoryFile> m_files;
 };
