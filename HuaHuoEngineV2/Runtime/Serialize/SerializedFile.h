@@ -14,6 +14,7 @@
 #include "TypeSystem/Object.h"
 #include "Utilities/vector_map.h"
 #include "SerializedFileLoadError.h"
+#include "SwapEndianBytes.h"
 
 struct FileIdentifier
 {
@@ -216,6 +217,8 @@ public:
     void WriteObject(Object& object, LocalIdentifierInFileType fileID /*,SInt16 scriptTypeIndex, const BuildUsageTag& buildUsage, const GlobalBuildData& globalBuildData*/);
 
     bool FinishWriting(size_t* outDataOffset = NULL);
+
+    enum { kSectionAlignment = 16 };
 private:
     void FinalizeInitCommon(TransferInstructionFlags options);
 

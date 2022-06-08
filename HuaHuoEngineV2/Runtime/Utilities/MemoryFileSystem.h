@@ -29,6 +29,17 @@ private:
     std::vector<UInt8> data;
 };
 
+template <class T>
+T Min(T n1, T n2){
+    if(n1 > n2) return n2;
+    return n1;
+}
+
+template <class T>
+T Max(T n1, T n2){
+    if(n1 < n2) return n2;
+    return n1;
+}
 
 class MemoryFileAccessor{
 public:
@@ -46,6 +57,26 @@ public:
 
         memcpy( (void*)memoryFile->data[offset], buffer, size);
         return true;
+    }
+
+    size_t Read(size_t position, void* buffer, size_t size){
+        size_t fileSize = memoryFile->GetFileLength();
+
+        size_t actualReadSize = Min(size, fileSize - position);
+
+        memcpy(buffer, memoryFile->data.data() + position, actualReadSize);
+        offset = position + actualReadSize;
+
+        return actualReadSize;
+    }
+
+    size_t Read(void* buffer, size_t size){
+        size_t fileSize = memoryFile->GetFileLength();
+
+        size_t actualReadSize = Min(size, fileSize - offset);
+
+        memcpy(buffer, memoryFile->data.data() + offset, actualReadSize);
+        return actualReadSize;
     }
 
     bool Write(size_t pos, const void* buffer, size_t size){

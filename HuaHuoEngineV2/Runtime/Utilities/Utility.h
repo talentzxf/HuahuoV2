@@ -34,6 +34,10 @@ inline T* Stride(T* p, size_t offset)
     return reinterpret_cast<T*>((char*)p + offset);
 }
 
+inline UInt64 RoundUp64(UInt64 value, SInt64 base)
+{
+    return (value + base - 1) & (-base);
+}
 
 template<class T>
 inline T clamp(const T&t, const T& t0, const T& t1)

@@ -84,6 +84,25 @@ bool File::Write(size_t pos, const void *buffer, size_t size) {
     return written > 0;
 }
 
+size_t File::Read(void* buffer, size_t size, FileReadFlags flags){
+    if(this->isMemoryFile){
+        return this->m_MemFileAccessor->Read(buffer, size);
+    }
+
+    size_t readSize = fread((void *) buffer, 1, size, this->m_FileAccessor);
+    return readSize;
+}
+
+size_t File::Read(size_t position, void* buffer, size_t size, FileReadFlags flags){
+    if(this->isMemoryFile){
+        return this->m_MemFileAccessor->Read(position, buffer, size);
+    }
+
+    fseek(this->m_FileAccessor, position, SEEK_SET);
+    size_t readSize = fread((void *) buffer, 1, size, this->m_FileAccessor);
+    return readSize;
+}
+
 bool File::Close(){
     if(this->isMemoryFile){
         GetMemoryFileSystem()->CloseFile(this->m_MemFileAccessor);

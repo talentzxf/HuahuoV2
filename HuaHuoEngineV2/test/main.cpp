@@ -70,38 +70,40 @@ void testShapeStore() {
     lineShape1->SetEndPoint(3,3,3);
     currentLayer->AddShapeInternal(lineShape1);
 
-    std::string path = StoreFilePath;
-    GetPersistentManager().BeginFileWriting(path);
+    GetPersistentManagerPtr()->WriteFile(StoreFilePath);
 
-    BlockMemoryCacheWriter memoryCacheWriter(kMemDefault);
-    StreamedBinaryWrite writeStream;
-    CachedWriter* writeCache = &writeStream.Init(kReadWriteFromSerializedFile);
-    writeCache->InitWrite(memoryCacheWriter);
-    GetDefaultObjectStoreManager()->VirtualRedirectTransfer(writeStream);
-    writeCache->CompleteWriting();
-
-    UInt32 length = memoryCacheWriter.GetFileLength() * sizeof(UInt8);
-    Assert(length != 0);
-    printf("Length is:%d\n", length);
-
-    GetPersistentManager().BeginFileReading(path);
-
-    MemoryCacherReadBlocks memoryCacheReader(memoryCacheWriter.GetCacheBlocks(), memoryCacheWriter.GetFileLength(), memoryCacheWriter.GetCacheSize());
-    StreamedBinaryRead readStream;
-    CachedReader* readCache = &readStream.Init(kReadWriteFromSerializedFile);
-    readCache->InitRead(memoryCacheReader, 0 , writeCache->GetPosition());
-    Object* clonedObj = Object::Produce(GetDefaultObjectStoreManager()->GetType());
-    clonedObj->VirtualRedirectTransfer(readStream);
-    ObjectStoreManager* storeManager = (ObjectStoreManager*)clonedObj;
-    Assert(storeManager->GetCurrentStore()->GetCurrentLayer() != NULL);
-
-    Layer* layer = storeManager->GetCurrentStore()->GetCurrentLayer();
-    BaseShape* firstShape = layer->GetShapes()[0];
-    Assert(firstShape != NULL);
-
-    std::vector<UInt8> memoryStream;
-    size_t size = GetPersistentManager().WriteStoreFileInMemory();
-    Assert(size != 0);
+//    std::string path = StoreFilePath;
+//    GetPersistentManager().BeginFileWriting(path);
+//
+//    BlockMemoryCacheWriter memoryCacheWriter(kMemDefault);
+//    StreamedBinaryWrite writeStream;
+//    CachedWriter* writeCache = &writeStream.Init(kReadWriteFromSerializedFile);
+//    writeCache->InitWrite(memoryCacheWriter);
+//    GetDefaultObjectStoreManager()->VirtualRedirectTransfer(writeStream);
+//    writeCache->CompleteWriting();
+//
+//    UInt32 length = memoryCacheWriter.GetFileLength() * sizeof(UInt8);
+//    Assert(length != 0);
+//    printf("Length is:%d\n", length);
+//
+//    GetPersistentManager().BeginFileReading(path);
+//
+//    MemoryCacherReadBlocks memoryCacheReader(memoryCacheWriter.GetCacheBlocks(), memoryCacheWriter.GetFileLength(), memoryCacheWriter.GetCacheSize());
+//    StreamedBinaryRead readStream;
+//    CachedReader* readCache = &readStream.Init(kReadWriteFromSerializedFile);
+//    readCache->InitRead(memoryCacheReader, 0 , writeCache->GetPosition());
+//    Object* clonedObj = Object::Produce(GetDefaultObjectStoreManager()->GetType());
+//    clonedObj->VirtualRedirectTransfer(readStream);
+//    ObjectStoreManager* storeManager = (ObjectStoreManager*)clonedObj;
+//    Assert(storeManager->GetCurrentStore()->GetCurrentLayer() != NULL);
+//
+//    Layer* layer = storeManager->GetCurrentStore()->GetCurrentLayer();
+//    BaseShape* firstShape = layer->GetShapes()[0];
+//    Assert(firstShape != NULL);
+//
+//    std::vector<UInt8> memoryStream;
+//    size_t size = GetPersistentManager().WriteStoreFileInMemory();
+//    Assert(size != 0);
 }
 
 int main() {

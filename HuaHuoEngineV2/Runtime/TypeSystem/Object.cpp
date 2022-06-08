@@ -430,6 +430,101 @@ Object* PreallocateObjectFromPersistentManager(InstanceID instanceID, bool threa
     return obj;
 }
 
+void Object::SetPersistentDirtyIndex(UInt32 dirtyValue)
+{
+    m_DirtyIndex = dirtyValue;
+
+//    if (gDiagObjectSetDirty && !TestHideFlag(kDontSaveInEditor))
+//        LogStringMsg("Set Dirty(%d) : [%d] %s (%s)", m_DirtyIndex, GetInstanceID(), GetName(), GetTypeName());
+}
+
+UInt32 Object::GetPersistentDirtyIndex()
+{
+    return m_DirtyIndex;
+}
+
+void Object::IncrementPersistentDirtyIndex()
+{
+    // When we run out of dirty indices, make sure it stays at 1
+    m_DirtyIndex++;
+    if (m_DirtyIndex == 0)
+        m_DirtyIndex = 1;
+
+//    if (gDiagObjectSetDirty && !TestHideFlag(kDontSaveInEditor))
+//        LogStringMsg("Increment Dirty(%d) : [%d] %s (%s)", m_DirtyIndex, GetInstanceID(), GetName(), GetTypeName());
+}
+
+void Object::SetDirty()
+{
+    IncrementPersistentDirtyIndex();
+
+//    if (gSetDirtyCallbackFunc)
+//    {
+//        Object* objectsToDirty[1] = {this};
+//        gSetDirtyCallbackFunc(objectsToDirty, 1);
+//    }
+//
+//#if !UNITY_RELEASE
+//    m_DEBUGPersistentTypeID = GetType()->GetPersistentTypeID();
+//#endif
+}
+
+void SetObjectLockForWrite()
+{
+#if THREADED_LOADING
+    if (gCreateObjectLockRecursionCount == 0)
+    {
+        gCreateObjectLock.WriteLock();
+        gObjectLockedForWrite = true;
+    }
+    else
+    {
+        if (!gObjectLockedForWrite)
+            ErrorStringMsg("object lock does not support promotion from readlock to writelock");
+    }
+    ++gCreateObjectLockRecursionCount;
+#endif
+}
+
+void ReleaseObjectLock()
+{
+#if THREADED_LOADING
+    --gCreateObjectLockRecursionCount;
+    if (gCreateObjectLockRecursionCount == 0)
+    {
+        if (gObjectLockedForWrite)
+        {
+            gObjectLockedForWrite = false;
+            gCreateObjectLock.WriteUnlock();
+        }
+        else if (!CurrentThread::IsMainThread())
+            gCreateObjectLock.ReadUnlock();
+    }
+#endif
+}
+
+void UnloadObject(Object* p)
+{
+    if (!p)
+        return;
+
+    SetObjectLockForWrite();
+    delete_object_internal(p);
+    ReleaseObjectLock();
+}
+
+#if HUAHUO_EDITOR
+InstanceIDResolveCallback* gInstanceIDResolveCallback = NULL;
+const void* gInstanceIDResolveContext = NULL;
+
+void SetInstanceIDResolveCallback(InstanceIDResolveCallback callback, const void* context)
+{
+    gInstanceIDResolveCallback = callback;
+    gInstanceIDResolveContext = context;
+}
+
+#endif
+
 void InstanceIDToLocalSerializedObjectIdentifier(InstanceID id, LocalSerializedObjectIdentifier& localIdentifier)
 {
 #if UNITY_EDITOR

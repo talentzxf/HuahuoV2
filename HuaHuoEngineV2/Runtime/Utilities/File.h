@@ -125,6 +125,19 @@ public:
     bool Lock(File::LockMode mode, bool block);
 };
 
+// On Vista, its search indexer can wreak havoc on files that are written then renamed. Full story here:
+// http://stackoverflow.com/questions/153257/random-movefileex-failures-on-vista-access-denied-looks-like-caused-by-search-i
+// but in short, whenever a file is temporary or should be excluded from search indexing, we have to set those flags.
+enum FileFlags
+{
+    kFileFlagTemporary = (1 << 0), // File is meant to be temporary.
+    kFileFlagDontIndex = (1 << 1), // Exclude file from search indexing (Spotlight, Vista Search, ...)
+    kFileFlagHidden    = (1 << 2), // Set file as hidden file.
+    kFileFlagNoBackup  = (1 << 3), // Don't make backups of this file. So far used only on iOS.
+
+    kAllFileFlags = kFileFlagTemporary | kFileFlagDontIndex | kFileFlagNoBackup
+};
+
 #if HUAHUO_EDITOR
 std::string GenerateUniquePathSafe(std::string inPath);
 std::string GenerateUniquePath(std::string inPath);

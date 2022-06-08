@@ -22,6 +22,8 @@
 static const char* kResourceImageExtensions[] = { "resG", "res", "resS" };
 #endif
 
+
+
 #if HUAHUO_EDITOR
 class AutoResetInstanceIDResolver : NonCopyable
 {
@@ -45,6 +47,7 @@ private:
 };
 
 #endif
+
 
 void PersistentManager::LocalSerializedObjectIdentifierToInstanceID(const LocalSerializedObjectIdentifier& localIdentifier, InstanceID& outInstanceID, LockFlags lockedFlags)
 {
@@ -109,6 +112,8 @@ void PersistentManager::LocalSerializedObjectIdentifierToInstanceID(int activeNa
         PreallocateObjectThreaded(outInstanceID, lockedFlags);
     }
 }
+
+
 
 Object* PersistentManager::PreallocateObjectThreaded(InstanceID instanceID, LockFlags lockedFlags)
 {
@@ -209,6 +214,79 @@ static bool InitTempWriteFile(FileCacherWrite& writer, const std::string& path, 
 
     return writer.InitWriteFile(shouldBeOnMemoryFileSystem ? "mem:/" + path : path, cacheSize);
 }
+
+int PersistentManager::WriteFile(std::string& path, BuildTargetSelection target /*= BuildTargetSelection::NoTarget()*/, TransferInstructionFlags options /*= 0*/)
+{
+    // PROFILER_AUTO(gWriteFileProfiler);
+
+//    LockFlags lockedFlags = kLockFlagNone;
+//    AutoLock autoLock(*this, kMutexLock, &lockedFlags);
+
+    int serializedFileIndex;
+    serializedFileIndex = InsertPathNameInternal(path, false);
+    if (serializedFileIndex == -1)
+        return kNoError;
+
+//    bool needsWrite = TestNeedWriteFile(serializedFileIndex);
+//
+//    // Early out
+//    if (!needsWrite)
+//    {
+//        // @TODO: THIS SHOULD NOT BE HACKED IN HERE. Make test coverage against increased leaking then remove this and call CleanupStream explicitly.
+//        // We have already determined that the stream does not have any destroyed objects so it is safe so call this function with the 'false' argument
+//        // as there is nothing to clean up anyway
+//        CleanupStreamAndNameSpaceMapping(serializedFileIndex, false);
+//        return kNoError;
+//    }
+
+    ObjectIDs writeObjects; //(kMemTempAlloc);
+    if (options & kDontReadObjectsFromDiskBeforeWriting)
+    {
+        GetLoadedInstanceIDsAtPath(path, &writeObjects);
+        Assert(!writeObjects.empty());
+    }
+    else
+    {
+        // Load all writeobjects into memory
+        // (dont use LoadFileCompletely, since that reads all objects
+        // even those that might have been changed in memory)
+        GetInstanceIDsAtPath(path, &writeObjects);
+    }
+
+    WriteDataArray writeData;
+
+    for (const auto instanceID : writeObjects)
+    {
+        // Force load object from disk.
+        Object* o = dynamic_instanceID_cast<Object*>(instanceID);
+
+        if (o == NULL)
+            continue;
+
+        Assert(!(o != NULL && !o->IsPersistent()));
+
+        SerializedObjectIdentifier identifier;
+        m_Remapper->InstanceIDToSerializedObjectIdentifier(instanceID, identifier);
+
+        Assert(identifier.serializedFileIndex == serializedFileIndex);
+
+        DebugAssert(o->IsPersistent());
+        DebugAssert(m_Remapper->GetSerializedFileIndex(instanceID) == serializedFileIndex);
+        DebugAssert(m_Remapper->IsSerializedObjectIdentifierMappedToAnything(identifier));
+
+        writeData.push_back(WriteData(identifier.localIdentifierInFile, instanceID/*, BuildUsageTag()*/));
+    }
+
+    std::sort(writeData.begin(), writeData.end());
+
+    int result = WriteFile(path, serializedFileIndex, writeData.begin().base(), writeData.size()/*, GlobalBuildData()*/, NULL, target, options, NULL/*, lockedFlags*/);
+    if (result != kNoError && options & kAllowTextSerialization)
+        // Try binary serialization as a fallback.
+        result = WriteFile(path, serializedFileIndex, writeData.begin().base(), writeData.size()/*, GlobalBuildData()*/, NULL, target, options & ~kAllowTextSerialization, NULL/*, lockedFlags*/);
+
+    return result;
+}
+
 
 //static bool InitTempWriteFile(FileCacherWrite& writer, unsigned cacheSize, bool shouldBeOnMemoryFileSystem)
 //{
@@ -998,40 +1076,40 @@ int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, con
     }
 
     // Atomically move the serialized file into the target location
-    core::string actualNewPathName = RemapToAbsolutePath(path);
+    std::string actualNewPathName = RemapToAbsolutePath(path);
 
-    // make sure the file is not in the async read manager cache
-    AsyncReadForceCloseAllFiles();
+//    // make sure the file is not in the async read manager cache
+//    AsyncReadForceCloseAllFiles();
 
-    if (!MoveReplaceFile(serializedFileWriter.GetPathName(), actualNewPathName))
-    {
-        ErrorString("File " + path + " couldn't be written. Because moving " + serializedFileWriter.GetPathName() + " to " + actualNewPathName + " failed.");
-        return kFileCouldNotBeWritten;
-    }
-    SetFileFlags(actualNewPathName, kFileFlagTemporary, 0);
+//    if (!MoveReplaceFile(serializedFileWriter.GetPathName(), actualNewPathName))
+//    {
+//        ErrorString("File " + path + " couldn't be written. Because moving " + serializedFileWriter.GetPathName() + " to " + actualNewPathName + " failed.");
+//        return kFileCouldNotBeWritten;
+//    }
+//    SetFileFlags(actualNewPathName, kFileFlagTemporary, 0);
 
 
-    if (options & kBuildResourceImage)
-    {
-        // Move the resource images into the target location
-        for (int i = 0; i < kNbResourceImages; i++)
-        {
-            core::string targetPath = AppendPathNameExtension(actualNewPathName, kResourceImageExtensions[i]);
-            core::string tempWriteFileName(resourceImageWriters[i].GetPathName(), kMemTempAlloc);
-
-            if (!GetFileLength(tempWriteFileName).IsZero())
-            {
-                if (!MoveReplaceFile(tempWriteFileName, targetPath))
-                {
-                    ErrorString("File " + path + " couldn't be written. Because moving " + tempWriteFileName + " to " + actualNewPathName + " failed.");
-                    return kFileCouldNotBeWritten;
-                }
-                SetFileFlags(targetPath, kFileFlagTemporary, 0);
-            }
-            else
-                ::DeleteFile(targetPath);
-        }
-    }
+//    if (options & kBuildResourceImage)
+//    {
+//        // Move the resource images into the target location
+//        for (int i = 0; i < kNbResourceImages; i++)
+//        {
+//            std::string targetPath = AppendPathNameExtension(actualNewPathName, kResourceImageExtensions[i]);
+//            core::string tempWriteFileName(resourceImageWriters[i].GetPathName(), kMemTempAlloc);
+//
+//            if (!GetFileLength(tempWriteFileName).IsZero())
+//            {
+//                if (!MoveReplaceFile(tempWriteFileName, targetPath))
+//                {
+//                    ErrorString("File " + path + " couldn't be written. Because moving " + tempWriteFileName + " to " + actualNewPathName + " failed.");
+//                    return kFileCouldNotBeWritten;
+//                }
+//                SetFileFlags(targetPath, kFileFlagTemporary, 0);
+//            }
+//            else
+//                ::DeleteFile(targetPath);
+//        }
+//    }
 
     return kNoError;
 }

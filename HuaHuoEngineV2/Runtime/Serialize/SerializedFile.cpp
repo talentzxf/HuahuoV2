@@ -8,8 +8,65 @@
 #include "Utilities/Align.h"
 #include "Serialize/SerializationCaching/CachedWriter.h"
 #include "Serialize/SerializationCaching/CacheWriterBase.h"
+#include "Utilities/Utility.h"
+#include "Utilities/File.h"
 
 const char* kAssetBundleVersionNumber = "2";
+
+
+static const int kPreallocateFront = 4096;
+
+struct SerializedFileHeader32
+{
+    static const int kHeaderSize_Ver8 = 12;
+
+    // This header is always in BigEndian when in file
+    // Metadata follows directly after the header
+    UInt32  m_MetadataSize;
+    UInt32  m_FileSize;
+    SerializedFileFormatVersion  m_Version;
+    UInt32  m_DataOffset;
+    UInt8   m_Endianess;
+    UInt8   m_Reserved[3];
+
+    void SwapEndianess()
+    {
+        SwapEndianBytes(m_MetadataSize);
+        SwapEndianBytes(m_FileSize);
+        SwapEndianBytes(*(UInt32*)&m_Version);
+        SwapEndianBytes(m_DataOffset);
+    }
+};
+
+struct SerializedFileHeader
+{
+    // This header is always in BigEndian when in file
+    // Metadata follows directly after the header
+    UInt8   m_Legacy[sizeof(UInt32) * 2]; // unused, allows start of struct to be same as SerializedFileHeader32
+    SerializedFileFormatVersion  m_Version;
+    size_t m_MetadataSize;
+    size_t m_FileSize;
+    size_t  m_DataOffset;
+    UInt8   m_Endianess;
+    UInt8   m_Reserved[3];
+
+    void SwapEndianess()
+    {
+        UInt64 x;
+        x = m_MetadataSize;  SwapEndianBytes(x); m_MetadataSize = x;
+        x = m_FileSize;      SwapEndianBytes(x); m_FileSize = x;
+        x = m_DataOffset;    SwapEndianBytes(x); m_DataOffset = x;
+        SwapEndianBytes(*(UInt32*)&m_Version);
+    }
+};
+
+SerializedFile::SerializedType::~SerializedType()
+{
+#if SUPPORT_SERIALIZED_TYPETREES
+    UNITY_DELETE(m_OldType, kMemTypeTree);
+#endif
+}
+
 
 void SerializedFile::AddExternalRef(const FileIdentifier& pathName)
 {
@@ -95,6 +152,21 @@ SerializedFileLoadError SerializedFile::FinalizeInitRead(TransferInstructionFlag
     {
         return SerializedFileLoadError::kSerializedFileLoadError_Unknown;
     }
+}
+
+SerializedFile::SerializedType::SerializedType(const HuaHuo::Type* unityType, bool isStrippedType, SInt16 scriptTypeIdx)
+        : m_Type(unityType)
+        , m_IsStrippedType(isStrippedType)
+        , m_PerClassTypeTree(true)
+        , m_ScriptTypeIndex(scriptTypeIdx)
+#if SUPPORT_SERIALIZED_TYPETREES
+, m_OldType(NULL)
+    , m_Equals(kNotCompared)
+    #if !UNITY_EXTERNAL_TOOL || SUPPORT_SERIALIZE_WRITE  // this an odd way of expression it, but basicaly: player or editor.
+    , m_TypeTreeCacheId(0)
+    #endif
+#endif
+{
 }
 
 SerializedFileLoadError SerializedFile::ReadHeader()
@@ -271,8 +343,6 @@ SerializedFileLoadError SerializedFile::InitializeRead(const std::string& path, 
 
     return loadError;
 }
-
-static const int kPreallocateFront = 4096;
 
 SerializedFileLoadError SerializedFile::FinalizeInitWrite(TransferInstructionFlags options)
 {
@@ -708,4 +778,173 @@ bool SerializedFile::FinishWriting(size_t* outDataOffset)
     }
 
     return false;
+}
+
+static void WriteAlignmentData(File& file, size_t misalignment)
+{
+    Assert(misalignment < SerializedFile::kSectionAlignment);
+    UInt8 data[SerializedFile::kSectionAlignment];
+    memset(data, 0, misalignment);
+    file.Write(data, misalignment);
+}
+
+template<bool kSwap, bool kIsAReferencedType>
+void SerializedFile::SerializedType::WriteType(TypeVector & referencedTypesPool, bool enableTypeTree, std::vector<UInt8>& cache)
+{
+    SInt32 persistentTypeID = GetPersistentTypeID();
+
+    WriteHeaderCache<kSwap>(persistentTypeID, cache);
+    WriteHeaderCache<kSwap>(m_IsStrippedType, cache);
+    WriteHeaderCache<kSwap>(m_ScriptTypeIndex, cache);
+
+//    // Only write the script ID for scripts.
+//    if (persistentTypeID == kMonoBehaviourPersistentID || m_ScriptTypeIndex >= 0)
+//    {
+//        WriteHeaderCache<kSwap>(m_ScriptID.hashData.u32[0], cache);
+//        WriteHeaderCache<kSwap>(m_ScriptID.hashData.u32[1], cache);
+//        WriteHeaderCache<kSwap>(m_ScriptID.hashData.u32[2], cache);
+//        WriteHeaderCache<kSwap>(m_ScriptID.hashData.u32[3], cache);
+//    }
+
+//    WriteHeaderCache<kSwap>(m_OldTypeHash.hashData.u32[0], cache);
+//    WriteHeaderCache<kSwap>(m_OldTypeHash.hashData.u32[1], cache);
+//    WriteHeaderCache<kSwap>(m_OldTypeHash.hashData.u32[2], cache);
+//    WriteHeaderCache<kSwap>(m_OldTypeHash.hashData.u32[3], cache);
+
+//    if (enableTypeTree)
+//    {
+//        TypeTreeIO::WriteTypeTree(*m_OldType, cache, kSwap);
+//
+//        if (kIsAReferencedType)
+//        {
+//            WriteHeaderCache<kSwap>(m_KlassName, cache);
+//            WriteHeaderCache<kSwap>(m_NameSpace, cache);
+//            WriteHeaderCache<kSwap>(m_AsmName, cache);
+//        }
+//        else
+//        {
+//            // only write dependencies for Object types (MonoBehaviour and the like)
+//            SInt32 dependenciesCount = m_TypeDependencies.size();
+//            WriteHeaderCache<kSwap>(dependenciesCount, cache);
+//            if (dependenciesCount > 0)
+//            {
+//                size_t writeSize = sizeof(SInt32) * dependenciesCount;
+//                cache.resize_uninitialized(cache.size() + writeSize);
+//                UInt32* dst = (UInt32*)(cache.data() + cache.size() - writeSize);
+//                std::memcpy(dst, &*m_TypeDependencies.begin(), writeSize);
+//            }
+//        }
+//    }
+}
+
+template<bool kSwap>
+bool SerializedFile::WriteHeader(std::vector<UInt8>& metadata, size_t* outDataOffset)
+{
+    bool success = true;
+
+    // The aggregated metadata fits into the pre-written block, so write it directly.
+    if (metadata.size() <= kPreallocateFront - sizeof(SerializedFileHeader))
+    {
+        UInt8* temp = (UInt8*)alloca(kPreallocateFront);
+        memset(temp, 0, kPreallocateFront);
+
+        // Make sure to zero this out, as padding can result in uninitialised data that gets copied into the file
+        // This can cause an unstable content hash
+        memset(temp, 0, sizeof(SerializedFileHeader));
+        SerializedFileHeader& header = *(SerializedFileHeader*)temp;
+        header.m_MetadataSize = (UInt64)metadata.size();
+        header.m_FileSize = size_t(m_CachedWriter->GetPosition());
+        header.m_Version = SerializedFileFormatVersion::kCurrentSerializeVersion;
+        header.m_DataOffset = m_WriteDataOffset;
+        header.m_Endianess = m_FileEndianess;
+
+        if (outDataOffset != NULL)
+            (*outDataOffset) = m_WriteDataOffset - (UInt64)kPreallocateFront;
+
+        if (kActiveEndianess != kBigEndian)
+            header.SwapEndianess();
+
+        std::copy(metadata.begin(), metadata.end(), temp + sizeof(SerializedFileHeader));
+
+        success &= m_CachedWriter->CompleteWriting();
+        success &= m_CachedWriter->GetCacheBase().WriteHeaderAndCloseFile(temp, 0, sizeof(SerializedFileHeader) + metadata.size());
+    }
+    else
+    {
+        // metadata doesn't fit, therefore close the file, write header + metadata to another file
+        // and copy data over from 'this' one.
+
+        success &= m_CachedWriter->CompleteWriting();
+        success &= m_CachedWriter->GetCacheBase().WriteHeaderAndCloseFile(NULL, 0, 0);
+
+        size_t dataFileSize = m_CachedWriter->GetPosition();
+        if (dataFileSize < kPreallocateFront)
+            return false;
+
+        size_t dataSize = dataFileSize - (UInt64)kPreallocateFront;
+        size_t dataOffsetOriginal = (UInt64)(metadata.size() + sizeof(SerializedFileHeader));
+        size_t dataOffset(RoundUp64(dataOffsetOriginal, (SInt64)kSectionAlignment));
+
+        if (outDataOffset != NULL)
+            (*outDataOffset) = dataOffset - (UInt64)kPreallocateFront;
+
+        std::string originalPath = m_CachedWriter->GetCacheBase().GetPathName();
+        std::string tempPath = originalPath;//GetUniqueTempPathInProject();
+
+        SerializedFileHeader header{};
+
+        // Make sure to zero this out, as padding can result in uninitialised data that gets copied into the file
+        // This can cause an unstable content hash
+        memset(&header, 0, sizeof(header));
+        header.m_Version = SerializedFileFormatVersion::kCurrentSerializeVersion;
+        header.m_MetadataSize = (UInt64)metadata.size();
+        header.m_FileSize = dataOffset + dataSize;
+        header.m_DataOffset = dataOffset;
+        header.m_Endianess = m_FileEndianess;
+
+        if (kActiveEndianess != kBigEndian)
+            header.SwapEndianess();
+
+        File file;
+        success &= file.Open(tempPath, kWritePermission);
+
+        // header
+        success &= file.Write(&header, sizeof(header));
+
+        // metadata
+        success &= file.Write(metadata.data(), metadata.size());
+        if (dataOffset != dataOffsetOriginal)
+            WriteAlignmentData(file, (dataOffset - dataOffsetOriginal));
+        // FatalErrorIf(dataOffset != file.GetPosition());
+
+        {
+            enum { kCopyChunck = 1 * 1024 * 1024 };
+
+            UInt8* buffer;
+            ALLOC_TEMP_AUTO(buffer, kCopyChunck);
+
+            File srcFile;
+            success &= srcFile.Open(originalPath, kReadPermission);
+
+            size_t position = kPreallocateFront;
+            size_t left = dataSize;
+            while (left > 0 && success)
+            {
+                size_t toRead = std::min<size_t>(kCopyChunck, left);
+                size_t wasRead = srcFile.Read((UInt64)position, buffer, toRead);
+                success &= file.Write(buffer, wasRead);
+                position += toRead;
+                left -= toRead;
+            }
+            success &= srcFile.Close();
+
+            success &= file.Close();
+        }
+
+//        // move the temp file over to the destination
+//        success &= DeleteFile(originalPath);
+//        success &= MoveFileOrDirectory(tempPath, originalPath);
+    }
+
+    return success;
 }
