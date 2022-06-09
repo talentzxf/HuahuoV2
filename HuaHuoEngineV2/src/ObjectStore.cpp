@@ -69,12 +69,18 @@ void Layer::Transfer(TransferFunction &transfer) {
 
 #if WEB_ENV
 emscripten::val writeObjectStoreInMemoryFile(){
-    int bufferSize = GetPersistentManager().WriteFile(StoreFilePath);
+    int writeResult = GetPersistentManager().WriteFile(StoreFilePath);
+    printf("%s,%d; bufferSize:%d\n", __FILE__, __LINE__ , writeResult);
     UInt8* bufferPtr = GetMemoryFileSystem()->GetDataPtr(StoreFilePath);
+    printf("%s,%d\n", __FILE__, __LINE__ );
+    if(bufferPtr == NULL){
+        printf("%s,%d\n", __FILE__, __LINE__ );
+    }
     size_t length = GetMemoryFileSystem()->GetFileLength(StoreFilePath);
+    printf("%s,%d\n", __FILE__, __LINE__ );
 
     return emscripten::val(
-                emscripten::typed_memory_view(bufferSize, bufferPtr)
+                emscripten::typed_memory_view(length, bufferPtr)
                 );
     }
 

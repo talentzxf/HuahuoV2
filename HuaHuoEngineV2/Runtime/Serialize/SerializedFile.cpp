@@ -840,13 +840,17 @@ void SerializedFile::SerializedType::WriteType(TypeVector & referencedTypesPool,
 template<bool kSwap>
 bool SerializedFile::WriteHeader(std::vector<UInt8>& metadata, size_t* outDataOffset)
 {
+    printf("%s,%d\n", __FILE__, __LINE__);
     bool success = true;
 
     // The aggregated metadata fits into the pre-written block, so write it directly.
     if (metadata.size() <= kPreallocateFront - sizeof(SerializedFileHeader))
     {
+        printf("%s,%d\n", __FILE__, __LINE__);
         UInt8* temp = (UInt8*)alloca(kPreallocateFront);
         memset(temp, 0, kPreallocateFront);
+
+        printf("%s,%d\n", __FILE__, __LINE__);
 
         // Make sure to zero this out, as padding can result in uninitialised data that gets copied into the file
         // This can cause an unstable content hash
@@ -865,12 +869,14 @@ bool SerializedFile::WriteHeader(std::vector<UInt8>& metadata, size_t* outDataOf
             header.SwapEndianess();
 
         std::copy(metadata.begin(), metadata.end(), temp + sizeof(SerializedFileHeader));
+        printf("%s,%d\n", __FILE__, __LINE__);
 
         success &= m_CachedWriter->CompleteWriting();
         success &= m_CachedWriter->GetCacheBase().WriteHeaderAndCloseFile(temp, 0, sizeof(SerializedFileHeader) + metadata.size());
     }
     else
     {
+        printf("%s,%d\n", __FILE__, __LINE__);
         // metadata doesn't fit, therefore close the file, write header + metadata to another file
         // and copy data over from 'this' one.
 
@@ -890,9 +896,9 @@ bool SerializedFile::WriteHeader(std::vector<UInt8>& metadata, size_t* outDataOf
 
         std::string originalPath = m_CachedWriter->GetCacheBase().GetPathName();
         std::string tempPath = originalPath;//GetUniqueTempPathInProject();
-
+        printf("%s,%d\n", __FILE__, __LINE__);
         SerializedFileHeader header{};
-
+        printf("%s,%d\n", __FILE__, __LINE__);
         // Make sure to zero this out, as padding can result in uninitialised data that gets copied into the file
         // This can cause an unstable content hash
         memset(&header, 0, sizeof(header));
@@ -901,22 +907,22 @@ bool SerializedFile::WriteHeader(std::vector<UInt8>& metadata, size_t* outDataOf
         header.m_FileSize = dataOffset + dataSize;
         header.m_DataOffset = dataOffset;
         header.m_Endianess = m_FileEndianess;
-
+        printf("%s,%d\n", __FILE__, __LINE__);
         if (kActiveEndianess != kBigEndian)
             header.SwapEndianess();
-
+        printf("%s,%d\n", __FILE__, __LINE__);
         File file;
         success &= file.Open(tempPath, kWritePermission);
-
+        printf("%s,%d\n", __FILE__, __LINE__);
         // header
         success &= file.Write(&header, sizeof(header));
-
+        printf("%s,%d\n", __FILE__, __LINE__);
         // metadata
         success &= file.Write(metadata.data(), metadata.size());
         if (dataOffset != dataOffsetOriginal)
             WriteAlignmentData(file, (dataOffset - dataOffsetOriginal));
         // FatalErrorIf(dataOffset != file.GetPosition());
-
+        printf("%s,%d\n", __FILE__, __LINE__);
         {
             enum { kCopyChunck = 1 * 1024 * 1024 };
 
@@ -940,6 +946,7 @@ bool SerializedFile::WriteHeader(std::vector<UInt8>& metadata, size_t* outDataOf
 
             success &= file.Close();
         }
+        printf("%s,%d\n", __FILE__, __LINE__);
 
 //        // move the temp file over to the destination
 //        success &= DeleteFile(originalPath);
