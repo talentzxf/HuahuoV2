@@ -16,8 +16,6 @@ interface ScriptEventHandlerImpl{
 
 interface PersistentManager{
     static PersistentManager GetPersistentManager();
-
-    void LoadFromBuffer();
 };
 
 [NoDelete]

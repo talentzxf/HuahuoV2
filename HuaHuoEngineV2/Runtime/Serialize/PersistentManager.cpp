@@ -444,11 +444,13 @@ void PersistentManager::InstanceIDToLocalSerializedObjectIdentifier(InstanceID i
 #if HUAHUO_EDITOR
 void PersistentManager::MakeObjectPersistent(InstanceID heapID, std::string pathName)
 {
+    printf("%s,%d\n", __FILE__, __LINE__);
     MakeObjectPersistentAtFileID(heapID, 0, pathName);
 }
 
 void PersistentManager::MakeObjectPersistentAtFileID(InstanceID heapID, LocalIdentifierInFileType fileID, std::string pathName)
 {
+    printf("%s,%d\n", __FILE__, __LINE__);
     MakeObjectsPersistent(&heapID, &fileID, 1, pathName);
 }
 
@@ -627,72 +629,85 @@ void PersistentManager::MakeObjectsPersistent(const InstanceID* heapIDs, LocalId
     CheckedAssert(m_AllowLoadingFromDisk);
     // ASSERT_RUNNING_ON_MAIN_THREAD;
     // AutoLock autoLock(*this);
-
+    printf("%s,%d\n", __FILE__, __LINE__);
     Assert(!pathName.empty());
+    printf("%s,%d\n", __FILE__, __LINE__);
+    if(this == NULL)
+        printf("%s,%d\n", __FILE__, __LINE__);
     SInt32 globalNameSpace = InsertPathNameInternal(pathName, true);
+    printf("%s,%d\n", __FILE__, __LINE__);
     StreamNameSpace* streamNameSpace = NULL;
-
+    printf("%s,%d\n", __FILE__, __LINE__);
     for (int i = 0; i < size; i++)
     {
+        printf("%s,%d\n", __FILE__, __LINE__);
         InstanceID heapID = heapIDs[i];
         LocalIdentifierInFileType fileID = fileIDs[i];
-
+        printf("%s,%d\n", __FILE__, __LINE__);
         Object* o = Object::IDToPointer(heapID);
-
+        printf("%s,%d\n", __FILE__, __LINE__);
         if ((options & kMakePersistentDontRequireToBeLoadedAndDontUnpersist) == 0)
         {
+            printf("%s,%d\n", __FILE__, __LINE__);
             // Making an object that is not in memory persistent
             if (o == NULL)
             {
                 ErrorString("Make Objects Persistent failed because the object can not be loaded");
                 continue;
             }
-
+            printf("%s,%d\n", __FILE__, __LINE__);
             // Make Object unpersistent first
             if (o->IsPersistent())
             {
+                printf("%s,%d\n", __FILE__, __LINE__);
                 SerializedObjectIdentifier identifier;
                 InstanceIDToSerializedObjectIdentifier(heapID, identifier);
                 Assert(identifier.serializedFileIndex != -1);
 
+                printf("%s,%d\n", __FILE__, __LINE__);
                 // Return if the file and serializedFileIndex is not going to change
                 if (globalNameSpace == identifier.serializedFileIndex)
                 {
                     if (fileID == 0 || identifier.localIdentifierInFile == fileID)
                         continue;
                 }
-
+                printf("%s,%d\n", __FILE__, __LINE__);
                 MakeObjectUnpersistent(heapID, kDestroyFromFile);
             }
         }
-
+        printf("%s,%d\n", __FILE__, __LINE__);
         if (streamNameSpace == NULL)
             streamNameSpace = &GetStreamNameSpaceInternal(globalNameSpace);
-
+        printf("%s,%d\n", __FILE__, __LINE__);
         // Allocate an fileID for this object in the File
         if (fileID == 0)
         {
+            printf("%s,%d\n", __FILE__, __LINE__);
             fileID = streamNameSpace->highestID;
             if (streamNameSpace->stream)
                 fileID = std::max(streamNameSpace->highestID, streamNameSpace->stream->GetHighestID());
             fileID++;
         }
+        printf("%s,%d\n", __FILE__, __LINE__);
         streamNameSpace->highestID = std::max(streamNameSpace->highestID, fileID);
-
+        printf("%s,%d\n", __FILE__, __LINE__);
         SerializedObjectIdentifier identifier;
         identifier.serializedFileIndex = globalNameSpace;
         identifier.localIdentifierInFile = fileID;
         m_Remapper->SetupRemapping(heapID, identifier);
         fileIDs[i] = fileID;
-
+        printf("%s,%d\n", __FILE__, __LINE__);
         if (o)
         {
+            printf("%s,%d\n", __FILE__, __LINE__);
             // Assert(!(o->TestHideFlag(Object::kDontSaveInEditor) && (options & kAllowDontSaveObjectsToBePersistent) == 0));
             o->SetIsPersistent(true);
+            printf("%s,%d\n", __FILE__, __LINE__);
             o->SetFileIDHint(fileID);
             o->SetDirty();
         }
     }
+    printf("%s,%d\n", __FILE__, __LINE__);
 }
 
 static const char* kSerializedFileArea = "SerializedFile";
@@ -1114,33 +1129,4 @@ int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, con
 
     return kNoError;
 }
-
-#if WEB_ENV
-#include <emscripten/bind.h>
-
-
-emscripten::val writePersistentManagerInMemory(){
-    int bufferSize = GetPersistentManager().WriteStoreFileInMemory();
-    UInt8* bufferPtr = GetPersistentManager().GetBufferPtr();
-
-    return emscripten::val(
-                emscripten::typed_memory_view(bufferSize, bufferPtr)
-                );
-    }
-
-emscripten::val resizeAndGetPersistentManagerBuffer(int size){
-    GetPersistentManager().CleanupAndResizeBuffer(size);
-    UInt8* bufferPtr = GetPersistentManager().GetBufferPtr();
-
-    return emscripten::val(
-                emscripten::typed_memory_view(size, bufferPtr)
-                );
-}
-EMSCRIPTEN_BINDINGS(my_module) {
-    function("writePersistentManagerInMemory", &writePersistentManagerInMemory);
-    function("resizeAndGetPersistentManagerBuffer", &resizeAndGetPersistentManagerBuffer);
-}
-
-#endif
-
 #endif

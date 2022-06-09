@@ -8,7 +8,9 @@
 
 void InitPathNamePersistentManager()
 {
+    printf("Creating persistentManager\n");
     SetPersistentManager(HUAHUO_NEW_AS_ROOT(PathNamePersistentManager , kMemManager, "Managers", "PathNameManager") ());
+    printf("PersistentManager created\n");
     // InitializeStdConverters();
 }
 
@@ -39,17 +41,21 @@ int PathNamePersistentManager::InsertPathNameInternal(std::string pathname, bool
     SET_ALLOC_OWNER(GetMemoryLabel());
     Assert(!(!pathname.empty() && (pathname[0] == '/' || pathname[0] == '\\')));
 
+    printf("%s,%d\n", __FILE__, __LINE__);
     std::string lowerCasePathName = ToLower(pathname);
-
+    printf("%s,%d\n", __FILE__, __LINE__);
     PathToStreamID::iterator found = m_PathToStreamID.find(lowerCasePathName);
     if (found != m_PathToStreamID.end())
         return found->second;
 
+    printf("%s,%d\n", __FILE__, __LINE__);
     if (create)
     {
+        printf("%s,%d\n", __FILE__, __LINE__);
         m_PathToStreamID.insert(std::make_pair(lowerCasePathName, m_PathNames.size()));
         m_PathNames.push_back(pathname);
         AddStream();
+        printf("%s,%d\n", __FILE__, __LINE__);
         return m_PathNames.size() - 1;
     }
     else

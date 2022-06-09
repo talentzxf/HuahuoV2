@@ -67,3 +67,20 @@ void Layer::Transfer(TransferFunction &transfer) {
     TRANSFER(shapes);
 }
 
+#if WEB_ENV
+emscripten::val writeObjectStoreInMemoryFile(){
+    int bufferSize = GetPersistentManager().WriteFile(StoreFilePath);
+    UInt8* bufferPtr = GetMemoryFileSystem()->GetDataPtr(StoreFilePath);
+    size_t length = GetMemoryFileSystem()->GetFileLength(StoreFilePath);
+
+    return emscripten::val(
+                emscripten::typed_memory_view(bufferSize, bufferPtr)
+                );
+    }
+
+
+EMSCRIPTEN_BINDINGS(HuaHuoEngineV2) {
+    function("writeObjectStoreInMemoryFile", &writeObjectStoreInMemoryFile);
+}
+#endif
+

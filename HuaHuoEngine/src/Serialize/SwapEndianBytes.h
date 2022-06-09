@@ -17,7 +17,7 @@ inline void SwapEndianBytes(SInt32& i)   { SwapEndianBytes(reinterpret_cast<UInt
 inline void SwapEndianBytes(float& i)
 {
     UInt32 asUint = bit_cast<UInt32>(i);
-    SwapEndianBytes(asUint);
+
     i = bit_cast<float>(asUint);
 }
 

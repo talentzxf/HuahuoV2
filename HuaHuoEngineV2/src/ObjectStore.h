@@ -13,6 +13,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include "Utilities/MemoryFileSystem.h"
 
 extern std::string StoreFilePath;
 
@@ -100,8 +101,11 @@ public:
         if(!currentStore.IsValid()){
             printf("currentStore invalid, creating new store\n");
             currentStore = Object::Produce<ObjectStore>();
+            printf("%s,%d\n", __FILE__, __LINE__);
             GetPersistentManager().MakeObjectPersistent(currentStore.GetInstanceID(), StoreFilePath);
+            printf("%s,%d\n", __FILE__, __LINE__);
             allStores.push_back(currentStore);
+            printf("%s,%d\n", __FILE__, __LINE__);
         }
         printf("Return of current store\n");
         return currentStore;
@@ -116,6 +120,10 @@ private:
 
 ObjectStoreManager* GetDefaultObjectStoreManager();
 
+#if WEB_ENV
+#include <emscripten/bind.h>
+emscripten::val writeObjectStoreInMemoryFile();
 
+#endif
 
 #endif //HUAHUOENGINEV2_OBJECTSTORE_H

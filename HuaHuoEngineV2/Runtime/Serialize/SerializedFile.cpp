@@ -701,7 +701,7 @@ void SerializedFile::BuildMetadataSection(std::vector<UInt8>& cache, size_t data
         Write4Alignment(cache);
         WriteHeaderCache<kSwap>(i->first, cache);
 
-        WriteHeaderCache<kSwap>((i->second.byteStart - dataOffsetInFile)/*.Cast<UInt64>()*/, cache);
+        WriteHeaderCache<kSwap>((UInt64)(i->second.byteStart - dataOffsetInFile)/*.Cast<UInt64>()*/, cache);
         WriteHeaderCache<kSwap>(i->second.byteSize, cache);
         WriteHeaderCache<kSwap>(i->second.typeID, cache);
         //printf_console ("fileID: %d byteStart: %d typeID: %d \n", i->first, i->second.byteStart, i->second.typeID);
