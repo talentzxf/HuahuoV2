@@ -1726,10 +1726,11 @@ bool SerializedFile::SerializedType::ReadType(SerializedFileFormatVersion versio
             m_Equals = kNotEqual;
         }
 #endif
-        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[0]);
-        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[1]);
-        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[2]);
-        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[3]);
+        // VZ: If we support typetree later, we should enable this part.
+//        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[0]);
+//        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[1]);
+//        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[2]);
+//        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[3]);
     }
 
 #if SUPPORT_SERIALIZED_TYPETREES
