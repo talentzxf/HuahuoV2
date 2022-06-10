@@ -16,6 +16,7 @@ interface ScriptEventHandlerImpl{
 
 interface PersistentManager{
     static PersistentManager GetPersistentManager();
+    long LoadFile(DOMString fName);
 };
 
 [NoDelete]

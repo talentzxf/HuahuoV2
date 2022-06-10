@@ -1658,4 +1658,16 @@ int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, con
 
     return kNoError;
 }
+
+#if WEB_ENV
+
+size_t LoadFileCompletely(std::string fName){
+    return GetPersistentManager().LoadFileCompletely(fName);
+}
+
+EMSCRIPTEN_BINDINGS(HuaHuoEngineV2) {
+    emscripten::function("LoadFileCompletely", &LoadFileCompletely);
+}
+
+#endif
 #endif

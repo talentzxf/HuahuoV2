@@ -33,19 +33,19 @@ function save(){
 function load(e){
     var file = e.target.files[0];
     var reader = new FileReader()
-
-    let fileContent = new Blob([Uint8Array], {type:"application/octet-stream"});
     reader.onload = function(e){
-        // let fileSize = fileContent.size;
-        // let Uint8Array = Module.resizeAndGetPersistentManagerBuffer(fileSize);
-        // let arrayBuffer = fileContent.arrayBuffer()
-        // for(let i = 0 ; i < fileSize; i++){
-        //     Uint8Array[i] = arrayBuffer[i];
-        // }
-        //
-        // huahuoEngine.GetPersistentManager().LoadFromBuffer();
+        let fileContent = new Uint8Array(e.target.result);
+        let storeMemoryFile = "mem://objectstore.data"
+        let fileSize = fileContent.length;
+        let memoryFileContent = Module.createMemFile(storeMemoryFile, fileSize);
+        for(let i = 0 ; i < fileSize; i++){ // Copy to the file, byte by byte
+            memoryFileContent[i] = fileContent[i];
+        }
+
+        Module.LoadFileCompletely(storeMemoryFile);
+
     }
-    reader.readAsArrayBuffer(fileContent)
+    reader.readAsArrayBuffer(file)
 }
 
 window.menuoperations = {

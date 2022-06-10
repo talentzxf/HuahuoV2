@@ -40,13 +40,13 @@ void MemoryFileSystem::TruncateFile(std::string path) {
     m_files.find(path)->second.Truncate();
 }
 
-bool MemoryFileSystem::CreateFile(std::string path) {
+bool MemoryFileSystem::CreateFile(std::string path, size_t reservedLength) {
     if(this->IsFileCreated(path)){
         LogStringMsg("File:%s already exists!", path.c_str());
         return false;
     }
 
-    m_files.insert(std::pair<std::string, MemoryFile>(path, MemoryFile()));
+    m_files.insert(std::pair<std::string, MemoryFile>(path, MemoryFile(reservedLength)));
     return true;
 }
 

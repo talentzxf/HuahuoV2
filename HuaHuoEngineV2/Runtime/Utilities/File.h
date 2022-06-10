@@ -142,4 +142,10 @@ enum FileFlags
 std::string GenerateUniquePathSafe(std::string inPath);
 std::string GenerateUniquePath(std::string inPath);
 #endif
+
+#if WEB_ENV
+#include <emscripten/bind.h>
+emscripten::val createMemFile(std::string fileName, size_t length);
+
+#endif
 #endif //HUAHUOENGINEV2_FILE_H

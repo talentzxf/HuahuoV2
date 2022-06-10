@@ -217,4 +217,21 @@ std::string GenerateUniquePath(std::string inPath)
 
     return std::string();
 }
+
+#if WEB_ENV
+emscripten::val createMemFile(std::string fileName, size_t length){
+    bool createFileResult = GetMemoryFileSystem()->CreateFile(fileName, length);
+
+    UInt8* bufferPtr = GetMemoryFileSystem()->GetDataPtr(fileName);
+
+    return emscripten::val(
+                emscripten::typed_memory_view(length, bufferPtr)
+                );
+}
+
+EMSCRIPTEN_BINDINGS(HuaHuoEngineV2) {
+    function("createMemFile", &createMemFile);
+}
+#endif
+
 #endif

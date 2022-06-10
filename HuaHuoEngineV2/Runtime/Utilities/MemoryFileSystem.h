@@ -16,6 +16,10 @@ class MemoryFileAccessor;
 
 class MemoryFile{
 public:
+    MemoryFile(size_t reservedLength){
+        data.resize(reservedLength);
+    }
+
     size_t GetFileLength(){
         printf("%s,%d. Data size is: %d bytes\n", __FILE__, __LINE__, data.size());
         return data.size();
@@ -110,7 +114,7 @@ public:
 
     void DeleteFile(std::string path);
     void TruncateFile(std::string path);
-    bool CreateFile(std::string path);
+    bool CreateFile(std::string path, size_t reservedLength = 0);
 
     bool CloseFile(MemoryFileAccessor* fileAccessor);
 

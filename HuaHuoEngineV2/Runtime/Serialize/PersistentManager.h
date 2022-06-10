@@ -272,6 +272,12 @@ public:
     /// Load the entire file from a different thread
     int LoadFileCompletelyThreaded(std::string& pathname, LocalIdentifierInFileType* fileIDs, InstanceID* instanceIDs, int size, LoadFlags flags,/* LoadProgress& loadProgress,*/ LockFlags lockedFlags = kLockFlagNone);
 
+    int LoadFile(const char* pathName)
+    {
+        std::string pathNameStr(pathName);
+        return LoadFileCompletely(pathNameStr);
+    }
+
     /// Thread locking must be performed from outside using Lock/Unlock
     SerializedFile* GetSerializedFile(std::string& path, LockFlags lockedFlags = kLockFlagNone);
     SerializedFile* GetSerializedFile(int serializedFileIndex, LockFlags lockedFlags = kLockFlagNone);
@@ -324,4 +330,9 @@ PersistentManager* GetPersistentManagerPtr();
 void CleanupPersistentManager();
 void SetPersistentManager(PersistentManager* persistentManager);
 
+#if WEB_ENV
+#include <emscripten/bind.h>
+size_t LoadFileCompletely(std::string fName);
+
+#endif
 #endif //HUAHUOENGINE_PERSISTENTMANAGER_H
