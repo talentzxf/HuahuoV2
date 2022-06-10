@@ -46,9 +46,34 @@ TypeManager::TypeManager(RTTI::RuntimeTypeArray& runtimeTypeArray)
 
 TypeManager::~TypeManager()
 {
+    DeserializationStubMap::iterator it = m_DeserializationStubMap.begin();
+    for (; m_DeserializationStubMap.end() != it; ++it)
+        HUAHUO_DELETE(it->second, kMemBaseObject);
+    m_DeserializationStubMap.clear();
     m_RuntimeTypes.Count = 0;
 }
 
+const RTTI* TypeManager::GetDeserializationRTTIStubForPersistentTypeID(PersistentTypeID typeID) {
+    {
+        // ReadWriteLock::AutoReadLock readLock(m_DeserializationStubMapLock);
+        const DeserializationStubMap &map = m_DeserializationStubMap;
+        DeserializationStubMap::const_iterator it = map.find(typeID);
+        if (it != map.end())
+            return it->second;
+    }
+    {
+        // ReadWriteLock::AutoWriteLock writeLock(m_DeserializationStubMapLock);
+        RTTI *newStub = HUAHUO_NEW(RTTI, kMemBaseObject);
+        RTTI defaultRTTI = RTTI_DEFAULT_INITIALIZER_LIST;
+        *newStub = defaultRTTI;
+        newStub->persistentTypeID = typeID;
+        std::pair<DeserializationStubMap::iterator, bool> inserted = m_DeserializationStubMap.insert(std::pair<PersistentTypeID, RTTI*>(typeID, newStub));
+        if (!inserted.second)
+            HUAHUO_DELETE(newStub, kMemBaseObject);
+
+        return inserted.first->second;
+    }
+}
 
 void TypeManager::CallInitializeTypes()
 {
@@ -283,4 +308,12 @@ const RTTI* TypeManager::ClassNameToRTTI(const char* name, bool caseInsensitive)
         }
         return NULL;
     }
+}
+
+const RTTI* TypeManager::PersistentTypeIDToRTTI(PersistentTypeID id) const
+{
+    RTTIMap::const_iterator i = m_RTTI.find(id);
+    if (i == m_RTTI.end())
+        return NULL;
+    return i->second;
 }

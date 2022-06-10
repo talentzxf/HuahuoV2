@@ -235,7 +235,19 @@ public:
     inline void SetAwakeDidLoadThreadedCalledInternal() {}
     inline void SetMainThreadCleanupCalledInternal() {}
 
-
+    /// AwakeFromLoadThreaded is called immediately after deserialization when an object is loaded from disk.
+    /// It is called on the loading thread, thus NOT guaranteed to always be called.
+    /// Objects created from code do not call this function, it is only called when loading from disk.
+    /// Thus it is not safe to access other objects or any global state from AwakeFromLoadThreaded unless the code is thread safe
+    /// A common usage case is to compute expensive data on the loading thread in order to not incur any cost on the main thread.
+    virtual void AwakeFromLoadThreaded()
+    {
+#if !UNITY_RELEASE
+        m_AwakeThreadedCalled           = 1;
+        m_AwakeCalled                   = 0;
+        m_AwakeDidLoadThreadedCalled    = 0;
+#endif
+    }
 
     /// Some classes need to deallocate resources on the main thread or deregister themselves from other objects,
     /// for those things you want to override MainThreadCleanup.
@@ -313,9 +325,9 @@ public:
     /// AwakeFromLoad is always called on the main thread.
     virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode)
     {
-        // SetAwakeCalledInternal();
-        //if (awakeMode & kDidLoadThreaded)
-        //SetAwakeDidLoadThreadedCalledInternal();
+         SetAwakeCalledInternal();
+        if (awakeMode & kDidLoadThreaded)
+        SetAwakeDidLoadThreadedCalledInternal();
     }
 
     // Finds the pointer to the object referenced by instanceID (NULL if none found in memory)
@@ -385,6 +397,16 @@ private:
     static Object* Produce(const HuaHuo::Type* targetCastType, const HuaHuo::Type* produceType, InstanceID instanceID, ObjectCreationMode mode);
 
     static Object* IDToPointerInternal(InstanceID inInstanceID);
+
+#if !UNITY_RELEASE
+    PersistentTypeID      m_DEBUGPersistentTypeID;
+    UInt32                m_AwakeCalled : 1;
+    UInt32                m_ResetCalled : 1;
+    UInt32                m_AwakeThreadedCalled : 1;
+    UInt32                m_AwakeDidLoadThreadedCalled : 1;
+    UInt32                m_MainThreadCleanupCalled : 1;
+#endif
+
 };
 
 typedef void InstanceIDResolveCallback (InstanceID id, LocalSerializedObjectIdentifier& localIdentifier, void* context);

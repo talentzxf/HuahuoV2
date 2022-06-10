@@ -74,6 +74,10 @@ public:
     void InitializeAllTypes();
 
     const RTTI* ClassNameToRTTI(const char* name, bool caseInsensitive = false) const;
+
+    const RTTI* GetDeserializationRTTIStubForPersistentTypeID(PersistentTypeID typeID);
+
+    const RTTI* PersistentTypeIDToRTTI(PersistentTypeID persistentTypeID) const;
 private:
     class Builder;
 
@@ -108,6 +112,7 @@ private:
     typedef std::map<PersistentTypeID, TypeCallbackStruct> TypeCallbacks;
     typedef std::unordered_map<PersistentTypeID, RTTI*, HashFunctorPersistentTypeID> RTTIMap;
     typedef std::unordered_map<const char*, const RTTI*, ConstCharPtrHashFunctor, ConstCharPtrEqualTo> StringToTypeMap;
+    typedef std::unordered_map<PersistentTypeID, RTTI*, HashFunctorPersistentTypeID> DeserializationStubMap;
 
     RTTI::RuntimeTypeArray& m_RuntimeTypes;
     StringToTypeMap m_StringToType;
@@ -115,6 +120,7 @@ private:
     void FatalErrorOnPersistentTypeIDConflict(PersistentTypeID typeID, const char* name);
     RTTIMap m_RTTI;
     static TypeManager* ms_Instance;
+    DeserializationStubMap m_DeserializationStubMap;
 };
 
 #endif //HUAHUOENGINE_TYPEMANAGER_H

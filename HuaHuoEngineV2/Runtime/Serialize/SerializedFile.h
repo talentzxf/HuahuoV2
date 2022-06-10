@@ -66,6 +66,23 @@ struct FileIdentifier
 #endif
 };
 
+template<bool kSwap, class T>
+// Need this in order for Asset bundles to load correctly when the code is optimized
+#if PLATFORM_ANDROID
+__attribute__((noinline))
+#endif
+void ReadHeaderCache(T& t, UInt8 const*& c)
+{
+#if UNITY_NO_UNALIGNED_MEMORY_ACCESS
+    memcpy(&t, c, sizeof(T));
+#else
+    t = *(T const*)c;
+#endif
+    if (kSwap)
+        SwapEndianBytes(t);
+    c += sizeof(T);
+}
+
 class SerializedFile {
 public:
     enum
@@ -201,10 +218,16 @@ public:
 #else
     bool IsTextFile() const { return false; }
 #endif
+    // Returns whether or not an object is available in the stream
+    bool IsAvailable(LocalIdentifierInFileType id) const;
 
     template<bool kSwap> void BuildMetadataSection(std::vector<UInt8>& cache, size_t dataOffsetInFile);
     template<bool kSwap> bool WriteHeader(std::vector<UInt8>& cache, size_t* outDataOffset = NULL);
 
+    void ReadObject(LocalIdentifierInFileType fileID, ObjectCreationMode mode, bool isPersistent/*, const TypeTree** oldTypeTree*/, bool* safeLoaded, Object& object);
+
+    // Extract all data necessary to produce the object
+    bool GetProduceData(LocalIdentifierInFileType fileID, const HuaHuo::Type*& type, LocalSerializedObjectIdentifier& scriptTypeReference, MemLabelId& label);
 
     // Returns the seek position in the file where the object with id is stored
     size_t GetByteStart(LocalIdentifierInFileType id) const;
@@ -224,6 +247,8 @@ private:
 
     SerializedFileLoadError FinalizeInitRead(TransferInstructionFlags options);
     SerializedFileLoadError FinalizeInitWrite(TransferInstructionFlags options);
+
+    template<bool kSwap> bool ReadMetadata(SerializedFileFormatVersion version, size_t dataOffset, UInt8 const* data, size_t length, size_t dataFileSize);
 
     MemLabelId                          m_MemLabel;
 

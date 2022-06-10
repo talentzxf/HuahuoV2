@@ -102,6 +102,24 @@ enum VerifyWriteObjectResult
     kFailBuild
 };
 
+struct ThreadedAwakeData
+{
+    InstanceID      instanceID;
+    // const TypeTree* oldType;
+    Object*         object;
+    bool            checkConsistency; ///< Refactor to safeLoaded
+
+    // Has the object been fully loaded with AwakeFromLoadThreaded.
+    // We have to make sure the Object* is available already, so that recursive PPtr's to each other from Mono can correctly be resolved.
+    // In this case, neither object has been fully created, but we can setup pointers between them already.
+    bool            completedThreadAwake;
+
+    bool            loadStarted;      ///< Indicates, that object is being loaded.
+
+#if UNITY_EDITOR
+    AwakeFromLoadMode overrideAwakeFromLoadMode;
+#endif
+};
 
 #if HUAHUO_EDITOR
 struct InstanceIDResolver
@@ -242,7 +260,22 @@ public:
     int WriteFile(std::string& path, int serializedFileIndex, const WriteData* writeData, int size, /*const GlobalBuildData& globalBuildData,*/ VerifyWriteObjectCallback* verifyCallback, BuildTargetSelection target, TransferInstructionFlags options, const InstanceIDResolver* instanceIDResolver = NULL, LockFlags lockedFlags = kLockFlagNone, ReportWriteObjectCallback* reportCallback = NULL, void* reportCallbackUserData = NULL);
     int WriteFile(std::string& path, int serializedFileIndex, const WriteData* writeData, int size, /*const GlobalBuildData& globalBuildData,*/ VerifyWriteObjectCallback* verifyCallback, BuildTargetSelection target, TransferInstructionFlags options, WriteInformation& writeInfo, const InstanceIDResolver* instanceIDResolver = NULL, LockFlags lockedFlags = kLockFlagNone, ReportWriteObjectCallback* reportCallback = NULL, void* reportCallbackUserData = NULL);
 
+    int LoadFileCompletely(std::string& pathName);
 
+    enum LoadFlags
+    {
+        kLoadFlagNone = 0,
+        kSceneLoad = 1 << 0,
+        kForcePreloadReferencedObjects = 1 << 1,
+    };
+    ENUM_FLAGS_AS_MEMBER(LoadFlags);
+    /// Load the entire file from a different thread
+    int LoadFileCompletelyThreaded(std::string& pathname, LocalIdentifierInFileType* fileIDs, InstanceID* instanceIDs, int size, LoadFlags flags,/* LoadProgress& loadProgress,*/ LockFlags lockedFlags = kLockFlagNone);
+
+    /// Thread locking must be performed from outside using Lock/Unlock
+    SerializedFile* GetSerializedFile(std::string& path, LockFlags lockedFlags = kLockFlagNone);
+    SerializedFile* GetSerializedFile(int serializedFileIndex, LockFlags lockedFlags = kLockFlagNone);
+    SerializedFile* GetSerializedFileIfObjectAvailable(int serializedFileIndex, LocalIdentifierInFileType id, LockFlags lockedFlags = kLockFlagNone);
 protected:
     ///  maps a pathID to a pathname/file guid/fileidentifier.
     /// (pathID can be assumed to be allocated before with InsertPathName)
@@ -256,7 +289,14 @@ private:
 
     std::vector<IDRemap> m_GlobalToLocalNameSpace;
     std::vector<IDRemap> m_LocalToGlobalNameSpace;
+    typedef std::map<InstanceID, ThreadedAwakeData>    ThreadedObjectActivationQueue;
 
+    ThreadedObjectActivationQueue           m_ThreadedObjectActivationQueue; // Protected by m_IntegrationMutex
+
+    void LoadRemainingPreallocatedObjects(LockFlags lockedFlags);
+    ThreadedAwakeData*  CreateThreadActivationQueueEntry(SerializedFile& file, SerializedObjectIdentifier localIdentifier, InstanceID instanceID, bool loadStarted, LockFlags lockedFlags = kLockFlagNone);
+    void                PostReadActivationQueue(InstanceID instanceID, /*const TypeTree* oldType,*/ bool didTypeTreeChange, LockFlags lockedFlags = kLockFlagNone);
+    Object*             ProduceObject(SerializedFile& file, SerializedObjectIdentifier identifier, InstanceID instanceID, ObjectCreationMode objectCreationMode, LockFlags lockedFlags = kLockFlagNone);
     void SetActiveNameSpace(int activeNameSpace, ActiveNameSpaceType type = kReadingNameSpace);
     void ClearActiveNameSpace(ActiveNameSpaceType type = kReadingNameSpace);
 
@@ -266,6 +306,11 @@ private:
     StreamNameSpace* GetStreamNameSpaceInternal(std::string path);
 
     void PostLoadStreamNameSpaceInternal(StreamNameSpace& nameSpace, int namespaceID);
+
+    void CheckInstanceIDsLoaded(InstanceID* heapIDs, int size, LockFlags lockedFlags = kLockFlagNone);
+    Object*             ReadAndActivateObjectThreaded(InstanceID instanceID, const SerializedObjectIdentifier& identifier, SerializedFile* stream, bool isPersistent, bool validateLoadingFromSceneFile, LockFlags lockedFlags = kLockFlagNone);
+
+    bool ShouldAbort() const;
 
     UserPathRemap                           m_UserPathRemap;
 

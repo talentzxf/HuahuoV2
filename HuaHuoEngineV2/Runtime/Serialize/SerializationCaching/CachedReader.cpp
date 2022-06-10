@@ -41,6 +41,11 @@ void CachedReader::InitRead(CacheReaderBase& cacher, size_t position, size_t rea
     SetPosition(position);
 }
 
+void CachedReader::InitResourceImages(ResourceImageGroup& resourceImageGroup)
+{
+    m_ResourceImageGroup = resourceImageGroup;
+}
+
 size_t CachedReader::End()
 {
     Assert(m_Block != -1);

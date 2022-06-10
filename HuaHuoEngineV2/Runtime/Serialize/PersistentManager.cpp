@@ -11,6 +11,8 @@
 #include "ObjectStore.h"
 #include "Serialize/SerializationCaching/BlockMemoryCacheWriter.h"
 #include "WriteData.h"
+#include "Core/Finalizer.h"
+#include "Serialize/SerializationCaching/FileCacherRead.h"
 
 #if DEBUGMODE
 #define CheckedAssert(x) Assert(x)
@@ -48,6 +50,64 @@ private:
 
 #endif
 
+class AutoFileCacherReadOverride
+{
+public:
+    AutoFileCacherReadOverride(SerializedFile *sf) : m_SerializedFile(sf)
+    {
+#if SUPPORT_THREADS && !PLATFORM_WEBGL
+        // Because we won't be seeking around the file, we can use a larger cache and can also prefetch
+        m_PrevReader = m_SerializedFile->GetCacheReader();
+        m_OverrideReader = UNITY_NEW(FileCacherRead, kMemTempAlloc)(kMemTempAlloc, m_PrevReader->GetPathName(), 1 * 1024 * 1024, true);
+        m_SerializedFile->SetCacheReader(m_OverrideReader);
+#endif
+    }
+
+    ~AutoFileCacherReadOverride()
+    {
+#if SUPPORT_THREADS && !PLATFORM_WEBGL
+        m_SerializedFile->SetCacheReader(m_PrevReader);
+        UNITY_DELETE(m_OverrideReader, kMemTempAlloc);
+#endif
+    }
+
+private:
+    CacheReaderBase* m_PrevReader;
+    FileCacherRead* m_OverrideReader;
+    SerializedFile* m_SerializedFile;
+};
+
+struct ObjectLoadData
+{
+    SerializedObjectIdentifier identifier;
+    InstanceID instanceID;
+
+    bool operator<(const ObjectLoadData& other) const
+    {
+        return identifier < other.identifier;
+    }
+};
+typedef std::vector<ObjectLoadData> ObjectLoadList;
+
+// Prepare preallocated, but not yet loaded objects obtained from activation queue
+// and sort them by SerializedObjectIdentifier if needed.
+// When we load object with ReadObject or LoadObjectsThreaded and it has dependencies which were not yet loaded,
+// we preallocate them and put to m_ThreadedObjectActivationQueue as not loaded objects.
+// LoadRemainingPreallocatedObjects loads these objects.
+// In order to read objects sequentially from disk, we sort them by offset
+// which is indirectly defined by localIdentifierInFile in SerializedObjectIdentifier.
+// SerializedObjectIdentifier is extracted and reused later.
+static void PrepareLoadObjects(Remapper* remapper, ObjectLoadList& objectsToLoad, bool sortInstanceIDsForLoading)
+{
+    for (ObjectLoadList::iterator it = objectsToLoad.begin(); it != objectsToLoad.end(); ++it)
+    {
+        if (!remapper->InstanceIDToSerializedObjectIdentifier(it->instanceID, it->identifier))
+            it->instanceID = InstanceID_None;
+    }
+
+    if (sortInstanceIDsForLoading)
+        std::sort(objectsToLoad.begin(), objectsToLoad.end());
+}
 
 void PersistentManager::LocalSerializedObjectIdentifierToInstanceID(const LocalSerializedObjectIdentifier& localIdentifier, InstanceID& outInstanceID, LockFlags lockedFlags)
 {
@@ -205,6 +265,454 @@ bool StreamNameSpace::IsDestroyed(LocalIdentifierInFileType id)
     return std::find(destroyedObjects->begin(), destroyedObjects->end(), id) != destroyedObjects->end();
 }
 
+int PersistentManager::LoadFileCompletely(std::string& pathName)
+{
+////    PROFILER_AUTO(gLoadFileCompletely);
+////    AutoLock autoLock(*this);
+//
+//    LoadProgress tempProgress;
+
+    int result = LoadFileCompletelyThreaded(pathName, NULL, NULL, -1, PersistentManager::kLoadFlagNone/*, tempProgress*/);
+    // IntegrateAllThreadedObjects();
+
+    return result;
+}
+
+SerializedFile* PersistentManager::GetSerializedFile(std::string& path, LockFlags lockedFlags)
+{
+    // __FAKEABLE_METHOD_OVERLOADED__(PersistentManager, GetSerializedFile, (path, lockedFlags), SerializedFile * (core::string_ref, LockFlags));
+
+    // AutoLock autoLock(*this, kMutexLock, &lockedFlags);
+    return GetSerializedFile(InsertPathNameInternal(path, true), lockedFlags);
+}
+
+SerializedFile* PersistentManager::GetSerializedFile(int serializedFileIndex, LockFlags lockedFlags)
+{
+    // __FAKEABLE_METHOD_OVERLOADED__(PersistentManager, GetSerializedFile, (serializedFileIndex, lockedFlags), SerializedFile * (int, LockFlags));
+
+    if (serializedFileIndex == -1)
+        return NULL;
+
+    // AutoLock autoLock(*this, kMutexLock, &lockedFlags);
+    StreamNameSpace& stream = GetStreamNameSpaceInternal(serializedFileIndex);
+    return stream.stream;
+}
+
+SerializedFile* PersistentManager::GetSerializedFileIfObjectAvailable(int serializedFileIndex, LocalIdentifierInFileType id, LockFlags lockedFlags)
+{
+    if (serializedFileIndex == -1)
+        return NULL;
+
+    // AutoLock autoLock(*this, kMutexLock, &lockedFlags);
+    StreamNameSpace& stream = GetStreamNameSpaceInternal(serializedFileIndex);
+
+    if (stream.stream == NULL || !stream.stream->IsAvailable(id))
+        return NULL;
+
+    if (stream.IsDestroyed(id))
+        return NULL;
+
+    return stream.stream;
+}
+
+
+void PersistentManager::CheckInstanceIDsLoaded(InstanceID* heapIDs, int size, LockFlags lockedFlags)
+{
+//    if (size > 0)
+//    {
+//        AutoLock integrationAutoLock(*this, kIntegrationMutexLock, &lockedFlags);
+//
+//        // Search through threaded object activation queue and activate the object if necessary.
+//        for (int j = 0; j < size; j++)
+//        {
+//            if (m_ThreadedObjectActivationQueue.count(heapIDs[j]) != 0)
+//                heapIDs[j] = InstanceID_None;
+//        }
+//    }
+//
+//    // Check which objects are already loaded all at once to lock object creation only once for a short amount of time
+//    // Since we have locked persistentmanager already no objects can be loaded in the mean time
+//    SetObjectLockForRead();
+//    Object::CheckInstanceIDsLoaded(heapIDs, size);
+//    ReleaseObjectLock();
+}
+
+bool PersistentManager::ShouldAbort() const
+{
+    // return atomic_load_explicit(&m_Abort, ::memory_order_relaxed) != 0;
+    return false;
+}
+
+Object* PersistentManager::ProduceObject(SerializedFile& file, SerializedObjectIdentifier identifier, InstanceID instanceID, ObjectCreationMode objectCreationMode, LockFlags lockedFlags)
+{
+    const HuaHuo::Type* type;
+    LocalSerializedObjectIdentifier scriptReference;
+    MemLabelId memLabel;
+    if (!file.GetProduceData(identifier.localIdentifierInFile, type, scriptReference, memLabel))
+        return NULL;
+
+    Object* obj = Object::Produce(type, instanceID, memLabel, objectCreationMode);
+
+    if (obj == NULL)
+    {
+        // We deprecate classes in the editor so no need for these errors.
+        // In the player it's a different affair, usually something has gone terribly wrong.
+        // Note: If class is available on Editor, but not available in player, be sure to check
+        //       SlowIsTypeSupportedOnBuildTarget is correctly excluding the class for the target platform
+#if !UNITY_EDITOR
+        if (type == NULL)
+        {
+            ErrorStringMsg("Could not produce class with NULL type.");
+            return NULL;
+        }
+#if SUPPORTS_GRANULAR_CLASS_REGISTRATION
+        const char* error = "Could not produce class with ID %d.\nThis could be caused by a class being stripped from the build even though it is needed. Try disabling 'Strip Engine Code' in Player Settings.";
+#else
+        const char* error = "Could not produce class with ID %d.";
+#endif
+        ErrorStringMsg(error, static_cast<int>(type->GetPersistentTypeID()));
+#endif
+
+        return NULL;
+    }
+#if UNITY_EDITOR
+    obj->SetFileIDHint(identifier.localIdentifierInFile);
+#endif
+//
+//    // If we have a ObjectStoredSerializableManagedRef and a valid MonoScript, set the script
+//    // on the Script host object and create the managed object instance.
+//    //
+//    // Note that it is possible for the script PPtr to be null or for the
+//    // PPtr to reference an external file that no longer exists.
+//    if (scriptReference.localIdentifierInFile != 0)
+//    {
+//        if (IManagedObjectHost::IsObjectsTypeAHost(obj))
+//        {
+//            // Resolve the script reference.  MonoScripts have to be loaded *before* objects referencing
+//            // them are loaded.  We do *not* load them on-demand.
+//            InstanceID scriptInstanceID = InstanceID_None;
+//            LocalSerializedObjectIdentifierToInstanceID(identifier.serializedFileIndex, scriptReference, scriptInstanceID, lockedFlags);
+//
+//            // Try getting the script from the activation queue first since that's where scripts will usually be when we are
+//            // loading scenes (we read them from one of the sharedassets files before reading the scene data itself).
+//            MonoScript* script = dynamic_pptr_cast<MonoScript*>(GetFromActivationQueue(scriptInstanceID, lockedFlags));
+//            if (!script)
+//            {
+//                // It's not in the load queue.  Assume it's a MonoScript that has already been fully loaded.
+//                script = dynamic_pptr_cast<MonoScript*>(Object::IDToPointerThreadSafe(scriptInstanceID));
+//            }
+//
+//            // set script.
+//            SerializableManagedRef &scriptedObj = *IManagedObjectHost::GetManagedReference(obj);
+//            SerializableManagedRefFriends::SetScriptInternal(scriptedObj, obj, PPtr<MonoScript>(scriptInstanceID));
+//
+//            // Set instance
+//            ScriptingObjectPtr scriptingPtr = m_PreallocatedScriptingObjectCallback != NULL ? m_PreallocatedScriptingObjectCallback(m_PreallocatedScriptingObjectCallbackContext, instanceID, type, obj) : SCRIPTING_NULL;
+//
+//            // Ensure scriptingPtr type matches script type. If type doesn't match, don't reuse the scriptingPtr.
+//            if (scriptingPtr != SCRIPTING_NULL)
+//            {
+//                if (!script || script->GetClass() != scripting_object_get_class(scriptingPtr))
+//                    scriptingPtr = SCRIPTING_NULL;
+//            }
+//
+//            SerializableManagedRefFriends::RebuildMonoInstance(scriptedObj, obj, script ? script->GetClass() : SCRIPTING_NULL, scriptingPtr, script);
+//        }
+//    }
+//    else
+//    {
+//        ScriptingObjectPtr scriptingPtr = m_PreallocatedScriptingObjectCallback != NULL ? m_PreallocatedScriptingObjectCallback(m_PreallocatedScriptingObjectCallbackContext, instanceID, type, obj) : SCRIPTING_NULL;
+//        if (scriptingPtr != SCRIPTING_NULL)
+//            Scripting::ConnectScriptingWrapperToObject(scriptingPtr, obj);
+//    }
+
+    return obj;
+}
+
+
+ThreadedAwakeData* PersistentManager::CreateThreadActivationQueueEntry(SerializedFile& file, SerializedObjectIdentifier identifier, InstanceID instanceID, bool loadStarted, LockFlags lockedFlags)
+{
+    // DebugAssert(Object::IDToPointerThreadSafe(instanceID) == NULL);
+
+    // AutoLock integrationAutoLock(*this, kIntegrationMutexLock, &lockedFlags);
+
+    // Pop preallocated object from queue or create new object
+    ThreadedObjectActivationQueue::iterator found = m_ThreadedObjectActivationQueue.find(instanceID);
+    if (found != m_ThreadedObjectActivationQueue.end())
+    {
+        ThreadedAwakeData& awake = found->second;
+
+        if (loadStarted)
+            awake.loadStarted = true;
+
+        Assert(awake.object != NULL);
+
+        return &awake;
+    }
+
+    Object* obj = ProduceObject(file, identifier, instanceID, kCreateObjectFromNonMainThread, lockedFlags);
+
+    // Object could not be created...
+    if (obj == NULL)
+        return NULL;
+
+    ThreadedAwakeData awake;
+    awake.instanceID = instanceID;
+    awake.object = obj;
+    awake.checkConsistency = false;
+    awake.completedThreadAwake = false;
+    awake.loadStarted = loadStarted;
+    // awake.oldType = NULL;
+#if UNITY_EDITOR
+    awake.overrideAwakeFromLoadMode = kDefaultAwakeFromLoadInvalid;
+#endif
+
+    ThreadedAwakeData* result;
+
+    result = &m_ThreadedObjectActivationQueue.insert(std::pair<InstanceID, ThreadedAwakeData>(instanceID, awake)).first->second;
+
+    // DebugAssert(Object::IDToPointerThreadSafe(instanceID) == NULL);
+
+    return result;
+}
+
+void PersistentManager::PostReadActivationQueue(InstanceID instanceID/*, const TypeTree* oldType*/, bool didTypeTreeChange, LockFlags lockedFlags)
+{
+    // AutoLock integrationAutoLock(*this, kIntegrationMutexLock, &lockedFlags);
+
+    ThreadedObjectActivationQueue::iterator found = m_ThreadedObjectActivationQueue.find(instanceID);
+    Assert(found != m_ThreadedObjectActivationQueue.end());
+
+    ThreadedAwakeData& awakeData = found->second;
+    Object* obj = awakeData.object;
+    {
+        // PROFILER_AUTO(kProfileAwakeFromLoadThreaded, obj);
+        obj->AwakeFromLoadThreaded();
+    }
+    // awakeData.oldType = oldType;
+    awakeData.checkConsistency = didTypeTreeChange;
+    awakeData.completedThreadAwake = true;
+}
+
+Object* PersistentManager::ReadAndActivateObjectThreaded(InstanceID instanceID, const SerializedObjectIdentifier& identifier, SerializedFile* stream, bool isPersistent, bool validateLoadingFromSceneFile, LockFlags lockedFlags)
+{
+    // PROFILER_AUTO_INSTANCE_ID(gReadObjectThreadedProfiler, instanceID);
+
+    // DebugAssertMsg(Object::IDToPointerThreadSafe(instanceID) == NULL, "Object is already loaded!");
+
+    if (stream == NULL)
+    {
+        // AutoLock autoLock(*this, kMutexLock, &lockedFlags);
+
+        // Get the SerializedFile object if it wasn't provided
+        stream = GetSerializedFileIfObjectAvailable(identifier.serializedFileIndex, identifier.localIdentifierInFile, lockedFlags);
+        if (stream == NULL)
+            return NULL;
+    }
+
+    if (validateLoadingFromSceneFile)
+    {
+        // Scene objects are loaded specially such that their in-memory objects are transient.
+#if UNITY_EDITOR
+        // Case 631608:
+        // In this case, there is a missing MonoBehaviour referencing the SceneSettings
+        // from another scene file. No idea, how could this happen.
+        // If we don't return NULL, the SceneSettings will be loaded as persistent.
+        // We'll crash later in RemoveDuplicateGameManagers().
+        bool isInSceneFile = EndsWithCaseInsensitive(PathIDToPathNameInternal(identifier.serializedFileIndex, false), ".unity");
+        if (isInSceneFile)
+        {
+            ErrorString("Do not use ReadObjectThreaded on scene objects!");
+            return NULL;
+        }
+#endif
+    }
+
+    ThreadedAwakeData* awakeData = CreateThreadActivationQueueEntry(*stream, identifier, instanceID, true, lockedFlags);
+    if (awakeData == NULL)
+        return NULL;
+
+    // AutoLock autoLock(*this, kMutexLock, &lockedFlags);
+
+    // Find file id in stream and read the object
+    SetActiveNameSpace(identifier.serializedFileIndex);
+//    const TypeTree* oldType;
+    bool didTypeTreeChange;
+//
+    Object& targetObject = *awakeData->object;
+    stream->ReadObject(identifier.localIdentifierInFile, kCreateObjectFromNonMainThread, isPersistent, /*&oldType,*/ &didTypeTreeChange, targetObject);
+
+    ClearActiveNameSpace();
+
+    PostReadActivationQueue(instanceID/*, oldType*/, didTypeTreeChange, lockedFlags);
+
+    return &targetObject;
+}
+
+void PersistentManager::LoadRemainingPreallocatedObjects(LockFlags lockedFlags)
+{
+    // PROFILER_AUTO(gLoadRemainingPreallocatedObjects);
+
+    ObjectLoadList objectsToLoad; //(kMemTempAlloc);
+    objectsToLoad.reserve(100);
+
+//    // Make sure access to internals (m_Remapper, m_Streams) is exclusive.
+//    AutoLock autoLock(*this, kMutexLock, &lockedFlags);
+
+    while (!ShouldAbort())
+    {
+        objectsToLoad.resize(0);
+
+        {
+            // AutoLock integrationAutoLock(*this, kIntegrationMutexLock, &lockedFlags);
+
+            for (ThreadedObjectActivationQueue::iterator i = m_ThreadedObjectActivationQueue.begin(); i != m_ThreadedObjectActivationQueue.end(); i++)
+            {
+                ThreadedAwakeData& awake = i->second;
+                if (awake.loadStarted)
+                    continue;
+
+                ObjectLoadData& loadData = objectsToLoad.emplace_back();
+                loadData.instanceID = awake.instanceID;
+            }
+        }
+
+        if (objectsToLoad.empty())
+            return;
+
+        PrepareLoadObjects(m_Remapper, objectsToLoad, true);
+
+        // At this point all SerializedFiles should be created, and all objects produces (because they are in m_ThreadedObjectActivationQueue)
+        // and we can use default fallback label
+        for (ObjectLoadList::const_iterator it = objectsToLoad.begin(), itEnd = objectsToLoad.end(); it != itEnd && !ShouldAbort(); ++it)
+        {
+            const InstanceID instanceID = it->instanceID;
+            if (instanceID == InstanceID_None)
+                continue;
+
+            ReadAndActivateObjectThreaded(instanceID, it->identifier, NULL, true, true, lockedFlags);
+        }
+    }
+}
+
+
+int PersistentManager::LoadFileCompletelyThreaded(std::string& pathname, LocalIdentifierInFileType* fileIDs, InstanceID* instanceIDs, int size, LoadFlags flags/*, LoadProgress& loadProgress*/, LockFlags lockedFlags)
+{
+//    PROFILER_AUTO(kProfileLoadFileCompletelyThreaded);
+//    AutoLock autoLock(*this, kMutexLock, &lockedFlags);
+    bool savedForcePreloadReferencedObjects = m_ForcePreloadReferencedObjects;
+    auto restorePreloadReferencedObjects = core::MakeFinalizer([&]()
+                                                               {
+                                                                   m_ForcePreloadReferencedObjects = savedForcePreloadReferencedObjects;
+                                                               });
+
+    if (HasFlag(flags, kForcePreloadReferencedObjects))
+        m_ForcePreloadReferencedObjects = true;
+
+    // DebugAssert(!HasPreallocatedObjects());
+
+    // Find Stream
+    int serializedFileIndex = InsertPathNameInternal(pathname, true);
+    SerializedFile* serializedFile = GetSerializedFile(serializedFileIndex, lockedFlags);
+    if (serializedFile == NULL)
+        return kFileCouldNotBeRead;
+
+    Assert(!(fileIDs != NULL && size == -1));
+    Assert(!(instanceIDs != NULL && size == -1));
+
+    // Because we won't be seeking around the file, we can use a larger cache and can also prefetch
+    AutoFileCacherReadOverride autoCacherReaderResize(serializedFile);
+
+    // Get all file IDs we want to load and generate instance ids
+    std::vector<LocalIdentifierInFileType> fileIDsVector; //(kMemTempAlloc);
+    std::vector<InstanceID> instanceIDsVector; //(kMemTempAlloc);
+    if (size == -1)
+    {
+        GetAllFileIDs(pathname, fileIDsVector);
+        fileIDs = fileIDsVector.begin().base();
+        size = fileIDsVector.size();
+        // loadProgress.AddTotalItemCount(size);
+        instanceIDsVector.resize(size, InstanceID_None);
+        instanceIDs = instanceIDsVector.begin().base();
+    }
+
+    // In the editor we can not use preallocate ranges since fileID's might be completely arbitrary ranges
+    bool loadScene = HasFlag(flags, kSceneLoad);
+    if (loadScene /*&& !UNITY_EDITOR*/)
+    {
+        LocalIdentifierInFileType highestFileID = 0;
+        for (int i = 0; i < size; i++)
+        {
+            Assert(fileIDs[i] >= 0);
+            highestFileID = std::max(highestFileID, fileIDs[i]);
+        }
+
+        InstanceID firstPreallocatedID, lastPreallocatedID;
+        m_Remapper->PreallocateIDs(highestFileID, serializedFileIndex, firstPreallocatedID, lastPreallocatedID);
+
+        for (int i = 0; i < size; i++)
+        {
+            LocalIdentifierInFileType fileID = fileIDs[i];
+            Assert(!m_Remapper->IsSerializedObjectIdentifierMappedToAnything(SerializedObjectIdentifier(serializedFileIndex, fileID)));
+            instanceIDs[i] = InstanceID_Make(InstanceID_AsSInt32Ref(firstPreallocatedID) + fileID * 2);
+        }
+
+#if DEBUGMODE
+        CheckInstanceIDsLoaded(&instanceIDs[0], size, lockedFlags);
+        for (int i = 0; i < size; i++)
+        {
+            Assert(instanceIDs[i] != InstanceID_None);
+        }
+#endif
+    }
+    else
+    {
+        for (int i = 0; i < size; i++)
+        {
+            LocalIdentifierInFileType fileID = fileIDs[i];
+            InstanceID heapID = m_Remapper->GetOrGenerateInstanceID(SerializedObjectIdentifier(serializedFileIndex, fileID));
+
+            if (heapID == InstanceID_None)
+            {
+                AssertString("Loading an object that was made unpersistent but wasn't destroyed before reloading it");
+            }
+            instanceIDs[i] = heapID;
+        }
+        // - Figure out which ones are already loaded
+        CheckInstanceIDsLoaded(&instanceIDs[0], size, lockedFlags);
+    }
+
+    // Load all objects
+    for (int i = 0; i < size && !ShouldAbort(); i++)
+    {
+        // loadProgress.BeginProcessItem();
+
+        const InstanceID instanceID = instanceIDs[i];
+        if (instanceID == InstanceID_None)
+            continue;
+
+        SerializedObjectIdentifier identifier(serializedFileIndex, fileIDs[i]);
+        Object* object = ReadAndActivateObjectThreaded(instanceID, identifier, serializedFile, !loadScene, false, lockedFlags);
+        if (object == NULL)
+            continue;
+
+        // loadProgress.DidReadObject(*object);
+    }
+
+    LoadRemainingPreallocatedObjects(lockedFlags);
+
+    if (loadScene)
+    {
+#if UNITY_EDITOR
+        for (int i = 0; i < size; i++)
+            m_Remapper->Remove(instanceIDs[i]);
+#else
+        m_Remapper->ClearPreallocateIDs();
+#endif
+    }
+
+    return kNoError;
+}
 
 static bool InitTempWriteFile(FileCacherWrite& writer, const std::string& path, unsigned cacheSize, bool shouldBeOnMemoryFileSystem)
 {

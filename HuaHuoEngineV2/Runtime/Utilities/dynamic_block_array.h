@@ -398,7 +398,7 @@ private:
     {
         static void resize(internal_container * data, size_t size)
         {
-            data->resize_initialized(size);
+            data->resize(size);
         }
     };
 
@@ -408,7 +408,7 @@ private:
 
         void resize(internal_container * data, size_t size) const
         {
-            data->resize_initialized(size, m_Default);
+            data->resize(size, m_Default);
         }
 
         const T& m_Default;
