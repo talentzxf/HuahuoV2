@@ -108,6 +108,8 @@ list(APPEND CPPFILES Runtime/Serialize/SerializationCaching/FileCacherWrite.cpp)
 list(APPEND CPPFILES Runtime/Utilities/File.cpp)
 list(APPEND CPPFILES Runtime/Utilities/PathNameUtility.cpp)
 list(APPEND CPPFILES Runtime/Utilities/MemoryFileSystem.cpp)
+list(APPEND CPPFILES Runtime/File/OpenFileCache.cpp)
+list(APPEND CPPFILES Runtime/File/AsyncReadManagerSimple.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)
@@ -139,7 +141,7 @@ else ()
     add_compile_options(-Wno-deprecated-enum-enum-conversion)
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
 
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp Runtime/Serialize/WriteData.h)
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp )
 
     target_link_libraries(TestHuaHuoEngine ${ALL_LIBS})
 endif ()

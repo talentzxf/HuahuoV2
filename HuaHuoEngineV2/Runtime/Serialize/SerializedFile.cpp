@@ -487,10 +487,10 @@ bool SerializedFile::ReadMetadata(SerializedFileFormatVersion version, size_t da
 //    }
 
     // m_EnableTypeTree = SUPPORT_SERIALIZED_TYPETREES;
-    m_EnableTypeTree = false;
-
-    if (version >= SerializedFileFormatVersion::kHasTypeTreeHashes)
-        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_EnableTypeTree);
+//    m_EnableTypeTree = false;
+//
+//    if (version >= SerializedFileFormatVersion::kHasTypeTreeHashes)
+//        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_EnableTypeTree);
 
     // Read number of types.
     SInt32 typeCount = 0;

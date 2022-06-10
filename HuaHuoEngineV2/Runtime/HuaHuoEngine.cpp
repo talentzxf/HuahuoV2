@@ -12,6 +12,7 @@
 #ifdef HUAHUO_EDITOR
 #include "BaseClasses/ManagerContextLoading.h"
 #include "BaseClasses/ManagerContext.h"
+#include "File/AsyncReadManager.h"
 
 #endif
 
@@ -33,6 +34,7 @@ void HuaHuoEngine::InitEngine() {
 #endif
 
     InitPathNamePersistentManager();
+    InitializeAsyncReadManager();
 
 }
 

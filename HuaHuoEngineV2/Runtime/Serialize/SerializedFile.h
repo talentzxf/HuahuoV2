@@ -192,7 +192,7 @@ public:
 
     // options: kSerializeGameRelease, kSwapEndianess, kBuildPlayerOnlySerializeBuildProperties
     SerializedFileLoadError InitializeWrite(CachedWriter& cachedWriter/*, BuildTargetSelection target*/, TransferInstructionFlags options);
-    SerializedFileLoadError InitializeRead(const std::string& path, ResourceImageGroup& resourceImage, size_t cacheSize, bool prefetch, TransferInstructionFlags options, size_t readOffset = 0, size_t readEndOffset = 0);
+    SerializedFileLoadError InitializeRead(const std::string& path, ResourceImageGroup& resourceImage, size_t cacheSize, bool prefetch, TransferInstructionFlags options, size_t readOffset = 0, size_t readEndOffset = SIZE_MAX);
 
     typedef SerializedType::TypeVector TypeVector;
     typedef dynamic_block_array<FileIdentifier, 64> FileIdentifierArray;

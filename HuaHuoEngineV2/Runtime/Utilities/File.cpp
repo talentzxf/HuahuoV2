@@ -38,6 +38,10 @@ File::File(){
     m_FileAccessor = NULL;
 }
 
+bool File::IsValid() {
+    return m_MemFileAccessor != NULL || m_FileAccessor != NULL;
+}
+
 bool File::Open(std::string path, FilePermission perm, FileAutoBehavior behavior) {
     if(GetMemoryFileSystem()->IsMemoryFile(path)){
         isMemoryFile = true;

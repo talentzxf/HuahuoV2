@@ -6,6 +6,7 @@
 #define HUAHUOENGINEV2_FILECACHERREAD_H
 #include "CacheReaderBase.h"
 #include "Memory/AllocatorLabels.h"
+#include "File/AsyncReadManager.h"
 
 class FileCacherRead : public CacheReaderBase {
 public:
@@ -21,10 +22,32 @@ public:
     virtual void DirectRead(void* data, size_t position, size_t size);
     virtual std::string GetPathName() const;
 private:
+    struct CacheBlock
+    {
+        UInt8*           data;
+        int              block;
+        int              locked;
+
+        CacheBlock() { data = NULL; block = -1; locked = 0; }
+    };
+    void DebugLinearFileAccess(size_t position, size_t size);
+
+    int RequestBlock(int block);
+    void SyncReadCommandBlock(int index);
+    bool Request(int block, int readCmdIndex, CacheBlock& cacheBlock, bool sync);
+    void AllocateBlock(CacheBlock& block);
+    void DeallocateBlock(CacheBlock& block);
+
+    bool m_PrefetchNextBlock;
     MemLabelId m_MemLabel;
     size_t m_FileSize;
     size_t m_CacheSize;
     std::string m_Path;
+
+    enum { kCacheCount = 2 };
+    CacheBlock       m_ActiveBlocks[kCacheCount];
+    AsyncReadCommand m_ReadCommands[kCacheCount];
+    AsyncReadCommand m_DirectReadCommands;
 };
 
 
