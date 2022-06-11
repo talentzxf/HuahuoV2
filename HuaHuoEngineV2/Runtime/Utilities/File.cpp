@@ -220,6 +220,7 @@ std::string GenerateUniquePath(std::string inPath)
 
 #if WEB_ENV
 emscripten::val createMemFile(std::string fileName, size_t length){
+    printf("%s,%d: Creating file:%s, length:%d\n", __FILE__, __LINE__, fileName.c_str(), length);
     bool createFileResult = GetMemoryFileSystem()->CreateFile(fileName, length);
 
     UInt8* bufferPtr = GetMemoryFileSystem()->GetDataPtr(fileName);

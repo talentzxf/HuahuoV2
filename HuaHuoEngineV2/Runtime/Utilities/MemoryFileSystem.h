@@ -16,12 +16,14 @@ class MemoryFileAccessor;
 
 class MemoryFile{
 public:
-    MemoryFile(size_t reservedLength){
+    MemoryFile(std::string fName, size_t reservedLength){
         data.resize(reservedLength);
+        this->fName = fName;
+        printf("Reserving length:%d for file:%s\n", reservedLength, fName.c_str());
     }
 
     size_t GetFileLength(){
-        printf("%s,%d. Data size is: %d bytes\n", __FILE__, __LINE__, data.size());
+        printf("%s,%d. File:%s, Data size is: %d bytes\n", __FILE__, __LINE__, fName.c_str(), data.size());
         return data.size();
     }
 
@@ -35,6 +37,7 @@ public:
 
     friend class MemoryFileAccessor;
 private:
+    std::string fName;
     std::vector<UInt8> data;
 };
 

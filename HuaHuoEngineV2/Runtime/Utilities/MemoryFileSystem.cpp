@@ -41,12 +41,15 @@ void MemoryFileSystem::TruncateFile(std::string path) {
 }
 
 bool MemoryFileSystem::CreateFile(std::string path, size_t reservedLength) {
+    printf("%s,%d: Creating file:%s, length:%d\n", __FILE__, __LINE__, path.c_str(), reservedLength);
     if(this->IsFileCreated(path)){
+        printf("%s,%d: File already exists!:%s, length:%d\n", __FILE__, __LINE__, path.c_str(), reservedLength);
         LogStringMsg("File:%s already exists!", path.c_str());
         return false;
     }
-
-    m_files.insert(std::pair<std::string, MemoryFile>(path, MemoryFile(reservedLength)));
+    printf("%s,%d: Creating file:%s, length:%d\n", __FILE__, __LINE__, path.c_str(), reservedLength);
+    m_files.insert(std::pair<std::string, MemoryFile>(path, MemoryFile(path, reservedLength)));
+    printf("%s,%d: Creating file:%s, length:%d\n", __FILE__, __LINE__, path.c_str(), reservedLength);
     return true;
 }
 

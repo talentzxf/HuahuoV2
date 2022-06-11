@@ -473,6 +473,11 @@ ThreadedAwakeData* PersistentManager::CreateThreadActivationQueueEntry(Serialize
 
     // DebugAssert(Object::IDToPointerThreadSafe(instanceID) == NULL);
 
+    if(result){
+        printf("New object inserted!%s,%d\n", __FILE__, __LINE__ );
+    }else{
+        printf("Can't create new object!%s,%d\n", __FILE__, __LINE__ );
+    }
     return result;
 }
 
@@ -598,6 +603,7 @@ void PersistentManager::LoadRemainingPreallocatedObjects(LockFlags lockedFlags)
 
 int PersistentManager::LoadFileCompletelyThreaded(std::string& pathname, LocalIdentifierInFileType* fileIDs, InstanceID* instanceIDs, int size, LoadFlags flags/*, LoadProgress& loadProgress*/, LockFlags lockedFlags)
 {
+printf("%s,%d\n", __FILE__, __LINE__);
 //    PROFILER_AUTO(kProfileLoadFileCompletelyThreaded);
 //    AutoLock autoLock(*this, kMutexLock, &lockedFlags);
     bool savedForcePreloadReferencedObjects = m_ForcePreloadReferencedObjects;
@@ -606,35 +612,46 @@ int PersistentManager::LoadFileCompletelyThreaded(std::string& pathname, LocalId
                                                                    m_ForcePreloadReferencedObjects = savedForcePreloadReferencedObjects;
                                                                });
 
+printf("%s,%d\n", __FILE__, __LINE__);
     if (HasFlag(flags, kForcePreloadReferencedObjects))
         m_ForcePreloadReferencedObjects = true;
 
+printf("%s,%d\n", __FILE__, __LINE__);
     // DebugAssert(!HasPreallocatedObjects());
 
+printf("%s,%d\n", __FILE__, __LINE__);
     // Find Stream
     int serializedFileIndex = InsertPathNameInternal(pathname, true);
     SerializedFile* serializedFile = GetSerializedFile(serializedFileIndex, lockedFlags);
     if (serializedFile == NULL)
         return kFileCouldNotBeRead;
 
+printf("%s,%d\n", __FILE__, __LINE__);
     Assert(!(fileIDs != NULL && size == -1));
     Assert(!(instanceIDs != NULL && size == -1));
-
+printf("%s,%d\n", __FILE__, __LINE__);
     // Because we won't be seeking around the file, we can use a larger cache and can also prefetch
     AutoFileCacherReadOverride autoCacherReaderResize(serializedFile);
-
+printf("%s,%d\n", __FILE__, __LINE__);
     // Get all file IDs we want to load and generate instance ids
     std::vector<LocalIdentifierInFileType> fileIDsVector; //(kMemTempAlloc);
     std::vector<InstanceID> instanceIDsVector; //(kMemTempAlloc);
     if (size == -1)
     {
+    printf("%s,%d\n", __FILE__, __LINE__);
         GetAllFileIDs(pathname, fileIDsVector);
+        printf("%s,%d\n", __FILE__, __LINE__);
         fileIDs = fileIDsVector.begin().base();
+        printf("%s,%d\n", __FILE__, __LINE__);
         size = fileIDsVector.size();
+        printf("%s,%d\n", __FILE__, __LINE__);
         // loadProgress.AddTotalItemCount(size);
         instanceIDsVector.resize(size, InstanceID_None);
+        printf("%s,%d\n", __FILE__, __LINE__);
         instanceIDs = instanceIDsVector.begin().base();
+        printf("%s,%d\n", __FILE__, __LINE__);
     }
+printf("%s,%d\n", __FILE__, __LINE__);
 
     // In the editor we can not use preallocate ranges since fileID's might be completely arbitrary ranges
     bool loadScene = HasFlag(flags, kSceneLoad);
@@ -667,40 +684,46 @@ int PersistentManager::LoadFileCompletelyThreaded(std::string& pathname, LocalId
     }
     else
     {
+    printf("%s,%d\n", __FILE__, __LINE__);
         for (int i = 0; i < size; i++)
         {
+        printf("%s,%d\n", __FILE__, __LINE__);
             LocalIdentifierInFileType fileID = fileIDs[i];
             InstanceID heapID = m_Remapper->GetOrGenerateInstanceID(SerializedObjectIdentifier(serializedFileIndex, fileID));
-
+printf("%s,%d\n", __FILE__, __LINE__);
             if (heapID == InstanceID_None)
             {
                 AssertString("Loading an object that was made unpersistent but wasn't destroyed before reloading it");
             }
+            printf("%s,%d\n", __FILE__, __LINE__);
             instanceIDs[i] = heapID;
         }
+        printf("%s,%d\n", __FILE__, __LINE__);
         // - Figure out which ones are already loaded
         CheckInstanceIDsLoaded(&instanceIDs[0], size, lockedFlags);
+        printf("%s,%d\n", __FILE__, __LINE__);
     }
-
+printf("%s,%d\n", __FILE__, __LINE__);
     // Load all objects
     for (int i = 0; i < size && !ShouldAbort(); i++)
     {
+    printf("%s,%d\n", __FILE__, __LINE__);
         // loadProgress.BeginProcessItem();
 
         const InstanceID instanceID = instanceIDs[i];
         if (instanceID == InstanceID_None)
             continue;
-
+printf("%s,%d\n", __FILE__, __LINE__);
         SerializedObjectIdentifier identifier(serializedFileIndex, fileIDs[i]);
         Object* object = ReadAndActivateObjectThreaded(instanceID, identifier, serializedFile, !loadScene, false, lockedFlags);
         if (object == NULL)
             continue;
-
+printf("%s,%d\n", __FILE__, __LINE__);
         // loadProgress.DidReadObject(*object);
     }
-
+printf("%s,%d\n", __FILE__, __LINE__);
     LoadRemainingPreallocatedObjects(lockedFlags);
-
+printf("%s,%d\n", __FILE__, __LINE__);
     if (loadScene)
     {
 #if UNITY_EDITOR
@@ -710,7 +733,7 @@ int PersistentManager::LoadFileCompletelyThreaded(std::string& pathname, LocalId
         m_Remapper->ClearPreallocateIDs();
 #endif
     }
-
+printf("%s,%d\n", __FILE__, __LINE__);
     return kNoError;
 }
 

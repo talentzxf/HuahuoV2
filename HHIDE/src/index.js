@@ -14,6 +14,7 @@ import {faSlash} from "@fortawesome/free-solid-svg-icons/faSlash";
 import {faCircle} from "@fortawesome/free-solid-svg-icons/faCircle";
 import {faBezierCurve} from "@fortawesome/free-solid-svg-icons/faBezierCurve";
 import { saveAs } from 'file-saver';
+import {Logger} from "hhcommoncomponents";
 
 
 library.add(faMinus)
@@ -30,12 +31,15 @@ function save(){
     Logger.info("Good!!")
 }
 
-function load(e){
-    var file = e.target.files[0];
-    var reader = new FileReader()
+function load(fName, e){
+    Logger.info("Opening:" + fName)
+
+    let fileName = fName.split("\\").pop();
+    let file = e.target.files[0];
+    let reader = new FileReader()
     reader.onload = function(e){
         let fileContent = new Uint8Array(e.target.result);
-        let storeMemoryFile = "mem://objectstore.data"
+        let storeMemoryFile = "mem://" + fileName;
         let fileSize = fileContent.length;
         let memoryFileContent = Module.createMemFile(storeMemoryFile, fileSize);
         for(let i = 0 ; i < fileSize; i++){ // Copy to the file, byte by byte

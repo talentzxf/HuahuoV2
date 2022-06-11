@@ -45,9 +45,9 @@ struct SerializedFileHeader
     // Metadata follows directly after the header
     UInt8   m_Legacy[sizeof(UInt32) * 2]; // unused, allows start of struct to be same as SerializedFileHeader32
     SerializedFileFormatVersion  m_Version;
-    size_t m_MetadataSize;
-    size_t m_FileSize;
-    size_t  m_DataOffset;
+    UInt64 m_MetadataSize;
+    UInt64 m_FileSize;
+    UInt64  m_DataOffset;
     UInt8   m_Endianess;
     UInt8   m_Reserved[3];
 
@@ -63,7 +63,7 @@ struct SerializedFileHeader
 
 static void OutOfBoundsReadingError(const HuaHuo::Type* unityType, size_t expected, size_t was, Object& object)
 {
-    printf_console("Out of bound!!!!");
+    printf_console("Out of bound!!!!\n");
 //    if (unityType != NULL && IManagedObjectHost::IsTypeAHost(*unityType))
 //    {
 //        // This code must be very careful about accessing member variables
@@ -158,10 +158,12 @@ void SerializedFile::GetAllFileIDs(std::vector<LocalIdentifierInFileType>& objec
 
 SerializedFileLoadError SerializedFile::FinalizeInitRead(TransferInstructionFlags options)
 {
+printf("%s,%d\n", __FILE__, __LINE__);
     FinalizeInitCommon(options);
-
+printf("%s,%d\n", __FILE__, __LINE__);
     if (m_ReadFile)
     {
+    printf("%s,%d\n", __FILE__, __LINE__);
 #if SUPPORT_TEXT_SERIALIZATION
         static const size_t magiclen = strlen(kUnityTextMagicString);
         char signature[256];
@@ -209,21 +211,28 @@ SerializedFile::SerializedType::SerializedType(const HuaHuo::Type* unityType, bo
 
 SerializedFileLoadError SerializedFile::ReadHeader()
 {
+printf("%s,%d\n", __FILE__, __LINE__);
     Assert(m_ReadFile != NULL);
 
+printf("%s,%d\n", __FILE__, __LINE__);
     SerializedFileHeader header{};
-
+printf("%s,%d\n", __FILE__, __LINE__);
     if (m_ReadEndOffset <= 0)
         return kSerializedFileLoadError_EmptyOrCorruptFile;
 
+printf("%s,%d\n", __FILE__, __LINE__);
     if (m_ReadEndOffset < sizeof(header))
         return kSerializedFileLoadError_Unknown;
 
+printf("%s,%d\n", __FILE__, __LINE__);
     SerializedFileHeader32 legacyHeader{};
     ReadFileCache(*m_ReadFile, &legacyHeader, m_ReadOffset, sizeof(legacyHeader));
+printf("%s,%d\n", __FILE__, __LINE__);
     if (kActiveEndianess == kLittleEndian)
         legacyHeader.SwapEndianess();
+printf("%s,%d\n", __FILE__, __LINE__);
 
+printf("legacyHeader.m_Version:%d %s,%d.\n", legacyHeader.m_Version, __FILE__, __LINE__);
     if (legacyHeader.m_Version < SerializedFileFormatVersion::kLargeFilesSupport)
     {
         header.m_Version = legacyHeader.m_Version;
@@ -237,10 +246,15 @@ SerializedFileLoadError SerializedFile::ReadHeader()
     }
     else
     {
+    printf("%s,%d\n", __FILE__, __LINE__);
         ReadFileCache(*m_ReadFile, &header, m_ReadOffset, sizeof(header));
+    printf("%s,%d\n", __FILE__, __LINE__);
         if (kActiveEndianess == kLittleEndian)
             header.SwapEndianess();
     }
+printf("%s,%d\n", __FILE__, __LINE__);
+printf("legacyHeader.m_Version:%d %s,%d.\n", legacyHeader.m_Version, __FILE__, __LINE__);
+printf("File length:%d\n", header.m_FileSize);
 
     // Consistency check if the file is a valid serialized file.
     if (header.m_MetadataSize == std::numeric_limits<UInt32>::max() ) //VFS::FileSize::Max())
@@ -249,13 +263,14 @@ SerializedFileLoadError SerializedFile::ReadHeader()
         return kSerializedFileLoadError_Unknown;
     if (header.m_Version > SerializedFileFormatVersion::kCurrentSerializeVersion)
         return kSerializedFileLoadError_HigherSerializedFileVersion;
-
+printf("%s,%d\n", __FILE__, __LINE__);
     size_t metadataSize, metadataOffset;
     size_t dataSize, dataOffset;
     size_t dataEnd;
-
+printf("%s,%d\n", __FILE__, __LINE__);
     if (header.m_Version >= SerializedFileFormatVersion::kUnknown_9)
     {
+    printf("%s,%d\n", __FILE__, __LINE__);
         // If we're reading a stream file, m_ReadOffset + header.m_FileSize will not necessarilly be equal to m_ReadEndOffset,
         // because there can be few padding bytes which doesn't count into header.m_FileSize
         // See WriteStreamFile in BuildPlayerUtility.cpp
@@ -263,22 +278,30 @@ SerializedFileLoadError SerializedFile::ReadHeader()
             || header.m_DataOffset > header.m_FileSize
             || header.m_FileSize == 0
             || header.m_FileSize == std::numeric_limits<UInt32>::max())
-            return kSerializedFileLoadError_Unknown;
+            {
+                printf("%s,%d\n", __FILE__, __LINE__);
 
+                printf("m_ReadOffset: %d, header.m_FileSize:%d, header.m_DataOffset:%d, m_ReadEndOffset:%d\n", m_ReadOffset, header.m_FileSize, header.m_DataOffset, m_ReadEndOffset);
+                return kSerializedFileLoadError_Unknown;
+            }
+printf("%s,%d\n", __FILE__, __LINE__);
         // [header][metadata[...]][data]
-
+printf("%s,%d\n", __FILE__, __LINE__);
         if (header.m_Version < SerializedFileFormatVersion::kLargeFilesSupport)
             metadataOffset = (UInt64)sizeof(SerializedFileHeader32);
         else
             metadataOffset = (UInt64)sizeof(SerializedFileHeader);
         metadataSize = header.m_MetadataSize;
 
+        printf("%s,%d\n", __FILE__, __LINE__);
+
         m_FileEndianess = header.m_Endianess;
 
+printf("%s,%d\n", __FILE__, __LINE__);
         dataOffset = header.m_DataOffset;
         dataSize = header.m_FileSize - header.m_DataOffset;
         dataEnd = dataOffset + dataSize;
-
+printf("%s,%d\n", __FILE__, __LINE__);
         if (dataEnd == 0)
             return kSerializedFileLoadError_Unknown;
     }
@@ -300,20 +323,22 @@ SerializedFileLoadError SerializedFile::ReadHeader()
 
         ReadFileCache(*m_ReadFile, &m_FileEndianess, m_ReadOffset + metadataOffset - (UInt64)1, sizeof(m_FileEndianess));
     }
-
+printf("%s,%d\n", __FILE__, __LINE__);
     // Check endianess validity
     if (m_FileEndianess != kBigEndian && m_FileEndianess != kLittleEndian)
         return kSerializedFileLoadError_Unknown;
-
+printf("%s,%d\n", __FILE__, __LINE__);
     std::vector<UInt8> metadataBuffer; //(kMemSerialization);
     metadataBuffer.resize(metadataSize);
     ReadFileCache(*m_ReadFile, metadataBuffer.data(), m_ReadOffset + metadataOffset, metadataSize);
-
+printf("%s,%d\n", __FILE__, __LINE__);
     bool metaDataRead;
     if (m_FileEndianess == kActiveEndianess)
         metaDataRead = ReadMetadata<false>(header.m_Version, dataOffset, metadataBuffer.begin().base(), metadataBuffer.size(), dataEnd);
     else
         metaDataRead = ReadMetadata<true>(header.m_Version, dataOffset, metadataBuffer.begin().base(), metadataBuffer.size(), dataEnd);
+
+        printf("%s,%d\n", __FILE__, __LINE__);
     if (!metaDataRead)
     {
 #if UNITY_EDITOR
@@ -340,11 +365,15 @@ bool VerifyCanRead(const T& val, const UInt8* iterator, const UInt8* end)
 template<bool kSwap, class T> inline static
 bool ReadHeaderCacheChecked(T& t, UInt8 const*& iterator, UInt8 const*& end)
 {
+printf("%s,%d\n",__FILE__, __LINE__);
     if (VerifyCanRead(t, iterator, end))
     {
+    printf("%s,%d\n",__FILE__, __LINE__);
         ReadHeaderCache<kSwap>(t, iterator);
+        printf("%s,%d\n",__FILE__, __LINE__);
         return true;
     }
+    printf("%s,%d\n",__FILE__, __LINE__);
     return false;
 }
 
@@ -453,20 +482,22 @@ static T ReadLocalIdentifier(SerializedFileFormatVersion version, UInt8 const* d
 template<bool kSwap>
 bool SerializedFile::ReadMetadata(SerializedFileFormatVersion version, size_t dataOffset, UInt8 const* data, size_t length, size_t dataFileEnd)
 {
+printf("%s,%d\n", __FILE__, __LINE__);
 #define READ_HEADER_CHECKED_RETURN_ON_ERROR(data) PP_WRAP_CODE(if (!ReadHeaderCacheChecked<kSwap>((data), iterator, end)) { return false;})
 
     Assert(!(kSwap && kActiveEndianess == m_FileEndianess));
     Assert(!(!kSwap && kOppositeEndianess == m_FileEndianess));
             SET_ALLOC_OWNER(m_MemLabel);
-
+printf("%s,%d\n", __FILE__, __LINE__);
     UInt8 const* iterator = data, *end = data + length;
-
+printf("%s,%d\n", __FILE__, __LINE__);
     std::string huahuoVersion; // (kMemTempAlloc);
     if (version >= SerializedFileFormatVersion::kUnknown_7)
     {
+    printf("%s,%d\n", __FILE__, __LINE__);
         READ_HEADER_CHECKED_RETURN_ON_ERROR(huahuoVersion);
     }
-
+printf("%s,%d\n", __FILE__, __LINE__);
 //    // Build target platform verification
 //    if (version >= SerializedFileFormatVersion::kUnknown_8)
 //    {
@@ -1365,6 +1396,8 @@ bool SerializedFile::WriteHeader(std::vector<UInt8>& metadata, size_t* outDataOf
         header.m_DataOffset = m_WriteDataOffset;
         header.m_Endianess = m_FileEndianess;
 
+        printf("fileSize:%d, metadataSize:%d\n", header.m_FileSize, header.m_MetadataSize);
+
         if (outDataOffset != NULL)
             (*outDataOffset) = m_WriteDataOffset - (UInt64)kPreallocateFront;
 
@@ -1373,6 +1406,7 @@ bool SerializedFile::WriteHeader(std::vector<UInt8>& metadata, size_t* outDataOf
 
         std::copy(metadata.begin(), metadata.end(), temp + sizeof(SerializedFileHeader));
         printf("%s,%d\n", __FILE__, __LINE__);
+        printf("SerializedFileHeader:%d\n", sizeof(SerializedFileHeader));
 
         success &= m_CachedWriter->CompleteWriting();
         success &= m_CachedWriter->GetCacheBase().WriteHeaderAndCloseFile(temp, 0, sizeof(SerializedFileHeader) + metadata.size());
