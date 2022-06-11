@@ -352,6 +352,9 @@ public:
     /// Also for one class you have to always returns true or always false.
     virtual bool GetNeedsPerObjectTypeTree() const { return false; }
 
+    /// Threadsafe version that calls Lock/Unlock-ObjectCreation
+    static Object* IDToPointerThreadSafe(InstanceID inInstanceID);
+
 protected:
     virtual ~Object();
     template<class TransferFunction>
@@ -445,6 +448,14 @@ FORCE_INLINE Object* Object::IDToPointerLockTaken(InstanceID instanceID)
     //@TODO: handle 0 case specifically?
     // AssertObjectLockTaken(false);
     return IDToPointerInternal(instanceID);
+}
+
+FORCE_INLINE Object* Object::IDToPointerThreadSafe(InstanceID instanceID)
+{
+    // SetObjectLockForRead();
+    Object* obj = IDToPointerInternal(instanceID);
+    // ReleaseObjectLock();
+    return obj;
 }
 
 // Destroys a Object removing from memory and disk when needed.

@@ -14,6 +14,8 @@ public:
     BaseShape(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
     {}
+
+    virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override = 0;
 };
 
 

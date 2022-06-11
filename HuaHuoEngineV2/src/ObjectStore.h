@@ -50,6 +50,8 @@ public:
         return shapes;
     }
 
+    void AwakeAllShapes();
+
 private:
     ShapePPtrVector shapes;
     std::string name;
@@ -70,6 +72,7 @@ public:
         Layer* layer = Object::Produce<Layer>();
         currentLayer = layer;
         layerMap.insert(std::pair<std::string, PPtr<Layer>>(uuid, layer));
+        layers.push_back(layer);
         GetPersistentManager().MakeObjectPersistent(layer->GetInstanceID(), StoreFilePath);
 
         return layer;
@@ -83,7 +86,12 @@ public:
         return layerMap.size();
     }
 
+    Layer* GetLayer(int i){
+        return layers[i];
+    }
+
 private:
+    std::vector<PPtr<Layer>> layers;
     std::map<std::string, PPtr<Layer>> layerMap;
     PPtr<Layer> currentLayer;
 };
@@ -91,10 +99,21 @@ private:
 class ObjectStoreManager: public Object{
     REGISTER_CLASS(ObjectStoreManager);
     DECLARE_OBJECT_SERIALIZE();
+private:
+    bool m_IsGlobal;
 public:
     ObjectStoreManager(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
+        ,m_IsGlobal(false)
     {
+    }
+
+    void SetIsGlobal(bool isGlobal){
+        m_IsGlobal = isGlobal;
+    }
+
+    bool IsGlobal(){
+        return m_IsGlobal;
     }
 
     ObjectStore* GetCurrentStore(){
@@ -113,12 +132,15 @@ public:
 
     static ObjectStoreManager* GetDefaultObjectStoreManager();
 
+    void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
+
 private:
     std::vector<PPtr<ObjectStore>> allStores;
     PPtr<ObjectStore> currentStore;
 };
 
 ObjectStoreManager* GetDefaultObjectStoreManager();
+void SetDefaultObjectStoreManager(ObjectStoreManager* storeManager);
 
 #if WEB_ENV
 #include <emscripten/bind.h>

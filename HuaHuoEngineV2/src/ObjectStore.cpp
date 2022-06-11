@@ -13,6 +13,7 @@ ObjectStoreManager* gDefaultObjectStoreManager = NULL;
 ObjectStoreManager* GetDefaultObjectStoreManager(){
     if(gDefaultObjectStoreManager == NULL){
         gDefaultObjectStoreManager = Object::Produce<ObjectStoreManager>();
+        gDefaultObjectStoreManager->SetIsGlobal(true);
     }
 
     return gDefaultObjectStoreManager;
@@ -25,6 +26,7 @@ INSTANTIATE_TEMPLATE_TRANSFER(ObjectStoreManager);
 template<class TransferFunction>
 void ObjectStoreManager::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
+    TRANSFER(m_IsGlobal);
     printf("Writing allStores:%d\n", allStores.size());
     TRANSFER(allStores);
     printf("Writing current store:%d\n", allStores.size());
@@ -33,6 +35,19 @@ void ObjectStoreManager::Transfer(TransferFunction &transfer) {
 
 ObjectStoreManager* ObjectStoreManager::GetDefaultObjectStoreManager(){
     return ::GetDefaultObjectStoreManager();
+}
+
+void ObjectStoreManager::AwakeFromLoad(AwakeFromLoadMode awakeMode){
+    Super::AwakeFromLoad(awakeMode);
+
+    if(this->m_IsGlobal){
+        SetDefaultObjectStoreManager(this);
+
+        size_t layerCount = GetCurrentStore()->GetLayerCount();
+        for(int i = 0 ; i < layerCount; i++){
+            GetCurrentStore()->GetLayer(i)->AwakeAllShapes();
+        }
+    }
 }
 
 IMPLEMENT_REGISTER_CLASS(ObjectStore, 10000);
@@ -65,6 +80,12 @@ void Layer::Transfer(TransferFunction &transfer) {
     TRANSFER(name);
     printf("Writing shapes:%d\n", shapes.size());
     TRANSFER(shapes);
+}
+
+void Layer::AwakeAllShapes(){
+    for( ShapePPtrVector::iterator itr = shapes.begin(); itr != shapes.end(); itr++){
+        itr->AwakeFromLoad();
+    }
 }
 
 #if WEB_ENV

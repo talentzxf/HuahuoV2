@@ -13,6 +13,7 @@
 #include "WriteData.h"
 #include "Core/Finalizer.h"
 #include "Serialize/SerializationCaching/FileCacherRead.h"
+#include "AwakeFromLoadQueue.h"
 
 #if DEBUGMODE
 #define CheckedAssert(x) Assert(x)
@@ -173,33 +174,44 @@ void PersistentManager::LocalSerializedObjectIdentifierToInstanceID(int activeNa
     }
 }
 
+Object* PersistentManager::GetFromActivationQueue(InstanceID instanceID, LockFlags lockedFlags)
+{
+    // PROFILER_AUTO(gFindInActivationQueueProfiler);
 
+    // AutoLock integrationAutoLock(*this, kIntegrationMutexLock, &lockedFlags);
+
+    ThreadedObjectActivationQueue::iterator found = m_ThreadedObjectActivationQueue.find(instanceID);
+    if (found != m_ThreadedObjectActivationQueue.end())
+        return found->second.object;
+
+    return NULL;
+}
 
 Object* PersistentManager::PreallocateObjectThreaded(InstanceID instanceID, LockFlags lockedFlags)
 {
-//    PERSISTENT_MANAGER_AUTOLOCK(autoLock, kMutexLock | kIntegrationMutexLock, lockedFlags, gLoadFromActivationQueueStall);
-//    Object* obj = Object::IDToPointerThreadSafe(instanceID);
-//
-//    if (obj != NULL)
-//        return obj;
-//
-//    Object* o = GetFromActivationQueue(instanceID, lockedFlags);
-//    if (o != NULL)
-//        return o;
-//
-//    // Find and load the right stream
-//    SerializedObjectIdentifier identifier;
-//    if (!m_Remapper->InstanceIDToSerializedObjectIdentifier(instanceID, identifier))
-//        return NULL;
-//
-//    SerializedFile* stream = GetSerializedFileIfObjectAvailable(identifier.serializedFileIndex, identifier.localIdentifierInFile, lockedFlags);
-//    if (stream == NULL)
-//        return NULL;
-//
-//    ThreadedAwakeData* awakeData = CreateThreadActivationQueueEntry(*stream, identifier, instanceID, false, lockedFlags);
-//    if (awakeData != NULL)
-//        return awakeData->object;
-//    else
+    // PERSISTENT_MANAGER_AUTOLOCK(autoLock, kMutexLock | kIntegrationMutexLock, lockedFlags, gLoadFromActivationQueueStall);
+    Object* obj = Object::IDToPointerThreadSafe(instanceID);
+
+    if (obj != NULL)
+        return obj;
+
+    Object* o = GetFromActivationQueue(instanceID, lockedFlags);
+    if (o != NULL)
+        return o;
+
+    // Find and load the right stream
+    SerializedObjectIdentifier identifier;
+    if (!m_Remapper->InstanceIDToSerializedObjectIdentifier(instanceID, identifier))
+        return NULL;
+
+    SerializedFile* stream = GetSerializedFileIfObjectAvailable(identifier.serializedFileIndex, identifier.localIdentifierInFile, lockedFlags);
+    if (stream == NULL)
+        return NULL;
+
+    ThreadedAwakeData* awakeData = CreateThreadActivationQueueEntry(*stream, identifier, instanceID, false, lockedFlags);
+    if (awakeData != NULL)
+        return awakeData->object;
+    else
         return NULL;
 }
 
@@ -265,6 +277,69 @@ bool StreamNameSpace::IsDestroyed(LocalIdentifierInFileType id)
     return std::find(destroyedObjects->begin(), destroyedObjects->end(), id) != destroyedObjects->end();
 }
 
+static inline void AddToAwakeQueue(const ThreadedAwakeData& awake, AwakeFromLoadQueue& awakeQueue)
+{
+    Assert(awake.loadStarted);
+
+    if (awake.object)
+    {
+        AwakeFromLoadMode overrideAwakeFromLoadMode = kDefaultAwakeFromLoadInvalid;
+#if UNITY_EDITOR
+        overrideAwakeFromLoadMode = awake.overrideAwakeFromLoadMode;
+#endif
+
+        awakeQueue.Add(*awake.object/*, awake.oldType*/, awake.checkConsistency, overrideAwakeFromLoadMode);
+    }
+}
+
+void PersistentManager::CopyToAwakeFromLoadQueueInternal(AwakeFromLoadQueue& awakeQueue)
+{
+    // Add to AwakeFromLoadQueue - this will take care of ensuring sort order
+    awakeQueue.Reserve(m_ThreadedObjectActivationQueue.size());
+
+    ThreadedObjectActivationQueue::iterator end = m_ThreadedObjectActivationQueue.end();
+    for (ThreadedObjectActivationQueue::iterator i = m_ThreadedObjectActivationQueue.begin(); i != end; ++i)
+        AddToAwakeQueue(i->second, awakeQueue);
+}
+
+void PersistentManager::ExtractAwakeFromLoadQueue(AwakeFromLoadQueue& awakeQueue)
+{
+    LockFlags lockedFlags = kLockFlagNone;
+    // PERSISTENT_MANAGER_AUTOLOCK(integrationAutoLock, kIntegrationMutexLock, lockedFlags, gLoadFromActivationQueueStall);
+
+    CopyToAwakeFromLoadQueueInternal(awakeQueue);
+    m_ThreadedObjectActivationQueue.clear();
+}
+
+void PersistentManager::ExtractAwakeFromLoadQueue(const InstanceID* instanceIDs, size_t size, AwakeFromLoadQueue& awakeQueue, LockFlags lockedFlags)
+{
+    // PERSISTENT_MANAGER_AUTOLOCK(integrationAutoLock, kIntegrationMutexLock, lockedFlags, gLoadFromActivationQueueStall);
+
+    // Add to AwakeFromLoadQueue - this will take care of ensuring sort order
+    awakeQueue.Reserve(size);
+
+    for (size_t i = 0; i < size; i++)
+    {
+        InstanceID instanceID = instanceIDs[i];
+        ThreadedObjectActivationQueue::iterator found = m_ThreadedObjectActivationQueue.find(instanceID);
+        if (found != m_ThreadedObjectActivationQueue.end())
+        {
+            AddToAwakeQueue(found->second, awakeQueue);
+            m_ThreadedObjectActivationQueue.erase(found);
+        }
+    }
+}
+
+void PersistentManager::IntegrateAllThreadedObjects()
+{
+    // PROFILER_AUTO(kProfileIntegrateAllThreadedObjects);
+    AwakeFromLoadQueue awakeQueue(kMemTempAlloc);
+
+    ExtractAwakeFromLoadQueue(awakeQueue);
+    awakeQueue.RegisterObjectInstanceIDs();
+    awakeQueue.PersistentManagerAwakeFromLoad();
+}
+
 int PersistentManager::LoadFileCompletely(std::string& pathName)
 {
 ////    PROFILER_AUTO(gLoadFileCompletely);
@@ -273,7 +348,7 @@ int PersistentManager::LoadFileCompletely(std::string& pathName)
 //    LoadProgress tempProgress;
 
     int result = LoadFileCompletelyThreaded(pathName, NULL, NULL, -1, PersistentManager::kLoadFlagNone/*, tempProgress*/);
-    // IntegrateAllThreadedObjects();
+    IntegrateAllThreadedObjects();
 
     return result;
 }

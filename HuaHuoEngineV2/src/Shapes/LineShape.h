@@ -17,6 +17,8 @@ public:
 
     }
 
+    void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
+
     void SetStartPoint(float x,float y,float z){
         p1.x = x;
         p1.y = y;
@@ -27,6 +29,14 @@ public:
         p2.x = x;
         p2.y = y;
         p2.z = z;
+    }
+
+    Vector3f* GetStartPoint(){
+        return &p1;
+    }
+
+    Vector3f* GetEndPoint(){
+        return &p2;
     }
 private:
     Vector3f p1;

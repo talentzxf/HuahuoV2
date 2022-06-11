@@ -110,6 +110,7 @@ list(APPEND CPPFILES Runtime/Utilities/PathNameUtility.cpp)
 list(APPEND CPPFILES Runtime/Utilities/MemoryFileSystem.cpp)
 list(APPEND CPPFILES Runtime/File/OpenFileCache.cpp)
 list(APPEND CPPFILES Runtime/File/AsyncReadManagerSimple.cpp)
+list(APPEND CPPFILES Runtime/Serialize/AwakeFromLoadQueue.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)

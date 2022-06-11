@@ -10,6 +10,7 @@
 #include "SerializedFile.h"
 #include "Utilities/StringComparison.h"
 #include "BuildTarget.h"
+#include "AwakeFromLoadQueue.h"
 #include <set>
 
 class SerializedFile;
@@ -282,6 +283,12 @@ public:
     SerializedFile* GetSerializedFile(std::string& path, LockFlags lockedFlags = kLockFlagNone);
     SerializedFile* GetSerializedFile(int serializedFileIndex, LockFlags lockedFlags = kLockFlagNone);
     SerializedFile* GetSerializedFileIfObjectAvailable(int serializedFileIndex, LocalIdentifierInFileType id, LockFlags lockedFlags = kLockFlagNone);
+
+    // Extract all or the specified Objects that have been read but not yet integrated.
+    // (Main thread work like AwakeFromLoad and RegisterInstanceID has not yet been called on them)
+    // ALl objects can then be integrated with IntegrateAwakeFromLoadQueue.
+    void ExtractAwakeFromLoadQueue(AwakeFromLoadQueue& awakeQueue);
+    void ExtractAwakeFromLoadQueue(const InstanceID* instanceIDs, size_t size, AwakeFromLoadQueue& awakeQueue, LockFlags lockedFlags = kLockFlagNone);
 protected:
     ///  maps a pathID to a pathname/file guid/fileidentifier.
     /// (pathID can be assumed to be allocated before with InsertPathName)
@@ -305,8 +312,11 @@ private:
     Object*             ProduceObject(SerializedFile& file, SerializedObjectIdentifier identifier, InstanceID instanceID, ObjectCreationMode objectCreationMode, LockFlags lockedFlags = kLockFlagNone);
     void SetActiveNameSpace(int activeNameSpace, ActiveNameSpaceType type = kReadingNameSpace);
     void ClearActiveNameSpace(ActiveNameSpaceType type = kReadingNameSpace);
-
+    /// Goes through object activation queue and calls AwakeFromLoad if it has been serialized already but not AwakeFromLoad called.
+    Object* GetFromActivationQueue(InstanceID instanceID, LockFlags lockedFlags = kLockFlagNone);
+    void IntegrateAllThreadedObjects();
     int  GetActiveNameSpace(ActiveNameSpaceType type = kReadingNameSpace) { Assert(m_ActiveNameSpace[type] != -1); return m_ActiveNameSpace[type]; }
+    void CopyToAwakeFromLoadQueueInternal(AwakeFromLoadQueue& awakeQueue);
 
     StreamNameSpace& GetStreamNameSpaceInternal(int nameSpaceID);
     StreamNameSpace* GetStreamNameSpaceInternal(std::string path);
