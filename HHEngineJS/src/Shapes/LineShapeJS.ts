@@ -45,10 +45,6 @@ class LineShapeJS extends BaseShapeJS{
     setEndPoint(endPoint: Vector2){
         this.rawObj.SetEndPoint(endPoint.x, endPoint.y, 0);
     }
-
-    getPaperPoint(engineV3Point){
-        return new paper.Point(engineV3Point.x, engineV3Point.y)
-    }
 }
 
 shapeFactory.RegisterClass(shapeName, LineShapeJS.createLine)

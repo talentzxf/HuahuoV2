@@ -65,6 +65,14 @@ interface LineShape{
     Vector3f GetEndPoint();
 };
 
+[NoDelete]
+interface CircleShape{
+    void SetCenter(float x, float y, float z);
+    void SetRadius(float radius);
+    Vector3f GetCenter();
+    float GetRadius();
+};
+
 interface HuaHuoEngine {
     static HuaHuoEngine GetInstance();
     static void InitEngine();

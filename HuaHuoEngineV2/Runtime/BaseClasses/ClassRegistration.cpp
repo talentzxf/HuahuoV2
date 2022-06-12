@@ -10,6 +10,7 @@
 #include "Input/TimeManager.h"
 #include "ObjectStore.h"
 #include "Shapes/LineShape.h"
+#include "Shapes/CircleShape.h"
 
 void RegisterBuiltinTypes()
 {
@@ -50,4 +51,5 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<Layer>("ObjectStore");
     RegisterHuaHuoClass<BaseShape>("ObjectStore");
     RegisterHuaHuoClass<LineShape>("ObjectStore");
+    RegisterHuaHuoClass<CircleShape>("ObjectStore");
 }

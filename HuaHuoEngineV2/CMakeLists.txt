@@ -143,7 +143,7 @@ else ()
 #    add_compile_definitions(PLATFORM_WIN=1)
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
 
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp )
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp src/Shapes/CircleShape.cpp src/Shapes/CircleShape.h)
 
     target_link_libraries(TestHuaHuoEngine ${ALL_LIBS})
 endif ()

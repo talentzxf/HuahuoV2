@@ -1,4 +1,5 @@
 import {huahuoEngine} from "../EngineAPI";
+import paper from "paper";
 
 declare var Module: any;
 
@@ -35,6 +36,10 @@ class BaseShapeJS
 
     update(){
 
+    }
+
+    getPaperPoint(engineV3Point){
+        return new paper.Point(engineV3Point.x, engineV3Point.y)
     }
 }
 
