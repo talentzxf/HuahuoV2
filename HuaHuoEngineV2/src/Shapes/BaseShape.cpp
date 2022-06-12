@@ -3,6 +3,8 @@
 //
 
 #include "BaseShape.h"
+#include "Export/Events/ScriptEventManager.h"
+
 IMPLEMENT_REGISTER_CLASS(BaseShape, 10002);
 
 IMPLEMENT_OBJECT_SERIALIZE(BaseShape);
@@ -14,8 +16,9 @@ void BaseShape::Transfer(TransferFunction &transfer) {
 }
 
 void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
-    AwakeFromLoadInCpp();
-    AwakeFromLoadInJS();
+    ShapeLoadedEventArgs args(this);
+
+    GetScriptEventManager()->TriggerEvent("OnShapeLoaded", &args);
 }
 
 BaseShape* BaseShape::CreateShape(const char* shapeName){

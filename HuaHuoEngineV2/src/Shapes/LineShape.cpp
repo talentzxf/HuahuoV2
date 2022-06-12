@@ -16,6 +16,8 @@ void LineShape::Transfer(TransferFunction &transfer) {
 
     printf("Transfering p1: %f,%f,%f\n", this->p1.x, this->p1.y, this->p1.z);
     TRANSFER(this->p1);
-    printf("Transfering p2: %f,%f,%f\n", this->p1.x, this->p1.y, this->p1.z);
+    printf("After transfering p1: %f,%f,%f\n", this->p1.x, this->p1.y, this->p1.z);
+    printf("Transfering p2: %f,%f,%f\n", this->p2.x, this->p2.y, this->p2.z);
     TRANSFER(this->p2);
+    printf("After transfering p2: %f,%f,%f\n", this->p2.x, this->p2.y, this->p2.z);
 }

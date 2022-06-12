@@ -19,6 +19,10 @@ class EngineAPI{
         this.PendingInitFunctions.push(func);
     }
 
+    GetInstance(){
+        return this.cppEngine;
+    }
+
     OnInit(){
         Module.HuaHuoEngine.prototype.InitEngine();
         this.cppEngine = Module.HuaHuoEngine.prototype.GetInstance();

@@ -5,6 +5,21 @@
 #ifndef HUAHUOENGINEV2_BASESHAPE_H
 #define HUAHUOENGINEV2_BASESHAPE_H
 #include "TypeSystem/Object.h"
+#include "Export/Events/ScriptEventManager.h"
+
+class BaseShape;
+class ShapeLoadedEventArgs: public ScriptEventHandlerArgs{
+public:
+    ShapeLoadedEventArgs(BaseShape* baseShape):m_BaseShape(baseShape){
+
+    }
+
+    BaseShape* GetBaseShape(){
+        return m_BaseShape;
+    }
+private:
+    BaseShape* m_BaseShape;
+};
 
 class BaseShape : public Object{
     REGISTER_CLASS_TRAITS(kTypeIsAbstract);
@@ -15,16 +30,12 @@ public:
         :Super(label, mode)
     {}
 
-    virtual const char* GetShapeName(){
+    virtual char* GetName(){
         return "Unknown";
     }
 
     virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
     static BaseShape* CreateShape(const char* shapeName);
-
-protected:
-    virtual void AwakeFromLoadInCpp() {}
-    virtual void AwakeFromLoadInJS() {} // This function should be implemented in JS side.
 };
 
 

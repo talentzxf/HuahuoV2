@@ -42,6 +42,12 @@ interface ObjectStoreManager{
 [NoDelete]
 interface BaseShape{
     static BaseShape CreateShape(DOMString shapeName);
+    DOMString GetName();
+};
+
+[NoDelete]
+interface ShapeLoadedEventArgs{
+    BaseShape GetBaseShape();
 };
 
 [NoDelete]
@@ -57,11 +63,6 @@ interface LineShape{
     void SetEndPoint(float x, float y, float z);
     Vector3f GetStartPoint();
     Vector3f GetEndPoint();
-};
-
-[NoDelete, JSImplementation="LineShape"]
-interface LineShapeJS{
-    void AwakeFromLoadInJS();
 };
 
 interface HuaHuoEngine {

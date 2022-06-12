@@ -1,19 +1,20 @@
 import {Vector2} from "hhcommoncomponents"
 import * as paper from "paper";
-import {BaseShapeJS} from "./BaseShapeJS";
+import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
 declare var Module: any;
 declare function castObject(obj:any, clz:any): any;
+
+let shapeName = "LineShape"
 
 class LineShapeJS extends BaseShapeJS{
     line: paper.Path.Line
 
-    constructor(){
-        super();
+    static createLine(rawObj){
+        return new LineShapeJS(rawObj);
     }
 
     afterWASMReady(){
         this.rawObj = castObject(this.rawObj, Module.LineShape);
-        this.rawObj.AwakeFromLoadInJS = this.awakeFromLoad.bind(this);
     }
 
     awakeFromLoad(){
@@ -21,7 +22,7 @@ class LineShapeJS extends BaseShapeJS{
     }
 
     getShapeName(){
-        return "LineShape"
+        return shapeName
     }
 
     update() {
@@ -49,5 +50,7 @@ class LineShapeJS extends BaseShapeJS{
         return new paper.Point(engineV3Point.x, engineV3Point.y)
     }
 }
+
+shapeFactory.RegisterClass(shapeName, LineShapeJS.createLine)
 
 export {LineShapeJS}

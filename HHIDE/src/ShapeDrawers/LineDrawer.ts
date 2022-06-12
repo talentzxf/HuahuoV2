@@ -38,13 +38,16 @@ class LineDrawer extends BaseShapeDrawer {
     onMouseUp(evt: MouseEvent) {
         super.onMouseUp(evt);
 
-        this.isDrawing = false
-        EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, this)
+        let _this = this
+        huahuoEngine.ExecuteAfterInited(()=>{
+            _this.isDrawing = false
+            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
 
-        let currentLayer = huahuoEngine.GetCurrentLayer()
-        currentLayer.addShape(this.tempShape)
+            let currentLayer = huahuoEngine.GetCurrentLayer()
+            currentLayer.addShape(this.tempShape)
 
-        this.tempShape = new LineShapeJS();
+            _this.tempShape = new LineShapeJS();
+        })
     }
 }
 

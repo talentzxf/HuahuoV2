@@ -695,6 +695,11 @@ printf("%s,%d\n", __FILE__, __LINE__);
     // DebugAssert(!HasPreallocatedObjects());
 
 printf("%s,%d\n", __FILE__, __LINE__);
+
+if(this == NULL){
+    printf("%s,%d\n", __FILE__, __LINE__);
+}
+
     // Find Stream
     int serializedFileIndex = InsertPathNameInternal(pathname, true);
     SerializedFile* serializedFile = GetSerializedFile(serializedFileIndex, lockedFlags);

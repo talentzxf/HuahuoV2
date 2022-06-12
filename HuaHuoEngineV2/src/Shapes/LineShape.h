@@ -17,7 +17,7 @@ public:
 
     }
 
-    virtual const char* GetName(){
+    virtual char* GetName() override{
         return "LineShape";
     }
 
