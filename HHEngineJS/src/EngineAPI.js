@@ -8,7 +8,7 @@ class EngineAPI{
     cppEngine = null
 
     constructor() {
-        Logger.error("Creating Engine API!!!!")
+        Logger.info("Creating Engine API!!!!")
     }
 
     ExecuteAfterInited(func){

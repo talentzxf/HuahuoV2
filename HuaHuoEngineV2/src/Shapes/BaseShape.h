@@ -15,7 +15,16 @@ public:
         :Super(label, mode)
     {}
 
-    virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override = 0;
+    virtual const char* GetShapeName(){
+        return "Unknown";
+    }
+
+    virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
+    static BaseShape* CreateShape(const char* shapeName);
+
+protected:
+    virtual void AwakeFromLoadInCpp() {}
+    virtual void AwakeFromLoadInJS() {} // This function should be implemented in JS side.
 };
 
 

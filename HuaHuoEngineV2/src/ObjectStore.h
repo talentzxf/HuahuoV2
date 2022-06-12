@@ -50,7 +50,7 @@ public:
         return shapes;
     }
 
-    void AwakeAllShapes();
+    void AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode);
 
 private:
     ShapePPtrVector shapes;

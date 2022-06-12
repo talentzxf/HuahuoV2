@@ -19,8 +19,3 @@ void LineShape::Transfer(TransferFunction &transfer) {
     printf("Transfering p2: %f,%f,%f\n", this->p1.x, this->p1.y, this->p1.z);
     TRANSFER(this->p2);
 }
-
-void LineShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
-    Super::AwakeFromLoad(awakeMode);
-}
-

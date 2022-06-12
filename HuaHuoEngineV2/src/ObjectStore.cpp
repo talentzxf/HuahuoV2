@@ -19,6 +19,10 @@ ObjectStoreManager* GetDefaultObjectStoreManager(){
     return gDefaultObjectStoreManager;
 }
 
+void SetDefaultObjectStoreManager(ObjectStoreManager* objectStoreManager){
+    gDefaultObjectStoreManager = objectStoreManager;
+}
+
 IMPLEMENT_REGISTER_CLASS(ObjectStoreManager, 10004);
 
 IMPLEMENT_OBJECT_SERIALIZE(ObjectStoreManager);
@@ -45,7 +49,7 @@ void ObjectStoreManager::AwakeFromLoad(AwakeFromLoadMode awakeMode){
 
         size_t layerCount = GetCurrentStore()->GetLayerCount();
         for(int i = 0 ; i < layerCount; i++){
-            GetCurrentStore()->GetLayer(i)->AwakeAllShapes();
+            GetCurrentStore()->GetLayer(i)->AwakeAllShapes(awakeMode);
         }
     }
 }
@@ -82,9 +86,9 @@ void Layer::Transfer(TransferFunction &transfer) {
     TRANSFER(shapes);
 }
 
-void Layer::AwakeAllShapes(){
+void Layer::AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode){
     for( ShapePPtrVector::iterator itr = shapes.begin(); itr != shapes.end(); itr++){
-        itr->AwakeFromLoad();
+        (*itr)->AwakeFromLoad(awakeFromLoadMode);
     }
 }
 

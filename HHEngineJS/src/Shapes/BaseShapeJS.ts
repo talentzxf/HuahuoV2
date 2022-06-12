@@ -1,23 +1,26 @@
-import {huahuoEngine} from "../EngineAPI"
+import {huahuoEngine} from "../EngineAPI";
 
-// This class and all it's children should not store any data
-// All persistent data should be stored in C++'s side.
-class BaseShapeJS{
-    protected cppShapeObj
+declare var Module: any;
+
+class BaseShapeJS
+{
+    protected rawObj: any = null;
+
+    getShapeName(){
+        return "UnknownShape";
+    }
 
     constructor() {
         let _this = this
         huahuoEngine.ExecuteAfterInited(()=>{
-            _this.cppShapeObj = huahuoEngine.CreateShape(_this.getShapeName())
+            _this.rawObj = Module.BaseShape.prototype.CreateShape(_this.getShapeName());
+
+            _this.afterWASMReady();
         })
     }
 
-    getShapeName(){
-        return "Unkonwn"
-    }
+    afterWASMReady(){
 
-    getRawShape(){
-        return this.cppShapeObj;
     }
 
     update(){

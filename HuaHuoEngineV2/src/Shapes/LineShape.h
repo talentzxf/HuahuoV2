@@ -17,7 +17,9 @@ public:
 
     }
 
-    void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
+    virtual const char* GetName(){
+        return "LineShape";
+    }
 
     void SetStartPoint(float x,float y,float z){
         p1.x = x;

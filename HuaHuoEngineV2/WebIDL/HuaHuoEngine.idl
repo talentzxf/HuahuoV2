@@ -20,12 +20,6 @@ interface PersistentManager{
 };
 
 [NoDelete]
-interface LineShape{
-    void SetStartPoint(float x,float y,float z);
-    void SetEndPoint(float x,float y,float z);
-};
-
-[NoDelete]
 interface Layer{
     void AddShapeInternal(BaseShape newShape);
     long long GetShapeCount();
@@ -47,7 +41,27 @@ interface ObjectStoreManager{
 
 [NoDelete]
 interface BaseShape{
+    static BaseShape CreateShape(DOMString shapeName);
+};
 
+[NoDelete]
+interface Vector3f{
+    attribute float x;
+    attribute float y;
+    attribute float z;
+};
+
+[NoDelete]
+interface LineShape{
+    void SetStartPoint(float x, float y, float z);
+    void SetEndPoint(float x, float y, float z);
+    Vector3f GetStartPoint();
+    Vector3f GetEndPoint();
+};
+
+[NoDelete, JSImplementation="LineShape"]
+interface LineShapeJS{
+    void AwakeFromLoadInJS();
 };
 
 interface HuaHuoEngine {

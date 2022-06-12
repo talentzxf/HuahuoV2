@@ -4,6 +4,7 @@
 #include "HuaHuoEngine.h"
 #include "Components/Transform/Transform.h"
 #include "ObjectStore.h"
+#include "Shapes/LineShape.h"
 #ifdef HUAHUO_EDITOR
 #include "Editor/SceneInspector.h"
 #include "Editor/SceneView.h"
