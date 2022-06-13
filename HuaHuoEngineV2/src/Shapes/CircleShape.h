@@ -25,7 +25,7 @@ public:
         return &m_Center;
     }
 
-    float GetRaidus(){
+    float GetRadius(){
         return m_Radius;
     }
 

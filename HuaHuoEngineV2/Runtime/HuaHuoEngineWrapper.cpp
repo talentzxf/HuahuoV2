@@ -5,6 +5,7 @@
 #include "Components/Transform/Transform.h"
 #include "ObjectStore.h"
 #include "Shapes/LineShape.h"
+#include "Shapes/CircleShape.h"
 #ifdef HUAHUO_EDITOR
 #include "Editor/SceneInspector.h"
 #include "Editor/SceneView.h"

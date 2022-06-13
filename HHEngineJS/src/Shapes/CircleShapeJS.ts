@@ -1,12 +1,14 @@
-import {BaseShapeJS} from "./BaseShapeJS";
+import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
+import * as paper from "paper";
+import {LineShapeJS} from "./LineShapeJS";
 declare function castObject(obj:any, clz:any): any;
 declare var Module: any;
 
 let shapeName = "CircleShape"
 class CircleShapeJS extends BaseShapeJS{
-    cirle: paper.Path.Circle
+    circle: paper.Path.Circle
 
-    static createShape(rawObj){
+    static createCircle(rawObj){
         return new CircleShapeJS(rawObj);
     }
 
@@ -22,11 +24,27 @@ class CircleShapeJS extends BaseShapeJS{
         return shapeName
     }
 
+    setCenter(center){
+        this.rawObj.SetCenter(center.x, center.y, 0);
+    }
+
+    setRadius(radius){
+        this.rawObj.SetRadius(radius)
+    }
+
     update(){
         let circleCenter = this.getPaperPoint(this.rawObj.GetCenter());
         let radius = this.rawObj.GetRadius();
-        if(this.cirle == null){
-            this.cirle = new paper.Path.Circle();
+        if(this.circle){
+            this.circle.remove()
         }
+
+        this.circle = new paper.Path.Circle(circleCenter, radius);
+        this.circle.strokeColor = new paper.Color("black")
     }
 }
+
+shapeFactory.RegisterClass(shapeName, CircleShapeJS.createCircle)
+
+
+export {CircleShapeJS}

@@ -1,5 +1,5 @@
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
-import {Vector2} from "../../../HHCommonComponents/src/Math/Vector2";
+import {Vector2} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {LineShapeJS} from "hhenginejs"
 import {huahuoEngine} from "hhenginejs"

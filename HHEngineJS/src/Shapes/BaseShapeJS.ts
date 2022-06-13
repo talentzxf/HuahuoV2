@@ -1,5 +1,5 @@
 import {huahuoEngine} from "../EngineAPI";
-import paper from "paper";
+import * as paper from "paper";
 
 declare var Module: any;
 

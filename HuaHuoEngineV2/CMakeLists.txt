@@ -111,6 +111,7 @@ list(APPEND CPPFILES Runtime/Utilities/MemoryFileSystem.cpp)
 list(APPEND CPPFILES Runtime/File/OpenFileCache.cpp)
 list(APPEND CPPFILES Runtime/File/AsyncReadManagerSimple.cpp)
 list(APPEND CPPFILES Runtime/Serialize/AwakeFromLoadQueue.cpp)
+list(APPEND CPPFILES src/Shapes/CircleShape.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)
@@ -143,7 +144,7 @@ else ()
 #    add_compile_definitions(PLATFORM_WIN=1)
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
 
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp src/Shapes/CircleShape.cpp src/Shapes/CircleShape.h)
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp)
 
     target_link_libraries(TestHuaHuoEngine ${ALL_LIBS})
 endif ()

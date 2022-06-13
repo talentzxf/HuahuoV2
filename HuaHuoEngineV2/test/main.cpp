@@ -17,6 +17,7 @@
 #include "Utilities/File.h"
 #include "Utilities/PathNameUtility.h"
 #include "Utilities/MemoryFileSystem.h"
+#include "Shapes/CircleShape.h"
 
 void testTransform() {
     GameObject *go = MonoCreateGameObject("Go1");
@@ -65,6 +66,11 @@ void testShapeStore() {
     lineShape->SetStartPoint(0, 1, 0);
     lineShape->SetEndPoint(1, 0, 0);
     currentLayer->AddShapeInternal(lineShape);
+
+    CircleShape* circleShape = Object::Produce<CircleShape>();
+    circleShape->SetCenter(0,0,0);
+    circleShape->SetRadius(10.0);
+    currentLayer->AddShapeInternal(circleShape);
 
     LineShape* lineShape1 = Object::Produce<LineShape>();
     lineShape1->SetStartPoint(2,2,2);
