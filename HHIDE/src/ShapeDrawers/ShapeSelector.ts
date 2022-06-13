@@ -72,8 +72,8 @@ class ShapeSelector extends BaseShapeDrawer {
             shape.selected = false
             shape.update()
         }
-
         this.selectedShapes = new Array()
+        this.transformHandler = null
 
         // 2. Hit testing. If anything was hit.
         if (this.hitSomething(evt.offsetX, evt.offsetY)) {
@@ -123,9 +123,6 @@ class ShapeSelector extends BaseShapeDrawer {
     }
 
     onMouseUp(evt: MouseEvent) {
-        if (evt.buttons != 1)
-            return
-
         super.onMouseUp(evt);
 
         this.transformHandler = null;
