@@ -54,6 +54,7 @@ class EngineAPI{
         let layer = this.GetCurrentStore().GetCurrentLayer();
         if(!layer.addShape){
             layer.addShape = (shape)=>{
+                shape.update()
                 layer.AddShapeInternal(shape.getRawShape())
                 Logger.debug("Currently there're:" + layer.GetShapeCount() + " shapes in the layer.")
             }

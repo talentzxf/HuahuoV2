@@ -44,6 +44,7 @@ class LineDrawer extends BaseShapeDrawer {
             EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
 
             let currentLayer = huahuoEngine.GetCurrentLayer()
+
             currentLayer.addShape(this.tempShape)
 
             _this.tempShape = new LineShapeJS();

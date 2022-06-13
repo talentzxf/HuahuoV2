@@ -7,8 +7,6 @@ declare function castObject(obj:any, clz:any): any;
 let shapeName = "LineShape"
 
 class LineShapeJS extends BaseShapeJS{
-    line: paper.Path.Line
-
     static createLine(rawObj){
         return new LineShapeJS(rawObj);
     }
@@ -26,15 +24,18 @@ class LineShapeJS extends BaseShapeJS{
     }
 
     update() {
+        super.update()
+
         let startPaperPoint = this.getPaperPoint(this.rawObj.GetStartPoint());
         let endPaperPoint = this.getPaperPoint(this.rawObj.GetEndPoint());
 
-        if(this.line == null){
-            this.line = new paper.Path.Line( startPaperPoint, endPaperPoint);
-            this.line.strokeColor = paper.Color.random()
+        if(this.paperShape == null){
+            this.paperShape = new paper.Path.Line( startPaperPoint, endPaperPoint);
+            this.paperShape.data.meta = this
+            this.paperShape.strokeColor = paper.Color.random()
         }else{
-            this.line.removeSegments()
-            this.line.add(startPaperPoint, endPaperPoint)
+            this.paperShape.removeSegments()
+            this.paperShape.add(startPaperPoint, endPaperPoint)
         }
     }
 

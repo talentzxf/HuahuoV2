@@ -6,6 +6,16 @@ declare var Module: any;
 class BaseShapeJS
 {
     protected rawObj: any = null;
+    protected paperShape: paper.Path
+    protected isSelected = false
+
+    get selected(){
+        return this.isSelected
+    }
+
+    set selected(val:boolean){
+        this.isSelected = val
+    }
 
     getShapeName(){
         return "UnknownShape";
@@ -24,6 +34,10 @@ class BaseShapeJS
             this.rawObj = rawObj
             this.afterWASMReady()
         }
+    }
+
+    isSelectable(){
+        return true
     }
 
     afterWASMReady(){

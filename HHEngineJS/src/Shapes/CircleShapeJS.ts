@@ -5,8 +5,6 @@ declare var Module: any;
 
 let shapeName = "CircleShape"
 class CircleShapeJS extends BaseShapeJS{
-    circle: paper.Path.Circle
-
     static createCircle(rawObj){
         return new CircleShapeJS(rawObj);
     }
@@ -32,15 +30,24 @@ class CircleShapeJS extends BaseShapeJS{
     }
 
     update(){
+        super.update()
         let circleCenter = this.getPaperPoint(this.rawObj.GetCenter());
         let radius = this.rawObj.GetRadius();
-        if(this.circle){
-            this.circle.remove()
+        if(this.paperShape){
+            this.paperShape.remove()
         }
 
-        this.circle = new paper.Path.Circle(circleCenter, radius);
-        this.circle.strokeColor = new paper.Color("black")
-        this.circle.fillColor = paper.Color.random()
+        this.paperShape = new paper.Path.Circle(circleCenter, radius);
+        this.paperShape.data.meta = this
+        this.paperShape.strokeColor = new paper.Color("black")
+        this.paperShape.fillColor = paper.Color.random()
+
+        if(this.isSelected){
+            let boundingBox = this.paperShape.bounds;
+            let boundingBoxRect = new paper.Path.Rectangle(boundingBox)
+            boundingBoxRect.dashArray = [4, 10]
+            boundingBoxRect.strokeColor = new paper.Color("black")
+        }
     }
 }
 

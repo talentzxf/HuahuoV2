@@ -8,6 +8,20 @@ class ShapeSelector extends BaseShapeDrawer{
     name = "ShapeSelector"
 
     startPos: Vector2;
+    margin: number = 5;
+    hitOptions = {}
+
+    constructor() {
+        super();
+
+        this.hitOptions = {
+            segments: true,
+            stroke: true,
+            fill: true,
+            handles: true,
+            tolerance: 5
+        }
+    }
 
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
         super.onBeginToDrawShape(canvas);
@@ -36,11 +50,36 @@ class ShapeSelector extends BaseShapeDrawer{
         }
     }
 
+    itemSelectable(item){
+        if( typeof item.data.meta == "undefined" || false == item.data.meta.isSelectable())
+            return false
+        return true
+    }
+
     onMouseUp(evt: MouseEvent) {
         super.onMouseUp(evt);
 
+        if(this.isDrawing){
+            let endPos = this.getWorldPosFromView(evt.offsetX, evt.offsetY)
+            if(endPos.distance(this.startPos) < this.margin){
+                let screenPos = new paper.Point(evt.offsetX, evt.offsetY)
+
+                // Single click, perform hit test.
+                let hitResult = paper.project.hitTest(screenPos, this.hitOptions)
+                if(hitResult){
+                    let hitItem = hitResult.item;
+                    if(this.itemSelectable(hitResult.item)){
+                        hitItem.data.meta.selected = true
+                        hitItem.data.meta.update();
+                    }
+                }
+            }
+        }
+
         this.isDrawing = false
-        this.selectRectangle.remove()
+
+        if(this.selectRectangle)
+            this.selectRectangle.remove()
     }
 }
 
