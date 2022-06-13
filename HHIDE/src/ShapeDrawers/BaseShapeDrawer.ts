@@ -12,6 +12,10 @@ class BaseShapeDrawer{
     canvasWidth = -1;
     canvasHeight = -1;
 
+    isDefaultDrawer(){
+        return false
+    }
+
     onClicked(isSelected){ // The button is clicked
         Logger.debug(this.name + " clicked!")
         if(isSelected)

@@ -9,6 +9,8 @@ class BaseShapeJS
     protected paperShape: paper.Path
     protected isSelected = false
 
+    protected boundingBoxRect = null;
+
     get selected(){
         return this.isSelected
     }
@@ -48,8 +50,36 @@ class BaseShapeJS
         return this.rawObj
     }
 
-    update(){
+    beforeUpdate(){
+        // Clear shapes
+        if(this.paperShape){
+            this.paperShape.remove()
+        }
 
+        if(this.boundingBoxRect){
+            this.boundingBoxRect.remove()
+        }
+    }
+
+    duringUpdate()
+    {
+
+    }
+
+    afterUpdate()
+    {
+        if(this.isSelected){
+            let boundingBox = this.paperShape.bounds;
+            this.boundingBoxRect = new paper.Path.Rectangle(boundingBox)
+            this.boundingBoxRect.dashArray = [4, 10]
+            this.boundingBoxRect.strokeColor = new paper.Color("black")
+        }
+    }
+
+    update(){
+        this.beforeUpdate()
+        this.duringUpdate()
+        this.afterUpdate()
     }
 
     getPaperPoint(engineV3Point){

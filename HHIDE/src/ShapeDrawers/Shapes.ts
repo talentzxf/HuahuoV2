@@ -10,4 +10,11 @@ let shapes = [
     new CurveDrawer()
 ]
 
-export {shapes}
+let defaultShapeDrawerArray = shapes.filter(drawer=>{
+    if(drawer.isDefaultDrawer()) return true
+    return false
+})
+
+let defaultShapeDrawer = defaultShapeDrawerArray.length == 0 ? null: defaultShapeDrawerArray[0]
+
+export {shapes, defaultShapeDrawer}

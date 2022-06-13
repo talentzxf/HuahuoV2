@@ -1,3 +1,4 @@
+import {BaseShapeJS} from "hhenginejs"
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {Vector2} from "hhcommoncomponents"
 import {paper} from "hhenginejs";
@@ -11,6 +12,8 @@ class ShapeSelector extends BaseShapeDrawer{
     margin: number = 5;
     hitOptions = {}
 
+    selectedShapes: Array<BaseShapeJS> = new Array()
+
     constructor() {
         super();
 
@@ -23,11 +26,23 @@ class ShapeSelector extends BaseShapeDrawer{
         }
     }
 
+    isDefaultDrawer(): boolean {
+        return true
+    }
+
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
         super.onBeginToDrawShape(canvas);
     }
 
     onMouseDown(evt: MouseEvent) {
+        // Clear current selections.
+        for(let shape of this.selectedShapes){
+            shape.selected = false
+            shape.update()
+        }
+
+        this.selectedShapes = new Array()
+
         super.onMouseDown(evt);
         this.isDrawing = true;
         this.startPos = this.getWorldPosFromView(evt.offsetX, evt.offsetY)
@@ -71,6 +86,8 @@ class ShapeSelector extends BaseShapeDrawer{
                     if(this.itemSelectable(hitResult.item)){
                         hitItem.data.meta.selected = true
                         hitItem.data.meta.update();
+
+                        this.selectedShapes.push(hitItem.data.meta)
                     }
                 }
             }

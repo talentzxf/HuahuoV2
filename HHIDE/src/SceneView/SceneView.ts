@@ -5,6 +5,7 @@ import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {HHTimeline, TimelineEventNames} from "hhtimeline"
 import {huahuoEngine} from "hhenginejs"
 import {ResizeObserver} from 'resize-observer';
+import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
 
 @CustomElement({
     selector: "hh-sceneview"
@@ -14,12 +15,11 @@ class SceneView extends HTMLElement {
     canvas: HTMLCanvasElement
     ctx: CanvasRenderingContext2D = null;
 
-    currentShapeDrawer: BaseShapeDrawer = null;
+    currentShapeDrawer: BaseShapeDrawer = defaultShapeDrawer;
 
     gizmoContainer: HTMLDivElement = null;
     zoomInBtn: HTMLButtonElement = null;
     zoomOutBtn: HTMLButtonElement = null;
-
 
     createCanvasContainer() {
         this.canvasContainer = document.createElement("div")
@@ -137,7 +137,7 @@ class SceneView extends HTMLElement {
     }
 
     endOfDrawingShape(shapeDrawer: BaseShapeDrawer) {
-        this.currentShapeDrawer = null;
+        this.currentShapeDrawer = defaultShapeDrawer;
         this.canvas.style.cursor = "default"
     }
 

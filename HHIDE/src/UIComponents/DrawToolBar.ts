@@ -10,6 +10,8 @@ class DrawToolBar extends HTMLElement{
     private shapeButtonMap:Map<BaseShapeDrawer, HTMLButtonElement> = new Map
     private currentActiveDrawer: BaseShapeDrawer = null
 
+    private defaultDrawer: BaseShapeDrawer = null
+
     setButtonBackgroundColor(button:HTMLButtonElement, isSelected:boolean){
         let bgColor = "white"
         if(isSelected)
@@ -22,7 +24,10 @@ class DrawToolBar extends HTMLElement{
 
         for(let shape of shapes){
             this.createButton(shape)
+            if(shape.isDefaultDrawer())
+                this.defaultDrawer = shape;
         }
+
         EventBus.getInstance().on(EventNames.DRAWSHAPEBEGINS, this.onDrawShapeBegins.bind(this))
         EventBus.getInstance().on(EventNames.DRAWSHAPEENDS, this.onEndOfDrawingShape.bind(this))
     }
