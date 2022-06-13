@@ -31,7 +31,7 @@ class LineShapeJS extends BaseShapeJS{
 
         if(this.line == null){
             this.line = new paper.Path.Line( startPaperPoint, endPaperPoint);
-            this.line.strokeColor = new paper.Color("black")
+            this.line.strokeColor = paper.Color.random()
         }else{
             this.line.removeSegments()
             this.line.add(startPaperPoint, endPaperPoint)

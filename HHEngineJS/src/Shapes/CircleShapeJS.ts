@@ -1,6 +1,5 @@
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
 import * as paper from "paper";
-import {LineShapeJS} from "./LineShapeJS";
 declare function castObject(obj:any, clz:any): any;
 declare var Module: any;
 
@@ -41,6 +40,7 @@ class CircleShapeJS extends BaseShapeJS{
 
         this.circle = new paper.Path.Circle(circleCenter, radius);
         this.circle.strokeColor = new paper.Color("black")
+        this.circle.fillColor = paper.Color.random()
     }
 }
 

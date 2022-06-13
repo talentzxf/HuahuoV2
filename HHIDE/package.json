@@ -18,6 +18,7 @@
     "@types/file-saver": "^2.0.5",
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.7.1",
+    "file-saver": "^2.0.5",
     "hhcommoncomponents": "file:../HHCommonComponents",
     "hhenginejs": "file:../HHEngineJS",
     "hhpanel": "file:../HHPanel",
@@ -29,7 +30,6 @@
     "ts-loader": "^9.3.0",
     "webpack": "^5.70.0",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.7.4",
-    "file-saver": "^2.0.5"
+    "webpack-dev-server": "^4.7.4"
   }
 }
