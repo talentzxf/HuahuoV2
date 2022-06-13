@@ -1,4 +1,5 @@
 import {huahuoEngine} from "../EngineAPI";
+import {Vector2} from "hhcommoncomponents"
 import * as paper from "paper";
 
 declare var Module: any;
@@ -11,12 +12,26 @@ class BaseShapeJS
 
     protected boundingBoxRect = null;
 
+    protected objPosition: Vector2
+
     get selected(){
         return this.isSelected
     }
 
     set selected(val:boolean){
         this.isSelected = val
+    }
+
+    get position(){
+        if(!this.objPosition){
+            let pos = this.paperShape.position;
+            this.objPosition = new Vector2(pos.x, pos.y)
+        }
+        return this.objPosition
+    }
+
+    set position(val){
+        this.objPosition = val
     }
 
     getShapeName(){
@@ -68,6 +83,8 @@ class BaseShapeJS
 
     afterUpdate()
     {
+        this.paperShape.position = new paper.Point(this.objPosition.x, this.objPosition.y);
+
         if(this.isSelected){
             let boundingBox = this.paperShape.bounds;
             this.boundingBoxRect = new paper.Path.Rectangle(boundingBox)

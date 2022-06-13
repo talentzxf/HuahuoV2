@@ -2,6 +2,8 @@ import {BaseShapeJS} from "hhenginejs"
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {Vector2} from "hhcommoncomponents"
 import {paper} from "hhenginejs";
+import {shapeTranslateHandler} from "../TransformHandlers/ShapeTranslateHandler";
+import {ShapeTranslateMorphBase} from "../TransformHandlers/ShapeTranslateMorphBase";
 
 class ShapeSelector extends BaseShapeDrawer{
     selectRectangle: paper.Path.Rectangle;
@@ -13,6 +15,10 @@ class ShapeSelector extends BaseShapeDrawer{
     hitOptions = {}
 
     selectedShapes: Array<BaseShapeJS> = new Array()
+
+
+    transformHandler: ShapeTranslateMorphBase = null
+    defaultTransformHandler: ShapeTranslateMorphBase = shapeTranslateHandler
 
     constructor() {
         super();
@@ -35,6 +41,9 @@ class ShapeSelector extends BaseShapeDrawer{
     }
 
     onMouseDown(evt: MouseEvent) {
+        if(evt.buttons != 1)
+            return
+
         // Clear current selections.
         for(let shape of this.selectedShapes){
             shape.selected = false
@@ -45,23 +54,31 @@ class ShapeSelector extends BaseShapeDrawer{
 
         super.onMouseDown(evt);
         this.isDrawing = true;
-        this.startPos = this.getWorldPosFromView(evt.offsetX, evt.offsetY)
+        this.startPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
     }
 
     onMouseMove(evt: MouseEvent) {
+        if(evt.buttons != 1)
+            return
+
         super.onMouseMove(evt);
+        let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
 
-        if(this.isDrawing){
+        if(this.transformHandler && this.transformHandler.getIsDragging()){
+            this.transformHandler.dragging(pos)
+        }else{
+            if(this.isDrawing){
 
-            let endPos = this.getWorldPosFromView(evt.offsetX, evt.offsetY)
+                let endPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
 
-            if(this.selectRectangle){
-                this.selectRectangle.remove()
+                if(this.selectRectangle){
+                    this.selectRectangle.remove()
+                }
+
+                this.selectRectangle = new paper.Path.Rectangle(this.startPos, endPos)
+                this.selectRectangle.strokeColor = new paper.Color("Black")
+                this.selectRectangle.dashArray = [10, 12];
             }
-
-            this.selectRectangle = new paper.Path.Rectangle(this.startPos, endPos)
-            this.selectRectangle.strokeColor = new paper.Color("Black")
-            this.selectRectangle.dashArray = [10, 12];
         }
     }
 
@@ -71,21 +88,32 @@ class ShapeSelector extends BaseShapeDrawer{
         return true
     }
 
+    setTransformHandler(targetObj:BaseShapeJS, pos: Vector2){
+        this.transformHandler = this.defaultTransformHandler
+        this.transformHandler.setTarget(targetObj)
+        this.transformHandler.beginMove(pos)
+    }
+
     onMouseUp(evt: MouseEvent) {
+        if(evt.buttons != 0 )
+            return
+
         super.onMouseUp(evt);
 
         if(this.isDrawing){
-            let endPos = this.getWorldPosFromView(evt.offsetX, evt.offsetY)
+            let endPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
             if(endPos.distance(this.startPos) < this.margin){
-                let screenPos = new paper.Point(evt.offsetX, evt.offsetY)
-
                 // Single click, perform hit test.
-                let hitResult = paper.project.hitTest(screenPos, this.hitOptions)
+                let hitResult = paper.project.hitTest(endPos, this.hitOptions)
                 if(hitResult){
                     let hitItem = hitResult.item;
                     if(this.itemSelectable(hitResult.item)){
-                        hitItem.data.meta.selected = true
-                        hitItem.data.meta.update();
+
+                        let selectedObj = hitItem.data.meta
+                        selectedObj.selected = true
+                        selectedObj.update();
+
+                        this.setTransformHandler(selectedObj, endPos)
 
                         this.selectedShapes.push(hitItem.data.meta)
                     }

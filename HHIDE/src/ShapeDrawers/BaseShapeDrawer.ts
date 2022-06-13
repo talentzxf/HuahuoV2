@@ -32,7 +32,7 @@ class BaseShapeDrawer{
     onMouseDown(evt: MouseEvent){
     }
 
-    getWorldPosFromView(x, y): Vector2{
+    static getWorldPosFromView(x, y): Vector2{
         return renderEngine2D.getWorldPosFromView(x,y)
     }
 

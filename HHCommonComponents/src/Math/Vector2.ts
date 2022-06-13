@@ -11,6 +11,14 @@ class Vector2{
     distance(p:Vector2){
         return Math.sqrt( (this.x - p.x ) ** 2 + (this.y - p.y ) ** 2)
     }
+
+    subtract(p:Vector2){
+        return new Vector2(this.x - p.x, this.y - p.y)
+    }
+
+    add(p:Vector2){
+        return new Vector2(this.x + p.x, this.y + p.y)
+    }
 }
 
 export {Vector2}
