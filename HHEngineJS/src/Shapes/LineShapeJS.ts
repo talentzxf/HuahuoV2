@@ -15,10 +15,6 @@ class LineShapeJS extends BaseShapeJS{
         this.rawObj = castObject(this.rawObj, Module.LineShape);
     }
 
-    awakeFromLoad(){
-        this.update();
-    }
-
     getShapeName(){
         return shapeName
     }
@@ -35,11 +31,16 @@ class LineShapeJS extends BaseShapeJS{
     }
 
     setStartPoint(startPoint: Vector2){
+        this.position = startPoint
         this.rawObj.SetStartPoint(startPoint.x, startPoint.y, 0);
     }
 
     setEndPoint(endPoint: Vector2){
         this.rawObj.SetEndPoint(endPoint.x, endPoint.y, 0);
+
+        let p1 = this.rawObj.GetStartPoint()
+        let p2 = this.rawObj.GetEndPoint()
+        this.position = new Vector2((p1.x + p2.x)/2.0,(p1.y + p2.y)/2.0)
     }
 }
 

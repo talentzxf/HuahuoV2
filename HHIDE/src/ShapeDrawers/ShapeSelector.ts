@@ -5,7 +5,7 @@ import {paper} from "hhenginejs";
 import {shapeTranslateHandler} from "../TransformHandlers/ShapeTranslateHandler";
 import {ShapeTranslateMorphBase} from "../TransformHandlers/ShapeTranslateMorphBase";
 
-class ShapeSelector extends BaseShapeDrawer{
+class ShapeSelector extends BaseShapeDrawer {
     selectRectangle: paper.Path.Rectangle;
     imgClass = "fas fa-arrow-pointer"
     name = "ShapeSelector"
@@ -40,38 +40,66 @@ class ShapeSelector extends BaseShapeDrawer{
         super.onBeginToDrawShape(canvas);
     }
 
-    onMouseDown(evt: MouseEvent) {
-        if(evt.buttons != 1)
-            return
+    hitSomething(scrX, scrY): boolean {
+        let hitPoint = BaseShapeDrawer.getWorldPosFromView(scrX, scrY)
+        // Single click, perform hit test.
+        let hitResult = paper.project.hitTest(hitPoint, this.hitOptions)
+        if (hitResult) {
+            let hitItem = hitResult.item;
+            if (this.itemSelectable(hitResult.item)) {
 
-        // Clear current selections.
-        for(let shape of this.selectedShapes){
+                let selectedObj = hitItem.data.meta
+                selectedObj.selected = true
+                selectedObj.update();
+
+                this.setTransformHandler(selectedObj, hitPoint)
+
+                this.selectedShapes.push(hitItem.data.meta)
+
+                return true
+            }
+        }
+        return false
+    }
+
+    onMouseDown(evt: MouseEvent) {
+        if (evt.buttons != 1)
+            return
+        super.onMouseDown(evt);
+
+        // 1. Clear current selections. TODO: How about multiple selection ???
+        for (let shape of this.selectedShapes) {
             shape.selected = false
             shape.update()
         }
 
         this.selectedShapes = new Array()
 
-        super.onMouseDown(evt);
+        // 2. Hit testing. If anything was hit.
+        if (this.hitSomething(evt.offsetX, evt.offsetY)) {
+            return
+        }
+
+        // 3. Did hit anything, begin to draw select box.
         this.isDrawing = true;
         this.startPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
     }
 
     onMouseMove(evt: MouseEvent) {
-        if(evt.buttons != 1)
+        if (evt.buttons != 1)
             return
 
         super.onMouseMove(evt);
         let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
 
-        if(this.transformHandler && this.transformHandler.getIsDragging()){
+        if (this.transformHandler && this.transformHandler.getIsDragging()) {
             this.transformHandler.dragging(pos)
-        }else{
-            if(this.isDrawing){
+        } else {
+            if (this.isDrawing) {
 
                 let endPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
 
-                if(this.selectRectangle){
+                if (this.selectRectangle) {
                     this.selectRectangle.remove()
                 }
 
@@ -82,48 +110,29 @@ class ShapeSelector extends BaseShapeDrawer{
         }
     }
 
-    itemSelectable(item){
-        if( typeof item.data.meta == "undefined" || false == item.data.meta.isSelectable())
+    itemSelectable(item) {
+        if (typeof item.data.meta == "undefined" || false == item.data.meta.isSelectable())
             return false
         return true
     }
 
-    setTransformHandler(targetObj:BaseShapeJS, pos: Vector2){
+    setTransformHandler(targetObj: BaseShapeJS, pos: Vector2) {
         this.transformHandler = this.defaultTransformHandler
         this.transformHandler.setTarget(targetObj)
         this.transformHandler.beginMove(pos)
     }
 
     onMouseUp(evt: MouseEvent) {
-        if(evt.buttons != 0 )
+        if (evt.buttons != 1)
             return
 
         super.onMouseUp(evt);
 
-        if(this.isDrawing){
-            let endPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
-            if(endPos.distance(this.startPos) < this.margin){
-                // Single click, perform hit test.
-                let hitResult = paper.project.hitTest(endPos, this.hitOptions)
-                if(hitResult){
-                    let hitItem = hitResult.item;
-                    if(this.itemSelectable(hitResult.item)){
-
-                        let selectedObj = hitItem.data.meta
-                        selectedObj.selected = true
-                        selectedObj.update();
-
-                        this.setTransformHandler(selectedObj, endPos)
-
-                        this.selectedShapes.push(hitItem.data.meta)
-                    }
-                }
-            }
-        }
+        this.transformHandler = null;
 
         this.isDrawing = false
 
-        if(this.selectRectangle)
+        if (this.selectRectangle)
             this.selectRectangle.remove()
     }
 }

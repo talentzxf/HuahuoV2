@@ -12,9 +12,7 @@ class BaseShapeJS
 
     protected boundingBoxRect = null;
 
-    protected objPosition: Vector2
-
-    get selected(){
+    get selected():boolean{
         return this.isSelected
     }
 
@@ -22,16 +20,17 @@ class BaseShapeJS
         this.isSelected = val
     }
 
-    get position(){
-        if(!this.objPosition){
-            let pos = this.paperShape.position;
-            this.objPosition = new Vector2(pos.x, pos.y)
-        }
-        return this.objPosition
+    get position():Vector2{
+        let point = this.rawObj.GetPosition()
+        return new Vector2(point.x, point.y)
     }
 
-    set position(val){
-        this.objPosition = val
+    set position(val:Vector2){
+        this.rawObj.SetPosition(val.x, val.y, 0);
+    }
+
+    awakeFromLoad(){
+        this.update();
     }
 
     getShapeName(){
@@ -83,7 +82,9 @@ class BaseShapeJS
 
     afterUpdate()
     {
-        this.paperShape.position = new paper.Point(this.objPosition.x, this.objPosition.y);
+        let pos = this.rawObj.GetPosition();
+
+        this.paperShape.position = new paper.Point(pos.x, pos.y);
 
         if(this.isSelected){
             let boundingBox = this.paperShape.bounds;
@@ -130,7 +131,7 @@ huahuoEngine.ExecuteAfterInited(()=>{
         let shapeConstructor = shapeFactory.GetShapeConstructor(baseShape.GetName())
         let newBaseShape = shapeConstructor(arg.GetBaseShape())
 
-        newBaseShape.update()
+        newBaseShape.awakeFromLoad()
     }
 
     huahuoEngine.GetInstance().RegisterEvent("OnShapeLoaded", baseShapeOnLoadHandler)

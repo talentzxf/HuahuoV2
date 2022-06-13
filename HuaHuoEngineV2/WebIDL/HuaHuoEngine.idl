@@ -40,12 +40,6 @@ interface ObjectStoreManager{
 };
 
 [NoDelete]
-interface BaseShape{
-    static BaseShape CreateShape(DOMString shapeName);
-    DOMString GetName();
-};
-
-[NoDelete]
 interface ShapeLoadedEventArgs{
     BaseShape GetBaseShape();
 };
@@ -57,12 +51,26 @@ interface Vector3f{
     attribute float z;
 };
 
+
+[NoDelete]
+interface BaseShape{
+    static BaseShape CreateShape(DOMString shapeName);
+    DOMString GetName();
+
+    void SetPosition(float x, float y, float z);
+    Vector3f GetPosition();
+};
+
 [NoDelete]
 interface LineShape{
     void SetStartPoint(float x, float y, float z);
     void SetEndPoint(float x, float y, float z);
     Vector3f GetStartPoint();
     Vector3f GetEndPoint();
+
+    // Inherited from BaseShape
+    void SetPosition(float x, float y, float z);
+    Vector3f GetPosition();
 };
 
 [NoDelete]
@@ -71,6 +79,10 @@ interface CircleShape{
     void SetRadius(float radius);
     Vector3f GetCenter();
     float GetRadius();
+
+    // Inherited from BaseShape
+    void SetPosition(float x, float y, float z);
+    Vector3f GetPosition();
 };
 
 interface HuaHuoEngine {

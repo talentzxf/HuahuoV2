@@ -14,10 +14,6 @@ class CircleShapeJS extends BaseShapeJS{
         this.rawObj = castObject(this.rawObj, Module.CircleShape);
     }
 
-    awakeFromLoad(){
-        this.update();
-    }
-
     getShapeName(){
         return shapeName
     }

@@ -4,6 +4,7 @@
 
 #include "BaseShape.h"
 #include "Export/Events/ScriptEventManager.h"
+#include "Serialize/SerializeUtility.h"
 
 IMPLEMENT_REGISTER_CLASS(BaseShape, 10002);
 
@@ -13,6 +14,7 @@ INSTANTIATE_TEMPLATE_TRANSFER(BaseShape);
 template<class TransferFunction>
 void BaseShape::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
+    TRANSFER(m_Position);
 }
 
 void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {

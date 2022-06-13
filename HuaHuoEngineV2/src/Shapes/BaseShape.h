@@ -5,6 +5,7 @@
 #ifndef HUAHUOENGINEV2_BASESHAPE_H
 #define HUAHUOENGINEV2_BASESHAPE_H
 #include "TypeSystem/Object.h"
+#include "Math/Vector3f.h"
 #include "Export/Events/ScriptEventManager.h"
 
 class BaseShape;
@@ -25,6 +26,8 @@ class BaseShape : public Object{
     REGISTER_CLASS_TRAITS(kTypeIsAbstract);
     REGISTER_CLASS(BaseShape);
     DECLARE_OBJECT_SERIALIZE();
+private:
+    Vector3f m_Position;
 public:
     BaseShape(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
@@ -32,6 +35,14 @@ public:
 
     virtual char* GetName(){
         return "Unknown";
+    }
+
+    Vector3f* GetPosition(){
+        return &m_Position;
+    }
+
+    void SetPosition(float x, float y, float z){
+        this->m_Position.Set(x, y, z);
     }
 
     virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
