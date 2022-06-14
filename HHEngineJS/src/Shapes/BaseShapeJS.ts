@@ -1,4 +1,5 @@
 import {huahuoEngine} from "../EngineAPI";
+import {Logger} from "hhcommoncomponents"
 import {Vector2} from "hhcommoncomponents"
 import * as paper from "paper";
 
@@ -29,6 +30,15 @@ class BaseShapeJS
         this.rawObj.SetPosition(val.x, val.y, 0);
     }
 
+    get color():paper.Color{
+        let rawObjColor = this.rawObj.GetColor()
+        return new paper.Color(rawObjColor.r, rawObjColor.g, rawObjColor.b, rawObjColor.a)
+    }
+
+    set color(val:paper.Color){
+        this.rawObj.SetColor(val.red, val.green, val.blue, val.alpha)
+    }
+
     awakeFromLoad(){
         this.update();
     }
@@ -41,10 +51,15 @@ class BaseShapeJS
         if(!rawObj)
         {
             let _this = this
-            huahuoEngine.ExecuteAfterInited(()=>{
-                _this.rawObj = Module.BaseShape.prototype.CreateShape(_this.getShapeName());
 
+            Logger.info("BaseShapeJS: Submitted execute method")
+            huahuoEngine.ExecuteAfterInited(()=>{
+
+                Logger.info("BaseShapeJS: Executing raw obj creation method")
+                _this.rawObj = Module.BaseShape.prototype.CreateShape(_this.getShapeName());
+                Logger.info("BaseShapeJS: Executing afterWASMReady")
                 _this.afterWASMReady();
+                Logger.info("BaseShapeJS: Executed afterWASMReady")
             })
         }else{
             this.rawObj = rawObj

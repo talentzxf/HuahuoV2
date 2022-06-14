@@ -51,6 +51,13 @@ interface Vector3f{
     attribute float z;
 };
 
+[NoDelete]
+interface ColorRGBAf{
+    attribute float r;
+    attribute float g;
+    attribute float b;
+    attribute float a;
+};
 
 [NoDelete]
 interface BaseShape{
@@ -59,6 +66,9 @@ interface BaseShape{
 
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+
+    void SetColor(float r, float g, float b, float a);
+    ColorRGBAf GetColor();
 };
 
 [NoDelete]
@@ -68,9 +78,12 @@ interface LineShape{
     Vector3f GetStartPoint();
     Vector3f GetEndPoint();
 
-    // Inherited from BaseShape
+    // inherited from BaseShape
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+
+    void SetColor(float r, float g, float b, float a);
+    ColorRGBAf GetColor();
 };
 
 [NoDelete]
@@ -80,9 +93,12 @@ interface CircleShape{
     Vector3f GetCenter();
     float GetRadius();
 
-    // Inherited from BaseShape
+    // inherited from BaseShape
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+
+    void SetColor(float r, float g, float b, float a);
+    ColorRGBAf GetColor();
 };
 
 interface HuaHuoEngine {

@@ -6,8 +6,15 @@ import * as paper from "paper"
 
 let renderEngine2D = new RenderEnginePaperJs()
 
-Module.onRuntimeInitialized = ()=>{
+if(Module.IsWASMInited && Module.IsWASMInited()){
+    console.log("Init right now")
     huahuoEngine.OnInit()
+} else {
+    console.log("Init later")
+    Module.onRuntimeInitialized = ()=>{
+        console.log("Init now!")
+        huahuoEngine.OnInit()
+    }
 }
 
 export {renderEngine2D, LineShapeJS, CircleShapeJS, huahuoEngine, paper}

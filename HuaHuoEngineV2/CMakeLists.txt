@@ -134,6 +134,7 @@ if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
     include_directories(PlatformDependent/WebGL/External/baselib/builds/Include)
     list(APPEND CPPFILES Runtime/HuaHuoEngineWrapper.cpp)
     list(APPEND CPPFILES PlatformDependent/WebGL/External/baselib/builds/Source/Baselib_Timer_Emscripten.cpp)
+    list(APPEND CPPFILES src/main.cpp)
 
     add_link_options(--bind)
     add_executable(${TARGETNAME} ${CPPFILES})

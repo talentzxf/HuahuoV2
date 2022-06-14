@@ -6,6 +6,7 @@
 #define HUAHUOENGINEV2_BASESHAPE_H
 #include "TypeSystem/Object.h"
 #include "Math/Vector3f.h"
+#include "Math/Color.h"
 #include "Export/Events/ScriptEventManager.h"
 
 class BaseShape;
@@ -28,6 +29,7 @@ class BaseShape : public Object{
     DECLARE_OBJECT_SERIALIZE();
 private:
     Vector3f m_Position;
+    ColorRGBAf m_Color;
 public:
     BaseShape(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
@@ -43,6 +45,14 @@ public:
 
     void SetPosition(float x, float y, float z){
         this->m_Position.Set(x, y, z);
+    }
+
+    void SetColor(float r, float g, float b, float a){
+        this->m_Color.Set(r, g, b, a);
+    }
+
+    ColorRGBAf* GetColor(){
+        return &this->m_Color;
     }
 
     virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
