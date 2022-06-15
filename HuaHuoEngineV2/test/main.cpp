@@ -125,7 +125,9 @@ void testShapeStore() {
 }
 
 void testTimeManager(){
-    Layer* layer = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer();
+    ObjectStore* objectStore = GetDefaultObjectStoreManager()->GetCurrentStore();
+    objectStore->CreateLayer("TestTest");
+    Layer* layer = objectStore->GetCurrentLayer();
     TimeLineCellManager* timeLineCellManager = layer->GetTimeLineCellManager();
     timeLineCellManager->MergeCells(0, 10);
     Assert( timeLineCellManager->IsSpanHead(0) == true);
@@ -145,6 +147,15 @@ void testTimeManager(){
     Assert( timeLineCellManager->GetSpanHead(1) == 0);
 
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
+    int length = GetFileLength(StoreFilePath);
+    const char* filename = "objectstore_persistent2.data";
+    FILE* fp = fopen(filename, "w+b");
+    fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath),length,1, fp);
+    fclose(fp);
+    std::string filenamestr(filename);
+    GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
+    TimeLineCellManager* pTimelineCellManager = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->GetTimeLineCellManager();
+    Assert(pTimelineCellManager->GetSpanHead(100) == 0);
 }
 
 int main() {
@@ -152,7 +163,7 @@ int main() {
 //    testTransform();
 //    testScene();
 //    testGameObject();
-    testShapeStore();
+//    testShapeStore();
 
     testTimeManager();
     return 0;

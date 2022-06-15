@@ -14,6 +14,8 @@ ObjectStoreManager* GetDefaultObjectStoreManager(){
     if(gDefaultObjectStoreManager == NULL){
         gDefaultObjectStoreManager = Object::Produce<ObjectStoreManager>();
         gDefaultObjectStoreManager->SetIsGlobal(true);
+
+        GetPersistentManager().MakeObjectPersistent(gDefaultObjectStoreManager->GetInstanceID(), StoreFilePath);
     }
 
     return gDefaultObjectStoreManager;
@@ -65,6 +67,8 @@ void ObjectStore::Transfer(TransferFunction &transfer) {
 
     printf("Writing layermap:%d\n", layerMap.size());
     TRANSFER(layerMap);
+
+    TRANSFER(layers);
 
     printf("Writing currentlayer\n");
     TRANSFER(currentLayer);
