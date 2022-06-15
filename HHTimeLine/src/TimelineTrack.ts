@@ -55,7 +55,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
     private pendingFuncs: Array<Function> = new Array();
 
-    constructor(sequenceId: number, frameCount: number, ctx: CanvasRenderingContext2D, yOffset = 0, trackName: string = "NoNameTrack") {
+    constructor(sequenceId: number, frameCount: number, ctx: CanvasRenderingContext2D, yOffset = 0, layer = null, trackName: string = "NoNameTrack") {
         super();
         this.sequenceId = sequenceId;
         this.trackName = trackName;
@@ -71,8 +71,13 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
         let _this = this
         huahuoEngine.ExecuteAfterInited(()=> {
-            let layer = huahuoEngine.GetCurrentStore().CreateLayer(_this.getId())
-            layer.SetName(_this.getName())
+            if(!layer){
+                layer = huahuoEngine.GetCurrentStore().CreateLayer(_this.getId())
+                layer.SetName(_this.getName())
+            } else {
+                _this.trackName = layer.GetName()
+            }
+
             Logger.debug("New layer created, currently there're:" + huahuoEngine.GetCurrentStore().GetLayerCount() + " layers!")
             _this.setLayer(layer)
 
@@ -298,8 +303,8 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 }
 
 class TitleTimelineTrack extends TimelineTrack{
-    constructor(sequenceId: number, frameCount: number, ctx: CanvasRenderingContext2D, yOffset = 0, trackName: string = "NoNameTrack") {
-        super(sequenceId, frameCount, ctx, yOffset, trackName);
+    constructor(sequenceId: number, frameCount: number, ctx: CanvasRenderingContext2D, yOffset = 0, layer = null, trackName: string = "NoNameTrack") {
+        super(sequenceId, frameCount, ctx, yOffset, layer, trackName);
 
         this.unitCellHeight = this.cellFontSize * 1.3
         this.selectable = false

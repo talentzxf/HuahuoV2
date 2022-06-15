@@ -50,6 +50,8 @@ function load(fName, e){
 
         Module.LoadFileCompletely(storeMemoryFile);
 
+        let timeline = document.querySelector("hh-timeline")
+        timeline.reloadTracks();
     }
     reader.readAsArrayBuffer(file)
 }

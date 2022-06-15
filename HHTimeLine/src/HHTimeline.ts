@@ -2,6 +2,7 @@ import {TimelineTrack, TimelineTrackEventNames, TitleTimelineTrack} from "./Time
 import {ContextMenu, CustomElement, Logger} from "hhcommoncomponents";
 import {GlobalConfig} from "./GlobalConfig";
 import {TimelineEventNames} from "./HHTimelineEvents";
+import {huahuoEngine} from "hhenginejs"
 
 @CustomElement({
     "selector": "hh-timeline"
@@ -50,7 +51,7 @@ class HHTimeline extends HTMLElement {
         this.canvasScrollContainer.addEventListener("scroll", this.onScroll.bind(this))
         window.addEventListener("resize", this.Resize.bind(this))
 
-        let titleTimeLineTrack = new TitleTimelineTrack(0, this.frameCount, this.canvas.getContext('2d'), 0, "Frames")
+        let titleTimeLineTrack = new TitleTimelineTrack(0, this.frameCount, this.canvas.getContext('2d'), 0, null,"Frames")
         this.titleTrack = titleTimeLineTrack
         // Add one timelinetrack
         this.timelineTracks.push(titleTimeLineTrack)
@@ -85,10 +86,24 @@ class HHTimeline extends HTMLElement {
         this.redrawCanvas()
     }
 
-    addNewTrack() {
+    reloadTracks(){
+        this.timelineTracks = new Array<TimelineTrack>()
+        this.timelineTracks.push(this.titleTrack)
+        let currentStore = huahuoEngine.GetCurrentStore()
+        let layerCount = currentStore.GetLayerCount()
+        for(let layerId = 0 ; layerId < layerCount; layerId++){
+            let layer = currentStore.GetLayer(layerId)
+
+            this.addNewTrack(layer)
+        }
+
+        this.redrawCanvas()
+    }
+
+    addNewTrack(layer) {
         let seqId = this.timelineTracks.length;
 
-        let track = new TimelineTrack(seqId, this.frameCount, this.canvas.getContext('2d'), this.totalTrackHeight, "Track " + seqId)
+        let track = new TimelineTrack(seqId, this.frameCount, this.canvas.getContext('2d'), this.totalTrackHeight, layer, "Track " + seqId)
         track.setElapsedTime(this.elapsedTime)
         this.timelineTracks.push(track)
         this.totalTrackHeight += track.getCellHeight()

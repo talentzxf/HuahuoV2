@@ -33,6 +33,7 @@ interface Layer{
     void AddShapeInternal(BaseShape newShape);
     long long GetShapeCount();
     void SetName(DOMString name);
+    DOMString GetName();
     TimeLineCellManager GetTimeLineCellManager();
 };
 
@@ -40,7 +41,8 @@ interface Layer{
 interface ObjectStore{
     Layer GetCurrentLayer();
     Layer CreateLayer(DOMString trackId);
-    long long GetLayerCount();
+    unsigned long GetLayerCount();
+    Layer GetLayer(unsigned long id);
 };
 
 [NoDelete]

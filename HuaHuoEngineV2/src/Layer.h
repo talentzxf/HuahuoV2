@@ -36,8 +36,8 @@ public:
         this->name = name;
     }
 
-    virtual const char* GetName() const override{
-        return this->name.c_str();
+    virtual char* GetName() const override{
+        return const_cast<char*>(this->name.c_str());
     }
 
     size_t GetShapeCount(){

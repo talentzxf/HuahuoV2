@@ -26,7 +26,7 @@ class EngineAPI{
     OnInit(){
         if(this.inited)
             return;
-        
+
         Module.HuaHuoEngine.prototype.InitEngine();
         this.cppEngine = Module.HuaHuoEngine.prototype.GetInstance();
         this.inited = true
