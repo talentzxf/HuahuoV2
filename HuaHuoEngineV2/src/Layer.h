@@ -22,6 +22,7 @@ public:
             :Super(label, mode), name("Unknown Layer")
     {
         cellManager = Object::Produce<TimeLineCellManager>();
+        GetPersistentManagerPtr()->MakeObjectPersistent(cellManager.GetInstanceID(), StoreFilePath);
     }
 
     typedef std::vector<PPtr<BaseShape>> ShapePPtrVector;

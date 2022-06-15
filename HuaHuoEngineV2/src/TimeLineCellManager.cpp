@@ -13,6 +13,9 @@ INSTANTIATE_TEMPLATE_TRANSFER(TimeLineCellManager);
 template<class TransferFunction>
 void TimeLineCellManager::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
+
+    printf("Transfering cellspanmap. Size:%d\n", cellSpanMap.size());
     TRANSFER(cellSpanMap);
+    printf("Transfering merged cells. Size:%d\n", mergedCells.size());
     TRANSFER(mergedCells);
 }

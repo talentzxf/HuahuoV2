@@ -18,6 +18,7 @@ void Layer::Transfer(TransferFunction &transfer) {
     printf("Writing shapes:%d\n", shapes.size());
     TRANSFER(shapes);
 
+    printf("Writing cell mananger.\n");
     TRANSFER(cellManager);
 }
 
