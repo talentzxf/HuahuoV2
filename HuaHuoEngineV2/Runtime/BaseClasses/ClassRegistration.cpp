@@ -52,4 +52,5 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<BaseShape>("ObjectStore");
     RegisterHuaHuoClass<LineShape>("ObjectStore");
     RegisterHuaHuoClass<CircleShape>("ObjectStore");
+    RegisterHuaHuoClass<TimeLineCellManager>("ObjectStore");
 }

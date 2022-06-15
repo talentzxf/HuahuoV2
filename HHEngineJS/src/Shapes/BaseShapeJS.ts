@@ -80,19 +80,20 @@ class BaseShapeJS
     }
 
     beforeUpdate(){
-        // Clear shapes
-        if(this.paperShape){
-            this.paperShape.remove()
-        }
-
-        if(this.boundingBoxRect){
+        if(!this.isSelected && this.boundingBoxRect){
             this.boundingBoxRect.remove()
         }
     }
 
+    createShape(){
+        throw "Can't create abstract shape, override this function."
+    }
+
     duringUpdate()
     {
-
+        if(!this.paperShape){
+            this.createShape()
+        }
     }
 
     afterUpdate()
@@ -102,6 +103,9 @@ class BaseShapeJS
         this.paperShape.position = new paper.Point(pos.x, pos.y);
 
         if(this.isSelected){
+            if(this.boundingBoxRect)
+                this.boundingBoxRect.remove()
+
             let boundingBox = this.paperShape.bounds;
             this.boundingBoxRect = new paper.Path.Rectangle(boundingBox)
             this.boundingBoxRect.dashArray = [4, 10]

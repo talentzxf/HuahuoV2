@@ -1,4 +1,13 @@
 [NoDelete]
+interface TimeLineCellManager{
+    unsigned long GetSpanHead(unsigned long cellId);
+    boolean IsSpanHead(unsigned long cellId);
+    long GetCellSpan(unsigned long cellId);
+    void MergeCells(unsigned long startCellId, unsigned long endCellId);
+};
+
+
+[NoDelete]
 interface ScriptEventHandler{
 
 };
@@ -24,6 +33,7 @@ interface Layer{
     void AddShapeInternal(BaseShape newShape);
     long long GetShapeCount();
     void SetName(DOMString name);
+    TimeLineCellManager GetTimeLineCellManager();
 };
 
 [NoDelete]

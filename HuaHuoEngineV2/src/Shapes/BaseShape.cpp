@@ -15,6 +15,7 @@ template<class TransferFunction>
 void BaseShape::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
     TRANSFER(m_Position);
+    TRANSFER(m_Color);
 }
 
 void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {

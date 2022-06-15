@@ -70,28 +70,6 @@ void ObjectStore::Transfer(TransferFunction &transfer) {
     TRANSFER(currentLayer);
 }
 
-
-IMPLEMENT_REGISTER_CLASS(Layer, 10001);
-
-IMPLEMENT_OBJECT_SERIALIZE(Layer);
-INSTANTIATE_TEMPLATE_TRANSFER(Layer);
-
-template<class TransferFunction>
-void Layer::Transfer(TransferFunction &transfer) {
-    Super::Transfer(transfer);
-
-    printf("Transfering layername:%s\n", name.c_str());
-    TRANSFER(name);
-    printf("Writing shapes:%d\n", shapes.size());
-    TRANSFER(shapes);
-}
-
-void Layer::AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode){
-    for( ShapePPtrVector::iterator itr = shapes.begin(); itr != shapes.end(); itr++){
-        (*itr)->AwakeFromLoad(awakeFromLoadMode);
-    }
-}
-
 #if WEB_ENV
 emscripten::val writeObjectStoreInMemoryFile(){
     int writeResult = GetPersistentManager().WriteFile(StoreFilePath);

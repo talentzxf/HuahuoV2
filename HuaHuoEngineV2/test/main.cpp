@@ -124,11 +124,36 @@ void testShapeStore() {
 //    Assert(size != 0);
 }
 
+void testTimeManager(){
+    Layer* layer = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer();
+    TimeLineCellManager* timeLineCellManager = layer->GetTimeLineCellManager();
+    timeLineCellManager->MergeCells(0, 10);
+    Assert( timeLineCellManager->IsSpanHead(0) == true);
+    Assert( timeLineCellManager->IsSpanHead(10) == true);
+    Assert( timeLineCellManager->IsSpanHead(11) == false);
+    Assert( timeLineCellManager->IsSpanHead(20) == false);
+    timeLineCellManager->MergeCells(20, 50);
+    Assert( timeLineCellManager->IsSpanHead(20) == true);
+    Assert( timeLineCellManager->IsSpanHead(30) == true);
+    Assert( timeLineCellManager->IsSpanHead(40) == true);
+    Assert( timeLineCellManager->IsSpanHead(50) == true);
+    Assert( timeLineCellManager->IsSpanHead(51) == false);
+    timeLineCellManager->MergeCells(70, 60);
+    Assert( timeLineCellManager->IsSpanHead(51) == false);
+    timeLineCellManager->MergeCells(0, 100);
+    Assert( timeLineCellManager->GetCellSpan(0) == 101);
+    Assert( timeLineCellManager->GetSpanHead(1) == 0);
+
+    GetPersistentManagerPtr()->WriteFile(StoreFilePath);
+}
+
 int main() {
     HuaHuoEngine::InitEngine();
 //    testTransform();
 //    testScene();
 //    testGameObject();
     testShapeStore();
+
+    testTimeManager();
     return 0;
 }

@@ -24,6 +24,9 @@ class EngineAPI{
     }
 
     OnInit(){
+        if(this.inited)
+            return;
+        
         Module.HuaHuoEngine.prototype.InitEngine();
         this.cppEngine = Module.HuaHuoEngine.prototype.GetInstance();
         this.inited = true
@@ -63,5 +66,10 @@ class EngineAPI{
     }
 }
 
-let huahuoEngine = new EngineAPI()
+let huahuoEngine = window.huahuoEngine
+if(!window.huahuoEngine){
+    huahuoEngine = new EngineAPI()
+    window.huahuoEngine = huahuoEngine
+}
+
 export {huahuoEngine}

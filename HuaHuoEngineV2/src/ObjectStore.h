@@ -14,48 +14,9 @@
 #include <map>
 #include <string>
 #include "Utilities/MemoryFileSystem.h"
+#include "Layer.h"
 
 extern std::string StoreFilePath;
-
-class Layer: public Object{
-    REGISTER_CLASS(Layer);
-    DECLARE_OBJECT_SERIALIZE();
-public:
-    Layer(MemLabelId label, ObjectCreationMode mode)
-        :Super(label, mode), name("Unknown Layer")
-    {
-    }
-
-    typedef std::vector<PPtr<BaseShape>> ShapePPtrVector;
-
-    void AddShapeInternal(BaseShape* newShape){
-        shapes.push_back(newShape);
-
-        GetPersistentManager().MakeObjectPersistent(newShape->GetInstanceID(), StoreFilePath);
-    }
-
-    virtual void SetName(const char* name) override{
-        this->name = name;
-    }
-
-    virtual const char* GetName() const override{
-        return this->name.c_str();
-    }
-
-    size_t GetShapeCount(){
-        return shapes.size();
-    }
-
-    ShapePPtrVector& GetShapes(){
-        return shapes;
-    }
-
-    void AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode);
-
-private:
-    ShapePPtrVector shapes;
-    std::string name;
-};
 
 class ObjectStore : public Object{
     REGISTER_CLASS(ObjectStore);

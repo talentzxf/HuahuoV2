@@ -7,8 +7,8 @@ buildComponent(){
 }
 
 buildComponent HHCommonComponents
+buildComponent HHEngineJS
 buildComponent HHPanel
 buildComponent HHTimeLine
-buildComponent HHEngineJS
 buildComponent HHIDE
 

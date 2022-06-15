@@ -112,6 +112,8 @@ list(APPEND CPPFILES Runtime/File/OpenFileCache.cpp)
 list(APPEND CPPFILES Runtime/File/AsyncReadManagerSimple.cpp)
 list(APPEND CPPFILES Runtime/Serialize/AwakeFromLoadQueue.cpp)
 list(APPEND CPPFILES src/Shapes/CircleShape.cpp)
+list(APPEND CPPFILES src/Layer.cpp)
+list(APPEND CPPFILES src/TimeLineCellManager.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)

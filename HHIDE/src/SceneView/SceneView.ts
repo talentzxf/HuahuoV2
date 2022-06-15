@@ -3,7 +3,6 @@ import {renderEngine2D} from "hhenginejs"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {HHTimeline, TimelineEventNames} from "hhtimeline"
-import {huahuoEngine} from "hhenginejs"
 import {ResizeObserver} from 'resize-observer';
 import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
 
@@ -58,8 +57,6 @@ class SceneView extends HTMLElement {
         this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this))
 
         let timeline: HHTimeline = document.querySelector("hh-timeline")
-        timeline.addEventListener(TimelineEventNames.NEWTRACKADDED, this.onNewTrackAdded.bind(this))
-
         timeline.addNewTrack()
     }
 
@@ -104,14 +101,7 @@ class SceneView extends HTMLElement {
         this.setupEventsAndCreateFirstTrack()
     }
 
-    onNewTrackAdded(trackEvent: CustomEvent) {
-        let track = trackEvent.detail.targetObj
-        huahuoEngine.ExecuteAfterInited(()=> {
-            let layer = huahuoEngine.GetCurrentStore().CreateLayer(track.getId())
-            layer.SetName(track.getName())
-            Logger.debug("New layer created, currently there're:" + huahuoEngine.GetCurrentStore().GetLayerCount() + " layers!")
-        })
-    }
+
 
     onMouseDown(evt: MouseEvent) {
         if (this.currentShapeDrawer) {

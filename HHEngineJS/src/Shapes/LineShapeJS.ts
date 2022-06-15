@@ -19,22 +19,17 @@ class LineShapeJS extends BaseShapeJS{
         return shapeName
     }
 
+    createShape()
+    {
+        let p1 = this.getPaperPoint(this.rawObj.GetStartPoint());
+        let p2 = this.getPaperPoint(this.rawObj.GetEndPoint());
+        this.paperShape = new paper.Path.Line( p1, p2);
+        this.paperShape.strokeColor = this.color
+        this.paperShape.data.meta = this
+    }
+
     duringUpdate() {
         super.duringUpdate()
-
-        let startPaperPoint = this.getPaperPoint(this.rawObj.GetStartPoint());
-        let endPaperPoint = this.getPaperPoint(this.rawObj.GetEndPoint());
-
-        if(this.paperShape == null){
-            this.paperShape = new paper.Path.Line( startPaperPoint, endPaperPoint);
-            this.paperShape.data.meta = this
-            this.paperShape.strokeColor = paper.Color.random()
-            this.color = this.paperShape.strokeColor
-        } else {
-            this.paperShape = new paper.Path.Line( startPaperPoint, endPaperPoint);
-            this.paperShape.data.meta = this
-            this.paperShape.strokeColor = this.color
-        }
     }
 
     setStartPoint(startPoint: Vector2){
@@ -45,9 +40,14 @@ class LineShapeJS extends BaseShapeJS{
     setEndPoint(endPoint: Vector2){
         this.rawObj.SetEndPoint(endPoint.x, endPoint.y, 0);
 
-        let p1 = this.rawObj.GetStartPoint()
-        let p2 = this.rawObj.GetEndPoint()
-        this.position = new Vector2((p1.x + p2.x)/2.0,(p1.y + p2.y)/2.0)
+        if(this.paperShape == null){
+            this.color = paper.Color.random()
+        } else {
+            this.paperShape.remove()
+        }
+
+        this.createShape()
+        this.position = this.paperShape.position
     }
 }
 
