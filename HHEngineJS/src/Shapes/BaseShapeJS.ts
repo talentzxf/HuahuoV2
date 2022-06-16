@@ -13,6 +13,8 @@ class BaseShapeJS
 
     protected boundingBoxRect = null;
 
+    protected paperjs
+
     get selected():boolean{
         return this.isSelected
     }
@@ -32,7 +34,7 @@ class BaseShapeJS
 
     get color():paper.Color{
         let rawObjColor = this.rawObj.GetColor()
-        return new paper.Color(rawObjColor.r, rawObjColor.g, rawObjColor.b, rawObjColor.a)
+        return new this.paperjs.Color(rawObjColor.r, rawObjColor.g, rawObjColor.b, rawObjColor.a)
     }
 
     set color(val:paper.Color){
@@ -48,6 +50,11 @@ class BaseShapeJS
     }
 
     constructor(rawObj?) {
+        if(paper.project)
+            this.paperjs = paper
+        else
+            this.paperjs = window.paper
+
         if(!rawObj)
         {
             let _this = this
@@ -100,16 +107,16 @@ class BaseShapeJS
     {
         let pos = this.rawObj.GetPosition();
 
-        this.paperShape.position = new paper.Point(pos.x, pos.y);
+        this.paperShape.position = new this.paperjs.Point(pos.x, pos.y);
 
         if(this.isSelected){
             if(this.boundingBoxRect)
                 this.boundingBoxRect.remove()
 
             let boundingBox = this.paperShape.bounds;
-            this.boundingBoxRect = new paper.Path.Rectangle(boundingBox)
+            this.boundingBoxRect = new this.paperjs.Path.Rectangle(boundingBox)
             this.boundingBoxRect.dashArray = [4, 10]
-            this.boundingBoxRect.strokeColor = new paper.Color("black")
+            this.boundingBoxRect.strokeColor = new this.paperjs.Color("black")
         }
     }
 
@@ -120,7 +127,7 @@ class BaseShapeJS
     }
 
     getPaperPoint(engineV3Point){
-        return new paper.Point(engineV3Point.x, engineV3Point.y)
+        return new this.paperjs.Point(engineV3Point.x, engineV3Point.y)
     }
 }
 

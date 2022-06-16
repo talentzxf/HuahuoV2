@@ -64,6 +64,7 @@ class HHTimeline extends HTMLElement {
 
         this.canvas.addEventListener('contextmenu', this.contextMenu.onContextMenu.bind(this.contextMenu))
 
+        let _this = this
         this.contextMenu.setItems([
             {
                 itemName: "Merged Cells",
@@ -71,7 +72,9 @@ class HHTimeline extends HTMLElement {
             },
             {
                 itemName: "Create New Track",
-                onclick: this.addNewTrack.bind(this)
+                onclick: function(e){
+                    _this.addNewTrack()
+                }
             }
         ])
         this.setTimeElapsed(0.5 / GlobalConfig.fps)
@@ -91,6 +94,7 @@ class HHTimeline extends HTMLElement {
         this.timelineTracks.push(this.titleTrack)
         let currentStore = huahuoEngine.GetCurrentStore()
         let layerCount = currentStore.GetLayerCount()
+        this.totalTrackHeight = this.titleTrack.getCellHeight()
         for(let layerId = 0 ; layerId < layerCount; layerId++){
             let layer = currentStore.GetLayer(layerId)
 
@@ -100,7 +104,7 @@ class HHTimeline extends HTMLElement {
         this.redrawCanvas()
     }
 
-    addNewTrack(layer) {
+    addNewTrack(layer = null) {
         let seqId = this.timelineTracks.length;
 
         let track = new TimelineTrack(seqId, this.frameCount, this.canvas.getContext('2d'), this.totalTrackHeight, layer, "Track " + seqId)

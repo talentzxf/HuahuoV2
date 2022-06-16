@@ -49,10 +49,10 @@ void ObjectStoreManager::AwakeFromLoad(AwakeFromLoadMode awakeMode){
     if(this->m_IsGlobal){
         SetDefaultObjectStoreManager(this);
 
-        size_t layerCount = GetCurrentStore()->GetLayerCount();
-        for(int i = 0 ; i < layerCount; i++){
-            GetCurrentStore()->GetLayer(i)->AwakeAllShapes(awakeMode);
-        }
+//        size_t layerCount = GetCurrentStore()->GetLayerCount();
+//        for(int i = 0 ; i < layerCount; i++){
+//            GetCurrentStore()->GetLayer(i)->AwakeAllShapes(awakeMode);
+//        }
     }
 }
 

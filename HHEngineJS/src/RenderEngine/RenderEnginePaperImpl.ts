@@ -116,6 +116,8 @@ class RenderEnginePaperJs implements RenderEngine2D{
         this.canvas = canvas
         paper.setup(canvas)
 
+        window.paper = paper
+
         this.clearBackground()
     }
 }

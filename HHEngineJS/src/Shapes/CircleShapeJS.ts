@@ -26,8 +26,8 @@ class CircleShapeJS extends BaseShapeJS{
     createShape(){
         let circleCenter = this.getPaperPoint(this.rawObj.GetCenter());
         let radius = this.rawObj.GetRadius()
-        this.paperShape = new paper.Path.Circle(circleCenter, radius);
-        this.paperShape.strokeColor = new paper.Color("black")
+        this.paperShape = new this.paperjs.Path.Circle(circleCenter, radius);
+        this.paperShape.strokeColor = new this.paperjs.Color("black")
         this.paperShape.fillColor = this.color
         this.paperShape.data.meta = this
     }
@@ -36,7 +36,7 @@ class CircleShapeJS extends BaseShapeJS{
         this.rawObj.SetRadius(radius)
 
         if(this.paperShape == null){
-            this.color = paper.Color.random()
+            this.color = this.paperjs.Color.random()
         } else {
             this.paperShape.remove()
         }
