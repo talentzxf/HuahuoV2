@@ -25,10 +25,10 @@ TransformData Lerp(TransformData &k1, TransformData &k2, float ratio) {
 
 
 bool ShapeTransformFrameState::Apply(int frameId) {
-    std::pair<TransformKeyFrames *, TransformKeyFrames *> resultKeyFrames;
+    std::pair<TransformKeyFrame *, TransformKeyFrame *> resultKeyFrames;
     if (FindKeyFramePair(frameId, this->m_KeyFrames, resultKeyFrames)) {
-        TransformKeyFrames *k1 = resultKeyFrames.first;
-        TransformKeyFrames *k2 = resultKeyFrames.second;
+        TransformKeyFrame *k1 = resultKeyFrames.first;
+        TransformKeyFrame *k2 = resultKeyFrames.second;
 
         float ratio = float(frameId - k1->frameId) / float(k2->frameId - k1->frameId);
 

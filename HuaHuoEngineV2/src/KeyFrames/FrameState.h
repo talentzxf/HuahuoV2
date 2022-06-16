@@ -24,8 +24,9 @@ public:
     virtual bool Apply(int frameId) = 0;
 };
 
+// TODO: Binary search rather than linear search !!!!
 template<class T>
-bool FindKeyFramePair(int frameId, std::vector<T> &keyFrames, std::pair<T *, T *> result) {
+bool FindKeyFramePair(int frameId, std::vector<T> &keyFrames, std::pair<T *, T *>& result) {
     int status = 0;
     int lastFrameId = -1;
     int nextFrameId = -1;
@@ -66,7 +67,7 @@ bool FindKeyFramePair(int frameId, std::vector<T> &keyFrames, std::pair<T *, T *
             itr++;
         }
 
-        if (lastFrameId == -1) {
+        if (nextFrameId == -1) {
             return false;
         }
 

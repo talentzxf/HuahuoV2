@@ -8,16 +8,16 @@
 
 #include "FrameState.h"
 
-class ColorKeyFrames{
+class ColorKeyFrame{
 public:
     int frameId;
     ColorRGBAf color;
-    DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(ColorKeyFrames)
+    DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(ColorKeyFrame)
 };
 
-template<class TransferFunction> void ColorKeyFrames::Transfer(TransferFunction &transfer){
+template<class TransferFunction> void ColorKeyFrame::Transfer(TransferFunction &transfer){
     TRANSFER(frameId);
-    TRANSFER(color)
+    TRANSFER(color);
 }
 
 
@@ -34,7 +34,7 @@ public:
     virtual bool Apply(int frameId) override;
 
 private:
-    std::vector<ColorKeyFrames> m_KeyFrames;
+    std::vector<ColorKeyFrame> m_KeyFrames;
 };
 
 

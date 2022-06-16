@@ -20,14 +20,14 @@ template<class TransferFunction> void TransformData::Transfer(TransferFunction &
 
 TransformData Lerp(TransformData& k1, TransformData& k2, float ratio);
 
-struct TransformKeyFrames{
+struct TransformKeyFrame{
     int frameId;
     TransformData transformData;
 
-    DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(TransformKeyFrames)
+    DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(TransformKeyFrame)
 };
 
-template<class TransferFunction> void TransformKeyFrames::Transfer(TransferFunction &transfer){
+template<class TransferFunction> void TransformKeyFrame::Transfer(TransferFunction &transfer){
     TRANSFER(frameId);
     TRANSFER(transformData);
 }
@@ -52,7 +52,7 @@ public:
     }
 
 private:
-    std::vector<TransformKeyFrames> m_KeyFrames;
+    std::vector<TransformKeyFrame> m_KeyFrames;
 
     bool isValidFrame;
     TransformData m_CurrentTransformData;

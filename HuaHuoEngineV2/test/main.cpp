@@ -8,6 +8,7 @@
 #include "Serialize/SerializationCaching/MemoryCacherReadBlocks.h"
 
 #include <cstdio>
+#include <cassert>
 #include "Export/Scripting/GameObjectExport.h"
 #include "Editor/SceneInspector.h"
 #include "Misc/GameObjectUtility.h"
@@ -18,6 +19,8 @@
 #include "Utilities/PathNameUtility.h"
 #include "Utilities/MemoryFileSystem.h"
 #include "Shapes/CircleShape.h"
+#include "KeyFrames/FrameState.h"
+#include "KeyFrames/ShapeTransformFrameState.h"
 
 void testTransform() {
     GameObject *go = MonoCreateGameObject("Go1");
@@ -158,6 +161,49 @@ void testTimeManager(){
     Assert(pTimelineCellManager->GetSpanHead(100) == 0);
 }
 
+// template<class T>
+//bool FindKeyFramePair(int frameId, std::vector<T> &keyFrames, std::pair<T *, T *> result)
+
+void testKeyFrames(){
+    std::vector<TransformKeyFrame> transformKeyFrames;
+    std::pair<TransformKeyFrame*, TransformKeyFrame*> framePair;
+    bool result = FindKeyFramePair(0, transformKeyFrames, framePair);
+    assert(result == false);
+
+    TransformKeyFrame k1;
+    k1.frameId = 0;
+    k1.transformData.position = Vector3f(0.0, 1.0, 0.0);
+    transformKeyFrames.push_back(k1);
+
+    result = FindKeyFramePair(0, transformKeyFrames, framePair);
+    assert(result == true);
+
+    transformKeyFrames.clear();
+    k1.frameId = 1;
+    k1.transformData.position = Vector3f(0.0, 1.0, 0.0);
+    transformKeyFrames.push_back(k1);
+    result = FindKeyFramePair(0, transformKeyFrames, framePair);
+    assert( result == false);
+
+    TransformKeyFrame k2;
+    k2.frameId = 5;
+    k2.transformData.position = Vector3f(0.0, 5.0, 0.0);
+    transformKeyFrames.push_back(k2);
+    result = FindKeyFramePair(3, transformKeyFrames, framePair);
+    assert( result == true);
+
+    TransformKeyFrame k3;
+    k3.frameId = 10;
+    k3.transformData.position = Vector3f(0.0, 10.0, 0.0);
+    transformKeyFrames.push_back(k3);
+    result = FindKeyFramePair(6, transformKeyFrames, framePair);
+    assert( result == true);
+    assert( framePair.first->frameId == 5 && framePair.second->frameId == 10);
+
+    result = FindKeyFramePair(11, transformKeyFrames, framePair);
+    assert(result == false);
+}
+
 int main() {
     HuaHuoEngine::InitEngine();
 //    testTransform();
@@ -165,6 +211,7 @@ int main() {
 //    testGameObject();
 //    testShapeStore();
 
-    testTimeManager();
+//    testTimeManager();
+    testKeyFrames();
     return 0;
 }
