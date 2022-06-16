@@ -147,7 +147,7 @@ else ()
 #    add_compile_definitions(PLATFORM_WIN=1)
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
 
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp)
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp src/KeyFrames/FrameState.cpp src/KeyFrames/FrameState.h src/KeyFrames/ShapeTransformFrameState.cpp src/KeyFrames/ShapeTransformFrameState.h src/KeyFrames/ShapeColorFrameState.cpp src/KeyFrames/ShapeColorFrameState.h)
 
     target_link_libraries(TestHuaHuoEngine ${ALL_LIBS})
 endif ()
