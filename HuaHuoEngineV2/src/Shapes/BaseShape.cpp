@@ -50,6 +50,8 @@ void BaseShape::SetPosition(float x, float y, float z) {
     Layer *shapeLayer = GetLayer();
 
     int currentFrameId = shapeLayer->GetCurrentFrame();
+
+    printf("Recording shape position:%d, %f, %f, %f\n", currentFrameId, x, y, z);
     mTransformKeyFrames->RecordPosition(currentFrameId, x, y, z);
 }
 

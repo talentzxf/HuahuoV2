@@ -159,6 +159,9 @@ huahuoEngine.ExecuteAfterInited(()=>{
         let newBaseShape = shapeConstructor(arg.GetBaseShape())
 
         newBaseShape.awakeFromLoad()
+
+        let layer = newBaseShape.GetLayer()
+        huahuoEngine.getLayerShapes(layer).push(newBaseShape)
     }
 
     huahuoEngine.GetInstance().RegisterEvent("OnShapeLoaded", baseShapeOnLoadHandler)

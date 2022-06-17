@@ -123,11 +123,22 @@ class HHTimeline extends HTMLElement {
             }
         })
         this.dispatchEvent(customEvent)
+
+        return track
     }
 
     onCellClicked(track, cellId) {
         let elapsedTime = (cellId + 0.5) / GlobalConfig.fps
         this.setTimeElapsed(elapsedTime)
+
+        let customEvent = new CustomEvent(TimelineEventNames.TRACKCELLCLICKED, {
+            detail:{
+                track: track,
+                cellId: cellId
+            }
+        })
+
+        this.dispatchEvent(customEvent)
     }
 
     mergeCells() {

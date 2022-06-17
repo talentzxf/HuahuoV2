@@ -59,11 +59,30 @@ class EngineAPI{
             layer.addShape = (shape)=>{
                 shape.update()
                 layer.AddShapeInternal(shape.getRawShape())
+
+                this.getLayerShapes(layer).push(shape)
                 Logger.debug("Currently there're:" + layer.GetShapeCount() + " shapes in the layer.")
             }
         }
         return layer
     }
+
+    updateLayerShapes(layer){
+        let shapes = this.getLayerShapes(layer)
+        for(let shape of shapes){
+            shape.update()
+        }
+    }
+
+    getLayerShapes(layer){
+        if(!this.layerShapes.has(layer)){
+            this.layerShapes.set(layer, [])
+        }
+
+        return this.layerShapes.get(layer)
+    }
+
+    layerShapes = new Map();
 }
 
 let huahuoEngine = window.huahuoEngine

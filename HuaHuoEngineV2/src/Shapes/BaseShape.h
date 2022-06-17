@@ -65,6 +65,8 @@ public:
     }
 
     virtual void Apply(int frameId){
+
+        printf("Applying frame:%d\n", frameId);
         mTransformKeyFrames->Apply(frameId);
         mColorKeyFrames->Apply(frameId);
     }

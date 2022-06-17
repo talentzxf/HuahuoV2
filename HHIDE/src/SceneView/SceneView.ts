@@ -1,5 +1,5 @@
 import {CustomElement, Logger} from "hhcommoncomponents"
-import {renderEngine2D} from "hhenginejs"
+import {renderEngine2D, huahuoEngine} from "hhenginejs"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {HHTimeline, TimelineEventNames} from "hhtimeline"
@@ -58,6 +58,17 @@ class SceneView extends HTMLElement {
 
         let timeline: HHTimeline = document.querySelector("hh-timeline")
         timeline.addNewTrack()
+
+        timeline.addEventListener(TimelineEventNames.TRACKCELLCLICKED, this.updateAllShapes.bind(this))
+    }
+
+    updateAllShapes(){
+        let store = huahuoEngine.GetCurrentStore()
+        let layerCount = store.GetLayerCount();
+        for(let i = 0 ; i < layerCount; i++){
+            let layer = store.GetLayer(i)
+            huahuoEngine.updateLayerShapes(layer)
+        }
     }
 
     createGizmos() {

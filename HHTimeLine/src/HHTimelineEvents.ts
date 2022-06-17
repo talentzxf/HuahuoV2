@@ -1,5 +1,6 @@
 enum TimelineEventNames{
-    NEWTRACKADDED = "newTrackAdded"
+    NEWTRACKADDED = "newTrackAdded",
+    TRACKCELLCLICKED = "trackCellClicked"
 }
 
 export {TimelineEventNames}

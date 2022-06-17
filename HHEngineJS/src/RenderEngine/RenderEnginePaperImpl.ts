@@ -99,7 +99,7 @@ class RenderEnginePaperJs implements RenderEngine2D{
                 this.bgRect.remove()
             }
 
-            this.bgRect = this.createViewRectangle(0,0, canvasWidth, canvasHeight, paper.Color.random())
+            this.bgRect = this.createViewRectangle(0,0, canvasWidth, canvasHeight, new paper.Color("gray"))
             this.bgRect.sendToBack()
         }
 

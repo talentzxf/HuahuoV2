@@ -33,6 +33,7 @@ interface Layer{
     void AddShapeInternal(BaseShape newShape);
     long long GetShapeCount();
     void SetName(DOMString name);
+    void SetCurrentFrame(long frameId);
     DOMString GetName();
     TimeLineCellManager GetTimeLineCellManager();
 };
@@ -81,6 +82,8 @@ interface BaseShape{
 
     void SetColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
+
+    Layer GetLayer();
 };
 
 [NoDelete]
