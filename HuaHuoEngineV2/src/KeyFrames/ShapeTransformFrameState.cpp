@@ -32,9 +32,11 @@ bool ShapeTransformFrameState::Apply(int frameId) {
         TransformKeyFrame *k1 = resultKeyFrames.first;
         TransformKeyFrame *k2 = resultKeyFrames.second;
 
-        if (k2->frameId == k1->frameId) { // Avoid 0/0 during ratio calculation.
+        if (k2->frameId == k1->frameId || k2 == NULL) { // Avoid 0/0 during ratio calculation. Or beyond the last frame. k1 is the last frame.
             this->m_CurrentTransformData = k1->transformData;
-        } else {
+        }
+        else
+        {
             float ratio = float(frameId - k1->frameId) / float(k2->frameId - k1->frameId);
 
             this->m_CurrentTransformData = Lerp(k1->transformData, k2->transformData, ratio);

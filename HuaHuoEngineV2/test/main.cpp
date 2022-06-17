@@ -163,9 +163,6 @@ void testTimeManager(){
     Assert(pTimelineCellManager->GetSpanHead(100) == 0);
 }
 
-// template<class T>
-//bool FindKeyFramePair(int frameId, std::vector<T> &keyFrames, std::pair<T *, T *> result)
-
 void testKeyFrames(){
     std::vector<TransformKeyFrame> transformKeyFrames;
     std::pair<TransformKeyFrame*, TransformKeyFrame*> framePair;
@@ -185,7 +182,10 @@ void testKeyFrames(){
     k1.transformData.position = Vector3f(0.0, 1.0, 0.0);
     transformKeyFrames.push_back(k1);
     result = FindKeyFramePair(0, transformKeyFrames, framePair);
-    assert( result == false);
+    assert( result == true);
+    assert( framePair.second == NULL);
+    assert( framePair.first->frameId == 1);
+
 
     TransformKeyFrame k2;
     k2.frameId = 5;
@@ -203,7 +203,9 @@ void testKeyFrames(){
     assert( framePair.first->frameId == 5 && framePair.second->frameId == 10);
 
     result = FindKeyFramePair(11, transformKeyFrames, framePair);
-    assert(result == false);
+    assert(result == true);
+    assert(framePair.second == NULL);
+    assert(framePair.first->frameId == 10);
 }
 
 void testRecordKeyFrames(){
@@ -241,7 +243,7 @@ int main() {
 //    testTransform();
 //    testScene();
 //    testGameObject();
-    testShapeStore();
+//    testShapeStore();
 
 //    testTimeManager();
     testKeyFrames();

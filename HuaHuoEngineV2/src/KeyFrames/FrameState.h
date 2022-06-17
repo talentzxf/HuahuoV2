@@ -36,10 +36,8 @@ protected:
 // TODO: Binary search rather than linear search !!!!
 template<class T>
 bool
-FindKeyFramePair(int frameId, std::vector<T> &keyFrames, std::pair<T *, T *> &result, bool ensureSecondIsValid = true) {
+FindKeyFramePair(int frameId, std::vector<T> &keyFrames, std::pair<T *, T *> &result) {
     int status = 0;
-    int lastFrameId = -1;
-    int nextFrameId = -1;
 
     T *t_prev = NULL;
     T *t_next = NULL;
@@ -50,37 +48,18 @@ FindKeyFramePair(int frameId, std::vector<T> &keyFrames, std::pair<T *, T *> &re
         return false;
     }
 
-    // First frame is larger than we want
-    if (keyFrames[0].frameId > frameId) {
-        return false;
-    }
-
-    if (keyFrames.size() == 1) {
-        if (keyFrames[0].frameId != frameId)
-            return false;
-        else {
-            lastFrameId = frameId;
-            nextFrameId = frameId;
-
-            t_prev = &keyFrames[0];
-            t_next = &keyFrames[0];
-        }
+    // First frame is larger than we want, return the first frame.
+    if (keyFrames[0].frameId >= frameId) {
+        t_prev = &keyFrames[0];
+        t_next = NULL;
     } else {
         while (itr != keyFrames.end()) {
             if (itr->frameId >= frameId) {
                 t_next = &(*itr);
-                nextFrameId = itr->frameId;
                 break;
             }
             t_prev = &(*itr);
-            lastFrameId = itr->frameId;
             itr++;
-        }
-
-        if (ensureSecondIsValid) {
-            if (nextFrameId == -1 || itr == keyFrames.end()) {
-                return false;
-            }
         }
     }
 
