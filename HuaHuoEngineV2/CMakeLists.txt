@@ -114,6 +114,9 @@ list(APPEND CPPFILES Runtime/Serialize/AwakeFromLoadQueue.cpp)
 list(APPEND CPPFILES src/Shapes/CircleShape.cpp)
 list(APPEND CPPFILES src/Layer.cpp)
 list(APPEND CPPFILES src/TimeLineCellManager.cpp)
+list(APPEND CPPFILES src/KeyFrames/FrameState.cpp)
+list(APPEND CPPFILES src/KeyFrames/ShapeTransformFrameState.cpp)
+list(APPEND CPPFILES src/KeyFrames/ShapeColorFrameState.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)
@@ -147,7 +150,7 @@ else ()
 #    add_compile_definitions(PLATFORM_WIN=1)
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
 
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp src/KeyFrames/FrameState.cpp src/KeyFrames/FrameState.h src/KeyFrames/ShapeTransformFrameState.cpp src/KeyFrames/ShapeTransformFrameState.h src/KeyFrames/ShapeColorFrameState.cpp src/KeyFrames/ShapeColorFrameState.h)
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp )
 
     target_link_libraries(TestHuaHuoEngine ${ALL_LIBS})
 endif ()

@@ -180,14 +180,6 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
             return;
         }
 
-        if(this.cellManager == null){
-            let _this = this
-            this.pendingFuncs.push(function(){
-                _this.drawCell(cellId)
-            })
-            return;
-        }
-
         // VZ: For merged cells, always draw it's span head. This will cause the cell be redrawn many times during redraw. But might not be a big deal ??
         cellId = this.cellManager.GetSpanHead(cellId)
 
@@ -226,9 +218,6 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.canvasStartPos = canvasStartPos
         this.canvasEndPos = canvasEndPos
 
-        let startCellIdx = this.calculateCellIdx(this.canvasStartPos - this.unitCellWidth) // Leave one cell margin
-        let endCellIdx = this.calculateCellIdx(this.canvasEndPos + this.unitCellWidth)
-
         this.ctx.fillStyle = "black"
         this.ctx.font = this.trackNameSize + 'px serif'
         let textYOffset = this.yOffset + this.trackNameSize + (this.unitCellHeight - this.trackNameSize) * 0.5
@@ -248,6 +237,20 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
                 }
             }
         }
+
+        if(this.cellManager == null){
+            let _this = this
+            this.pendingFuncs.push(function(){
+                _this.drawTrackInternal()
+            })
+        } else {
+            this.drawTrackInternal()
+        }
+    }
+
+    drawTrackInternal(){
+        let startCellIdx = this.calculateCellIdx(this.canvasStartPos - this.unitCellWidth) // Leave one cell margin
+        let endCellIdx = this.calculateCellIdx(this.canvasEndPos + this.unitCellWidth)
 
         let firstCellX = this.calculateCanvasOffsetX(0);
         this.ctx.strokeStyle = "black"
