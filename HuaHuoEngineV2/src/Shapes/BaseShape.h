@@ -8,7 +8,12 @@
 #include "Math/Vector3f.h"
 #include "Math/Color.h"
 #include "Export/Events/ScriptEventManager.h"
+#include "KeyFrames/ShapeTransformFrameState.h"
+#include "BaseClasses/PPtr.h"
+#include "KeyFrames/ShapeColorFrameState.h"
+#include "Serialize/PersistentManager.h"
 
+extern std::string StoreFilePath;
 class BaseShape;
 class ShapeLoadedEventArgs: public ScriptEventHandlerArgs{
 public:
@@ -23,36 +28,50 @@ private:
     BaseShape* m_BaseShape;
 };
 
+class Layer;
 class BaseShape : public Object{
     REGISTER_CLASS_TRAITS(kTypeIsAbstract);
     REGISTER_CLASS(BaseShape);
     DECLARE_OBJECT_SERIALIZE();
 private:
-    Vector3f m_Position;
-    ColorRGBAf m_Color;
+    PPtr<ShapeTransformFrameState> mTransformKeyFrames;
+    PPtr<ShapeColorFrameState> mColorKeyFrames;
+    Layer* mLayer;
+
 public:
     BaseShape(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
-    {}
+    {
+        mTransformKeyFrames = Object::Produce<ShapeTransformFrameState>();
+        mColorKeyFrames = Object::Produce<ShapeColorFrameState>();
+
+        GetPersistentManager().MakeObjectPersistent(mTransformKeyFrames.GetInstanceID(), StoreFilePath);
+        GetPersistentManager().MakeObjectPersistent(mColorKeyFrames->GetInstanceID(), StoreFilePath);
+    }
+
+    void SetLayer(Layer* layer){
+        this->mLayer = layer;
+    }
 
     virtual char* GetName(){
         return "Unknown";
     }
 
     Vector3f* GetPosition(){
-        return &m_Position;
+        return mTransformKeyFrames->GetPosition();
     }
 
-    void SetPosition(float x, float y, float z){
-        this->m_Position.Set(x, y, z);
+    virtual void Apply(int frameId){
+        mTransformKeyFrames->Apply(frameId);
+        mColorKeyFrames->Apply(frameId);
     }
 
-    void SetColor(float r, float g, float b, float a){
-        this->m_Color.Set(r, g, b, a);
-    }
+    void SetPosition(float x, float y, float z);
+
+    void SetColor(float r, float g, float b, float a);
 
     ColorRGBAf* GetColor(){
-        return &this->m_Color;
+        return mColorKeyFrames->GetColor();
     }
 
     virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;

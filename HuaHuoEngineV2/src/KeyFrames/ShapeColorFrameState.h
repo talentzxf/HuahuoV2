@@ -33,7 +33,15 @@ public:
 
     virtual bool Apply(int frameId) override;
 
+    ColorRGBAf* GetColor(){
+        if(isValidFrame)
+            return &m_CurrentColor;
+        return NULL;
+    }
+
+    void RecordColor(int frameId, float r, float g, float b, float a);
 private:
+    ColorRGBAf m_CurrentColor;
     std::vector<ColorKeyFrame> m_KeyFrames;
 };
 

@@ -19,7 +19,7 @@ class Layer: public Object{
     DECLARE_OBJECT_SERIALIZE();
 public:
     Layer(MemLabelId label, ObjectCreationMode mode)
-            :Super(label, mode), name("Unknown Layer")
+            :Super(label, mode), name("Unknown Layer"),currentFrameId(0)
     {
         cellManager = Object::Produce<TimeLineCellManager>();
         GetPersistentManagerPtr()->MakeObjectPersistent(cellManager.GetInstanceID(), StoreFilePath);
@@ -28,6 +28,7 @@ public:
     typedef std::vector<PPtr<BaseShape>> ShapePPtrVector;
 
     void AddShapeInternal(BaseShape* newShape){
+        newShape->SetLayer(this);
         shapes.push_back(newShape);
 
         GetPersistentManager().MakeObjectPersistent(newShape->GetInstanceID(), StoreFilePath);
@@ -39,6 +40,19 @@ public:
 
     virtual char* GetName() const override{
         return const_cast<char*>(this->name.c_str());
+    }
+
+    void SetCurrentFrame(int currentFrameId){
+        if(this->currentFrameId != currentFrameId)
+            return;
+        this->currentFrameId = currentFrameId;
+        for(auto shape : shapes){
+            shape->Apply(this->currentFrameId);
+        }
+    }
+
+    int GetCurrentFrame(){
+        return currentFrameId;
     }
 
     size_t GetShapeCount(){
@@ -56,6 +70,8 @@ public:
     }
 
 private:
+    // Frame Id-- starting from 0.
+    int currentFrameId;
     ShapePPtrVector shapes;
     std::string name;
     PPtr<TimeLineCellManager> cellManager;

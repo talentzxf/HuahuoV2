@@ -204,6 +204,36 @@ void testKeyFrames(){
     assert(result == false);
 }
 
+void testRecordKeyFrames(){
+    std::vector<TransformKeyFrame> transformKeyFrames;
+    TransformKeyFrame* pKeyFrame = InsertOrUpdateKeyFrame(0, transformKeyFrames);
+    pKeyFrame->transformData.position.Set(1.0, 0.0, 0.0f);
+    assert(transformKeyFrames.size() == 1);
+    assert(transformKeyFrames[0].transformData.position == Vector3f(1.0, 0.0, 0.0));
+
+    pKeyFrame = InsertOrUpdateKeyFrame(5, transformKeyFrames);
+    pKeyFrame->transformData.position.Set(5.0, 1.0, 0.0f);
+    assert(transformKeyFrames.size() == 2);
+    assert(transformKeyFrames[1].transformData.position == Vector3f(5.0, 1.0, 0.0));
+
+    pKeyFrame = InsertOrUpdateKeyFrame(3, transformKeyFrames);
+    pKeyFrame->transformData.position.Set(3.0, 1.0, 0.0f);
+    assert(transformKeyFrames.size() == 3);
+    assert(transformKeyFrames[1].transformData.position == Vector3f(3.0, 1.0, 0.0));
+    assert(transformKeyFrames[2].transformData.position == Vector3f(5.0, 1.0, 0.0));
+
+    pKeyFrame = InsertOrUpdateKeyFrame(10, transformKeyFrames);
+    pKeyFrame->transformData.position.Set(10.0, 1.0, 0.0f);
+    assert(transformKeyFrames.size() == 4);
+    assert(transformKeyFrames[3].transformData.position == Vector3f(10.0, 1.0, 0.0));
+
+    pKeyFrame = InsertOrUpdateKeyFrame(5, transformKeyFrames);
+    pKeyFrame->transformData.position.Set(5.0, 2.0, 0.0f);
+    assert(transformKeyFrames.size() == 4);
+    assert(transformKeyFrames[2].frameId == 5);
+    assert(transformKeyFrames[2].transformData.position == Vector3f(5.0, 2.0, 0.0));
+}
+
 int main() {
     HuaHuoEngine::InitEngine();
 //    testTransform();
@@ -213,5 +243,6 @@ int main() {
 
 //    testTimeManager();
     testKeyFrames();
+    testRecordKeyFrames();
     return 0;
 }

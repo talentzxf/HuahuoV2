@@ -287,7 +287,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
             this.selectedCellStart = spanHeadCellId;
             this.selectedCellEnd = spanHeadCellId;
-            
+
             this.emit(TimelineTrackEventNames.CELLCLICKED, this, cellId)
         }
     }

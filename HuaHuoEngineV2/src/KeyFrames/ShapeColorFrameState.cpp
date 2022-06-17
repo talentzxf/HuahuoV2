@@ -21,3 +21,8 @@ void ShapeColorFrameState::Transfer(TransferFunction &transfer) {
 bool ShapeColorFrameState::Apply(int frameId){
     return false;
 }
+
+void ShapeColorFrameState::RecordColor(int frameId, float r, float g, float b, float a) {
+    ColorKeyFrame* pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+    pKeyFrame->color.Set(r, g, b, a);
+}

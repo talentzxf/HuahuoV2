@@ -38,7 +38,6 @@ class ShapeTransformFrameState: public AbstractFrameState{
 public:
     ShapeTransformFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
             :Super(memLabelId, creationMode)
-            ,isValidFrame(false)
     {
 
     }
@@ -51,10 +50,11 @@ public:
         return NULL;
     }
 
+    void RecordPosition(int frameId, float x, float y, float z);
+
 private:
     std::vector<TransformKeyFrame> m_KeyFrames;
 
-    bool isValidFrame;
     TransformData m_CurrentTransformData;
 };
 

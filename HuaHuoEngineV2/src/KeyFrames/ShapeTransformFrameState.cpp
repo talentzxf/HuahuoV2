@@ -39,3 +39,9 @@ bool ShapeTransformFrameState::Apply(int frameId) {
 
     return false;
 }
+
+// TODO: Optimize this one.
+void ShapeTransformFrameState::RecordPosition(int frameId, float x, float y, float z){
+    TransformKeyFrame* pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+    pKeyFrame->transformData.position.Set(x, y, z);
+}
