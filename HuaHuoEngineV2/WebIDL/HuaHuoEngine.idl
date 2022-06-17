@@ -84,6 +84,8 @@ interface BaseShape{
     ColorRGBAf GetColor();
 
     Layer GetLayer();
+
+    boolean IsVisible();
 };
 
 [NoDelete]
@@ -101,6 +103,7 @@ interface LineShape{
     ColorRGBAf GetColor();
 
     Layer GetLayer();
+    boolean IsVisible();
 };
 
 [NoDelete]
@@ -118,6 +121,7 @@ interface CircleShape{
     ColorRGBAf GetColor();
 
     Layer GetLayer();
+    boolean IsVisible();
 };
 
 interface HuaHuoEngine {

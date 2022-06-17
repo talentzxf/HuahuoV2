@@ -13,6 +13,8 @@ class BaseShapeJS
 
     protected boundingBoxRect = null;
 
+    public isPermanent: boolean = false;
+
     get selected():boolean{
         return this.isSelected
     }
@@ -44,6 +46,7 @@ class BaseShapeJS
     }
 
     awakeFromLoad(){
+        this.isPermanent = true
         this.update();
     }
 
@@ -90,6 +93,10 @@ class BaseShapeJS
     }
 
     beforeUpdate(){
+        if(this.isPermanent && !this.rawObj.IsVisible()){
+            this.selected = false
+        }
+
         if(!this.isSelected && this.boundingBoxRect){
             this.boundingBoxRect.remove()
         }
@@ -128,7 +135,13 @@ class BaseShapeJS
     update(){
         this.beforeUpdate()
         this.duringUpdate()
-        this.afterUpdate()
+
+        if(this.isPermanent == true && !this.rawObj.IsVisible()){
+            this.paperShape.visible = false
+        }else{
+            this.paperShape.visible = true
+            this.afterUpdate()
+        }
     }
 
     getPaperPoint(engineV3Point){

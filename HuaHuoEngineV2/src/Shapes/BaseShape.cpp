@@ -17,6 +17,7 @@ INSTANTIATE_TEMPLATE_TRANSFER(BaseShape);
 template<class TransferFunction>
 void BaseShape::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
+    TRANSFER(mBornFrameId);
     TRANSFER(mTransformKeyFrames);
     TRANSFER(mColorKeyFrames);
 }
@@ -25,7 +26,7 @@ void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
 
     int frameId = this->GetLayer()->GetCurrentFrame();
     Apply(frameId);
-    
+
     ShapeLoadedEventArgs args(this);
     GetScriptEventManager()->TriggerEvent("OnShapeLoaded", &args);
 }
@@ -63,4 +64,19 @@ void BaseShape::SetColor(float r, float g, float b, float a) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     mColorKeyFrames->RecordColor(currentFrameId, r, g, b, a);
+}
+
+bool BaseShape::IsVisibleInFrame(SInt32 frameId){
+    if(this->mBornFrameId < 0)
+        return false;
+
+    Layer *shapeLayer = GetLayer();
+    unsigned int bornFrameSpanHead = shapeLayer->GetTimeLineCellManager()->GetSpanHead(mBornFrameId);
+    unsigned int currentFrameSpanHead = shapeLayer->GetTimeLineCellManager()->GetSpanHead(frameId);
+
+    return bornFrameSpanHead == currentFrameSpanHead;
+}
+
+bool BaseShape::IsVisible(){
+    return IsVisibleInFrame(GetLayer()->GetCurrentFrame());
 }

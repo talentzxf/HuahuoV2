@@ -112,7 +112,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.elapsedTime = elapsedTime
 
         if(this.layer){
-            let frameId = Math.ceil(this.elapsedTime * GlobalConfig.fps);
+            let frameId = Math.floor(this.elapsedTime * GlobalConfig.fps);
             this.layer.SetCurrentFrame(frameId)
         }
     }

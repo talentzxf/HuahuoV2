@@ -59,6 +59,7 @@ class EngineAPI{
             layer.addShape = (shape)=>{
                 shape.update()
                 layer.AddShapeInternal(shape.getRawShape())
+                shape.isPermanent = true
 
                 this.getLayerShapes(layer).push(shape)
                 Logger.debug("Currently there're:" + layer.GetShapeCount() + " shapes in the layer.")

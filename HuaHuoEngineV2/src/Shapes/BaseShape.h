@@ -37,11 +37,13 @@ private:
     PPtr<ShapeTransformFrameState> mTransformKeyFrames;
     PPtr<ShapeColorFrameState> mColorKeyFrames;
     Layer* mLayer;
+    SInt32 mBornFrameId;
 
 public:
     BaseShape(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
         ,mLayer(NULL)
+        ,mBornFrameId(-1)
     {
         mTransformKeyFrames = Object::Produce<ShapeTransformFrameState>();
         mColorKeyFrames = Object::Produce<ShapeColorFrameState>();
@@ -49,6 +51,17 @@ public:
         GetPersistentManager().MakeObjectPersistent(mTransformKeyFrames.GetInstanceID(), StoreFilePath);
         GetPersistentManager().MakeObjectPersistent(mColorKeyFrames->GetInstanceID(), StoreFilePath);
     }
+
+    void SetBornFrameId(SInt32 bornFrameId){
+        mBornFrameId = bornFrameId;
+    }
+
+    SInt32 GetBornFrameId(){
+        return mBornFrameId;
+    }
+
+    bool IsVisibleInFrame(SInt32 frameId);
+    bool IsVisible();
 
     void SetLayer(Layer* layer){
         this->mLayer = layer;
