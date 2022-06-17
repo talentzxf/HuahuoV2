@@ -99,6 +99,8 @@ interface LineShape{
 
     void SetColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
+
+    Layer GetLayer();
 };
 
 [NoDelete]
@@ -114,6 +116,8 @@ interface CircleShape{
 
     void SetColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
+
+    Layer GetLayer();
 };
 
 interface HuaHuoEngine {

@@ -24,6 +24,6 @@ void Layer::Transfer(TransferFunction &transfer) {
 
 void Layer::AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode){
     for( ShapePPtrVector::iterator itr = shapes.begin(); itr != shapes.end(); itr++){
-        (*itr)->AwakeFromLoad(awakeFromLoadMode);
+        (*itr)->SetLayer(this);
     }
 }

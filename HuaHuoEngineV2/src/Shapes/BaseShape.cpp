@@ -22,8 +22,11 @@ void BaseShape::Transfer(TransferFunction &transfer) {
 }
 
 void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
-    ShapeLoadedEventArgs args(this);
 
+    int frameId = this->GetLayer()->GetCurrentFrame();
+    Apply(frameId);
+    
+    ShapeLoadedEventArgs args(this);
     GetScriptEventManager()->TriggerEvent("OnShapeLoaded", &args);
 }
 

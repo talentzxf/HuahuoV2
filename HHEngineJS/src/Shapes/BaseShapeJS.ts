@@ -39,6 +39,10 @@ class BaseShapeJS
         this.rawObj.SetColor(val.red, val.green, val.blue, val.alpha)
     }
 
+    getLayer(){
+        return this.rawObj.GetLayer()
+    }
+
     awakeFromLoad(){
         this.update();
     }
@@ -160,7 +164,7 @@ huahuoEngine.ExecuteAfterInited(()=>{
 
         newBaseShape.awakeFromLoad()
 
-        let layer = newBaseShape.GetLayer()
+        let layer = newBaseShape.getLayer()
         huahuoEngine.getLayerShapes(layer).push(newBaseShape)
     }
 
