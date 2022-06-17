@@ -23,7 +23,9 @@ class LineShapeJS extends BaseShapeJS{
     {
         let p1 = this.getPaperPoint(this.rawObj.GetStartPoint());
         let p2 = this.getPaperPoint(this.rawObj.GetEndPoint());
-        this.paperShape = new this.paperjs.Path.Line( p1, p2);
+
+        let paperjs = this.getPaperJs()
+        this.paperShape = new paperjs.Path.Line( p1, p2);
         this.paperShape.strokeColor = this.color
         this.paperShape.data.meta = this
     }
@@ -41,7 +43,7 @@ class LineShapeJS extends BaseShapeJS{
         this.rawObj.SetEndPoint(endPoint.x, endPoint.y, 0);
 
         if(this.paperShape == null){
-            this.color = this.paperjs.Color.random()
+            this.color = paper.Color.random()
         } else {
             this.paperShape.remove()
         }

@@ -6,6 +6,7 @@
 #include "Export/Events/ScriptEventManager.h"
 #include "Serialize/SerializeUtility.h"
 #include "Layer.h"
+#include "ObjectStore.h"
 
 IMPLEMENT_REGISTER_CLASS(BaseShape, 10002);
 
@@ -29,7 +30,6 @@ void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
 BaseShape *BaseShape::CreateShape(const char *shapeName) {
     const HuaHuo::Type *shapeType = HuaHuo::Type::FindTypeByName(shapeName);
     if (shapeType == NULL || !shapeType->IsDerivedFrom<BaseShape>()) {
-        printf("Error, the shape:%s is not derived from baseshape.\n", shapeName);
         return NULL;
     }
 
@@ -37,23 +37,25 @@ BaseShape *BaseShape::CreateShape(const char *shapeName) {
     return baseShape;
 }
 
-void BaseShape::SetPosition(float x, float y, float z) {
-    if (this->mLayer == NULL) {
-        printf("Error, layer has not been set, can't record it's position");
-        return;
+Layer *BaseShape::GetLayer() {
+    if (!this->mLayer) {
+        this->mLayer = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer();
     }
 
-    int currentFrameId = this->mLayer->GetCurrentFrame();
+    return mLayer;
+}
+
+void BaseShape::SetPosition(float x, float y, float z) {
+
+    Layer *shapeLayer = GetLayer();
+
+    int currentFrameId = shapeLayer->GetCurrentFrame();
     mTransformKeyFrames->RecordPosition(currentFrameId, x, y, z);
 }
 
 
 void BaseShape::SetColor(float r, float g, float b, float a) {
-    if (this->mLayer == NULL) {
-        printf("Error, layer has not been set, can't record it's position");
-        return;
-    }
-
-    int currentFrameId = this->mLayer->GetCurrentFrame();
+    Layer *shapeLayer = GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
     mColorKeyFrames->RecordColor(currentFrameId, r, g, b, a);
 }

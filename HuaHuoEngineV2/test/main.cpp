@@ -69,6 +69,8 @@ void testShapeStore() {
     lineShape->SetStartPoint(0, 1, 0);
     lineShape->SetEndPoint(1, 0, 0);
     currentLayer->AddShapeInternal(lineShape);
+    lineShape->SetPosition(100.0, 100.0, 100.0);
+    assert(*lineShape->GetPosition() == Vector3f(100.0, 100.0, 100.0));
 
     CircleShape* circleShape = Object::Produce<CircleShape>();
     circleShape->SetCenter(0,0,0);
@@ -239,7 +241,7 @@ int main() {
 //    testTransform();
 //    testScene();
 //    testGameObject();
-//    testShapeStore();
+    testShapeStore();
 
 //    testTimeManager();
     testKeyFrames();

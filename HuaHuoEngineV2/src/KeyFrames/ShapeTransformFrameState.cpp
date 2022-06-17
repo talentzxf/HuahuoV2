@@ -19,6 +19,7 @@ void ShapeTransformFrameState::Transfer(TransferFunction &transfer) {
 
 TransformData Lerp(TransformData &k1, TransformData &k2, float ratio) {
     TransformData resultData;
+
     resultData.position = Lerp(k1.position, k2.position, ratio);
     return resultData;
 }
@@ -27,12 +28,17 @@ TransformData Lerp(TransformData &k1, TransformData &k2, float ratio) {
 bool ShapeTransformFrameState::Apply(int frameId) {
     std::pair<TransformKeyFrame *, TransformKeyFrame *> resultKeyFrames;
     if (FindKeyFramePair(frameId, this->m_KeyFrames, resultKeyFrames)) {
+        this->isValidFrame = true;
         TransformKeyFrame *k1 = resultKeyFrames.first;
         TransformKeyFrame *k2 = resultKeyFrames.second;
 
-        float ratio = float(frameId - k1->frameId) / float(k2->frameId - k1->frameId);
+        if (k2->frameId == k1->frameId) { // Avoid 0/0 during ratio calculation.
+            this->m_CurrentTransformData = k1->transformData;
+        } else {
+            float ratio = float(frameId - k1->frameId) / float(k2->frameId - k1->frameId);
 
-        this->m_CurrentTransformData = Lerp(k1->transformData, k2->transformData, ratio);
+            this->m_CurrentTransformData = Lerp(k1->transformData, k2->transformData, ratio);
+        }
 
         return true;
     }
@@ -41,7 +47,9 @@ bool ShapeTransformFrameState::Apply(int frameId) {
 }
 
 // TODO: Optimize this one.
-void ShapeTransformFrameState::RecordPosition(int frameId, float x, float y, float z){
-    TransformKeyFrame* pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+void ShapeTransformFrameState::RecordPosition(int frameId, float x, float y, float z) {
+    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
     pKeyFrame->transformData.position.Set(x, y, z);
+
+    Apply(frameId);
 }

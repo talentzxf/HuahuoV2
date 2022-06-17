@@ -41,6 +41,7 @@ private:
 public:
     BaseShape(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
+        ,mLayer(NULL)
     {
         mTransformKeyFrames = Object::Produce<ShapeTransformFrameState>();
         mColorKeyFrames = Object::Produce<ShapeColorFrameState>();
@@ -52,6 +53,8 @@ public:
     void SetLayer(Layer* layer){
         this->mLayer = layer;
     }
+
+    Layer* GetLayer();
 
     virtual char* GetName(){
         return "Unknown";

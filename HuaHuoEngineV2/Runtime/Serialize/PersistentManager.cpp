@@ -678,7 +678,7 @@ void PersistentManager::LoadRemainingPreallocatedObjects(LockFlags lockedFlags)
 
 int PersistentManager::LoadFileCompletelyThreaded(std::string& pathname, LocalIdentifierInFileType* fileIDs, InstanceID* instanceIDs, int size, LoadFlags flags/*, LoadProgress& loadProgress*/, LockFlags lockedFlags)
 {
-printf("%s,%d\n", __FILE__, __LINE__);
+
 //    PROFILER_AUTO(kProfileLoadFileCompletelyThreaded);
 //    AutoLock autoLock(*this, kMutexLock, &lockedFlags);
     bool savedForcePreloadReferencedObjects = m_ForcePreloadReferencedObjects;
@@ -687,17 +687,17 @@ printf("%s,%d\n", __FILE__, __LINE__);
                                                                    m_ForcePreloadReferencedObjects = savedForcePreloadReferencedObjects;
                                                                });
 
-printf("%s,%d\n", __FILE__, __LINE__);
+
     if (HasFlag(flags, kForcePreloadReferencedObjects))
         m_ForcePreloadReferencedObjects = true;
 
-printf("%s,%d\n", __FILE__, __LINE__);
+
     // DebugAssert(!HasPreallocatedObjects());
 
-printf("%s,%d\n", __FILE__, __LINE__);
+
 
 if(this == NULL){
-    printf("%s,%d\n", __FILE__, __LINE__);
+
 }
 
     // Find Stream
@@ -706,32 +706,32 @@ if(this == NULL){
     if (serializedFile == NULL)
         return kFileCouldNotBeRead;
 
-printf("%s,%d\n", __FILE__, __LINE__);
+
     Assert(!(fileIDs != NULL && size == -1));
     Assert(!(instanceIDs != NULL && size == -1));
-printf("%s,%d\n", __FILE__, __LINE__);
+
     // Because we won't be seeking around the file, we can use a larger cache and can also prefetch
     AutoFileCacherReadOverride autoCacherReaderResize(serializedFile);
-printf("%s,%d\n", __FILE__, __LINE__);
+
     // Get all file IDs we want to load and generate instance ids
     std::vector<LocalIdentifierInFileType> fileIDsVector; //(kMemTempAlloc);
     std::vector<InstanceID> instanceIDsVector; //(kMemTempAlloc);
     if (size == -1)
     {
-    printf("%s,%d\n", __FILE__, __LINE__);
+
         GetAllFileIDs(pathname, fileIDsVector);
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         fileIDs = fileIDsVector.begin().base();
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         size = fileIDsVector.size();
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         // loadProgress.AddTotalItemCount(size);
         instanceIDsVector.resize(size, InstanceID_None);
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         instanceIDs = instanceIDsVector.begin().base();
-        printf("%s,%d\n", __FILE__, __LINE__);
+
     }
-printf("%s,%d\n", __FILE__, __LINE__);
+
 
     // In the editor we can not use preallocate ranges since fileID's might be completely arbitrary ranges
     bool loadScene = HasFlag(flags, kSceneLoad);
@@ -764,46 +764,46 @@ printf("%s,%d\n", __FILE__, __LINE__);
     }
     else
     {
-    printf("%s,%d\n", __FILE__, __LINE__);
+
         for (int i = 0; i < size; i++)
         {
-        printf("%s,%d\n", __FILE__, __LINE__);
+
             LocalIdentifierInFileType fileID = fileIDs[i];
             InstanceID heapID = m_Remapper->GetOrGenerateInstanceID(SerializedObjectIdentifier(serializedFileIndex, fileID));
-printf("%s,%d\n", __FILE__, __LINE__);
+
             if (heapID == InstanceID_None)
             {
                 AssertString("Loading an object that was made unpersistent but wasn't destroyed before reloading it");
             }
-            printf("%s,%d\n", __FILE__, __LINE__);
+
             instanceIDs[i] = heapID;
         }
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         // - Figure out which ones are already loaded
         CheckInstanceIDsLoaded(&instanceIDs[0], size, lockedFlags);
-        printf("%s,%d\n", __FILE__, __LINE__);
+
     }
-printf("%s,%d\n", __FILE__, __LINE__);
+
     // Load all objects
     for (int i = 0; i < size && !ShouldAbort(); i++)
     {
-    printf("%s,%d\n", __FILE__, __LINE__);
+
         // loadProgress.BeginProcessItem();
 
         const InstanceID instanceID = instanceIDs[i];
         if (instanceID == InstanceID_None)
             continue;
-printf("%s,%d\n", __FILE__, __LINE__);
+
         SerializedObjectIdentifier identifier(serializedFileIndex, fileIDs[i]);
         Object* object = ReadAndActivateObjectThreaded(instanceID, identifier, serializedFile, !loadScene, false, lockedFlags);
         if (object == NULL)
             continue;
-printf("%s,%d\n", __FILE__, __LINE__);
+
         // loadProgress.DidReadObject(*object);
     }
-printf("%s,%d\n", __FILE__, __LINE__);
+
     LoadRemainingPreallocatedObjects(lockedFlags);
-printf("%s,%d\n", __FILE__, __LINE__);
+
     if (loadScene)
     {
 #if UNITY_EDITOR
@@ -813,7 +813,7 @@ printf("%s,%d\n", __FILE__, __LINE__);
         m_Remapper->ClearPreallocateIDs();
 #endif
     }
-printf("%s,%d\n", __FILE__, __LINE__);
+
     return kNoError;
 }
 
@@ -834,13 +834,13 @@ int PersistentManager::WriteFile(std::string& path, BuildTargetSelection target 
 //    LockFlags lockedFlags = kLockFlagNone;
 //    AutoLock autoLock(*this, kMutexLock, &lockedFlags);
 
-printf("%s,%d\n", __FILE__, __LINE__);
+
     int serializedFileIndex;
 
     serializedFileIndex = InsertPathNameInternal(path, false);
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     if (serializedFileIndex == -1){
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         return kNoError;
     }
 
@@ -857,60 +857,60 @@ printf("%s,%d\n", __FILE__, __LINE__);
 //        return kNoError;
 //    }
 
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     ObjectIDs writeObjects; //(kMemTempAlloc);
     if (options & kDontReadObjectsFromDiskBeforeWriting)
     {
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         GetLoadedInstanceIDsAtPath(path, &writeObjects);
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         Assert(!writeObjects.empty());
     }
     else
     {
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         // Load all writeobjects into memory
         // (dont use LoadFileCompletely, since that reads all objects
         // even those that might have been changed in memory)
         GetInstanceIDsAtPath(path, &writeObjects);
     }
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     WriteDataArray writeData;
-    printf("%s,%d\n", __FILE__, __LINE__);
+
 
     for (const auto instanceID : writeObjects)
     {
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         // Force load object from disk.
         Object* o = dynamic_instanceID_cast<Object*>(instanceID);
-        printf("%s,%d\n", __FILE__, __LINE__);
+
 
         if (o == NULL)
             continue;
 
         Assert(!(o != NULL && !o->IsPersistent()));
-        printf("%s,%d\n", __FILE__, __LINE__);
+
 
         SerializedObjectIdentifier identifier;
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         m_Remapper->InstanceIDToSerializedObjectIdentifier(instanceID, identifier);
-        printf("%s,%d\n", __FILE__, __LINE__);
+
 
         Assert(identifier.serializedFileIndex == serializedFileIndex);
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         DebugAssert(o->IsPersistent());
         DebugAssert(m_Remapper->GetSerializedFileIndex(instanceID) == serializedFileIndex);
         DebugAssert(m_Remapper->IsSerializedObjectIdentifierMappedToAnything(identifier));
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         writeData.push_back(WriteData(identifier.localIdentifierInFile, instanceID/*, BuildUsageTag()*/));
-        printf("%s,%d\n", __FILE__, __LINE__);
+
     }
 
     std::sort(writeData.begin(), writeData.end());
-    printf("%s,%d\n", __FILE__, __LINE__);
+
 
     int result = WriteFile(path, serializedFileIndex, writeData.begin().base(), writeData.size()/*, GlobalBuildData()*/, NULL, target, options, NULL/*, lockedFlags*/);
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     if (result != kNoError && options & kAllowTextSerialization)
         // Try binary serialization as a fallback.
         result = WriteFile(path, serializedFileIndex, writeData.begin().base(), writeData.size()/*, GlobalBuildData()*/, NULL, target, options & ~kAllowTextSerialization, NULL/*, lockedFlags*/);
@@ -984,7 +984,7 @@ LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIn
     LocalIdentifierInFileType localIdentifierInFile = globalIdentifier.localIdentifierInFile;
     int localSerializedFileIndex;
 
-    printf("%s, %d\n", __FILE__, __LINE__);
+
     // Remap globalPathID to localPathID
     int activeNameSpace = GetActiveNameSpace(kWritingNameSpace);
 
@@ -993,12 +993,12 @@ LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIn
     IDRemap& globalToLocalNameSpace = m_GlobalToLocalNameSpace[activeNameSpace];
     IDRemap& localToGlobalNameSpace = m_LocalToGlobalNameSpace[activeNameSpace];
 
-    printf("%s, %d\n", __FILE__, __LINE__);
+
     IDRemap::iterator found = globalToLocalNameSpace.find(globalIdentifier.serializedFileIndex);
-    printf("%s, %d\n", __FILE__, __LINE__);
+
     if (found == globalToLocalNameSpace.end())
     {
-        printf("%s, %d\n", __FILE__, __LINE__);
+
         // SET_ALLOC_OWNER(m_MemoryLabel);
         Assert(activeNameSpace < (int)m_Streams.size());
         Assert(m_Streams[activeNameSpace].stream != NULL);
@@ -1011,35 +1011,35 @@ LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIn
 
         SerializedFile& serialize = *m_Streams[activeNameSpace].stream;
 
-        printf("%s, %d\n", __FILE__, __LINE__);
+
 
         FileIdentifier fileIdentifier = PathIDToFileIdentifierInternal(globalIdentifier.serializedFileIndex);
 
-        printf("%s, %d\n", __FILE__, __LINE__);
+
         serialize.AddExternalRef(fileIdentifier);
 
-        printf("%s, %d\n", __FILE__, __LINE__);
+
 
         // localIdentifierInFile mapping is not zero based. zero is reserved for mapping into the same file.
         localSerializedFileIndex = serialize.GetExternalRefs().size();
 
-        printf("%s, %d\n", __FILE__, __LINE__);
+
 
         globalToLocalNameSpace[globalIdentifier.serializedFileIndex] = localSerializedFileIndex;
-        printf("%s, %d\n", __FILE__, __LINE__);
+
         localToGlobalNameSpace[localSerializedFileIndex] = globalIdentifier.serializedFileIndex;
-        printf("%s, %d\n", __FILE__, __LINE__);
+
     }
     else
         localSerializedFileIndex = found->second;
-    printf("%s, %d\n", __FILE__, __LINE__);
+
 
     // Setup local identifier
     LocalSerializedObjectIdentifier localIdentifier;
-    printf("%s, %d\n", __FILE__, __LINE__);
+
     localIdentifier.localSerializedFileIndex = localSerializedFileIndex;
     localIdentifier.localIdentifierInFile = localIdentifierInFile;
-    printf("%s, %d\n", __FILE__, __LINE__);
+
     return localIdentifier;
 }
 
@@ -1047,7 +1047,7 @@ LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIn
 void PersistentManager::InstanceIDToLocalSerializedObjectIdentifier(InstanceID instanceID, LocalSerializedObjectIdentifier& localIdentifier)
 {
     // PERSISTENT_MANAGER_AUTOLOCK2(autoLock, HuaHuoEngine::kMutexLock, NULL, &gIDRemappingProfiler);
-    printf("%s, %d\n", __FILE__, __LINE__);
+
     if (instanceID == InstanceID_None)
     {
         localIdentifier.localSerializedFileIndex = 0;
@@ -1055,32 +1055,32 @@ void PersistentManager::InstanceIDToLocalSerializedObjectIdentifier(InstanceID i
         return;
     }
 
-    printf("%s, %d\n", __FILE__, __LINE__);
+
     SerializedObjectIdentifier globalIdentifier;
-    printf("%s, %d\n", __FILE__, __LINE__);
+
     if (!m_Remapper->InstanceIDToSerializedObjectIdentifier(instanceID, globalIdentifier))
     {
-        printf("%s, %d\n", __FILE__, __LINE__);
+
         localIdentifier.localSerializedFileIndex = 0;
         localIdentifier.localIdentifierInFile = 0;
         return;
     }
 
-    printf("%s, %d\n", __FILE__, __LINE__);
+
     localIdentifier = GlobalToLocalSerializedFileIndex(globalIdentifier);
-    printf("%s, %d\n", __FILE__, __LINE__);
+
 }
 
 #if HUAHUO_EDITOR
 void PersistentManager::MakeObjectPersistent(InstanceID heapID, std::string pathName)
 {
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     MakeObjectPersistentAtFileID(heapID, 0, pathName);
 }
 
 void PersistentManager::MakeObjectPersistentAtFileID(InstanceID heapID, LocalIdentifierInFileType fileID, std::string pathName)
 {
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     MakeObjectsPersistent(&heapID, &fileID, 1, pathName);
 }
 
@@ -1259,85 +1259,76 @@ void PersistentManager::MakeObjectsPersistent(const InstanceID* heapIDs, LocalId
     CheckedAssert(m_AllowLoadingFromDisk);
     // ASSERT_RUNNING_ON_MAIN_THREAD;
     // AutoLock autoLock(*this);
-    printf("%s,%d\n", __FILE__, __LINE__);
     Assert(!pathName.empty());
-    printf("%s,%d\n", __FILE__, __LINE__);
-    if(this == NULL)
-        printf("%s,%d\n", __FILE__, __LINE__);
     SInt32 globalNameSpace = InsertPathNameInternal(pathName, true);
-    printf("%s,%d\n", __FILE__, __LINE__);
     StreamNameSpace* streamNameSpace = NULL;
-    printf("%s,%d\n", __FILE__, __LINE__);
     for (int i = 0; i < size; i++)
     {
-        printf("%s,%d\n", __FILE__, __LINE__);
         InstanceID heapID = heapIDs[i];
         LocalIdentifierInFileType fileID = fileIDs[i];
-        printf("%s,%d\n", __FILE__, __LINE__);
         Object* o = Object::IDToPointer(heapID);
-        printf("%s,%d\n", __FILE__, __LINE__);
         if ((options & kMakePersistentDontRequireToBeLoadedAndDontUnpersist) == 0)
         {
-            printf("%s,%d\n", __FILE__, __LINE__);
+
             // Making an object that is not in memory persistent
             if (o == NULL)
             {
                 ErrorString("Make Objects Persistent failed because the object can not be loaded");
                 continue;
             }
-            printf("%s,%d\n", __FILE__, __LINE__);
+
             // Make Object unpersistent first
             if (o->IsPersistent())
             {
-                printf("%s,%d\n", __FILE__, __LINE__);
+
                 SerializedObjectIdentifier identifier;
                 InstanceIDToSerializedObjectIdentifier(heapID, identifier);
                 Assert(identifier.serializedFileIndex != -1);
 
-                printf("%s,%d\n", __FILE__, __LINE__);
+
                 // Return if the file and serializedFileIndex is not going to change
                 if (globalNameSpace == identifier.serializedFileIndex)
                 {
                     if (fileID == 0 || identifier.localIdentifierInFile == fileID)
                         continue;
                 }
-                printf("%s,%d\n", __FILE__, __LINE__);
+
                 MakeObjectUnpersistent(heapID, kDestroyFromFile);
             }
         }
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         if (streamNameSpace == NULL)
             streamNameSpace = &GetStreamNameSpaceInternal(globalNameSpace);
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         // Allocate an fileID for this object in the File
         if (fileID == 0)
         {
-            printf("%s,%d\n", __FILE__, __LINE__);
+
             fileID = streamNameSpace->highestID;
             if (streamNameSpace->stream)
                 fileID = std::max(streamNameSpace->highestID, streamNameSpace->stream->GetHighestID());
             fileID++;
         }
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         streamNameSpace->highestID = std::max(streamNameSpace->highestID, fileID);
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         SerializedObjectIdentifier identifier;
         identifier.serializedFileIndex = globalNameSpace;
         identifier.localIdentifierInFile = fileID;
         m_Remapper->SetupRemapping(heapID, identifier);
         fileIDs[i] = fileID;
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         if (o)
         {
-            printf("%s,%d\n", __FILE__, __LINE__);
+
             // Assert(!(o->TestHideFlag(Object::kDontSaveInEditor) && (options & kAllowDontSaveObjectsToBePersistent) == 0));
             o->SetIsPersistent(true);
-            printf("%s,%d\n", __FILE__, __LINE__);
+
             o->SetFileIDHint(fileID);
             o->SetDirty();
         }
     }
-    printf("%s,%d\n", __FILE__, __LINE__);
+
 }
 
 static const char* kSerializedFileArea = "SerializedFile";
@@ -1462,7 +1453,7 @@ PersistentManager* PersistentManager::GetPersistentManager() {
 
 int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, const WriteData* writeData, int size, /*const GlobalBuildData& globalBuildData,*/ VerifyWriteObjectCallback* verifyCallback, BuildTargetSelection target, TransferInstructionFlags options, const InstanceIDResolver* instanceIDResolver, LockFlags lockedFlags, ReportWriteObjectCallback* reportCallback, void* reportCallbackUserData)
 {
-    printf("%s,%d\n", __FILE__, __LINE__);
+    
     WriteInformation writeInfo;
     return WriteFile(path, serializedFileIndex, writeData, size, /*globalBuildData,*/ verifyCallback, target, options, writeInfo, instanceIDResolver, lockedFlags, reportCallback, reportCallbackUserData);
 }
@@ -1502,25 +1493,25 @@ int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, con
 
 //    AutoLock autoLock(*this, kMutexLock, &lockedFlags);
     //printf_console("Writing file %s\n", pathName.c_str());
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     AutoResetInstanceIDResolver autoResetIDResolver;
     if (instanceIDResolver)
         autoResetIDResolver.Set(*instanceIDResolver);
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     // Create writing tools
     CachedWriter writer;
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     FileCacherWrite serializedFileWriter;
     // FileCacherWrite resourceImageWriters[kNbResourceImages];
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     bool isTempFileOnMemoryFileSystem = options & kTempFileOnMemoryFileSystem;
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     // ScopedMemoryMount scopedMemoryMount(isTempFileOnMemoryFileSystem);
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     if (!InitTempWriteFile(serializedFileWriter, path, kCacheSize, isTempFileOnMemoryFileSystem))
         return kFileCouldNotBeWritten;
     writer.InitWrite(serializedFileWriter);
-    printf("%s,%d\n", __FILE__, __LINE__);
+
 //    if (options & kBuildResourceImage)
 //    {
 //        for (int i = 0; i < kNbResourceImages; i++)
@@ -1540,11 +1531,11 @@ int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, con
     // Cleanup old stream and mapping
     // We are about to write the file so it is safe to tell the function to cleanup the list of destroyed objects
     CleanupStreamAndNameSpaceMapping(serializedFileIndex, true);
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     // Setup global to self namespace mapping
     m_GlobalToLocalNameSpace[serializedFileIndex][serializedFileIndex] = 0;
     m_LocalToGlobalNameSpace[serializedFileIndex][0] = serializedFileIndex;
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     // Create writable stream
     SerializedFile* tempSerialize = HUAHUO_NEW_AS_ROOT(SerializedFile, kMemSerialization, kSerializedFileArea, "") ();
 #if UNITY_EDITOR
@@ -1553,20 +1544,20 @@ int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, con
     GetMemoryProfiler()->SetRootAllocationObjectName(tempSerialize, kMemSerialization, tempSerialize->GetDebugPath().c_str());
 #endif
 #endif
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     tempSerialize->InitializeWrite(writer/*, target*/, options);
     m_Streams[serializedFileIndex].stream = tempSerialize;
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     // Generate all uniqueScriptTypeReferences
     // This way we can produce monobehaviours and their C# class without reading the actual data.
     // (See PreallocatObjectThreaded)
     SetActiveNameSpace(serializedFileIndex, kWritingNameSpace);
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     std::vector<LocalSerializedObjectIdentifier> scriptTypeReferences;
     LocalSerializedObjectIdentifier scriptLocalIdentifier;
     for (int i = 0; i < size; i++)
     {
-        printf("%s,%d\n", __FILE__, __LINE__);
+
         Object* o = writeData[i].objectPtr;
         if (o == NULL)
             o = Object::IDToPointer(writeData[i].instanceID);
@@ -1577,11 +1568,11 @@ int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, con
     }
 //    vector_set<LocalSerializedObjectIdentifier> uniqueScriptTypeReferences;
 //    uniqueScriptTypeReferences.assign_clear_duplicates(scriptTypeReferences.begin(), scriptTypeReferences.end());
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     bool reportObjectNames = false;
     if (reportCallback)
         reportObjectNames = reportCallback(PersistentManager::ReportWriteObjectStep_CheckReportability, 0, "", 0, reportCallbackUserData);
-    printf("%s,%d\n", __FILE__, __LINE__);
+
     bool writeSuccess = true;
     writeInfo.locations.resize(size);
     // Write Objects in fileID order

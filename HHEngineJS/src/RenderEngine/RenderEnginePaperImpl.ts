@@ -112,6 +112,8 @@ class RenderEnginePaperJs implements RenderEngine2D{
     }
 
     public init(canvas: HTMLCanvasElement, isPlayer: boolean = false){
+        console.log("Initing paper!!!!")
+
         this.isPlayer = isPlayer
         this.canvas = canvas
         paper.setup(canvas)
