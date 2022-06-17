@@ -282,12 +282,12 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         let absoluteX = this.canvasStartPos + relativeX;
         let cellId = this.calculateCellIdx(absoluteX);
 
-        cellId = this.cellManager.GetSpanHead(cellId)
-
         if(this.isValidCellId(cellId)){
-            this.selectedCellStart = cellId
-            this.selectedCellEnd = cellId;
+            let spanHeadCellId = this.cellManager.GetSpanHead(cellId)
 
+            this.selectedCellStart = spanHeadCellId;
+            this.selectedCellEnd = spanHeadCellId;
+            
             this.emit(TimelineTrackEventNames.CELLCLICKED, this, cellId)
         }
     }
