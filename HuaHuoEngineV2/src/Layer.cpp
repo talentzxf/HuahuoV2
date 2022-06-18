@@ -12,14 +12,10 @@ INSTANTIATE_TEMPLATE_TRANSFER(Layer);
 template<class TransferFunction>
 void Layer::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-
-    printf("Transfering layername:%s\n", name.c_str());
     TRANSFER(name);
-    printf("Writing shapes:%d\n", shapes.size());
     TRANSFER(shapes);
-
-    printf("Writing cell mananger.\n");
     TRANSFER(cellManager);
+    TRANSFER(keyFrames);
 }
 
 void Layer::AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode){

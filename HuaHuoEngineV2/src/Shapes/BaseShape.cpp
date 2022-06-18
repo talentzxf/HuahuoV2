@@ -57,13 +57,16 @@ void BaseShape::SetPosition(float x, float y, float z) {
 
     printf("Recording shape position:%d, %f, %f, %f\n", currentFrameId, x, y, z);
     mTransformKeyFrames->RecordPosition(currentFrameId, x, y, z);
-}
 
+    shapeLayer->AddKeyFrame(currentFrameId);
+}
 
 void BaseShape::SetColor(float r, float g, float b, float a) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     mColorKeyFrames->RecordColor(currentFrameId, r, g, b, a);
+
+    shapeLayer->AddKeyFrame(currentFrameId);
 }
 
 bool BaseShape::IsVisibleInFrame(SInt32 frameId){

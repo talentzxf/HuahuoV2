@@ -14,6 +14,25 @@
 
 extern std::string StoreFilePath;
 
+class KeyFrameAddedEventHandlerArgs: public ScriptEventHandlerArgs{
+public:
+    KeyFrameAddedEventHandlerArgs(Layer* layer, int frameId){
+        this->layer = layer;
+        this->frameId = frameId;
+    }
+
+    Layer* GetLayer(){
+        return this->layer;
+    }
+
+    int GetFrameId(){
+        return this->frameId;
+    }
+private:
+    Layer* layer;
+    int frameId;
+};
+
 class Layer: public Object{
     REGISTER_CLASS(Layer);
     DECLARE_OBJECT_SERIALIZE();
@@ -72,12 +91,27 @@ public:
         return cellManager;
     }
 
+    void AddKeyFrame(int frameId){
+        keyFrames.insert(frameId);
+
+        KeyFrameAddedEventHandlerArgs args(this, frameId);
+        GetScriptEventManager()->TriggerEvent("OnKeyFrameAdded", &args);
+    }
+
+    bool IsKeyFrame(int frameId){
+        if(keyFrames.contains(frameId))
+            return true;
+
+        return false;
+    }
+
 private:
     // Frame Id-- starting from 0.
     int currentFrameId;
     ShapePPtrVector shapes;
     std::string name;
     PPtr<TimeLineCellManager> cellManager;
+    std::set<int> keyFrames;
 };
 
 #endif //HUAHUOENGINEV2_LAYER_H

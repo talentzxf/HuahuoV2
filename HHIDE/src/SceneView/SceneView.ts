@@ -2,9 +2,10 @@ import {CustomElement, Logger} from "hhcommoncomponents"
 import {renderEngine2D, huahuoEngine} from "hhenginejs"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
-import {HHTimeline, TimelineEventNames} from "hhtimeline"
+import {HHTimeline} from "hhtimeline"
 import {ResizeObserver} from 'resize-observer';
 import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
+import {EditorPlayer} from "./EditorPlayer";
 
 @CustomElement({
     selector: "hh-sceneview"
@@ -19,6 +20,7 @@ class SceneView extends HTMLElement {
     gizmoContainer: HTMLDivElement = null;
     zoomInBtn: HTMLButtonElement = null;
     zoomOutBtn: HTMLButtonElement = null;
+    editorPlayer: EditorPlayer = null;
 
     createCanvasContainer() {
         this.canvasContainer = document.createElement("div")
@@ -58,17 +60,6 @@ class SceneView extends HTMLElement {
 
         let timeline: HHTimeline = document.querySelector("hh-timeline")
         timeline.addNewTrack()
-
-        timeline.addEventListener(TimelineEventNames.TRACKCELLCLICKED, this.updateAllShapes.bind(this))
-    }
-
-    updateAllShapes(){
-        let store = huahuoEngine.GetCurrentStore()
-        let layerCount = store.GetLayerCount();
-        for(let i = 0 ; i < layerCount; i++){
-            let layer = store.GetLayer(i)
-            huahuoEngine.updateLayerShapes(layer)
-        }
     }
 
     createGizmos() {
@@ -110,6 +101,8 @@ class SceneView extends HTMLElement {
 
         this.createGizmos();
         this.setupEventsAndCreateFirstTrack()
+
+        this.editorPlayer = new EditorPlayer()
     }
 
 

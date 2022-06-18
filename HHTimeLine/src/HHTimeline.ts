@@ -29,6 +29,7 @@ class HHTimeline extends HTMLElement {
 
     private titleTrack: TitleTimelineTrack;
     private totalTrackHeight: number;
+    private layerTrackMap: Map<object, TimelineTrack> = new Map();
 
     public elapsedTime: number = 0.0
 
@@ -239,6 +240,23 @@ class HHTimeline extends HTMLElement {
         this.canvasEndPos = this.canvasStartPos + this.canvasWidth;
 
         this.canvas.style.left = this.canvasScrollContainer.scrollLeft + "px";
+    }
+
+    getTrackFromLayer(layer):TimelineTrack{
+        if(!this.layerTrackMap.has(layer)){
+            for(let track of this.timelineTracks){
+                this.layerTrackMap.set( track.getLayer(), track);
+            }
+        }
+
+        return this.layerTrackMap.get(layer)
+    }
+
+    redrawCell(layer, frameId){
+        let track:TimelineTrack = this.getTrackFromLayer(layer)
+        track.selectCell(frameId)
+        track.drawCell(frameId)
+        track.drawTimelineIndicator()
     }
 
     redrawCanvas() {
