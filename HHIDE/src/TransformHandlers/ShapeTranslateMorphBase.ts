@@ -1,7 +1,7 @@
 import {BaseShapeJS, Vector2} from "hhenginejs"
 
 class ShapeTranslateMorphBase{
-    protected curObjs: Array<BaseShapeJS> = null
+    protected curObjs: Set<BaseShapeJS> = null
     protected startPos: Vector2 = null
     protected lastPos: Vector2 = null
     protected isDragging: boolean = false
@@ -10,7 +10,7 @@ class ShapeTranslateMorphBase{
         return this.isDragging
     }
 
-    setTarget(objs:Array<BaseShapeJS>){
+    setTarget(objs:Set<BaseShapeJS>){
         this.curObjs = objs
     }
 

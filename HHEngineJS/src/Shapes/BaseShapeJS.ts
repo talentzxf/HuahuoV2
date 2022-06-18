@@ -92,6 +92,10 @@ class BaseShapeJS
         return this.rawObj
     }
 
+    isVisible(){
+        return this.rawObj.IsVisible();
+    }
+
     beforeUpdate(){
         if(this.isPermanent && !this.rawObj.IsVisible()){
             this.selected = false

@@ -23,7 +23,6 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
 
                 obj.position = proposedNewPosition
                 obj.update()
-                super.dragging(newPos)
             }
         }
     }

@@ -14,7 +14,7 @@ class ShapeSelector extends BaseShapeDrawer {
     margin: number = 5;
     hitOptions = {}
 
-    selectedShapes: Array<BaseShapeJS> = new Array()
+    selectedShapes: Set<BaseShapeJS> = new Set()
 
 
     transformHandler: ShapeTranslateMorphBase = null
@@ -47,22 +47,31 @@ class ShapeSelector extends BaseShapeDrawer {
         if (hitResult) {
             let hitItem = hitResult.item;
             if (this.itemSelectable(hitResult.item)) {
+                if(!hitItem.data.meta.selected){
+                    if (clearSelection) {
+                        this.clearSelection()
+                    }
 
-                if(clearSelection){
-                    this.clearSelection()
+                    this.selectObject(hitItem.data.meta, hitPoint)
+                }else{
+                    if(this.transformHandler){
+                        this.transformHandler.beginMove(hitPoint)
+                    }
                 }
-
-                let selectedObj = hitItem.data.meta
-                selectedObj.selected = true
-                selectedObj.update();
-                this.selectedShapes.push(hitItem.data.meta)
-
-                this.setTransformHandler(this.selectedShapes, hitPoint)
 
                 return true
             }
         }
         return false
+    }
+
+    selectObject(shape: BaseShapeJS, hitPoint: Vector2) {
+        let selectedObj = shape
+        selectedObj.selected = true
+        selectedObj.update();
+        this.selectedShapes.add(shape)
+
+        this.setTransformHandler(this.selectedShapes, hitPoint)
     }
 
     clearSelection() {
@@ -71,7 +80,7 @@ class ShapeSelector extends BaseShapeDrawer {
             shape.selected = false
             shape.update()
         }
-        this.selectedShapes = new Array()
+        this.selectedShapes = new Set()
         this.transformHandler = null
     }
 
@@ -80,11 +89,11 @@ class ShapeSelector extends BaseShapeDrawer {
             return
         super.onMouseDown(evt);
 
-        // 2. Hit testing.
+        // 1. Hit testing.
         if (!this.hitSomething(evt.offsetX, evt.offsetY, !evt.ctrlKey)) { // Ctrl key was pressed and hit something else.
             this.clearSelection()
 
-            // 3. Didn't hit anything, begin to draw select box.
+            // 2. Didn't hit anything, begin to draw select box.
             this.isDrawing = true;
             this.startPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         }
@@ -121,7 +130,7 @@ class ShapeSelector extends BaseShapeDrawer {
         return true
     }
 
-    setTransformHandler(targetObjs: Array<BaseShapeJS>, pos: Vector2) {
+    setTransformHandler(targetObjs: Set<BaseShapeJS>, pos: Vector2) {
         this.transformHandler = this.defaultTransformHandler
         this.transformHandler.setTarget(targetObjs)
         this.transformHandler.beginMove(pos)
@@ -130,12 +139,29 @@ class ShapeSelector extends BaseShapeDrawer {
     onMouseUp(evt: MouseEvent) {
         super.onMouseUp(evt);
 
-        this.transformHandler = null;
+        if (this.selectedShapes.size == 0)
+            this.transformHandler = null;
 
         this.isDrawing = false
 
-        if (this.selectRectangle)
+        if (this.selectRectangle) {
+            let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+            // Test against all shapes.
+            // TODO: any faster algorithm?  AABB? Oct-Tree?
+            for (let layer of paper.project.layers) {
+                for (let shape of layer.children) {
+                    if (shape.data && shape.data.meta && shape.data.meta.isVisible()) {
+                        let shapeBoundingBox = shape.getBounds()
+                        let selectionRectBoundingBox = this.selectRectangle.getBounds()
+                        if (shapeBoundingBox.intersects(selectionRectBoundingBox)) {
+                            this.selectObject(shape.data.meta, pos)
+                        }
+                    }
+                }
+            }
             this.selectRectangle.remove()
+            this.selectRectangle = null
+        }
     }
 }
 
