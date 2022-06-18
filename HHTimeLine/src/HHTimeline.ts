@@ -8,7 +8,7 @@ import {huahuoEngine} from "hhenginejs"
     "selector": "hh-timeline"
 })
 class HHTimeline extends HTMLElement {
-    private frameCount: number = 100
+    private frameCount: number = 1000
     private canvasScrollContainer: HTMLDivElement = null // This will show the scrollbar.
     private canvasContainer: HTMLDivElement = null; // This will contain the canvas
 
@@ -82,9 +82,11 @@ class HHTimeline extends HTMLElement {
     }
 
     setTimeElapsed(timeElapsed) {
-        this.elapsedTime = timeElapsed
+        let totalTime = this.frameCount / GlobalConfig.fps
+
+        this.elapsedTime = timeElapsed % totalTime
         for (let tracks of this.timelineTracks) {
-            tracks.setElapsedTime(timeElapsed)
+            tracks.setElapsedTime(this.elapsedTime)
         }
 
         this.redrawCanvas()
