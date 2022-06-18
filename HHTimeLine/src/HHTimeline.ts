@@ -8,7 +8,7 @@ import {huahuoEngine} from "hhenginejs"
     "selector": "hh-timeline"
 })
 class HHTimeline extends HTMLElement {
-    private frameCount: number = 1000000
+    private frameCount: number = 100
     private canvasScrollContainer: HTMLDivElement = null // This will show the scrollbar.
     private canvasContainer: HTMLDivElement = null; // This will contain the canvas
 

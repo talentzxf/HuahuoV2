@@ -73,6 +73,9 @@ bool BaseShape::IsVisibleInFrame(SInt32 frameId){
     if(this->mBornFrameId < 0)
         return false;
 
+    if(frameId < this->mBornFrameId)
+        return false;
+
     Layer *shapeLayer = GetLayer();
     unsigned int bornFrameSpanHead = shapeLayer->GetTimeLineCellManager()->GetSpanHead(mBornFrameId);
     unsigned int currentFrameSpanHead = shapeLayer->GetTimeLineCellManager()->GetSpanHead(frameId);

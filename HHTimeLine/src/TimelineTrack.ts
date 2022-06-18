@@ -185,14 +185,14 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         return relativeOffsetX;
     }
 
-    drawCell(cellId: number) {
+    drawCell(cellId: number, forceDraw: boolean = false) {
         if (!this.isValidCellId(cellId)) { // Invalid cell or the layer is still initing.
             return;
         }
 
         let inputCellId = cellId;
 
-        if(this.cellManager.IsSpanHead(cellId)){
+        if(forceDraw || this.cellManager.IsSpanHead(cellId)){
             cellId = this.cellManager.GetSpanHead(cellId)
 
             let spanCellCount = this.cellManager.GetCellSpan(cellId);
@@ -283,7 +283,11 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.ctx.strokeRect(0, this.yOffset, firstCellX, this.getCellHeight())
 
         for (let cellIdx = startCellIdx; cellIdx <= endCellIdx; cellIdx++) {
-            this.drawCell(cellIdx);
+            if(cellIdx == startCellIdx){
+                this.drawCell(cellIdx, true);
+            }else{
+                this.drawCell(cellIdx, false);
+            }
         }
 
         this.drawTimelineIndicator()
