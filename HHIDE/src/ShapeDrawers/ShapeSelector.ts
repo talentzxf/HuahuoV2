@@ -40,7 +40,7 @@ class ShapeSelector extends BaseShapeDrawer {
         super.onBeginToDrawShape(canvas);
     }
 
-    hitSomething(scrX, scrY): boolean {
+    hitSomething(scrX, scrY, clearSelection: boolean = false): boolean {
         let hitPoint = BaseShapeDrawer.getWorldPosFromView(scrX, scrY)
         // Single click, perform hit test.
         let hitResult = paper.project.hitTest(hitPoint, this.hitOptions)
@@ -48,13 +48,16 @@ class ShapeSelector extends BaseShapeDrawer {
             let hitItem = hitResult.item;
             if (this.itemSelectable(hitResult.item)) {
 
+                if(clearSelection){
+                    this.clearSelection()
+                }
+
                 let selectedObj = hitItem.data.meta
                 selectedObj.selected = true
                 selectedObj.update();
-
-                this.setTransformHandler(selectedObj, hitPoint)
-
                 this.selectedShapes.push(hitItem.data.meta)
+
+                this.setTransformHandler(this.selectedShapes, hitPoint)
 
                 return true
             }
@@ -62,11 +65,7 @@ class ShapeSelector extends BaseShapeDrawer {
         return false
     }
 
-    onMouseDown(evt: MouseEvent) {
-        if (evt.buttons != 1)
-            return
-        super.onMouseDown(evt);
-
+    clearSelection() {
         // 1. Clear current selections. TODO: How about multiple selection ???
         for (let shape of this.selectedShapes) {
             shape.selected = false
@@ -74,15 +73,21 @@ class ShapeSelector extends BaseShapeDrawer {
         }
         this.selectedShapes = new Array()
         this.transformHandler = null
+    }
 
-        // 2. Hit testing. If anything was hit.
-        if (this.hitSomething(evt.offsetX, evt.offsetY)) {
+    onMouseDown(evt: MouseEvent) {
+        if (evt.buttons != 1)
             return
-        }
+        super.onMouseDown(evt);
 
-        // 3. Did hit anything, begin to draw select box.
-        this.isDrawing = true;
-        this.startPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+        // 2. Hit testing.
+        if (!this.hitSomething(evt.offsetX, evt.offsetY, !evt.ctrlKey)) { // Ctrl key was pressed and hit something else.
+            this.clearSelection()
+
+            // 3. Didn't hit anything, begin to draw select box.
+            this.isDrawing = true;
+            this.startPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+        }
     }
 
     onMouseMove(evt: MouseEvent) {
@@ -116,9 +121,9 @@ class ShapeSelector extends BaseShapeDrawer {
         return true
     }
 
-    setTransformHandler(targetObj: BaseShapeJS, pos: Vector2) {
+    setTransformHandler(targetObjs: Array<BaseShapeJS>, pos: Vector2) {
         this.transformHandler = this.defaultTransformHandler
-        this.transformHandler.setTarget(targetObj)
+        this.transformHandler.setTarget(targetObjs)
         this.transformHandler.beginMove(pos)
     }
 

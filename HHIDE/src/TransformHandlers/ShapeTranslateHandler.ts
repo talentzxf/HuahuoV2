@@ -12,19 +12,19 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
 
     // The pos is already in world space.
     dragging(newPos: Vector2) {
-        if(this.isDragging && this.curObj != null){
+        if(this.isDragging && this.curObjs != null){
             let offset = newPos.subtract(this.lastPos)
-
-            let proposedNewPosition = this.curObj.position.add(offset)
-
-            // TODO: check whether the position is acceptable or need some modification
-
-            this.curObj.position = proposedNewPosition
             this.lastPos = newPos
 
-            this.curObj.update()
+            for(let obj of this.curObjs){
+                let proposedNewPosition = obj.position.add(offset)
 
-            super.dragging(newPos)
+                // TODO: check whether the position is acceptable or need some modification
+
+                obj.position = proposedNewPosition
+                obj.update()
+                super.dragging(newPos)
+            }
         }
     }
 }
