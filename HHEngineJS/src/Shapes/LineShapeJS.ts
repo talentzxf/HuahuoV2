@@ -26,6 +26,7 @@ class LineShapeJS extends BaseShapeJS{
 
         let paperjs = this.getPaperJs()
         this.paperShape = new paperjs.Path.Line( p1, p2);
+        this.paperShape.applyMatrix = false;
         this.paperShape.strokeColor = this.color
         this.paperShape.data.meta = this
     }

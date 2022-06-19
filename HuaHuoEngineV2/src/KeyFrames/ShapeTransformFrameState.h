@@ -10,12 +10,21 @@
 class TransformData{
 public:
     Vector3f position;
+    Vector3f scale;
 
     DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(TransformData)
+
+    TransformData()
+        :position(0.0,0.0,0.0)
+        ,scale(1.0,1.0,1.0)
+    {
+
+    }
 };
 
 template<class TransferFunction> void TransformData::Transfer(TransferFunction &transfer){
     TRANSFER(position);
+    TRANSFER(scale);
 }
 
 TransformData Lerp(TransformData& k1, TransformData& k2, float ratio);
@@ -50,7 +59,15 @@ public:
         return NULL;
     }
 
+    Vector3f* GetScale(){
+        if(isValidFrame)
+            return &m_CurrentTransformData.scale;
+        return NULL;
+    }
+
     void RecordPosition(int frameId, float x, float y, float z);
+
+    void RecordScale(int frameId, float xScale, float yScale, float zScale);
 
 private:
     std::vector<TransformKeyFrame> m_KeyFrames;

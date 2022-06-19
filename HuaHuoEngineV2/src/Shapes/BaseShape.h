@@ -84,6 +84,9 @@ public:
         mColorKeyFrames->Apply(frameId);
     }
 
+    void SetScale(float xScale, float yScale, float zScale);
+    Vector3f* GetScale();
+
     void SetPosition(float x, float y, float z);
 
     void SetColor(float r, float g, float b, float a);

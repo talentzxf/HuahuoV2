@@ -15,9 +15,16 @@ class BaseShapeJS
 
     public isPermanent: boolean = false;
 
-    scale(val:number){
-        this.paperShape.scale(val)
+    set scale(scale:Vector2){
+        this.paperShape.scaling = new paper.Point(scale.x, scale.y)
+        this.rawObj.SetScale(scale.x, scale.y, 1.0)
     }
+
+    get scale():Vector2{
+        let scale = this.rawObj.GetScale()
+        return new Vector2(scale.x, scale.y)
+    }
+
 
     get selected():boolean{
         return this.isSelected
@@ -123,8 +130,10 @@ class BaseShapeJS
 
     afterUpdate()
     {
-        let pos = this.rawObj.GetPosition();
+        let scale = this.rawObj.GetScale()
+        this.paperShape.scaling = new paper.Point(scale.x, scale.y)
 
+        let pos = this.rawObj.GetPosition();
         this.paperShape.position = new paper.Point(pos.x, pos.y);
 
         if(this.isSelected){

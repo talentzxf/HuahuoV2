@@ -29,6 +29,7 @@ class CircleShapeJS extends BaseShapeJS{
 
         let paperjs = this.getPaperJs()
         this.paperShape = new paperjs.Path.Circle(circleCenter, radius);
+        this.paperShape.applyMatrix = false;
         this.paperShape.strokeColor = new paper.Color("black")
         this.paperShape.fillColor = this.color
         this.paperShape.data.meta = this

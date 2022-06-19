@@ -59,6 +59,17 @@ void BaseShape::SetPosition(float x, float y, float z) {
     shapeLayer->AddKeyFrame(currentFrameId);
 }
 
+void BaseShape::SetScale(float xScale, float yScale, float zScale) {
+    Layer *shapeLayer = GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+    mTransformKeyFrames->RecordScale(currentFrameId, xScale, yScale, zScale);
+    shapeLayer->AddKeyFrame(currentFrameId);
+}
+
+Vector3f* BaseShape::GetScale(){
+    return mTransformKeyFrames->GetScale();
+}
+
 void BaseShape::SetColor(float r, float g, float b, float a) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();

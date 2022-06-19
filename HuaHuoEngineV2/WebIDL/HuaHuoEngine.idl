@@ -87,6 +87,8 @@ interface BaseShape{
 
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+    void SetScale(float xScale, float yScale, float zScale);
+    Vector3f GetScale();
 
     void SetColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
@@ -106,6 +108,8 @@ interface LineShape{
     // inherited from BaseShape
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+    void SetScale(float xScale, float yScale, float zScale);
+    Vector3f GetScale();
 
     void SetColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
@@ -124,6 +128,8 @@ interface CircleShape{
     // inherited from BaseShape
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+    void SetScale(float xScale, float yScale, float zScale);
+    Vector3f GetScale();
 
     void SetColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();

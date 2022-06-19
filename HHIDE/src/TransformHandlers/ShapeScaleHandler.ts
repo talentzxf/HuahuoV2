@@ -24,11 +24,11 @@ class ShapeScaleHandler extends ShapeTranslateMorphBase{
 
             for(let obj of this.curObjs){
                 let center = obj.getPaperShape().bounds.center // current center
-                let vec1 = this.lastPos.subtract(center)
+                let vec1 = this.startPos.subtract(center)
                 let vec2 = newPos.subtract(center)
 
                 let scale = vec2.length()/vec1.length()
-                obj.scale(scale)
+                obj.scale = new Vector2(scale, scale)
                 obj.update()
             }
 
