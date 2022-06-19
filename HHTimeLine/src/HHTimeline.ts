@@ -68,7 +68,7 @@ class HHTimeline extends HTMLElement {
         let _this = this
         this.contextMenu.setItems([
             {
-                itemName: "Merged Cells",
+                itemName: "Merge Cells",
                 onclick: this.mergeCells.bind(this)
             },
             {
