@@ -303,11 +303,11 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.ctx.stroke()
     }
 
-    onTrackUnSelected() {
+    unSelectTrack() {
         this.isSelected = false
     }
 
-    onTrackSelected(relativeX: number) {
+    selectTrack(relativeX: number) {
         if (!this.selectable)
             return;
 
@@ -317,6 +317,9 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         let cellId = this.calculateCellIdx(absoluteX);
 
         this.selectCell(cellId)
+
+        if(this.layer)
+            huahuoEngine.GetCurrentStore().SetCurrentLayer(this.layer)
     }
 
     selectCell(cellId){

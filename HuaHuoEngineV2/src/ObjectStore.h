@@ -39,6 +39,10 @@ public:
         return layer;
     }
 
+    void SetCurrentLayer(Layer* layer){
+        this->currentLayer = layer;
+    }
+
     Layer* GetCurrentLayer(){
         return currentLayer;
     }

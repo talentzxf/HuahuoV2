@@ -49,6 +49,7 @@ interface Layer{
 [NoDelete]
 interface ObjectStore{
     Layer GetCurrentLayer();
+    void SetCurrentLayer(Layer layer);
     Layer CreateLayer(DOMString trackId);
     unsigned long GetLayerCount();
     Layer GetLayer(unsigned long id);

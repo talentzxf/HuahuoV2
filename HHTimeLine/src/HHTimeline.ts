@@ -115,6 +115,12 @@ class HHTimeline extends HTMLElement {
         this.timelineTracks.push(track)
         this.totalTrackHeight += track.getCellHeight()
 
+        if(this.selectedTrackSeqId >= 0){
+            this.timelineTracks[this.selectedTrackSeqId].clearSelect()
+            this.timelineTracks[this.selectedTrackSeqId].unSelectTrack()
+            this.selectedTrackSeqId = -1
+        }
+
         this.Resize();
         this.redrawCanvas()
 
@@ -126,7 +132,6 @@ class HHTimeline extends HTMLElement {
             }
         })
         this.dispatchEvent(customEvent)
-
         return track
     }
 
@@ -210,10 +215,10 @@ class HHTimeline extends HTMLElement {
             if (this.selectedTrackSeqId >= 0) {
                 this.timelineTracks[this.selectedTrackSeqId].clearSelect();
             }
-            this.timelineTracks[trackSeqId].onTrackSelected(evt.clientX);
+            this.timelineTracks[trackSeqId].selectTrack(evt.clientX);
 
             if(this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId){
-                this.timelineTracks[this.selectedTrackSeqId].onTrackUnSelected();
+                this.timelineTracks[this.selectedTrackSeqId].unSelectTrack();
             }
             this.selectedTrackSeqId = trackSeqId;
         }else{

@@ -77,7 +77,7 @@ void ObjectStore::Transfer(TransferFunction &transfer) {
 #if WEB_ENV
 emscripten::val writeObjectStoreInMemoryFile(){
     int writeResult = GetPersistentManager().WriteFile(StoreFilePath);
-    printf("%s,%d; bufferSize:%d\n", __FILE__, __LINE__ , writeResult);
+    printf("%s,%d; writeResult:%d\n", __FILE__, __LINE__ , writeResult);
     UInt8* bufferPtr = GetMemoryFileSystem()->GetDataPtr(StoreFilePath);
     printf("%s,%d\n", __FILE__, __LINE__ );
     if(bufferPtr == NULL){
