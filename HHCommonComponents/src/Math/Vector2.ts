@@ -19,6 +19,10 @@ class Vector2{
     add(p:Vector2){
         return new Vector2(this.x + p.x, this.y + p.y)
     }
+
+    length(){
+        return Math.sqrt(this.x**2 + this.y**2)
+    }
 }
 
 export {Vector2}

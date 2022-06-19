@@ -103,6 +103,8 @@ class SceneView extends HTMLElement {
         this.setupEventsAndCreateFirstTrack()
 
         this.editorPlayer = new EditorPlayer()
+
+        defaultShapeDrawer.onBeginToDrawShape(this.canvas)
     }
 
 

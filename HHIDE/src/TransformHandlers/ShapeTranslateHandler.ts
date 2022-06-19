@@ -1,13 +1,17 @@
 import {ShapeTranslateMorphBase} from "./ShapeTranslateMorphBase";
-import {paper} from "hhenginejs"
 import {Vector2} from "hhcommoncomponents"
-import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 
 class ShapeTranslateHandler extends ShapeTranslateMorphBase
 {
+    protected lastPos: Vector2 = null
     constructor() {
         super();
         this.isDragging = false
+    }
+
+    beginMove(startPos) {
+        super.beginMove(startPos);
+        this.lastPos = startPos
     }
 
     // The pos is already in world space.

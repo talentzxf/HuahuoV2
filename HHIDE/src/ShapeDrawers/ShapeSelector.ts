@@ -3,7 +3,15 @@ import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {Vector2} from "hhcommoncomponents"
 import {paper} from "hhenginejs";
 import {shapeTranslateHandler} from "../TransformHandlers/ShapeTranslateHandler";
+import {shapeScaleHandler} from "../TransformHandlers/ShapeScaleHandler";
 import {ShapeTranslateMorphBase} from "../TransformHandlers/ShapeTranslateMorphBase";
+
+const VERYNEARMARGIN = 5
+const NEARBOUNDMARGIN = 15
+
+function pointsNear(p1:paper.Point, p2:paper.Point, margin:number){
+    return p1.getDistance(p2) < margin
+}
 
 class ShapeSelector extends BaseShapeDrawer {
     selectRectangle: paper.Path.Rectangle;
@@ -16,9 +24,9 @@ class ShapeSelector extends BaseShapeDrawer {
 
     selectedShapes: Set<BaseShapeJS> = new Set()
 
-
     transformHandler: ShapeTranslateMorphBase = null
     defaultTransformHandler: ShapeTranslateMorphBase = shapeTranslateHandler
+    canvas: HTMLCanvasElement
 
     constructor() {
         super();
@@ -38,6 +46,8 @@ class ShapeSelector extends BaseShapeDrawer {
 
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
         super.onBeginToDrawShape(canvas);
+
+        this.canvas = canvas
     }
 
     hitSomething(scrX, scrY, clearSelection: boolean = false): boolean {
@@ -47,16 +57,15 @@ class ShapeSelector extends BaseShapeDrawer {
         if (hitResult) {
             let hitItem = hitResult.item;
             if (this.itemSelectable(hitResult.item)) {
-                if(!hitItem.data.meta.selected){
+                if (!hitItem.data.meta.selected) {
                     if (clearSelection) {
                         this.clearSelection()
                     }
 
                     this.selectObject(hitItem.data.meta, hitPoint)
-                }else{
-                    if(this.transformHandler){
-                        this.transformHandler.beginMove(hitPoint)
-                    }
+                } else {
+                    this.transformHandler = this.defaultTransformHandler
+                    this.transformHandler.beginMove(hitPoint)
                 }
 
                 return true
@@ -82,6 +91,7 @@ class ShapeSelector extends BaseShapeDrawer {
         }
         this.selectedShapes = new Set()
         this.transformHandler = null
+        this.canvas.style.cursor = "default"
     }
 
     onMouseDown(evt: MouseEvent) {
@@ -89,37 +99,75 @@ class ShapeSelector extends BaseShapeDrawer {
             return
         super.onMouseDown(evt);
 
-        // 1. Hit testing.
-        if (!this.hitSomething(evt.offsetX, evt.offsetY, !evt.ctrlKey)) { // Ctrl key was pressed and hit something else.
-            this.clearSelection()
+        let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+        if(this.transformHandler){
+            this.transformHandler.beginMove(pos)
+        }else{
+            // 1. Hit testing.
+            if (!this.hitSomething(evt.offsetX, evt.offsetY, !evt.ctrlKey)) { // Ctrl key was pressed and hit something else.
+                this.clearSelection()
 
-            // 2. Didn't hit anything, begin to draw select box.
-            this.isDrawing = true;
-            this.startPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+                // 2. Didn't hit anything, begin to draw select box.
+                this.isDrawing = true;
+                this.startPos = pos
+            }
+        }
+    }
+
+    showRotateScaleCursor(pos:Vector2){
+        let targetPos = new paper.Point(pos.x, pos.y)
+        for(let shape of this.selectedShapes){
+            let bounds = shape.getPaperShape().getBounds()
+
+            if(pointsNear(bounds.topLeft, pos, VERYNEARMARGIN)){
+                this.canvas.style.cursor = "nw-resize"
+                this.setTransformHandler(this.selectedShapes, pos, shapeScaleHandler)
+            } else if(pointsNear(bounds.topLeft, pos, VERYNEARMARGIN)){
+                this.canvas.style.cursor = "ne-resize"
+                this.setTransformHandler(this.selectedShapes, pos, shapeScaleHandler)
+            } else if(pointsNear(bounds.bottomLeft, pos, VERYNEARMARGIN)){
+                this.canvas.style.cursor = "nesw-resize"
+                this.setTransformHandler(this.selectedShapes, pos, shapeScaleHandler)
+            } else if(pointsNear(bounds.bottomRight, pos, VERYNEARMARGIN)){
+                this.canvas.style.cursor = "nwse-resize"
+                this.setTransformHandler(this.selectedShapes, pos, shapeScaleHandler)
+            } else {
+                if( pointsNear(bounds.topLeft, pos, NEARBOUNDMARGIN) ||
+                    pointsNear(bounds.topRight, pos, NEARBOUNDMARGIN) ||
+                    pointsNear(bounds.bottomLeft, pos, NEARBOUNDMARGIN) ||
+                    pointsNear(bounds.bottomRight, pos, NEARBOUNDMARGIN) ){
+                    this.canvas.style.cursor = "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAETUlEQVR42t2VfUzVVRjHn+ecH/d6r1zeLPWiEQHXF2CmUaM/iOboZdVyQjPiJS2dTVKDiqm1UCuXTcduuSz7I3pfUc6WtIXp0A1XqNCi5CZw1TkFBORyudf78ns9nd+PexGqJdT8p7M9e3bO75zv5zzPec75Idzghv8fQHNzi12W5ZmSJIIoSnDNS6BpGlBKuNGoMVVVXWVlxcqkAcePn6i12azLuBjyxRA1TWMgCAISDmC8QwgBj8cz7PP5K1asKGqdCsDpcKRW6QKIyHC0gclkYleCArr6EZKsANl2ZO6uM+e6u90lHHBqSoD589MqdVHddJCeDqQCNHURyLGHwC9RcA+bgVztuTwyeLGwdPm9J6YEWLgwoyoC0FOBPDXwax9lTBExNVEBwr8BEnbBK+DpPtoRlMnzGwvMh/X1uxrFKv51IBj0128rukn9W0BmpsNIETfGd49hlcLBdpUVpAWREj0qIzIOR5Q1wtp7BXD1k4OyAtWSChn8uGr4FE1StEd2FFp9fwKcdGZnz6scVynwbTvArTY/2OO0qLgRRWQToEO9YQLNZ6l0fgjellW2MyTDm8DAVFtsWT0BsKWu89P8JcnlSxcIRhn2jBBsbA/Ag/OCjHL1caJG+qgeCcXoOHMPAh5yYW+PV8sPivBTOBxI/7ziZj/essGNcsyMGlGGrVnJhDRVW4EKFGoPiXDfbV5IsEDkwIkRBdUF9TsRAeoRYWT8/WYWcvVp6Veusq/5zqu+2RDbhpmvjNTLKtyuapAKwMzOJ6yQaEV2+rwHl6aL/A5Qfh7GjiMQEo2Ie0QjnQJhv1xCdB5RGgZ8WilHfseZ1cc221pxcc1AChFMwwJBz+7HrcK7R0WYFauxVYuH0ByDINBRgGCcCxnfZ1zYAPDrxzYfUC62XVD3+ELs0RgKGTzrz/LpGcYZ5D7XlJKcsaTrwMYE875jIljUIZYzV+Yixl1gAh0VGu0TxqNC3euVpo/t/5mx+lNK2blBbf9QgLkELszNaxLgKQNQsOlo0qz0O/vfKrHSTV964YV7fBExOtELY1GMeU8QYfXH0o+HX7Tl6VrT13lKee28xMUfG34nsWusip75JNj9sMMX/1ELxpXmyKZFySyaluiO/5oi7rc3KOqR39W727bGGe+SufgkQetsS/jDlMCEMq3+KlRhodI2TfStbThjy1tkVyrX5yvmOQlk9JCvRRNNGfuth+HKOrGu8434Ndd9KvT2WkPYyQCeDIjsvRa3XH92QN2xKldbtjYPIXbaxJTpJbp8b9jX0assuFSbdHlSAL3tbgzn8rfo6b7+wfW1K+eqses899vj0fnyQySr8A5BB/AIKNa3qqzyi/AW797EXZN67P6pTSvvEMj05IrcNNy+s8ic6Jgt4F2vB9x9Q4Gs0AdzpP8MiDbLmt4Z1GR51TGTlHf2qyXBfUnfX2/Nv/onmx74jEg/lGuTmXvDf/p/AC99yhRBi1wxAAAAAElFTkSuQmCC'), auto"
+                }else{
+                    this.canvas.style.cursor = "default"
+                }
+            }
+
         }
     }
 
     onMouseMove(evt: MouseEvent) {
-        if (evt.buttons != 1)
-            return
-
-        super.onMouseMove(evt);
         let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
 
-        if (this.transformHandler && this.transformHandler.getIsDragging()) {
-            this.transformHandler.dragging(pos)
+        if (evt.buttons != 1) {
+            this.showRotateScaleCursor(pos);
         } else {
-            if (this.isDrawing) {
+            super.onMouseMove(evt);
 
-                let endPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+            if (this.transformHandler && this.transformHandler.getIsDragging()) {
+                this.transformHandler.dragging(pos)
+            } else {
+                if (this.isDrawing) {
 
-                if (this.selectRectangle) {
-                    this.selectRectangle.remove()
+                    let endPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+
+                    if (this.selectRectangle) {
+                        this.selectRectangle.remove()
+                    }
+
+                    this.selectRectangle = new paper.Path.Rectangle(this.startPos, endPos)
+                    this.selectRectangle.strokeColor = new paper.Color("Black")
+                    this.selectRectangle.dashArray = [10, 12];
                 }
-
-                this.selectRectangle = new paper.Path.Rectangle(this.startPos, endPos)
-                this.selectRectangle.strokeColor = new paper.Color("Black")
-                this.selectRectangle.dashArray = [10, 12];
             }
         }
     }
@@ -130,8 +178,8 @@ class ShapeSelector extends BaseShapeDrawer {
         return true
     }
 
-    setTransformHandler(targetObjs: Set<BaseShapeJS>, pos: Vector2) {
-        this.transformHandler = this.defaultTransformHandler
+    setTransformHandler(targetObjs: Set<BaseShapeJS>, pos: Vector2, handler:ShapeTranslateMorphBase = this.defaultTransformHandler) {
+        this.transformHandler = handler
         this.transformHandler.setTarget(targetObjs)
         this.transformHandler.beginMove(pos)
     }
@@ -139,9 +187,7 @@ class ShapeSelector extends BaseShapeDrawer {
     onMouseUp(evt: MouseEvent) {
         super.onMouseUp(evt);
 
-        if (this.selectedShapes.size == 0)
-            this.transformHandler = null;
-
+        this.transformHandler = null;
         this.isDrawing = false
 
         if (this.selectRectangle) {

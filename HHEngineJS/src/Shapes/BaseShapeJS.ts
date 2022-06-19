@@ -15,6 +15,10 @@ class BaseShapeJS
 
     public isPermanent: boolean = false;
 
+    scale(val:number){
+        this.paperShape.scale(val)
+    }
+
     get selected():boolean{
         return this.isSelected
     }
@@ -150,6 +154,10 @@ class BaseShapeJS
 
     getPaperPoint(engineV3Point){
         return new paper.Point(engineV3Point.x, engineV3Point.y)
+    }
+
+    getPaperShape():paper.Path{
+        return this.paperShape
     }
 }
 
