@@ -691,15 +691,6 @@ int PersistentManager::LoadFileCompletelyThreaded(std::string& pathname, LocalId
     if (HasFlag(flags, kForcePreloadReferencedObjects))
         m_ForcePreloadReferencedObjects = true;
 
-
-    // DebugAssert(!HasPreallocatedObjects());
-
-
-
-if(this == NULL){
-
-}
-
     // Find Stream
     int serializedFileIndex = InsertPathNameInternal(pathname, true);
     SerializedFile* serializedFile = GetSerializedFile(serializedFileIndex, lockedFlags);

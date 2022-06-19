@@ -56,6 +56,8 @@ public:
         this->cellSpanMap[minCell] = newMinCellSpan;
     }
 
+    void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
+
 private:
     // key -- startCellId; value -- the length of the span.
     std::map<unsigned int, unsigned int> cellSpanMap;

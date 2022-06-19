@@ -81,13 +81,9 @@ public:
         if(!currentStore.IsValid()){
             printf("currentStore invalid, creating new store\n");
             currentStore = Object::Produce<ObjectStore>();
-            printf("%s,%d\n", __FILE__, __LINE__);
             GetPersistentManager().MakeObjectPersistent(currentStore.GetInstanceID(), StoreFilePath);
-            printf("%s,%d\n", __FILE__, __LINE__);
             allStores.push_back(currentStore);
-            printf("%s,%d\n", __FILE__, __LINE__);
         }
-        printf("Return of current store\n");
         return currentStore;
     }
 

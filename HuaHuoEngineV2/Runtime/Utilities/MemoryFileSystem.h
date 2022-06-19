@@ -69,7 +69,8 @@ public:
         size_t newSize = memoryFile->data.size() + size;
         memoryFile->data.resize(newSize);
 
-        memcpy( (void*)memoryFile->data[offset], buffer, size);
+        UInt8* pDstBuffer = memoryFile->data.data();
+        memcpy( (void*)(pDstBuffer + offset), buffer, size);
         return true;
     }
 

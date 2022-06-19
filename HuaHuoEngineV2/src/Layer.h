@@ -66,7 +66,6 @@ public:
         if(this->currentFrameId == currentFrameId)
             return;
 
-        printf("Set current frame Id to:%d\n", currentFrameId);
         this->currentFrameId = currentFrameId;
         for(auto shape : shapes){
             shape->Apply(this->currentFrameId);

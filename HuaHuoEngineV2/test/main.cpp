@@ -88,6 +88,11 @@ void testShapeStore() {
     lineShape1->SetEndPoint(3,3,3);
     currentLayer->AddShapeInternal(lineShape1);
 
+    for(int i = 0; i < 100; i++){
+        CircleShape* shape = Object::Produce<CircleShape>();
+        currentLayer->AddShapeInternal(shape);
+    }
+
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
 
     size_t length = GetMemoryFileSystem()->GetFileLength(StoreFilePath);
@@ -98,7 +103,8 @@ void testShapeStore() {
     fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath),length,1, fp);
     fclose(fp);
 
-    std::string filenamestr(filename);
+    std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo (18).data");
+    // std::string filenamestr(filename);
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
 //    std::string path = StoreFilePath;

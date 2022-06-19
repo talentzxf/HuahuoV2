@@ -68,7 +68,7 @@ class HHTimeline extends HTMLElement {
         let _this = this
         this.contextMenu.setItems([
             {
-                itemName: "Merge Cells",
+                itemName: "Merge Selected Cells",
                 onclick: this.mergeCells.bind(this)
             },
             {
@@ -205,15 +205,20 @@ class HHTimeline extends HTMLElement {
             return;
         }
 
-        if (this.selectedTrackSeqId >= 0) {
-            this.timelineTracks[this.selectedTrackSeqId].clearSelect();
-        }
-        this.timelineTracks[trackSeqId].onTrackSelected(evt.clientX);
+        let shiftPressed = evt.shiftKey;
+        if(!shiftPressed || this.selectedTrackSeqId < 0){
+            if (this.selectedTrackSeqId >= 0) {
+                this.timelineTracks[this.selectedTrackSeqId].clearSelect();
+            }
+            this.timelineTracks[trackSeqId].onTrackSelected(evt.clientX);
 
-        if(this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId){
-            this.timelineTracks[this.selectedTrackSeqId].onTrackUnSelected();
+            if(this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId){
+                this.timelineTracks[this.selectedTrackSeqId].onTrackUnSelected();
+            }
+            this.selectedTrackSeqId = trackSeqId;
+        }else{
+            this.timelineTracks[trackSeqId].rangeSelect(evt.clientX);
         }
-        this.selectedTrackSeqId = trackSeqId;
 
         this.redrawCanvas()
     }

@@ -16,6 +16,11 @@ void TimeLineCellManager::Transfer(TransferFunction &transfer) {
 
     printf("Transfering cellspanmap. Size:%d\n", cellSpanMap.size());
     TRANSFER(cellSpanMap);
-    printf("Transfering merged cells. Size:%d\n", mergedCells.size());
+
+    // TODO: No need to persistent this map, it can be calculated from cellSpanMap.
     TRANSFER(mergedCells);
+}
+
+void TimeLineCellManager::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
+    Object::AwakeFromLoad(awakeMode);
 }
