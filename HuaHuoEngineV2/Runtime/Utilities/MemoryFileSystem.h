@@ -16,6 +16,9 @@ class MemoryFileAccessor;
 
 class MemoryFile{
 public:
+    MemoryFile(){
+
+    }
     MemoryFile(std::string fName, size_t reservedLength){
         data.resize(reservedLength);
         this->fName = fName;
@@ -66,11 +69,13 @@ public:
         if(size < 0 || buffer == NULL)
             return false;
 
-        size_t newSize = memoryFile->data.size() + size;
-        memoryFile->data.resize(newSize);
+        if(offset + size > memoryFile->data.size()){
+            memoryFile->data.resize(offset+size);
+        }
 
         UInt8* pDstBuffer = memoryFile->data.data();
         memcpy( (void*)(pDstBuffer + offset), buffer, size);
+        offset += size;
         return true;
     }
 
@@ -91,6 +96,7 @@ public:
         size_t actualReadSize = Min(size, fileSize - offset);
 
         memcpy(buffer, memoryFile->data.data() + offset, actualReadSize);
+        offset += actualReadSize;
         return actualReadSize;
     }
 
@@ -116,7 +122,7 @@ public:
     bool IsFileCreated(std::string path);
     size_t GetFileLength(std::string path);
 
-    void DeleteFile(std::string path);
+    bool DeleteFile(std::string path);
     void TruncateFile(std::string path);
     bool CreateFile(std::string path, size_t reservedLength = 0);
 
@@ -132,6 +138,8 @@ public:
 
         return fileItr->second.GetDataPtr();
     }
+
+    bool MoveFileOrDirectory(std::string fromPath, std::string toPath);
 private:
     std::map<std::string, MemoryFile> m_files;
 };

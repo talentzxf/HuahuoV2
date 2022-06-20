@@ -1432,7 +1432,7 @@ bool SerializedFile::WriteHeader(std::vector<UInt8>& metadata, size_t* outDataOf
             (*outDataOffset) = dataOffset - (UInt64)kPreallocateFront;
 
         std::string originalPath = m_CachedWriter->GetCacheBase().GetPathName();
-        std::string tempPath = originalPath;//GetUniqueTempPathInProject();
+        std::string tempPath = "mem://" + GetUniqueTempPathInProject();
         printf("%s,%d\n", __FILE__, __LINE__);
         SerializedFileHeader header{};
         printf("%s,%d\n", __FILE__, __LINE__);
@@ -1485,9 +1485,9 @@ bool SerializedFile::WriteHeader(std::vector<UInt8>& metadata, size_t* outDataOf
         }
         printf("%s,%d\n", __FILE__, __LINE__);
 
-//        // move the temp file over to the destination
-//        success &= DeleteFile(originalPath);
-//        success &= MoveFileOrDirectory(tempPath, originalPath);
+        // move the temp file over to the destination
+        success &= DeleteFile(originalPath);
+        success &= MoveFileOrDirectory(tempPath, originalPath);
     }
 
     return success;

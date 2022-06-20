@@ -9,6 +9,8 @@
 #include <iostream>
 #include <fstream>
 #include "MemoryFileSystem.h"
+#include "GUID.h"
+
 namespace fs = std::filesystem;
 
 std::string PathToAbsolutePath(std::string path)
@@ -167,6 +169,26 @@ bool CreateDirectory(std::string pathName)
 }
 
 #if HUAHUO_EDITOR
+std::string GetUniqueTempPath(std::string basePath)
+{
+    std::string tmpFilePath; (kMemTempAlloc);
+
+    do
+    {
+        HuaHuoGUID guid; guid.Init();
+        tmpFilePath = basePath + GUIDToString(guid);
+    }
+    while (IsFileCreated(tmpFilePath));
+
+    return tmpFilePath;
+}
+
+std::string GetUniqueTempPathInProject()
+{
+    // __FAKEABLE_FUNCTION__(GetUniqueTempPathInProject, ());
+    return GetUniqueTempPath("Temp/UnityTempFile-");
+}
+
 std::string GenerateUniquePathSafe(std::string inPath){
     return GenerateUniquePath(inPath);
 }
@@ -216,6 +238,22 @@ std::string GenerateUniquePath(std::string inPath)
     }
 
     return std::string();
+}
+
+bool MoveFileOrDirectory(std::string fromPath, std::string toPath){
+    if(GetMemoryFileSystem()->IsMemoryFile(fromPath)){
+        return GetMemoryFileSystem()->MoveFileOrDirectory(fromPath, toPath);
+    }
+
+    return std::filesystem::copy_file(fromPath, toPath);
+}
+
+bool DeleteFile(std::string fName){
+    if(GetMemoryFileSystem()->IsMemoryFile(fName))
+        return GetMemoryFileSystem()->DeleteFile(fName);
+
+    std::filesystem::remove(fName);
+    return true;
 }
 
 #if WEB_ENV

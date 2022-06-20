@@ -1,5 +1,7 @@
 #include "GUID.h"
 
+#include "Math/Random/rand.h"
+
 #if PLATFORM_WIN
 #include <windef.h>
 #include <ObjBase.h>
@@ -23,10 +25,10 @@ static void MarkAsStandardGUID(HuaHuoGUID& guid)
     guid.data[2] = (guid.data[2] & ~0xC0) | 0x80;
 }
 
-#if UNITY_HAVE_GUID_INIT && !UNITY_USE_PLATFORM_GUID
+// #if UNITY_HAVE_GUID_INIT && !UNITY_USE_PLATFORM_GUID
 void HuaHuoGUID::Init()
 {
-    __FAKEABLE_METHOD__(HuaHuoGUID, Init, ());
+    // __FAKEABLE_METHOD__(HuaHuoGUID, Init, ());
 
 #if UNITY_APPLE
 
@@ -72,7 +74,7 @@ void HuaHuoGUID::Init()
         "HuaHuoGUID::Init() must produce a standard GUID/UUID with type bits 10.");
 }
 
-#endif // UNITY_HAVE_GUID_INIT && !UNITY_USE_PLATFORM_GUID
+// #endif // UNITY_HAVE_GUID_INIT && !UNITY_USE_PLATFORM_GUID
 
 bool CompareGUIDStringLess(const HuaHuoGUID& lhsGUID, const HuaHuoGUID& rhsGUID)
 {
@@ -89,15 +91,15 @@ bool CompareGUIDStringLess(const HuaHuoGUID& lhsGUID, const HuaHuoGUID& rhsGUID)
 
     return false;
 }
-//
-//std::string GUIDToString(const HuaHuoGUID& guid, MemLabelRef label)
-//{
-//    char name[kGUIDStringLength + 1];
-//    GUIDToString(guid, name);
-//    name[kGUIDStringLength] = '\0';
-//    return TempString(name);
-//}
-//
+
+std::string GUIDToString(const HuaHuoGUID& guid, MemLabelRef label)
+{
+    char name[kGUIDStringLength + 1];
+    GUIDToString(guid, name);
+    name[kGUIDStringLength] = '\0';
+    return std::string(name);
+}
+
 //std::string GUIDToStringWithHyphens(const HuaHuoGUID& guid, MemLabelRef label)
 //{
 //    const std::string str = GUIDToString(guid, kMemTempAlloc);
@@ -111,20 +113,22 @@ bool CompareGUIDStringLess(const HuaHuoGUID& lhsGUID, const HuaHuoGUID& rhsGUID)
 //        str.substr(20, 12));
 //    return r;
 //}
-//
-//void GUIDToString(const HuaHuoGUID& guid, char* name)
-//{
-//    for (int i = 0; i < 4; i++)
-//    {
-//        for (int j = 8; j--;)
-//        {
-//            UInt32 cur = guid.data[i];
-//            cur >>= (j * 4);
-//            cur &= 0xF;
-//            name[i * 8 + j] = kHexToLiteral[cur];
-//        }
-//    }
-//}
+
+extern const char kHexToLiteral[16];
+
+void GUIDToString(const HuaHuoGUID& guid, char* name)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 8; j--;)
+        {
+            UInt32 cur = guid.data[i];
+            cur >>= (j * 4);
+            cur &= 0xF;
+            name[i * 8 + j] = kHexToLiteral[cur];
+        }
+    }
+}
 
 //this is pre initialized to make this function thread safe
 const signed char s_LiteralToHex[255] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };

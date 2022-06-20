@@ -141,7 +141,11 @@ enum FileFlags
 #if HUAHUO_EDITOR
 std::string GenerateUniquePathSafe(std::string inPath);
 std::string GenerateUniquePath(std::string inPath);
+std::string GetUniqueTempPathInProject();
 #endif
+
+bool DeleteFile(std::string fName);
+bool MoveFileOrDirectory(std::string fromPath, std::string toPath);
 
 #if WEB_ENV
 #include <emscripten/bind.h>

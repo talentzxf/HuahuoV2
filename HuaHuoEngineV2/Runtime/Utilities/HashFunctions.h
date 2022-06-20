@@ -10,6 +10,8 @@
 #include "BaseClasses/BaseTypes.h"
 #include "BaseClasses/BaseTypes.h"
 #include "HashFunctions/xxhash.h"
+#include "Hash128.h"
+#include "Utilities/HashFunctions/SpookyV2.h"
 
 // --------------------------------------------------------------------------
 // Hash functions in this file:
@@ -78,27 +80,16 @@ FORCE_INLINE UInt32 ComputeHash32(const void* data, size_t dataSize, size_t seed
 //    return CityHash64WithSeed((const char*)data, dataSize, seed);
 //}
 
-//// Compute a 128 bit hash.
-//// Implementation: SpookyHash V2.
-////
-//// Note that the hash is in-out parameter! Acts as a seed on input, and filled with hashed value on output.
-//void ComputeHash128(const void* data, size_t dataSize, UInt64 inSeedOutHash[2])
-//{
-//    SpookyHash::Hash128(data, dataSize, &inSeedOutHash[0], &inSeedOutHash[1]);
-//}
+// Compute a 128 bit hash.
+// Implementation: SpookyHash V2.
 //
-//// Note that the hash is in-out parameter! Acts as a seed on input, and filled with hashed value on output.
-//void ComputeHash128(const void* data, size_t dataSize, Hash128& inSeedOutHash)
-//{
-//    ComputeHash128(data, dataSize, inSeedOutHash.hashData.u64);
-//}
-//
-//Hash128 ComputeHash128(const void* data, size_t dataSize)
-//{
-//    Hash128 h;
-//    ComputeHash128(data, dataSize, h);
-//    return h;
-//}
+// Note that the hash is in-out parameter! Acts as a seed on input, and filled with hashed value on output.
+void ComputeHash128(const void* data, size_t dataSize, UInt64 inSeedOutHash[2]);
+
+// Note that the hash is in-out parameter! Acts as a seed on input, and filled with hashed value on output.
+void ComputeHash128(const void* data, size_t dataSize, Hash128& inSeedOutHash);
+
+Hash128 ComputeHash128(const void* data, size_t dataSize);
 
 // --------------------------------------------------------------------------
 // Simple data type (integer/pointer) hashing

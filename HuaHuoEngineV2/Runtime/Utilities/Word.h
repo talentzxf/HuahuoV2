@@ -9,6 +9,7 @@
 #include <vector>
 #include <cstring>
 
+extern const char kHexToLiteral[16];
 bool BeginsWith(const char* str, const char* prefix);
 
 enum ComparisonType

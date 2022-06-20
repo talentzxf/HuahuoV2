@@ -20,6 +20,15 @@ bool MemoryFileSystem::IsFileCreated(std::string path) {
     return m_files.find(path) != m_files.end();
 }
 
+bool MemoryFileSystem::MoveFileOrDirectory(std::string fromPath, std::string toPath){
+    auto fileItr = m_files.find(fromPath);
+    if(fileItr == m_files.end())
+        return false;
+    m_files[toPath] = std::move(fileItr->second);
+    m_files.erase(fromPath);
+    return true;
+}
+
 size_t MemoryFileSystem::GetFileLength(std::string path){
     auto fileItr = m_files.find(path);
     if(fileItr == m_files.end()){
@@ -30,10 +39,11 @@ size_t MemoryFileSystem::GetFileLength(std::string path){
     return fileItr->second.GetFileLength();
 }
 
-void MemoryFileSystem::DeleteFile(std::string path) {
+bool MemoryFileSystem::DeleteFile(std::string path) {
     if(m_files.contains(path)){
         m_files.erase(path);
     }
+    return true;
 }
 
 void MemoryFileSystem::TruncateFile(std::string path) {
@@ -55,9 +65,7 @@ bool MemoryFileSystem::CreateFile(std::string path, size_t reservedLength) {
 
 MemoryFileAccessor* MemoryFileSystem::OpenFile(std::string path, FilePermission perm) {
     if(perm == FilePermission::kWritePermission){
-        if(this->IsFileCreated(path)){
-            this->TruncateFile(path);
-        } else {
+        if(!this->IsFileCreated(path)){
             this->CreateFile(path);
         }
     }

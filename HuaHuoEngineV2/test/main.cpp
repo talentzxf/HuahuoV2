@@ -103,8 +103,8 @@ void testShapeStore() {
     fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath),length,1, fp);
     fclose(fp);
 
-    std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo (8).data");
-    // std::string filenamestr(filename);
+    // std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo (8).data");
+    std::string filenamestr(filename);
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
 //    std::string path = StoreFilePath;

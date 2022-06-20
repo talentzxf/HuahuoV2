@@ -57,14 +57,12 @@ struct HuaHuoGUID
 
     static HuaHuoGUID CreateMinimumLexicographicalValue() { return HuaHuoGUID(); }
 
-#if UNITY_HAVE_GUID_INIT
     void Init();
-#endif
 };
 
 //BIND_MANAGED_TYPE_NAME(HuaHuoGUID, UnityEditor_GUID);
 
-std::string GUIDToString(const HuaHuoGUID& guid/*, MemLabelRef label = kMemString*/);
+std::string GUIDToString(const HuaHuoGUID& guid, MemLabelRef label = kMemString);
 void GUIDToString(const HuaHuoGUID& guid, char* string);
 std::string GUIDToStringWithHyphens(const HuaHuoGUID& guid/*, MemLabelRef label = kMemString*/);
 

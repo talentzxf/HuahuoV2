@@ -5,6 +5,7 @@
 #ifndef HUAHUOENGINE_HASHSTRINGFUNCTIONS_H
 #define HUAHUOENGINE_HASHSTRINGFUNCTIONS_H
 #include <cstdio>
+#include "Hash128.h"
 #include "BaseClasses/BaseTypes.h"
 #include "HashFunctions.h"
 
@@ -136,42 +137,42 @@ struct ShortStringHash32Function
 //};
 //
 //
-//// --------------------------------------------------------------------------
-//// 128 bit hashes
-////
-//// Computes 128 bit hash value for a string.
-//// If it's a C-style string, and you know the length, then pass that in too.
-//// Implementation: ComputeHash128 (SpookyV2).
+// --------------------------------------------------------------------------
+// 128 bit hashes
 //
-//inline Hash128 ComputeStringHash128(const char* str, size_t strLen)
-//{
-//    return ComputeHash128(str, strLen);
-//}
-//
-//inline Hash128 ComputeStringHash128(const char* str)
-//{
-//    size_t strLen = strlen(str);
-//    return ComputeStringHash128(str, strLen);
-//}
-//
+// Computes 128 bit hash value for a string.
+// If it's a C-style string, and you know the length, then pass that in too.
+// Implementation: ComputeHash128 (SpookyV2).
+
+inline Hash128 ComputeStringHash128(const char* str, size_t strLen)
+{
+    return ComputeHash128(str, strLen);
+}
+
+inline Hash128 ComputeStringHash128(const char* str)
+{
+    size_t strLen = strlen(str);
+    return ComputeStringHash128(str, strLen);
+}
+
 //template<typename TString>
 //inline Hash128 ComputeStringHash128(const TString& str)
 //{
 //    return ComputeStringHash128(StringTraits::AsConstTChars(str), StringTraits::GetLength(str));
 //}
-//
-//// Variants for incremental hash building (Hash128 is in+out parameter)
-//inline void ComputeStringHash128(const char* str, size_t strLen, Hash128& hashInOut)
-//{
-//    ComputeHash128(str, strLen, hashInOut);
-//}
-//
-//inline void ComputeStringHash128(const char* str, Hash128& hashInOut)
-//{
-//    size_t strLen = strlen(str);
-//    ComputeStringHash128(str, strLen, hashInOut);
-//}
-//
+
+// Variants for incremental hash building (Hash128 is in+out parameter)
+inline void ComputeStringHash128(const char* str, size_t strLen, Hash128& hashInOut)
+{
+    ComputeHash128(str, strLen, hashInOut);
+}
+
+inline void ComputeStringHash128(const char* str, Hash128& hashInOut)
+{
+    size_t strLen = strlen(str);
+    ComputeStringHash128(str, strLen, hashInOut);
+}
+
 //template<typename TString>
 //inline void ComputeStringHash128(const TString& str, Hash128& hashInOut)
 //{
