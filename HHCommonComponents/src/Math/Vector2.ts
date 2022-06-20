@@ -8,6 +8,10 @@ class Vector2{
         this.y = y
     }
 
+    multiply(s:number){
+        return new Vector2(this.x*s, this.y*s)
+    }
+
     distance(p:Vector2){
         return Math.sqrt( (this.x - p.x ) ** 2 + (this.y - p.y ) ** 2)
     }

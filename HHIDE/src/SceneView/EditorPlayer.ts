@@ -1,4 +1,4 @@
-import {HHTimeLine, TimelineEventNames} from "hhtimeline"
+import {HHTimeLine, TimelineEventNames, GlobalConfig} from "hhtimeline"
 import {huahuoEngine} from "hhenginejs"
 declare var Module:any;
 
@@ -7,6 +7,8 @@ class EditorPlayer{
     timeline: HHTimeLine = null
     animationFrame = -1
     animationStartTime = -1
+
+    lastAnimateTime = -1
     constructor() {
         this.timeline = document.querySelector("hh-timeline")
         this.timeline.addEventListener(TimelineEventNames.TRACKCELLCLICKED, this.updateAllShapes.bind(this))
@@ -43,13 +45,18 @@ class EditorPlayer{
             }
             let elapsedTime = timeStamp - this.animationStartTime
 
-            this.timeline.setTimeElapsed(elapsedTime/1000.0) // convert from miliseconds to seconds
-            this.updateAllShapes()
+            if(this.lastAnimateTime < 0 || (elapsedTime - timeStamp ) > 1.0/GlobalConfig.fps){
+                this.timeline.setTimeElapsed(elapsedTime/1000.0) // convert from miliseconds to seconds
+                this.updateAllShapes()
+                this.lastAnimateTime = timeStamp
+            }
+
             requestAnimationFrame(this.animationFrameStep.bind(this));
         }
     }
 
     startPlay(){
+        this.lastAnimateTime = -1
         this.animationStartTime = -1
         this.animationFrame = requestAnimationFrame(this.animationFrameStep.bind(this));
     }

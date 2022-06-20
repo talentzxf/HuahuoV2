@@ -5,6 +5,7 @@ import {BaseShapeJS, paper} from "hhenginejs"
 class ShapeScaleHandler extends ShapeTranslateMorphBase{
 
     protected lastPos: Vector2 = null
+    protected originalScaleMap: Map<BaseShapeJS, Vector2> = new Map();
 
     constructor() {
         super();
@@ -14,21 +15,24 @@ class ShapeScaleHandler extends ShapeTranslateMorphBase{
     beginMove(startPos) {
         super.beginMove(startPos);
         this.lastPos = startPos
+
+        this.originalScaleMap.clear()
+        for(let shape of this.curObjs){
+            this.originalScaleMap.set(shape, shape.scale)
+        }
     }
 
     dragging(newPos: Vector2) {
         super.dragging(newPos);
 
         if(this.isDragging && this.curObjs != null){
-
-
             for(let obj of this.curObjs){
                 let center = obj.getPaperShape().bounds.center // current center
                 let vec1 = this.startPos.subtract(center)
                 let vec2 = newPos.subtract(center)
 
                 let scale = vec2.length()/vec1.length()
-                obj.scale = new Vector2(scale, scale)
+                obj.scale = this.originalScaleMap.get(obj).multiply(scale)
                 obj.update()
             }
 
