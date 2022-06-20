@@ -5,6 +5,18 @@ import * as paper from "paper";
 
 declare var Module: any;
 
+function relaxRectangle(rectangle, margin) {
+    let retRectangle = rectangle.clone()
+    retRectangle.x -= margin
+    retRectangle.y -= margin
+    retRectangle.width += 2 * margin
+    retRectangle.height += 2 * margin
+
+    return retRectangle
+}
+
+const BOUNDMARGIN:number = 10
+
 class BaseShapeJS
 {
     protected rawObj: any = null;
@@ -143,9 +155,12 @@ class BaseShapeJS
             let boundingBox = this.paperShape.bounds;
 
             let paperjs = this.getPaperJs()
-            this.boundingBoxRect = new paperjs.Path.Rectangle(boundingBox)
+            this.boundingBoxRect = new paperjs.Path.Rectangle(relaxRectangle(boundingBox, BOUNDMARGIN))
             this.boundingBoxRect.dashArray = [4, 10]
             this.boundingBoxRect.strokeColor = new paper.Color("black")
+            this.paperShape.selected = true
+        }else{
+            this.paperShape.selected = false
         }
     }
 

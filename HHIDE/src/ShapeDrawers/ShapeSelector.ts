@@ -57,16 +57,26 @@ class ShapeSelector extends BaseShapeDrawer {
         if (hitResult) {
             let hitItem = hitResult.item;
             if (this.itemSelectable(hitResult.item)) {
-                if (!hitItem.data.meta.selected) { // If nothing is selected.
+                console.log("HitType:" + hitResult.type)
+
+                if (!hitItem.data.meta.selected) { // If the object has not been selected, select it.
                     if (clearSelection) {
                         this.clearSelection()
                     }
 
                     this.selectObject(hitItem.data.meta)
                     this.setTransformHandler(this.selectedShapes, hitPoint)
-                } else {
-                    this.transformHandler = this.defaultTransformHandler
-                    this.transformHandler.beginMove(hitPoint)
+                } else { // If the object has already been selected, we might need to do something based on the hittype.
+
+                    let hitType = hitResult.type
+
+
+                    if(hitType == "fill"){
+                        this.transformHandler = this.defaultTransformHandler
+                    }
+
+                    if(this.transformHandler)
+                        this.transformHandler.beginMove(hitPoint)
                 }
 
                 return true
@@ -135,6 +145,7 @@ class ShapeSelector extends BaseShapeDrawer {
                 this.setTransformHandler(this.selectedShapes, pos, shapeScaleHandler)
                 return;
             } else {
+                // TODO: Add rotate handler ...
                 if( pointsNear(bounds.topLeft, pos, NEARBOUNDMARGIN) ||
                     pointsNear(bounds.topRight, pos, NEARBOUNDMARGIN) ||
                     pointsNear(bounds.bottomLeft, pos, NEARBOUNDMARGIN) ||
