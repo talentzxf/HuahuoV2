@@ -46,7 +46,10 @@ class EditorPlayer{
             let elapsedTime = timeStamp - this.animationStartTime
 
             if(this.lastAnimateTime < 0 || (elapsedTime - this.lastAnimateTime ) > 1.0/GlobalConfig.fps){
-                this.timeline.setTimeElapsed(elapsedTime/1000.0) // convert from miliseconds to seconds
+                let activeFrames = huahuoEngine.GetCurrentStore().GetMaxFrameId() + 1
+                let activePlayTime = activeFrames / GlobalConfig.fps
+                let playTime = elapsedTime/1000.0 % activePlayTime
+                this.timeline.setTimeElapsed(playTime) // convert from miliseconds to seconds
                 this.updateAllShapes()
                 this.lastAnimateTime = elapsedTime
             }

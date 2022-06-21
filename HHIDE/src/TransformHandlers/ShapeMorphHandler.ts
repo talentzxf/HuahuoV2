@@ -1,7 +1,7 @@
 import {ShapeTranslateMorphBase} from "./ShapeTranslateMorphBase";
 import {paper, BaseShapeJS} from "hhenginejs";
 
-class ShapeMorphHander extends ShapeTranslateMorphBase{
+class ShapeMorphHandler extends ShapeTranslateMorphBase{
     curSegment: paper.Segment
     curSegmentStartPos: paper.Point
 
@@ -45,7 +45,7 @@ class ShapeMorphHander extends ShapeTranslateMorphBase{
     }
 }
 
-class ShapeHandlerMoveHandler extends ShapeMorphHander{
+class ShapeHandlerMoveHandler extends ShapeMorphHandler{
     targetHandleName: string = ""
     targetHandleStartPos: paper.Point = null
     beginMove(startPos, hitResult) {
@@ -73,5 +73,5 @@ class ShapeHandlerMoveHandler extends ShapeMorphHander{
 }
 
 let shapeHandlerMoveHandler = new ShapeHandlerMoveHandler()
-let shapeMorphHandler = new ShapeMorphHander()
+let shapeMorphHandler = new ShapeMorphHandler()
 export {shapeMorphHandler, shapeHandlerMoveHandler}

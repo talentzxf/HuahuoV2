@@ -206,11 +206,8 @@ class BaseShapeJS
 
             this.applySegments()
             let pos = this.rawObj.GetPosition();
-            console.log("Before shape position:" + this.paperShape.position)
-            if(this.paperShape.position.x != pos.x && this.paperShape.position.y != pos.y)
+            if(this.paperShape.position.x != pos.x || this.paperShape.position.y != pos.y)
                 this.paperShape.position = new paper.Point(pos.x, pos.y);
-
-            console.log("Current shape position:" + this.paperShape.position)
         }
 
         if(this.isSelected){

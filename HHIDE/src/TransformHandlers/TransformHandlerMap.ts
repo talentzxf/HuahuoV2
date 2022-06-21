@@ -1,4 +1,4 @@
-import {shapeHandlerMoveHandler, shapeMorphHandler} from "./ShapeMorphHander";
+import {shapeHandlerMoveHandler, shapeMorphHandler} from "./ShapeMorphHandler";
 import {ShapeTranslateMorphBase} from "./ShapeTranslateMorphBase";
 import {shapeTranslateHandler} from "./ShapeTranslateHandler";
 

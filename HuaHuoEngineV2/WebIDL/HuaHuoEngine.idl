@@ -53,6 +53,7 @@ interface ObjectStore{
     Layer CreateLayer(DOMString trackId);
     unsigned long GetLayerCount();
     Layer GetLayer(unsigned long id);
+    long GetMaxFrameId();
 };
 
 [NoDelete]

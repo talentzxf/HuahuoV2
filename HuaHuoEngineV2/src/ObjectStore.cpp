@@ -72,6 +72,7 @@ void ObjectStore::Transfer(TransferFunction &transfer) {
 
     printf("Writing currentlayer\n");
     TRANSFER(currentLayer);
+    TRANSFER(maxFrameId);
 }
 
 #if WEB_ENV

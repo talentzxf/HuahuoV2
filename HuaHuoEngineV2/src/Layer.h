@@ -13,7 +13,7 @@
 #include <vector>
 
 extern std::string StoreFilePath;
-
+class ObjectStore;
 class KeyFrameAddedEventHandlerArgs: public ScriptEventHandlerArgs{
 public:
     KeyFrameAddedEventHandlerArgs(Layer* layer, int frameId){
@@ -54,6 +54,10 @@ public:
         GetPersistentManager().MakeObjectPersistent(newShape->GetInstanceID(), StoreFilePath);
     }
 
+    void SetObjectStore(ObjectStore* store){
+        this->objectStore = store;
+    }
+
     virtual void SetName(const char* name) override{
         this->name = name;
     }
@@ -90,12 +94,7 @@ public:
         return cellManager;
     }
 
-    void AddKeyFrame(int frameId){
-        keyFrames.insert(frameId);
-
-        KeyFrameAddedEventHandlerArgs args(this, frameId);
-        GetScriptEventManager()->TriggerEvent("OnKeyFrameAdded", &args);
-    }
+    void AddKeyFrame(int frameId);
 
     bool IsKeyFrame(int frameId){
         if(keyFrames.contains(frameId))
@@ -111,6 +110,7 @@ private:
     std::string name;
     PPtr<TimeLineCellManager> cellManager;
     std::set<int> keyFrames;
+    PPtr<ObjectStore> objectStore;
 };
 
 #endif //HUAHUOENGINEV2_LAYER_H

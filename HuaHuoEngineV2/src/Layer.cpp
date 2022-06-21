@@ -3,10 +3,12 @@
 //
 
 #include "Layer.h"
+#include "ObjectStore.h"
 
 IMPLEMENT_REGISTER_CLASS(Layer, 10001);
 
 IMPLEMENT_OBJECT_SERIALIZE(Layer);
+
 INSTANTIATE_TEMPLATE_TRANSFER(Layer);
 
 template<class TransferFunction>
@@ -16,10 +18,19 @@ void Layer::Transfer(TransferFunction &transfer) {
     TRANSFER(shapes);
     TRANSFER(cellManager);
     TRANSFER(keyFrames);
+    TRANSFER(objectStore);
 }
 
-void Layer::AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode){
-    for( ShapePPtrVector::iterator itr = shapes.begin(); itr != shapes.end(); itr++){
+void Layer::AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode) {
+    for (ShapePPtrVector::iterator itr = shapes.begin(); itr != shapes.end(); itr++) {
         (*itr)->SetLayer(this);
     }
+}
+
+void Layer::AddKeyFrame(int frameId) {
+    objectStore->UpdateMaxFrameId(frameId);
+    keyFrames.insert(frameId);
+
+    KeyFrameAddedEventHandlerArgs args(this, frameId);
+    GetScriptEventManager()->TriggerEvent("OnKeyFrameAdded", &args);
 }

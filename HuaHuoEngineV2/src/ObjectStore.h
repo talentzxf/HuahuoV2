@@ -24,6 +24,7 @@ class ObjectStore : public Object{
 public:
     ObjectStore(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
+        ,maxFrameId(-1)
     {
 
     }
@@ -31,6 +32,7 @@ public:
     Layer* CreateLayer(const char* uuid){
         printf("Creating layer for uuid:%s\n", uuid);
         Layer* layer = Object::Produce<Layer>();
+        layer->SetObjectStore(this);
         currentLayer = layer;
         layerMap.insert(std::pair<std::string, PPtr<Layer>>(uuid, layer));
         layers.push_back(layer);
@@ -55,7 +57,16 @@ public:
         return layers[i];
     }
 
+    void UpdateMaxFrameId(int frameId){
+        this->maxFrameId = std::max(this->maxFrameId, frameId);
+    }
+
+    int GetMaxFrameId(){
+        return this->maxFrameId;
+    }
+
 private:
+    int maxFrameId;
     std::vector<PPtr<Layer>> layers;
     std::map<std::string, PPtr<Layer>> layerMap;
     PPtr<Layer> currentLayer;

@@ -25,8 +25,9 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
 
                 // TODO: check whether the position is acceptable or need some modification
 
-                obj.position = proposedNewPosition
-                obj.update()
+                // obj.position = proposedNewPosition
+                obj.getPaperShape().position = proposedNewPosition
+                obj.store({segments: true, position: true})
             }
         }
     }
