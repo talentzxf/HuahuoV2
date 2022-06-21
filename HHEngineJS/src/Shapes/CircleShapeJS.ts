@@ -47,10 +47,6 @@ class CircleShapeJS extends BaseShapeJS{
         this.createShape()
         this.position = this.paperShape.position
     }
-
-    duringUpdate(){
-        super.duringUpdate()
-    }
 }
 
 shapeFactory.RegisterClass(shapeName, CircleShapeJS.createCircle)

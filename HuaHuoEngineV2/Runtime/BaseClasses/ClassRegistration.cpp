@@ -60,4 +60,5 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<AbstractFrameState>("ObjectStore");
     RegisterHuaHuoClass<ShapeTransformFrameState>("ObjectStore");
     RegisterHuaHuoClass<ShapeColorFrameState>("ObjectStore");
+    RegisterHuaHuoClass<ShapeSegmentFrameState>("ObjectStore");
 }

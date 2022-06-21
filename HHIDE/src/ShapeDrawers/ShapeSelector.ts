@@ -5,6 +5,7 @@ import {paper} from "hhenginejs";
 import {shapeTranslateHandler} from "../TransformHandlers/ShapeTranslateHandler";
 import {shapeScaleHandler} from "../TransformHandlers/ShapeScaleHandler";
 import {ShapeTranslateMorphBase} from "../TransformHandlers/ShapeTranslateMorphBase";
+import {TransformHandlerMap} from "../TransformHandlers/TransformHandlerMap";
 
 const VERYNEARMARGIN = 5
 const NEARBOUNDMARGIN = 15
@@ -25,8 +26,8 @@ class ShapeSelector extends BaseShapeDrawer {
     selectedShapes: Set<BaseShapeJS> = new Set()
 
     transformHandler: ShapeTranslateMorphBase = null
-    defaultTransformHandler: ShapeTranslateMorphBase = shapeTranslateHandler
     canvas: HTMLCanvasElement
+    transformHandlerMap:TransformHandlerMap
 
     constructor() {
         super();
@@ -38,6 +39,8 @@ class ShapeSelector extends BaseShapeDrawer {
             handles: true,
             tolerance: 5
         }
+
+        this.transformHandlerMap = new TransformHandlerMap()
     }
 
     isDefaultDrawer(): boolean {
@@ -69,14 +72,10 @@ class ShapeSelector extends BaseShapeDrawer {
                 } else { // If the object has already been selected, we might need to do something based on the hittype.
 
                     let hitType = hitResult.type
-
-
-                    if(hitType == "fill"){
-                        this.transformHandler = this.defaultTransformHandler
-                    }
+                    this.transformHandler = this.transformHandlerMap.getHandler(hitType)
 
                     if(this.transformHandler)
-                        this.transformHandler.beginMove(hitPoint)
+                        this.setTransformHandler(this.selectedShapes, hitPoint, this.transformHandler, hitResult)
                 }
 
                 return true
@@ -194,10 +193,10 @@ class ShapeSelector extends BaseShapeDrawer {
         return true
     }
 
-    setTransformHandler(targetObjs: Set<BaseShapeJS>, pos: Vector2, handler:ShapeTranslateMorphBase = this.defaultTransformHandler) {
+    setTransformHandler(targetObjs: Set<BaseShapeJS>, pos: Vector2, handler:ShapeTranslateMorphBase = TransformHandlerMap.defaultTransformHandler, hitResult = null) {
         this.transformHandler = handler
         this.transformHandler.setTarget(targetObjs)
-        this.transformHandler.beginMove(pos)
+        this.transformHandler.beginMove(pos, hitResult)
     }
 
     onMouseUp(evt: MouseEvent) {

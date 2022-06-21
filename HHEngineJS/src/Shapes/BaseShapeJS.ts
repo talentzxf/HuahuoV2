@@ -83,6 +83,29 @@ class BaseShapeJS
         return window.paper
     }
 
+    store(storeOptions){
+        if(storeOptions.position)
+            this.position = this.paperShape.position
+        if(storeOptions.segments)
+        {
+            let segments = this.paperShape.segments
+            if(segments){
+                let segmentBuffer = []
+
+                for(let id=0; id < segments.length; id++){
+                    segmentBuffer[6*id] = segments[id].point.x
+                    segmentBuffer[6*id + 1] = segments[id].point.y
+                    segmentBuffer[6*id + 2 ] = segments[id].handleIn.x
+                    segmentBuffer[6*id + 3 ] = segments[id].handleIn.y
+                    segmentBuffer[6*id + 4] = segments[id].handleOut.x
+                    segmentBuffer[6*id + 5] = segments[id].handleOut.y
+                }
+
+                this.rawObj.SetSegments(segmentBuffer, segments.length)
+            }
+        }
+    }
+
     constructor(rawObj?) {
         if(!rawObj)
         {
@@ -119,13 +142,9 @@ class BaseShapeJS
         return this.rawObj.IsVisible();
     }
 
-    beforeUpdate(){
+    beforeUpdate(updateOptions){
         if(this.isPermanent && !this.rawObj.IsVisible()){
             this.selected = false
-        }
-
-        if(!this.isSelected && this.boundingBoxRect){
-            this.boundingBoxRect.remove()
         }
     }
 
@@ -133,46 +152,98 @@ class BaseShapeJS
         throw "Can't create abstract shape, override this function."
     }
 
-    duringUpdate()
+    duringUpdate(updateOptions)
     {
-        if(!this.paperShape){
-            this.createShape()
+        if(updateOptions && updateOptions.updateShape){
+            if(!this.paperShape){
+                this.createShape()
+            }
         }
     }
 
-    afterUpdate()
-    {
-        let scale = this.rawObj.GetScale()
-        this.paperShape.scaling = new paper.Point(scale.x, scale.y)
+    applySegments(){
+        let segmentCount = this.rawObj.GetSegmentCount();
+        if(segmentCount > 0 && this.paperShape.segments.length > 0){
+            let currentSegmentCount = this.paperShape.segments.length
+            let createSegments = false
+            if(currentSegmentCount != segmentCount){
+                this.paperShape.removeSegments()
+                createSegments = true
+            }
 
-        let pos = this.rawObj.GetPosition();
-        this.paperShape.position = new paper.Point(pos.x, pos.y);
+            for(let i = 0; i < segmentCount; i++){
+                let position = this.rawObj.GetSegmentPositions(i);
+                let handleIn = this.rawObj.GetSegmentHandleIns(i);
+                let handleOut = this.rawObj.GetSegmentHandleOuts(i);
+
+                let positionPoint = new paper.Point(position.x, position.y)
+                let handleInPoint = new paper.Point(handleIn.x, handleIn.y)
+                let handleOutPoint = new paper.Point(handleOut.x, handleOut.y)
+
+                if(createSegments){
+                    this.paperShape.insert(i, new paper.Segment(positionPoint, handleInPoint, handleOutPoint))
+                } else {
+                    this.paperShape.segments[i].point.x = positionPoint.x
+                    this.paperShape.segments[i].point.y = positionPoint.y
+                    this.paperShape.segments[i].handleIn.x = handleInPoint.x
+                    this.paperShape.segments[i].handleIn.y = handleInPoint.y
+                    this.paperShape.segments[i].handleOut.x = handleOutPoint.x
+                    this.paperShape.segments[i].handleOut.y = handleOutPoint.y
+                }
+            }
+            return true
+        }
+
+        return false
+    }
+
+    afterUpdate(updateOptions)
+    {
+        if(updateOptions && updateOptions.updateShape){
+            let scale = this.rawObj.GetScale()
+            this.paperShape.scaling = new paper.Point(scale.x, scale.y)
+
+            if(!this.applySegments()){
+                let pos = this.rawObj.GetPosition();
+                this.paperShape.position = new paper.Point(pos.x, pos.y);
+            }
+        }
+
 
         if(this.isSelected){
-            if(this.boundingBoxRect)
-                this.boundingBoxRect.remove()
+            if(updateOptions && updateOptions.updateBoundingBox){
+                if(this.boundingBoxRect)
+                    this.boundingBoxRect.remove()
 
-            let boundingBox = this.paperShape.bounds;
+                let boundingBox = this.paperShape.bounds;
 
-            let paperjs = this.getPaperJs()
-            this.boundingBoxRect = new paperjs.Path.Rectangle(relaxRectangle(boundingBox, BOUNDMARGIN))
-            this.boundingBoxRect.dashArray = [4, 10]
-            this.boundingBoxRect.strokeColor = new paper.Color("black")
+                let paperjs = this.getPaperJs()
+                this.boundingBoxRect = new paperjs.Path.Rectangle(relaxRectangle(boundingBox, BOUNDMARGIN))
+                this.boundingBoxRect.dashArray = [4, 10]
+                this.boundingBoxRect.strokeColor = new paper.Color("black")
+            }
+
             this.paperShape.selected = true
         }else{
             this.paperShape.selected = false
+            if(updateOptions && updateOptions.updateBoundingBox){
+                if(this.boundingBoxRect)
+                    this.boundingBoxRect.remove()
+            }
         }
     }
 
-    update(){
-        this.beforeUpdate()
-        this.duringUpdate()
+    update(updateOptions = {updateShape: true, updateBoundingBox : true}){
+        this.beforeUpdate(updateOptions)
+        this.duringUpdate(updateOptions)
 
         if(this.isPermanent == true && !this.rawObj.IsVisible()){
             this.paperShape.visible = false
+            this.isSelected = false
+            this.paperShape.selected = false
         }else{
             this.paperShape.visible = true
-            this.afterUpdate()
+            this.afterUpdate(updateOptions)
         }
     }
 

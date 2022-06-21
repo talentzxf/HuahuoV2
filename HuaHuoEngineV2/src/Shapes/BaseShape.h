@@ -12,6 +12,7 @@
 #include "BaseClasses/PPtr.h"
 #include "KeyFrames/ShapeColorFrameState.h"
 #include "Serialize/PersistentManager.h"
+#include "KeyFrames/ShapeSegmentFrameState.h"
 
 extern std::string StoreFilePath;
 class BaseShape;
@@ -36,6 +37,7 @@ class BaseShape : public Object{
 private:
     PPtr<ShapeTransformFrameState> mTransformKeyFrames;
     PPtr<ShapeColorFrameState> mColorKeyFrames;
+    PPtr<ShapeSegmentFrameState> mSegmentFrames;
     Layer* mLayer;
     SInt32 mBornFrameId;
 
@@ -47,9 +49,11 @@ public:
     {
         mTransformKeyFrames = Object::Produce<ShapeTransformFrameState>();
         mColorKeyFrames = Object::Produce<ShapeColorFrameState>();
+        mSegmentFrames = Object::Produce<ShapeSegmentFrameState>();
 
         GetPersistentManager().MakeObjectPersistent(mTransformKeyFrames.GetInstanceID(), StoreFilePath);
         GetPersistentManager().MakeObjectPersistent(mColorKeyFrames->GetInstanceID(), StoreFilePath);
+        GetPersistentManager().MakeObjectPersistent(mSegmentFrames->GetInstanceID(), StoreFilePath);
     }
 
     void SetBornFrameId(SInt32 bornFrameId){
@@ -80,6 +84,7 @@ public:
     virtual void Apply(int frameId){
         mTransformKeyFrames->Apply(frameId);
         mColorKeyFrames->Apply(frameId);
+        mSegmentFrames->Apply(frameId);
     }
 
     void SetScale(float xScale, float yScale, float zScale);
@@ -88,6 +93,24 @@ public:
     void SetPosition(float x, float y, float z);
 
     void SetColor(float r, float g, float b, float a);
+
+    void SetSegments(float segmentBuffer[], int size);
+
+    int GetSegmentCount(){
+        return mSegmentFrames->GetSegmentCount();
+    }
+
+    Vector3f* GetSegmentPositions(int segmentId){
+        return mSegmentFrames->GetSegmentPositions(segmentId);
+    }
+
+    Vector3f* GetSegmentHandleIns(int segmentId){
+        return mSegmentFrames->GetSegmentHandleIns(segmentId);
+    }
+
+    Vector3f* GetSegmentHandleOuts(int segmentId){
+        return mSegmentFrames->GetSegmentHandleOuts(segmentId);
+    }
 
     ColorRGBAf* GetColor(){
         return mColorKeyFrames->GetColor();

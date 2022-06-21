@@ -250,6 +250,37 @@ void testRecordKeyFrames(){
     assert(transformKeyFrames[2].transformData.position == Vector3f(5.0, 2.0, 0.0));
 }
 
+void testSegmentKeyFrames(){
+    ShapeSegmentFrameState* segmentFrameState = Object::Produce<ShapeSegmentFrameState>();
+
+    int segmentSize = 4;
+    std::vector<float> segmentBuffer;
+    for(int i = 0 ; i < segmentSize; i++){
+        segmentBuffer.push_back(i*6);
+        segmentBuffer.push_back(i*6+1);
+        segmentBuffer.push_back(i*6+2);
+        segmentBuffer.push_back(i*6+3);
+        segmentBuffer.push_back(i*6+4);
+        segmentBuffer.push_back(i*6+5);
+    }
+
+    segmentFrameState->RecordSegments(0, segmentBuffer.data(), segmentSize);
+
+    segmentBuffer.clear();
+    for(int i = 0 ; i < segmentSize; i++){
+        segmentBuffer.push_back(i*6 + 10);
+        segmentBuffer.push_back(i*6+1 + 10);
+        segmentBuffer.push_back(i*6+2 + 10);
+        segmentBuffer.push_back(i*6+3 + 10);
+        segmentBuffer.push_back(i*6+4 + 10);
+        segmentBuffer.push_back(i*6+5 + 10);
+    }
+
+    segmentFrameState->RecordSegments(9, segmentBuffer.data(), segmentSize);
+
+    segmentFrameState->Apply(5);
+}
+
 int main() {
     HuaHuoEngine::InitEngine();
 //    testTransform();
@@ -259,5 +290,6 @@ int main() {
     testShapeStore();
     testKeyFrames();
     testRecordKeyFrames();
+    testSegmentKeyFrames();
     return 0;
 }

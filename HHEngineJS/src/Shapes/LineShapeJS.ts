@@ -31,10 +31,6 @@ class LineShapeJS extends BaseShapeJS{
         this.paperShape.data.meta = this
     }
 
-    duringUpdate() {
-        super.duringUpdate()
-    }
-
     setStartPoint(startPoint: Vector2){
         this.position = startPoint
         this.rawObj.SetStartPoint(startPoint.x, startPoint.y, 0);

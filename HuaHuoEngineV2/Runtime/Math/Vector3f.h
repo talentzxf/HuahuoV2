@@ -50,6 +50,8 @@ public:
     EXPORT_COREMODULE static const Vector3f xAxis;
     EXPORT_COREMODULE static const Vector3f yAxis;
     EXPORT_COREMODULE static const Vector3f zAxis;
+
+    inline static bool AllowTransferOptimization () { return false; }
 };
 
 

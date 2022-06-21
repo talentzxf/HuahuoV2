@@ -13,7 +13,7 @@ class ShapeTranslateMorphBase{
         this.curObjs = objs
     }
 
-    beginMove(startPos: Vector2){
+    beginMove(startPos: Vector2, hitResult = null){
         this.startPos = startPos
         this.isDragging = true
     }

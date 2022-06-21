@@ -66,7 +66,7 @@ void BaseShape::SetScale(float xScale, float yScale, float zScale) {
     shapeLayer->AddKeyFrame(currentFrameId);
 }
 
-Vector3f* BaseShape::GetScale(){
+Vector3f *BaseShape::GetScale() {
     return mTransformKeyFrames->GetScale();
 }
 
@@ -78,11 +78,11 @@ void BaseShape::SetColor(float r, float g, float b, float a) {
     shapeLayer->AddKeyFrame(currentFrameId);
 }
 
-bool BaseShape::IsVisibleInFrame(SInt32 frameId){
-    if(this->mBornFrameId < 0)
+bool BaseShape::IsVisibleInFrame(SInt32 frameId) {
+    if (this->mBornFrameId < 0)
         return false;
 
-    if(frameId < this->mBornFrameId)
+    if (frameId < this->mBornFrameId)
         return false;
 
     Layer *shapeLayer = GetLayer();
@@ -92,6 +92,13 @@ bool BaseShape::IsVisibleInFrame(SInt32 frameId){
     return bornFrameSpanHead == currentFrameSpanHead;
 }
 
-bool BaseShape::IsVisible(){
+bool BaseShape::IsVisible() {
     return IsVisibleInFrame(GetLayer()->GetCurrentFrame());
+}
+
+void BaseShape::SetSegments(float segmentBuffer[], int size) {
+    Layer* shapeLayer = GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+    mSegmentFrames->RecordSegments(currentFrameId, segmentBuffer, size);
+    shapeLayer->AddKeyFrame(currentFrameId);
 }

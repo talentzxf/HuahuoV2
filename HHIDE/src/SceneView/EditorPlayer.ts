@@ -45,10 +45,10 @@ class EditorPlayer{
             }
             let elapsedTime = timeStamp - this.animationStartTime
 
-            if(this.lastAnimateTime < 0 || (elapsedTime - timeStamp ) > 1.0/GlobalConfig.fps){
+            if(this.lastAnimateTime < 0 || (elapsedTime - this.lastAnimateTime ) > 1.0/GlobalConfig.fps){
                 this.timeline.setTimeElapsed(elapsedTime/1000.0) // convert from miliseconds to seconds
                 this.updateAllShapes()
-                this.lastAnimateTime = timeStamp
+                this.lastAnimateTime = elapsedTime
             }
 
             requestAnimationFrame(this.animationFrameStep.bind(this));

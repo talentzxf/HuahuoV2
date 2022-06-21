@@ -25,7 +25,7 @@ bool ShapeColorFrameState::Apply(int frameId) {
         ColorKeyFrame *k1 = resultKeyFrames.first;
         ColorKeyFrame *k2 = resultKeyFrames.second;
 
-        if (k1->frameId == k2->frameId) {
+        if (k2 == NULL || k1->frameId == k2->frameId) {
             this->m_CurrentColor = k1->color;
         } else {
             float ratio = float(frameId - k1->frameId) / float(k2->frameId - k1->frameId);

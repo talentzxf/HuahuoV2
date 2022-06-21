@@ -97,6 +97,12 @@ interface BaseShape{
     Layer GetLayer();
 
     boolean IsVisible();
+    void SetSegments(float[] segmentBuffer, long size);
+
+    long GetSegmentCount();
+    Vector3f GetSegmentPositions(long segmentId);
+    Vector3f GetSegmentHandleIns(long segmentId);
+    Vector3f GetSegmentHandleOuts(long segmentId);
 };
 
 [NoDelete]
@@ -117,6 +123,12 @@ interface LineShape{
 
     Layer GetLayer();
     boolean IsVisible();
+    void SetSegments(float[] segmentBuffer, long size);
+
+    long GetSegmentCount();
+    Vector3f GetSegmentPositions(long segmentId);
+    Vector3f GetSegmentHandleIns(long segmentId);
+    Vector3f GetSegmentHandleOuts(long segmentId);
 };
 
 [NoDelete]
@@ -137,6 +149,12 @@ interface CircleShape{
 
     Layer GetLayer();
     boolean IsVisible();
+    void SetSegments(float[] segmentBuffer, long size);
+
+    long GetSegmentCount();
+    Vector3f GetSegmentPositions(long segmentId);
+    Vector3f GetSegmentHandleIns(long segmentId);
+    Vector3f GetSegmentHandleOuts(long segmentId);
 };
 
 interface HuaHuoEngine {
