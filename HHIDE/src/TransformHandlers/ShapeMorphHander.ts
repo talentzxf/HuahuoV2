@@ -36,9 +36,11 @@ class ShapeMorphHander extends ShapeTranslateMorphBase{
             let proposedNewPosition = this.curSegmentStartPos.add(offset)
             this.curSegment.point = proposedNewPosition;
 
+            console.log("Dragging to new pos:" + proposedNewPosition)
+
             // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
             this.targetShape.store({position: true, segments: true})
-            // this.targetShape.update( {updateShape: false, updateBoundingBox : true});
+            this.targetShape.update( {updateShape: false, updateBoundingBox : true});
         }
     }
 }
@@ -64,7 +66,7 @@ class ShapeHandlerMoveHandler extends ShapeMorphHander{
             this.curSegment[this.targetHandleName] = targetHandlePos
 
             // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
-            this.targetShape.store({position: true, segments: true})
+            this.targetShape.store({position: false, segments: true})
             this.targetShape.update( {updateShape: false, updateBoundingBox : true});
         }
     }

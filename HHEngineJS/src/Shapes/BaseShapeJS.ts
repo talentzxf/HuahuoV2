@@ -84,8 +84,6 @@ class BaseShapeJS
     }
 
     store(storeOptions){
-        if(storeOptions.position)
-            this.position = this.paperShape.position
         if(storeOptions.segments)
         {
             let segments = this.paperShape.segments
@@ -100,10 +98,16 @@ class BaseShapeJS
                     segmentBuffer[6*id + 4] = segments[id].handleOut.x
                     segmentBuffer[6*id + 5] = segments[id].handleOut.y
                 }
-
                 this.rawObj.SetSegments(segmentBuffer, segments.length)
             }
         }
+
+        if(storeOptions.position){
+            this.position = this.paperShape.position
+
+            console.log("Storing position:" + this.position.x + "," + this.position.y)
+        }
+
     }
 
     constructor(rawObj?) {
@@ -183,12 +187,9 @@ class BaseShapeJS
                 if(createSegments){
                     this.paperShape.insert(i, new paper.Segment(positionPoint, handleInPoint, handleOutPoint))
                 } else {
-                    this.paperShape.segments[i].point.x = positionPoint.x
-                    this.paperShape.segments[i].point.y = positionPoint.y
-                    this.paperShape.segments[i].handleIn.x = handleInPoint.x
-                    this.paperShape.segments[i].handleIn.y = handleInPoint.y
-                    this.paperShape.segments[i].handleOut.x = handleOutPoint.x
-                    this.paperShape.segments[i].handleOut.y = handleOutPoint.y
+                    this.paperShape.segments[i].point = positionPoint
+                    this.paperShape.segments[i].handleIn = handleInPoint
+                    this.paperShape.segments[i].handleOut = handleOutPoint
                 }
             }
             return true
@@ -203,12 +204,14 @@ class BaseShapeJS
             let scale = this.rawObj.GetScale()
             this.paperShape.scaling = new paper.Point(scale.x, scale.y)
 
-            if(!this.applySegments()){
-                let pos = this.rawObj.GetPosition();
+            this.applySegments()
+            let pos = this.rawObj.GetPosition();
+            console.log("Before shape position:" + this.paperShape.position)
+            if(this.paperShape.position.x != pos.x && this.paperShape.position.y != pos.y)
                 this.paperShape.position = new paper.Point(pos.x, pos.y);
-            }
-        }
 
+            console.log("Current shape position:" + this.paperShape.position)
+        }
 
         if(this.isSelected){
             if(updateOptions && updateOptions.updateBoundingBox){
