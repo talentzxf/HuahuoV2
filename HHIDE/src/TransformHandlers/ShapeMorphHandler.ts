@@ -19,14 +19,16 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase{
         hitSegment.handleOut.selected = true
     }
 
-    beginMove(startPos, hitResult) {
+    beginMove(startPos, hitResult = null) {
         if(this.curObjs.size != 1){
             throw "Can't morph multiple objects!!!"
         }
 
         this.targetShape = this.curObjs.values().next().value // There's only one object in the set, get it.
         super.beginMove(startPos);
-        this.setSegment(hitResult.segment)
+
+        if(hitResult != null && hitResult.segment != null)
+            this.setSegment(hitResult.segment)
     }
 
     dragging(pos){
@@ -72,6 +74,22 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler{
     }
 }
 
+class ShapeInsertSegmentHandler extends ShapeMorphHandler{
+    circle: paper.Path
+    beginMove(startPos) {
+        super.beginMove(startPos);
+
+        let obj:paper.Path = this.targetShape.getPaperShape()
+        let localPos = obj.globalToLocal(startPos)
+        let nearestPoint = obj.getNearestPoint(localPos)
+        let offset = obj.getOffsetOf(nearestPoint)
+
+        let newSegment = obj.divideAt(offset)
+        this.setSegment(newSegment)
+    }
+}
+
 let shapeHandlerMoveHandler = new ShapeHandlerMoveHandler()
 let shapeMorphHandler = new ShapeMorphHandler()
-export {shapeMorphHandler, shapeHandlerMoveHandler}
+let shapeInsertSegmentHandler = new ShapeInsertSegmentHandler()
+export {shapeMorphHandler, shapeHandlerMoveHandler, shapeInsertSegmentHandler}

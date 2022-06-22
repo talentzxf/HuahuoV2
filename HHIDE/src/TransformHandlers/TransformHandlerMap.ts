@@ -1,4 +1,4 @@
-import {shapeHandlerMoveHandler, shapeMorphHandler} from "./ShapeMorphHandler";
+import {shapeHandlerMoveHandler, shapeMorphHandler, shapeInsertSegmentHandler} from "./ShapeMorphHandler";
 import {ShapeTranslateMorphBase} from "./ShapeTranslateMorphBase";
 import {shapeTranslateHandler} from "./ShapeTranslateHandler";
 
@@ -9,7 +9,8 @@ class TransformHandlerMap{
         "segment": shapeMorphHandler,
         "default": TransformHandlerMap.defaultTransformHandler,
         "handle-in": shapeHandlerMoveHandler,
-        "handle-out": shapeHandlerMoveHandler
+        "handle-out": shapeHandlerMoveHandler,
+        "stroke" : shapeInsertSegmentHandler,
     }
     constructor() {
     }
