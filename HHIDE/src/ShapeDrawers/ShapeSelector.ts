@@ -1,18 +1,13 @@
 import {BaseShapeJS} from "hhenginejs"
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
-import {Vector2} from "hhcommoncomponents"
+import {Vector2, pointsNear} from "hhcommoncomponents"
 import {paper} from "hhenginejs";
-import {shapeTranslateHandler} from "../TransformHandlers/ShapeTranslateHandler";
 import {shapeScaleHandler} from "../TransformHandlers/ShapeScaleHandler";
 import {ShapeTranslateMorphBase} from "../TransformHandlers/ShapeTranslateMorphBase";
 import {TransformHandlerMap} from "../TransformHandlers/TransformHandlerMap";
 
 const VERYNEARMARGIN = 5
 const NEARBOUNDMARGIN = 15
-
-function pointsNear(p1:paper.Point, p2:paper.Point, margin:number){
-    return p1.getDistance(p2) < margin
-}
 
 class ShapeSelector extends BaseShapeDrawer {
     selectRectangle: paper.Path.Rectangle;

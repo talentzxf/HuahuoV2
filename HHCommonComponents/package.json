@@ -13,6 +13,7 @@
     "css-loader": "^6.7.1",
     "ejs-loader": "^0.5.0",
     "html-webpack-plugin": "^5.5.0",
+    "paper": "^0.12.15",
     "style-loader": "^3.3.1",
     "tiny-typed-emitter": "^2.1.0",
     "ts-loader": "^9.3.0",

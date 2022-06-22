@@ -21,13 +21,17 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
             this.lastPos = newPos
 
             for(let obj of this.curObjs){
+                console.log("Current object pos:" + obj.position.x, obj.position.y)
                 let proposedNewPosition = obj.position.add(offset)
 
                 // TODO: check whether the position is acceptable or need some modification
 
                 // obj.position = proposedNewPosition
+                console.log("Proposing:" + proposedNewPosition.x + "," + proposedNewPosition.y)
                 obj.getPaperShape().position = proposedNewPosition
+                console.log("After set position:" + obj.getPaperShape().position.x + "," + obj.getPaperShape().position.y)
                 obj.store({segments: true, position: true})
+                obj.update({updateShape:false, updateBoundingBox:true})
             }
         }
     }

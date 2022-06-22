@@ -1,6 +1,6 @@
 import {huahuoEngine} from "../EngineAPI";
 import {Logger} from "hhcommoncomponents"
-import {Vector2} from "hhcommoncomponents"
+import {Vector2, pointsNear} from "hhcommoncomponents"
 import * as paper from "paper";
 
 declare var Module: any;
@@ -52,6 +52,7 @@ class BaseShapeJS
     }
 
     set position(val:Vector2){
+        console.log("Setting pos:" + val.x + "," + val.y)
         this.rawObj.SetPosition(val.x, val.y, 0);
     }
 
@@ -84,9 +85,12 @@ class BaseShapeJS
     }
 
     store(storeOptions){
+        console.log("Current position 1:" + this.paperShape.position.x + "," + this.paperShape.position.y)
         if(storeOptions.segments)
         {
+            console.log("Current position 2:" + this.paperShape.position.x + "," + this.paperShape.position.y)
             let segments = this.paperShape.segments
+            console.log("Current position 3:" + this.paperShape.position.x + "," + this.paperShape.position.y)
             if(segments){
                 let segmentBuffer = []
 
@@ -98,10 +102,13 @@ class BaseShapeJS
                     segmentBuffer[6*id + 4] = segments[id].handleOut.x
                     segmentBuffer[6*id + 5] = segments[id].handleOut.y
                 }
+                console.log("Current position 4:" + this.paperShape.position.x + "," + this.paperShape.position.y)
                 this.rawObj.SetSegments(segmentBuffer, segments.length)
+                console.log("Current position 5:" + this.paperShape.position.x + "," + this.paperShape.position.y)
             }
         }
 
+        console.log("Current position 6:" + this.paperShape.position.x + "," + this.paperShape.position.y)
         if(storeOptions.position){
             this.position = this.paperShape.position
 
@@ -206,8 +213,11 @@ class BaseShapeJS
 
             this.applySegments()
             let pos = this.rawObj.GetPosition();
-            if(this.paperShape.position.x != pos.x || this.paperShape.position.y != pos.y)
+
+            if(!pointsNear(this.paperShape.position, new paper.Point(pos.x, pos.y), 0.1)){
+                console.log("Setting pos here:" + pos.x + "," + pos.y)
                 this.paperShape.position = new paper.Point(pos.x, pos.y);
+            }
         }
 
         if(this.isSelected){
