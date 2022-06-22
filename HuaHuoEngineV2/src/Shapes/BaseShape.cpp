@@ -103,3 +103,7 @@ void BaseShape::SetSegments(float segmentBuffer[], int size) {
     mSegmentFrames->RecordSegments(currentFrameId, segmentBuffer, size);
     shapeLayer->AddKeyFrame(currentFrameId);
 }
+
+void BaseShape::SetSegmentsAtFrame(float segmentBuffer[], int size, int keyFrameId){
+    mSegmentFrames->RecordSegments(keyFrameId, segmentBuffer, size);
+}

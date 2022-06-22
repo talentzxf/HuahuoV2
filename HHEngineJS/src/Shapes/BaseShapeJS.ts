@@ -84,6 +84,24 @@ class BaseShapeJS
         return window.paper
     }
 
+    storeSegments(segments, keyframeId = null){
+        let segmentBuffer = []
+
+        for(let id=0; id < segments.length; id++){
+            segmentBuffer[6*id] = segments[id].point.x
+            segmentBuffer[6*id + 1] = segments[id].point.y
+            segmentBuffer[6*id + 2 ] = segments[id].handleIn.x
+            segmentBuffer[6*id + 3 ] = segments[id].handleIn.y
+            segmentBuffer[6*id + 4] = segments[id].handleOut.x
+            segmentBuffer[6*id + 5] = segments[id].handleOut.y
+        }
+
+        if(keyframeId == null) // Set the current frame.
+            this.rawObj.SetSegments(segmentBuffer, segments.length)
+        else
+            this.rawObj.SetSegmentsAtFrame(segmentBuffer, segments.length, keyframeId)
+    }
+
     store(storeOptions){
         console.log("Current position 1:" + this.paperShape.position.x + "," + this.paperShape.position.y)
         if(storeOptions.segments)
@@ -92,19 +110,7 @@ class BaseShapeJS
             let segments = this.paperShape.segments
             console.log("Current position 3:" + this.paperShape.position.x + "," + this.paperShape.position.y)
             if(segments){
-                let segmentBuffer = []
-
-                for(let id=0; id < segments.length; id++){
-                    segmentBuffer[6*id] = segments[id].point.x
-                    segmentBuffer[6*id + 1] = segments[id].point.y
-                    segmentBuffer[6*id + 2 ] = segments[id].handleIn.x
-                    segmentBuffer[6*id + 3 ] = segments[id].handleIn.y
-                    segmentBuffer[6*id + 4] = segments[id].handleOut.x
-                    segmentBuffer[6*id + 5] = segments[id].handleOut.y
-                }
-                console.log("Current position 4:" + this.paperShape.position.x + "," + this.paperShape.position.y)
-                this.rawObj.SetSegments(segmentBuffer, segments.length)
-                console.log("Current position 5:" + this.paperShape.position.x + "," + this.paperShape.position.y)
+                this.storeSegments(segments)
             }
         }
 
@@ -172,6 +178,48 @@ class BaseShapeJS
         }
     }
 
+    insertSegment(localPos: paper.Point){ // Need to add segments in all keyframes
+        let keyFrameCount = this.rawObj.GetSegmentKeyFrameCount()
+        if(keyFrameCount <= 0)
+            return;
+
+        let newObj = new paper.Path() // Clone the object at keyFrameIdx and add new segment and save.
+        newObj.applyMatrix = false
+        newObj.visible = false
+        newObj.closed = true
+
+        // TODO: 1.Merge this with applySegments??
+        // TODO: 2.Add a clone method.
+        for(let keyFrameIdx = 0; keyFrameIdx < keyFrameCount; keyFrameIdx++){
+            let segmentKeyFrame = this.rawObj.GetSegmentKeyFrameAtKeyFrameIndex(keyFrameIdx);
+            let segmentCount = segmentKeyFrame.GetTotalSegments()
+            for(let segmentIdx = 0; segmentIdx < segmentCount; segmentIdx++){
+                let position = segmentKeyFrame.GetPosition(segmentIdx)
+                let handleIn = segmentKeyFrame.GetHandleIn(segmentIdx)
+                let handleOut = segmentKeyFrame.GetHandleOut(segmentIdx)
+
+                let positionPoint = new paper.Point(position.x, position.y)
+                let handleInPoint = new paper.Point(handleIn.x, handleIn.y)
+                let handleOutPoint = new paper.Point(handleOut.x, handleOut.y)
+
+                let newSegment = new paper.Segment(positionPoint, handleInPoint, handleOutPoint)
+                newObj.add(newSegment)
+            }
+
+
+            let nearestPoint = newObj.getNearestPoint(localPos)
+            let offset = newObj.getOffsetOf(nearestPoint)
+            if(!newObj.divideAt(offset)){
+                console.log("ERRRRRRRR!!!")
+            }
+
+            this.storeSegments(newObj.segments, segmentKeyFrame.GetFrameId())
+            newObj.removeSegments()
+        }
+
+        newObj.remove()
+    }
+
     applySegments(){
         let segmentCount = this.rawObj.GetSegmentCount();
         if(segmentCount > 0 && this.paperShape.segments.length > 0){
@@ -183,9 +231,9 @@ class BaseShapeJS
             }
 
             for(let i = 0; i < segmentCount; i++){
-                let position = this.rawObj.GetSegmentPositions(i);
-                let handleIn = this.rawObj.GetSegmentHandleIns(i);
-                let handleOut = this.rawObj.GetSegmentHandleOuts(i);
+                let position = this.rawObj.GetSegmentPosition(i);
+                let handleIn = this.rawObj.GetSegmentHandleIn(i);
+                let handleOut = this.rawObj.GetSegmentHandleOut(i);
 
                 let positionPoint = new paper.Point(position.x, position.y)
                 let handleInPoint = new paper.Point(handleIn.x, handleIn.y)

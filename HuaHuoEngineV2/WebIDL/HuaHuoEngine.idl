@@ -83,6 +83,15 @@ interface ColorRGBAf{
 };
 
 [NoDelete]
+interface SegmentKeyFrame{
+    long GetFrameId();
+    long GetTotalSegments();
+    Vector3f GetPosition(long segmentId);
+    Vector3f GetHandleIn(long segmentId);
+    Vector3f GetHandleOut(long segmentId);
+};
+
+[NoDelete]
 interface BaseShape{
     static BaseShape CreateShape(DOMString shapeName);
     DOMString GetName();
@@ -99,11 +108,14 @@ interface BaseShape{
 
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
+    void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
 
+    long GetSegmentKeyFrameCount();
     long GetSegmentCount();
-    Vector3f GetSegmentPositions(long segmentId);
-    Vector3f GetSegmentHandleIns(long segmentId);
-    Vector3f GetSegmentHandleOuts(long segmentId);
+    Vector3f GetSegmentPosition(long segmentId);
+    Vector3f GetSegmentHandleIn(long segmentId);
+    Vector3f GetSegmentHandleOut(long segmentId);
+    SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
 };
 
 [NoDelete]
@@ -125,11 +137,14 @@ interface LineShape{
     Layer GetLayer();
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
+    void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
 
+    long GetSegmentKeyFrameCount();
     long GetSegmentCount();
-    Vector3f GetSegmentPositions(long segmentId);
-    Vector3f GetSegmentHandleIns(long segmentId);
-    Vector3f GetSegmentHandleOuts(long segmentId);
+    Vector3f GetSegmentPosition(long segmentId);
+    Vector3f GetSegmentHandleIn(long segmentId);
+    Vector3f GetSegmentHandleOut(long segmentId);
+    SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
 };
 
 [NoDelete]
@@ -151,11 +166,14 @@ interface CircleShape{
     Layer GetLayer();
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
+    void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
 
+    long GetSegmentKeyFrameCount();
     long GetSegmentCount();
-    Vector3f GetSegmentPositions(long segmentId);
-    Vector3f GetSegmentHandleIns(long segmentId);
-    Vector3f GetSegmentHandleOuts(long segmentId);
+    Vector3f GetSegmentPosition(long segmentId);
+    Vector3f GetSegmentHandleIn(long segmentId);
+    Vector3f GetSegmentHandleOut(long segmentId);
+    SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
 };
 
 interface HuaHuoEngine {

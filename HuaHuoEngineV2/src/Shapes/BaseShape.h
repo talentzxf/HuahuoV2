@@ -96,20 +96,30 @@ public:
 
     void SetSegments(float segmentBuffer[], int size);
 
+    void SetSegmentsAtFrame(float segmentBuffer[], int size, int keyFrameId);
+
     int GetSegmentCount(){
         return mSegmentFrames->GetSegmentCount();
     }
 
-    Vector3f* GetSegmentPositions(int segmentId){
-        return mSegmentFrames->GetSegmentPositions(segmentId);
+    Vector3f* GetSegmentPosition(int segmentId){
+        return mSegmentFrames->GetSegmentPosition(segmentId);
     }
 
-    Vector3f* GetSegmentHandleIns(int segmentId){
-        return mSegmentFrames->GetSegmentHandleIns(segmentId);
+    Vector3f* GetSegmentHandleIn(int segmentId){
+        return mSegmentFrames->GetSegmentHandleIn(segmentId);
     }
 
-    Vector3f* GetSegmentHandleOuts(int segmentId){
-        return mSegmentFrames->GetSegmentHandleOuts(segmentId);
+    Vector3f* GetSegmentHandleOut(int segmentId){
+        return mSegmentFrames->GetSegmentHandleOut(segmentId);
+    }
+
+    int GetSegmentKeyFrameCount(){
+        return mSegmentFrames->GetKeyFrameCount();
+    }
+
+    SegmentKeyFrame* GetSegmentKeyFrameAtKeyFrameIndex(int keyFrameIndex){
+        return mSegmentFrames->GetSegmentKeyFrameAtFrameIndex(keyFrameIndex);
     }
 
     ColorRGBAf* GetColor(){

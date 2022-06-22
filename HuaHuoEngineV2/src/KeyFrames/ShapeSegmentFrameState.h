@@ -16,6 +16,26 @@ struct SegmentKeyFrame{
     std::vector<Vector3f> handleOutArray;
 
     DECLARE_SERIALIZE(SegmentKeyFrame)
+
+    int GetFrameId(){
+        return frameId;
+    }
+
+    int GetTotalSegments(){
+        return positionArray.size();
+    }
+
+    Vector3f* GetPosition(long segmentId){
+        return &positionArray[segmentId];
+    }
+
+    Vector3f* GetHandleIn(long segmentId){
+        return &handleInArray[segmentId];
+    }
+
+    Vector3f* GetHandleOut(long segmentId){
+        return &handleOutArray[segmentId];
+    }
 };
 
 template<class TransferFunction> void SegmentKeyFrame::Transfer(TransferFunction &transfer){
@@ -42,17 +62,30 @@ public:
         return m_currentPositionArray.size();
     }
 
-    Vector3f* GetSegmentPositions(int segmentId){
+    Vector3f* GetSegmentPosition(int segmentId){
         return &m_currentPositionArray[segmentId];
     }
 
-    Vector3f* GetSegmentHandleIns(int segmentId){
+    Vector3f* GetSegmentHandleIn(int segmentId){
         return &m_currentHandleInArray[segmentId];
     }
 
-    Vector3f* GetSegmentHandleOuts(int segmentId){
+    Vector3f* GetSegmentHandleOut(int segmentId){
         return &m_currentHandleOutArray[segmentId];
     }
+
+    int GetKeyFrameCount(){
+        return m_KeyFrames.size();
+    }
+
+    SegmentKeyFrame* GetSegmentKeyFrameAtFrameIndex(int keyFrameIndex){
+        if(keyFrameIndex >= m_KeyFrames.size()){
+            printf("Error, totally %d keyframes, but want to get the %dth keyframe.\n", m_KeyFrames.size(), keyFrameIndex);
+            return NULL;
+        }
+
+        return &m_KeyFrames[keyFrameIndex];
+    };
 
 private:
     std::vector<Vector3f> m_currentPositionArray;

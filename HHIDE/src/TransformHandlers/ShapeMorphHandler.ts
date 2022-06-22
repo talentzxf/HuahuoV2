@@ -86,6 +86,8 @@ class ShapeInsertSegmentHandler extends ShapeMorphHandler{
 
         let newSegment = obj.divideAt(offset)
         this.setSegment(newSegment)
+
+        this.targetShape.insertSegment(localPos)
     }
 }
 
