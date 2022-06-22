@@ -30,7 +30,7 @@ void Layer::AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode) {
 void Layer::AddKeyFrame(int frameId) {
     if(keyFrames.contains(frameId))
         return;
-    
+
     objectStore->UpdateMaxFrameId(frameId);
     keyFrames.insert(frameId);
 

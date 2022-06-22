@@ -20,6 +20,7 @@ void BaseShape::Transfer(TransferFunction &transfer) {
     TRANSFER(mBornFrameId);
     TRANSFER(mTransformKeyFrames);
     TRANSFER(mColorKeyFrames);
+    TRANSFER(mSegmentFrames);
 }
 
 void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {

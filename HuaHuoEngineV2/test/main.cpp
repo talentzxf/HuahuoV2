@@ -70,6 +70,19 @@ void testShapeStore() {
     lineShape->SetEndPoint(1, 0, 0);
     currentLayer->AddShapeInternal(lineShape);
     lineShape->SetPosition(100.0, 100.0, 100.0);
+
+    int segmentSize = 4;
+    float buffer[4*6];
+    for(int i = 0; i < segmentSize; i++){
+        buffer[i*6] = 1.0f;
+        buffer[i*6 + 1 ] = 2.0f;
+        buffer[i*6 + 2 ] = 2.0f;
+        buffer[i*6 + 3 ] = 2.0f;
+        buffer[i*6 + 4 ] = 2.0f;
+        buffer[i*6 + 5 ] = 2.0f;
+    }
+    lineShape->SetSegments(buffer, segmentSize);
+
     assert(*lineShape->GetPosition() == Vector3f(100.0, 100.0, 100.0));
 
     lineShape->GetLayer()->SetCurrentFrame(10);
@@ -103,7 +116,7 @@ void testShapeStore() {
     fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath),length,1, fp);
     fclose(fp);
 
-    // std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo (8).data");
+    // std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo (1).data");
     std::string filenamestr(filename);
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 

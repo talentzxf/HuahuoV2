@@ -15,7 +15,7 @@ struct SegmentKeyFrame{
     std::vector<Vector3f> handleInArray;
     std::vector<Vector3f> handleOutArray;
 
-    DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(SegmentKeyFrame)
+    DECLARE_SERIALIZE(SegmentKeyFrame)
 };
 
 template<class TransferFunction> void SegmentKeyFrame::Transfer(TransferFunction &transfer){
