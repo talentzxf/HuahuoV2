@@ -67,8 +67,7 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler{
 
             this.curSegment[this.targetHandleName] = targetHandlePos
 
-            // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
-            this.targetShape.store({position: false, segments: true})
+            this.targetShape.store()
             this.targetShape.update( {updateShape: false, updateBoundingBox : true});
         }
     }

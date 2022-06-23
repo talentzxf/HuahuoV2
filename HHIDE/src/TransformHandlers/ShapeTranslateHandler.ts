@@ -29,7 +29,7 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
                 console.log("Proposing:" + proposedNewPosition.x + "," + proposedNewPosition.y)
                 obj.getPaperShape().position = proposedNewPosition
                 console.log("After set position:" + obj.getPaperShape().position.x + "," + obj.getPaperShape().position.y)
-                obj.store({segments: true, position: true})
+                obj.store()
                 obj.update({updateShape:false, updateBoundingBox:true})
             }
         }
