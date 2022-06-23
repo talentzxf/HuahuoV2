@@ -32,7 +32,6 @@ class LineShapeJS extends BaseShapeJS{
     }
 
     setStartPoint(startPoint: Vector2){
-        this.position = startPoint
         this.rawObj.SetStartPoint(startPoint.x, startPoint.y, 0);
     }
 
@@ -46,7 +45,7 @@ class LineShapeJS extends BaseShapeJS{
         }
 
         this.createShape()
-        this.position = this.paperShape.position
+        this.store()
     }
 }
 

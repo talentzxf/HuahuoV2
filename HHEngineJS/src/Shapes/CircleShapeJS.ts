@@ -19,7 +19,6 @@ class CircleShapeJS extends BaseShapeJS{
     }
 
     setCenter(center){
-        this.position = center
         this.rawObj.SetCenter(center.x, center.y, 0);
     }
 
@@ -45,7 +44,8 @@ class CircleShapeJS extends BaseShapeJS{
         }
 
         this.createShape()
-        this.position = this.paperShape.position
+
+        this.store()
     }
 }
 

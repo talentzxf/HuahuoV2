@@ -1,19 +1,9 @@
 import {huahuoEngine} from "../EngineAPI";
 import {Logger} from "hhcommoncomponents"
-import {Vector2, pointsNear} from "hhcommoncomponents"
+import {Vector2, relaxRectangle, pointsNear} from "hhcommoncomponents"
 import * as paper from "paper";
 
 declare var Module: any;
-
-function relaxRectangle(rectangle, margin) {
-    let retRectangle = rectangle.clone()
-    retRectangle.x -= margin
-    retRectangle.y -= margin
-    retRectangle.width += 2 * margin
-    retRectangle.height += 2 * margin
-
-    return retRectangle
-}
 
 const BOUNDMARGIN:number = 10
 
@@ -44,16 +34,6 @@ class BaseShapeJS
 
     set selected(val:boolean){
         this.isSelected = val
-    }
-
-    get position():Vector2{
-        let point = this.rawObj.GetPosition()
-        return new Vector2(point.x, point.y)
-    }
-
-    set position(val:Vector2){
-        console.log("Setting pos:" + val.x + "," + val.y)
-        this.rawObj.SetPosition(val.x, val.y, 0);
     }
 
     get color():paper.Color{
@@ -102,25 +82,19 @@ class BaseShapeJS
             this.rawObj.SetSegmentsAtFrame(segmentBuffer, segments.length, keyframeId)
     }
 
-    store(storeOptions){
-        console.log("Current position 1:" + this.paperShape.position.x + "," + this.paperShape.position.y)
+    store(storeOptions = {segments: true, position: true}){
         if(storeOptions.segments)
         {
-            console.log("Current position 2:" + this.paperShape.position.x + "," + this.paperShape.position.y)
             let segments = this.paperShape.segments
-            console.log("Current position 3:" + this.paperShape.position.x + "," + this.paperShape.position.y)
             if(segments){
                 this.storeSegments(segments)
             }
         }
 
-        console.log("Current position 6:" + this.paperShape.position.x + "," + this.paperShape.position.y)
         if(storeOptions.position){
-            this.position = this.paperShape.position
-
-            console.log("Storing position:" + this.position.x + "," + this.position.y)
+            let zeroPointPosition = this.paperShape.localToGlobal(new paper.Point(0,0))
+            this.rawObj.SetPosition(zeroPointPosition.x, zeroPointPosition.y, 0)
         }
-
     }
 
     constructor(rawObj?) {
@@ -260,12 +234,12 @@ class BaseShapeJS
             this.paperShape.scaling = new paper.Point(scale.x, scale.y)
 
             this.applySegments()
-            let pos = this.rawObj.GetPosition();
+            let pos = this.rawObj.GetPosition();// This position is the new global coordinate of the local (0,0).
+            let localCenter = this.paperShape.globalToLocal(this.paperShape.position)
+            let localOffset = localCenter.subtract(pos)
+            let globalOffset = this.paperShape.localToGlobal(localOffset)
 
-            if(!pointsNear(this.paperShape.position, new paper.Point(pos.x, pos.y), 0.1)){
-                console.log("Setting pos here:" + pos.x + "," + pos.y)
-                this.paperShape.position = new paper.Point(pos.x, pos.y);
-            }
+            this.paperShape.position = new paper.Point(pos.x, pos.y).add(globalOffset)
         }
 
         if(this.isSelected){
@@ -299,6 +273,10 @@ class BaseShapeJS
             this.paperShape.visible = false
             this.isSelected = false
             this.paperShape.selected = false
+
+            if(this.boundingBoxRect){
+                this.boundingBoxRect.remove();
+            }
         }else{
             this.paperShape.visible = true
             this.afterUpdate(updateOptions)
