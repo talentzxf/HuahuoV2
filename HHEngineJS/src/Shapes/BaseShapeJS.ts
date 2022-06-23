@@ -27,7 +27,6 @@ class BaseShapeJS
         return new Vector2(scale.x, scale.y)
     }
 
-
     get selected():boolean{
         return this.isSelected
     }
@@ -94,6 +93,8 @@ class BaseShapeJS
         if(storeOptions.position){
             let zeroPointPosition = this.paperShape.localToGlobal(new paper.Point(0,0))
             this.rawObj.SetPosition(zeroPointPosition.x, zeroPointPosition.y, 0)
+
+            console.log("Storing position:" + zeroPointPosition.x + "," + zeroPointPosition.y)
         }
     }
 
@@ -235,11 +236,13 @@ class BaseShapeJS
 
             this.applySegments()
             let pos = this.rawObj.GetPosition();// This position is the new global coordinate of the local (0,0).
-            let localCenter = this.paperShape.globalToLocal(this.paperShape.position)
-            let localOffset = localCenter.subtract(pos)
-            let globalOffset = this.paperShape.localToGlobal(localOffset)
 
-            this.paperShape.position = new paper.Point(pos.x, pos.y).add(globalOffset)
+            let currentZeroPoint = this.paperShape.localToGlobal(new paper.Point(0,0))
+            let currentCenter = this.paperShape.position
+
+            let centerOffset = currentCenter.subtract(currentZeroPoint)
+
+            this.paperShape.position = new paper.Point(pos.x, pos.y).add(centerOffset)
         }
 
         if(this.isSelected){

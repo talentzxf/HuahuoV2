@@ -27,6 +27,8 @@ TransformData Lerp(TransformData &k1, TransformData &k2, float ratio) {
 
 
 bool ShapeTransformFrameState::Apply(int frameId) {
+    printf("Currently there're %d transformKeyFrames\n", this->m_KeyFrames.size());
+
     std::pair<TransformKeyFrame *, TransformKeyFrame *> resultKeyFrames;
     if (FindKeyFramePair(frameId, this->m_KeyFrames, resultKeyFrames)) {
         this->isValidFrame = true;

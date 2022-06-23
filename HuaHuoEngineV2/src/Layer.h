@@ -72,6 +72,7 @@ public:
 
         this->currentFrameId = currentFrameId;
         for(auto shape : shapes){
+            printf("Applying layer shape here!!!!!\n");
             shape->Apply(this->currentFrameId);
         }
     }

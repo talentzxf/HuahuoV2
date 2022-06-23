@@ -40,6 +40,7 @@ interface Layer{
     long long GetShapeCount();
     void SetName(DOMString name);
     void SetCurrentFrame(long frameId);
+    long GetCurrentFrame();
     DOMString GetName();
     TimeLineCellManager GetTimeLineCellManager();
 
