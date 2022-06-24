@@ -1,14 +1,17 @@
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {TypedEmitter} from "tiny-typed-emitter";
+import {PropertySheet} from "hhcommoncomponents"
 
 enum EventNames{
     DRAWSHAPEBEGINS = 'drawShapeBegins',
-    DRAWSHAPEENDS = "drawShapeEnds"
+    DRAWSHAPEENDS = "drawShapeEnds",
+    OBJECTSELECTED = "objectSelected"
 }
 
 interface GlobalEvents{
     drawShapeBegins:(shapeDrawer: BaseShapeDrawer)=>void;
     drawShapeEnds:(shapeDrawer: BaseShapeDrawer)=>void;
+    objectSelected:(shapes: PropertySheet)=>void;
 }
 
 class EventBus extends TypedEmitter<GlobalEvents>{

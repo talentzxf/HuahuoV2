@@ -18,7 +18,7 @@ class ShapeScaleHandler extends ShapeTranslateMorphBase{
 
         this.originalScaleMap.clear()
         for(let shape of this.curObjs){
-            this.originalScaleMap.set(shape, shape.getPaperShape().scaling)
+            this.originalScaleMap.set(shape, shape.scaling)
         }
     }
 
@@ -32,7 +32,7 @@ class ShapeScaleHandler extends ShapeTranslateMorphBase{
                 let vec2 = newPos.subtract(center)
 
                 let scale = vec2.length()/vec1.length()
-                obj.getPaperShape().scaling = this.originalScaleMap.get(obj).multiply(scale)
+                obj.scaling = this.originalScaleMap.get(obj).multiply(scale)
 
                 obj.store()
                 obj.update({updateShape: false, updateBoundingBox : true})

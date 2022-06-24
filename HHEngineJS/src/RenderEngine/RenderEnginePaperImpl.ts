@@ -89,7 +89,6 @@ class RenderEnginePaperJs implements RenderEngine2D{
         let [contentWidth, contentHeight] = this.getContentWH(canvasWidth, canvasHeight)
         let xOffset = (canvasWidth - contentWidth)/2
         let yOffset = (canvasHeight - contentHeight)/2
-        let leftUp = view.viewToProject(new paper.Point(xOffset, yOffset))
         this.contentRect = this.createViewRectangle(xOffset, yOffset, contentWidth, contentHeight, "white")
         this.contentRect.sendToBack()
 
@@ -99,7 +98,7 @@ class RenderEnginePaperJs implements RenderEngine2D{
                 this.bgRect.remove()
             }
 
-            this.bgRect = this.createViewRectangle(0,0, canvasWidth, canvasHeight, new paper.Color("gray"))
+            this.bgRect = this.createViewRectangle(0,0, canvasWidth, canvasHeight, new paper.Color("lightgray"))
             this.bgRect.sendToBack()
         }
 

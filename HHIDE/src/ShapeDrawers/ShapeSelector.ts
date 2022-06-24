@@ -6,6 +6,7 @@ import {shapeScaleHandler} from "../TransformHandlers/ShapeScaleHandler";
 import {ShapeTranslateMorphBase} from "../TransformHandlers/ShapeTranslateMorphBase";
 import {TransformHandlerMap} from "../TransformHandlers/TransformHandlerMap";
 import {shapeRotateHandler} from "../TransformHandlers/ShapeRotateHandler";
+import {EventBus, EventNames} from "../Events/GlobalEvents";
 
 const BOUNDMARGIN:number = 10
 const VERYNEARMARGIN = 10
@@ -86,6 +87,8 @@ class ShapeSelector extends BaseShapeDrawer {
         selectedObj.selected = true
         selectedObj.update();
         this.selectedShapes.add(shape)
+
+        EventBus.getInstance().emit(EventNames.OBJECTSELECTED, selectedObj.getProperty())
     }
 
     clearSelection() {

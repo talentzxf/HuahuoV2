@@ -12,6 +12,7 @@ class LineShapeJS extends BaseShapeJS{
     }
 
     afterWASMReady(){
+        super.afterWASMReady()
         this.rawObj = castObject(this.rawObj, Module.LineShape);
     }
 

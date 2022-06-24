@@ -107,8 +107,6 @@ class SceneView extends HTMLElement {
         defaultShapeDrawer.onBeginToDrawShape(this.canvas)
     }
 
-
-
     onMouseDown(evt: MouseEvent) {
         if (this.currentShapeDrawer) {
             this.currentShapeDrawer.onMouseDown(evt)

@@ -1,6 +1,6 @@
 import {huahuoEngine} from "../EngineAPI";
 import {Logger} from "hhcommoncomponents"
-import {Vector2, relaxRectangle, pointsNear} from "hhcommoncomponents"
+import {Vector2, relaxRectangle, pointsNear, PropertySheet, Property, PropertyType} from "hhcommoncomponents"
 import * as paper from "paper";
 
 declare var Module: any;
@@ -15,6 +15,25 @@ class BaseShapeJS {
     protected boundingBoxRect = null;
 
     public isPermanent: boolean = false;
+
+    // This is used for Editor only to set properties.
+    private property: PropertySheet
+
+    get position(): paper.Point{
+        return this.paperShape.position
+    }
+
+    set position(val: paper.Point){
+        this.paperShape.position = val
+    }
+
+    get scaling(): paper.Point{
+        return this.paperShape.scaling
+    }
+
+    set scaling(val:paper.Point){
+        this.paperShape.scaling = val
+    }
 
     get selected(): boolean {
         return this.isSelected
@@ -116,7 +135,15 @@ class BaseShapeJS {
     }
 
     afterWASMReady() {
+        this.property = new PropertySheet();
 
+        // Position
+        this.property.AddProperty({
+            key:"Position",
+            type:PropertyType.FLOATARRAY,
+            getter: this.getPosition.bind(this),
+            setter: this.setPosition.bind(this)
+        });
     }
 
     getRawShape() {

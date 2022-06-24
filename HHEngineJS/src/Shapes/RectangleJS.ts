@@ -10,6 +10,7 @@ class RectangleJS extends BaseShapeJS{
     }
 
     afterWASMReady() {
+        super.afterWASMReady()
         this.rawObj = castObject(this.rawObj, Module.RectangleShape)
     }
 
