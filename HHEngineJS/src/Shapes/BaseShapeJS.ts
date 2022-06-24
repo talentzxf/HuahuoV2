@@ -298,6 +298,10 @@ class ShapeFactory {
 let shapeFactory = new ShapeFactory()
 
 huahuoEngine.ExecuteAfterInited(() => {
+    let eventName = "OnShapeLoaded"
+    if(huahuoEngine.GetInstance().IsEventRegistered(eventName))
+        return;
+
     let baseShapeOnLoadHandler = new Module.ScriptEventHandlerImpl()
     baseShapeOnLoadHandler.handleEvent = function (baseShapeEventHandler) {
         let arg = Module.wrapPointer(baseShapeEventHandler, Module.ShapeLoadedEventArgs)
@@ -315,7 +319,7 @@ huahuoEngine.ExecuteAfterInited(() => {
         huahuoEngine.getLayerShapes(layer).push(newBaseShape)
     }
 
-    huahuoEngine.GetInstance().RegisterEvent("OnShapeLoaded", baseShapeOnLoadHandler)
+    huahuoEngine.GetInstance().RegisterEvent(eventName, baseShapeOnLoadHandler)
 })
 
 export {BaseShapeJS, shapeFactory}

@@ -137,7 +137,7 @@ set(TARGETNAME HuaHuoEngineV2)
 ## Compile external dependencies
 #add_subdirectory (external)
 
-add_compile_options(-Wno-deprecated-enum-enum-conversion)
+add_compile_options(-Wno-deprecated-enum-enum-conversion --profiling)
 
 if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
     add_compile_definitions(WEB_ENV=1)
@@ -148,6 +148,7 @@ if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
     list(APPEND CPPFILES src/main.cpp)
 
     add_link_options(--bind)
+    add_link_options(--profiling)
     add_executable(${TARGETNAME} ${CPPFILES})
 else ()
     #    include_directories("C:\\Users\\vincentzhang\\OpenSource\\emsdk\\upstream\\emscripten\\system\\include\\")

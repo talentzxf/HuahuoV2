@@ -66,47 +66,47 @@ void testShapeStore() {
     ObjectStoreManager* objectStoreManager = GetDefaultObjectStoreManager();
     objectStoreManager->GetCurrentStore()->CreateLayer("TestTest");
     Layer* currentLayer = objectStoreManager->GetCurrentStore()->GetCurrentLayer();
-    LineShape* lineShape = Object::Produce<LineShape>();
-    lineShape->SetStartPoint(0, 1, 0);
-    lineShape->SetEndPoint(1, 0, 0);
-    currentLayer->AddShapeInternal(lineShape);
-    lineShape->SetPosition(100.0, 100.0, 100.0);
-
-    int segmentSize = 4;
-    float buffer[4*6];
-    for(int i = 0; i < segmentSize; i++){
-        buffer[i*6] = 1.0f;
-        buffer[i*6 + 1 ] = 2.0f;
-        buffer[i*6 + 2 ] = 2.0f;
-        buffer[i*6 + 3 ] = 2.0f;
-        buffer[i*6 + 4 ] = 2.0f;
-        buffer[i*6 + 5 ] = 2.0f;
-    }
-    lineShape->SetSegments(buffer, segmentSize);
-
-    assert(*lineShape->GetPosition() == Vector3f(100.0, 100.0, 100.0));
-
-    lineShape->GetLayer()->SetCurrentFrame(10);
-    lineShape->SetPosition(200.0, 200.0, 200.0);
-    lineShape->GetLayer()->SetCurrentFrame(5);
-    lineShape->SetScale(0.5,0.5,0.5);
-
-
-    CircleShape* circleShape = Object::Produce<CircleShape>();
-    circleShape->SetCenter(0,0,0);
-    circleShape->SetRadius(10.0);
-    currentLayer->AddShapeInternal(circleShape);
-
-    LineShape* lineShape1 = Object::Produce<LineShape>();
-    lineShape1->SetStartPoint(2,2,2);
-    lineShape1->SetEndPoint(3,3,3);
-    currentLayer->AddShapeInternal(lineShape1);
-
-    for(int i = 0; i < 100; i++){
-        CircleShape* shape = Object::Produce<CircleShape>();
-        shape->SetColor(1.0, 0.0, 1.0, 1.0);
-        currentLayer->AddShapeInternal(shape);
-    }
+//    LineShape* lineShape = Object::Produce<LineShape>();
+//    lineShape->SetStartPoint(0, 1, 0);
+//    lineShape->SetEndPoint(1, 0, 0);
+//    currentLayer->AddShapeInternal(lineShape);
+//    lineShape->SetPosition(100.0, 100.0, 100.0);
+//
+//    int segmentSize = 4;
+//    float buffer[4*6];
+//    for(int i = 0; i < segmentSize; i++){
+//        buffer[i*6] = 1.0f;
+//        buffer[i*6 + 1 ] = 2.0f;
+//        buffer[i*6 + 2 ] = 2.0f;
+//        buffer[i*6 + 3 ] = 2.0f;
+//        buffer[i*6 + 4 ] = 2.0f;
+//        buffer[i*6 + 5 ] = 2.0f;
+//    }
+//    lineShape->SetSegments(buffer, segmentSize);
+//
+//    assert(*lineShape->GetPosition() == Vector3f(100.0, 100.0, 100.0));
+//
+//    lineShape->GetLayer()->SetCurrentFrame(10);
+//    lineShape->SetPosition(200.0, 200.0, 200.0);
+//    lineShape->GetLayer()->SetCurrentFrame(5);
+//    lineShape->SetScale(0.5,0.5,0.5);
+//
+//
+//    CircleShape* circleShape = Object::Produce<CircleShape>();
+//    circleShape->SetCenter(0,0,0);
+//    circleShape->SetRadius(10.0);
+//    currentLayer->AddShapeInternal(circleShape);
+//
+//    LineShape* lineShape1 = Object::Produce<LineShape>();
+//    lineShape1->SetStartPoint(2,2,2);
+//    lineShape1->SetEndPoint(3,3,3);
+//    currentLayer->AddShapeInternal(lineShape1);
+//
+//    for(int i = 0; i < 100; i++){
+//        CircleShape* shape = Object::Produce<CircleShape>();
+//        shape->SetColor(1.0, 0.0, 1.0, 1.0);
+//        currentLayer->AddShapeInternal(shape);
+//    }
 
     RectangleShape* rectangleShape = (RectangleShape*)BaseShape::CreateShape("RectangleShape");
     rectangleShape->SetStartPoint(2,2,2);
@@ -128,6 +128,8 @@ void testShapeStore() {
     // std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo (1).data");
     std::string filenamestr(filename);
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
+
+    GetScriptEventManager()->IsEventRegistered("Hello");
 
 //    std::string path = StoreFilePath;
 //    GetPersistentManager().BeginFileWriting(path);

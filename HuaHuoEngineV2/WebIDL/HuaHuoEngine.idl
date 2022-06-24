@@ -219,5 +219,6 @@ interface HuaHuoEngine {
     static HuaHuoEngine GetInstance();
     static void InitEngine();
     void RegisterEvent(DOMString eventType, ScriptEventHandler handler);
+    boolean IsEventRegistered(DOMString eventType);
     BaseShape CreateShape(DOMString shapeName);
 };

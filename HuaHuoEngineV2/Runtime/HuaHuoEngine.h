@@ -28,6 +28,10 @@ public:
         GetScriptEventManager()->RegisterEventHandler(eventType, pHandler);
     }
 
+    bool IsEventRegistered(std::string eventType){
+        return GetScriptEventManager()->IsEventRegistered(eventType);
+    }
+
     BaseShape* CreateShape(const char* shapeName){
         const HuaHuo::Type* shapeType = HuaHuo::Type::FindTypeByName(shapeName);
         if(!shapeType->IsDerivedFrom<BaseShape>()){

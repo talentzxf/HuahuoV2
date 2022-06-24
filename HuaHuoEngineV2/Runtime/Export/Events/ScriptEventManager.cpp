@@ -45,10 +45,19 @@ void ScriptEventManager::RegisterEventHandler(std::string eventType, ScriptEvent
 }
 
 void ScriptEventManager::TriggerEvent(std::string eventType, ScriptEventHandlerArgs* args){
+    printf("Triggering event:%s\n", eventType.c_str());
+
     if(m_ScriptEventHandlerLists.contains(eventType)){
         ScriptEventHandlerList* handlerList = m_ScriptEventHandlerLists[eventType];
         for(auto item : *handlerList){
             (*item).handleEvent(args);
         }
     }
+}
+
+bool ScriptEventManager::IsEventRegistered(std::string eventType){
+    if(m_ScriptEventHandlerLists.contains(eventType)){
+        return true;
+    }
+    return false;
 }

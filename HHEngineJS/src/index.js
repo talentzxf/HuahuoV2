@@ -18,4 +18,5 @@ if(Module.IsWASMInited && Module.IsWASMInited()){
     }
 }
 
+window.enginejsInited = true
 export {renderEngine2D, LineShapeJS, CircleShapeJS,RectangleJS, huahuoEngine, paper}

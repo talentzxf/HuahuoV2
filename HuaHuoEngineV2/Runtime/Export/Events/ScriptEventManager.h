@@ -32,6 +32,8 @@ public:
     static void InitClass(void*);
     static void CleanupClass(void *);
 
+    bool IsEventRegistered(std::string eventType);
+
     void RegisterEventHandler(std::string eventType, ScriptEventHandler* pHandler);
     void TriggerEvent(std::string eventType, ScriptEventHandlerArgs* args);
 };
