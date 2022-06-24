@@ -33,12 +33,14 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase{
 
     dragging(pos){
         if(this.isDragging && this.curSegment != null){
-            let offset = pos.subtract(this.startPos)
+            let startPoint = new paper.Point(this.startPos.x, this.startPos.y)
+            let posPoint = new paper.Point(pos.x, pos.y)
+            let localStart = this.targetShape.getPaperShape().globalToLocal(startPoint)
+            let localPos = this.targetShape.getPaperShape().globalToLocal(posPoint)
+            let offset = localPos.subtract(localStart)
 
             let proposedNewPosition = this.curSegmentStartPos.add(offset)
             this.curSegment.point = proposedNewPosition;
-
-            console.log("Dragging to new pos:" + proposedNewPosition)
 
             // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
             this.targetShape.store({position: true, segments: true})
@@ -62,7 +64,11 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler{
 
     dragging(pos){
         if(this.isDragging && this.curSegment != null){
-            let offset = pos.subtract(this.startPos)
+            let startPoint = new paper.Point(this.startPos.x, this.startPos.y)
+            let posPoint = new paper.Point(pos.x, pos.y)
+            let localStart = this.targetShape.getPaperShape().globalToLocal(startPoint)
+            let localPos = this.targetShape.getPaperShape().globalToLocal(posPoint)
+            let offset = localPos.subtract(localStart)
             let targetHandlePos = this.targetHandleStartPos.add(offset)
 
             this.curSegment[this.targetHandleName] = targetHandlePos
