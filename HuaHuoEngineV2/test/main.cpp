@@ -21,6 +21,7 @@
 #include "Shapes/CircleShape.h"
 #include "KeyFrames/FrameState.h"
 #include "KeyFrames/ShapeTransformFrameState.h"
+#include "Shapes/RectangleShape.h"
 
 void testTransform() {
     GameObject *go = MonoCreateGameObject("Go1");
@@ -103,8 +104,16 @@ void testShapeStore() {
 
     for(int i = 0; i < 100; i++){
         CircleShape* shape = Object::Produce<CircleShape>();
+        shape->SetColor(1.0, 0.0, 1.0, 1.0);
         currentLayer->AddShapeInternal(shape);
     }
+
+    RectangleShape* rectangleShape = (RectangleShape*)BaseShape::CreateShape("RectangleShape");
+    rectangleShape->SetStartPoint(2,2,2);
+    rectangleShape->SetEndPoint(3,3,3);
+    rectangleShape->SetColor(1.0, 0.0, 1.0, 1.0);
+    currentLayer->AddShapeInternal(rectangleShape);
+
 
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
 

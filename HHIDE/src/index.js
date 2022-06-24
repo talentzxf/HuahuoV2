@@ -14,6 +14,7 @@ import {faSlash} from "@fortawesome/free-solid-svg-icons/faSlash";
 import {faCircle} from "@fortawesome/free-solid-svg-icons/faCircle";
 import {faBezierCurve} from "@fortawesome/free-solid-svg-icons/faBezierCurve";
 import {faArrowPointer} from "@fortawesome/free-solid-svg-icons";
+import {faSquare} from "@fortawesome/free-solid-svg-icons";
 import {saveAs} from 'file-saver';
 import {Logger} from "hhcommoncomponents";
 
@@ -24,6 +25,7 @@ library.add(faSlash)
 library.add(faCircle)
 library.add(faBezierCurve)
 library.add(faArrowPointer)
+library.add(faSquare)
 dom.watch();
 
 function save() {
