@@ -22,6 +22,7 @@ TransformData Lerp(TransformData &k1, TransformData &k2, float ratio) {
 
     resultData.position = Lerp(k1.position, k2.position, ratio);
     resultData.scale = Lerp(k1.scale, k2.scale, ratio);
+    resultData.rotation = Lerp(k1.rotation, k2.rotation, ratio);
     return resultData;
 }
 
@@ -64,6 +65,14 @@ void ShapeTransformFrameState::RecordScale(int frameId, float xScale, float ySca
     TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
     pKeyFrame->transformData = m_CurrentTransformData; // Record current state.
     pKeyFrame->transformData.scale.Set(xScale, yScale, zScale); // Change the scale.
+
+    Apply(frameId);
+}
+
+void ShapeTransformFrameState::RecordRotation(int frameId, float rotation) {
+    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+    pKeyFrame->transformData = m_CurrentTransformData; // Record current state.
+    pKeyFrame->transformData.rotation = rotation;
 
     Apply(frameId);
 }

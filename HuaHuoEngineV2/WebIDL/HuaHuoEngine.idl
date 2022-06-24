@@ -97,8 +97,11 @@ interface BaseShape{
     static BaseShape CreateShape(DOMString shapeName);
     DOMString GetName();
 
+    // inherited from BaseShape
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+    float GetRotation();
+    void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f GetScale();
 
@@ -129,6 +132,8 @@ interface LineShape{
     // inherited from BaseShape
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+    float GetRotation();
+    void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f GetScale();
 
@@ -158,6 +163,8 @@ interface RectangleShape{
     // inherited from BaseShape
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+    float GetRotation();
+    void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f GetScale();
 
@@ -187,6 +194,8 @@ interface CircleShape{
     // inherited from BaseShape
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+    float GetRotation();
+    void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f GetScale();
 

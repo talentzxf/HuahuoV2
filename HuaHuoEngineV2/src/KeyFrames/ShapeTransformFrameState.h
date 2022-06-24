@@ -11,12 +11,14 @@ class TransformData{
 public:
     Vector3f position;
     Vector3f scale;
+    float rotation;
 
     DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(TransformData)
 
     TransformData()
         :position(0.0,0.0,0.0)
         ,scale(1.0,1.0,1.0)
+        ,rotation(0.0f)
     {
 
     }
@@ -25,6 +27,7 @@ public:
 template<class TransferFunction> void TransformData::Transfer(TransferFunction &transfer){
     TRANSFER(position);
     TRANSFER(scale);
+    TRANSFER(rotation);
 }
 
 TransformData Lerp(TransformData& k1, TransformData& k2, float ratio);
@@ -65,9 +68,17 @@ public:
         return NULL;
     }
 
+    float GetRotation(){
+        if(isValidFrame)
+            return m_CurrentTransformData.rotation;
+        return NULL;
+    }
+
     void RecordPosition(int frameId, float x, float y, float z);
 
     void RecordScale(int frameId, float xScale, float yScale, float zScale);
+
+    void RecordRotation(int frameId, float rotation);
 
 private:
     std::vector<TransformKeyFrame> m_KeyFrames;

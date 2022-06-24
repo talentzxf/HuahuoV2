@@ -60,6 +60,16 @@ void BaseShape::SetPosition(float x, float y, float z) {
     shapeLayer->AddKeyFrame(currentFrameId);
 }
 
+void BaseShape::SetRotation(float rotation) {
+
+    Layer *shapeLayer = GetLayer();
+
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+    mTransformKeyFrames->RecordRotation(currentFrameId, rotation);
+
+    shapeLayer->AddKeyFrame(currentFrameId);
+}
+
 void BaseShape::SetScale(float xScale, float yScale, float zScale) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();

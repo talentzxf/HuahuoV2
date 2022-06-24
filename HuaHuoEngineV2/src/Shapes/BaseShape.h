@@ -81,6 +81,10 @@ public:
         return mTransformKeyFrames->GetPosition();
     }
 
+    float GetRotation(){
+        return mTransformKeyFrames->GetRotation();
+    }
+
     virtual void Apply(int frameId){
         mTransformKeyFrames->Apply(frameId);
         mColorKeyFrames->Apply(frameId);
@@ -93,6 +97,8 @@ public:
     void SetPosition(float x, float y, float z);
 
     void SetColor(float r, float g, float b, float a);
+
+    void SetRotation(float rotation);
 
     void SetSegments(float segmentBuffer[], int size);
 
