@@ -26,9 +26,7 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
                 // TODO: check whether the position is acceptable or need some modification
 
                 // obj.position = proposedNewPosition
-                console.log("Proposing:" + proposedNewPosition.x + "," + proposedNewPosition.y)
                 obj.getPaperShape().position = proposedNewPosition
-                console.log("After set position:" + obj.getPaperShape().position.x + "," + obj.getPaperShape().position.y)
                 obj.store()
                 obj.update({updateShape:false, updateBoundingBox:true})
             }

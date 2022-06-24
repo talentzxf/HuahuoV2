@@ -82,10 +82,14 @@ class BaseShapeJS {
         let rotation = this.getPaperShape().rotation
         this.rawObj.SetRotation(rotation)
 
+        let prevPosition = this.paperShape.position
         this.paperShape.rotation = 0
         let zeroPointPosition = this.paperShape.localToGlobal(new paper.Point(0, 0))
         this.rawObj.SetPosition(zeroPointPosition.x, zeroPointPosition.y, 0)
+
+        this.paperShape.position = new paper.Point(0,0)
         this.paperShape.rotation = rotation
+        this.paperShape.position = prevPosition
     }
 
     constructor(rawObj?) {
