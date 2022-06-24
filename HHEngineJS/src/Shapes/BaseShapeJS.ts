@@ -76,14 +76,16 @@ class BaseShapeJS {
             this.storeSegments(segments)
         }
 
-        let zeroPointPosition = this.paperShape.localToGlobal(new paper.Point(0, 0))
-        this.rawObj.SetPosition(zeroPointPosition.x, zeroPointPosition.y, 0)
-
         let scaling = this.getPaperShape().scaling
         this.rawObj.SetScale(scaling.x, scaling.y, 0)
 
         let rotation = this.getPaperShape().rotation
         this.rawObj.SetRotation(rotation)
+
+        this.paperShape.rotation = 0
+        let zeroPointPosition = this.paperShape.localToGlobal(new paper.Point(0, 0))
+        this.rawObj.SetPosition(zeroPointPosition.x, zeroPointPosition.y, 0)
+        this.paperShape.rotation = rotation
     }
 
     constructor(rawObj?) {
@@ -219,15 +221,15 @@ class BaseShapeJS {
             this.applySegments()
             let scale = this.rawObj.GetScale()
             this.paperShape.scaling = new paper.Point(scale.x, scale.y)
-            this.paperShape.rotation = this.rawObj.GetRotation()
 
+            this.paperShape.rotation = 0
             let pos = this.rawObj.GetPosition();// This position is the new global coordinate of the local (0,0).
-
             let currentZeroPoint = this.paperShape.localToGlobal(new paper.Point(0, 0))
             let currentCenter = this.paperShape.position
 
             let centerOffset = currentCenter.subtract(currentZeroPoint)
 
+            this.paperShape.rotation = this.rawObj.GetRotation()
             this.paperShape.position = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
         }
 
