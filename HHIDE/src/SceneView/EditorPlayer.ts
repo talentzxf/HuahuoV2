@@ -25,7 +25,7 @@ class EditorPlayer{
     }
 
     onKeyEvent(e){
-        if(e.key == "Enter"){
+        if(e.key == "Enter" && e.ctrlKey){ // Ctrl+Enter
             e.preventDefault()
 
             if(!this.isPlaying){

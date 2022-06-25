@@ -173,6 +173,7 @@ class BaseShapeJS {
 
     private setPosition(x:number, y: number){
         this.paperShape.position = new paper.Point(x,y)
+        this.update({updateShape: false, updateBoundingBox: true})
         this.store()
     }
 
