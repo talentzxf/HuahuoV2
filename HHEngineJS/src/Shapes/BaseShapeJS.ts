@@ -25,10 +25,6 @@ class BaseShapeJS {
         return this.paperShape.globalToLocal(globalPoint)
     }
 
-    rotate(angle: number, center: paper.Point){
-        this.paperShape.rotate(angle, center)
-    }
-
     getNearestPoint(localPos: paper.Point){
         return this.paperShape.getNearestPoint(localPos)
     }
@@ -49,6 +45,14 @@ class BaseShapeJS {
         return this.paperShape.position
     }
 
+    get rotation(): number{
+        return this.paperShape.rotation
+    }
+
+    get scaling(): paper.Point{
+        return this.paperShape.scaling
+    }
+
     callHandlers(propertyName: string, val: any){
         if(this.valueChangeHandlersMap.has(propertyName)){
             for(let handler of this.valueChangeHandlersMap.get(propertyName)){
@@ -57,19 +61,26 @@ class BaseShapeJS {
         }
     }
 
+    rotate(angle: number, center: paper.Point){
+        this.paperShape.rotate(angle, center)
+        this.callHandlers("rotation", this.paperShape.rotation)
+    }
+
     set position(val: paper.Point){
         this.paperShape.position = val
         this.callHandlers("position", val)
     }
 
-    get scaling(): paper.Point{
-        return this.paperShape.scaling
-    }
 
     set scaling(val:paper.Point){
         this.paperShape.scaling = val
 
         this.callHandlers("scaling", val)
+    }
+
+    set rotation(val:number){
+        this.paperShape.rotation = val
+        this.callHandlers("rotation", val)
     }
 
     get selected(): boolean {
@@ -192,6 +203,16 @@ class BaseShapeJS {
         this.store()
     }
 
+    private getRotation():number{
+        return this.rotation
+    }
+
+    private setRotation(val:number){
+        this.paperShape.rotation = val
+        this.update({updateShape: false, updateBoundingBox: true})
+        this.store()
+    }
+
     afterWASMReady() {
         this.propertySheet = new PropertySheet();
 
@@ -210,6 +231,14 @@ class BaseShapeJS {
             getter: this.getScaling.bind(this),
             setter: this.setScaling.bind(this),
             registerValueChangeFunc: this.registerValueChangeHandler("scaling").bind(this)
+        })
+
+        this.propertySheet.addProperty({
+            key:"Rotation",
+            type:PropertyType.FLOAT,
+            getter: this.getRotation.bind(this),
+            setter: this.setRotation.bind(this),
+            registerValueChangeFunc: this.registerValueChangeHandler("rotation").bind(this)
         })
     }
 
@@ -340,7 +369,7 @@ class BaseShapeJS {
 
             let centerOffset = currentCenter.subtract(currentZeroPoint)
 
-            this.paperShape.rotation = this.rawObj.GetRotation()
+            this.rotation = this.rawObj.GetRotation() // Trigger property change events
             this.position = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
         }
 
