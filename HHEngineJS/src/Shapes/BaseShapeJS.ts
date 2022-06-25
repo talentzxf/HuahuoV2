@@ -17,7 +17,33 @@ class BaseShapeJS {
     public isPermanent: boolean = false;
 
     // This is used for Editor only to set properties.
-    private property: PropertySheet
+    private propertySheet: PropertySheet
+
+    private valueChangeHandlersMap: Map<string, Array<Function>> = new Map()
+
+    globalToLocal(globalPoint: paper.Point): paper.Point{
+        return this.paperShape.globalToLocal(globalPoint)
+    }
+
+    rotate(angle: number, center: paper.Point){
+        this.paperShape.rotate(angle, center)
+    }
+
+    getNearestPoint(localPos: paper.Point){
+        return this.paperShape.getNearestPoint(localPos)
+    }
+
+    getOffsetOf(localPos: paper.Point){
+        return this.paperShape.getOffsetOf(localPos)
+    }
+
+    divideAt(length: number){
+        return this.paperShape.divideAt(length)
+    }
+
+    get bounds(): paper.Rectangle{
+        return this.paperShape.bounds
+    }
 
     get position(): paper.Point{
         return this.paperShape.position
@@ -25,6 +51,12 @@ class BaseShapeJS {
 
     set position(val: paper.Point){
         this.paperShape.position = val
+
+        if(this.valueChangeHandlersMap.has("position")){
+            for(let handler of this.valueChangeHandlersMap.get("position")){
+                handler(val)
+            }
+        }
     }
 
     get scaling(): paper.Point{
@@ -95,20 +127,20 @@ class BaseShapeJS {
             this.storeSegments(segments)
         }
 
-        let scaling = this.getPaperShape().scaling
+        let scaling = this.paperShape.scaling
         this.rawObj.SetScale(scaling.x, scaling.y, 0)
 
-        let rotation = this.getPaperShape().rotation
+        let rotation = this.paperShape.rotation
         this.rawObj.SetRotation(rotation)
 
-        let prevPosition = this.paperShape.position
+        let prevPosition = this.position
         this.paperShape.rotation = 0
         let zeroPointPosition = this.paperShape.localToGlobal(new paper.Point(0, 0))
         this.rawObj.SetPosition(zeroPointPosition.x, zeroPointPosition.y, 0)
 
-        this.paperShape.position = new paper.Point(0,0)
+        this.position = new paper.Point(0,0)
         this.paperShape.rotation = rotation
-        this.paperShape.position = prevPosition
+        this.position = prevPosition
     }
 
     constructor(rawObj?) {
@@ -134,16 +166,40 @@ class BaseShapeJS {
         return true
     }
 
+    // Not sure how to pass getter/setter as functor.
+    private getPosition(){
+        return this.position
+    }
+
+    private setPosition(x:number, y: number){
+        this.paperShape.position = new paper.Point(x,y)
+        this.store()
+    }
+
     afterWASMReady() {
-        this.property = new PropertySheet();
+        this.propertySheet = new PropertySheet();
 
         // Position
-        this.property.AddProperty({
+        this.propertySheet.addProperty({
             key:"Position",
-            type:PropertyType.FLOATARRAY,
+            type:PropertyType.VECTOR2,
             getter: this.getPosition.bind(this),
-            setter: this.setPosition.bind(this)
+            setter: this.setPosition.bind(this),
+            registerValueChangeFunc: this.registerValueChangeHandler("position").bind(this)
         });
+    }
+
+    registerValueChangeHandler( valueName:string){
+        return function(valueChangedHandler: Function){
+            if(!this.valueChangeHandlersMap.has(valueName)){
+                this.valueChangeHandlersMap.set(valueName, new Array<Function>())
+            }
+            this.valueChangeHandlersMap.get(valueName).push(valueChangedHandler)
+        }
+    }
+
+    getPropertySheet(){
+        return this.propertySheet
     }
 
     getRawShape() {
@@ -256,12 +312,12 @@ class BaseShapeJS {
             this.paperShape.rotation = 0
             let pos = this.rawObj.GetPosition();// This position is the new global coordinate of the local (0,0).
             let currentZeroPoint = this.paperShape.localToGlobal(new paper.Point(0, 0))
-            let currentCenter = this.paperShape.position
+            let currentCenter = this.position
 
             let centerOffset = currentCenter.subtract(currentZeroPoint)
 
             this.paperShape.rotation = this.rawObj.GetRotation()
-            this.paperShape.position = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
+            this.position = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
         }
 
         if (this.isSelected) {
@@ -307,10 +363,6 @@ class BaseShapeJS {
 
     getPaperPoint(engineV3Point) {
         return new paper.Point(engineV3Point.x, engineV3Point.y)
-    }
-
-    getPaperShape(): paper.Path {
-        return this.paperShape
     }
 }
 

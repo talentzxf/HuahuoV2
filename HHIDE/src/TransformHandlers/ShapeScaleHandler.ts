@@ -27,7 +27,7 @@ class ShapeScaleHandler extends ShapeTranslateMorphBase{
 
         if(this.isDragging && this.curObjs != null){
             for(let obj of this.curObjs){
-                let center = obj.getPaperShape().bounds.center // current center
+                let center = obj.position
                 let vec1 = this.startPos.subtract(center)
                 let vec2 = newPos.subtract(center)
 

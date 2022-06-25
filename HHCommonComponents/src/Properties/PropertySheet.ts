@@ -1,6 +1,6 @@
 enum PropertyType{
     STRING,
-    FLOATARRAY,
+    VECTOR2,
     FLOAT,
     COLOR
 }
@@ -10,13 +10,18 @@ class Property{
     type: PropertyType
     setter: Function
     getter: Function
+    registerValueChangeFunc: Function
 }
 
 class PropertySheet{
     protected properties: Array<Property> = new Array<Property>()
 
-    AddProperty(property: Property){
+    addProperty(property: Property){
         this.properties.push(property)
+    }
+
+    getProperties(){
+        return this.properties
     }
 }
 

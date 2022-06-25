@@ -27,7 +27,7 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase{
             let vec2 = pos.subtract(this.rotationCenter)
 
             let theta = vec1.getDirectedAngle(vec2)
-            this.targetShape.getPaperShape().rotate(theta, this.rotationCenter)
+            this.targetShape.rotate(theta, this.rotationCenter)
             this.lastPos = new paper.Point(pos.x, pos.y)
 
             this.targetShape.store()

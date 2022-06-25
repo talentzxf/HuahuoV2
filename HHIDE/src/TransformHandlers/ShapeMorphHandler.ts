@@ -35,8 +35,8 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase{
         if(this.isDragging && this.curSegment != null){
             let startPoint = new paper.Point(this.startPos.x, this.startPos.y)
             let posPoint = new paper.Point(pos.x, pos.y)
-            let localStart = this.targetShape.getPaperShape().globalToLocal(startPoint)
-            let localPos = this.targetShape.getPaperShape().globalToLocal(posPoint)
+            let localStart = this.targetShape.globalToLocal(startPoint)
+            let localPos = this.targetShape.globalToLocal(posPoint)
             let offset = localPos.subtract(localStart)
 
             let proposedNewPosition = this.curSegmentStartPos.add(offset)
@@ -66,8 +66,8 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler{
         if(this.isDragging && this.curSegment != null){
             let startPoint = new paper.Point(this.startPos.x, this.startPos.y)
             let posPoint = new paper.Point(pos.x, pos.y)
-            let localStart = this.targetShape.getPaperShape().globalToLocal(startPoint)
-            let localPos = this.targetShape.getPaperShape().globalToLocal(posPoint)
+            let localStart = this.targetShape.globalToLocal(startPoint)
+            let localPos = this.targetShape.globalToLocal(posPoint)
             let offset = localPos.subtract(localStart)
             let targetHandlePos = this.targetHandleStartPos.add(offset)
 
@@ -84,12 +84,11 @@ class ShapeInsertSegmentHandler extends ShapeMorphHandler{
     beginMove(startPos) {
         super.beginMove(startPos);
 
-        let obj:paper.Path = this.targetShape.getPaperShape()
-        let localPos = obj.globalToLocal(startPos)
-        let nearestPoint = obj.getNearestPoint(localPos)
-        let offset = obj.getOffsetOf(nearestPoint)
+        let localPos = this.targetShape.globalToLocal(startPos)
+        let nearestPoint = this.targetShape.getNearestPoint(localPos)
+        let offset = this.targetShape.getOffsetOf(nearestPoint)
 
-        let newSegment = obj.divideAt(offset)
+        let newSegment = this.targetShape.divideAt(offset)
         this.setSegment(newSegment)
 
         this.targetShape.insertSegment(localPos)

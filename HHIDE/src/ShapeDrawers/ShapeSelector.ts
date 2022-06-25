@@ -88,7 +88,7 @@ class ShapeSelector extends BaseShapeDrawer {
         selectedObj.update();
         this.selectedShapes.add(shape)
 
-        EventBus.getInstance().emit(EventNames.OBJECTSELECTED, selectedObj.getProperty())
+        EventBus.getInstance().emit(EventNames.OBJECTSELECTED, selectedObj.getPropertySheet())
     }
 
     clearSelection() {
@@ -132,7 +132,7 @@ class ShapeSelector extends BaseShapeDrawer {
         let targetPos = new paper.Point(pos.x, pos.y)
 
         let targetShape = this.selectedShapes.values().next().value
-        let bounds = relaxRectangle(targetShape.getPaperShape().bounds, BOUNDMARGIN)
+        let bounds = relaxRectangle(targetShape.paperShape.bounds, BOUNDMARGIN)
 
         if(!bounds.contains(targetPos)){
             if (pointsNear(bounds.topLeft, targetPos, VERYNEARMARGIN)) {
