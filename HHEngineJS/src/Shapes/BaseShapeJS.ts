@@ -49,14 +49,17 @@ class BaseShapeJS {
         return this.paperShape.position
     }
 
-    set position(val: paper.Point){
-        this.paperShape.position = val
-
-        if(this.valueChangeHandlersMap.has("position")){
-            for(let handler of this.valueChangeHandlersMap.get("position")){
+    callHandlers(propertyName: string, val: any){
+        if(this.valueChangeHandlersMap.has(propertyName)){
+            for(let handler of this.valueChangeHandlersMap.get(propertyName)){
                 handler(val)
             }
         }
+    }
+
+    set position(val: paper.Point){
+        this.paperShape.position = val
+        this.callHandlers("position", val)
     }
 
     get scaling(): paper.Point{
@@ -65,6 +68,8 @@ class BaseShapeJS {
 
     set scaling(val:paper.Point){
         this.paperShape.scaling = val
+
+        this.callHandlers("scaling", val)
     }
 
     get selected(): boolean {
@@ -177,6 +182,16 @@ class BaseShapeJS {
         this.store()
     }
 
+    private getScaling(){
+        return this.scaling
+    }
+
+    private setScaling(x:number, y:number){
+        this.paperShape.scaling = new paper.Point(x,y)
+        this.update({updateShape: false, updateBoundingBox: true})
+        this.store()
+    }
+
     afterWASMReady() {
         this.propertySheet = new PropertySheet();
 
@@ -188,6 +203,14 @@ class BaseShapeJS {
             setter: this.setPosition.bind(this),
             registerValueChangeFunc: this.registerValueChangeHandler("position").bind(this)
         });
+
+        this.propertySheet.addProperty({
+            key:"Scaling",
+            type:PropertyType.VECTOR2,
+            getter: this.getScaling.bind(this),
+            setter: this.setScaling.bind(this),
+            registerValueChangeFunc: this.registerValueChangeHandler("scaling").bind(this)
+        })
     }
 
     registerValueChangeHandler( valueName:string){
@@ -308,7 +331,7 @@ class BaseShapeJS {
         if (updateOptions && updateOptions.updateShape) {
             this.applySegments()
             let scale = this.rawObj.GetScale()
-            this.paperShape.scaling = new paper.Point(scale.x, scale.y)
+            this.scaling = new paper.Point(scale.x, scale.y)
 
             this.paperShape.rotation = 0
             let pos = this.rawObj.GetPosition();// This position is the new global coordinate of the local (0,0).
