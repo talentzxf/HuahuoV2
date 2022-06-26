@@ -53,6 +53,10 @@ class BaseShapeJS {
         return this.paperShape.scaling
     }
 
+    get color(): paper.Color{
+        return this.paperShape.fillColor
+    }
+
     callHandlers(propertyName: string, val: any){
         if(this.valueChangeHandlersMap.has(propertyName)){
             for(let handler of this.valueChangeHandlersMap.get(propertyName)){
@@ -70,7 +74,6 @@ class BaseShapeJS {
         this.paperShape.position = val
         this.callHandlers("position", val)
     }
-
 
     set scaling(val:paper.Point){
         this.paperShape.scaling = val
@@ -91,13 +94,8 @@ class BaseShapeJS {
         this.isSelected = val
     }
 
-    get color(): paper.Color {
-        let rawObjColor = this.rawObj.GetColor()
-        return new paper.Color(rawObjColor.r, rawObjColor.g, rawObjColor.b, rawObjColor.a)
-    }
-
     set color(val: paper.Color) {
-        this.rawObj.SetColor(val.red, val.green, val.blue, val.alpha)
+        this.paperShape.fillColor = val
         this.callHandlers("color", val)
     }
 
@@ -158,6 +156,11 @@ class BaseShapeJS {
         this.position = new paper.Point(0,0)
         this.paperShape.rotation = rotation
         this.position = prevPosition
+
+        // Store color
+        let fillColor = this.paperShape.fillColor
+        if(fillColor) // Some shapes doesn't have fille color
+            this.rawObj.SetColor(fillColor.red, fillColor.green, fillColor.blue, fillColor.alpha)
     }
 
     constructor(rawObj?) {
@@ -389,6 +392,9 @@ class BaseShapeJS {
 
             this.rotation = this.rawObj.GetRotation() // Trigger property change events
             this.position = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
+
+            let rawFillColor = this.rawObj.GetColor()
+            this.paperShape.fillColor = new paper.Color(rawFillColor.r, rawFillColor.g, rawFillColor.b, rawFillColor.a)
         }
 
         if (this.isSelected) {

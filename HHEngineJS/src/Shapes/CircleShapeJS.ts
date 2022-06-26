@@ -10,6 +10,8 @@ class CircleShapeJS extends BaseShapeJS{
         return new CircleShapeJS(rawObj);
     }
 
+    randomColor: paper.Color
+
     afterWASMReady(){
         super.afterWASMReady()
         this.rawObj = castObject(this.rawObj, Module.CircleShape);
@@ -31,7 +33,7 @@ class CircleShapeJS extends BaseShapeJS{
         this.paperShape = new paperjs.Path.Circle(circleCenter, radius);
         this.paperShape.applyMatrix = false;
         this.paperShape.strokeColor = new paper.Color("black")
-        this.paperShape.fillColor = this.color
+        this.paperShape.fillColor = this.randomColor
         this.paperShape.data.meta = this
     }
 
@@ -39,7 +41,7 @@ class CircleShapeJS extends BaseShapeJS{
         this.rawObj.SetRadius(radius)
 
         if(this.paperShape == null){
-            this.color = paper.Color.random()
+            this.randomColor = paper.Color.random()
         } else {
             this.paperShape.remove()
         }

@@ -9,6 +9,9 @@ class RectangleJS extends BaseShapeJS{
         return new RectangleJS(rawObj)
     }
 
+    // This is only used in editor
+    randomFillColor: paper.Color
+
     afterWASMReady() {
         super.afterWASMReady()
         this.rawObj = castObject(this.rawObj, Module.RectangleShape)
@@ -26,7 +29,7 @@ class RectangleJS extends BaseShapeJS{
         this.paperShape = new paperjs.Path.Rectangle(p1, p2)
         this.paperShape.applyMatrix = false;
         this.paperShape.strokeColor = new paperjs.Color("black");
-        this.paperShape.fillColor = this.color
+        this.paperShape.fillColor = this.randomFillColor
         this.paperShape.data.meta = this
     }
 
@@ -38,7 +41,7 @@ class RectangleJS extends BaseShapeJS{
         this.rawObj.SetEndPoint(endPoint.x, endPoint.y, 0);
 
         if(this.paperShape == null){
-            this.color = paper.Color.random()
+            this.randomFillColor = paper.Color.random()
         }else{
             this.paperShape.remove()
         }

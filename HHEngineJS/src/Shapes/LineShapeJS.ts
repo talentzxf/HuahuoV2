@@ -11,6 +11,8 @@ class LineShapeJS extends BaseShapeJS{
         return new LineShapeJS(rawObj);
     }
 
+    randomStrokeColor: paper.Color
+
     afterWASMReady(){
         super.afterWASMReady()
         this.rawObj = castObject(this.rawObj, Module.LineShape);
@@ -28,7 +30,7 @@ class LineShapeJS extends BaseShapeJS{
         let paperjs = this.getPaperJs()
         this.paperShape = new paperjs.Path.Line( p1, p2);
         this.paperShape.applyMatrix = false;
-        this.paperShape.strokeColor = this.color
+        this.paperShape.strokeColor = this.randomStrokeColor
         this.paperShape.data.meta = this
     }
 
@@ -40,7 +42,7 @@ class LineShapeJS extends BaseShapeJS{
         this.rawObj.SetEndPoint(endPoint.x, endPoint.y, 0);
 
         if(this.paperShape == null){
-            this.color = paper.Color.random()
+            this.randomStrokeColor = paper.Color.random()
         } else {
             this.paperShape.remove()
         }
