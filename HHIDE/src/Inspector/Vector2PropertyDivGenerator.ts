@@ -1,11 +1,9 @@
-import {BasePropertyDivGenerator, RegisterDivGenerator} from "./BasePropertyDivGenerator";
+import {BasePropertyDesc, BasePropertyDivGenerator, RegisterDivGenerator} from "./BasePropertyDivGenerator";
 import {PropertyType, Property, Vector2} from "hhcommoncomponents"
 
-class Vector2PropertyDiv{
-    contentDiv: HTMLDivElement
+class Vector2PropertyDesc extends BasePropertyDesc{
     inputX : HTMLInputElement
     inputY : HTMLInputElement
-    setter: Function
 
     createInput(val):HTMLInputElement{
         let input = document.createElement("input")
@@ -35,13 +33,9 @@ class Vector2PropertyDiv{
     }
 
     constructor(property: Property) {
-        property.registerValueChangeFunc(this.onValueChanged.bind(this))
-
-        this.contentDiv = document.createElement("div")
+        super(property)
 
         let currentValue:Vector2 = property.getter()
-        this.setter = property.setter
-
         this.createVector2Divs(currentValue.x, currentValue.y)
     }
 
@@ -49,9 +43,9 @@ class Vector2PropertyDiv{
 
 class Vector2PropertyDivGenerator extends BasePropertyDivGenerator{
 
-    generateDiv(property: Property): HTMLElement {
-        let vector2PropertyDiv = new Vector2PropertyDiv(property)
-        return vector2PropertyDiv.contentDiv
+    generatePropertyDesc(property): BasePropertyDesc {
+        let vector2PropertyDiv = new Vector2PropertyDesc(property)
+        return vector2PropertyDiv
     }
 }
 

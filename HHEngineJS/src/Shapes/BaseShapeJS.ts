@@ -222,8 +222,10 @@ class BaseShapeJS {
     }
 
     private setColor(val:paper.Color){
-        this.paperShape.fillColor = val
-        this.store()
+        if(this.paperShape.fillColor != val){
+            this.paperShape.fillColor = val
+            this.store()
+        }
     }
 
     afterWASMReady() {
@@ -394,7 +396,7 @@ class BaseShapeJS {
             this.position = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
 
             let rawFillColor = this.rawObj.GetColor()
-            this.paperShape.fillColor = new paper.Color(rawFillColor.r, rawFillColor.g, rawFillColor.b, rawFillColor.a)
+            this.color = new paper.Color(rawFillColor.r, rawFillColor.g, rawFillColor.b, rawFillColor.a)
         }
 
         if (this.isSelected) {

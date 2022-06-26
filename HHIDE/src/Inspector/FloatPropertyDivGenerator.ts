@@ -1,10 +1,8 @@
-import {BasePropertyDivGenerator, RegisterDivGenerator} from "./BasePropertyDivGenerator";
+import {BasePropertyDesc, BasePropertyDivGenerator, RegisterDivGenerator} from "./BasePropertyDivGenerator";
 import {PropertyType, Property, Vector2} from "hhcommoncomponents"
 
-class FloatPropertyDiv{
-    contentDiv: HTMLDivElement
+class FloatPropertyDesc extends BasePropertyDesc{
     input : HTMLInputElement
-    setter: Function
 
     createInput(val):HTMLInputElement{
         this.input = document.createElement("input")
@@ -25,12 +23,8 @@ class FloatPropertyDiv{
     }
 
     constructor(property: Property) {
-        property.registerValueChangeFunc(this.onValueChanged.bind(this))
-
-        this.contentDiv = document.createElement("div")
-
+        super(property)
         let currentValue = property.getter()
-        this.setter = property.setter
         this.createInput(currentValue)
 
         this.contentDiv.appendChild(this.input)
@@ -40,9 +34,9 @@ class FloatPropertyDiv{
 
 class FloatPropertyDivGenerator extends BasePropertyDivGenerator{
 
-    generateDiv(property: Property): HTMLElement {
-        let floatPropertyDiv = new FloatPropertyDiv(property)
-        return floatPropertyDiv.contentDiv
+    generatePropertyDesc(property: Property): BasePropertyDesc {
+        let floatPropertyDesc = new FloatPropertyDesc(property)
+        return floatPropertyDesc
     }
 }
 

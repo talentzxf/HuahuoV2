@@ -1,7 +1,35 @@
 import {PropertyType, Property, Logger} from "hhcommoncomponents"
 
+abstract class BasePropertyDesc{
+    contentDiv: HTMLDivElement
+    titleDiv: HTMLElement
+    property: Property
+    setter: Function
+
+    abstract onValueChanged(val)
+
+    protected constructor(property) {
+        this.property = property
+        this.setter = this.property.setter
+
+        property.registerValueChangeFunc(this.onValueChanged.bind(this))
+        this.contentDiv = document.createElement("div")
+
+        this.titleDiv = document.createElement("div")
+        this.titleDiv.innerText = property.key
+    }
+
+    getTitleDiv(){
+        return this.titleDiv
+    }
+
+    getContentDiv(){
+        return this.contentDiv
+    }
+}
+
 abstract class BasePropertyDivGenerator {
-    abstract generateDiv(property:Property): HTMLElement
+    abstract generatePropertyDesc(property:Property): BasePropertyDesc
 
     flexDirection(){
         return "row"
@@ -19,12 +47,8 @@ function RegisterDivGenerator(type: PropertyType, generator: BasePropertyDivGene
     propertyGeneratorMap.set(type, generator);
 }
 
-function GeneratePropertyDiv(type: PropertyType, property: Property): HTMLElement{
-    return propertyGeneratorMap.get(type).generateDiv(property)
+function GetPropertyDivGenerator(type: PropertyType){
+    return propertyGeneratorMap.get(type)
 }
 
-function GetPropertyFlexDirection(type: PropertyType){
-    return propertyGeneratorMap.get(type).flexDirection()
-}
-
-export {BasePropertyDivGenerator, RegisterDivGenerator, GeneratePropertyDiv, GetPropertyFlexDirection}
+export {BasePropertyDivGenerator, RegisterDivGenerator, GetPropertyDivGenerator, BasePropertyDesc}
