@@ -76,7 +76,7 @@ class ColorPropertyDiv extends BasePropertyDesc{
 
             if(this.silentColorChangeEvent)
                 return
-            
+
             let newColor = new paper.Color(e.detail.value)
             this.setter(newColor)
 

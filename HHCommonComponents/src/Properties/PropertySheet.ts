@@ -11,6 +11,7 @@ class Property{
     setter: Function
     getter: Function
     registerValueChangeFunc: Function
+    unregisterValueChangeFunc: Function
 }
 
 class PropertySheet{

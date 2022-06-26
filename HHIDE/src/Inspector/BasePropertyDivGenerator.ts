@@ -5,6 +5,7 @@ abstract class BasePropertyDesc{
     titleDiv: HTMLElement
     property: Property
     setter: Function
+    handlerId: number
 
     abstract onValueChanged(val)
 
@@ -12,11 +13,15 @@ abstract class BasePropertyDesc{
         this.property = property
         this.setter = this.property.setter
 
-        property.registerValueChangeFunc(this.onValueChanged.bind(this))
+        this.handlerId = property.registerValueChangeFunc(this.onValueChanged.bind(this))
         this.contentDiv = document.createElement("div")
 
         this.titleDiv = document.createElement("div")
         this.titleDiv.innerText = property.key
+    }
+
+    clear(){
+        this.property.unregisterValueChangeFunc(this.handlerId)
     }
 
     getTitleDiv(){

@@ -16,72 +16,74 @@ class BaseShapeJS {
 
     public isPermanent: boolean = false;
 
+    private handlerId: number = 0 // always increment
+
     // This is used for Editor only to set properties.
     private propertySheet: PropertySheet
 
     private valueChangeHandlersMap: Map<string, Array<Function>> = new Map()
 
-    globalToLocal(globalPoint: paper.Point): paper.Point{
+    globalToLocal(globalPoint: paper.Point): paper.Point {
         return this.paperShape.globalToLocal(globalPoint)
     }
 
-    getNearestPoint(localPos: paper.Point){
+    getNearestPoint(localPos: paper.Point) {
         return this.paperShape.getNearestPoint(localPos)
     }
 
-    getOffsetOf(localPos: paper.Point){
+    getOffsetOf(localPos: paper.Point) {
         return this.paperShape.getOffsetOf(localPos)
     }
 
-    divideAt(length: number){
+    divideAt(length: number) {
         return this.paperShape.divideAt(length)
     }
 
-    get bounds(): paper.Rectangle{
+    get bounds(): paper.Rectangle {
         return this.paperShape.bounds
     }
 
-    get position(): paper.Point{
+    get position(): paper.Point {
         return this.paperShape.position
     }
 
-    get rotation(): number{
+    get rotation(): number {
         return this.paperShape.rotation
     }
 
-    get scaling(): paper.Point{
+    get scaling(): paper.Point {
         return this.paperShape.scaling
     }
 
-    get color(): paper.Color{
+    get color(): paper.Color {
         return this.paperShape.fillColor
     }
 
-    callHandlers(propertyName: string, val: any){
-        if(this.valueChangeHandlersMap.has(propertyName)){
-            for(let handler of this.valueChangeHandlersMap.get(propertyName)){
+    callHandlers(propertyName: string, val: any) {
+        if (this.valueChangeHandlersMap.has(propertyName)) {
+            for (let handler of this.valueChangeHandlersMap.get(propertyName).values()) {
                 handler(val)
             }
         }
     }
 
-    rotate(angle: number, center: paper.Point){
+    rotate(angle: number, center: paper.Point) {
         this.paperShape.rotate(angle, center)
         this.callHandlers("rotation", this.paperShape.rotation)
     }
 
-    set position(val: paper.Point){
+    set position(val: paper.Point) {
         this.paperShape.position = val
         this.callHandlers("position", val)
     }
 
-    set scaling(val:paper.Point){
+    set scaling(val: paper.Point) {
         this.paperShape.scaling = val
 
         this.callHandlers("scaling", val)
     }
 
-    set rotation(val:number){
+    set rotation(val: number) {
         this.paperShape.rotation = val
         this.callHandlers("rotation", val)
     }
@@ -153,13 +155,13 @@ class BaseShapeJS {
         let zeroPointPosition = this.paperShape.localToGlobal(new paper.Point(0, 0))
         this.rawObj.SetPosition(zeroPointPosition.x, zeroPointPosition.y, 0)
 
-        this.position = new paper.Point(0,0)
+        this.position = new paper.Point(0, 0)
         this.paperShape.rotation = rotation
         this.position = prevPosition
 
         // Store color
         let fillColor = this.paperShape.fillColor
-        if(fillColor) // Some shapes doesn't have fille color
+        if (fillColor) // Some shapes doesn't have fille color
             this.rawObj.SetColor(fillColor.red, fillColor.green, fillColor.blue, fillColor.alpha)
     }
 
@@ -187,42 +189,42 @@ class BaseShapeJS {
     }
 
     // Not sure how to pass getter/setter as functor.
-    private getPosition(){
+    private getPosition() {
         return this.position
     }
 
-    private setPosition(x:number, y: number){
-        this.paperShape.position = new paper.Point(x,y)
+    private setPosition(x: number, y: number) {
+        this.paperShape.position = new paper.Point(x, y)
         this.update({updateShape: false, updateBoundingBox: true})
         this.store()
     }
 
-    private getScaling(){
+    private getScaling() {
         return this.scaling
     }
 
-    private setScaling(x:number, y:number){
-        this.paperShape.scaling = new paper.Point(x,y)
+    private setScaling(x: number, y: number) {
+        this.paperShape.scaling = new paper.Point(x, y)
         this.update({updateShape: false, updateBoundingBox: true})
         this.store()
     }
 
-    private getRotation():number{
+    private getRotation(): number {
         return this.rotation
     }
 
-    private setRotation(val:number){
+    private setRotation(val: number) {
         this.paperShape.rotation = val
         this.update({updateShape: false, updateBoundingBox: true})
         this.store()
     }
 
-    private getColor():paper.Color{
+    private getColor(): paper.Color {
         return this.color
     }
 
-    private setColor(val:paper.Color){
-        if(this.paperShape.fillColor != val){
+    private setColor(val: paper.Color) {
+        if (this.paperShape.fillColor != val) {
             this.paperShape.fillColor = val
             this.store()
         }
@@ -233,48 +235,65 @@ class BaseShapeJS {
 
         // Position
         this.propertySheet.addProperty({
-            key:"Position",
-            type:PropertyType.VECTOR2,
+            key: "Position",
+            type: PropertyType.VECTOR2,
             getter: this.getPosition.bind(this),
             setter: this.setPosition.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("position").bind(this)
+            registerValueChangeFunc: this.registerValueChangeHandler("position").bind(this),
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("position").bind(this)
         });
 
         this.propertySheet.addProperty({
-            key:"Scaling",
-            type:PropertyType.VECTOR2,
+            key: "Scaling",
+            type: PropertyType.VECTOR2,
             getter: this.getScaling.bind(this),
             setter: this.setScaling.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("scaling").bind(this)
+            registerValueChangeFunc: this.registerValueChangeHandler("scaling").bind(this),
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("scaling").bind(this)
         })
 
         this.propertySheet.addProperty({
-            key:"Rotation",
-            type:PropertyType.FLOAT,
+            key: "Rotation",
+            type: PropertyType.FLOAT,
             getter: this.getRotation.bind(this),
             setter: this.setRotation.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("rotation").bind(this)
+            registerValueChangeFunc: this.registerValueChangeHandler("rotation").bind(this),
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("rotation").bind(this)
         })
 
         this.propertySheet.addProperty({
-            key:"FillColor",
-            type:PropertyType.COLOR,
+            key: "FillColor",
+            type: PropertyType.COLOR,
             getter: this.getColor.bind(this),
             setter: this.setColor.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("color").bind(this)
+            registerValueChangeFunc: this.registerValueChangeHandler("color").bind(this),
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("color").bind(this)
         })
     }
 
-    registerValueChangeHandler( valueName:string){
-        return function(valueChangedHandler: Function){
-            if(!this.valueChangeHandlersMap.has(valueName)){
-                this.valueChangeHandlersMap.set(valueName, new Array<Function>())
+    registerValueChangeHandler(valueName: string) {
+        return function (valueChangedHandler: Function) {
+            if (!this.valueChangeHandlersMap.has(valueName)) {
+                this.valueChangeHandlersMap.set(valueName, new Map<Number, Function>())
             }
-            this.valueChangeHandlersMap.get(valueName).push(valueChangedHandler)
+
+            let id = this.handlerId
+            this.valueChangeHandlersMap.get(valueName).set(id, valueChangedHandler)
+            this.handlerId++
+            return id;
         }
     }
 
-    getPropertySheet(){
+    unregisterValueChangeHandler(valueName: string) {
+        return function (handlerId: number) {
+            if (this.valueChangeHandlersMap.has(valueName)) {
+                let valueChangeHandlerMap = this.valueChangeHandlersMap.get(valueName)
+                valueChangeHandlerMap.delete(handlerId)
+            }
+        }
+    }
+
+    getPropertySheet() {
         return this.propertySheet
     }
 
@@ -461,7 +480,7 @@ let shapeFactory = new ShapeFactory()
 
 huahuoEngine.ExecuteAfterInited(() => {
     let eventName = "OnShapeLoaded"
-    if(huahuoEngine.GetInstance().IsEventRegistered(eventName))
+    if (huahuoEngine.GetInstance().IsEventRegistered(eventName))
         return;
 
     let baseShapeOnLoadHandler = new Module.ScriptEventHandlerImpl()
