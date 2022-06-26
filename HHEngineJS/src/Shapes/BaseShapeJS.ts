@@ -98,6 +98,7 @@ class BaseShapeJS {
 
     set color(val: paper.Color) {
         this.rawObj.SetColor(val.red, val.green, val.blue, val.alpha)
+        this.callHandlers("color", val)
     }
 
     getLayer() {
@@ -213,6 +214,15 @@ class BaseShapeJS {
         this.store()
     }
 
+    private getColor():paper.Color{
+        return this.color
+    }
+
+    private setColor(val:paper.Color){
+        this.paperShape.fillColor = val
+        this.store()
+    }
+
     afterWASMReady() {
         this.propertySheet = new PropertySheet();
 
@@ -239,6 +249,14 @@ class BaseShapeJS {
             getter: this.getRotation.bind(this),
             setter: this.setRotation.bind(this),
             registerValueChangeFunc: this.registerValueChangeHandler("rotation").bind(this)
+        })
+
+        this.propertySheet.addProperty({
+            key:"FillColor",
+            type:PropertyType.COLOR,
+            getter: this.getColor.bind(this),
+            setter: this.setColor.bind(this),
+            registerValueChangeFunc: this.registerValueChangeHandler("color").bind(this)
         })
     }
 

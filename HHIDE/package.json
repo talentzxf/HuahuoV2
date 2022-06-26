@@ -28,6 +28,7 @@
     "style-loader": "^3.3.1",
     "tiny-typed-emitter": "^2.1.0",
     "ts-loader": "^9.3.0",
+    "vanilla-colorful": "^0.6.2",
     "webpack": "^5.70.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.7.4"

@@ -8,6 +8,8 @@ import {DrawToolBar} from "./UIComponents/DrawToolBar";
 import {SceneView} from "./SceneView/SceneView";
 import {Inspector} from "./Inspector/Inspector";
 
+import "vanilla-colorful"
+
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 import {faMinus} from "@fortawesome/free-solid-svg-icons/faMinus"

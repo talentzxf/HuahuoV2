@@ -1,6 +1,6 @@
 import {CustomElement, Logger, PropertySheet} from "hhcommoncomponents"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
-import {GeneratePropertyDiv} from "./BasePropertyDivGenerator"
+import {GeneratePropertyDiv, GetPropertyFlexDirection} from "./BasePropertyDivGenerator"
 import "./PropertyTypes"
 
 @CustomElement({
@@ -31,7 +31,7 @@ class Inspector extends HTMLElement{
         let properties = propertySheet.getProperties()
         for(let property of properties){
             let propertyDiv = document.createElement("div")
-            propertyDiv.style.flexDirection = "row"
+            propertyDiv.style.flexDirection = GetPropertyFlexDirection(property.type)
             propertyDiv.style.display = "flex"
             propertyDiv.style.width = "100%"
             let keyDiv = document.createElement("div")

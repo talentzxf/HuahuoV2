@@ -2,6 +2,10 @@ import {PropertyType, Property, Logger} from "hhcommoncomponents"
 
 abstract class BasePropertyDivGenerator {
     abstract generateDiv(property:Property): HTMLElement
+
+    flexDirection(){
+        return "row"
+    }
 }
 
 let propertyGeneratorMap:Map<PropertyType, BasePropertyDivGenerator> = new Map<PropertyType, BasePropertyDivGenerator>()
@@ -19,4 +23,8 @@ function GeneratePropertyDiv(type: PropertyType, property: Property): HTMLElemen
     return propertyGeneratorMap.get(type).generateDiv(property)
 }
 
-export {BasePropertyDivGenerator, RegisterDivGenerator, GeneratePropertyDiv}
+function GetPropertyFlexDirection(type: PropertyType){
+    return propertyGeneratorMap.get(type).flexDirection()
+}
+
+export {BasePropertyDivGenerator, RegisterDivGenerator, GeneratePropertyDiv, GetPropertyFlexDirection}
