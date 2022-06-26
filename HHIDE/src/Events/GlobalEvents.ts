@@ -5,13 +5,15 @@ import {PropertySheet} from "hhcommoncomponents"
 enum EventNames{
     DRAWSHAPEBEGINS = 'drawShapeBegins',
     DRAWSHAPEENDS = "drawShapeEnds",
-    OBJECTSELECTED = "objectSelected"
+    OBJECTSELECTED = "objectSelected",
+    UNSELECTOBJECTS = "unselectObjects"
 }
 
 interface GlobalEvents{
     drawShapeBegins:(shapeDrawer: BaseShapeDrawer)=>void;
     drawShapeEnds:(shapeDrawer: BaseShapeDrawer)=>void;
     objectSelected:(shapes: PropertySheet)=>void;
+    unselectObjects:()=>void;
 }
 
 class EventBus extends TypedEmitter<GlobalEvents>{

@@ -2,6 +2,7 @@ import {CustomElement, Logger, PropertySheet} from "hhcommoncomponents"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {BasePropertyDesc, GetPropertyDivGenerator} from "./BasePropertyDivGenerator"
 import "./PropertyTypes"
+import {findParentPanel} from "../Utilities/PanelUtilities";
 
 @CustomElement({
     selector: "hh-inspector"
@@ -24,6 +25,13 @@ class Inspector extends HTMLElement{
         div.appendChild(this.contentDiv)
 
         EventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
+        EventBus.getInstance().on(EventNames.UNSELECTOBJECTS, this.unselectObjects.bind(this))
+
+        findParentPanel(this).style.display = "none"
+    }
+
+    unselectObjects(){
+        findParentPanel(this).style.display = "none"
     }
 
     clearCurrentProperties(){
@@ -37,6 +45,9 @@ class Inspector extends HTMLElement{
     }
 
     onItemSelected(propertySheet: PropertySheet){
+
+        findParentPanel(this).style.display = "block"
+
         Logger.info("Selected something")
         this.clearCurrentProperties()
 

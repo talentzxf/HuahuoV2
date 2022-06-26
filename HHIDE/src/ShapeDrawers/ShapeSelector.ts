@@ -79,6 +79,8 @@ class ShapeSelector extends BaseShapeDrawer {
                 return true
             }
         }
+
+        EventBus.getInstance().emit(EventNames.UNSELECTOBJECTS)
         return false
     }
 

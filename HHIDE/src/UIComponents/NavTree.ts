@@ -246,17 +246,7 @@
 //         return this.selectedTreeNode
 //     }
 //
-//     findParentPanel() {
-//         let candidate = this.parentElement
-//         while (candidate != null) {
-//             if (candidate instanceof HHPanel) {
-//                 return candidate
-//             }
-//             candidate = candidate.parentElement
-//         }
-//
-//         return null
-//     }
+
 //
 //     connectedCallback() {
 //         this.domRoot.className = "navtree"
