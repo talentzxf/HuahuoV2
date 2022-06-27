@@ -20,8 +20,8 @@ class RenderEnginePaperJs implements RenderEngine2D{
 
     private activateBgLayer(){
         if(!this.bgLayer){
-            this.bgLayer = new paper.Layer();
             this.contentLayer = this.getProject().activeLayer
+            this.bgLayer = new paper.Layer();
             this.getProject().insertLayer(0, this.bgLayer)
         }
         this.bgLayer.activate()

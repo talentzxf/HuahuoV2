@@ -1,12 +1,13 @@
 import {BaseShapeJS} from "hhenginejs"
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
-import {Vector2, pointsNear, relaxRectangle} from "hhcommoncomponents"
+import {Vector2, pointsNear, relaxRectangle, ContextMenu} from "hhcommoncomponents"
 import {paper} from "hhenginejs";
 import {shapeScaleHandler} from "../TransformHandlers/ShapeScaleHandler";
 import {ShapeTranslateMorphBase} from "../TransformHandlers/ShapeTranslateMorphBase";
 import {TransformHandlerMap} from "../TransformHandlers/TransformHandlerMap";
 import {shapeRotateHandler} from "../TransformHandlers/ShapeRotateHandler";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
+
 
 const BOUNDMARGIN:number = 10
 const VERYNEARMARGIN = 10
@@ -26,6 +27,8 @@ class ShapeSelector extends BaseShapeDrawer {
     transformHandler: ShapeTranslateMorphBase = null
     canvas: HTMLCanvasElement
     transformHandlerMap: TransformHandlerMap
+    private contextMenu: ContextMenu = new ContextMenu()
+    private contextMenuInited: boolean = false
 
     constructor() {
         super();
@@ -45,10 +48,41 @@ class ShapeSelector extends BaseShapeDrawer {
         return true
     }
 
+    sendSelectedToBack(){
+        for(let shape of this.selectedShapes){
+            shape.sendToBack()
+        }
+    }
+
+    bringToFrond(){
+        for(let shape of this.selectedShapes){
+            shape.bringToFront()
+        }
+    }
+
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
         super.onBeginToDrawShape(canvas);
 
         this.canvas = canvas
+
+        // setup right click context menu
+        if(!this.contextMenuInited){
+            this.canvas.addEventListener("contextmenu", this.contextMenu.onContextMenu.bind(this.contextMenu))
+
+            let _this = this
+            this.contextMenu.setItems([
+                {
+                    itemName: "Send To Back",
+                    onclick: _this.sendSelectedToBack.bind(_this)
+                },
+                {
+                    itemName: "Bring to Front",
+                    onclick: _this.bringToFrond.bind(_this)
+                }
+                ])
+
+            this.contextMenuInited = true
+        }
     }
 
     hitSomething(scrX, scrY, clearSelection: boolean = false): boolean {

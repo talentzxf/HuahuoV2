@@ -120,6 +120,9 @@ interface BaseShape{
     Vector3f GetSegmentHandleIn(long segmentId);
     Vector3f GetSegmentHandleOut(long segmentId);
     SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
+
+    long GetIndex();
+    void SetIndex(long index);
 };
 
 [NoDelete]
@@ -151,6 +154,8 @@ interface LineShape{
     Vector3f GetSegmentHandleIn(long segmentId);
     Vector3f GetSegmentHandleOut(long segmentId);
     SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
+    long GetIndex();
+    void SetIndex(long index);
 };
 
 [NoDelete]
@@ -182,6 +187,8 @@ interface RectangleShape{
     Vector3f GetSegmentHandleIn(long segmentId);
     Vector3f GetSegmentHandleOut(long segmentId);
     SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
+    long GetIndex();
+    void SetIndex(long index);
 };
 
 [NoDelete]
@@ -213,6 +220,8 @@ interface CircleShape{
     Vector3f GetSegmentHandleIn(long segmentId);
     Vector3f GetSegmentHandleOut(long segmentId);
     SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
+    long GetIndex();
+    void SetIndex(long index);
 };
 
 interface HuaHuoEngine {

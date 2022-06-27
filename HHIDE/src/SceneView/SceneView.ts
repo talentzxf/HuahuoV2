@@ -1,5 +1,5 @@
 import {CustomElement, Logger} from "hhcommoncomponents"
-import {renderEngine2D, huahuoEngine} from "hhenginejs"
+import {renderEngine2D} from "hhenginejs"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {HHTimeline} from "hhtimeline"

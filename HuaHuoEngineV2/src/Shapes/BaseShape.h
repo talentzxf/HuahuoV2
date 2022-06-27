@@ -40,12 +40,14 @@ private:
     PPtr<ShapeSegmentFrameState> mSegmentFrames;
     Layer* mLayer;
     SInt32 mBornFrameId;
+    SInt32 mIndex;
 
 public:
     BaseShape(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
         ,mLayer(NULL)
         ,mBornFrameId(-1)
+        ,mIndex(-1)
     {
         mTransformKeyFrames = Object::Produce<ShapeTransformFrameState>();
         mColorKeyFrames = Object::Produce<ShapeColorFrameState>();
@@ -130,6 +132,14 @@ public:
 
     ColorRGBAf* GetColor(){
         return mColorKeyFrames->GetColor();
+    }
+
+    void SetIndex(SInt32 index){
+        this->mIndex = index;
+    }
+
+    SInt32 GetIndex(){
+        return this->mIndex;
     }
 
     virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;

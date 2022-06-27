@@ -67,6 +67,28 @@ class BaseShapeJS {
         }
     }
 
+    storeSameLayerShapes(){
+        let parent = this.paperShape.parent
+        if(parent){
+            for(let childShape of parent.children){
+                if(childShape.data && childShape.data.meta){
+                    let baseShape = childShape.data.meta
+                    baseShape.store()
+                }
+            }
+        }
+    }
+
+    sendToBack(){
+        this.paperShape.sendToBack()
+        this.storeSameLayerShapes()
+    }
+
+    bringToFront(){
+        this.paperShape.bringToFront()
+        this.storeSameLayerShapes()
+    }
+
     rotate(angle: number, center: paper.Point) {
         this.paperShape.rotate(angle, center)
         this.callHandlers("rotation", this.paperShape.rotation)
@@ -150,6 +172,7 @@ class BaseShapeJS {
         let rotation = this.paperShape.rotation
         this.rawObj.SetRotation(rotation)
 
+        // Store rotation (rotation is complicated)
         let prevPosition = this.position
         this.paperShape.rotation = 0
         let zeroPointPosition = this.paperShape.localToGlobal(new paper.Point(0, 0))
@@ -163,6 +186,10 @@ class BaseShapeJS {
         let fillColor = this.paperShape.fillColor
         if (fillColor) // Some shapes doesn't have fille color
             this.rawObj.SetColor(fillColor.red, fillColor.green, fillColor.blue, fillColor.alpha)
+
+        // Store index
+        let index = this.paperShape.index
+        this.rawObj.SetIndex(index)
     }
 
     constructor(rawObj?) {
@@ -416,6 +443,14 @@ class BaseShapeJS {
 
             let rawFillColor = this.rawObj.GetColor()
             this.color = new paper.Color(rawFillColor.r, rawFillColor.g, rawFillColor.b, rawFillColor.a)
+
+            // Adjust index
+            if(this.paperShape.index != this.rawObj.GetIndex() && this.paperShape.index > 0){
+                let parent = this.paperShape.parent
+                if(parent){
+                    parent.insertChild(this.rawObj.GetIndex(), this.paperShape)
+                }
+            }
         }
 
         if (this.isSelected) {
