@@ -58,7 +58,6 @@ void StreamedBinaryWrite::TransferSTLStyleArray(T& data, TransferMetaFlags /*met
     typename T::const_iterator end = cdata.end();
     for (typename T::const_iterator i = cdata.begin(); i != end; ++i)
     {
-        printf("Transfering data of vector\n");
         non_const_value_type& p = (non_const_value_type&)(*i);
         Transfer(p, "data");
     }

@@ -1,7 +1,5 @@
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
 import * as paper from "paper";
-declare function castObject(obj:any, clz:any): any;
-declare var Module: any;
 
 let shapeName = "CircleShape"
 class CircleShapeJS extends BaseShapeJS{
@@ -11,11 +9,6 @@ class CircleShapeJS extends BaseShapeJS{
     }
 
     randomColor: paper.Color
-
-    afterWASMReady(){
-        super.afterWASMReady()
-        this.rawObj = castObject(this.rawObj, Module.CircleShape);
-    }
 
     getShapeName(){
         return shapeName

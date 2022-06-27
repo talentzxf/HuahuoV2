@@ -3,13 +3,14 @@ import {Logger} from "hhcommoncomponents"
 import {Vector2, relaxRectangle, pointsNear, PropertySheet, Property, PropertyType} from "hhcommoncomponents"
 import * as paper from "paper";
 
+declare function castObject(obj:any, clz:any): any;
 declare var Module: any;
 
 const BOUNDMARGIN: number = 10
 
 class BaseShapeJS {
     protected rawObj: any = null;
-    protected paperShape: paper.Path
+    protected paperItem: paper.Item
     protected isSelected = false
 
     protected boundingBoxRect = null;
@@ -23,12 +24,21 @@ class BaseShapeJS {
 
     private valueChangeHandlersMap: Map<string, Array<Function>> = new Map()
 
+    set paperShape(val:paper.Path){
+        this.paperItem = val
+    }
+
+    get paperShape():paper.Path{
+        return this.paperItem as paper.Path
+    }
+
     globalToLocal(globalPoint: paper.Point): paper.Point {
         return this.paperShape.globalToLocal(globalPoint)
     }
 
     getNearestPoint(localPos: paper.Point) {
-        return this.paperShape.getNearestPoint(localPos)
+        if(this.paperShape.getNearestPoint)
+            return this.paperShape.getNearestPoint(localPos)
     }
 
     getOffsetOf(localPos: paper.Point) {
@@ -40,23 +50,23 @@ class BaseShapeJS {
     }
 
     get bounds(): paper.Rectangle {
-        return this.paperShape.bounds
+        return this.paperItem.bounds
     }
 
     get position(): paper.Point {
-        return this.paperShape.position
+        return this.paperItem.position
     }
 
     get rotation(): number {
-        return this.paperShape.rotation
+        return this.paperItem.rotation
     }
 
     get scaling(): paper.Point {
-        return this.paperShape.scaling
+        return this.paperItem.scaling
     }
 
     get color(): paper.Color {
-        return this.paperShape.fillColor
+        return this.paperItem.fillColor
     }
 
     callHandlers(propertyName: string, val: any) {
@@ -68,7 +78,7 @@ class BaseShapeJS {
     }
 
     storeSameLayerShapes(){
-        let parent = this.paperShape.parent
+        let parent = this.paperItem.parent
         if(parent){
             for(let childShape of parent.children){
                 if(childShape.data && childShape.data.meta){
@@ -80,33 +90,33 @@ class BaseShapeJS {
     }
 
     sendToBack(){
-        this.paperShape.sendToBack()
+        this.paperItem.sendToBack()
         this.storeSameLayerShapes()
     }
 
     bringToFront(){
-        this.paperShape.bringToFront()
+        this.paperItem.bringToFront()
         this.storeSameLayerShapes()
     }
 
     rotate(angle: number, center: paper.Point) {
-        this.paperShape.rotate(angle, center)
-        this.callHandlers("rotation", this.paperShape.rotation)
+        this.paperItem.rotate(angle, center)
+        this.callHandlers("rotation", this.paperItem.rotation)
     }
 
     set position(val: paper.Point) {
-        this.paperShape.position = val
+        this.paperItem.position = val
         this.callHandlers("position", val)
     }
 
     set scaling(val: paper.Point) {
-        this.paperShape.scaling = val
+        this.paperItem.scaling = val
 
         this.callHandlers("scaling", val)
     }
 
     set rotation(val: number) {
-        this.paperShape.rotation = val
+        this.paperItem.rotation = val
         this.callHandlers("rotation", val)
     }
 
@@ -119,7 +129,7 @@ class BaseShapeJS {
     }
 
     set color(val: paper.Color) {
-        this.paperShape.fillColor = val
+        this.paperItem.fillColor = val
         this.callHandlers("color", val)
     }
 
@@ -166,29 +176,29 @@ class BaseShapeJS {
             this.storeSegments(segments)
         }
 
-        let scaling = this.paperShape.scaling
+        let scaling = this.paperItem.scaling
         this.rawObj.SetScale(scaling.x, scaling.y, 0)
 
-        let rotation = this.paperShape.rotation
+        let rotation = this.paperItem.rotation
         this.rawObj.SetRotation(rotation)
 
         // Store rotation (rotation is complicated)
         let prevPosition = this.position
-        this.paperShape.rotation = 0
-        let zeroPointPosition = this.paperShape.localToGlobal(new paper.Point(0, 0))
+        this.paperItem.rotation = 0
+        let zeroPointPosition = this.paperItem.localToGlobal(new paper.Point(0, 0))
         this.rawObj.SetPosition(zeroPointPosition.x, zeroPointPosition.y, 0)
 
         this.position = new paper.Point(0, 0)
-        this.paperShape.rotation = rotation
+        this.paperItem.rotation = rotation
         this.position = prevPosition
 
         // Store color
-        let fillColor = this.paperShape.fillColor
+        let fillColor = this.paperItem.fillColor
         if (fillColor) // Some shapes doesn't have fille color
             this.rawObj.SetColor(fillColor.red, fillColor.green, fillColor.blue, fillColor.alpha)
 
         // Store index
-        let index = this.paperShape.index
+        let index = this.paperItem.index
         this.rawObj.SetIndex(index)
     }
 
@@ -221,7 +231,7 @@ class BaseShapeJS {
     }
 
     private setPosition(x: number, y: number) {
-        this.paperShape.position = new paper.Point(x, y)
+        this.paperItem.position = new paper.Point(x, y)
         this.update({updateShape: false, updateBoundingBox: true})
         this.store()
     }
@@ -231,7 +241,7 @@ class BaseShapeJS {
     }
 
     private setScaling(x: number, y: number) {
-        this.paperShape.scaling = new paper.Point(x, y)
+        this.paperItem.scaling = new paper.Point(x, y)
         this.update({updateShape: false, updateBoundingBox: true})
         this.store()
     }
@@ -241,7 +251,7 @@ class BaseShapeJS {
     }
 
     private setRotation(val: number) {
-        this.paperShape.rotation = val
+        this.paperItem.rotation = val
         this.update({updateShape: false, updateBoundingBox: true})
         this.store()
     }
@@ -251,13 +261,15 @@ class BaseShapeJS {
     }
 
     private setColor(val: paper.Color) {
-        if (this.paperShape.fillColor != val) {
-            this.paperShape.fillColor = val
+        if (this.paperItem.fillColor != val) {
+            this.paperItem.fillColor = val
             this.store()
         }
     }
 
     afterWASMReady() {
+        this.rawObj = castObject(this.rawObj, Module[this.getShapeName()]);
+
         this.propertySheet = new PropertySheet();
 
         // Position
@@ -344,7 +356,7 @@ class BaseShapeJS {
 
     duringUpdate(updateOptions) {
         if (updateOptions && updateOptions.updateShape) {
-            if (!this.paperShape) {
+            if (!this.paperItem) {
                 this.createShape()
             }
         }
@@ -431,9 +443,9 @@ class BaseShapeJS {
             let scale = this.rawObj.GetScale()
             this.scaling = new paper.Point(scale.x, scale.y)
 
-            this.paperShape.rotation = 0
+            this.paperItem.rotation = 0
             let pos = this.rawObj.GetPosition();// This position is the new global coordinate of the local (0,0).
-            let currentZeroPoint = this.paperShape.localToGlobal(new paper.Point(0, 0))
+            let currentZeroPoint = this.paperItem.localToGlobal(new paper.Point(0, 0))
             let currentCenter = this.position
 
             let centerOffset = currentCenter.subtract(currentZeroPoint)
@@ -445,10 +457,10 @@ class BaseShapeJS {
             this.color = new paper.Color(rawFillColor.r, rawFillColor.g, rawFillColor.b, rawFillColor.a)
 
             // Adjust index
-            if(this.paperShape.index != this.rawObj.GetIndex() && this.paperShape.index > 0){
-                let parent = this.paperShape.parent
+            if(this.paperItem.index != this.rawObj.GetIndex() && this.paperItem.index > 0){
+                let parent = this.paperItem.parent
                 if(parent){
-                    parent.insertChild(this.rawObj.GetIndex(), this.paperShape)
+                    parent.insertChild(this.rawObj.GetIndex(), this.paperItem)
                 }
             }
         }
@@ -458,7 +470,7 @@ class BaseShapeJS {
                 if (this.boundingBoxRect)
                     this.boundingBoxRect.remove()
 
-                let boundingBox = this.paperShape.bounds;
+                let boundingBox = this.paperItem.bounds;
 
                 let paperjs = this.getPaperJs()
                 this.boundingBoxRect = new paperjs.Path.Rectangle(relaxRectangle(boundingBox, BOUNDMARGIN))
@@ -466,9 +478,9 @@ class BaseShapeJS {
                 this.boundingBoxRect.strokeColor = new paper.Color("black")
             }
 
-            this.paperShape.selected = true
+            this.paperItem.selected = true
         } else {
-            this.paperShape.selected = false
+            this.paperItem.selected = false
             if (updateOptions && updateOptions.updateBoundingBox) {
                 if (this.boundingBoxRect)
                     this.boundingBoxRect.remove()
@@ -481,15 +493,15 @@ class BaseShapeJS {
         this.duringUpdate(updateOptions)
 
         if (this.isPermanent == true && !this.rawObj.IsVisible()) {
-            this.paperShape.visible = false
+            this.paperItem.visible = false
             this.isSelected = false
-            this.paperShape.selected = false
+            this.paperItem.selected = false
 
             if (this.boundingBoxRect) {
                 this.boundingBoxRect.remove();
             }
         } else {
-            this.paperShape.visible = true
+            this.paperItem.visible = true
             this.afterUpdate(updateOptions)
         }
     }

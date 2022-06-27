@@ -1,8 +1,6 @@
 import {Vector2} from "hhcommoncomponents"
 import * as paper from "paper";
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
-declare var Module: any;
-declare function castObject(obj:any, clz:any): any;
 
 let shapeName = "LineShape"
 
@@ -12,11 +10,6 @@ class LineShapeJS extends BaseShapeJS{
     }
 
     randomStrokeColor: paper.Color
-
-    afterWASMReady(){
-        super.afterWASMReady()
-        this.rawObj = castObject(this.rawObj, Module.LineShape);
-    }
 
     getShapeName(){
         return shapeName

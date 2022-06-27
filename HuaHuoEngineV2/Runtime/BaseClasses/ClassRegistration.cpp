@@ -15,6 +15,7 @@
 #include "KeyFrames/ShapeTransformFrameState.h"
 #include "KeyFrames/ShapeColorFrameState.h"
 #include "Shapes/RectangleShape.h"
+#include "Shapes/ImageShape.h"
 
 void RegisterBuiltinTypes()
 {
@@ -57,6 +58,7 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<LineShape>("ObjectStore");
     RegisterHuaHuoClass<RectangleShape>("ObjectStore");
     RegisterHuaHuoClass<CircleShape>("ObjectStore");
+    RegisterHuaHuoClass<ImageShape>("ObjectStore");
     RegisterHuaHuoClass<TimeLineCellManager>("ObjectStore");
 
     RegisterHuaHuoClass<AbstractFrameState>("ObjectStore");

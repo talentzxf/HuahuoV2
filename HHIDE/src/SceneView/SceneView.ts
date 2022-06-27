@@ -6,6 +6,7 @@ import {HHTimeline} from "hhtimeline"
 import {ResizeObserver} from 'resize-observer';
 import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
 import {EditorPlayer} from "./EditorPlayer";
+import {fileLoader} from "./FileLoader";
 
 @CustomElement({
     selector: "hh-sceneview"
@@ -43,6 +44,19 @@ class SceneView extends HTMLElement {
         this.canvasContainer.appendChild(this.canvas)
 
         this.ctx = this.canvas.getContext("2d")
+
+        this.canvas.addEventListener("dragover", (e)=>{
+            e.stopPropagation()
+            e.preventDefault()
+            e.dataTransfer.dropEffect = "copy"
+        })
+
+        this.canvas.addEventListener("drop", (e)=>{
+            e.stopPropagation()
+            e.preventDefault()
+            const fileList = e.dataTransfer.files;
+            fileLoader.loadFile(fileList[0])
+        })
     }
 
     setupEventsAndCreateFirstTrack() {

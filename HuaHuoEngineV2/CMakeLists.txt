@@ -123,6 +123,7 @@ list(APPEND CPPFILES Runtime/Utilities/GUID.cpp)
 list(APPEND CPPFILES Runtime/Math/Random/rand.cpp)
 list(APPEND CPPFILES src/KeyFrames/ShapeSegmentFrameState.cpp)
 list(APPEND CPPFILES src/Shapes/RectangleShape.cpp)
+list(APPEND CPPFILES  src/Shapes/ImageShape.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)

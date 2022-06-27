@@ -1,7 +1,5 @@
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
 import {Vector2} from "hhcommoncomponents"
-declare var Module: any;
-declare function castObject(obj:any, clz:any): any;
 
 let shapeName = "RectangleShape"
 class RectangleJS extends BaseShapeJS{
@@ -11,11 +9,6 @@ class RectangleJS extends BaseShapeJS{
 
     // This is only used in editor
     randomFillColor: paper.Color
-
-    afterWASMReady() {
-        super.afterWASMReady()
-        this.rawObj = castObject(this.rawObj, Module.RectangleShape)
-    }
 
     getShapeName(): string {
         return shapeName
