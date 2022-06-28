@@ -122,19 +122,19 @@ class SceneView extends HTMLElement {
     }
 
     onMouseDown(evt: MouseEvent) {
-        if (this.currentShapeDrawer) {
+        if (this.currentShapeDrawer && !this.editorPlayer.isPlaying) {
             this.currentShapeDrawer.onMouseDown(evt)
         }
     }
 
     onMouseMove(evt: MouseEvent) {
-        if (this.currentShapeDrawer) {
+        if (this.currentShapeDrawer && !this.editorPlayer.isPlaying) {
             this.currentShapeDrawer.onMouseMove(evt)
         }
     }
 
     onMouseUp(evt: MouseEvent) {
-        if (this.currentShapeDrawer) {
+        if (this.currentShapeDrawer && !this.editorPlayer.isPlaying) {
             this.currentShapeDrawer.onMouseUp(evt)
         }
     }
