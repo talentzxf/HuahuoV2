@@ -4,6 +4,8 @@
 
 #include "TimeLineCellManager.h"
 #include "Serialize/SerializeUtility.h"
+#include "Layer.h"
+#include "ObjectStore.h"
 
 IMPLEMENT_REGISTER_CLASS(TimeLineCellManager, 10006);
 
@@ -14,8 +16,12 @@ template<class TransferFunction>
 void TimeLineCellManager::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
 
-    printf("Transfering cellspanmap. Size:%d\n", cellSpanMap.size());
     TRANSFER(cellSpanMap);
+    TRANSFER(layer);
+}
+
+void TimeLineCellManager::SetLayer(Layer *pLayer) {
+    this->layer = pLayer;
 }
 
 void TimeLineCellManager::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
@@ -28,5 +34,30 @@ void TimeLineCellManager::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
         for(unsigned int frameId = startFrameId; frameId < startFrameId + spanLength; frameId++){
             this->mergedCells[frameId] = startFrameId;
         }
+    }
+}
+
+void TimeLineCellManager::MergeCells(unsigned int startCellId, unsigned int endCellId) {
+    unsigned int minCell = std::min(startCellId, endCellId);
+    unsigned int maxCell = std::max(startCellId, endCellId);
+
+    unsigned int currentMaxCellSpan = this->GetCellSpan(maxCell);
+
+    unsigned int newMinCellSpan = maxCell - minCell + currentMaxCellSpan;
+
+    // Update all spans in the middle
+    for(unsigned int cellId = minCell; cellId <= minCell + newMinCellSpan - 1; cellId++){
+        // 1. Delete all cells in the middle
+        if(this->cellSpanMap.contains(cellId)){
+            this->cellSpanMap.erase(cellId);
+        }
+
+        this->mergedCells[cellId] = minCell;
+    }
+
+    this->cellSpanMap[minCell] = newMinCellSpan;
+
+    if(this->layer.IsValid() && this->layer->GetObjectStore() != NULL){
+        this->layer->GetObjectStore()->UpdateMaxFrameId(maxCell);
     }
 }

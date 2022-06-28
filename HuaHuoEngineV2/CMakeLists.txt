@@ -138,12 +138,13 @@ set(TARGETNAME HuaHuoEngineV2)
 ## Compile external dependencies
 #add_subdirectory (external)
 
-add_compile_options(-Wno-deprecated-enum-enum-conversion --profiling)
-add_compile_options(-sALLOW_MEMORY_GROWTH)
+add_compile_options(-Wno-deprecated-enum-enum-conversion)
 
 if (CMAKE_CXX_PLATFORM_ID STREQUAL "emscripten")
     add_compile_definitions(WEB_ENV=1)
     add_compile_definitions(PLATFORM_WEBGL=1)
+    add_compile_options(--profiling)
+    add_compile_options(-sALLOW_MEMORY_GROWTH)
     include_directories(PlatformDependent/WebGL/External/baselib/builds/Include)
     list(APPEND CPPFILES Runtime/HuaHuoEngineWrapper.cpp)
     list(APPEND CPPFILES PlatformDependent/WebGL/External/baselib/builds/Source/Baselib_Timer_Emscripten.cpp)

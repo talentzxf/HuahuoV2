@@ -13,6 +13,7 @@ void ImageShape::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
     TRANSFER(this->data);
     TRANSFER(this->mType);
+    TRANSFER(this->mIsAnimation);
 }
 
 void ImageShape::SetImageData(UInt8 *pData, UInt32 dataSize) {

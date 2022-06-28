@@ -37,6 +37,7 @@ public:
         layerMap.insert(std::pair<std::string, PPtr<Layer>>(uuid, layer));
         layers.push_back(layer);
         GetPersistentManager().MakeObjectPersistent(layer->GetInstanceID(), StoreFilePath);
+        layer->Init();
 
         return layer;
     }
@@ -59,6 +60,7 @@ public:
 
     void UpdateMaxFrameId(int frameId){
         this->maxFrameId = std::max(this->maxFrameId, frameId);
+        printf("Update maxFrameId:%d\n", this->maxFrameId);
     }
 
     int GetMaxFrameId(){

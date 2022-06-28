@@ -21,6 +21,10 @@ void Layer::Transfer(TransferFunction &transfer) {
     TRANSFER(objectStore);
 }
 
+ObjectStore* Layer::GetObjectStore() {
+    return objectStore;
+}
+
 void Layer::AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode) {
     for (ShapePPtrVector::iterator itr = shapes.begin(); itr != shapes.end(); itr++) {
         (*itr)->SetLayer(this);

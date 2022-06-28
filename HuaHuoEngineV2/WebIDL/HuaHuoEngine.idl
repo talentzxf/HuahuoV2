@@ -232,6 +232,8 @@ interface ImageShape{
     void LoadImageData(octet[] pData);
     long GetImageDataSize();
     void SetImageData(octet[] pData, long dataSize);
+    boolean GetIsAnimation();
+    void SetIsAnimation(boolean isAnimation);
 
     // inherited from BaseShape
     void SetPosition(float x, float y, float z);

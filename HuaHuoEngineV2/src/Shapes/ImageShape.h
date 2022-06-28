@@ -15,6 +15,7 @@ public:
     ImageShape(MemLabelId label, ObjectCreationMode mode)
     :Super(label, mode)
     ,mType("UnknownType")
+    ,mIsAnimation(false)
     {
     }
 
@@ -30,6 +31,14 @@ public:
         return const_cast<char*>(this->mType.c_str());
     }
 
+    void SetIsAnimation(bool isAnimation){
+        this->mIsAnimation = isAnimation;
+    }
+
+    bool GetIsAnimation(){
+        return this->mIsAnimation;
+    }
+
     void SetImageData(UInt8* pData, UInt32 dataSize);
 
     UInt8 GetImageDataAtIndex(UInt32 index);
@@ -43,6 +52,7 @@ public:
 private:
     std::vector<UInt8> data;
     std::string mType;
+    bool mIsAnimation;
 };
 
 

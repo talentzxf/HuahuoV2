@@ -54,6 +54,10 @@ public:
         GetPersistentManager().MakeObjectPersistent(newShape->GetInstanceID(), StoreFilePath);
     }
 
+    void Init(){
+        this->cellManager->SetLayer(this);
+    }
+
     void SetObjectStore(ObjectStore* store){
         this->objectStore = store;
     }
@@ -103,6 +107,8 @@ public:
 
         return false;
     }
+
+    ObjectStore* GetObjectStore();
 
 private:
     // Frame Id-- starting from 0.

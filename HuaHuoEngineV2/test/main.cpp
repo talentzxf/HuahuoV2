@@ -310,7 +310,7 @@ int main() {
 //    testTransform();
 //    testScene();
 //    testGameObject();
-//    testTimeManager();
+    testTimeManager();
     testShapeStore();
     testKeyFrames();
     testRecordKeyFrames();

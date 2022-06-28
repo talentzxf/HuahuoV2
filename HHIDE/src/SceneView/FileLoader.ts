@@ -7,9 +7,11 @@ class FileLoader{
         const reader = new FileReader()
 
         reader.addEventListener('load', (e)=>{
+            let fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1)
             let img = e.target.result
+
             let imageShape = new ImageShapeJS()
-            imageShape.setImageData(file.name, img)
+            imageShape.setImageData(file.name, img, fileExtension == "gif")
             imageShape.createShape()
             imageShape.store()
 
