@@ -1,8 +1,9 @@
-import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
+import {shapeFactory} from "./BaseShapeJS";
 import * as paper from "paper";
+import {BaseSolidShape} from "./BaseSolidShape";
 
 let shapeName = "CircleShape"
-class CircleShapeJS extends BaseShapeJS{
+class CircleShapeJS extends BaseSolidShape{
 
     static createCircle(rawObj){
         return new CircleShapeJS(rawObj);

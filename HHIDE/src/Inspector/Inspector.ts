@@ -60,6 +60,7 @@ class Inspector extends HTMLElement{
             propertyDiv.style.flexDirection = divGenerator.flexDirection()
             propertyDiv.style.display = "flex"
             propertyDiv.style.width = "100%"
+            propertyDiv.style.gap = "10px"
 
             propertyDiv.appendChild(propertyDesc.getTitleDiv())
             propertyDiv.appendChild(propertyDesc.getContentDiv())

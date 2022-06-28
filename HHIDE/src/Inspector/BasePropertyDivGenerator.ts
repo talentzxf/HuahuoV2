@@ -13,7 +13,9 @@ abstract class BasePropertyDesc{
         this.property = property
         this.setter = this.property.setter
 
-        this.handlerId = property.registerValueChangeFunc(this.onValueChanged.bind(this))
+        if(property.registerValueChangeFunc)
+            this.handlerId = property.registerValueChangeFunc(this.onValueChanged.bind(this))
+
         this.contentDiv = document.createElement("div")
 
         this.titleDiv = document.createElement("div")
@@ -21,7 +23,8 @@ abstract class BasePropertyDesc{
     }
 
     clear(){
-        this.property.unregisterValueChangeFunc(this.handlerId)
+        if(this.property.unregisterValueChangeFunc)
+            this.property.unregisterValueChangeFunc(this.handlerId)
     }
 
     getTitleDiv(){

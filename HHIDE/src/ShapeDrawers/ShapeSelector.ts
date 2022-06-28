@@ -247,7 +247,11 @@ class ShapeSelector extends BaseShapeDrawer {
     onMouseUp(evt: MouseEvent) {
         super.onMouseUp(evt);
 
-        this.transformHandler = null;
+        if(this.transformHandler){
+            this.transformHandler.endMove();
+            this.transformHandler = null;
+        }
+
         this.isDrawing = false
 
         if (this.selectRectangle) {

@@ -1,4 +1,4 @@
-import {Vector2} from "hhcommoncomponents"
+import {Vector2, PropertyType} from "hhcommoncomponents"
 import * as paper from "paper";
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
 
@@ -42,6 +42,26 @@ class LineShapeJS extends BaseShapeJS{
 
         this.createShape()
         this.store()
+    }
+
+    getStrokeWidth(){
+        return this.paperShape.strokeWidth
+    }
+
+    setStrokeWidth(val){
+        this.paperShape.strokeWidth = val
+    }
+
+    afterWASMReady() {
+        super.afterWASMReady();
+        this.propertySheet.addProperty({
+            key: "StrokeWidth",
+            type: PropertyType.FLOAT,
+            getter: this.getStrokeWidth.bind(this),
+            setter: this.setStrokeWidth.bind(this),
+            registerValueChangeFunc: this.registerValueChangeHandler("strokeWidth").bind(this),
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("strokeWidth").bind(this)
+        })
     }
 }
 

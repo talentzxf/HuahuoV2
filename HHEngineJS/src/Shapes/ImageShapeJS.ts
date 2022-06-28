@@ -1,4 +1,5 @@
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
+import {PropertyType} from "hhcommoncomponents"
 import {parseGIF, decompressFrames, ParsedFrame} from "gifuct-js";
 import {GlobalConfig} from "../GlobalConfig"
 
@@ -146,6 +147,20 @@ class ImageShapeJS extends BaseShapeJS{
         }
 
         this.paperItem = tempShape
+
+        this.appendProperties()
+    }
+
+    appendProperties(){
+        if(this.isAnimation){
+            // Position
+            this.propertySheet.addProperty({
+                key: "Frames",
+                type: PropertyType.STRING,
+                getter: this.getFrames.bind(this)
+            });
+
+        }
     }
 
     beforeUpdate(updateOptions) {
@@ -188,6 +203,10 @@ class ImageShapeJS extends BaseShapeJS{
 
             this.dirty = false
         }
+    }
+
+    getFrames(){
+        return this.frames.length;
     }
 }
 

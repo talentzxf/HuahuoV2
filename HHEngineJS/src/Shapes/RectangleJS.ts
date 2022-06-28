@@ -1,8 +1,9 @@
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
 import {Vector2} from "hhcommoncomponents"
+import {BaseSolidShape} from "./BaseSolidShape";
 
 let shapeName = "RectangleShape"
-class RectangleJS extends BaseShapeJS{
+class RectangleJS extends BaseSolidShape{
     static createRectangle(rawObj){
         return new RectangleJS(rawObj)
     }

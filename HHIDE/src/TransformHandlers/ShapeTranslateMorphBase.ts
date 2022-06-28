@@ -22,5 +22,9 @@ class ShapeTranslateMorphBase{
 
     }
 
+    endMove(){
+
+    }
+
 }
 export {ShapeTranslateMorphBase}

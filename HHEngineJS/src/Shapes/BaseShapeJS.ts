@@ -1,6 +1,6 @@
 import {huahuoEngine} from "../EngineAPI";
 import {Logger} from "hhcommoncomponents"
-import {Vector2, relaxRectangle, pointsNear, PropertySheet, Property, PropertyType} from "hhcommoncomponents"
+import {relaxRectangle, PropertySheet, PropertyType} from "hhcommoncomponents"
 import * as paper from "paper";
 
 declare function castObject(obj:any, clz:any): any;
@@ -20,7 +20,7 @@ class BaseShapeJS {
     private handlerId: number = 0 // always increment
 
     // This is used for Editor only to set properties.
-    private propertySheet: PropertySheet
+    protected propertySheet: PropertySheet
 
     private valueChangeHandlersMap: Map<string, Array<Function>> = new Map()
 
@@ -256,17 +256,6 @@ class BaseShapeJS {
         this.store()
     }
 
-    private getColor(): paper.Color {
-        return this.color
-    }
-
-    private setColor(val: paper.Color) {
-        if (this.paperItem.fillColor != val) {
-            this.paperItem.fillColor = val
-            this.store()
-        }
-    }
-
     afterWASMReady() {
         this.rawObj = castObject(this.rawObj, Module[this.getShapeName()]);
 
@@ -298,15 +287,6 @@ class BaseShapeJS {
             setter: this.setRotation.bind(this),
             registerValueChangeFunc: this.registerValueChangeHandler("rotation").bind(this),
             unregisterValueChangeFunc: this.unregisterValueChangeHandler("rotation").bind(this)
-        })
-
-        this.propertySheet.addProperty({
-            key: "FillColor",
-            type: PropertyType.COLOR,
-            getter: this.getColor.bind(this),
-            setter: this.setColor.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("color").bind(this),
-            unregisterValueChangeFunc: this.unregisterValueChangeHandler("color").bind(this)
         })
     }
 
@@ -443,7 +423,9 @@ class BaseShapeJS {
             let scale = this.rawObj.GetScale()
             this.scaling = new paper.Point(scale.x, scale.y)
 
+            this.paperItem.position = new paper.Point(0,0)
             this.paperItem.rotation = 0
+
             let pos = this.rawObj.GetPosition();// This position is the new global coordinate of the local (0,0).
             let currentZeroPoint = this.paperItem.localToGlobal(new paper.Point(0, 0))
             let currentCenter = this.position
