@@ -1,6 +1,6 @@
 import {TimelineTrack, TimelineTrackEventNames, TitleTimelineTrack} from "./TimelineTrack";
 import {ContextMenu, CustomElement, Logger} from "hhcommoncomponents";
-import {GlobalConfig} from "./GlobalConfig";
+import {GlobalConfig} from "hhenginejs";
 import {TimelineEventNames} from "./HHTimelineEvents";
 import {huahuoEngine} from "hhenginejs"
 

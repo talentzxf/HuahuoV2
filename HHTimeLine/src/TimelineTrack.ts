@@ -1,5 +1,5 @@
 import {TypedEmitter} from 'tiny-typed-emitter';
-import {GlobalConfig} from "./GlobalConfig";
+import {GlobalConfig} from "hhenginejs";
 import {Logger} from "hhcommoncomponents";
 import {v4 as uuidv4} from 'uuid';
 import {huahuoEngine} from "hhenginejs"

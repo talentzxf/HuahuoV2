@@ -1,5 +1,6 @@
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
 import {parseGIF, decompressFrames, ParsedFrame} from "gifuct-js";
+import {GlobalConfig} from "../GlobalConfig"
 
 function getMimeType(dataURI): string{
     // separate out the mime component
@@ -38,10 +39,14 @@ class ImageShapeJS extends BaseShapeJS{
     loaded: boolean = false
 
     dirty: boolean = false
-    isAnimation: boolean = false
 
+    // Animation related properties
+    isAnimation: boolean = false
     frames: ParsedFrame[] = null;
     animationLoaded: boolean = false;
+    worldFrameAnimationFrameMap: Map<number, number> = null;
+    lastAnimationFrame: number = -1; // The animation frame used in last time update.
+    animationTotalWorldFrames: number = -1;
 
     setImageData(fName, data, isAnimation = false){
         this.fileName = fName
@@ -100,6 +105,24 @@ class ImageShapeJS extends BaseShapeJS{
             let gif = parseGIF(binaryData)
             this.frames = decompressFrames(gif, true)
 
+            let elapsedTime = 0.0
+            this.worldFrameAnimationFrameMap = new Map<number, number>()
+            let animationFrameId = 0
+            let lastWorldFrame = -1
+            for(let frame of this.frames){
+                let elapsedFrames = Math.floor(elapsedTime * GlobalConfig.fps);
+
+                for(let frameId = lastWorldFrame + 1; frameId <= elapsedFrames; frameId++){
+                    this.worldFrameAnimationFrameMap.set(frameId, animationFrameId)
+                    lastWorldFrame = frameId
+                }
+
+                elapsedTime += frame.delay/1000.0 // delay is in milliseconds
+                animationFrameId++
+            }
+
+            this.animationTotalWorldFrames = lastWorldFrame
+
             this.animationLoaded = true
         }
     }
@@ -133,16 +156,24 @@ class ImageShapeJS extends BaseShapeJS{
         }
 
         if(this.rawObj.IsVisible()){
-            let frameId = this.getLayer().GetCurrentFrame();
-            let frame = this.frames[frameId % this.frames.length]
+            let bornFrameId = this.rawObj.GetBornFrameId();
+            let worldFrameId = this.getLayer().GetCurrentFrame();
 
-            let raster = this.paperItem as paper.Raster
-            raster.clear()
+            let curFrameId = Math.floor((worldFrameId - bornFrameId) % this.animationTotalWorldFrames)
+            let playingAnimationFrameId = this.worldFrameAnimationFrameMap.get(curFrameId)
 
-            let dims = frame.dims
-            let frameImageData = raster.createImageData(new paper.Size(dims.width, dims.height))
-            frameImageData.data.set(frame.patch)
-            raster.setImageData(frameImageData, new paper.Point(0,0))
+            if(this.lastAnimationFrame != playingAnimationFrameId){
+                let frame = this.frames[playingAnimationFrameId]
+                let raster = this.paperItem as paper.Raster
+                raster.clear()
+
+                let dims = frame.dims
+                let frameImageData = raster.createImageData(new paper.Size(dims.width, dims.height))
+                frameImageData.data.set(frame.patch)
+                raster.setImageData(frameImageData, new paper.Point(0,0))
+
+                this.lastAnimationFrame = playingAnimationFrameId
+            }
         }
     }
 

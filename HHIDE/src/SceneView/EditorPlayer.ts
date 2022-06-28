@@ -1,5 +1,5 @@
-import {HHTimeLine, TimelineEventNames, GlobalConfig} from "hhtimeline"
-import {huahuoEngine} from "hhenginejs"
+import {HHTimeLine, TimelineEventNames} from "hhtimeline"
+import {huahuoEngine, GlobalConfig} from "hhenginejs"
 declare var Module:any;
 
 class EditorPlayer{

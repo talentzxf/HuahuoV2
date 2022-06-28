@@ -259,6 +259,7 @@ interface ImageShape{
     SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
     long GetIndex();
     void SetIndex(long index);
+    long GetBornFrameId();
 };
 
 interface HuaHuoEngine {
