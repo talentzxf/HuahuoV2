@@ -64,8 +64,6 @@ public:
     }
 
     bool Write(const void* buffer, size_t size){
-        printf("%s,%d. Writing: %d bytes\n", __FILE__, __LINE__, size);
-
         if(size < 0 || buffer == NULL)
             return false;
 
@@ -101,7 +99,6 @@ public:
     }
 
     bool Write(size_t pos, const void* buffer, size_t size){
-        printf("%s,%d. Start pos:%d, Writing: %d bytes\n", __FILE__, __LINE__, pos, size);
         size_t newSize = pos + size;
         if(newSize > memoryFile->GetFileLength()){
             memoryFile->data.resize(newSize);

@@ -49,7 +49,7 @@ class ColorPropertyDiv extends BasePropertyDesc{
     colorPicker: RgbaStringColorPicker
     colorInput: HexInput
     showMoreButton: HTMLButtonElement
-    isExpanded: boolean = true
+    isExpanded: boolean = false
     silentColorChangeEvent:boolean = false
 
     getButtonText(){
@@ -125,6 +125,10 @@ class ColorPropertyDiv extends BasePropertyDesc{
         this.showMoreButton = document.createElement("button")
         this.showMoreButton.innerText = this.getButtonText()
         this.showMoreButton.onclick = this.showMoreButtonClicked.bind(this)
+
+        if(!this.isExpanded){
+            this.colorPicker.style.display = "none"
+        }
 
         this.titleDiv.appendChild(this.showMoreButton)
     }

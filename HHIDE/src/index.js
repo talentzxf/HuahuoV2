@@ -20,6 +20,7 @@ import {faArrowPointer} from "@fortawesome/free-solid-svg-icons";
 import {faSquare} from "@fortawesome/free-solid-svg-icons";
 import {saveAs} from 'file-saver';
 import {Logger} from "hhcommoncomponents";
+import {fileLoader} from "./SceneView/FileLoader";
 
 
 library.add(faMinus)
@@ -64,7 +65,13 @@ function load(fName, e) {
     reader.readAsArrayBuffer(file)
 }
 
+function loadImage(fName, e){
+    const fileList = e.target.files;
+    fileLoader.loadFile(fileList[0])
+}
+
 window.menuoperations = {
     save: save,
-    load: load
+    load: load,
+    loadImage: loadImage
 }

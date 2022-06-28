@@ -29,11 +29,9 @@
 <rgba-color-picker></rgba-color-picker>
 <hh-container>
     <hh-container direction="row" size="fit-content" hasSplitter="false">
-        <button>File</button>
-        <button>Edit</button>
-        <button>View</button>
         <button onclick="window.menuoperations.save()">Save</button>
-        <input type="file" onchange="window.menuoperations.load(this.value, event)"></button>
+        <input type="file" onchange="window.menuoperations.load(this.value, event)">
+        Load Image: <input type="file" onchange="window.menuoperations.loadImage(this.value, event)">
     </hh-container>
 
     <hh-container direction="row" size="fit-content" hasSplitter="false">
