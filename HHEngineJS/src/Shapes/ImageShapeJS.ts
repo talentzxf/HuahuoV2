@@ -118,7 +118,9 @@ class ImageShapeJS extends BaseShapeJS{
                     lastWorldFrame = frameId
                 }
 
-                elapsedTime += frame.delay/1000.0 // delay is in milliseconds
+                let delay = frame.delay?frame.delay/1000.0: 1.0/GlobalConfig.fps
+
+                elapsedTime += delay // delay is in milliseconds
                 animationFrameId++
             }
 
@@ -170,7 +172,7 @@ class ImageShapeJS extends BaseShapeJS{
             return;
         }
 
-        if(this.rawObj.IsVisible()){
+        if(this.rawObj.IsVisible() && this.isAnimation){
             let bornFrameId = this.rawObj.GetBornFrameId();
             let worldFrameId = this.getLayer().GetCurrentFrame();
 
@@ -206,7 +208,7 @@ class ImageShapeJS extends BaseShapeJS{
     }
 
     getFrames(){
-        return this.frames.length;
+        return this.worldFrameAnimationFrameMap.size;
     }
 }
 
