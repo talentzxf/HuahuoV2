@@ -9,6 +9,8 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
 
     targetShape: BaseShapeJS
 
+    valueChangeHandlerMap: Map<string, Function> = new Map<string, Function>()
+
     constructor() {
         super();
     }
@@ -22,32 +24,6 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         hitSegment.handleOut.selected = true
     }
 
-    getSegmentHandleIn() {
-        return this.curSegment["handleIn"]
-    }
-
-    setSegmentHandleIn(x,y) {
-        this.curSegment["handleIn"].x = x
-        this.curSegment["handleIn"].y = y
-
-        // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
-        this.targetShape.store({position: true, segments: true})
-        this.targetShape.update({updateShape: false, updateBoundingBox: true});
-    }
-
-    getSegmentHandleOut() {
-        return this.curSegment["handleOut"]
-    }
-
-    setSegmentHandleOut(x,y) {
-        this.curSegment["handleOut"].x = x
-        this.curSegment["handleOut"].y = y
-
-        // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
-        this.targetShape.store({position: true, segments: true})
-        this.targetShape.update({updateShape: false, updateBoundingBox: true});
-    }
-
     beginMove(startPos, hitResult = null) {
         if (this.curObjs.size != 1) {
             throw "Can't morph multiple objects!!!"
@@ -56,29 +32,77 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         this.targetShape = this.curObjs.values().next().value // There's only one object in the set, get it.
         super.beginMove(startPos);
 
-        if (hitResult != null && hitResult.segment != null)
+        if (hitResult != null && hitResult.segment != null){
             this.setSegment(hitResult.segment)
+            this.showInspector()
+        }
+    }
 
-        // Show inspector
-        let propertySheet: PropertySheet = new PropertySheet()
-        propertySheet.addProperty({
-                key: "handleIn",
+    getPropertyGetter(propertyName:string){
+        let _this = this
+        return function(){
+            return _this.curSegment[propertyName]
+        }
+    }
+
+    getPropertySetter(propertyName:string){
+        let _this = this
+        return function(x,y){
+            _this.curSegment[propertyName].x = x
+            _this.curSegment[propertyName].y = x
+
+            // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
+            this.targetShape.store({position: true, segments: true})
+            this.targetShape.update({updateShape: false, updateBoundingBox: true});
+        }
+    }
+
+    registerValueChangeHandler(propertyName:string){
+        return function(handler){
+            this.valueChangeHandlerMap.set(propertyName, handler)
+        }
+    }
+
+    unregisterValueChangeHandler(propertyName: string){
+        return function(){
+            this.valueChangeHandlerMap.set(propertyName, null)
+        }
+    }
+
+    protected setupPropertySheet(propertySheet: PropertySheet){
+        propertySheet.addProperty(
+            {
+                key: "point",
                 type: PropertyType.VECTOR2,
-                getter: this.getSegmentHandleIn.bind(this),
-                setter: this.setSegmentHandleIn.bind(this),
-                // registerValueChangeFunc: this.registerValueChangeHandler("color").bind(this),
-                // unregisterValueChangeFunc: this.unregisterValueChangeHandler("color").bind(this)
+                getter: this.getPropertyGetter("point").bind(this),
+                setter: this.getPropertySetter("point").bind(this),
+                registerValueChangeFunc: this.registerValueChangeHandler("point").bind(this),
+                unregisterValueChangeFunc: this.unregisterValueChangeHandler("point").bind(this)
             })
+
+        propertySheet.addProperty({
+            key: "handleIn",
+            type: PropertyType.VECTOR2,
+            getter: this.getPropertyGetter("handleIn").bind(this),
+            setter: this.getPropertySetter("handleIn").bind(this),
+            registerValueChangeFunc: this.registerValueChangeHandler("handleIn").bind(this),
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("handleIn").bind(this)
+        })
         propertySheet.addProperty(
             {
                 key: "handleOut",
                 type: PropertyType.VECTOR2,
-                getter: this.getSegmentHandleOut.bind(this),
-                setter: this.setSegmentHandleOut.bind(this),
-                // registerValueChangeFunc: this.registerValueChangeHandler("color").bind(this),
-                // unregisterValueChangeFunc: this.unregisterValueChangeHandler("color").bind(this)
+                getter: this.getPropertyGetter("handleOut").bind(this),
+                setter: this.getPropertySetter("handleOut").bind(this),
+                registerValueChangeFunc: this.registerValueChangeHandler("handleOut").bind(this),
+                unregisterValueChangeFunc: this.unregisterValueChangeHandler("handleOut").bind(this)
             })
+    }
 
+    protected showInspector(){
+        // Show inspector
+        let propertySheet: PropertySheet = new PropertySheet()
+        this.setupPropertySheet(propertySheet)
         EventBus.getInstance().emit(EventNames.OBJECTSELECTED, propertySheet)
     }
 
@@ -96,6 +120,10 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
             // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
             this.targetShape.store({position: true, segments: true})
             this.targetShape.update({updateShape: false, updateBoundingBox: true});
+
+            if(this.valueChangeHandlerMap.get("point")){
+                this.valueChangeHandlerMap.get("point")(this.curSegment.point)
+            }
         }
     }
 }
@@ -103,6 +131,8 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
 class ShapeHandlerMoveHandler extends ShapeMorphHandler {
     targetHandleName: string = ""
     targetHandleStartPos: paper.Point = null
+
+    valueChangeHandlerMap: Map<string, Function> = new Map<string, Function>()
 
     beginMove(startPos, hitResult) {
         super.beginMove(startPos, hitResult);
@@ -127,6 +157,10 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
 
             this.targetShape.store()
             this.targetShape.update({updateShape: false, updateBoundingBox: true});
+
+            if(this.valueChangeHandlerMap.get(this.targetHandleName)){
+                this.valueChangeHandlerMap.get(this.targetHandleName)(this.curSegment[this.targetHandleName])
+            }
         }
     }
 }
@@ -145,6 +179,8 @@ class ShapeInsertSegmentHandler extends ShapeMorphHandler {
         this.setSegment(newSegment)
 
         this.targetShape.insertSegment(localPos)
+
+        this.showInspector()
     }
 }
 

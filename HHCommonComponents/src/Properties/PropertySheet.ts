@@ -24,6 +24,14 @@ class PropertySheet{
     getProperties(){
         return this.properties
     }
+
+    getProperty(key: string){
+        for(let property of this.properties){
+            if(property.key == key)
+                return property
+        }
+        return null
+    }
 }
 
 export {PropertySheet,Property,PropertyType}
