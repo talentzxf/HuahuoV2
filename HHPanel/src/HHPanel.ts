@@ -56,6 +56,7 @@ class HHPanel extends HTMLElement {
     private _tabs: HTMLElement
     private _contents: HTMLElement
     private mInited:Boolean = false
+    private maxTabId: number = 0
 
     constructor() {
         super();
@@ -174,6 +175,23 @@ class HHPanel extends HTMLElement {
         })
     }
 
+    addContent(node: HHContent){
+        let title = node.getAttribute('title') || 'No Title'
+        let titleSpan = document.createElement('hh-title') as HHTitle
+        titleSpan.appendChild(node)
+        titleSpan.innerHTML = title
+        titleSpan.setAttribute('tabindex', this.maxTabId.toString())
+        titleSpan.addEventListener('click', function (evt) {
+            let idx = Number(titleSpan.getAttribute('tabindex'))
+            titleSpan.getParentPanel().selectTab(idx)
+        })
+
+        this._tabs.appendChild(titleSpan)
+        titleSpan.setContent(node)
+        titleSpan.setParentPanel(this)
+        return this.maxTabId++;
+    }
+
     initPanel() {
         /*
     :host {
@@ -204,24 +222,9 @@ class HHPanel extends HTMLElement {
 
         let _this = this
 
-        let tabIndex = 0
         this._contentNodes.forEach(
             node => {
-                let title = node.getAttribute('title') || 'No Title'
-                let titleSpan = document.createElement('hh-title') as HHTitle
-                titleSpan.appendChild(node)
-                titleSpan.innerHTML = title
-                titleSpan.setAttribute('tabindex', tabIndex.toString())
-                titleSpan.addEventListener('click', function (evt) {
-                    let idx = Number(titleSpan.getAttribute('tabindex'))
-                    titleSpan.getParentPanel().selectTab(idx)
-                })
-
-                _this._tabs.appendChild(titleSpan)
-                titleSpan.setContent(node)
-                titleSpan.setParentPanel(_this)
-
-                tabIndex++;
+                _this.addContent(node)
             }
         )
 

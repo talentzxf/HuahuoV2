@@ -1,9 +1,9 @@
-import {HHPanel} from "hhpanel"
+import {HHPanel, HHContainer} from "hhpanel"
 
-function findParentPanel(ele) {
+function findParentElement(ele, clz){
     let candidate = ele.parentElement
     while (candidate != null) {
-        if (candidate instanceof HHPanel) {
+        if (candidate instanceof clz) {
             return candidate
         }
         candidate = candidate.parentElement
@@ -12,4 +12,12 @@ function findParentPanel(ele) {
     return null
 }
 
-export {findParentPanel}
+function findParentPanel(ele) {
+    return findParentElement(ele, HHPanel)
+}
+
+function findParentContainer(ele){
+    return findParentElement(ele, HHContainer)
+}
+
+export {findParentPanel, findParentContainer}

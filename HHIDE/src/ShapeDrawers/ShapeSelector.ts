@@ -7,6 +7,7 @@ import {ShapeTranslateMorphBase} from "../TransformHandlers/ShapeTranslateMorphB
 import {TransformHandlerMap} from "../TransformHandlers/TransformHandlerMap";
 import {shapeRotateHandler} from "../TransformHandlers/ShapeRotateHandler";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {elementCreator} from "../SceneView/ElementCreator";
 
 
 const BOUNDMARGIN:number = 10
@@ -78,6 +79,10 @@ class ShapeSelector extends BaseShapeDrawer {
                 {
                     itemName: "Bring to Front",
                     onclick: _this.bringToFrond.bind(_this)
+                },
+                {
+                    itemName: "Create New Element",
+                    onclick: elementCreator.onNewElement.bind(elementCreator)
                 }
                 ])
 

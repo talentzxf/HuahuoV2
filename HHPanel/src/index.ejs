@@ -11,6 +11,8 @@
             padding: 0;
         }
     </style>
+
+
 </head>
 <body>
 
@@ -22,7 +24,7 @@
     </hh-container>
 
     <hh-container direction="row">
-        <hh-panel>
+        <hh-panel id="targetPanel">
             <hh-content title="NavTree">NavTree Content</hh-content>
             <hh-content title="Scene">Scene Content</hh-content>
             <hh-content title="Game">Game Content</hh-content>
@@ -51,5 +53,27 @@
     <!--    <hh-content title="Tab 3-3">Content 3-3</hh-content>-->
     <!--  </hh-panel>-->
 <!--</div>-->
+
+<script type="application/javascript">
+    window.onload = function(){
+        let hhContent = document.createElement("hh-content")
+        hhContent.title = "NewElement"
+        hhContent.style.width = "100%"
+        hhContent.style.height = "100%"
+        hhContent.style.flexBasis = "100%"
+        hhContent.style.alignItems = "stretch"
+
+        let elementContent = document.createElement("div")
+        elementContent.innerText = "New Element"
+
+        hhContent.appendChild(elementContent)
+
+        let targetPanel = document.querySelector("#targetPanel")
+        let id = targetPanel.addContent(hhContent)
+
+        targetPanel.selectTab(id)
+
+    }
+</script>
 </body>
 </html>
