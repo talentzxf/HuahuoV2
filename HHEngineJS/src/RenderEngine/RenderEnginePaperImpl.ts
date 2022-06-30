@@ -5,6 +5,9 @@ import {RenderEngine2D} from "./RenderEngine2D";
 
 class RenderEnginePaperJs implements RenderEngine2D{
 
+    // From canvas to project index
+    private canvasPaperMap: Map<HTMLCanvasElement, number> = new Map()
+
     private canvas: HTMLCanvasElement = null
     private bgRect: paper.Path.Rectangle;
     private contentRect: paper.Path.Rectangle;
@@ -120,6 +123,16 @@ class RenderEnginePaperJs implements RenderEngine2D{
         window.paper = paper
 
         this.clearBackground()
+
+        this.canvasPaperMap.set(canvas, paper.project.index)
+    }
+
+    public setDefaultCanvas(canvas:HTMLCanvasElement){
+        if(this.canvasPaperMap.has(canvas)){
+            let projectIndex = this.canvasPaperMap.get(canvas)
+            paper.projects[projectIndex].activate()
+            window.paper = paper
+        }
     }
 }
 

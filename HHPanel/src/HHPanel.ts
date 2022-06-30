@@ -5,9 +5,12 @@ import {OccupiedTitleManager, SplitPanelDir} from "./draggable/OccupiedTitleMana
 import {HHTitle} from "./HHTitle";
 import {HHContent} from "./HHContent";
 import {CustomElement} from "hhcommoncomponents";
-// import {HHSplitter} from "./HHSplitter";
 import {Vector2D} from "./math/Vector2D";
 import {ShadowPanelManager} from "./draggable/ShadowPanelManager";
+
+enum PanelEventNames{
+    CONTENTSELECTED = "ContentSelected"
+}
 
 @CustomElement({
     selector: 'hh-panel',
@@ -173,6 +176,14 @@ class HHPanel extends HTMLElement {
             tab.setAttribute('selected', 'false')
             content.selected = false
         })
+
+        let customEvent = new CustomEvent(PanelEventNames.CONTENTSELECTED, {
+            detail: {
+                tabIndex: tabindex,
+                content: selectedContent
+            }
+        })
+        this.dispatchEvent(customEvent)
     }
 
     addContent(node: HHContent){
@@ -297,4 +308,4 @@ class HHPanel extends HTMLElement {
     }
 }
 
-export {HHPanel}
+export {HHPanel, PanelEventNames}
