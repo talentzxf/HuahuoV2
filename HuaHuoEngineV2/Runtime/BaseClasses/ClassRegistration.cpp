@@ -16,6 +16,8 @@
 #include "KeyFrames/ShapeColorFrameState.h"
 #include "Shapes/RectangleShape.h"
 #include "Shapes/ImageShape.h"
+#include "Shapes/AudioShape.h"
+#include "Shapes/AbstractMediaShape.h"
 
 void RegisterBuiltinTypes()
 {
@@ -58,7 +60,9 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<LineShape>("ObjectStore");
     RegisterHuaHuoClass<RectangleShape>("ObjectStore");
     RegisterHuaHuoClass<CircleShape>("ObjectStore");
+    RegisterHuaHuoClass<AbstractMediaShape>("ObjectStore");
     RegisterHuaHuoClass<ImageShape>("ObjectStore");
+    RegisterHuaHuoClass<AudioShape>("ObjectStore");
     RegisterHuaHuoClass<TimeLineCellManager>("ObjectStore");
 
     RegisterHuaHuoClass<AbstractFrameState>("ObjectStore");

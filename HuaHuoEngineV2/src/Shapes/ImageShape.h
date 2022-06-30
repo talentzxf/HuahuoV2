@@ -7,28 +7,20 @@
 
 
 #include "BaseShape.h"
+#include "AbstractMediaShape.h"
 
-class ImageShape : public BaseShape{
+class ImageShape : public AbstractMediaShape{
     REGISTER_CLASS(ImageShape);
     DECLARE_OBJECT_SERIALIZE()
 public:
     ImageShape(MemLabelId label, ObjectCreationMode mode)
     :Super(label, mode)
-    ,mType("UnknownType")
     ,mIsAnimation(false)
     {
     }
 
     virtual char* GetName() override{
         return "ImageShape";
-    }
-
-    void SetImageMimeType(std::string type){
-        this->mType = type;
-    }
-
-    char* GetImageMimeType(){
-        return const_cast<char*>(this->mType.c_str());
     }
 
     void SetIsAnimation(bool isAnimation){
@@ -38,20 +30,7 @@ public:
     bool GetIsAnimation(){
         return this->mIsAnimation;
     }
-
-    void SetImageData(UInt8* pData, UInt32 dataSize);
-
-    UInt8 GetImageDataAtIndex(UInt32 index);
-
-    // TODO: This is not working for WebIDL, not sure why
-    void LoadImageData(UInt8* pData);
-    UInt32 GetImageDataSize(){
-        return this->data.size();
-    }
-
 private:
-    std::vector<UInt8> data;
-    std::string mType;
     bool mIsAnimation;
 };
 

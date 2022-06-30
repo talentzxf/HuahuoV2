@@ -1,8 +1,8 @@
 import {Logger} from "hhcommoncomponents"
-import {ImageShapeJS, huahuoEngine} from "hhenginejs"
+import {ImageShapeJS, huahuoEngine, AudioShapeJS} from "hhenginejs"
 
 class FileLoader{
-    loadFile(file:File):boolean{
+    loadImageFile(file:File):boolean{
         Logger.info("Loading:" + file.name)
         const reader = new FileReader()
 
@@ -11,7 +11,7 @@ class FileLoader{
             let img = e.target.result
 
             let imageShape = new ImageShapeJS()
-            imageShape.setImageData(file.name, img, fileExtension == "gif")
+            imageShape.setData(file.name, img, fileExtension == "gif")
             imageShape.createShape()
             imageShape.store()
 
@@ -20,6 +20,26 @@ class FileLoader{
         })
 
         reader.readAsDataURL(file)
+        return false;
+    }
+
+    loadAudioFile(file:File):boolean{
+        Logger.info("Loading: " + file.name)
+        const reader = new FileReader()
+
+        reader.addEventListener("load",(e)=>{
+            let audio = e.target.result
+            let audioShape = new AudioShapeJS()
+            audioShape.setData(file.name, audio)
+
+            audioShape.createShape()
+            audioShape.store()
+            let currentLayer = huahuoEngine.GetCurrentLayer()
+            currentLayer.addShape(audioShape)
+        })
+
+        reader.readAsDataURL(file)
+
         return false;
     }
 }

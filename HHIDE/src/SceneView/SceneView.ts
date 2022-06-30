@@ -55,7 +55,7 @@ class SceneView extends HTMLElement {
             e.stopPropagation()
             e.preventDefault()
             const fileList = e.dataTransfer.files;
-            fileLoader.loadFile(fileList[0])
+            fileLoader.loadImageFile(fileList[0])
         })
     }
 

@@ -18,6 +18,7 @@ import {faCircle} from "@fortawesome/free-solid-svg-icons/faCircle";
 import {faBezierCurve} from "@fortawesome/free-solid-svg-icons/faBezierCurve";
 import {faArrowPointer} from "@fortawesome/free-solid-svg-icons";
 import {faSquare} from "@fortawesome/free-solid-svg-icons";
+import {faFileAudio} from "@fortawesome/free-regular-svg-icons";
 import {saveAs} from 'file-saver';
 import {Logger} from "hhcommoncomponents";
 import {fileLoader} from "./SceneView/FileLoader";
@@ -30,6 +31,7 @@ library.add(faCircle)
 library.add(faBezierCurve)
 library.add(faArrowPointer)
 library.add(faSquare)
+library.add(faFileAudio)
 dom.watch();
 
 function save() {
@@ -67,7 +69,7 @@ function load(fName, e) {
 
 function loadImage(fName, e){
     const fileList = e.target.files;
-    fileLoader.loadFile(fileList[0])
+    fileLoader.loadImageFile(fileList[0])
 }
 
 window.menuoperations = {

@@ -8,7 +8,7 @@ declare var Module: any;
 
 const BOUNDMARGIN: number = 10
 
-class BaseShapeJS {
+abstract class BaseShapeJS {
     protected rawObj: any = null;
     protected paperItem: paper.Item
     protected isSelected = false
@@ -330,9 +330,7 @@ class BaseShapeJS {
         }
     }
 
-    createShape() {
-        throw "Can't create abstract shape, override this function."
-    }
+    abstract createShape()
 
     duringUpdate(updateOptions) {
         if (updateOptions && updateOptions.updateShape) {

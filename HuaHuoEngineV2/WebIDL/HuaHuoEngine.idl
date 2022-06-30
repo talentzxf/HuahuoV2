@@ -225,15 +225,59 @@ interface CircleShape{
 };
 
 [NoDelete]
+interface AudioShape{
+
+    // inherited from AbstractMediaShape
+    octet GetDataAtIndex(long index);
+    void LoadData(octet[] pData);
+    long GetDataSize();
+    void SetData(octet[] pData, long dataSize);
+    void SetMimeType(DOMString type);
+    DOMString GetMimeType();
+    void SetFileName(DOMString fName);
+    DOMString GetFileName();
+
+    // inherited from BaseShape
+    void SetPosition(float x, float y, float z);
+    Vector3f GetPosition();
+    float GetRotation();
+    void SetRotation(float rotation);
+    void SetScale(float xScale, float yScale, float zScale);
+    Vector3f GetScale();
+
+    void SetColor(float r, float g, float b, float a);
+    ColorRGBAf GetColor();
+
+    Layer GetLayer();
+    boolean IsVisible();
+    void SetSegments(float[] segmentBuffer, long size);
+    void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
+
+    long GetSegmentKeyFrameCount();
+    long GetSegmentCount();
+    Vector3f GetSegmentPosition(long segmentId);
+    Vector3f GetSegmentHandleIn(long segmentId);
+    Vector3f GetSegmentHandleOut(long segmentId);
+    SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
+    long GetIndex();
+    void SetIndex(long index);
+    long GetBornFrameId();
+};
+
+[NoDelete]
 interface ImageShape{
-    void SetImageMimeType(DOMString type);
-    DOMString GetImageMimeType();
-    octet GetImageDataAtIndex(long index);
-    void LoadImageData(octet[] pData);
-    long GetImageDataSize();
-    void SetImageData(octet[] pData, long dataSize);
     boolean GetIsAnimation();
     void SetIsAnimation(boolean isAnimation);
+
+    // inherited from AbstractMediaShape
+    octet GetDataAtIndex(long index);
+    void LoadData(octet[] pData);
+    long GetDataSize();
+    void SetData(octet[] pData, long dataSize);
+    void SetMimeType(DOMString type);
+    DOMString GetMimeType();
+    void SetFileName(DOMString fName);
+    DOMString GetFileName();
 
     // inherited from BaseShape
     void SetPosition(float x, float y, float z);

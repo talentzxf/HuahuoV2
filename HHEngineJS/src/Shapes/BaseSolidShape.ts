@@ -1,7 +1,7 @@
 import {BaseShapeJS} from "./BaseShapeJS";
 import {PropertyType} from "hhcommoncomponents"
 
-class BaseSolidShape extends BaseShapeJS{
+abstract class BaseSolidShape extends BaseShapeJS{
     private getFillColor(): paper.Color {
         return this.color
     }

@@ -97,6 +97,20 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
                 registerValueChangeFunc: this.registerValueChangeHandler("handleOut").bind(this),
                 unregisterValueChangeFunc: this.unregisterValueChangeHandler("handleOut").bind(this)
             })
+
+        propertySheet.addProperty({
+            key: "Smooth",
+            type: PropertyType.BUTTON,
+            action: this.smoothSegment.bind(this)
+        })
+    }
+
+    smoothSegment(){
+        this.curSegment.smooth()
+
+        // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
+        this.targetShape.store({position: true, segments: true})
+        this.targetShape.update({updateShape: false, updateBoundingBox: true});
     }
 
     protected showInspector(){

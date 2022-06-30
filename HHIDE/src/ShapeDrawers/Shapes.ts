@@ -3,13 +3,15 @@ import {CircleDrawer} from "./CircleDrawer";
 import {CurveDrawer} from "./CurveDrawer";
 import {RectangleDrawer} from "./RectangleDrawer"
 import {ShapeSelector} from "./ShapeSelector";
+import {AudioClipSelector} from "./AudioClipSelector";
 
 let shapes = [
     new ShapeSelector(),
     new LineDrawer(),
     new CircleDrawer(),
     new RectangleDrawer(),
-    new CurveDrawer()
+    new CurveDrawer(),
+    new AudioClipSelector()
 ]
 
 let defaultShapeDrawerArray = shapes.filter(drawer=>{

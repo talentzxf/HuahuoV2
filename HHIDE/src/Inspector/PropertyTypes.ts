@@ -4,6 +4,7 @@ import {PropertyType} from "hhcommoncomponents"
 import {floatPropertyDivGenerator} from "./FloatPropertyDivGenerator";
 import {colorPropertyDivGenerator} from "./ColorPropertyDivGenerator";
 import {stringPropertyDivGenerator} from "./StringPropertyDivGenerator";
+import {buttonPropertyDivGenerator} from "./ButtonPropertyDivGenerator";
 
 
 // Avoid being imported twice.
@@ -13,5 +14,6 @@ if(!window["IsTypesRegistered"]){
     RegisterDivGenerator(PropertyType.FLOAT, floatPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.VECTOR2, vector2PropertyGenerator)
     RegisterDivGenerator(PropertyType.STRING, stringPropertyDivGenerator)
+    RegisterDivGenerator(PropertyType.BUTTON, buttonPropertyDivGenerator)
     window["IsTypeRegistered"] = true
 }

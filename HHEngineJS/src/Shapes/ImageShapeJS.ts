@@ -1,45 +1,15 @@
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
-import {PropertyType} from "hhcommoncomponents"
+import {PropertyType, getMimeTypeFromDataURI, dataURItoBlob} from "hhcommoncomponents"
 import {parseGIF, decompressFrames, ParsedFrame} from "gifuct-js";
 import {GlobalConfig} from "../GlobalConfig"
-
-function getMimeType(dataURI): string{
-    // separate out the mime component
-    let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-    return mimeString
-}
-
-function dataURItoBlob(dataURI): Uint8Array{
-    // convert base64 to raw binary data held in a string
-    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-    let byteString = atob(dataURI.split(',')[1]);
-
-    // write the bytes of the string to an ArrayBuffer
-    let ab = new ArrayBuffer(byteString.length);
-
-    // create a view into the buffer
-    let ia = new Uint8Array(ab);
-
-    // set the bytes of the buffer to the correct values
-    for (let i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-    }
-    return ia;
-}
+import {AbstractMediaShapeJS} from "./AbstractMediaShapeJS";
 
 let shapeName = "ImageShape"
-class ImageShapeJS extends BaseShapeJS{
+class ImageShapeJS extends AbstractMediaShapeJS{
 
     static createImageShape(rawObj){
         return new ImageShapeJS(rawObj);
     }
-
-    imgData:string = null
-    fileName: string = ""
-
-    loaded: boolean = false
-
-    dirty: boolean = false
 
     // Animation related properties
     isAnimation: boolean = false
@@ -49,10 +19,8 @@ class ImageShapeJS extends BaseShapeJS{
     lastAnimationFrame: number = -1; // The animation frame used in last time update.
     animationTotalWorldFrames: number = -1;
 
-    setImageData(fName, data, isAnimation = false){
-        this.fileName = fName
-        this.imgData = data
-        this.dirty = true
+    setData(fName, data, isAnimation = false){
+        super.setData(fName, data)
         this.isAnimation = isAnimation
     }
 
@@ -60,49 +28,20 @@ class ImageShapeJS extends BaseShapeJS{
         return shapeName
     }
 
-    awakeFromLoad() {
-        let dataLength = this.rawObj.GetImageDataSize()
+    onDataLoaded() {
+        this.isAnimation = this.rawObj.GetIsAnimation()
+        if(this.isAnimation)
+            this.loadFrameData()
 
-        // write the bytes of the string to an ArrayBuffer
-        let ab = new ArrayBuffer(dataLength);
-
-        let binaryData:Uint8Array = new Uint8Array(ab)
-
-        for(let idx = 0; idx < dataLength; idx++){
-            binaryData[idx] = this.rawObj.GetImageDataAtIndex(idx);
+        if(this.paperItem){
+            let raster = this.paperItem as paper.Raster
+            raster.source = this.data
         }
-        // this.rawObj.LoadImageData(binaryData)
-        // console.log("Loaded")
-
-        let mimeType:string = this.rawObj.GetImageMimeType()
-        let blob = new Blob([binaryData], {'type': mimeType})
-
-        let reader = new FileReader()
-        reader.readAsDataURL(blob)
-
-        let _this = this
-        reader.onload = function(){
-            _this.imgData = reader.result as string
-
-            _this.isAnimation = _this.rawObj.GetIsAnimation()
-            if(_this.isAnimation)
-                _this.loadFrameData()
-
-            if(_this.paperItem){
-                let raster = _this.paperItem as paper.Raster
-                raster.source = _this.imgData
-            }
-
-            _this.loaded = true
-        }
-
-
-        super.awakeFromLoad();
     }
 
     loadFrameData(){
         if(!this.animationLoaded){
-            let binaryData:Uint8Array = dataURItoBlob(this.imgData)
+            let binaryData:Uint8Array = dataURItoBlob(this.data)
             let gif = parseGIF(binaryData)
             this.frames = decompressFrames(gif, true)
 
@@ -136,7 +75,7 @@ class ImageShapeJS extends BaseShapeJS{
         let tempShape = new _paper.Raster()
         tempShape.data.meta = this
         tempShape.position = _paper.view.center
-        tempShape.source = this.imgData // If it's gif, the first frame will be showed here.
+        tempShape.source = this.data // If it's gif, the first frame will be showed here.
 
         tempShape.onLoad = function(){
             _this.loaded = true
@@ -196,15 +135,7 @@ class ImageShapeJS extends BaseShapeJS{
 
     store() {
         super.store();
-
-        if(!this.imgData.startsWith("blob") && this.dirty){
-            let binaryData:Uint8Array = dataURItoBlob(this.imgData)
-            this.rawObj.SetImageData(binaryData, binaryData.length);
-            this.rawObj.SetImageMimeType(getMimeType(this.imgData))
-            this.rawObj.SetIsAnimation(this.isAnimation)
-
-            this.dirty = false
-        }
+        this.rawObj.SetIsAnimation(this.isAnimation)
     }
 
     getFrames(){

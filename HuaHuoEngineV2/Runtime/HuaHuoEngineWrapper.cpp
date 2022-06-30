@@ -8,6 +8,7 @@
 #include "Shapes/CircleShape.h"
 #include "Shapes/RectangleShape.h"
 #include "Shapes/ImageShape.h"
+#include "Shapes/AudioShape.h"
 #ifdef HUAHUO_EDITOR
 #include "Editor/SceneInspector.h"
 #include "Editor/SceneView.h"

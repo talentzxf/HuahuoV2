@@ -2,7 +2,8 @@ enum PropertyType{
     STRING,
     VECTOR2,
     FLOAT,
-    COLOR
+    COLOR,
+    BUTTON
 }
 
 class Property{
@@ -12,6 +13,8 @@ class Property{
     getter: Function
     registerValueChangeFunc: Function
     unregisterValueChangeFunc: Function
+
+    action: Function
 }
 
 class PropertySheet{

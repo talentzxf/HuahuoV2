@@ -6,8 +6,20 @@
 #define HUAHUOENGINEV2_AUDIOSHAPE_H
 
 
-class AudioShape {
+#include "AbstractMediaShape.h"
 
+class AudioShape : public AbstractMediaShape{
+    REGISTER_CLASS(AudioShape);
+    DECLARE_OBJECT_SERIALIZE()
+public:
+    AudioShape(MemLabelId label, ObjectCreationMode mode)
+            :Super(label, mode)
+    {
+    }
+
+    virtual char* GetName() override{
+        return "AudioShape";
+    }
 };
 
 
