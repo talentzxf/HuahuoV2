@@ -16,7 +16,6 @@ class ElementCreator{
         newEleContent.style.width = "100%"
         newEleContent.style.height = "100%"
         newEleContent.style.flexBasis = "100%"
-        newEleContent.style.display = "flex"
         newEleContent.style.alignItems = "stretch"
 
         let elementSceneView = document.createElement("hh-sceneview")
@@ -25,7 +24,8 @@ class ElementCreator{
         elementSceneView.style.alignItems = "stretch"
 
         newEleContent.appendChild(elementSceneView)
-        this.sceneViewPanel.appendChild(newEleContent)
+        let idx = this.sceneViewPanel.addContent(newEleContent)
+        this.sceneViewPanel.selectTab(idx)
     }
 }
 
