@@ -1,5 +1,5 @@
 import {CustomElement, Logger} from "hhcommoncomponents"
-import {renderEngine2D} from "hhenginejs"
+import {renderEngine2D, huahuoEngine} from "hhenginejs"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {HHTimeline} from "hhtimeline"
@@ -22,6 +22,7 @@ class SceneView extends HTMLElement {
     zoomInBtn: HTMLButtonElement = null;
     zoomOutBtn: HTMLButtonElement = null;
     editorPlayer: EditorPlayer = null;
+    storeId: number = null;
 
     createCanvasContainer() {
         this.canvasContainer = document.createElement("div")
@@ -117,6 +118,8 @@ class SceneView extends HTMLElement {
         this.setupEventsAndCreateFirstTrack()
 
         this.editorPlayer = new EditorPlayer()
+
+        this.storeId = huahuoEngine.GetCurrentStore().GetStoreId()
 
         defaultShapeDrawer.onBeginToDrawShape(this.canvas)
     }

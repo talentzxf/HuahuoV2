@@ -55,12 +55,15 @@ interface ObjectStore{
     unsigned long GetLayerCount();
     Layer GetLayer(unsigned long id);
     long GetMaxFrameId();
+    long GetStoreId();
 };
 
 [NoDelete]
 interface ObjectStoreManager{
     static ObjectStoreManager GetDefaultObjectStoreManager();
     ObjectStore GetCurrentStore();
+    ObjectStore CreateStore();
+    boolean SetDefaultStoreByIndex(long storeIdx);
 };
 
 [NoDelete]

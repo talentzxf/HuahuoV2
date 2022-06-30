@@ -20,8 +20,14 @@ class ElementCreator{
 
     onContentSelected(e){
         let content: HHContent = e.detail.content
-        let canvas = content.querySelector("canvas")
-        renderEngine2D.setDefaultCanvas(canvas)
+
+        let sceneview = content.querySelector("hh-sceneview")
+        if(sceneview){
+            let canvas = content.querySelector("canvas")
+            renderEngine2D.setDefaultCanvas(canvas)
+
+            huahuoEngine.GetDefaultObjectStoreManageR().SetDefaultStoreByIndex(sceneview.storeId)
+        }
     }
 
     onNewElement(){
@@ -32,7 +38,7 @@ class ElementCreator{
         newEleContent.style.flexBasis = "100%"
         newEleContent.style.alignItems = "stretch"
 
-        let elementSceneView = document.createElement("hh-sceneview")
+        let elementSceneView:SceneView = document.createElement("hh-sceneview") as SceneView
         elementSceneView.id = "NewElement"
         elementSceneView.style.flexBasis = "100%"
         elementSceneView.style.display = "flex"
@@ -41,6 +47,11 @@ class ElementCreator{
         newEleContent.appendChild(elementSceneView)
         let idx = this.sceneViewPanel.addContent(newEleContent)
         this.sceneViewPanel.selectTab(idx)
+
+        let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(newStore.GetStoreId())
+
+        elementSceneView.storeId = newStore.GetStoreId()
     }
 }
 

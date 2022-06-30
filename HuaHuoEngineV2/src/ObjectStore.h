@@ -29,6 +29,14 @@ public:
 
     }
 
+    void SetStoreId(UInt32 storeId){
+        this->mStoreId = storeId;
+    }
+
+    UInt32 GetStoreId(){
+        return this->mStoreId;
+    }
+
     Layer* CreateLayer(const char* uuid){
         printf("Creating layer for uuid:%s\n", uuid);
         Layer* layer = Object::Produce<Layer>();
@@ -68,6 +76,7 @@ public:
     }
 
 private:
+    UInt32 mStoreId;
     int maxFrameId;
     std::vector<PPtr<Layer>> layers;
     std::map<std::string, PPtr<Layer>> layerMap;
@@ -97,11 +106,29 @@ public:
     ObjectStore* GetCurrentStore(){
         if(!currentStore.IsValid()){
             printf("currentStore invalid, creating new store\n");
-            currentStore = Object::Produce<ObjectStore>();
-            GetPersistentManager().MakeObjectPersistent(currentStore.GetInstanceID(), StoreFilePath);
-            allStores.push_back(currentStore);
+            CreateStore();
         }
         return currentStore;
+    }
+
+    // After creating a store, it will be set as the default store.
+    ObjectStore* CreateStore(){
+        UInt32 storeId = allStores.size() + 1;
+        currentStore = Object::Produce<ObjectStore>();
+        currentStore->SetStoreId(storeId);
+        GetPersistentManager().MakeObjectPersistent(currentStore.GetInstanceID(), StoreFilePath);
+        allStores.push_back(currentStore);
+    }
+
+    bool SetDefaultStoreByIndex(UInt32 index){
+        if(allStores.size() > index){
+            printf("StoreId:%d not found\n", index);
+            return false;
+        }
+
+        currentStore = allStores[index - 1];
+
+        return true;
     }
 
     static ObjectStoreManager* GetDefaultObjectStoreManager();
