@@ -29,7 +29,7 @@ class ShapeSelector extends BaseShapeDrawer {
     canvas: HTMLCanvasElement
     transformHandlerMap: TransformHandlerMap
     private contextMenu: ContextMenu = new ContextMenu()
-    private contextMenuInited: boolean = false
+    private contextMenuInitedMap: Map<HTMLCanvasElement, boolean> = new Map();
 
     constructor() {
         super();
@@ -67,7 +67,7 @@ class ShapeSelector extends BaseShapeDrawer {
         this.canvas = canvas
 
         // setup right click context menu
-        if(!this.contextMenuInited){
+        if(!this.contextMenuInitedMap.get(canvas)){
             this.canvas.addEventListener("contextmenu", this.contextMenu.onContextMenu.bind(this.contextMenu))
 
             let _this = this
@@ -86,7 +86,7 @@ class ShapeSelector extends BaseShapeDrawer {
                 }
                 ])
 
-            this.contextMenuInited = true
+            this.contextMenuInitedMap.set(this.canvas, true)
         }
     }
 
