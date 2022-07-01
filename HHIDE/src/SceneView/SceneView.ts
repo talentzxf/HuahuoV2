@@ -118,10 +118,14 @@ class SceneView extends HTMLElement {
         this.setupEventsAndCreateFirstTrack()
 
         this.editorPlayer = new EditorPlayer()
-
-        this.storeId = huahuoEngine.GetCurrentStore().GetStoreId()
-
         defaultShapeDrawer.onBeginToDrawShape(this.canvas)
+
+        let _this = this
+        huahuoEngine.ExecuteAfterInited(() => {
+            _this.storeId = huahuoEngine.GetCurrentStore().GetStoreId()
+            console.log("New store id:" + _this.storeId)
+        })
+
     }
 
     onMouseDown(evt: MouseEvent) {
@@ -155,7 +159,7 @@ class SceneView extends HTMLElement {
     OnResize() {
         let containerWidth = this.canvasContainer.clientWidth
         let containerHeight = this.canvasContainer.clientHeight
-        Logger.debug("OnResize: ContainerWidth:" + containerWidth + ", ContainerHeight:" + containerHeight)
+        // Logger.debug("OnResize: ContainerWidth:" + containerWidth + ", ContainerHeight:" + containerHeight)
 
         let margin = 10
         let canvasWidth = containerWidth - margin

@@ -83,7 +83,7 @@ class RenderEnginePaperJs implements RenderEngine2D{
 
         let canvasWidth = view.element.width
         let canvasHeight = view.element.height
-        Logger.debug("Canvas width:" + canvasWidth + ",height:" + canvasHeight)
+        // Logger.debug("Canvas width:" + canvasWidth + ",height:" + canvasHeight)
 
         if(this.contentRect){
             this.contentRect.remove()

@@ -118,6 +118,7 @@ public:
         currentStore->SetStoreId(storeId);
         GetPersistentManager().MakeObjectPersistent(currentStore.GetInstanceID(), StoreFilePath);
         allStores.push_back(currentStore);
+        return currentStore;
     }
 
     bool SetDefaultStoreByIndex(UInt32 index){

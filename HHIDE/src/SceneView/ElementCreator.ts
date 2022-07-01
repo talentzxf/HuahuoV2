@@ -26,7 +26,7 @@ class ElementCreator{
             let canvas = content.querySelector("canvas")
             renderEngine2D.setDefaultCanvas(canvas)
 
-            huahuoEngine.GetDefaultObjectStoreManageR().SetDefaultStoreByIndex(sceneview.storeId)
+            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(sceneview.storeId)
         }
     }
 
@@ -52,6 +52,8 @@ class ElementCreator{
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(newStore.GetStoreId())
 
         elementSceneView.storeId = newStore.GetStoreId()
+
+        console.log("Created new store, store id:" + elementSceneView.storeId)
     }
 }
 
