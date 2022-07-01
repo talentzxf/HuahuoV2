@@ -75,8 +75,8 @@ class SceneView extends HTMLElement {
 
         huahuoEngine.ExecuteAfterInited(() => {
             let timeline: HHTimeline = document.querySelector("hh-timeline")
-            timeline.addNewTrack()
             timeline.reloadTracks()
+            timeline.addNewTrack()
         })
     }
 
