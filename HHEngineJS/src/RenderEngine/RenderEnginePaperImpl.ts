@@ -8,7 +8,6 @@ class RenderEnginePaperJs implements RenderEngine2D{
     // From canvas to project index
     private canvasPaperMap: Map<HTMLCanvasElement, number> = new Map()
 
-    private canvas: HTMLCanvasElement = null
     private bgRect: paper.Path.Rectangle;
     private contentRect: paper.Path.Rectangle;
     private bgLayer: paper.Layer
@@ -117,7 +116,6 @@ class RenderEnginePaperJs implements RenderEngine2D{
         console.log("Initing paper!!!!")
 
         this.isPlayer = isPlayer
-        this.canvas = canvas
         paper.setup(canvas)
 
         window.paper = paper

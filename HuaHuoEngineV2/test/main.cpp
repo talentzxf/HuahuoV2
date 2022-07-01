@@ -305,6 +305,16 @@ void testSegmentKeyFrames(){
     segmentFrameState->Apply(5);
 }
 
+void testMultipleStores(){
+    int defaultStoreId = GetDefaultObjectStoreManager()->GetCurrentStore()->GetStoreId();
+    ObjectStore* pNewStore = GetDefaultObjectStoreManager()->CreateStore();
+
+    int newStore = pNewStore->GetStoreId();
+
+    bool result = GetDefaultObjectStoreManager()->SetDefaultStoreByIndex(newStore);
+    assert(result);
+}
+
 int main() {
     HuaHuoEngine::InitEngine();
 //    testTransform();
@@ -315,5 +325,7 @@ int main() {
     testKeyFrames();
     testRecordKeyFrames();
     testSegmentKeyFrames();
+
+    testMultipleStores();
     return 0;
 }

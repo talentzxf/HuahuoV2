@@ -3,6 +3,7 @@ import {findParentPanel} from "../Utilities/PanelUtilities";
 import {HHPanel} from "hhpanel";
 import {renderEngine2D, huahuoEngine} from "hhenginejs"
 import {HHContent, PanelEventNames} from "hhpanel";
+import {HHTimeline} from "hhtimeline"
 
 class ElementCreator{
     sceneView: SceneView
@@ -27,10 +28,16 @@ class ElementCreator{
             renderEngine2D.setDefaultCanvas(canvas)
 
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(sceneview.storeId)
+
+            let timeline: HHTimeline = document.querySelector("hh-timeline")
+            timeline.reloadTracks()
         }
     }
 
     onNewElement(){
+        let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(newStore.GetStoreId())
+
         let newEleContent = document.createElement("hh-content")
         newEleContent.title = "NewElement"
         newEleContent.style.width = "100%"
@@ -47,9 +54,6 @@ class ElementCreator{
         newEleContent.appendChild(elementSceneView)
         let idx = this.sceneViewPanel.addContent(newEleContent)
         this.sceneViewPanel.selectTab(idx)
-
-        let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(newStore.GetStoreId())
 
         elementSceneView.storeId = newStore.GetStoreId()
 

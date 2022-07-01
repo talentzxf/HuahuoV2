@@ -73,8 +73,11 @@ class SceneView extends HTMLElement {
         this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this))
         this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this))
 
-        let timeline: HHTimeline = document.querySelector("hh-timeline")
-        timeline.addNewTrack()
+        huahuoEngine.ExecuteAfterInited(() => {
+            let timeline: HHTimeline = document.querySelector("hh-timeline")
+            timeline.addNewTrack()
+            timeline.reloadTracks()
+        })
     }
 
     createGizmos() {

@@ -122,7 +122,7 @@ public:
     }
 
     bool SetDefaultStoreByIndex(UInt32 index){
-        if(allStores.size() > index){
+        if(allStores.size() < index){
             printf("StoreId:%d not found\n", index);
             return false;
         }
