@@ -1,15 +1,15 @@
 import {HHTimeLine, TimelineEventNames} from "hhtimeline"
 import {huahuoEngine, GlobalConfig} from "hhenginejs"
+import {Player} from "hhenginejs/src/Player/Player"
 declare var Module:any;
 
-class EditorPlayer{
-    isPlaying: boolean = false
-    timeline: HHTimeLine = null
-    animationFrame = -1
-    animationStartTime = -1
+class EditorPlayer extends Player{
 
-    lastAnimateTime = -1
+    timeline: HHTimeLine = null
+
     constructor() {
+        super()
+
         this.timeline = document.querySelector("hh-timeline")
         this.timeline.addEventListener(TimelineEventNames.TRACKCELLCLICKED, this.updateAllShapes.bind(this))
 
@@ -33,44 +33,17 @@ class EditorPlayer{
             }else{
                 this.stopPlay()
             }
-
-            this.isPlaying = !this.isPlaying
         }
     }
 
-    animationFrameStep(timeStamp){
-        if(this.isPlaying){
-            if(this.animationStartTime < 0){
-                this.animationStartTime = timeStamp
-            }
-            let elapsedTime = timeStamp - this.animationStartTime
-
-            if(this.lastAnimateTime < 0 || (elapsedTime - this.lastAnimateTime ) > 1.0/GlobalConfig.fps){
-                let activeFrames = huahuoEngine.GetCurrentStore().GetMaxFrameId() + 1
-                let activePlayTime = activeFrames / GlobalConfig.fps
-                let playTime = elapsedTime/1000.0 % activePlayTime
-                this.timeline.setTimeElapsed(playTime) // convert from miliseconds to seconds
-                this.updateAllShapes()
-                this.lastAnimateTime = elapsedTime
-            }
-
-            requestAnimationFrame(this.animationFrameStep.bind(this));
-        }
+    onPlayFrame(elapsedTime){
+        super.onPlayFrame(elapsedTime)
+        let activeFrames = huahuoEngine.GetCurrentStore().GetMaxFrameId() + 1
+        let activePlayTime = activeFrames / GlobalConfig.fps
+        let playTime = elapsedTime/1000.0 % activePlayTime
+        this.timeline.setTimeElapsed(playTime) // convert from miliseconds to seconds
     }
 
-    startPlay(){
-        this.lastAnimateTime = -1
-        this.animationStartTime = -1
-        this.animationFrame = requestAnimationFrame(this.animationFrameStep.bind(this));
-    }
-
-    stopPlay(){
-        if(this.animationFrame){
-            cancelAnimationFrame(this.animationFrame)
-        }else{
-            console.log("Error, animation frame is invalid");
-        }
-    }
 
     onKeyFrameAdded(args){
         let keyframeAddedArgs = Module.wrapPointer(args, Module.KeyFrameAddedEventHandlerArgs)
@@ -80,14 +53,6 @@ class EditorPlayer{
         this.timeline.redrawCell(layer, frameId)
     }
 
-    updateAllShapes(){
-        let store = huahuoEngine.GetCurrentStore()
-        let layerCount = store.GetLayerCount();
-        for(let i = 0 ; i < layerCount; i++){
-            let layer = store.GetLayer(i)
-            huahuoEngine.updateLayerShapes(layer)
-        }
-    }
 }
 
 export {EditorPlayer}

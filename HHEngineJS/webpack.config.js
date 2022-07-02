@@ -1,4 +1,5 @@
 const path = require("path");
+const TypescriptDeclarationPlugin = require('typescript-declaration-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -34,5 +35,10 @@ module.exports = {
         },
         compress: true,
         port: 9393,
-    }
+    },
+    // plugins:[
+    //     new TypescriptDeclarationPlugin({
+    //         out:'hhenginejs.bundle.d.ts'
+    //     })
+    // ]
 };

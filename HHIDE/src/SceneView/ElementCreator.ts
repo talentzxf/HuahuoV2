@@ -28,6 +28,9 @@ class ElementCreator{
             let canvas = content.querySelector("canvas")
             renderEngine2D.setDefaultCanvas(canvas)
 
+            let player = this.sceneView.editorPlayer
+            huahuoEngine.setActivePlayer(player)
+
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(sceneview.storeId)
 
             let timeline: HHTimeline = document.querySelector("hh-timeline")
@@ -68,6 +71,7 @@ class ElementCreator{
         this.sceneViewPanel.selectTab(idx)
 
         elementSceneView.storeId = newStore.GetStoreId()
+        newElementShape.storeId = newStore.GetStoreId()
 
         console.log("Created new store, store id:" + elementSceneView.storeId)
     }

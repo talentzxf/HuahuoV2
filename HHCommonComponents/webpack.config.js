@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TypescriptDeclarationPlugin = require('typescript-declaration-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -42,5 +43,8 @@ module.exports = {
             template: 'src/index.ejs',
             // inject: false
         }),
+        // new TypescriptDeclarationPlugin({
+        //     out:'hhcommoncomponents.bundle.d.ts'
+        // })
     ]
 };

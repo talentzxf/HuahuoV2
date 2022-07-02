@@ -9,12 +9,12 @@ enum PropertyType{
 class Property{
     key: string
     type: PropertyType
-    setter: Function
-    getter: Function
-    registerValueChangeFunc: Function
-    unregisterValueChangeFunc: Function
+    setter?: Function
+    getter?: Function
+    registerValueChangeFunc?: Function
+    unregisterValueChangeFunc?: Function
 
-    action: Function
+    action?: Function
 }
 
 class PropertySheet{

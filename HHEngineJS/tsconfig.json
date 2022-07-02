@@ -7,6 +7,8 @@
     "target": "es2015",
     "jsx": "react",
     "allowJs": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "declaration": true,
+    "sourceMap": true
   }
 }

@@ -1,4 +1,5 @@
 import {Logger} from "hhcommoncomponents"
+import {Player} from "./Player/Player";
 
 class EngineAPI{
     inited = false
@@ -7,8 +8,14 @@ class EngineAPI{
 
     cppEngine = null
 
+    activePlayer = null
+
     constructor() {
         Logger.info("Creating Engine API!!!!")
+    }
+
+    setActivePlayer(activePlayer){
+        this.activePlayer = activePlayer
     }
 
     ExecuteAfterInited(func){
@@ -53,6 +60,10 @@ class EngineAPI{
         return this.GetDefaultObjectStoreManager().GetCurrentStore()
     }
 
+    GetCurrentStoreId(){
+        return this.GetCurrentStore().GetStoreId()
+    }
+
     GetCurrentLayer(){
         let layer = this.GetCurrentStore().GetCurrentLayer();
         if(!layer.addShape){
@@ -61,29 +72,15 @@ class EngineAPI{
                 layer.AddShapeInternal(shape.getRawShape())
                 shape.isPermanent = true
 
-                this.getLayerShapes(layer).push(shape)
+                if(this.activePlayer){
+                    this.activePlayer.getLayerShapes(layer).push(shape)
+                }
+
                 Logger.debug("Currently there're:" + layer.GetShapeCount() + " shapes in the layer.")
             }
         }
         return layer
     }
-
-    updateLayerShapes(layer){
-        let shapes = this.getLayerShapes(layer)
-        for(let shape of shapes){
-            shape.update()
-        }
-    }
-
-    getLayerShapes(layer){
-        if(!this.layerShapes.has(layer)){
-            this.layerShapes.set(layer, [])
-        }
-
-        return this.layerShapes.get(layer)
-    }
-
-    layerShapes = new Map();
 }
 
 let huahuoEngine = window.huahuoEngine

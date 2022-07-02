@@ -1,4 +1,5 @@
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
+import {huahuoEngine} from "../EngineAPI";
 
 let shapeName = "ElementShape"
 class ElementShapeJS extends BaseShapeJS{
@@ -6,8 +7,9 @@ class ElementShapeJS extends BaseShapeJS{
         return new ElementShapeJS(rawObj)
     }
 
-    storeId: number = -1;
     size: paper.Point
+
+    createdLayers: Set<any> = new Set()
 
     constructor(rawObj) {
         super(rawObj);
@@ -30,6 +32,34 @@ class ElementShapeJS extends BaseShapeJS{
         let boundingBox = new paper.Path.Rectangle(p1, p2)
         boundingBox.strokeColor = new paper.Color("black")
         this.paperItem.addChild(boundingBox)
+    }
+
+    get storeId():number{
+        return this.rawObj.GetStoreId();
+    }
+
+    set storeId(val:number){
+        this.rawObj.SetStoreId(val)
+    }
+
+    updateAllShapes(){
+        let defaultStoreManager = huahuoEngine.GetDefaultObjectStoreManager()
+        let previousStoreIdx = defaultStoreManager.GetCurrentStore().GetStoreId();
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId);
+        let store = defaultStoreManager.GetCurrentStore()
+        let layerCount = store.GetLayerCount();
+        for(let i = 0 ; i < layerCount; i++){
+            let layer = store.GetLayer(i)
+            huahuoEngine.updateLayerShapes(layer)
+        }
+        defaultStoreManager.SetDefaultStoreByIndex(previousStoreIdx)
+    }
+
+    update(updateOptions = {updateShape: true, updateBoundingBox: true}){
+        if(this.storeId > 0){ // If the storeId is less than 0, the shape has not been inited.
+            this.updateAllShapes()
+            super.update(updateOptions = {updateShape: true, updateBoundingBox: true})
+        }
     }
 }
 
