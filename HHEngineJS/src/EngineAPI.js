@@ -18,6 +18,10 @@ class EngineAPI{
         this.activePlayer = activePlayer
     }
 
+    getActivePlayer(){
+        return this.activePlayer
+    }
+
     ExecuteAfterInited(func){
         if(this.inited){
             return func();

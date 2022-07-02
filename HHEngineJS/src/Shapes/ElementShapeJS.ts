@@ -50,7 +50,7 @@ class ElementShapeJS extends BaseShapeJS{
         let layerCount = store.GetLayerCount();
         for(let i = 0 ; i < layerCount; i++){
             let layer = store.GetLayer(i)
-            huahuoEngine.updateLayerShapes(layer)
+            huahuoEngine.getActivePlayer().updateLayerShapes(layer)
         }
         defaultStoreManager.SetDefaultStoreByIndex(previousStoreIdx)
     }
