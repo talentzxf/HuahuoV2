@@ -18,6 +18,7 @@
 #include "Shapes/ImageShape.h"
 #include "Shapes/AudioShape.h"
 #include "Shapes/AbstractMediaShape.h"
+#include "Shapes/ElementShape.h"
 
 void RegisterBuiltinTypes()
 {
@@ -63,6 +64,7 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<AbstractMediaShape>("ObjectStore");
     RegisterHuaHuoClass<ImageShape>("ObjectStore");
     RegisterHuaHuoClass<AudioShape>("ObjectStore");
+    RegisterHuaHuoClass<ElementShape>("ObjectStore");
     RegisterHuaHuoClass<TimeLineCellManager>("ObjectStore");
 
     RegisterHuaHuoClass<AbstractFrameState>("ObjectStore");

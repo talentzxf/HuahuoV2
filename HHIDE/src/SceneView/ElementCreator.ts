@@ -1,9 +1,10 @@
 import {SceneView} from "./SceneView";
 import {findParentPanel} from "../Utilities/PanelUtilities";
 import {HHPanel} from "hhpanel";
-import {renderEngine2D, huahuoEngine} from "hhenginejs"
+import {renderEngine2D, huahuoEngine, ElementShapeJS, paper} from "hhenginejs"
 import {HHContent, PanelEventNames} from "hhpanel";
 import {HHTimeline} from "hhtimeline"
+import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 
 class ElementCreator{
     sceneView: SceneView
@@ -34,7 +35,18 @@ class ElementCreator{
         }
     }
 
-    onNewElement(){
+    onNewElement(e:PointerEvent){
+        let worldPos = BaseShapeDrawer.getWorldPosFromView(e.x, e.y)
+
+        // Create shape in the original scene/element
+        let newElementShape = new ElementShapeJS()
+        newElementShape.createShape()
+        newElementShape.position = new paper.Point(worldPos.x, worldPos.y)
+        newElementShape.store()
+
+        let currentLayer = huahuoEngine.GetCurrentLayer()
+        currentLayer.addShape(newElementShape)
+
         let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(newStore.GetStoreId())
 

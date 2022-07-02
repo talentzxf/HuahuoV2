@@ -6,6 +6,7 @@ import {ImageShapeJS} from "./Shapes/ImageShapeJS";
 import {huahuoEngine} from "./EngineAPI";
 import {GlobalConfig} from "./GlobalConfig";
 import {AudioShapeJS} from "./Shapes/AudioShapeJS";
+import {ElementShapeJS} from "./Shapes/ElementShapeJS";
 import * as paper from "paper"
 
 let renderEngine2D = new RenderEnginePaperJs()
@@ -22,4 +23,4 @@ if(Module.IsWASMInited && Module.IsWASMInited()){
 }
 
 window.enginejsInited = true
-export {renderEngine2D, LineShapeJS, CircleShapeJS,RectangleJS, ImageShapeJS, AudioShapeJS, huahuoEngine, paper, GlobalConfig}
+export {renderEngine2D, LineShapeJS, CircleShapeJS,RectangleJS, ImageShapeJS, AudioShapeJS, ElementShapeJS, huahuoEngine, paper, GlobalConfig}

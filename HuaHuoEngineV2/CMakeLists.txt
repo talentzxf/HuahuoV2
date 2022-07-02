@@ -126,6 +126,7 @@ list(APPEND CPPFILES src/Shapes/RectangleShape.cpp)
 list(APPEND CPPFILES src/Shapes/ImageShape.cpp)
 list(APPEND CPPFILES src/Shapes/AudioShape.cpp)
 list(APPEND CPPFILES src/Shapes/AbstractMediaShape.cpp)
+list(APPEND CPPFILES src/Shapes/ElementShape.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)

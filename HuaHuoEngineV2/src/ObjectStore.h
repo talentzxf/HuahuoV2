@@ -132,6 +132,15 @@ public:
         return true;
     }
 
+    ObjectStore* GetStoreByIndex(UInt32 index){
+        if(allStores.size() < index){
+            printf("StoreId:%d not found\n", index);
+            return NULL;
+        }
+
+        return allStores[index - 1];
+    }
+
     static ObjectStoreManager* GetDefaultObjectStoreManager();
 
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;

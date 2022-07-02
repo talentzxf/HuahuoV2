@@ -9,6 +9,7 @@
 #include "Shapes/RectangleShape.h"
 #include "Shapes/ImageShape.h"
 #include "Shapes/AudioShape.h"
+#include "Shapes/ElementShape.h"
 #ifdef HUAHUO_EDITOR
 #include "Editor/SceneInspector.h"
 #include "Editor/SceneView.h"
