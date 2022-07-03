@@ -21,7 +21,7 @@ class SceneView extends HTMLElement {
     gizmoContainer: HTMLDivElement = null;
     zoomInBtn: HTMLButtonElement = null;
     zoomOutBtn: HTMLButtonElement = null;
-    editorPlayer: EditorPlayer = null;
+    animationPlayer: EditorPlayer = null;
     storeId: number = null;
 
     createCanvasContainer() {
@@ -120,7 +120,7 @@ class SceneView extends HTMLElement {
         this.createGizmos();
         this.setupEventsAndCreateFirstTrack()
 
-        this.editorPlayer = new EditorPlayer()
+        this.animationPlayer = new EditorPlayer(this)
         defaultShapeDrawer.onBeginToDrawShape(this.canvas)
 
         let _this = this
@@ -132,19 +132,19 @@ class SceneView extends HTMLElement {
     }
 
     onMouseDown(evt: MouseEvent) {
-        if (this.currentShapeDrawer && !this.editorPlayer.isPlaying) {
+        if (this.currentShapeDrawer && !this.animationPlayer.isPlaying) {
             this.currentShapeDrawer.onMouseDown(evt)
         }
     }
 
     onMouseMove(evt: MouseEvent) {
-        if (this.currentShapeDrawer && !this.editorPlayer.isPlaying) {
+        if (this.currentShapeDrawer && !this.animationPlayer.isPlaying) {
             this.currentShapeDrawer.onMouseMove(evt)
         }
     }
 
     onMouseUp(evt: MouseEvent) {
-        if (this.currentShapeDrawer && !this.editorPlayer.isPlaying) {
+        if (this.currentShapeDrawer && !this.animationPlayer.isPlaying) {
             this.currentShapeDrawer.onMouseUp(evt)
         }
     }

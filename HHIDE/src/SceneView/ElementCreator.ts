@@ -24,11 +24,14 @@ class ElementCreator{
         let content: HHContent = e.detail.content
 
         let sceneview = content.querySelector("hh-sceneview")
+
+        this.sceneView = sceneview
+        this.sceneViewPanel = findParentPanel(this.sceneView)
         if(sceneview){
             let canvas = content.querySelector("canvas")
             renderEngine2D.setDefaultCanvas(canvas)
 
-            let player = this.sceneView.editorPlayer
+            let player = this.sceneView.animationPlayer
             huahuoEngine.setActivePlayer(player)
 
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(sceneview.storeId)

@@ -1,14 +1,19 @@
 import {HHTimeLine, TimelineEventNames} from "hhtimeline"
 import {huahuoEngine, GlobalConfig} from "hhenginejs"
 import {Player} from "hhenginejs/src/Player/Player"
+import {SceneView} from "./SceneView";
+
 declare var Module:any;
 
 class EditorPlayer extends Player{
 
     timeline: HHTimeLine = null
+    sceneView: SceneView = null
 
-    constructor() {
+    constructor(sceneView) {
         super()
+
+        this.sceneView = sceneView
 
         this.timeline = document.querySelector("hh-timeline")
         this.timeline.addEventListener(TimelineEventNames.TRACKCELLCLICKED, this.updateAllShapes.bind(this))
