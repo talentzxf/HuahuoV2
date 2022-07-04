@@ -89,6 +89,10 @@ public:
         return shapes.size();
     }
 
+    BaseShape* GetShapeAtIndex(size_t shapeIdx){
+        return shapes[shapeIdx];
+    }
+
     ShapePPtrVector& GetShapes(){
         return shapes;
     }

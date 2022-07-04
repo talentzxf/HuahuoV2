@@ -22,7 +22,7 @@ class Player{
     getLayerShapes(layer){
 
         if(!this.layerShapes.has(layer)){
-            this.layerShapes.set(layer, [])
+            this.layerShapes.set(layer, new Set())
         }
 
         return this.layerShapes.get(layer)

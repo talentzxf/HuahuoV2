@@ -77,7 +77,7 @@ class EngineAPI{
                 shape.isPermanent = true
 
                 if(this.activePlayer){
-                    this.activePlayer.getLayerShapes(layer).push(shape)
+                    this.activePlayer.getLayerShapes(layer).add(shape)
                 }
 
                 Logger.debug("Currently there're:" + layer.GetShapeCount() + " shapes in the layer.")

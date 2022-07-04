@@ -38,6 +38,7 @@ interface PersistentManager{
 interface Layer{
     void AddShapeInternal(BaseShape newShape);
     long long GetShapeCount();
+    BaseShape GetShapeAtIndex(long shapeIdx);
     void SetName(DOMString name);
     void SetCurrentFrame(long frameId);
     long GetCurrentFrame();
