@@ -83,7 +83,6 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
                 } else { // Load from persisted Cpp obj
                     _this.trackName = layer.GetName()
                 }
-
                 Logger.debug("New layer created, currently there're:" + huahuoEngine.GetCurrentStore().GetLayerCount() + " layers!")
                 _this.setLayer(layer)
 

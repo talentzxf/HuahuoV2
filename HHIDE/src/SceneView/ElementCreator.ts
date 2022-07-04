@@ -33,8 +33,8 @@ class ElementCreator{
 
             let player = this.sceneView.animationPlayer
             huahuoEngine.setActivePlayer(player)
-
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(sceneview.storeId)
+            player.updateAllShapes()
 
             let timeline: HHTimeline = document.querySelector("hh-timeline")
             timeline.reloadTracks()

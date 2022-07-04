@@ -29,9 +29,6 @@ void ElementShape::Apply(int frameId) {
     size_t layerCount = pStore->GetLayerCount();
     for(size_t layerId = 0 ; layerId < layerCount; layerId++){
         Layer* pLayer = pStore->GetLayer(layerId);
-        auto shapes = pLayer->GetShapes();
-        for(auto shape : shapes){
-            shape->Apply(frameId);
-        }
+        pLayer->SetCurrentFrame(frameId);
     }
 }
