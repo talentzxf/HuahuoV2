@@ -44,8 +44,13 @@ interface Layer{
     long GetCurrentFrame();
     DOMString GetName();
     TimeLineCellManager GetTimeLineCellManager();
-
     boolean IsKeyFrame(long frameId);
+
+    void SetIsVisible(boolean isVisible);
+    boolean GetIsVisible();
+
+    void SetIsSelected(boolean isSelected);
+    boolean GetIsSelected();
 };
 
 [NoDelete]

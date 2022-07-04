@@ -4,6 +4,7 @@
 
 #ifndef HUAHUOENGINEV2_LAYER_H
 #define HUAHUOENGINEV2_LAYER_H
+
 #include "TypeSystem/Object.h"
 #include "Shapes/BaseShape.h"
 #include "BaseClasses/PPtr.h"
@@ -13,40 +14,43 @@
 #include <vector>
 
 extern std::string StoreFilePath;
+
 class ObjectStore;
-class KeyFrameAddedEventHandlerArgs: public ScriptEventHandlerArgs{
+
+class KeyFrameAddedEventHandlerArgs : public ScriptEventHandlerArgs {
 public:
-    KeyFrameAddedEventHandlerArgs(Layer* layer, int frameId){
+    KeyFrameAddedEventHandlerArgs(Layer *layer, int frameId) {
         this->layer = layer;
         this->frameId = frameId;
     }
 
-    Layer* GetLayer(){
+    Layer *GetLayer() {
         return this->layer;
     }
 
-    int GetFrameId(){
+    int GetFrameId() {
         return this->frameId;
     }
+
 private:
-    Layer* layer;
+    Layer *layer;
     int frameId;
 };
 
-class Layer: public Object{
-    REGISTER_CLASS(Layer);
-    DECLARE_OBJECT_SERIALIZE();
+class Layer : public Object {
+REGISTER_CLASS(Layer);
+
+DECLARE_OBJECT_SERIALIZE();
 public:
     Layer(MemLabelId label, ObjectCreationMode mode)
-            :Super(label, mode), name("Unknown Layer"),currentFrameId(0)
-    {
+            : Super(label, mode), name("Unknown Layer"), currentFrameId(0), isVisible(true), isSelected(false) {
         cellManager = Object::Produce<TimeLineCellManager>();
         GetPersistentManagerPtr()->MakeObjectPersistent(cellManager.GetInstanceID(), StoreFilePath);
     }
 
     typedef std::vector<PPtr<BaseShape>> ShapePPtrVector;
 
-    void AddShapeInternal(BaseShape* newShape){
+    void AddShapeInternal(BaseShape *newShape) {
         newShape->SetLayer(this);
         newShape->SetBornFrameId(this->currentFrameId);
         shapes.push_back(newShape);
@@ -54,64 +58,80 @@ public:
         GetPersistentManager().MakeObjectPersistent(newShape->GetInstanceID(), StoreFilePath);
     }
 
-    void Init(){
+    void Init() {
         this->cellManager->SetLayer(this);
     }
 
-    void SetObjectStore(ObjectStore* store){
+    void SetObjectStore(ObjectStore *store) {
         this->objectStore = store;
     }
 
-    virtual void SetName(const char* name) override{
+    virtual void SetName(const char *name) override {
         this->name = name;
     }
 
-    virtual char* GetName() const override{
-        return const_cast<char*>(this->name.c_str());
+    virtual char *GetName() const override {
+        return const_cast<char *>(this->name.c_str());
     }
 
-    void SetCurrentFrame(int currentFrameId){
-        if(this->currentFrameId == currentFrameId)
+    void SetCurrentFrame(int currentFrameId) {
+        if (this->currentFrameId == currentFrameId)
             return;
 
         this->currentFrameId = currentFrameId;
-        for(auto shape : shapes){
+        for (auto shape: shapes) {
             shape->Apply(this->currentFrameId);
         }
     }
 
-    int GetCurrentFrame(){
+    int GetCurrentFrame() {
         return currentFrameId;
     }
 
-    size_t GetShapeCount(){
+    size_t GetShapeCount() {
         return shapes.size();
     }
 
-    BaseShape* GetShapeAtIndex(size_t shapeIdx){
+    BaseShape *GetShapeAtIndex(size_t shapeIdx) {
         return shapes[shapeIdx];
     }
 
-    ShapePPtrVector& GetShapes(){
+    ShapePPtrVector &GetShapes() {
         return shapes;
     }
 
     void AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode);
 
-    TimeLineCellManager* GetTimeLineCellManager(){
+    TimeLineCellManager *GetTimeLineCellManager() {
         return cellManager;
     }
 
     void AddKeyFrame(int frameId);
 
-    bool IsKeyFrame(int frameId){
-        if(keyFrames.contains(frameId))
+    bool IsKeyFrame(int frameId) {
+        if (keyFrames.contains(frameId))
             return true;
 
         return false;
     }
 
-    ObjectStore* GetObjectStore();
+    ObjectStore *GetObjectStore();
+
+    void SetIsVisible(bool isVisible) {
+        this->isVisible = isVisible;
+    }
+
+    bool GetIsVisible() {
+        return this->isVisible;
+    }
+
+    void SetIsSelected(bool isSelected){
+        this->isSelected = isSelected;
+    }
+
+    bool GetIsSelected(){
+        return this->isSelected;
+    }
 
 private:
     // Frame Id-- starting from 0.
@@ -121,6 +141,8 @@ private:
     PPtr<TimeLineCellManager> cellManager;
     std::set<int> keyFrames;
     PPtr<ObjectStore> objectStore;
+    bool isVisible;
+    bool isSelected;
 };
 
 #endif //HUAHUOENGINEV2_LAYER_H

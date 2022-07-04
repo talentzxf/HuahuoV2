@@ -19,6 +19,8 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     static defaultUnitCellWidth: number = 20;
     static defaultUnitCellHeight: number = 30;
 
+    protected iconWidth: number = 15
+    protected iconHeight: number = 15
     protected unitCellWidth: number = -1;
     protected unitCellHeight: number = -1;
     protected selectable: boolean = true;
@@ -26,7 +28,6 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     protected cellBgStyle: string = "lightgray"
 
     private trackNameSize: number = 12
-    private isSelected: boolean = false
     private ctx: CanvasRenderingContext2D
     private frameCount: number;
     private sequenceId: number
@@ -36,7 +37,6 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
     private selectedCellStart: number = -1;
     private selectedCellEnd: number = -1;
-
 
     private selectedCellBgStyle: string = "cyan"
     private cellStrokeStyle: string = "black"
@@ -52,9 +52,14 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
     private checkBoxImg = new Image()
 
+    private icons: Array<HTMLImageElement>;
+
     private trackId: uuidv4
 
     private pendingFuncs: Array<Function> = new Array();
+
+    // Left, Right, onClickFunction
+    private iconClickFuncArray: Array<[number, number, Function]> = new Array();
 
     public IgnoreDuringLoad() {
         return false
@@ -95,6 +100,17 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         }
     }
 
+    get isSelected(){
+        if(this.layer)
+            return this.layer.GetIsSelected()
+        return false
+    }
+
+    set isSelected(val:boolean){
+        if(this.layer)
+            this.layer.SetIsSelected(val)
+    }
+
     setLayer(layer) {
         this.layer = layer;
         this.cellManager = layer.GetTimeLineCellManager();
@@ -110,6 +126,10 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
     getId() {
         return this.trackId
+    }
+
+    setIcons(icons:Array<HTMLImageElement>){
+        this.icons = icons
     }
 
     setElapsedTime(elapsedTime) {
@@ -140,11 +160,19 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     }
 
     getTitleLength(withMargin: boolean = true, fontSize = this.cellFontSize): number {
+
+        let iconWidth = 0;
+        if(this.icons){
+            for(let icon of this.icons){
+                iconWidth += Math.max(icon.clientWidth, this.iconWidth)
+            }
+        }
+
         this.ctx.font = fontSize + 'px serif';
         let returnLength = this.ctx.measureText(this.trackName).width * 1.1
         if (withMargin)
             returnLength += 20
-        return returnLength;
+        return returnLength + iconWidth;
     }
 
     getSeqId(): number {
@@ -239,23 +267,43 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         }
     }
 
+    addOnClickFunc(xMin, xMax, onclickFunc){
+        for(let funcTuple of this.iconClickFuncArray){
+            if(funcTuple[2] == onclickFunc)
+                return;
+        }
+
+        this.iconClickFuncArray.push([xMin, xMax, onclickFunc])
+    }
+
     drawTrack(canvasStartPos: number, canvasEndPos: number) {
         this.canvasStartPos = canvasStartPos
         this.canvasEndPos = canvasEndPos
 
+        let imgXOffset = this.getTitleLength(false, this.trackNameSize)
+        let imgYOffset = this.yOffset + (this.unitCellHeight - this.iconHeight) * 0.5
+
+        let xOffset = 0;
+        if(this.icons){
+            for(let icon of this.icons){
+                let xMin = xOffset
+                this.ctx.drawImage(icon, xOffset, imgYOffset, this.iconWidth, this.iconHeight)
+                xOffset += Math.max(icon.clientWidth, this.iconWidth)
+
+                this.addOnClickFunc(xMin, xOffset, icon["onIconClicked"])
+            }
+        }
+
         this.ctx.fillStyle = "black"
         this.ctx.font = this.trackNameSize + 'px serif'
         let textYOffset = this.yOffset + this.trackNameSize + (this.unitCellHeight - this.trackNameSize) * 0.5
-        this.ctx.fillText(this.trackName, 0, textYOffset)
+        this.ctx.fillText(this.trackName, xOffset, textYOffset)
 
         if (this.isSelected) {
-            let imgWidth = 15
-            let imgHeight = 15
-            let imgXOffset = this.getTitleLength(false, this.trackNameSize)
-            let imgYOffset = this.yOffset + (this.unitCellHeight - imgHeight) * 0.5
+
             let _this = this
             if (this.checkBoxImg.complete) {
-                this.ctx.drawImage(this.checkBoxImg, imgXOffset, imgYOffset, imgWidth, imgHeight)
+                this.ctx.drawImage(this.checkBoxImg, imgXOffset, imgYOffset, this.iconWidth, this.iconHeight)
             } else {
                 this.checkBoxImg.onload = (e: Event) => {
                     _this.ctx.drawImage(_this.checkBoxImg, imgXOffset, imgYOffset)
@@ -309,6 +357,15 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     selectTrack(relativeX: number) {
         if (!this.selectable)
             return;
+
+        for(let funcTuple of this.iconClickFuncArray){
+            let min = funcTuple[0]
+            let max = funcTuple[1]
+            if(relativeX > min && relativeX < max){
+                if(funcTuple[2])
+                    funcTuple[2](this.layer)
+            }
+        }
 
         this.isSelected = true;
 

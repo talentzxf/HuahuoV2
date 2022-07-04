@@ -19,6 +19,8 @@ import {faBezierCurve} from "@fortawesome/free-solid-svg-icons/faBezierCurve";
 import {faArrowPointer} from "@fortawesome/free-solid-svg-icons";
 import {faSquare} from "@fortawesome/free-solid-svg-icons";
 import {faFileAudio} from "@fortawesome/free-regular-svg-icons";
+import {faEye} from "@fortawesome/free-regular-svg-icons"
+import {faEyeSlash} from "@fortawesome/free-regular-svg-icons";
 import {saveAs} from 'file-saver';
 import {Logger} from "hhcommoncomponents";
 import {fileLoader} from "./SceneView/FileLoader";
@@ -32,6 +34,8 @@ library.add(faBezierCurve)
 library.add(faArrowPointer)
 library.add(faSquare)
 library.add(faFileAudio)
+library.add(faEye)
+library.add(faEyeSlash)
 dom.watch();
 
 function save() {

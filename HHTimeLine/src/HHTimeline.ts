@@ -30,6 +30,7 @@ class HHTimeline extends HTMLElement {
     private titleTrack: TitleTimelineTrack;
     private totalTrackHeight: number;
     private layerTrackMap: Map<object, TimelineTrack> = new Map();
+    private layerIconMap: Map<Object, Array<any>> = new Map()
 
     public elapsedTime: number = 0.0
 
@@ -64,20 +65,6 @@ class HHTimeline extends HTMLElement {
         this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this))
 
         this.canvas.addEventListener('contextmenu', this.contextMenu.onContextMenu.bind(this.contextMenu))
-
-        let _this = this
-        this.contextMenu.setItems([
-            {
-                itemName: "Merge Selected Cells",
-                onclick: this.mergeCells.bind(this)
-            },
-            {
-                itemName: "Create New Track",
-                onclick: function(e){
-                    _this.addNewTrack()
-                }
-            }
-        ])
         this.setTimeElapsed(0.5 / GlobalConfig.fps)
     }
 
@@ -93,6 +80,12 @@ class HHTimeline extends HTMLElement {
     }
 
     reloadTracks(){
+        // if(this.selectedTrackSeqId >= 0){
+        //     this.timelineTracks[this.selectedTrackSeqId].clearSelect()
+        //     this.timelineTracks[this.selectedTrackSeqId].unSelectTrack()
+        //     this.selectedTrackSeqId = -1
+        // }
+
         this.timelineTracks = new Array<TimelineTrack>()
         this.timelineTracks.push(this.titleTrack)
         let currentStore = huahuoEngine.GetCurrentStore()
@@ -101,25 +94,28 @@ class HHTimeline extends HTMLElement {
         for(let layerId = 0 ; layerId < layerCount; layerId++){
             let layer = currentStore.GetLayer(layerId)
 
-            this.addNewTrack(layer)
+            let icons = null
+            if(this.layerIconMap.has(layer)){
+                icons = this.layerIconMap.get(layer)
+            }
+            this.addNewTrack(layer, icons)
         }
 
         this.redrawCanvas()
     }
 
-    addNewTrack(layer = null) {
+    addNewTrack(layer = null, icons: Array<any> = null) {
         let seqId = this.timelineTracks.length;
 
         let track = new TimelineTrack(seqId, this.frameCount, this.canvas.getContext('2d'), this.totalTrackHeight, layer, "Track " + seqId)
+        if(icons && icons.length > 0){
+            track.setIcons(icons)
+            this.layerIconMap.set(track.getLayer(), icons)
+        }
+
         track.setElapsedTime(this.elapsedTime)
         this.timelineTracks.push(track)
         this.totalTrackHeight += track.getCellHeight()
-
-        if(this.selectedTrackSeqId >= 0){
-            this.timelineTracks[this.selectedTrackSeqId].clearSelect()
-            this.timelineTracks[this.selectedTrackSeqId].unSelectTrack()
-            this.selectedTrackSeqId = -1
-        }
 
         this.Resize();
         this.redrawCanvas()
