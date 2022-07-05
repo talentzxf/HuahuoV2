@@ -16,7 +16,7 @@ class EditorPlayer extends Player{
         this.sceneView = sceneView
 
         this.timeline = document.querySelector("hh-timeline")
-        this.timeline.addEventListener(TimelineEventNames.TRACKCELLCLICKED, this.updateAllShapes.bind(this))
+        this.timeline.addEventListener(TimelineEventNames.TRACKCELLCLICKED, this.onSetFrameTime.bind(this))
 
         let _this = this
         huahuoEngine.ExecuteAfterInited(()=>{
@@ -27,6 +27,18 @@ class EditorPlayer extends Player{
         })
 
         document.addEventListener('keydown', this.onKeyEvent.bind(this));
+    }
+
+    onSetFrameTime(e){
+        let elapsedTime = e.detail.elapsedTime
+        let defaultStore = huahuoEngine.GetCurrentStore()
+        let layerCount = defaultStore.GetLayerCount()
+        for(let layerIdx = 0 ; layerIdx < layerCount; layerIdx++){
+            let layer = defaultStore.GetLayer(layerIdx)
+            layer.SetCurrentFrame(Math.floor(elapsedTime * GlobalConfig.fps))
+        }
+
+        this.updateAllShapes()
     }
 
     onKeyEvent(e){

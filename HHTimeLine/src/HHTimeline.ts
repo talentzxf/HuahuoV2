@@ -136,7 +136,8 @@ class HHTimeline extends HTMLElement {
         let customEvent = new CustomEvent(TimelineEventNames.TRACKCELLCLICKED, {
             detail:{
                 track: track,
-                cellId: cellId
+                cellId: cellId,
+                elapsedTime: elapsedTime
             }
         })
 
