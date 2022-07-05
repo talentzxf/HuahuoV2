@@ -200,8 +200,12 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         return Math.floor(absoluteOffsetX / this.unitCellWidth)
     }
 
-    calculateCanvasOffsetX(cellId: number) {
+    calculateCanvasOffsetX(cellId: number, relative: boolean = true) {
         let absoluteOffsetX = cellId * this.unitCellWidth
+
+        if(!relative)
+            return absoluteOffsetX
+
         let relativeOffsetX = absoluteOffsetX - this.canvasStartPos;
 
         return relativeOffsetX;

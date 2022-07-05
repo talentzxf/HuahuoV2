@@ -75,6 +75,15 @@ class HHTimeline extends HTMLElement {
         }
 
         this.redrawCanvas()
+
+        if(this.timelineTracks.length >= 1){
+            let indicatorOffsetX = this.timelineTracks[0].calculateCanvasOffsetX(Math.floor(this.elapsedTime * GlobalConfig.fps), false)
+
+            let deltaIndicatorOffsetX = indicatorOffsetX - this.canvasScrollContainer.scrollLeft
+            if(deltaIndicatorOffsetX > this.canvasScrollContainer.clientWidth || deltaIndicatorOffsetX < 0){
+                this.canvasScrollContainer.scrollLeft += deltaIndicatorOffsetX
+            }
+        }
     }
 
     reloadTracks(){
