@@ -45,17 +45,31 @@ class Player{
             let elapsedTime = timeStamp - this.animationStartTime
 
             if(this.lastAnimateTime < 0 || (elapsedTime - this.lastAnimateTime ) > 1.0/GlobalConfig.fps){
+                let activeFrames = huahuoEngine.GetCurrentStore().GetMaxFrameId() + 1;
+                let activePlayTime = activeFrames / GlobalConfig.fps;
+                let playTime = elapsedTime / 1000.0 % activePlayTime;
+                let frameId = Math.floor(playTime * GlobalConfig.fps)
+                console.log("Playing frame:" + frameId)
+                this.onPlayFrame(frameId)
 
-                this.onPlayFrame(elapsedTime)
+                this.lastAnimateTime = elapsedTime
             }
 
             requestAnimationFrame(this.animationFrameStep.bind(this));
         }
     }
 
-    onPlayFrame(elapsedTime){
+    onPlayFrame(playFrameId){
+        // Update time for all layers in the default store.
+        let currentStore = huahuoEngine.GetCurrentStore()
+
+        let layerCount = currentStore.GetLayerCount()
+        for(let layerIdx = 0; layerIdx < layerCount; layerIdx++){
+            let layer = currentStore.GetLayer(layerIdx)
+            layer.SetCurrentFrame(playFrameId)
+        }
+
         this.updateAllShapes()
-        this.lastAnimateTime = elapsedTime
     }
 
     startPlay(){

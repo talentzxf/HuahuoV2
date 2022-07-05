@@ -68,10 +68,8 @@ class HHTimeline extends HTMLElement {
         this.setTimeElapsed(0.5 / GlobalConfig.fps)
     }
 
-    setTimeElapsed(timeElapsed) {
-        let totalTime = this.frameCount / GlobalConfig.fps
-
-        this.elapsedTime = timeElapsed % totalTime
+    setTimeElapsed(playTime) {
+        this.elapsedTime = playTime
         for (let tracks of this.timelineTracks) {
             tracks.setElapsedTime(this.elapsedTime)
         }

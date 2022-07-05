@@ -134,11 +134,6 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
     setElapsedTime(elapsedTime) {
         this.elapsedTime = elapsedTime
-
-        if (this.layer) {
-            let frameId = Math.floor(this.elapsedTime * GlobalConfig.fps);
-            this.layer.SetCurrentFrame(frameId)
-        }
     }
 
     getYOffset(): number {

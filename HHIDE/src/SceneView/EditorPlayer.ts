@@ -41,14 +41,10 @@ class EditorPlayer extends Player{
         }
     }
 
-    onPlayFrame(elapsedTime){
-        super.onPlayFrame(elapsedTime)
-        let activeFrames = huahuoEngine.GetCurrentStore().GetMaxFrameId() + 1
-        let activePlayTime = activeFrames / GlobalConfig.fps
-        let playTime = elapsedTime/1000.0 % activePlayTime
-        this.timeline.setTimeElapsed(playTime) // convert from miliseconds to seconds
+    onPlayFrame(playFrameId){
+        super.onPlayFrame(playFrameId)
+        this.timeline.setTimeElapsed(playFrameId / GlobalConfig.fps)
     }
-
 
     onKeyFrameAdded(args){
         let keyframeAddedArgs = Module.wrapPointer(args, Module.KeyFrameAddedEventHandlerArgs)
