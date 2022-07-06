@@ -1,5 +1,6 @@
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
 import {huahuoEngine} from "../EngineAPI";
+import {GlobalConfig} from "../GlobalConfig";
 
 let shapeName = "ElementShape"
 
@@ -63,6 +64,13 @@ class ElementShapeJS extends BaseShapeJS {
         this.rawObj.SetStoreId(val)
     }
 
+    calculateLocalFrame(){
+        let currentFrame = this.getLayer().GetCurrentFrame()
+        let bornFrame = this.rawObj.GetBornFrameId()
+
+        return currentFrame - bornFrame
+    }
+
     updateAllShapes() {
         let defaultStoreManager = huahuoEngine.GetDefaultObjectStoreManager()
         let previousStoreIdx = defaultStoreManager.GetCurrentStore().GetStoreId();
@@ -70,9 +78,12 @@ class ElementShapeJS extends BaseShapeJS {
         let store = defaultStoreManager.GetCurrentStore()
         let layerCount = store.GetLayerCount();
 
+        let currentLocalFrame = this.calculateLocalFrame()
         let somethingIsVisible = false
         for (let i = 0; i < layerCount; i++) {
             let layer = store.GetLayer(i)
+
+            layer.SetCurrentFrame(currentLocalFrame)
 
             let shapes = this.getLayerShapes(layer)
             // Try to create layer shapes
