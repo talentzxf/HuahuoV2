@@ -93,7 +93,7 @@ class SceneView extends HTMLElement {
                 }
             ])
 
-            this.createNewTrack(timeline)
+            _this.createNewTrack(timeline)
         })
     }
 
@@ -115,6 +115,7 @@ class SceneView extends HTMLElement {
             timeline.reloadTracks()
         }
 
+        timeline.reloadTracks()
         timeline.addNewTrack(null, [eyeIcon])
     }
 
