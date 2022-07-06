@@ -467,7 +467,7 @@ abstract class BaseShapeJS {
         this.paperItem.rotation = 0
 
         let pos = this.rawObj.GetPosition();// This position is the new global coordinate of the local (0,0).
-        let currentZeroPoint = this.paperItem.localToGlobal(new paper.Point(0, 0))
+        let currentZeroPoint = this.paperItem.localToParent(new paper.Point(0, 0))
         let currentCenter = this.position
 
         let centerOffset = currentCenter.subtract(currentZeroPoint)

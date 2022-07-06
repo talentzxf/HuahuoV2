@@ -27,7 +27,11 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
 
                 // obj.position = proposedNewPosition
                 obj.position = proposedNewPosition
+
+                console.log("Setting position:" + obj.position.x + "," + obj.position.y)
                 obj.store()
+
+                console.log("After store position:" + obj.position.x + "," + obj.position.y)
             }
         }
     }

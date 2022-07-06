@@ -69,6 +69,8 @@ class ElementShapeJS extends BaseShapeJS {
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId);
         let store = defaultStoreManager.GetCurrentStore()
         let layerCount = store.GetLayerCount();
+
+        let somethingIsVisible = false
         for (let i = 0; i < layerCount; i++) {
             let layer = store.GetLayer(i)
 
@@ -92,9 +94,16 @@ class ElementShapeJS extends BaseShapeJS {
                 }
 
                 shape.update()
+
+                if(shape.isVisible()){
+                    somethingIsVisible = true
+                }
             }
         }
         defaultStoreManager.SetDefaultStoreByIndex(previousStoreIdx)
+
+        if(!somethingIsVisible)
+            this.selected = false
     }
 
     update() {
