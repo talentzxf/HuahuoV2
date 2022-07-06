@@ -414,8 +414,9 @@ abstract class BaseShapeJS {
 
             let nearestPoint = newObj.getNearestPoint(localPos)
             let offset = newObj.getOffsetOf(nearestPoint)
-            if (!newObj.divideAt(offset)) {
-                Logger.error("ERRRRRRRR!!!")
+
+            while(!newObj.divideAt(offset)) {
+                offset += 0.01 // Hit the corner points, offset a little and divide again.
             }
 
             this.storeSegments(newObj.segments, segmentKeyFrame.GetFrameId())
