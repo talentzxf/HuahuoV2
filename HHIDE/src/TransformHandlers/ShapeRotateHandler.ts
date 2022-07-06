@@ -31,7 +31,7 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase{
             this.lastPos = new paper.Point(pos.x, pos.y)
 
             this.targetShape.store()
-            this.targetShape.update({updateShape:false, updateBoundingBox:true})
+            this.targetShape.updateBoundingBox()
         }
     }
 }

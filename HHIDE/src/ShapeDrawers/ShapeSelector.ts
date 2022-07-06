@@ -90,6 +90,19 @@ class ShapeSelector extends BaseShapeDrawer {
         }
     }
 
+    // Find the outmost parent of the shape (Will change to find the correct hierarchy later
+    findParentOf(shape:BaseShapeJS){
+        let parent = shape.getParent()
+        let itr = shape
+
+        while(parent != null){
+            itr = parent
+            parent = parent.getParent()
+        }
+
+        return itr
+    }
+
     hitSomething(scrX, scrY, clearSelection: boolean = false): boolean {
         let hitPoint = BaseShapeDrawer.getWorldPosFromView(scrX, scrY)
         // Single click, perform hit test.
@@ -104,7 +117,7 @@ class ShapeSelector extends BaseShapeDrawer {
                         this.clearSelection()
                     }
 
-                    this.selectObject(hitItem.data.meta)
+                    this.selectObject(this.findParentOf(hitItem.data.meta))
                     this.setTransformHandler(this.selectedShapes, hitPoint)
                 } else { // If the object has already been selected, we might need to do something based on the hittype.
 

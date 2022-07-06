@@ -18,6 +18,15 @@ class ElementShapeJS extends BaseShapeJS {
         this.size = new paper.Point(100, 100)
     }
 
+    protected isUpdateFillColor(): boolean {
+        return false;
+    }
+
+
+    protected isUpdateStrokeColor(): boolean {
+        return false;
+    }
+
     getShapeName(): string {
         return shapeName
     }
@@ -38,11 +47,12 @@ class ElementShapeJS extends BaseShapeJS {
         this.paperItem.applyMatrix = false
         this.paperItem.data.meta = this
 
-        let p1 = new paper.Point(0, 0)
-        let p2 = this.size
-        let boundingBox = new paper.Path.Rectangle(p1, p2)
-        boundingBox.strokeColor = new paper.Color("black")
-        this.paperItem.addChild(boundingBox)
+        // // Draw a box to indicate this is an element
+        // let p1 = new paper.Point(0, 0)
+        // let p2 = this.size
+        // let boundingBox = new paper.Path.Rectangle(p1, p2)
+        // boundingBox.strokeColor = new paper.Color("black")
+        // this.paperItem.addChild(boundingBox)
     }
 
     get storeId(): number {
@@ -67,24 +77,30 @@ class ElementShapeJS extends BaseShapeJS {
             let shapeCount = layer.GetShapeCount()
             for (let shapeId = 0; shapeId < shapeCount; shapeId++) {
                 let baseShape = layer.GetShapeAtIndex(shapeId)
+
+                let shape = null
                 if (!shapes.has(baseShape)) {
                     let shapeConstructor = shapeFactory.GetShapeConstructor(baseShape.GetName())
                     let newBaseShape = shapeConstructor(baseShape)
                     newBaseShape.awakeFromLoad()
                     shapes.set(baseShape, newBaseShape)
+                    newBaseShape.setParent(this)
+
+                    shape = newBaseShape
                 } else { // Update layer shapes
-                    let shape = shapes.get(baseShape)
-                    shape.update()
+                    shape = shapes.get(baseShape)
                 }
+
+                shape.update()
             }
         }
         defaultStoreManager.SetDefaultStoreByIndex(previousStoreIdx)
     }
 
-    update(updateOptions = {updateShape: true, updateBoundingBox: true}) {
+    update() {
         if (this.storeId > 0) { // If the storeId is less than 0, the shape has not been inited.
             this.updateAllShapes()
-            super.update(updateOptions = {updateShape: true, updateBoundingBox: true})
+            super.update()
         }
     }
 }

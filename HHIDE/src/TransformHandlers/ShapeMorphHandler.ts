@@ -53,7 +53,6 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
 
             // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
             this.targetShape.store({position: true, segments: true})
-            this.targetShape.update({updateShape: false, updateBoundingBox: true});
         }
     }
 
@@ -110,7 +109,6 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
 
         // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
         this.targetShape.store({position: true, segments: true})
-        this.targetShape.update({updateShape: false, updateBoundingBox: true});
     }
 
     protected showInspector(){
@@ -133,7 +131,6 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
 
             // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
             this.targetShape.store({position: true, segments: true})
-            this.targetShape.update({updateShape: false, updateBoundingBox: true});
 
             if(this.valueChangeHandlerMap.get("point")){
                 this.valueChangeHandlerMap.get("point")(this.curSegment.point)
@@ -170,7 +167,6 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
             this.curSegment[this.targetHandleName] = targetHandlePos
 
             this.targetShape.store()
-            this.targetShape.update({updateShape: false, updateBoundingBox: true});
 
             if(this.valueChangeHandlerMap.get(this.targetHandleName)){
                 this.valueChangeHandlerMap.get(this.targetHandleName)(this.curSegment[this.targetHandleName])

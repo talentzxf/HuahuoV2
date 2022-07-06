@@ -35,7 +35,6 @@ class ShapeScaleHandler extends ShapeTranslateMorphBase{
                 obj.scaling = this.originalScaleMap.get(obj).multiply(scale)
 
                 obj.store()
-                obj.update({updateShape: false, updateBoundingBox : true})
             }
 
             this.lastPos = newPos

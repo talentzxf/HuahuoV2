@@ -104,8 +104,8 @@ class ImageShapeJS extends AbstractMediaShapeJS{
         }
     }
 
-    beforeUpdate(updateOptions) {
-        super.beforeUpdate(updateOptions);
+    beforeUpdate() {
+        super.beforeUpdate();
 
         if(!this.loaded){
             return;

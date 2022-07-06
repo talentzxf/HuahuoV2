@@ -28,7 +28,6 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
                 // obj.position = proposedNewPosition
                 obj.position = proposedNewPosition
                 obj.store()
-                obj.update({updateShape:false, updateBoundingBox:true})
             }
         }
     }
