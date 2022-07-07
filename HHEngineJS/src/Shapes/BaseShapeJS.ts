@@ -306,6 +306,12 @@ abstract class BaseShapeJS {
 
         this.propertySheet = new PropertySheet();
 
+        this.propertySheet.addProperty({
+            key: "Type",
+            type: PropertyType.STRING,
+            getter: this.getTypeName.bind(this)
+        })
+
         // Position
         this.propertySheet.addProperty({
             key: "Position",
@@ -381,6 +387,10 @@ abstract class BaseShapeJS {
         if (!this.paperItem) {
             this.createShape()
         }
+    }
+
+    getTypeName(){
+        return this.rawObj.GetName()
     }
 
     insertSegment(localPos: paper.Point) { // Need to add segments in all keyframes
