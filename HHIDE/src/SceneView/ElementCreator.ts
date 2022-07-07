@@ -5,6 +5,7 @@ import {renderEngine2D, huahuoEngine, ElementShapeJS, paper} from "hhenginejs"
 import {HHContent, PanelEventNames} from "hhpanel";
 import {HHTimeline} from "hhtimeline"
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
+import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
 
 class ElementCreator{
     sceneView: SceneView
@@ -38,6 +39,8 @@ class ElementCreator{
 
             let timeline: HHTimeline = document.querySelector("hh-timeline")
             timeline.reloadTracks()
+
+            sceneview.beginToDrawShape(defaultShapeDrawer)
         }
     }
 
