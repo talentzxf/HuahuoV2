@@ -7,6 +7,7 @@ import {ResizeObserver} from 'resize-observer';
 import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
 import {EditorPlayer} from "./EditorPlayer";
 import {fileLoader} from "./FileLoader";
+import {findParentPanel} from "../Utilities/PanelUtilities";
 
 @CustomElement({
     selector: "hh-sceneview"
@@ -31,6 +32,7 @@ class SceneView extends HTMLElement {
 
     createCanvasContainer() {
         this.canvasContainer = document.createElement("div")
+        this.canvasContainer.id = "CanvasContainer"
         // this.canvasContainer.style.width = "100%"
         // this.canvasContainer.style.height = "100%"
         this.canvasContainer.style.padding = "0"
@@ -204,11 +206,25 @@ class SceneView extends HTMLElement {
     }
 
     OnResize() {
-        let containerWidth = this.canvasContainer.clientWidth
-        let containerHeight = this.canvasContainer.clientHeight
-        // Logger.debug("OnResize: ContainerWidth:" + containerWidth + ", ContainerHeight:" + containerHeight)
+        // Find the panel
+        let panel = findParentPanel(this.canvasContainer)
 
-        let margin = 10
+        // TODO: Move this into HHPanel??
+        let panelWidth = panel.clientWidth
+        let panelHeight = panel.clientHeight
+        let titleHeight = panel.querySelector(".title_tabs").clientHeight
+        let contentHeight = panelHeight - titleHeight
+
+//        let containerWidth = this.canvasContainer.clientWidth
+//        let containerHeight = this.canvasContainer.clientHeight
+//        Logger.debug("OnResize: ContainerWidth:" + containerWidth + ", ContainerHeight:" + containerHeight)
+
+        let ele = this.canvasContainer.parentElement.parentElement.parentElement.parentElement
+        Logger.debug("OnResize: ContainerParentWidth:" + ele.clientWidth + ", ContainerHeight:" + ele.clientHeight)
+
+        let containerWidth = this.canvasContainer.clientWidth
+        let containerHeight = contentHeight
+        let margin = 15
         let canvasWidth = containerWidth - margin
         let canvasHeight = containerHeight - margin
 
