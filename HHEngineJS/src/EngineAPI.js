@@ -6,6 +6,8 @@ class EngineAPI{
 
     PendingInitFunctions = []
 
+    storeIdElementShapeMap = {}
+
     cppEngine = null
 
     activePlayer = null
@@ -84,6 +86,14 @@ class EngineAPI{
             }
         }
         return layer
+    }
+
+    RegisterElementShape(storeId, element){
+        this.storeIdElementShapeMap[storeId] = element
+    }
+
+    GetElementShapeByStoreId(storeId){
+        return this.storeIdElementShapeMap[storeId]
     }
 }
 

@@ -534,6 +534,17 @@ huahuoEngine.ExecuteAfterInited(() => {
         let arg = Module.wrapPointer(baseShapeEventHandler, Module.ShapeLoadedEventArgs)
         let baseShape = arg.GetBaseShape();
 
+        let shapeStoreId = baseShape.GetLayer().GetObjectStore().GetStoreId()
+        if(shapeStoreId != huahuoEngine.GetCurrentStoreId()){
+            let elementShape = huahuoEngine.GetElementShapeByStoreId(shapeStoreId)
+
+            if(elementShape){
+                elementShape.update();
+            }
+
+            return;
+        }
+
         // Convention: Cpp class name is the JS class name.
         // TODO: Create a map of the shapename->JS class name mapping.
 
@@ -543,7 +554,7 @@ huahuoEngine.ExecuteAfterInited(() => {
         newBaseShape.awakeFromLoad()
 
         let layer = newBaseShape.getLayer()
-        huahuoEngine.getLayerShapes(layer).add(newBaseShape)
+        huahuoEngine.getActivePlayer().getLayerShapes(layer).add(newBaseShape)
     }
 
     huahuoEngine.GetInstance().RegisterEvent(eventName, baseShapeOnLoadHandler)

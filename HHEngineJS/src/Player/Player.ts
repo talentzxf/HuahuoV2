@@ -49,7 +49,6 @@ class Player{
                 let activePlayTime = activeFrames / GlobalConfig.fps;
                 let playTime = elapsedTime / 1000.0 % activePlayTime;
                 let frameId = Math.floor(playTime * GlobalConfig.fps)
-                console.log("Playing frame:" + frameId)
                 this.onPlayFrame(frameId)
 
                 this.lastAnimateTime = elapsedTime

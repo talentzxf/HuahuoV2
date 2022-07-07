@@ -51,6 +51,8 @@ interface Layer{
 
     void SetIsSelected(boolean isSelected);
     boolean GetIsSelected();
+
+    ObjectStore GetObjectStore();
 };
 
 [NoDelete]

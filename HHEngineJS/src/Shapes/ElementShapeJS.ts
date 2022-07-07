@@ -9,6 +9,8 @@ class ElementShapeJS extends BaseShapeJS {
         return new ElementShapeJS(rawObj)
     }
 
+    emptyPlaceHolder: paper.Group
+
     size: paper.Point
 
     layerShapes: Map<any, Map<any, BaseShapeJS>> = new Map();
@@ -48,12 +50,19 @@ class ElementShapeJS extends BaseShapeJS {
         this.paperItem.applyMatrix = false
         this.paperItem.data.meta = this
 
-        // // Draw a box to indicate this is an element
-        // let p1 = new paper.Point(0, 0)
-        // let p2 = this.size
-        // let boundingBox = new paper.Path.Rectangle(p1, p2)
-        // boundingBox.strokeColor = new paper.Color("black")
-        // this.paperItem.addChild(boundingBox)
+        // Draw a box to indicate this is an element
+        let p1 = new paper.Point(0, 0)
+        let p2 = this.size
+        let boundingBox = new paper.Path.Rectangle(p1, p2)
+        boundingBox.strokeColor = new paper.Color("black")
+
+        let pointText = new paper.PointText(new paper.Point(0,0))
+        pointText.content = "Empty Element"
+
+        this.emptyPlaceHolder = new paper.Group()
+        this.emptyPlaceHolder.addChild(boundingBox)
+        this.emptyPlaceHolder.addChild(pointText)
+        this.paperItem.addChild(this.emptyPlaceHolder)
     }
 
     get storeId(): number {
@@ -71,7 +80,9 @@ class ElementShapeJS extends BaseShapeJS {
         return currentFrame - bornFrame
     }
 
-    updateAllShapes() {
+    override duringUpdate() {
+        super.duringUpdate()
+
         let defaultStoreManager = huahuoEngine.GetDefaultObjectStoreManager()
         let previousStoreIdx = defaultStoreManager.GetCurrentStore().GetStoreId();
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId);
@@ -89,6 +100,9 @@ class ElementShapeJS extends BaseShapeJS {
             // Try to create layer shapes
             let shapeCount = layer.GetShapeCount()
             for (let shapeId = 0; shapeId < shapeCount; shapeId++) {
+                // There's at least one shape, remove the emptyPlaceHolder
+                this.emptyPlaceHolder.remove()
+
                 let baseShape = layer.GetShapeAtIndex(shapeId)
 
                 let shape = null
@@ -119,9 +133,14 @@ class ElementShapeJS extends BaseShapeJS {
 
     update() {
         if (this.storeId > 0) { // If the storeId is less than 0, the shape has not been inited.
-            this.updateAllShapes()
             super.update()
         }
+    }
+
+
+    awakeFromLoad() {
+        super.awakeFromLoad();
+        huahuoEngine.RegisterElementShape(this.storeId, this);
     }
 }
 
