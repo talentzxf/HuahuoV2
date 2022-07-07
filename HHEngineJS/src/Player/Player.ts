@@ -73,7 +73,7 @@ class Player{
 
     startPlay(){
         this.lastAnimateTime = -1
-        this.animationStartTime = -1
+        this.animationStartTime = huahuoEngine.GetCurrentLayer().GetCurrentFrame() / GlobalConfig.fps;
         this.animationFrame = requestAnimationFrame(this.animationFrameStep.bind(this));
 
         this.isPlaying = true
