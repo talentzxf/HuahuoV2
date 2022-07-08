@@ -65,7 +65,6 @@ class EditorPlayer extends Player{
 
         this.timeline.redrawCell(layer, frameId)
     }
-
 }
 
 export {EditorPlayer}

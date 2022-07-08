@@ -1,6 +1,7 @@
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
 import {huahuoEngine} from "../EngineAPI";
 import {GlobalConfig} from "../GlobalConfig";
+import {LayerShapesManager} from "../Player/LayerShapesManager";
 
 let shapeName = "ElementShape"
 
@@ -13,7 +14,7 @@ class ElementShapeJS extends BaseShapeJS {
 
     size: paper.Point
 
-    layerShapes: Map<any, Map<any, BaseShapeJS>> = new Map();
+    layerShapesManager: LayerShapesManager = new LayerShapesManager
 
     constructor(rawObj) {
         super(rawObj);
@@ -25,22 +26,12 @@ class ElementShapeJS extends BaseShapeJS {
         return false;
     }
 
-
     protected isUpdateStrokeColor(): boolean {
         return false;
     }
 
     getShapeName(): string {
         return shapeName
-    }
-
-    getLayerShapes(layer): Map<any, BaseShapeJS> {
-
-        if (!this.layerShapes.has(layer)) {
-            this.layerShapes.set(layer, new Map())
-        }
-
-        return this.layerShapes.get(layer)
     }
 
     // Render a box first.
@@ -85,50 +76,37 @@ class ElementShapeJS extends BaseShapeJS {
 
         let defaultStoreManager = huahuoEngine.GetDefaultObjectStoreManager()
         let previousStoreIdx = defaultStoreManager.GetCurrentStore().GetStoreId();
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId);
-        let store = defaultStoreManager.GetCurrentStore()
-        let layerCount = store.GetLayerCount();
 
-        let currentLocalFrame = this.calculateLocalFrame()
-        let somethingIsVisible = false
-        for (let i = 0; i < layerCount; i++) {
-            let layer = store.GetLayer(i)
+        try{
+            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId);
+            let store = defaultStoreManager.GetCurrentStore()
 
-            layer.SetCurrentFrame(currentLocalFrame)
+            let currentLocalFrame = this.calculateLocalFrame()
+            this.layerShapesManager.forEachLayerInStore(store, (layer)=>{
+                layer.SetCurrentFrame(currentLocalFrame)
+            })
 
-            let shapes = this.getLayerShapes(layer)
-            // Try to create layer shapes
-            let shapeCount = layer.GetShapeCount()
-            for (let shapeId = 0; shapeId < shapeCount; shapeId++) {
-                // There's at least one shape, remove the emptyPlaceHolder
-                this.emptyPlaceHolder.remove()
+            this.layerShapesManager.loadShapesFromStore(this)
 
-                let baseShape = layer.GetShapeAtIndex(shapeId)
-
-                let shape = null
-                if (!shapes.has(baseShape)) {
-                    let shapeConstructor = shapeFactory.GetShapeConstructor(baseShape.GetName())
-                    let newBaseShape = shapeConstructor(baseShape)
-                    newBaseShape.awakeFromLoad()
-                    shapes.set(baseShape, newBaseShape)
-                    newBaseShape.setParent(this)
-
-                    shape = newBaseShape
-                } else { // Update layer shapes
-                    shape = shapes.get(baseShape)
+            let somethingIsVisible = false
+            let _this = this
+            this.layerShapesManager.forEachShapeInStore(store, (shape)=>{
+                if(shape){
+                    _this.emptyPlaceHolder.remove()
+                    if(shape.isVisible()){
+                        somethingIsVisible = true
+                    }
                 }
+            })
 
-                shape.update()
+            if(!somethingIsVisible)
+                this.selected = false
 
-                if(shape.isVisible()){
-                    somethingIsVisible = true
-                }
-            }
+            this.layerShapesManager.updateAllShapes()
+
+        }finally {
+            defaultStoreManager.SetDefaultStoreByIndex(previousStoreIdx)
         }
-        defaultStoreManager.SetDefaultStoreByIndex(previousStoreIdx)
-
-        if(!somethingIsVisible)
-            this.selected = false
     }
 
     update() {

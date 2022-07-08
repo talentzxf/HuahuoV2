@@ -564,7 +564,7 @@ huahuoEngine.ExecuteAfterInited(() => {
         newBaseShape.awakeFromLoad()
 
         let layer = newBaseShape.getLayer()
-        huahuoEngine.getActivePlayer().getLayerShapes(layer).add(newBaseShape)
+        huahuoEngine.getActivePlayer().getLayerShapes(layer).set(newBaseShape.getRawShape(), newBaseShape)
     }
 
     huahuoEngine.GetInstance().RegisterEvent(eventName, baseShapeOnLoadHandler)

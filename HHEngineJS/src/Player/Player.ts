@@ -1,5 +1,6 @@
 import {GlobalConfig} from "../GlobalConfig";
 import {huahuoEngine} from "../EngineAPI";
+import {LayerShapesManager} from "./LayerShapesManager";
 
 class Player{
     animationFrame = -1
@@ -7,34 +8,18 @@ class Player{
 
     lastAnimateTime = -1
     isPlaying: boolean = false
+    layerShapesManager: LayerShapesManager = new LayerShapesManager()
 
     constructor() {
         huahuoEngine.setActivePlayer(this)
     }
 
-    updateLayerShapes(layer){
-        let shapes = this.getLayerShapes(layer)
-        for(let shape of shapes){
-            shape.update()
-        }
-    }
-
     getLayerShapes(layer){
-
-        if(!this.layerShapes.has(layer)){
-            this.layerShapes.set(layer, new Set())
-        }
-
-        return this.layerShapes.get(layer)
+        return this.layerShapesManager.getLayerShapes(layer)
     }
 
     updateAllShapes(){
-        let store = huahuoEngine.GetCurrentStore()
-        let layerCount = store.GetLayerCount();
-        for(let i = 0 ; i < layerCount; i++){
-            let layer = store.GetLayer(i)
-            this.updateLayerShapes(layer)
-        }
+        this.layerShapesManager.updateAllShapes()
     }
 
     animationFrameStep(timeStamp){
@@ -88,8 +73,6 @@ class Player{
 
         this.isPlaying = false
     }
-
-    layerShapes = new Map();
 }
 
 export {Player}

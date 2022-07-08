@@ -64,6 +64,8 @@ class ElementCreator{
 
         elementSceneView.storeId = element.storeId
 
+        elementSceneView.animationPlayer.updateAllShapes()
+
         console.log("Created new store, store id:" + elementSceneView.storeId)
     }
 
