@@ -8,6 +8,7 @@ import {TransformHandlerMap} from "../TransformHandlers/TransformHandlerMap";
 import {shapeRotateHandler} from "../TransformHandlers/ShapeRotateHandler";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {elementCreator} from "../SceneView/ElementCreator";
+import {ElementShapeJS} from "hhenginejs";
 
 
 const BOUNDMARGIN:number = 10
@@ -290,6 +291,17 @@ class ShapeSelector extends BaseShapeDrawer {
             }
             this.selectRectangle.remove()
             this.selectRectangle = null
+        }
+    }
+
+
+    onDblClick(evt: MouseEvent) {
+        super.onDblClick(evt);
+        if(this.selectedShapes.size == 1){
+            let selectedShape = this.selectedShapes.values().next().value
+            if(selectedShape.getTypeName() == "ElementShape"){
+                elementCreator.openElementEditTab(selectedShape)
+            }
         }
     }
 }

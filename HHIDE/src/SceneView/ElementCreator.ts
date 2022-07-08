@@ -44,21 +44,7 @@ class ElementCreator{
         }
     }
 
-    onNewElement(e:PointerEvent){
-        let worldPos = BaseShapeDrawer.getWorldPosFromView(e.x, e.y)
-
-        // Create shape in the original scene/element
-        let newElementShape = new ElementShapeJS()
-        newElementShape.createShape()
-        newElementShape.position = new paper.Point(worldPos.x, worldPos.y)
-        newElementShape.store()
-
-        let currentLayer = huahuoEngine.GetCurrentLayer()
-        currentLayer.addShape(newElementShape)
-
-        let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(newStore.GetStoreId())
-
+    openElementEditTab(element:ElementShapeJS){
         let newEleContent = document.createElement("hh-content")
         newEleContent.title = "NewElement"
         newEleContent.style.width = "100%"
@@ -76,10 +62,28 @@ class ElementCreator{
         let idx = this.sceneViewPanel.addContent(newEleContent)
         this.sceneViewPanel.selectTab(idx)
 
-        elementSceneView.storeId = newStore.GetStoreId()
-        newElementShape.storeId = newStore.GetStoreId()
+        elementSceneView.storeId = element.storeId
 
         console.log("Created new store, store id:" + elementSceneView.storeId)
+    }
+
+    onNewElement(e:PointerEvent){
+        let worldPos = BaseShapeDrawer.getWorldPosFromView(e.x, e.y)
+
+        // Create shape in the original scene/element
+        let newElementShape = new ElementShapeJS()
+        newElementShape.createShape()
+        newElementShape.position = new paper.Point(worldPos.x, worldPos.y)
+        newElementShape.store()
+
+        let currentLayer = huahuoEngine.GetCurrentLayer()
+        currentLayer.addShape(newElementShape)
+
+        let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(newStore.GetStoreId())
+        newElementShape.storeId = newStore.GetStoreId()
+
+        this.openElementEditTab(newElementShape)
     }
 }
 

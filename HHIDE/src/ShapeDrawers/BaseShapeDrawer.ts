@@ -42,6 +42,10 @@ class BaseShapeDrawer{
     onMouseMove(evt: MouseEvent){
 
     }
+
+    onDblClick(evt: MouseEvent){
+
+    }
 }
 
 export {BaseShapeDrawer}

@@ -79,6 +79,7 @@ class SceneView extends HTMLElement {
         this.canvas.addEventListener("mousedown", this.onMouseDown.bind(this))
         this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this))
         this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this))
+        this.canvas.addEventListener("dblclick", this.onDbClick.bind(this))
 
         let _this = this
         huahuoEngine.ExecuteAfterInited(() => {
@@ -174,6 +175,12 @@ class SceneView extends HTMLElement {
             })
 
             this.inited = true
+        }
+    }
+
+    onDbClick(evt:MouseEvent){
+        if (this.currentShapeDrawer && !this.animationPlayer.isPlaying) {
+            this.currentShapeDrawer.onDblClick(evt)
         }
     }
 
