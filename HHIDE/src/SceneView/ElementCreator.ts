@@ -45,6 +45,8 @@ class ElementCreator{
     }
 
     openElementEditTab(element:ElementShapeJS){
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(element.storeId)
+
         let newEleContent = document.createElement("hh-content")
         newEleContent.title = "NewElement"
         newEleContent.style.width = "100%"
@@ -82,7 +84,6 @@ class ElementCreator{
         currentLayer.addShape(newElementShape)
 
         let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(newStore.GetStoreId())
         newElementShape.storeId = newStore.GetStoreId()
 
         this.openElementEditTab(newElementShape)
