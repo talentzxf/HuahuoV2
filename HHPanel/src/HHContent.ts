@@ -1,4 +1,5 @@
 import {CustomElement} from "hhcommoncomponents";
+import {HHTitle} from "./HHTitle";
 
 
 @CustomElement({
@@ -8,6 +9,16 @@ class HHContent extends HTMLElement {
     static contentCounter:number = 0;
     static get observedAttributes() {
         return ['selected'];
+    }
+
+    hhTitle: HHTitle
+
+    setTitle(inTitle){
+        this.hhTitle = inTitle
+    }
+
+    getTitle(){
+        return this.hhTitle
     }
 
     connectedCallback() {

@@ -8,6 +8,7 @@ import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
 import {EditorPlayer} from "./EditorPlayer";
 import {fileLoader} from "./FileLoader";
 import {findParentPanel} from "../Utilities/PanelUtilities";
+import {sceneViewManager} from "./SceneViewManager";
 
 @CustomElement({
     selector: "hh-sceneview"
@@ -178,6 +179,8 @@ class SceneView extends HTMLElement {
             })
 
             this.inited = true
+
+            sceneViewManager.registerSceneView(this)
         }
     }
 

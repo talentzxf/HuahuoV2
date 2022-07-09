@@ -32,6 +32,7 @@ class HHTitle extends HTMLElement {
 
     setContent(inContent: HHContent){
         this.content = inContent
+        this.content.setTitle(this)
     }
 
     setParentPanel(panel: HHPanel){

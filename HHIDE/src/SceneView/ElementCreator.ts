@@ -6,8 +6,9 @@ import {HHContent, PanelEventNames} from "hhpanel";
 import {HHTimeline} from "hhtimeline"
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
+import {sceneViewManager} from "./SceneViewManager";
 
-class ElementCreator{
+class ElementCreator {
     sceneView: SceneView
     sceneViewPanel: HHPanel
 
@@ -17,18 +18,19 @@ class ElementCreator{
             _this.sceneView = document.querySelector("#mainScene")
             _this.sceneViewPanel = findParentPanel(this.sceneView)
 
-            _this.sceneViewPanel.addEventListener(PanelEventNames.CONTENTSELECTED, _this.onContentSelected.bind(_this))
+            let outmostDiv = document.querySelector("#outmost_container")
+            outmostDiv.addEventListener(PanelEventNames.CONTENTSELECTED, _this.onContentSelected.bind(_this))
         })
     }
 
-    onContentSelected(e){
+    onContentSelected(e) {
         let content: HHContent = e.detail.content
 
         let sceneview = content.querySelector("hh-sceneview")
 
         this.sceneView = sceneview
         this.sceneViewPanel = findParentPanel(this.sceneView)
-        if(sceneview){
+        if (sceneview) {
             let canvas = content.querySelector("canvas")
             renderEngine2D.setDefaultCanvas(canvas)
 
@@ -44,33 +46,39 @@ class ElementCreator{
         }
     }
 
-    openElementEditTab(element:ElementShapeJS){
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(element.storeId)
+    openElementEditTab(element: ElementShapeJS) {
 
-        let newEleContent = document.createElement("hh-content")
-        newEleContent.title = "NewElement"
-        newEleContent.style.width = "100%"
-        newEleContent.style.height = "100%"
-        newEleContent.style.flexBasis = "100%"
-        newEleContent.style.alignItems = "stretch"
+        let eleSceneView = sceneViewManager.getSceneView(element.storeId)
+        if (!eleSceneView) {
+            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(element.storeId)
 
-        let elementSceneView:SceneView = document.createElement("hh-sceneview") as SceneView
-        elementSceneView.id = "NewElement"
-        elementSceneView.style.flexBasis = "100%"
-        elementSceneView.style.display = "flex"
-        elementSceneView.style.alignItems = "stretch"
+            let newEleContent = document.createElement("hh-content")
+            newEleContent.title = "NewElement"
+            newEleContent.style.width = "100%"
+            newEleContent.style.height = "100%"
+            newEleContent.style.flexBasis = "100%"
+            newEleContent.style.alignItems = "stretch"
 
-        newEleContent.appendChild(elementSceneView)
-        let idx = this.sceneViewPanel.addContent(newEleContent)
-        this.sceneViewPanel.selectTab(idx)
+            let elementSceneView: SceneView = document.createElement("hh-sceneview") as SceneView
+            elementSceneView.id = "NewElement"
+            elementSceneView.style.flexBasis = "100%"
+            elementSceneView.style.display = "flex"
+            elementSceneView.style.alignItems = "stretch"
 
-        elementSceneView.storeId = element.storeId
+            newEleContent.appendChild(elementSceneView)
+            let idx = this.sceneViewPanel.addContent(newEleContent)
+            this.sceneViewPanel.selectTab(idx)
 
-        elementSceneView.animationPlayer.loadShapesFromStore()
-        elementSceneView.animationPlayer.updateAllShapes()
+            elementSceneView.storeId = element.storeId
+
+            elementSceneView.animationPlayer.loadShapesFromStore()
+            elementSceneView.animationPlayer.updateAllShapes()
+        }else{ // Switch to the SceneView
+
+        }
     }
 
-    onNewElement(e:PointerEvent){
+    onNewElement(e: PointerEvent) {
         let worldPos = BaseShapeDrawer.getWorldPosFromView(e.x, e.y)
 
         // Create shape in the original scene/element

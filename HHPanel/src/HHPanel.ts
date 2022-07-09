@@ -181,7 +181,8 @@ class HHPanel extends HTMLElement {
             detail: {
                 tabIndex: tabindex,
                 content: selectedContent
-            }
+            },
+            bubbles: true
         })
         this.dispatchEvent(customEvent)
     }
