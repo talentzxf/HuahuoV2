@@ -31,18 +31,22 @@ class Player{
             if(this.animationStartTime < 0){
                 this.animationStartTime = timeStamp
             }
-            let elapsedTime = timeStamp - this.animationStartTime
+            let elapsedTime = timeStamp - this.lastAnimateTime
 
-            if(this.lastAnimateTime < 0 || (elapsedTime - this.lastAnimateTime ) > 1.0/GlobalConfig.fps){
+            console.log("Elapsed time:" + elapsedTime)
+            console.log("Expected time:" + 1000.0/GlobalConfig.fps)
+
+            if(this.lastAnimateTime < 0 || elapsedTime > 1000.0/GlobalConfig.fps){
                 let activeFrames = huahuoEngine.GetCurrentStore().GetMaxFrameId() + 1;
                 let activePlayTime = activeFrames / GlobalConfig.fps;
-                let playTime = elapsedTime / 1000.0 % activePlayTime;
+                let playTime = (timeStamp - this.animationStartTime) / 1000.0 % activePlayTime;
                 let frameId = Math.floor(playTime * GlobalConfig.fps)
                 this.onPlayFrame(frameId)
-
-                this.lastAnimateTime = elapsedTime
+                console.log("Rendering")
+                this.lastAnimateTime = timeStamp
+            }else{
+                console.log("Skipped Rendering")
             }
-
             requestAnimationFrame(this.animationFrameStep.bind(this));
         }
     }
