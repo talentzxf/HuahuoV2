@@ -98,7 +98,10 @@ class SceneView extends HTMLElement {
                 }
             ])
 
-            _this.createNewTrack(timeline)
+            // If no layer in the store now, create a new track.
+            let layerCount = huahuoEngine.GetCurrentStore().GetLayerCount()
+            if(layerCount == 0)
+                _this.createNewTrack(timeline)
         })
     }
 
@@ -213,6 +216,9 @@ class SceneView extends HTMLElement {
     }
 
     OnResize() {
+        if(window.getComputedStyle(this.parentElement).display == "none")
+            return;
+
         // Find the panel
         let panel = findParentPanel(this.canvasContainer)
 

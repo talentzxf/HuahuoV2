@@ -66,9 +66,8 @@ class ElementCreator{
 
         elementSceneView.storeId = element.storeId
 
+        elementSceneView.animationPlayer.loadShapesFromStore()
         elementSceneView.animationPlayer.updateAllShapes()
-
-        console.log("Created new store, store id:" + elementSceneView.storeId)
     }
 
     onNewElement(e:PointerEvent){
@@ -87,6 +86,8 @@ class ElementCreator{
         newElementShape.storeId = newStore.GetStoreId()
 
         this.openElementEditTab(newElementShape)
+
+        console.log("Created new store, store id:" + newElementShape.storeId)
     }
 }
 

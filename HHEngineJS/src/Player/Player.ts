@@ -18,6 +18,10 @@ class Player{
         return this.layerShapesManager.getLayerShapes(layer)
     }
 
+    loadShapesFromStore(){
+        return this.layerShapesManager.loadShapesFromStore(null)
+    }
+
     updateAllShapes(){
         this.layerShapesManager.updateAllShapes()
     }

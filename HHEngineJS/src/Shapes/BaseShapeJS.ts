@@ -532,7 +532,11 @@ class ShapeFactory {
     }
 }
 
-let shapeFactory = new ShapeFactory()
+let shapeFactory = window["shapeFactory"]
+if(!shapeFactory){
+    shapeFactory = new ShapeFactory()
+    window["shapeFactory"] = shapeFactory
+}
 
 huahuoEngine.ExecuteAfterInited(() => {
     let eventName = "OnShapeLoaded"
