@@ -1,5 +1,5 @@
 import {SceneView} from "./SceneView";
-import {findParentPanel} from "../Utilities/PanelUtilities";
+import {findParentContainer, findParentContent, findParentPanel} from "../Utilities/PanelUtilities";
 import {HHPanel} from "hhpanel";
 import {renderEngine2D, huahuoEngine, ElementShapeJS, paper} from "hhenginejs"
 import {HHContent, PanelEventNames} from "hhpanel";
@@ -74,7 +74,13 @@ class ElementCreator {
             elementSceneView.animationPlayer.loadShapesFromStore()
             elementSceneView.animationPlayer.updateAllShapes()
         }else{ // Switch to the SceneView
+            let panel:HHPanel = findParentPanel(eleSceneView)
+            let hhcontent:HHContent = findParentContent(eleSceneView)
+            let title = hhcontent.getTitle()
 
+            if(panel && title){
+                panel.selectTab(title.tabIndex)
+            }
         }
     }
 

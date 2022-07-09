@@ -1,4 +1,4 @@
-import {HHPanel, HHContainer} from "hhpanel"
+import {HHPanel, HHContainer, HHContent} from "hhpanel"
 
 function findParentElement(ele, clz){
     let candidate = ele.parentElement
@@ -12,12 +12,16 @@ function findParentElement(ele, clz){
     return null
 }
 
-function findParentPanel(ele) {
+function findParentPanel(ele) : HHPanel{
     return findParentElement(ele, HHPanel)
 }
 
-function findParentContainer(ele){
+function findParentContainer(ele): HHContainer{
     return findParentElement(ele, HHContainer)
 }
 
-export {findParentPanel, findParentContainer}
+function findParentContent(ele): HHContent{
+    return findParentElement(ele, HHContent)
+}
+
+export {findParentPanel, findParentContainer, findParentContent}
