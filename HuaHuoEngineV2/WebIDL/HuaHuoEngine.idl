@@ -72,6 +72,7 @@ interface ObjectStoreManager{
     ObjectStore GetCurrentStore();
     ObjectStore CreateStore();
     boolean SetDefaultStoreByIndex(long storeIdx);
+    ObjectStore GetStoreById(long storeIdx);
 };
 
 [NoDelete]

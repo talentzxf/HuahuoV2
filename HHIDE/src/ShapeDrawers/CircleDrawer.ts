@@ -26,8 +26,6 @@ class CircleDrawer extends BaseShapeDrawer{
     onMouseMove(evt: MouseEvent) {
         super.onMouseMove(evt);
         if(this.isDrawing){
-            let currentPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
-
             let endPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
 
             let radius = endPosition.distance(this.startPosition)

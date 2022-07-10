@@ -67,8 +67,9 @@ class ElementShapeJS extends BaseShapeJS {
     calculateLocalFrame(){
         let currentFrame = this.getLayer().GetCurrentFrame()
         let bornFrame = this.rawObj.GetBornFrameId()
+        let maxFrames = huahuoEngine.getStoreMaxFrames(this.storeId)
 
-        return currentFrame - bornFrame
+        return (currentFrame - bornFrame) % maxFrames
     }
 
     override duringUpdate() {

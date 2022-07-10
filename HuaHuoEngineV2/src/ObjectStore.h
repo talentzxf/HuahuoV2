@@ -121,6 +121,15 @@ public:
         return currentStore;
     }
 
+    ObjectStore* GetStoreById(UInt32 storeId){
+        if(allStores.size() < storeId){
+            printf("StoreId:%d not found\n", storeId);
+            return NULL;
+        }
+
+        return allStores[storeId -1];
+    }
+
     bool SetDefaultStoreByIndex(UInt32 index){
         if(allStores.size() < index){
             printf("StoreId:%d not found\n", index);

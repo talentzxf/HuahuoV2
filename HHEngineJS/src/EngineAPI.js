@@ -70,6 +70,10 @@ class EngineAPI{
         return this.GetCurrentStore().GetStoreId()
     }
 
+    getStoreMaxFrames(storeId){
+        return this.GetDefaultObjectStoreManager().GetStoreById(storeId).GetMaxFrameId()
+    }
+
     GetCurrentLayer(){
         let layer = this.GetCurrentStore().GetCurrentLayer();
         if(!layer.addShape){
