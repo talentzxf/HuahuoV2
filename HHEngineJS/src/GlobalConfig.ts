@@ -1,5 +1,5 @@
 class GlobalConfig{
-    public static fps:number = 60.0
+    public static fps:number = 30.0
 }
 
 export {GlobalConfig}
