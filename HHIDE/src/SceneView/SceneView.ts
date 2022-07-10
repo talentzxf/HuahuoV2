@@ -7,7 +7,7 @@ import {ResizeObserver} from 'resize-observer';
 import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
 import {EditorPlayer} from "./EditorPlayer";
 import {fileLoader} from "./FileLoader";
-import {findParentPanel} from "../Utilities/PanelUtilities";
+import {findParentContent, findParentPanel} from "../Utilities/PanelUtilities";
 import {sceneViewManager} from "./SceneViewManager";
 
 @CustomElement({
@@ -191,6 +191,14 @@ class SceneView extends HTMLElement {
     }
 
     onMouseDown(evt: MouseEvent) {
+        // Inform the panel to select my tab
+        // Find the panel
+        let panel = findParentPanel(this)
+        // Find the content
+        let content = findParentContent(this)
+        let title = content.getTitle()
+        panel.selectTab(title.tabIndex)
+
         if (this.currentShapeDrawer && !this.animationPlayer.isPlaying) {
             this.currentShapeDrawer.onMouseDown(evt)
         }

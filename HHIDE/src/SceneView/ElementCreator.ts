@@ -42,7 +42,7 @@ class ElementCreator {
             let timeline: HHTimeline = document.querySelector("hh-timeline")
             timeline.reloadTracks()
 
-            sceneview.beginToDrawShape(defaultShapeDrawer)
+            // sceneview.beginToDrawShape(defaultShapeDrawer)
         }
     }
 
