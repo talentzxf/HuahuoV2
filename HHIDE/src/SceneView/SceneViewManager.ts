@@ -3,7 +3,7 @@ import {SceneView} from "./SceneView";
 class SceneViewManager{
     // Map from storeId->SceneView
     sceneViews: Map<number, SceneView> = new Map()
-    curSelectedSceneView: SceneView = null
+    curFocusedSceneView: SceneView = null
 
     registerSceneView(sceneView: SceneView){
         this.sceneViews.set(sceneView.storeId, sceneView)
@@ -14,6 +14,14 @@ class SceneViewManager{
             return this.sceneViews.get(storeId)
         }
         return null
+    }
+
+    focusSceneView(sceneView:SceneView){
+        this.curFocusedSceneView = sceneView
+    }
+
+    getFocusedSceneView(){
+        return this.curFocusedSceneView
     }
 }
 

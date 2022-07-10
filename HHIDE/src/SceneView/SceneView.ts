@@ -204,6 +204,10 @@ class SceneView extends HTMLElement {
         }
     }
 
+    resetDefaultShapeDrawer(){
+        defaultShapeDrawer.onBeginToDrawShape(this.canvas)
+    }
+
     onMouseMove(evt: MouseEvent) {
         if (this.currentShapeDrawer && !this.animationPlayer.isPlaying) {
             this.currentShapeDrawer.onMouseMove(evt)

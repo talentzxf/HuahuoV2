@@ -31,6 +31,12 @@ class ElementCreator {
         this.sceneView = sceneview
         this.sceneViewPanel = findParentPanel(this.sceneView)
         if (sceneview) {
+
+            if(sceneViewManager.getFocusedSceneView() == sceneview)
+                return;
+
+            sceneViewManager.focusSceneView(sceneview)
+
             let canvas = content.querySelector("canvas")
             renderEngine2D.setDefaultCanvas(canvas)
 
@@ -42,7 +48,7 @@ class ElementCreator {
             let timeline: HHTimeline = document.querySelector("hh-timeline")
             timeline.reloadTracks()
 
-            // sceneview.beginToDrawShape(defaultShapeDrawer)
+            sceneview.resetDefaultShapeDrawer()
         }
     }
 
