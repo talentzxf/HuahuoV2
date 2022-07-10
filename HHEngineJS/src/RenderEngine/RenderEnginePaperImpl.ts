@@ -3,18 +3,34 @@ import {view} from "paper";
 import {Logger, Vector2} from "hhcommoncomponents"
 import {RenderEngine2D} from "./RenderEngine2D";
 
+let bgLayerName = "background"
+let contentLayerName = "content"
+
 class RenderEnginePaperJs implements RenderEngine2D{
 
     // From canvas to project index
     private canvasPaperMap: Map<HTMLCanvasElement, number> = new Map()
 
-    private bgRect: paper.Path.Rectangle;
-    private contentRect: paper.Path.Rectangle;
-    private bgLayer: paper.Layer
-    private contentLayer: paper.Layer
-
     private isPlayer = false
     private aspectRatio:number = 4/3  //  W:H = 4:3
+
+    getLayerByName(layerName){
+        let project = this.getProject()
+        let targetLayers = project.layers.filter((layer)=>{
+            return layer.name == layerName
+        })
+        if(targetLayers.length != 1)
+            return null
+        return targetLayers[0]
+    }
+
+    get bgLayer(){
+        return this.getLayerByName(bgLayerName)
+    }
+
+    get contentLayer(){
+        return this.getLayerByName(contentLayerName)
+    }
 
     private getProject(){
         return paper.project
@@ -22,9 +38,11 @@ class RenderEnginePaperJs implements RenderEngine2D{
 
     private activateBgLayer(){
         if(!this.bgLayer){
-            this.contentLayer = this.getProject().activeLayer
-            this.bgLayer = new paper.Layer();
-            this.getProject().insertLayer(0, this.bgLayer)
+            let contentLayer = this.getProject().activeLayer
+            contentLayer.name = contentLayerName
+            let bgLayer = new paper.Layer();
+            bgLayer.name = "background"
+            this.getProject().insertLayer(0, bgLayer)
         }
         this.bgLayer.activate()
     }
@@ -84,24 +102,20 @@ class RenderEnginePaperJs implements RenderEngine2D{
         let canvasHeight = view.element.height
         // Logger.debug("Canvas width:" + canvasWidth + ",height:" + canvasHeight)
 
-        if(this.contentRect){
-            this.contentRect.remove()
+        if(this.bgLayer){
+            this.bgLayer.removeChildren()
         }
 
         let [contentWidth, contentHeight] = this.getContentWH(canvasWidth, canvasHeight)
         let xOffset = (canvasWidth - contentWidth)/2
         let yOffset = (canvasHeight - contentHeight)/2
-        this.contentRect = this.createViewRectangle(xOffset, yOffset, contentWidth, contentHeight, "white")
-        this.contentRect.sendToBack()
+        let contentRect = this.createViewRectangle(xOffset, yOffset, contentWidth, contentHeight, "white")
+        contentRect.sendToBack()
 
         if(!this.isPlayer)
         {
-            if(this.bgRect){
-                this.bgRect.remove()
-            }
-
-            this.bgRect = this.createViewRectangle(0,0, canvasWidth, canvasHeight, new paper.Color("lightgray"))
-            this.bgRect.sendToBack()
+            let bgRect = this.createViewRectangle(0,0, canvasWidth, canvasHeight, new paper.Color("lightgray"))
+            bgRect.sendToBack()
         }
 
         this.restoreContentLayer()
