@@ -130,6 +130,8 @@ class RenderEnginePaperJs implements RenderEngine2D{
             let projectIndex = this.canvasPaperMap.get(canvas)
             paper.projects[projectIndex].activate()
             window.paper = paper
+
+            this.clearBackground()
         }
     }
 }
