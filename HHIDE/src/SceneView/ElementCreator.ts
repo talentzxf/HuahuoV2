@@ -1,11 +1,10 @@
 import {SceneView} from "./SceneView";
-import {findParentContainer, findParentContent, findParentPanel} from "../Utilities/PanelUtilities";
+import {findParentContent, findParentPanel} from "../Utilities/PanelUtilities";
 import {HHPanel} from "hhpanel";
 import {renderEngine2D, huahuoEngine, ElementShapeJS, paper} from "hhenginejs"
 import {HHContent, PanelEventNames} from "hhpanel";
 import {HHTimeline} from "hhtimeline"
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
-import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
 import {sceneViewManager} from "./SceneViewManager";
 
 class ElementCreator {
