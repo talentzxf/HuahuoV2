@@ -247,9 +247,6 @@ class SceneView extends HTMLElement {
 //        let containerHeight = this.canvasContainer.clientHeight
 //        Logger.debug("OnResize: ContainerWidth:" + containerWidth + ", ContainerHeight:" + containerHeight)
 
-        let ele = this.canvasContainer.parentElement.parentElement.parentElement.parentElement
-        Logger.debug("OnResize: ContainerParentWidth:" + ele.clientWidth + ", ContainerHeight:" + ele.clientHeight)
-
         let containerWidth = this.canvasContainer.clientWidth
         let containerHeight = contentHeight
         let margin = 15
