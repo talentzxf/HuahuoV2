@@ -17,6 +17,8 @@ class LineShapeJS extends BaseShapeJS{
 
     createShape()
     {
+        super.createShape()
+
         let p1 = this.getPaperPoint(this.rawObj.GetStartPoint());
         let p2 = this.getPaperPoint(this.rawObj.GetEndPoint());
 

@@ -11,6 +11,9 @@ class ElementCreator {
     sceneView: SceneView
     sceneViewPanel: HHPanel
 
+    // If some element is changed, update all related views.
+    elementChangeListeners: Map<number, Array<Function>> = new Map()
+
     constructor() {
         let _this = this
         huahuoEngine.ExecuteAfterInited(() => {
@@ -20,6 +23,23 @@ class ElementCreator {
             let outmostDiv = document.querySelector("#outmost_container")
             outmostDiv.addEventListener(PanelEventNames.CONTENTSELECTED, _this.onContentSelected.bind(_this))
         })
+    }
+
+    registerElementChangeEvent(storeId, func: Function){
+        if(!this.elementChangeListeners.has(storeId)){
+            this.elementChangeListeners.set(storeId, new Array())
+        }
+
+        this.elementChangeListeners.get(storeId).push(func)
+    }
+
+    dispatchElementChange(storeId){
+        let funcArray = this.elementChangeListeners.get(storeId)
+        if(funcArray){
+            for(let func of funcArray){
+                func()
+            }
+        }
     }
 
     onContentSelected(e) {
@@ -107,6 +127,10 @@ class ElementCreator {
         this.openElementEditTab(newElementShape)
 
         console.log("Created new store, store id:" + newElementShape.storeId)
+
+        this.registerElementChangeEvent(newElementShape.storeId, function(){
+            newElementShape.update()
+        })
     }
 }
 

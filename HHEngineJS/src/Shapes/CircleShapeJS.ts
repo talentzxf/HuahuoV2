@@ -20,6 +20,8 @@ class CircleShapeJS extends BaseSolidShape{
     }
 
     createShape(){
+        super.createShape()
+
         let circleCenter = this.getPaperPoint(this.rawObj.GetCenter());
         let radius = this.rawObj.GetRadius()
 

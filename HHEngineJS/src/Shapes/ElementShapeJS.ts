@@ -36,6 +36,8 @@ class ElementShapeJS extends BaseShapeJS {
 
     // Render a box first.
     createShape() {
+        super.createShape()
+
         let paper = this.getPaperJs()
         this.paperItem = new paper.Group()
         this.paperItem.applyMatrix = false

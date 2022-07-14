@@ -70,6 +70,8 @@ class ImageShapeJS extends AbstractMediaShapeJS{
     }
 
     createShape(){
+        super.createShape()
+
         let _this = this
         let _paper:any = this.getPaperJs()
         let tempShape = new _paper.Raster()

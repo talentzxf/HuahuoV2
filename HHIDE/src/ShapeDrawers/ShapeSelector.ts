@@ -8,7 +8,6 @@ import {TransformHandlerMap} from "../TransformHandlers/TransformHandlerMap";
 import {shapeRotateHandler} from "../TransformHandlers/ShapeRotateHandler";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {elementCreator} from "../SceneView/ElementCreator";
-import {ElementShapeJS} from "hhenginejs";
 
 
 const BOUNDMARGIN:number = 10
@@ -234,6 +233,11 @@ class ShapeSelector extends BaseShapeDrawer {
 
             if (this.transformHandler && this.transformHandler.getIsDragging()) {
                 this.transformHandler.dragging(pos)
+
+                for(let shape of this.selectedShapes){
+                    let bornStoreId = shape.getBornStoreId()
+                    elementCreator.dispatchElementChange(bornStoreId)
+                }
             } else {
                 if (this.isDrawing) {
 

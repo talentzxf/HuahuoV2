@@ -12,6 +12,8 @@ class AudioShapeJS extends AbstractMediaShapeJS {
     audioElement: HTMLAudioElement
 
     createShape() {
+        super.createShape()
+
         let paperjs: any = this.getPaperJs()
         this.paperShape = new paperjs.Path.Circle(paperjs.view.center, 10);
         this.paperShape.fillColor = new paper.Color("cyan")

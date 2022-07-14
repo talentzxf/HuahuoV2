@@ -27,6 +27,12 @@ abstract class BaseShapeJS {
 
     private parent: BaseShapeJS = null
 
+    private bornStoreId: number = -1;
+
+    private getBornStoreId():number{
+        return this.bornStoreId
+    }
+
     protected isUpdateFillColor() {
         return true;
     }
@@ -381,7 +387,9 @@ abstract class BaseShapeJS {
         }
     }
 
-    abstract createShape()
+    createShape(){
+        this.bornStoreId = huahuoEngine.GetCurrentStoreId()
+    }
 
     duringUpdate() {
         if (!this.paperItem) {
