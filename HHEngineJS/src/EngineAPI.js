@@ -7,6 +7,7 @@ class EngineAPI{
     PendingInitFunctions = []
 
     storeIdElementShapeMap = {}
+    elementIdParentId = {}
 
     cppEngine = null
 
@@ -98,6 +99,14 @@ class EngineAPI{
 
     GetElementShapeByStoreId(storeId){
         return this.storeIdElementShapeMap[storeId]
+    }
+
+    registerElementParent(childId, parentId){
+        this.elementIdParentId[childId] = parentId
+    }
+
+    getElementParentByStoreId(childId){
+        return this.elementIdParentId[childId]
     }
 }
 

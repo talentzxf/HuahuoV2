@@ -64,6 +64,8 @@ class ElementShapeJS extends BaseShapeJS {
 
     set storeId(val: number) {
         this.rawObj.SetStoreId(val)
+
+        huahuoEngine.registerElementParent(val, this.getBornStoreId())
     }
 
     calculateLocalFrame(){

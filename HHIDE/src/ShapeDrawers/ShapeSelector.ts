@@ -8,6 +8,7 @@ import {TransformHandlerMap} from "../TransformHandlers/TransformHandlerMap";
 import {shapeRotateHandler} from "../TransformHandlers/ShapeRotateHandler";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {elementCreator} from "../SceneView/ElementCreator";
+import {huahuoEngine} from "hhenginejs";
 
 
 const BOUNDMARGIN:number = 10
@@ -235,8 +236,12 @@ class ShapeSelector extends BaseShapeDrawer {
                 this.transformHandler.dragging(pos)
 
                 for(let shape of this.selectedShapes){
-                    let bornStoreId = shape.getBornStoreId()
-                    elementCreator.dispatchElementChange(bornStoreId)
+                    let targetStoreId = shape.getBornStoreId()
+
+                    while(targetStoreId){
+                        elementCreator.dispatchElementChange(targetStoreId)
+                        targetStoreId = huahuoEngine.getElementParentByStoreId(targetStoreId)
+                    }
                 }
             } else {
                 if (this.isDrawing) {
