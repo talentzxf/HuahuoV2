@@ -4,7 +4,7 @@ import {TabMover, TabMoveParam} from "./draggable/TabMover";
 import {OccupiedTitleManager, SplitPanelDir} from "./draggable/OccupiedTitleManager";
 import {HHTitle} from "./HHTitle";
 import {HHContent} from "./HHContent";
-import {CustomElement} from "hhcommoncomponents";
+import {CustomElement, Logger} from "hhcommoncomponents";
 import {Vector2D} from "./math/Vector2D";
 import {ShadowPanelManager} from "./draggable/ShadowPanelManager";
 
@@ -59,7 +59,19 @@ class HHPanel extends HTMLElement {
     private _tabs: HTMLElement
     private _contents: HTMLElement
     private mInited:Boolean = false
-    private maxTabId: number = 0
+
+    private get maxTabId():number{
+        let curMaxTitleId = -1
+        let titles = this._tabs.querySelectorAll('hh-title')
+
+        titles.forEach((titleBar:HHTitle) => {
+            if(titleBar.tabIndex > curMaxTitleId){
+                curMaxTitleId = titleBar.tabIndex
+            }
+        })
+
+        return curMaxTitleId
+    }
 
     constructor() {
         super();
@@ -164,11 +176,6 @@ class HHPanel extends HTMLElement {
         //     node.selected = false
         // }
 
-        let selectedTab = this.querySelector('hh-title[tabindex="' + tabindex + '"]') as HHTitle
-        let selectedContent = selectedTab.getContent();
-        selectedTab.setAttribute('selected', "true")
-        selectedContent.selected = true
-
         let unselectedTabs = this.querySelectorAll('hh-title:not([tabindex="' + tabindex + '"])') as NodeListOf<HHTitle>
 
         unselectedTabs.forEach(tab => {
@@ -177,22 +184,33 @@ class HHPanel extends HTMLElement {
             content.selected = false
         })
 
-        let customEvent = new CustomEvent(PanelEventNames.CONTENTSELECTED, {
-            detail: {
-                tabIndex: tabindex,
-                content: selectedContent
-            },
-            bubbles: true
-        })
-        this.dispatchEvent(customEvent)
+        let selectedTab = this.querySelector('hh-title[tabindex="' + tabindex + '"]') as HHTitle
+        if(selectedTab){
+            let selectedContent = selectedTab.getContent();
+            selectedTab.setAttribute('selected', "true")
+            selectedContent.selected = true
+
+            let customEvent = new CustomEvent(PanelEventNames.CONTENTSELECTED, {
+                detail: {
+                    tabIndex: tabindex,
+                    content: selectedContent
+                },
+                bubbles: true
+            })
+            this.dispatchEvent(customEvent)
+        } else {
+            Logger.error("Selecting a non existing id:" + tabindex)
+        }
     }
 
     addContent(node: HHContent){
+        let tabId = this.maxTabId + 1
+
         let title = node.getAttribute('title') || 'No Title'
         let titleSpan = document.createElement('hh-title') as HHTitle
         titleSpan.appendChild(node)
         titleSpan.innerHTML = title
-        titleSpan.setAttribute('tabindex', this.maxTabId.toString())
+        titleSpan.setAttribute('tabindex', tabId.toString())
         titleSpan.addEventListener('click', function (evt) {
             let idx = Number(titleSpan.getAttribute('tabindex'))
             titleSpan.getParentPanel().selectTab(idx)
@@ -201,7 +219,7 @@ class HHPanel extends HTMLElement {
         this._tabs.appendChild(titleSpan)
         titleSpan.setContent(node)
         titleSpan.setParentPanel(this)
-        return this.maxTabId++;
+        return tabId;
     }
 
     initPanel() {

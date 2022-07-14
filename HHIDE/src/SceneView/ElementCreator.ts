@@ -77,15 +77,17 @@ class ElementCreator {
         if (!eleSceneView) {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(element.storeId)
 
+            let elementId = "NewElement_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+
             let newEleContent = document.createElement("hh-content")
-            newEleContent.title = "NewElement"
+            newEleContent.title = elementId
             newEleContent.style.width = "100%"
             newEleContent.style.height = "100%"
             newEleContent.style.flexBasis = "100%"
             newEleContent.style.alignItems = "stretch"
 
             let elementSceneView: SceneView = document.createElement("hh-sceneview") as SceneView
-            elementSceneView.id = "NewElement"
+            elementSceneView.id = elementId
             elementSceneView.style.flexBasis = "100%"
             elementSceneView.style.display = "flex"
             elementSceneView.style.alignItems = "stretch"
