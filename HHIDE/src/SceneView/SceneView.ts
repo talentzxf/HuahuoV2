@@ -273,6 +273,7 @@ class SceneView extends HTMLElement {
         this.ctx.fillStyle = "white"
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
 
+        renderEngine2D.setDefaultCanvas(this.canvas)
         renderEngine2D.clearBackground()
     }
 
