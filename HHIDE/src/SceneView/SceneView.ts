@@ -237,6 +237,9 @@ class SceneView extends HTMLElement {
         // Find the panel
         let panel = findParentPanel(this.canvasContainer)
 
+        if(panel == null)  // The scene view might has already been closed
+            return;
+
         // TODO: Move this into HHPanel??
         let panelWidth = panel.clientWidth
         let panelHeight = panel.clientHeight

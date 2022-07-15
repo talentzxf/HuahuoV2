@@ -23,6 +23,10 @@ class SceneViewManager{
     getFocusedSceneView(){
         return this.curFocusedSceneView
     }
+
+    removeSceneViewMap(storeId: number){
+        this.sceneViews.delete(storeId)
+    }
 }
 
 let sceneViewManager = new SceneViewManager()

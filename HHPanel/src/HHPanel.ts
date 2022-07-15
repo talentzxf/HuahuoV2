@@ -9,7 +9,8 @@ import {Vector2D} from "./math/Vector2D";
 import {ShadowPanelManager} from "./draggable/ShadowPanelManager";
 
 enum PanelEventNames{
-    CONTENTSELECTED = "ContentSelected"
+    CONTENTSELECTED = "ContentSelected",
+    TABCLOSED = "TabClosed"
 }
 
 @CustomElement({
@@ -75,6 +76,19 @@ class HHPanel extends HTMLElement {
 
     constructor() {
         super();
+    }
+
+    isValidTabIndex(tabIndex: number){
+        let titles = this._tabs.querySelectorAll('hh-title')
+
+        let found = false
+        titles.forEach((titleBar:HHTitle) => {
+            if(titleBar.tabIndex == tabIndex){
+                found = true
+            }
+        })
+
+        return found
     }
 
     handleTitleBar(ele: HHTitle, targetPos: Vector2D) {
@@ -203,6 +217,22 @@ class HHPanel extends HTMLElement {
         }
     }
 
+    closeTab(tabIndex: number){
+        let selectedTab = this.querySelector('hh-title[tabindex="' + tabIndex + '"]') as HHTitle
+        let content = selectedTab.getContent()
+
+        selectedTab.parentElement.removeChild(selectedTab)
+        content.parentElement.removeChild(content)
+
+        let customEvent = new CustomEvent(PanelEventNames.TABCLOSED, {
+            detail: {
+                tabIndex: tabIndex,
+                content: content
+            }
+        })
+        this.dispatchEvent(customEvent)
+    }
+
     addContent(node: HHContent){
         let tabId = this.maxTabId + 1
 
@@ -216,9 +246,9 @@ class HHPanel extends HTMLElement {
             titleSpan.getParentPanel().selectTab(idx)
         })
 
-        this._tabs.appendChild(titleSpan)
         titleSpan.setContent(node)
         titleSpan.setParentPanel(this)
+        this._tabs.appendChild(titleSpan)
         return tabId;
     }
 
