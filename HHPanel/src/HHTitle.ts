@@ -86,8 +86,6 @@ class HHTitle extends HTMLElement {
         // Close this tab
         this.parentPanel.closeTab(this.tabIndex)
 
-
-
         // Open the previous tab
         let candidateTabIndex = this.tabIndex - 1
         while(candidateTabIndex >= 0){
@@ -96,6 +94,17 @@ class HHTitle extends HTMLElement {
                 return
             }
             candidateTabIndex--;
+        }
+
+        // Can't find previous tab, open next tab
+
+        candidateTabIndex = this.tabIndex + 1
+        while(candidateTabIndex <= this.parentPanel.maxTabId){
+            if(this.parentPanel.isValidTabIndex(candidateTabIndex)){
+                this.parentPanel.selectTab(candidateTabIndex)
+                return
+            }
+            candidateTabIndex++;
         }
     }
 

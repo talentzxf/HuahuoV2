@@ -61,7 +61,7 @@ class HHPanel extends HTMLElement {
     private _contents: HTMLElement
     private mInited:Boolean = false
 
-    private get maxTabId():number{
+    public get maxTabId():number{
         let curMaxTitleId = -1
         let titles = this._tabs.querySelectorAll('hh-title')
 
