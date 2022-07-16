@@ -8,14 +8,12 @@ enum EventNames{
     DRAWSHAPEENDS = "drawShapeEnds",
     OBJECTSELECTED = "objectSelected",
     UNSELECTOBJECTS = "unselectObjects",
-    CONTENTSELECTED = "contentSelected"
 }
 
 interface GlobalEvents{
     drawShapeBegins:(shapeDrawer: BaseShapeDrawer)=>void;
     drawShapeEnds:(shapeDrawer: BaseShapeDrawer)=>void;
     objectSelected:(shapes: PropertySheet)=>void;
-    contentSelected:(content: HHContent)=>void;
     unselectObjects:()=>void;
 }
 

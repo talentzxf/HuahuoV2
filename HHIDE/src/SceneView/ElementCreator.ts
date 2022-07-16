@@ -30,12 +30,7 @@ class ElementCreator {
         let content:HHContent = e.detail.content
         let sceneView:SceneView = content.querySelector("hh-sceneview")
         let storeId = sceneView.storeId
-        if(this.elementChangeListeners.has(storeId)){
-            this.elementChangeListeners.delete(storeId)
-        }
-
         sceneViewManager.removeSceneViewMap(storeId)
-
     }
 
     registerElementChangeEvent(storeId, func: Function){

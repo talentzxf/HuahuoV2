@@ -228,9 +228,18 @@ class HHPanel extends HTMLElement {
             detail: {
                 tabIndex: tabIndex,
                 content: content
-            }
+            },
+            bubbles: true
         })
         this.dispatchEvent(customEvent)
+
+        // TODO:   If this is the last of this panel, delete the panel and it's container. Question: How to handle splitter??
+
+        if(this.getTitleCount() == 0){
+            let oldParent = this.parentElement
+            OccupiedTitleManager.getInstance().removeElementWithSplitter(this)
+            OccupiedTitleManager.getInstance().recursivelyRemoveEmptyParents(oldParent)
+        }
     }
 
     addContent(node: HHContent){

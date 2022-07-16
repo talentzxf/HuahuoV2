@@ -23,6 +23,7 @@ class SceneView extends HTMLElement {
     gizmoContainer: HTMLDivElement = null;
     zoomInBtn: HTMLButtonElement = null;
     zoomOutBtn: HTMLButtonElement = null;
+    zoomResetBtn: HTMLButtonElement = null;
     animationPlayer: EditorPlayer = null;
     storeId: number = null;
 
@@ -137,6 +138,7 @@ class SceneView extends HTMLElement {
 
         this.zoomInBtn = document.createElement("button")
         this.zoomInBtn.innerHTML = "ZoomIn"
+        this.zoomInBtn.style.userSelect = 'none'
         this.zoomInBtn.onclick = () => {
             renderEngine2D.zoomIn()
         }
@@ -144,17 +146,19 @@ class SceneView extends HTMLElement {
 
         this.zoomOutBtn = document.createElement("button")
         this.zoomOutBtn.innerHTML = "ZoomOut"
+        this.zoomOutBtn.style.userSelect = 'none'
         this.zoomOutBtn.onclick = () => {
             renderEngine2D.zoomOut()
         }
         this.gizmoContainer.appendChild(this.zoomOutBtn)
 
-        this.zoomOutBtn = document.createElement("button")
-        this.zoomOutBtn.innerHTML = "Reset"
-        this.zoomOutBtn.onclick = () => {
+        this.zoomResetBtn = document.createElement("button")
+        this.zoomResetBtn.innerHTML = "Reset"
+        this.zoomResetBtn.style.userSelect = 'none'
+        this.zoomResetBtn.onclick = () => {
             renderEngine2D.zoomReset()
         }
-        this.gizmoContainer.appendChild(this.zoomOutBtn)
+        this.gizmoContainer.appendChild(this.zoomResetBtn)
     }
 
     connectedCallback() {
