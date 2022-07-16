@@ -1,6 +1,8 @@
 import {Logger, Vector2} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
-import {renderEngine2D} from "hhenginejs"
+import {huahuoEngine, renderEngine2D} from "hhenginejs"
+import {BaseShapeJS} from "hhenginejs/dist/src/Shapes/BaseShapeJS";
+import {elementCreator} from "../SceneView/ElementCreator";
 
 class BaseShapeDrawer{
     name = "unknown_shape"
@@ -34,6 +36,18 @@ class BaseShapeDrawer{
 
     static getWorldPosFromView(x, y): Vector2{
         return renderEngine2D.getWorldPosFromView(x,y)
+    }
+
+    addShapeToCurrentLayer(shape:BaseShapeJS){
+        let currentLayer = huahuoEngine.GetCurrentLayer()
+        currentLayer.addShape(shape)
+
+        let targetStoreId = shape.getBornStoreId()
+
+        while(targetStoreId){
+            elementCreator.dispatchElementChange(targetStoreId)
+            targetStoreId = huahuoEngine.getElementParentByStoreId(targetStoreId)
+        }
     }
 
     onMouseUp(evt: MouseEvent){

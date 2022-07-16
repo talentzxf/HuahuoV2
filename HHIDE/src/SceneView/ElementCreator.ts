@@ -85,17 +85,15 @@ class ElementCreator {
         if (!eleSceneView) {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(element.storeId)
 
-            let elementId = "NewElement_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-
             let newEleContent = document.createElement("hh-content")
-            newEleContent.title = elementId
+            newEleContent.title = element.getName()
             newEleContent.style.width = "100%"
             newEleContent.style.height = "100%"
             newEleContent.style.flexBasis = "100%"
             newEleContent.style.alignItems = "stretch"
 
             let elementSceneView: SceneView = document.createElement("hh-sceneview") as SceneView
-            elementSceneView.id = elementId
+            elementSceneView.id = element.getName()
             elementSceneView.style.flexBasis = "100%"
             elementSceneView.style.display = "flex"
             elementSceneView.style.alignItems = "stretch"
@@ -122,8 +120,10 @@ class ElementCreator {
     onNewElement(e: PointerEvent) {
         let worldPos = BaseShapeDrawer.getWorldPosFromView(e.x, e.y)
 
+        let elementId = "NewElement_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
         // Create shape in the original scene/element
         let newElementShape = new ElementShapeJS()
+        newElementShape.setName(elementId)
         newElementShape.createShape()
         newElementShape.position = new paper.Point(worldPos.x, worldPos.y)
         newElementShape.store()

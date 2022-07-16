@@ -29,7 +29,7 @@ abstract class BaseShapeJS {
 
     private bornStoreId: number = -1;
 
-    protected getBornStoreId():number{
+    public getBornStoreId():number{
         return this.bornStoreId
     }
 

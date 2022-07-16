@@ -10,11 +10,21 @@ class ElementShapeJS extends BaseShapeJS {
         return new ElementShapeJS(rawObj)
     }
 
+    name:string = "unknown"
+
     emptyPlaceHolder: paper.Group
 
     size: paper.Point
 
     layerShapesManager: LayerShapesManager = new LayerShapesManager
+
+    getName(){
+        return this.name
+    }
+
+    setName(eleName: string){
+        this.name = eleName
+    }
 
     constructor(rawObj) {
         super(rawObj);
@@ -47,10 +57,13 @@ class ElementShapeJS extends BaseShapeJS {
         let p1 = new paper.Point(0, 0)
         let p2 = this.size
         let boundingBox = new paper.Path.Rectangle(p1, p2)
+        boundingBox.fillColor = new paper.Color("gray")
+        boundingBox.fillColor.alpha = 0.5
         boundingBox.strokeColor = new paper.Color("black")
+        boundingBox.data.meta = this
 
         let pointText = new paper.PointText(new paper.Point(0,0))
-        pointText.content = "Empty Element"
+        pointText.content = this.name
 
         this.emptyPlaceHolder = new paper.Group()
         this.emptyPlaceHolder.addChild(boundingBox)
