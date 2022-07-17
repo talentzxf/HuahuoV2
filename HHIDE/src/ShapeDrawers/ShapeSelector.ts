@@ -64,8 +64,8 @@ class ShapeSelector extends BaseShapeDrawer {
 
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
         super.onBeginToDrawShape(canvas);
-
         this.canvas = canvas
+        this.clearSelection()
 
         // setup right click context menu
         if(!this.contextMenuInitedMap.get(canvas)){
