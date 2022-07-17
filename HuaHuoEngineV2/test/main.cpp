@@ -22,6 +22,7 @@
 #include "KeyFrames/FrameState.h"
 #include "KeyFrames/ShapeTransformFrameState.h"
 #include "Shapes/RectangleShape.h"
+#include "CloneObject.h"
 
 void testTransform() {
     GameObject *go = MonoCreateGameObject("Go1");
@@ -315,6 +316,22 @@ void testMultipleStores(){
     assert(result);
 }
 
+void testCloneObject(){
+    ObjectStoreManager* objectStoreManager = GetDefaultObjectStoreManager();
+    objectStoreManager->GetCurrentStore()->CreateLayer("TestTest");
+    Layer* currentLayer = objectStoreManager->GetCurrentStore()->GetCurrentLayer();
+
+    RectangleShape* rectangleShape = (RectangleShape*)BaseShape::CreateShape("RectangleShape");
+    rectangleShape->SetStartPoint(2,2,2);
+    rectangleShape->SetEndPoint(3,3,3);
+    rectangleShape->SetColor(1.0, 0.0, 1.0, 1.0);
+    currentLayer->AddShapeInternal(rectangleShape);
+
+    RectangleShape* clonedRectangle = (RectangleShape*)CloneObject(*rectangleShape);
+    currentLayer->AddShapeInternal(clonedRectangle);
+
+}
+
 int main() {
     HuaHuoEngine::InitEngine();
 //    testTransform();
@@ -325,6 +342,7 @@ int main() {
     testKeyFrames();
     testRecordKeyFrames();
     testSegmentKeyFrames();
+    testCloneObject();
 
     testMultipleStores();
     return 0;

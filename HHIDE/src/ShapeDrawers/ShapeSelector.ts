@@ -62,6 +62,12 @@ class ShapeSelector extends BaseShapeDrawer {
         }
     }
 
+    duplicateShape(){
+        for(let shape of this.selectedShapes){
+            shape.duplicate();
+        }
+    }
+
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
         super.onBeginToDrawShape(canvas);
         this.canvas = canvas
@@ -80,6 +86,10 @@ class ShapeSelector extends BaseShapeDrawer {
                 {
                     itemName: "Bring to Front",
                     onclick: _this.bringToFrond.bind(_this)
+                },
+                {
+                    itemName:"Duplicate",
+                    onclick: _this.duplicateShape.bind(_this)
                 },
                 {
                     itemName: "Create New Element",

@@ -56,7 +56,7 @@ void BaseShape::SetPosition(float x, float y, float z) {
     Layer *shapeLayer = GetLayer();
 
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    mTransformKeyFrames->RecordPosition(currentFrameId, x, y, z);
+    mTransformKeyFrames.RecordPosition(currentFrameId, x, y, z);
 
     shapeLayer->AddKeyFrame(currentFrameId);
 }
@@ -66,7 +66,7 @@ void BaseShape::SetRotation(float rotation) {
     Layer *shapeLayer = GetLayer();
 
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    mTransformKeyFrames->RecordRotation(currentFrameId, rotation);
+    mTransformKeyFrames.RecordRotation(currentFrameId, rotation);
 
     shapeLayer->AddKeyFrame(currentFrameId);
 }
@@ -74,18 +74,18 @@ void BaseShape::SetRotation(float rotation) {
 void BaseShape::SetScale(float xScale, float yScale, float zScale) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    mTransformKeyFrames->RecordScale(currentFrameId, xScale, yScale, zScale);
+    mTransformKeyFrames.RecordScale(currentFrameId, xScale, yScale, zScale);
     shapeLayer->AddKeyFrame(currentFrameId);
 }
 
 Vector3f *BaseShape::GetScale() {
-    return mTransformKeyFrames->GetScale();
+    return mTransformKeyFrames.GetScale();
 }
 
 void BaseShape::SetColor(float r, float g, float b, float a) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    mColorKeyFrames->RecordColor(currentFrameId, r, g, b, a);
+    mColorKeyFrames.RecordColor(currentFrameId, r, g, b, a);
 
     shapeLayer->AddKeyFrame(currentFrameId);
 }
@@ -111,10 +111,10 @@ bool BaseShape::IsVisible() {
 void BaseShape::SetSegments(float segmentBuffer[], int size) {
     Layer* shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    mSegmentFrames->RecordSegments(currentFrameId, segmentBuffer, size);
+    mSegmentFrames.RecordSegments(currentFrameId, segmentBuffer, size);
     shapeLayer->AddKeyFrame(currentFrameId);
 }
 
 void BaseShape::SetSegmentsAtFrame(float segmentBuffer[], int size, int keyFrameId){
-    mSegmentFrames->RecordSegments(keyFrameId, segmentBuffer, size);
+    mSegmentFrames.RecordSegments(keyFrameId, segmentBuffer, size);
 }

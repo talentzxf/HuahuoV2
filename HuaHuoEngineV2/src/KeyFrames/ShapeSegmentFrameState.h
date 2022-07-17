@@ -87,6 +87,8 @@ public:
         return &m_KeyFrames[keyFrameIndex];
     };
 
+    friend class BaseShape;
+
 private:
     std::vector<Vector3f> m_currentPositionArray;
     std::vector<Vector3f> m_currentHandleInArray;

@@ -265,6 +265,15 @@ public:
         SetMainThreadCleanupCalledInternal();
     }
 
+    /// ThreadedCleanup is called just before the object is destroyed.
+    /// ThreadedCleanup may be called on the destruction thread, or in some cases on the main thread, but there is no guarantee.
+    /// This functions exists to let you to do any type of cleanup that does not touch global state or other objects.
+    /// It is not safe to touch global state or access other objects from ThreadedCleanup.
+    /// For this reason GetInstanceID () returns 0 and asserts on access when it is accessed after MainThreadCleanup has been called.
+    /// See BatchDeleteObjects.h
+    /// NOTE: This function is not virtual the destructor at each level thus you shall not call the super classes ThreadedCleanup.
+    void ThreadedCleanup() {}
+
     enum HideFlags
     {
         kHideFlagsNone = 0,

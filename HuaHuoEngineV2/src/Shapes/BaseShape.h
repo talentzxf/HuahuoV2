@@ -35,9 +35,9 @@ class BaseShape : public Object{
     REGISTER_CLASS(BaseShape);
     DECLARE_OBJECT_SERIALIZE();
 private:
-    PPtr<ShapeTransformFrameState> mTransformKeyFrames;
-    PPtr<ShapeColorFrameState> mColorKeyFrames;
-    PPtr<ShapeSegmentFrameState> mSegmentFrames;
+    ShapeTransformFrameState mTransformKeyFrames;
+    ShapeColorFrameState mColorKeyFrames;
+    ShapeSegmentFrameState mSegmentFrames;
     Layer* mLayer;
     SInt32 mBornFrameId;
     SInt32 mIndex;
@@ -45,17 +45,13 @@ private:
 public:
     BaseShape(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
+        ,mTransformKeyFrames(label, mode)
+        ,mColorKeyFrames(label, mode)
+        ,mSegmentFrames(label, mode)
         ,mLayer(NULL)
         ,mBornFrameId(-1)
         ,mIndex(-1)
     {
-        mTransformKeyFrames = Object::Produce<ShapeTransformFrameState>();
-        mColorKeyFrames = Object::Produce<ShapeColorFrameState>();
-        mSegmentFrames = Object::Produce<ShapeSegmentFrameState>();
-
-        GetPersistentManager().MakeObjectPersistent(mTransformKeyFrames.GetInstanceID(), StoreFilePath);
-        GetPersistentManager().MakeObjectPersistent(mColorKeyFrames->GetInstanceID(), StoreFilePath);
-        GetPersistentManager().MakeObjectPersistent(mSegmentFrames->GetInstanceID(), StoreFilePath);
     }
 
     void SetBornFrameId(SInt32 bornFrameId){
@@ -80,17 +76,17 @@ public:
     }
 
     Vector3f* GetPosition(){
-        return mTransformKeyFrames->GetPosition();
+        return mTransformKeyFrames.GetPosition();
     }
 
     float GetRotation(){
-        return mTransformKeyFrames->GetRotation();
+        return mTransformKeyFrames.GetRotation();
     }
 
     virtual void Apply(int frameId){
-        mTransformKeyFrames->Apply(frameId);
-        mColorKeyFrames->Apply(frameId);
-        mSegmentFrames->Apply(frameId);
+        mTransformKeyFrames.Apply(frameId);
+        mColorKeyFrames.Apply(frameId);
+        mSegmentFrames.Apply(frameId);
     }
 
     void SetScale(float xScale, float yScale, float zScale);
@@ -107,31 +103,31 @@ public:
     void SetSegmentsAtFrame(float segmentBuffer[], int size, int keyFrameId);
 
     int GetSegmentCount(){
-        return mSegmentFrames->GetSegmentCount();
+        return mSegmentFrames.GetSegmentCount();
     }
 
     Vector3f* GetSegmentPosition(int segmentId){
-        return mSegmentFrames->GetSegmentPosition(segmentId);
+        return mSegmentFrames.GetSegmentPosition(segmentId);
     }
 
     Vector3f* GetSegmentHandleIn(int segmentId){
-        return mSegmentFrames->GetSegmentHandleIn(segmentId);
+        return mSegmentFrames.GetSegmentHandleIn(segmentId);
     }
 
     Vector3f* GetSegmentHandleOut(int segmentId){
-        return mSegmentFrames->GetSegmentHandleOut(segmentId);
+        return mSegmentFrames.GetSegmentHandleOut(segmentId);
     }
 
     int GetSegmentKeyFrameCount(){
-        return mSegmentFrames->GetKeyFrameCount();
+        return mSegmentFrames.GetKeyFrameCount();
     }
 
     SegmentKeyFrame* GetSegmentKeyFrameAtKeyFrameIndex(int keyFrameIndex){
-        return mSegmentFrames->GetSegmentKeyFrameAtFrameIndex(keyFrameIndex);
+        return mSegmentFrames.GetSegmentKeyFrameAtFrameIndex(keyFrameIndex);
     }
 
     ColorRGBAf* GetColor(){
-        return mColorKeyFrames->GetColor();
+        return mColorKeyFrames.GetColor();
     }
 
     void SetIndex(SInt32 index){

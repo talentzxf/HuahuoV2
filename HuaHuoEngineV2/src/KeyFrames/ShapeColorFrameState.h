@@ -40,6 +40,8 @@ public:
     }
 
     void RecordColor(int frameId, float r, float g, float b, float a);
+
+    friend class BaseShape;
 private:
     ColorRGBAf m_CurrentColor;
     std::vector<ColorKeyFrame> m_KeyFrames;

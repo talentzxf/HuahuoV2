@@ -9,6 +9,7 @@
 #include "Components/BaseComponent.h"
 #include "Serialize/TransferFunctions/RemapPPtrTransfer.h"
 #include "Serialize/AwakeFromLoadQueue.h"
+#include "CloneObject.h"
 #include <cstring>
 
 inline GameObject* GetGameObjectPtr(Object& o)

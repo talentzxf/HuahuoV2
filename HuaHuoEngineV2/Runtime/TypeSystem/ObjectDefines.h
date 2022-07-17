@@ -118,7 +118,7 @@ public:                            \
 private: \
     virtual const HuaHuo::Type* const GetTypeVirtualInternal() const override { return TypeOf<TYPE_NAME_>(); } \
 protected:                         \
-    ~TYPE_NAME_ (){ }              \
+    ~TYPE_NAME_ (){ /*ThreadedCleanup();*/ }              \
     void ThreadedCleanup(); \
 public: \
     class MISSING_SEMICOLON_AFTER_REGISTER_CLASS_MACRO

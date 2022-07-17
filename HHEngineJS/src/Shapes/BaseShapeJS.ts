@@ -115,6 +115,10 @@ abstract class BaseShapeJS {
         }
     }
 
+    duplicate(){
+        let newRawObj = this.rawObj.Clone();
+    }
+
     sendToBack() {
         this.paperItem.sendToBack()
         this.storeSameLayerShapes()

@@ -10,7 +10,6 @@
 
 typedef UNITY_VECTOR_MAP (kMemTempAlloc, InstanceID, InstanceID) TempRemapTable;
 
-static Object* CloneObject(Object& inObject);
-
+Object* CloneObject(Object& inObject);
 
 #endif //HUAHUOENGINEV2_CLONEOBJECT_H

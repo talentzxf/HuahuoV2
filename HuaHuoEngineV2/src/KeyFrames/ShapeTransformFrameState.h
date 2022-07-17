@@ -80,6 +80,7 @@ public:
 
     void RecordRotation(int frameId, float rotation);
 
+    friend class BaseShape;
 private:
     std::vector<TransformKeyFrame> m_KeyFrames;
 
