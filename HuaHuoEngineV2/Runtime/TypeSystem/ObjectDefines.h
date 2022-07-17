@@ -218,8 +218,8 @@ class MISSING_SEMICOLON_AFTER_IMPLEMENT_REGISTER_CLASS_MACRO
         template<class TransferFunction> void Transfer (TransferFunction& transfer); \
         /* virtual void VirtualRedirectTransfer (GenerateTypeTreeTransfer& transfer) override; */ \
         virtual void VirtualRedirectTransfer (StreamedBinaryRead& transfer) override; \
-        virtual void VirtualRedirectTransfer (StreamedBinaryWrite& transfer) override; \
-        /* virtual void VirtualRedirectTransfer (RemapPPtrTransfer& transfer) override; */\
+        virtual void VirtualRedirectTransfer (StreamedBinaryWrite& transfer) override;\
+        virtual void VirtualRedirectTransfer (RemapPPtrTransfer& transfer) override; \
     public: \
         class MISSING_SEMICOLON_AFTER_DECLARE_OBJECT_SERIALIZE; /* semicolon will be removed in the near future */
 
@@ -234,7 +234,7 @@ class MISSING_SEMICOLON_AFTER_IMPLEMENT_REGISTER_CLASS_MACRO
     /* DECL_ void PREFIX_ VirtualRedirectTransfer (GenerateTypeTreeTransfer& transfer)     { transfer.TransferBase (*this); } */\
     DECL_ void PREFIX_ VirtualRedirectTransfer (StreamedBinaryRead& transfer)    { /*SET_ALLOC_OWNER(GetMemoryLabel());*/ transfer.TransferBase (*this); } \
     DECL_ void PREFIX_ VirtualRedirectTransfer (StreamedBinaryWrite& transfer)   { transfer.TransferBase (*this); } \
-    /* DECL_ void PREFIX_ VirtualRedirectTransfer (RemapPPtrTransfer& transfer)            { transfer.TransferBase (*this); }*/\
+    DECL_ void PREFIX_ VirtualRedirectTransfer (RemapPPtrTransfer& transfer)            { transfer.TransferBase (*this); }\
     class MISSING_SEMICOLON_AFTER_IMPLEMENT_OBJECT_SERIALIZE; /* semicolon will be removed in the near future */
 
 #define IMPLEMENT_OBJECT_SERIALIZE(TYPE_) IMPLEMENT_OBJECT_SERIALIZE_WITH_DECL(TYPE_::, )

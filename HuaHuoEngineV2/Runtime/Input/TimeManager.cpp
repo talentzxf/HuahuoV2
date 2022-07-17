@@ -558,7 +558,7 @@ void TimeManager::Transfer(TransferFunction& transfer)
 
 void TimeManager::SetFixedDeltaTime(float fixedStep)
 {
-    fixedStep = clamp<float>(fixedStep, 0.0001F, 10.0F);
+    fixedStep = ::clamp<float>(fixedStep, 0.0001F, 10.0F);
     m_FixedTime.m_DeltaTime = fixedStep;
     m_FixedTime.m_InvDeltaTime = 1.0F / m_FixedTime.m_DeltaTime;
     m_FixedTime.m_SmoothDeltaTime = m_FixedTime.m_DeltaTime;

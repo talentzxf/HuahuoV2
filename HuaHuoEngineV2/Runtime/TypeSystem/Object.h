@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "Internal/CoreMacros.h"
+#include "Serialize/TransferFunctions/RemapPPtrTransfer.h"
 
 enum AwakeFromLoadMode
 {
@@ -223,7 +224,7 @@ public:
     // Required by serialization
     virtual void VirtualRedirectTransfer(StreamedBinaryWrite&)  { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
     virtual void VirtualRedirectTransfer(StreamedBinaryRead&)   { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
-//    virtual void VirtualRedirectTransfer(RemapPPtrTransfer&)           { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
+    virtual void VirtualRedirectTransfer(RemapPPtrTransfer&)           { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
 //    virtual void VirtualRedirectTransfer(GenerateTypeTreeTransfer&)    { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
 
     /// Get and set the name
