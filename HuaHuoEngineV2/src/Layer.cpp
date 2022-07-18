@@ -21,7 +21,7 @@ void Layer::Transfer(TransferFunction &transfer) {
     TRANSFER(objectStore);
 }
 
-ObjectStore* Layer::GetObjectStore() {
+ObjectStore *Layer::GetObjectStore() {
     return objectStore;
 }
 
@@ -32,7 +32,7 @@ void Layer::AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode) {
 }
 
 void Layer::AddKeyFrame(int frameId) {
-    if(keyFrames.contains(frameId))
+    if (keyFrames.contains(frameId))
         return;
 
     objectStore->UpdateMaxFrameId(frameId);
@@ -40,4 +40,8 @@ void Layer::AddKeyFrame(int frameId) {
 
     KeyFrameAddedEventHandlerArgs args(this, frameId);
     GetScriptEventManager()->TriggerEvent("OnKeyFrameAdded", &args);
+}
+
+void Layer::SetObjectStore(ObjectStore *store) {
+    this->objectStore = store;
 }

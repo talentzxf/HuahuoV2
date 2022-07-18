@@ -43,15 +43,7 @@ public:
         return reinterpret_cast<BaseShape*>(Object::Produce(shapeType));
     }
 
-    BaseShape* DuplicateShape(BaseShape* object){
-        if(object == NULL || object->GetType() == NULL)
-            return NULL;
-
-        if(!object->GetType()->IsDerivedFrom<BaseShape>()){
-            return NULL;
-        }
-        return (BaseShape*)CloneObject(*object);
-    }
+    BaseShape* DuplicateShape(BaseShape *object);
 };
 
 

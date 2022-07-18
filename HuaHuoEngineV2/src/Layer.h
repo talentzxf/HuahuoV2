@@ -62,9 +62,7 @@ public:
         this->cellManager->SetLayer(this);
     }
 
-    void SetObjectStore(ObjectStore *store) {
-        this->objectStore = store;
-    }
+    void SetObjectStore(ObjectStore *store);
 
     virtual void SetName(const char *name) override {
         this->name = name;
