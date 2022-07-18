@@ -18,6 +18,8 @@ class ElementShapeJS extends BaseShapeJS {
 
     layerShapesManager: LayerShapesManager = new LayerShapesManager
 
+    layerFrameMap: Map<any, number> = new Map();
+
     getName(){
         return this.name
     }
@@ -89,6 +91,18 @@ class ElementShapeJS extends BaseShapeJS {
         return (currentFrame - bornFrame) % maxFrames
     }
 
+    saveLayerFrame(layer, frame){
+        this.layerFrameMap.set(layer, frame)
+    }
+
+    restoreLayerFrameIds(){
+        let layers = this.layerFrameMap.keys()
+        for(let layer of layers){
+            let previousFrame = this.layerFrameMap.get(layer)
+            layer.SetCurrentFrame(previousFrame)
+        }
+    }
+
     override duringUpdate() {
         super.duringUpdate()
 
@@ -97,10 +111,13 @@ class ElementShapeJS extends BaseShapeJS {
 
         try{
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId);
+
             let store = defaultStoreManager.GetCurrentStore()
 
             let currentLocalFrame = this.calculateLocalFrame()
             this.layerShapesManager.forEachLayerInStore(store, (layer)=>{
+                this.saveLayerFrame(layer, layer.GetCurrentFrame())
+
                 layer.SetCurrentFrame(currentLocalFrame)
             })
 
@@ -123,6 +140,7 @@ class ElementShapeJS extends BaseShapeJS {
             this.layerShapesManager.updateAllShapes()
 
         }finally {
+            this.restoreLayerFrameIds();
             defaultStoreManager.SetDefaultStoreByIndex(previousStoreIdx)
         }
     }
