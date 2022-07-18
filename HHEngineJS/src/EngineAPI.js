@@ -55,6 +55,10 @@ class EngineAPI{
         return this.cppEngine.CreateShape(shapeName)
     }
 
+    DuplicateObject(obj){
+        return this.cppEngine.DuplicateShape(obj)
+    }
+
     GetPersistentManager(){
         return Module.PersistentManager.prototype.GetPersistentManager()
     }

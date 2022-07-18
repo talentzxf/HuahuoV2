@@ -16,9 +16,9 @@ inline void SwapEndianBytes(UInt32& i)   { i = (i >> 24) | ((i >> 8) & 0x0000ff0
 inline void SwapEndianBytes(SInt32& i)   { SwapEndianBytes(reinterpret_cast<UInt32&>(i)); }
 inline void SwapEndianBytes(float& i)
 {
-    UInt32 asUint = bit_cast<UInt32>(i);
+    UInt32 asUint = ::bit_cast<UInt32>(i);
     SwapEndianBytes(asUint);
-    i = bit_cast<float>(asUint);
+    i = ::bit_cast<float>(asUint);
 }
 
 inline void SwapEndianBytes(UInt64& i)
@@ -32,9 +32,9 @@ inline void SwapEndianBytes(UInt64& i)
 inline void SwapEndianBytes(SInt64& i) { SwapEndianBytes(reinterpret_cast<UInt64&>(i)); }
 inline void SwapEndianBytes(double& i)
 {
-    UInt64 asUint = bit_cast<UInt64>(i);
+    UInt64 asUint = ::bit_cast<UInt64>(i);
     SwapEndianBytes(asUint);
-    i = bit_cast<double>(asUint);
+    i = ::bit_cast<double>(asUint);
 }
 
 #if PLATFORM_ARCH_64 && PLATFORM_OSX

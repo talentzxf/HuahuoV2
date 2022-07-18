@@ -61,7 +61,7 @@ inline float NextToward(float x, float toward)
     if (x == toward)
         return x;
 
-    UInt32 asUInt = bit_cast<UInt32>(x);
+    UInt32 asUInt = ::bit_cast<UInt32>(x);
     if (x == 0)
     {
         if (x < toward)
@@ -76,7 +76,7 @@ inline float NextToward(float x, float toward)
         else
             asUInt--;
     }
-    return bit_cast<float>(asUInt);
+    return ::bit_cast<float>(asUInt);
 }
 
 // Floor, ceil and round functions.
@@ -455,7 +455,7 @@ inline bool IsMinusInf(float value)     { return value == -std::numeric_limits<f
 
 inline int SignOrZero(const float& value)
 {
-    UInt32 bits = bit_cast<UInt32>(value);
+    UInt32 bits = ::bit_cast<UInt32>(value);
     UInt32 sign = bits & 0x80000000;
     UInt32 otherBits = bits & ~0x80000000;
     return (otherBits == 0) ? 0 : (sign == 0) ? 1 : -1;
@@ -464,14 +464,14 @@ inline int SignOrZero(const float& value)
 inline bool IsFinite(const float& value)
 {
     // Returns false if value is NaN or +/- infinity
-    UInt32 intval = bit_cast<UInt32>(value);
+    UInt32 intval = ::bit_cast<UInt32>(value);
     return (intval & 0x7f800000) != 0x7f800000;
 }
 
 inline bool IsFinite(const double& value)
 {
     // Returns false if value is NaN or +/- infinity
-    UInt64 intval = bit_cast<UInt64>(value);
+    UInt64 intval = ::bit_cast<UInt64>(value);
     return (intval & 0x7ff0000000000000LL) != 0x7ff0000000000000LL;
 }
 
@@ -711,7 +711,7 @@ public:
     // register on some platforms if the function is not inlined.
     void Convert(const float& src, UInt16& dest)
     {
-        dest = ConvertBits(bit_cast<UInt32>(src));
+        dest = ConvertBits(::bit_cast<UInt32>(src));
     }
 
     void Convert(size_t count, const float* src, UInt16* dest)
@@ -744,7 +744,7 @@ inline void HalfToFloatImpl(UInt16 src, float& res)
 {
     // Based on Fabian Giesen's public domain half_to_float_fast3
     static const UInt32 magic = { 113 << 23 };
-    const float& magicFloat = bit_cast<float>(magic);
+    const float& magicFloat = ::bit_cast<float>(magic);
     static const UInt32 shiftedExp = 0x7c00 << 13; // exponent mask after shift
 
     // Mask out sign bit

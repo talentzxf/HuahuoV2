@@ -11,6 +11,7 @@
 #include "Serialize/PersistentManager.h"
 #include "Shapes/BaseShape.h"
 #include "Shapes/LineShape.h"
+#include "CloneObject.h"
 
 class HuaHuoEngine {
 private:
@@ -40,6 +41,16 @@ public:
         }
 
         return reinterpret_cast<BaseShape*>(Object::Produce(shapeType));
+    }
+
+    BaseShape* DuplicateShape(BaseShape* object){
+        if(object == NULL || object->GetType() == NULL)
+            return NULL;
+
+        if(!object->GetType()->IsDerivedFrom<BaseShape>()){
+            return NULL;
+        }
+        return (BaseShape*)CloneObject(*object);
     }
 };
 

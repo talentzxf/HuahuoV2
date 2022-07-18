@@ -116,7 +116,7 @@ abstract class BaseShapeJS {
     }
 
     duplicate(){
-        let newRawObj = this.rawObj.Clone();
+        let newRawObj = huahuoEngine.DuplicateObject(this.rawObj)
     }
 
     sendToBack() {
