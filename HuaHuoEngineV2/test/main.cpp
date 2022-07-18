@@ -325,11 +325,19 @@ void testCloneObject(){
     rectangleShape->SetStartPoint(2,2,2);
     rectangleShape->SetEndPoint(3,3,3);
     rectangleShape->SetColor(1.0, 0.0, 1.0, 1.0);
+
+    rectangleShape->SetPosition(10, 10, 10);
+
+    currentLayer->SetCurrentFrame(10);
+    rectangleShape->SetPosition( 100, 100, 100);
     currentLayer->AddShapeInternal(rectangleShape);
 
     RectangleShape* clonedRectangle = (RectangleShape*)CloneObject(*rectangleShape);
     currentLayer->AddShapeInternal(clonedRectangle);
 
+    currentLayer->SetCurrentFrame(0);
+    Vector3f* curPosition = clonedRectangle->GetPosition();
+    Assert(curPosition != NULL);
 }
 
 int main() {
