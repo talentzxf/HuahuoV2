@@ -4,10 +4,10 @@ import {BaseShapeJS, shapeFactory} from "../Shapes/BaseShapeJS";
 class LayerShapesManager {
     layerShapes = new Map();
 
-    getLayerShapes(layer) {
+    getLayerShapes(layer):Map<number, any> {
 
         if (!this.layerShapes.has(layer)) {
-            this.layerShapes.set(layer, new Map())
+            this.layerShapes.set(layer, new Map<number, any>())
         }
 
         return this.layerShapes.get(layer)
@@ -59,11 +59,11 @@ class LayerShapesManager {
                 layerShapeCount++
                 let baseShape = layer.GetShapeAtIndex(shapeId)
                 let shape = null
-                if (!shapes.has(baseShape)) {
+                if (!shapes.has(baseShape.ptr)) {
                     let shapeConstructor = shapeFactory.GetShapeConstructor(baseShape.GetName())
                     let newBaseShape = shapeConstructor(baseShape)
                     newBaseShape.awakeFromLoad()
-                    shapes.set(baseShape, newBaseShape)
+                    shapes.set(baseShape.ptr, newBaseShape)
                     if (parent)
                         newBaseShape.setParent(parent)
                     shape = newBaseShape

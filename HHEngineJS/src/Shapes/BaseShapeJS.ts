@@ -117,6 +117,10 @@ abstract class BaseShapeJS {
 
     duplicate(){
         let newRawObj = huahuoEngine.DuplicateObject(this.rawObj)
+        let shapeLayer = newRawObj.GetLayer()
+
+        let newShapeObj = huahuoEngine.getActivePlayer().getLayerShapes(shapeLayer).get(newRawObj.ptr)
+        return newShapeObj
     }
 
     sendToBack() {
@@ -580,7 +584,7 @@ huahuoEngine.ExecuteAfterInited(() => {
         newBaseShape.awakeFromLoad()
 
         let layer = newBaseShape.getLayer()
-        huahuoEngine.getActivePlayer().getLayerShapes(layer).set(newBaseShape.getRawShape(), newBaseShape)
+        huahuoEngine.getActivePlayer().getLayerShapes(layer).set(newBaseShape.getRawShape().ptr, newBaseShape)
     }
 
     huahuoEngine.GetInstance().RegisterEvent(eventName, baseShapeOnLoadHandler)

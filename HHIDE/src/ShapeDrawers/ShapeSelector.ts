@@ -64,7 +64,12 @@ class ShapeSelector extends BaseShapeDrawer {
 
     duplicateShape(){
         for(let shape of this.selectedShapes){
-            shape.duplicate();
+            let duplicatedShape = shape.duplicate();
+
+            // Offset the shape a little to avoid covering the original shape.
+            duplicatedShape.position.x += 10.0
+            duplicatedShape.position.y += 10.0
+            duplicatedShape.store()
         }
     }
 
