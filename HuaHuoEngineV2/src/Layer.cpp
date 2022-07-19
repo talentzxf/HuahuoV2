@@ -31,6 +31,18 @@ void Layer::AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode) {
     }
 }
 
+void Layer::SetIsVisible(bool isVisible) {
+    this->isVisible = isVisible;
+
+    // Hide all shapes in this layer.
+    for (auto shape: shapes) {
+        shape->SetIsVisible(isVisible);
+    }
+
+    LayerUpdatedEventHanderArgs args(this);
+    GetScriptEventManager()->TriggerEvent("OnLayerUpdated", &args);
+}
+
 void Layer::AddKeyFrame(int frameId) {
     if (keyFrames.contains(frameId))
         return;

@@ -2,6 +2,7 @@ import {HHTimeLine, TimelineEventNames} from "hhtimeline"
 import {huahuoEngine, GlobalConfig} from "hhenginejs"
 import {Player} from "hhenginejs/src/Player/Player"
 import {SceneView} from "./SceneView";
+import {BaseShapeJS} from "hhenginejs/dist/src/Shapes/BaseShapeJS";
 
 declare var Module:any;
 
@@ -24,6 +25,11 @@ class EditorPlayer extends Player{
             keyFrameAddedHandler.handleEvent = _this.onKeyFrameAdded.bind(_this)
 
             huahuoEngine.GetInstance().RegisterEvent("OnKeyFrameAdded", keyFrameAddedHandler)
+
+            let layerUpdatedHandler = new Module.ScriptEventHandlerImpl()
+            layerUpdatedHandler.handleEvent = _this.onLayerUpdated.bind(_this)
+
+            huahuoEngine.GetInstance().RegisterEvent("OnLayerUpdated", layerUpdatedHandler)
         })
 
         document.addEventListener('keydown', this.onKeyEvent.bind(this));
@@ -64,6 +70,13 @@ class EditorPlayer extends Player{
         let frameId = keyframeAddedArgs.GetFrameId()
 
         this.timeline.redrawCell(layer, frameId)
+    }
+
+    onLayerUpdated(args){
+        let layerUpdatedArgs = Module.wrapPointer(args, Module.LayerUpdatedEventHanderArgs)
+        let layer = layerUpdatedArgs.GetLayer()
+
+        this.layerShapesManager.updateLayerShapes(layer)
     }
 }
 

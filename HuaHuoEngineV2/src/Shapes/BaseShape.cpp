@@ -105,6 +105,9 @@ bool BaseShape::IsVisibleInFrame(SInt32 frameId) {
 }
 
 bool BaseShape::IsVisible() {
+    if(!mIsVisible)
+        return false;
+
     return IsVisibleInFrame(GetLayer()->GetCurrentFrame());
 }
 

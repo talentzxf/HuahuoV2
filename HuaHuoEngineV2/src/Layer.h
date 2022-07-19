@@ -17,6 +17,20 @@ extern std::string StoreFilePath;
 
 class ObjectStore;
 
+class LayerUpdatedEventHanderArgs: public ScriptEventHandlerArgs{
+public:
+    LayerUpdatedEventHanderArgs(Layer *layer) {
+        this->layer = layer;
+    }
+
+    Layer *GetLayer() {
+        return this->layer;
+    }
+
+private:
+    Layer *layer;
+};
+
 class KeyFrameAddedEventHandlerArgs : public ScriptEventHandlerArgs {
 public:
     KeyFrameAddedEventHandlerArgs(Layer *layer, int frameId) {
@@ -115,9 +129,7 @@ public:
 
     ObjectStore *GetObjectStore();
 
-    void SetIsVisible(bool isVisible) {
-        this->isVisible = isVisible;
-    }
+    void SetIsVisible(bool isVisible);
 
     bool GetIsVisible() {
         return this->isVisible;

@@ -41,6 +41,7 @@ private:
     Layer* mLayer;
     SInt32 mBornFrameId;
     SInt32 mIndex;
+    bool mIsVisible;
 
 public:
     BaseShape(MemLabelId label, ObjectCreationMode mode)
@@ -51,6 +52,7 @@ public:
         ,mLayer(NULL)
         ,mBornFrameId(-1)
         ,mIndex(-1)
+        ,mIsVisible(true)
     {
     }
 
@@ -64,6 +66,10 @@ public:
 
     bool IsVisibleInFrame(SInt32 frameId);
     bool IsVisible();
+
+    void SetIsVisible(bool isVisible){
+        mIsVisible = isVisible;
+    }
 
     void SetLayer(Layer* layer){
         this->mLayer = layer;

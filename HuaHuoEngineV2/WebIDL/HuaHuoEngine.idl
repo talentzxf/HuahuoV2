@@ -23,6 +23,11 @@ interface KeyFrameAddedEventHandlerArgs{
     long GetFrameId();
 };
 
+[NoDelete]
+interface LayerUpdatedEventHanderArgs{
+    Layer GetLayer();
+};
+
 [JSImplementation="ScriptEventHandler", NoDelete]
 interface ScriptEventHandlerImpl{
     void ScriptEventHandlerImpl();
