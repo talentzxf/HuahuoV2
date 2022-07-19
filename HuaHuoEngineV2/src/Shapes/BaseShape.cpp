@@ -17,6 +17,7 @@ INSTANTIATE_TEMPLATE_TRANSFER(BaseShape);
 template<class TransferFunction>
 void BaseShape::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
+    TRANSFER(mShapeName);
     TRANSFER(mBornFrameId);
     TRANSFER(mTransformKeyFrames);
     TRANSFER(mColorKeyFrames);

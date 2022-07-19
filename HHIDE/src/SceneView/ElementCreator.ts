@@ -23,7 +23,17 @@ class ElementCreator {
             let outmostDiv = document.querySelector("#outmost_container")
             outmostDiv.addEventListener(PanelEventNames.CONTENTSELECTED, _this.onContentSelected.bind(_this))
             outmostDiv.addEventListener(PanelEventNames.TABCLOSED, _this.onTabClosed.bind(_this))
+
+            huahuoEngine.registerEventListener("OnJSShapeCreated", _this.onShapeCreated.bind(_this))
         })
+    }
+
+    onShapeCreated(newShape){
+        if(newShape.getTypeName() == "ElementShape"){
+            this.registerElementChangeEvent(newShape.storeId, function(){
+                newShape.update()
+            })
+        }
     }
 
     onTabClosed(e){
@@ -86,14 +96,14 @@ class ElementCreator {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(element.storeId)
 
             let newEleContent = document.createElement("hh-content")
-            newEleContent.title = element.getName()
+            newEleContent.title = element.name
             newEleContent.style.width = "100%"
             newEleContent.style.height = "100%"
             newEleContent.style.flexBasis = "100%"
             newEleContent.style.alignItems = "stretch"
 
             let elementSceneView: SceneView = document.createElement("hh-sceneview") as SceneView
-            elementSceneView.id = element.getName()
+            elementSceneView.id = element.name
             elementSceneView.style.flexBasis = "100%"
             elementSceneView.style.display = "flex"
             elementSceneView.style.alignItems = "stretch"
@@ -123,7 +133,7 @@ class ElementCreator {
         let elementId = "NewElement_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
         // Create shape in the original scene/element
         let newElementShape = new ElementShapeJS()
-        newElementShape.setName(elementId)
+        newElementShape.name = elementId
         newElementShape.createShape()
         newElementShape.position = new paper.Point(worldPos.x, worldPos.y)
         newElementShape.store()

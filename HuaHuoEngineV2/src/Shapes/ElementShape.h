@@ -19,7 +19,7 @@ public:
 
     }
 
-    virtual char* GetName() override{
+    virtual char* GetTypeName() override{
         return "ElementShape";
     }
 

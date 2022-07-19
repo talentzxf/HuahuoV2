@@ -42,6 +42,7 @@ private:
     SInt32 mBornFrameId;
     SInt32 mIndex;
     bool mIsVisible;
+    std::string mShapeName;
 
 public:
     BaseShape(MemLabelId label, ObjectCreationMode mode)
@@ -54,6 +55,15 @@ public:
         ,mIndex(-1)
         ,mIsVisible(true)
     {
+    }
+
+    /// Get and set the name
+    virtual char* GetName() const override{
+        return const_cast<char*>(mShapeName.c_str());
+    }
+
+    virtual void SetName(char const* name) override{
+        this->mShapeName = name;
     }
 
     void SetBornFrameId(SInt32 bornFrameId){
@@ -77,7 +87,7 @@ public:
 
     Layer* GetLayer();
 
-    virtual char* GetName(){
+    virtual char* GetTypeName(){
         return "Unknown";
     }
 

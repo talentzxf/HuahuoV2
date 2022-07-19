@@ -60,7 +60,7 @@ class LayerShapesManager {
                 let baseShape = layer.GetShapeAtIndex(shapeId)
                 let shape = null
                 if (!shapes.has(baseShape.ptr)) {
-                    let shapeConstructor = shapeFactory.GetShapeConstructor(baseShape.GetName())
+                    let shapeConstructor = shapeFactory.GetShapeConstructor(baseShape.GetTypeName())
                     let newBaseShape = shapeConstructor(baseShape)
                     newBaseShape.awakeFromLoad()
                     shapes.set(baseShape.ptr, newBaseShape)

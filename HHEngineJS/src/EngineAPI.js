@@ -1,5 +1,6 @@
 import {Logger} from "hhcommoncomponents"
 import {Player} from "./Player/Player";
+import {engineEventManager} from "./EngineEvents/EngineEventManager";
 
 class EngineAPI{
     inited = false
@@ -98,7 +99,11 @@ class EngineAPI{
     }
 
     RegisterElementShape(storeId, element){
-        this.storeIdElementShapeMap[storeId] = element
+        if(!this.storeIdElementShapeMap[storeId]){
+            this.storeIdElementShapeMap[storeId] = new Set()
+        }
+
+        this.storeIdElementShapeMap[storeId].add(element)
     }
 
     GetElementShapeByStoreId(storeId){
@@ -111,6 +116,14 @@ class EngineAPI{
 
     getElementParentByStoreId(childId){
         return this.elementIdParentId[childId]
+    }
+
+    registerEventListener(eventName, func){
+        engineEventManager.registerEventListener(eventName, func)
+    }
+
+    dispatchEvent(eventName, ...params){
+        engineEventManager.dispatchEvent(eventName, ...params)
     }
 }
 

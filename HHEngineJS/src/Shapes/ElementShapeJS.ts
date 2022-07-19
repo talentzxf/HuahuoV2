@@ -10,8 +10,6 @@ class ElementShapeJS extends BaseShapeJS {
         return new ElementShapeJS(rawObj)
     }
 
-    name:string = "unknown"
-
     emptyPlaceHolder: paper.Group
 
     size: paper.Point
@@ -19,14 +17,6 @@ class ElementShapeJS extends BaseShapeJS {
     layerShapesManager: LayerShapesManager = new LayerShapesManager
 
     layerFrameMap: Map<any, number> = new Map();
-
-    getName(){
-        return this.name
-    }
-
-    setName(eleName: string){
-        this.name = eleName
-    }
 
     constructor(rawObj) {
         super(rawObj);

@@ -2,6 +2,7 @@ import {huahuoEngine} from "../EngineAPI";
 import {Logger} from "hhcommoncomponents"
 import {relaxRectangle, PropertySheet, PropertyType} from "hhcommoncomponents"
 import * as paper from "paper";
+import {engineEventManager} from "../EngineEvents/EngineEventManager";
 
 declare function castObject(obj: any, clz: any): any;
 
@@ -64,6 +65,14 @@ abstract class BaseShapeJS {
 
     divideAt(length: number) {
         return this.paperShape.divideAt(length)
+    }
+
+    get name(): string{
+        return this.rawObj.GetName()
+    }
+
+    set name(name:string){
+        this.rawObj.SetName(name)
     }
 
     get bounds(): paper.Rectangle {
@@ -397,6 +406,8 @@ abstract class BaseShapeJS {
 
     createShape(){
         this.bornStoreId = huahuoEngine.GetCurrentStoreId()
+
+        huahuoEngine.dispatchEvent("OnJSShapeCreated", this)
     }
 
     duringUpdate() {
@@ -406,7 +417,7 @@ abstract class BaseShapeJS {
     }
 
     getTypeName(){
-        return this.rawObj.GetName()
+        return this.rawObj.GetTypeName()
     }
 
     insertSegment(localPos: paper.Point) { // Need to add segments in all keyframes
@@ -566,19 +577,21 @@ huahuoEngine.ExecuteAfterInited(() => {
 
         let shapeStoreId = baseShape.GetLayer().GetObjectStore().GetStoreId()
         if(shapeStoreId != huahuoEngine.GetCurrentStoreId()){
-            let elementShape = huahuoEngine.GetElementShapeByStoreId(shapeStoreId)
-
-            if(elementShape){
-                elementShape.update();
+            let elementShapes = huahuoEngine.GetElementShapeByStoreId(shapeStoreId)
+            if(elementShapes){
+                for(let elementShape of elementShapes){
+                    if(elementShape){
+                        elementShape.update();
+                    }
+                }
             }
-
             return;
         }
 
         // Convention: Cpp class name is the JS class name.
         // TODO: Create a map of the shapename->JS class name mapping.
 
-        let shapeConstructor = shapeFactory.GetShapeConstructor(baseShape.GetName())
+        let shapeConstructor = shapeFactory.GetShapeConstructor(baseShape.GetTypeName())
         let newBaseShape = shapeConstructor(arg.GetBaseShape())
 
         newBaseShape.awakeFromLoad()

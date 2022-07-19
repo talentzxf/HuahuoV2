@@ -114,7 +114,9 @@ interface BaseShape{
     static BaseShape CreateShape(DOMString shapeName);
 
     // inherited from BaseShape
+    DOMString GetTypeName();
     DOMString GetName();
+    void SetName(DOMString name);
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
     float GetRotation();
@@ -150,7 +152,9 @@ interface LineShape{
     Vector3f GetEndPoint();
 
     // inherited from BaseShape
+    DOMString GetTypeName();
     DOMString GetName();
+    void SetName(DOMString name);
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
     float GetRotation();
@@ -184,7 +188,9 @@ interface RectangleShape{
     Vector3f GetEndPoint();
 
     // inherited from BaseShape
+    DOMString GetTypeName();
     DOMString GetName();
+    void SetName(DOMString name);
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
     float GetRotation();
@@ -218,7 +224,9 @@ interface CircleShape{
     float GetRadius();
 
     // inherited from BaseShape
+    DOMString GetTypeName();
     DOMString GetName();
+    void SetName(DOMString name);
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
     float GetRotation();
@@ -258,7 +266,9 @@ interface AudioShape{
     DOMString GetFileName();
 
     // inherited from BaseShape
+    DOMString GetTypeName();
     DOMString GetName();
+    void SetName(DOMString name);
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
     float GetRotation();
@@ -301,7 +311,9 @@ interface ImageShape{
     DOMString GetFileName();
 
     // inherited from BaseShape
+    DOMString GetTypeName();
     DOMString GetName();
+    void SetName(DOMString name);
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
     float GetRotation();
@@ -334,7 +346,9 @@ interface ElementShape{
     long GetStoreId();
 
     // inherited from BaseShape
+    DOMString GetTypeName();
     DOMString GetName();
+    void SetName(DOMString name);
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
     float GetRotation();
