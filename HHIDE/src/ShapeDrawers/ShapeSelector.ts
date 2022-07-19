@@ -66,12 +66,6 @@ class ShapeSelector extends BaseShapeDrawer {
         for(let shape of this.selectedShapes){
             let duplicatedShape = shape.duplicate();
 
-            if(duplicatedShape.getTypeName() == "ElementShape"){
-                elementCreator.registerElementChangeEvent(duplicatedShape.storeId, function(){
-                    duplicatedShape.update()
-                })
-            }
-
             // Offset the shape a little to avoid covering the original shape.
             duplicatedShape.position.x += 10.0
             duplicatedShape.position.y += 10.0

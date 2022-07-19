@@ -131,9 +131,12 @@ class ElementCreator {
         let worldPos = BaseShapeDrawer.getWorldPosFromView(e.x, e.y)
 
         let elementId = "NewElement_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+
+        let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
         // Create shape in the original scene/element
         let newElementShape = new ElementShapeJS()
         newElementShape.name = elementId
+        newElementShape.storeId = newStore.GetStoreId()
         newElementShape.createShape()
         newElementShape.position = new paper.Point(worldPos.x, worldPos.y)
         newElementShape.store()
@@ -141,16 +144,9 @@ class ElementCreator {
         let currentLayer = huahuoEngine.GetCurrentLayer()
         currentLayer.addShape(newElementShape)
 
-        let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
-        newElementShape.storeId = newStore.GetStoreId()
-
         this.openElementEditTab(newElementShape)
 
         console.log("Created new store, store id:" + newElementShape.storeId)
-
-        this.registerElementChangeEvent(newElementShape.storeId, function(){
-            newElementShape.update()
-        })
     }
 }
 
