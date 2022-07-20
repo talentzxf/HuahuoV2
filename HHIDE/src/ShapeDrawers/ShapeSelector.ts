@@ -103,6 +103,10 @@ class ShapeSelector extends BaseShapeDrawer {
                 {
                     itemName: "Create New Element",
                     onclick: elementCreator.onNewElement.bind(elementCreator)
+                },
+                {
+                    itemName: "Delete",
+                    onclick: _this.deleteObj.bind(_this)
                 }
                 ])
 
@@ -112,6 +116,10 @@ class ShapeSelector extends BaseShapeDrawer {
 
             this.contextMenuInitedMap.set(this.canvas, true)
         }
+    }
+
+    deleteObj(){
+        this.transformHandler.deleteObj()
     }
 
     onKeyDown(e:KeyboardEvent){

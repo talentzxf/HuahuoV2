@@ -16,6 +16,12 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
     }
 
     setSegment(hitSegment: paper.Segment) {
+        if(this.curSegment){
+            this.curSegment.selected = false
+            this.curSegment.handleIn.selected = false
+            this.curSegment.handleOut.selected = false
+        }
+        
         this.curSegment = hitSegment
         this.curSegmentStartPos = this.curSegment.point.clone()
 
@@ -150,6 +156,10 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
                 this.valueChangeHandlerMap.get("point")(this.curSegment.point)
             }
         }
+    }
+
+    deleteObj(){
+        console.log("Trying to delete segment")
     }
 }
 

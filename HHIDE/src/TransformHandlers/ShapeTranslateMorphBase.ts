@@ -26,5 +26,9 @@ class ShapeTranslateMorphBase{
 
     }
 
+    deleteObj(){
+
+    }
+
 }
 export {ShapeTranslateMorphBase}
