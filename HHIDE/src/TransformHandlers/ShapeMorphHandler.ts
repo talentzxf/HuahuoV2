@@ -102,6 +102,20 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
             type: PropertyType.BUTTON,
             action: this.smoothSegment.bind(this)
         })
+
+        propertySheet.addProperty({
+            key: "Sharpen",
+            type: PropertyType.BUTTON,
+            action: this.sharpenSegment.bind(this)
+        })
+    }
+
+    sharpenSegment(){
+        this.curSegment.handleIn = 0
+        this.curSegment.handleOut = 0
+
+        // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
+        this.targetShape.store({position: true, segments: true})
     }
 
     smoothSegment(){
