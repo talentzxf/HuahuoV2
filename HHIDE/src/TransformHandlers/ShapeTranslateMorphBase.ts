@@ -25,10 +25,5 @@ class ShapeTranslateMorphBase{
     endMove(){
 
     }
-
-    deleteObj(){
-
-    }
-
 }
 export {ShapeTranslateMorphBase}

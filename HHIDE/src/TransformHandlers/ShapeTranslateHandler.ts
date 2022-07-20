@@ -31,10 +31,6 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
             }
         }
     }
-
-    deleteObj(){
-        console.log("Trying to delete this.curObjs")
-    }
 }
 
 let shapeTranslateHandler = new ShapeTranslateHandler()

@@ -13,7 +13,7 @@ enum EventNames{
 interface GlobalEvents{
     drawShapeBegins:(shapeDrawer: BaseShapeDrawer)=>void;
     drawShapeEnds:(shapeDrawer: BaseShapeDrawer)=>void;
-    objectSelected:(shapes: PropertySheet)=>void;
+    objectSelected:(propertySheet: PropertySheet, obj: any)=>void;
     unselectObjects:()=>void;
 }
 

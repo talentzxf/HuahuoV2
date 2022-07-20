@@ -135,7 +135,7 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         // Show inspector
         let propertySheet: PropertySheet = new PropertySheet()
         this.setupPropertySheet(propertySheet)
-        EventBus.getInstance().emit(EventNames.OBJECTSELECTED, propertySheet)
+        EventBus.getInstance().emit(EventNames.OBJECTSELECTED, propertySheet, this.curSegment)
     }
 
     dragging(pos) {
@@ -156,10 +156,6 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
                 this.valueChangeHandlerMap.get("point")(this.curSegment.point)
             }
         }
-    }
-
-    deleteObj(){
-        console.log("Trying to delete segment")
     }
 }
 

@@ -10,7 +10,7 @@ import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {elementCreator} from "../SceneView/ElementCreator";
 import {huahuoEngine} from "hhenginejs";
 import {HHContent} from "HHPanel"
-import {findParentContent, findParentPanel} from "../Utilities/PanelUtilities";
+import {findParentContent} from "../Utilities/PanelUtilities";
 
 
 const BOUNDMARGIN:number = 10
@@ -27,6 +27,7 @@ class ShapeSelector extends BaseShapeDrawer {
     hitOptions = {}
 
     selectedShapes: Set<BaseShapeJS> = new Set()
+    selectedSegment: paper.Segment = null
 
     transformHandler: ShapeTranslateMorphBase = null
     canvas: HTMLCanvasElement
@@ -115,11 +116,26 @@ class ShapeSelector extends BaseShapeDrawer {
             parentContent.addEventListener('keydown', this.onKeyDown.bind(this))
 
             this.contextMenuInitedMap.set(this.canvas, true)
+
+            EventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onShapeSelected.bind(this))
+        }
+    }
+
+    onShapeSelected(property, targetObj: any){
+        console.log("Something selected")
+        if(targetObj instanceof paper.Segment){
+            if(this.selectedSegment){
+                this.selectedSegment.selected = false
+                this.selectedSegment.handleIn.selected = false
+                this.selectedSegment.handleOut.selected = false
+            }
+
+            this.selectedSegment = targetObj
         }
     }
 
     deleteObj(){
-        this.transformHandler.deleteObj()
+
     }
 
     onKeyDown(e:KeyboardEvent){
@@ -186,7 +202,7 @@ class ShapeSelector extends BaseShapeDrawer {
         selectedObj.update();
         this.selectedShapes.add(shape)
 
-        EventBus.getInstance().emit(EventNames.OBJECTSELECTED, selectedObj.getPropertySheet())
+        EventBus.getInstance().emit(EventNames.OBJECTSELECTED, selectedObj.getPropertySheet(), selectedObj)
     }
 
     clearSelection() {
@@ -196,6 +212,7 @@ class ShapeSelector extends BaseShapeDrawer {
             shape.update()
         }
         this.selectedShapes = new Set()
+        this.selectedSegment = null
         this.transformHandler = null
         this.canvas.style.cursor = "default"
     }
