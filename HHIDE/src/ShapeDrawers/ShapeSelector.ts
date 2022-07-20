@@ -11,6 +11,7 @@ import {elementCreator} from "../SceneView/ElementCreator";
 import {huahuoEngine} from "hhenginejs";
 import {HHContent} from "HHPanel"
 import {findParentContent} from "../Utilities/PanelUtilities";
+import {objectDeleter} from "./ObjectDeleter";
 
 
 const BOUNDMARGIN:number = 10
@@ -134,8 +135,16 @@ class ShapeSelector extends BaseShapeDrawer {
         }
     }
 
-    deleteObj(){
 
+
+    deleteObj(){
+        if(this.selectedSegment){
+            objectDeleter.deleteSegment(this.selectedSegment)
+        }else{
+            for(let shape of this.selectedShapes){
+                objectDeleter.deleteShape(shape)
+            }
+        }
     }
 
     onKeyDown(e:KeyboardEvent){

@@ -545,6 +545,10 @@ abstract class BaseShapeJS {
     getPaperPoint(engineV3Point) {
         return new paper.Point(engineV3Point.x, engineV3Point.y)
     }
+
+    remove(){
+        // TODO: TODO
+    }
 }
 
 class ShapeFactory {
