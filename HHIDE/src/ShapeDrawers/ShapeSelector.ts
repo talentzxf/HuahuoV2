@@ -9,6 +9,8 @@ import {shapeRotateHandler} from "../TransformHandlers/ShapeRotateHandler";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {elementCreator} from "../SceneView/ElementCreator";
 import {huahuoEngine} from "hhenginejs";
+import {HHContent} from "HHPanel"
+import {findParentContent, findParentPanel} from "../Utilities/PanelUtilities";
 
 
 const BOUNDMARGIN:number = 10
@@ -63,7 +65,9 @@ class ShapeSelector extends BaseShapeDrawer {
     }
 
     duplicateShape(){
+        console.log("Trying to duplicate shape")
         for(let shape of this.selectedShapes){
+            console.log("Duplicating shape")
             let duplicatedShape = shape.duplicate();
 
             // Offset the shape a little to avoid covering the original shape.
@@ -102,7 +106,23 @@ class ShapeSelector extends BaseShapeDrawer {
                 }
                 ])
 
+            // Setup other short cuts.
+            let parentContent = findParentContent(this.canvas)
+            parentContent.addEventListener('keydown', this.onKeyDown.bind(this))
+
             this.contextMenuInitedMap.set(this.canvas, true)
+        }
+    }
+
+    onKeyDown(e:KeyboardEvent){
+        let targetContent = e.target as HHContent
+        if(!targetContent.getAttribute("selected"))
+            return
+        if(e.ctrlKey && e.code == 'KeyD'){
+            e.preventDefault()
+            e.stopPropagation()
+
+            this.duplicateShape()
         }
     }
 
