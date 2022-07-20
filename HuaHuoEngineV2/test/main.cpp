@@ -64,9 +64,9 @@ void testGameObject() {
 }
 
 void testShapeStore() {
-    ObjectStoreManager* objectStoreManager = GetDefaultObjectStoreManager();
+    ObjectStoreManager *objectStoreManager = GetDefaultObjectStoreManager();
     objectStoreManager->GetCurrentStore()->CreateLayer("TestTest");
-    Layer* currentLayer = objectStoreManager->GetCurrentStore()->GetCurrentLayer();
+    Layer *currentLayer = objectStoreManager->GetCurrentStore()->GetCurrentLayer();
 //    LineShape* lineShape = Object::Produce<LineShape>();
 //    lineShape->SetStartPoint(0, 1, 0);
 //    lineShape->SetEndPoint(1, 0, 0);
@@ -109,9 +109,9 @@ void testShapeStore() {
 //        currentLayer->AddShapeInternal(shape);
 //    }
 
-    RectangleShape* rectangleShape = (RectangleShape*)BaseShape::CreateShape("RectangleShape");
-    rectangleShape->SetStartPoint(2,2,2);
-    rectangleShape->SetEndPoint(3,3,3);
+    RectangleShape *rectangleShape = (RectangleShape *) BaseShape::CreateShape("RectangleShape");
+    rectangleShape->SetStartPoint(2, 2, 2);
+    rectangleShape->SetEndPoint(3, 3, 3);
     rectangleShape->SetColor(1.0, 0.0, 1.0, 1.0);
     currentLayer->AddShapeInternal(rectangleShape);
 
@@ -121,9 +121,9 @@ void testShapeStore() {
     size_t length = GetMemoryFileSystem()->GetFileLength(StoreFilePath);
     printf("File length:%d\n", length);
 
-    const char* filename = "objectstore_persistent.data";
-    FILE* fp = fopen(filename, "w+b");
-    fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath),length,1, fp);
+    const char *filename = "objectstore_persistent.data";
+    FILE *fp = fopen(filename, "w+b");
+    fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath), length, 1, fp);
     fclose(fp);
 
     // std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo (1).data");
@@ -166,43 +166,43 @@ void testShapeStore() {
 //    Assert(size != 0);
 }
 
-void testTimeManager(){
-    ObjectStore* objectStore = GetDefaultObjectStoreManager()->GetCurrentStore();
+void testTimeManager() {
+    ObjectStore *objectStore = GetDefaultObjectStoreManager()->GetCurrentStore();
     objectStore->CreateLayer("TestTest");
-    Layer* layer = objectStore->GetCurrentLayer();
-    TimeLineCellManager* timeLineCellManager = layer->GetTimeLineCellManager();
+    Layer *layer = objectStore->GetCurrentLayer();
+    TimeLineCellManager *timeLineCellManager = layer->GetTimeLineCellManager();
     timeLineCellManager->MergeCells(0, 10);
-    Assert( timeLineCellManager->IsSpanHead(0) == true);
-    Assert( timeLineCellManager->IsSpanHead(10) == true);
-    Assert( timeLineCellManager->IsSpanHead(11) == false);
-    Assert( timeLineCellManager->IsSpanHead(20) == false);
+    Assert(timeLineCellManager->IsSpanHead(0) == true);
+    Assert(timeLineCellManager->IsSpanHead(10) == true);
+    Assert(timeLineCellManager->IsSpanHead(11) == false);
+    Assert(timeLineCellManager->IsSpanHead(20) == false);
     timeLineCellManager->MergeCells(20, 50);
-    Assert( timeLineCellManager->IsSpanHead(20) == true);
-    Assert( timeLineCellManager->IsSpanHead(30) == true);
-    Assert( timeLineCellManager->IsSpanHead(40) == true);
-    Assert( timeLineCellManager->IsSpanHead(50) == true);
-    Assert( timeLineCellManager->IsSpanHead(51) == false);
+    Assert(timeLineCellManager->IsSpanHead(20) == true);
+    Assert(timeLineCellManager->IsSpanHead(30) == true);
+    Assert(timeLineCellManager->IsSpanHead(40) == true);
+    Assert(timeLineCellManager->IsSpanHead(50) == true);
+    Assert(timeLineCellManager->IsSpanHead(51) == false);
     timeLineCellManager->MergeCells(70, 60);
-    Assert( timeLineCellManager->IsSpanHead(51) == false);
+    Assert(timeLineCellManager->IsSpanHead(51) == false);
     timeLineCellManager->MergeCells(0, 100);
-    Assert( timeLineCellManager->GetCellSpan(0) == 101);
-    Assert( timeLineCellManager->GetSpanHead(1) == 0);
+    Assert(timeLineCellManager->GetCellSpan(0) == 101);
+    Assert(timeLineCellManager->GetSpanHead(1) == 0);
 
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
     int length = GetFileLength(StoreFilePath);
-    const char* filename = "objectstore_persistent2.data";
-    FILE* fp = fopen(filename, "w+b");
-    fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath),length,1, fp);
+    const char *filename = "objectstore_persistent2.data";
+    FILE *fp = fopen(filename, "w+b");
+    fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath), length, 1, fp);
     fclose(fp);
     std::string filenamestr(filename);
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
-    TimeLineCellManager* pTimelineCellManager = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->GetTimeLineCellManager();
+    TimeLineCellManager *pTimelineCellManager = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->GetTimeLineCellManager();
     Assert(pTimelineCellManager->GetSpanHead(100) == 0);
 }
 
-void testKeyFrames(){
+void testKeyFrames() {
     std::vector<TransformKeyFrame> transformKeyFrames;
-    std::pair<TransformKeyFrame*, TransformKeyFrame*> framePair;
+    std::pair<TransformKeyFrame *, TransformKeyFrame *> framePair;
     bool result = FindKeyFramePair(0, transformKeyFrames, framePair);
     assert(result == false);
 
@@ -219,9 +219,9 @@ void testKeyFrames(){
     k1.transformData.position = Vector3f(0.0, 1.0, 0.0);
     transformKeyFrames.push_back(k1);
     result = FindKeyFramePair(0, transformKeyFrames, framePair);
-    assert( result == true);
-    assert( framePair.second == NULL);
-    assert( framePair.first->frameId == 1);
+    assert(result == true);
+    assert(framePair.second == NULL);
+    assert(framePair.first->frameId == 1);
 
 
     TransformKeyFrame k2;
@@ -229,15 +229,15 @@ void testKeyFrames(){
     k2.transformData.position = Vector3f(0.0, 5.0, 0.0);
     transformKeyFrames.push_back(k2);
     result = FindKeyFramePair(3, transformKeyFrames, framePair);
-    assert( result == true);
+    assert(result == true);
 
     TransformKeyFrame k3;
     k3.frameId = 10;
     k3.transformData.position = Vector3f(0.0, 10.0, 0.0);
     transformKeyFrames.push_back(k3);
     result = FindKeyFramePair(6, transformKeyFrames, framePair);
-    assert( result == true);
-    assert( framePair.first->frameId == 5 && framePair.second->frameId == 10);
+    assert(result == true);
+    assert(framePair.first->frameId == 5 && framePair.second->frameId == 10);
 
     result = FindKeyFramePair(11, transformKeyFrames, framePair);
     assert(result == true);
@@ -245,9 +245,9 @@ void testKeyFrames(){
     assert(framePair.first->frameId == 10);
 }
 
-void testRecordKeyFrames(){
+void testRecordKeyFrames() {
     std::vector<TransformKeyFrame> transformKeyFrames;
-    TransformKeyFrame* pKeyFrame = InsertOrUpdateKeyFrame(0, transformKeyFrames);
+    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(0, transformKeyFrames);
     pKeyFrame->transformData.position.Set(1.0, 0.0, 0.0f);
     assert(transformKeyFrames.size() == 1);
     assert(transformKeyFrames[0].transformData.position == Vector3f(1.0, 0.0, 0.0));
@@ -275,30 +275,30 @@ void testRecordKeyFrames(){
     assert(transformKeyFrames[2].transformData.position == Vector3f(5.0, 2.0, 0.0));
 }
 
-void testSegmentKeyFrames(){
-    ShapeSegmentFrameState* segmentFrameState = Object::Produce<ShapeSegmentFrameState>();
+void testSegmentKeyFrames() {
+    ShapeSegmentFrameState *segmentFrameState = Object::Produce<ShapeSegmentFrameState>();
 
     int segmentSize = 4;
     std::vector<float> segmentBuffer;
-    for(int i = 0 ; i < segmentSize; i++){
-        segmentBuffer.push_back(i*6);
-        segmentBuffer.push_back(i*6+1);
-        segmentBuffer.push_back(i*6+2);
-        segmentBuffer.push_back(i*6+3);
-        segmentBuffer.push_back(i*6+4);
-        segmentBuffer.push_back(i*6+5);
+    for (int i = 0; i < segmentSize; i++) {
+        segmentBuffer.push_back(i * 6);
+        segmentBuffer.push_back(i * 6 + 1);
+        segmentBuffer.push_back(i * 6 + 2);
+        segmentBuffer.push_back(i * 6 + 3);
+        segmentBuffer.push_back(i * 6 + 4);
+        segmentBuffer.push_back(i * 6 + 5);
     }
 
     segmentFrameState->RecordSegments(0, segmentBuffer.data(), segmentSize);
 
     segmentBuffer.clear();
-    for(int i = 0 ; i < segmentSize; i++){
-        segmentBuffer.push_back(i*6 + 10);
-        segmentBuffer.push_back(i*6+1 + 10);
-        segmentBuffer.push_back(i*6+2 + 10);
-        segmentBuffer.push_back(i*6+3 + 10);
-        segmentBuffer.push_back(i*6+4 + 10);
-        segmentBuffer.push_back(i*6+5 + 10);
+    for (int i = 0; i < segmentSize; i++) {
+        segmentBuffer.push_back(i * 6 + 10);
+        segmentBuffer.push_back(i * 6 + 1 + 10);
+        segmentBuffer.push_back(i * 6 + 2 + 10);
+        segmentBuffer.push_back(i * 6 + 3 + 10);
+        segmentBuffer.push_back(i * 6 + 4 + 10);
+        segmentBuffer.push_back(i * 6 + 5 + 10);
     }
 
     segmentFrameState->RecordSegments(9, segmentBuffer.data(), segmentSize);
@@ -306,9 +306,9 @@ void testSegmentKeyFrames(){
     segmentFrameState->Apply(5);
 }
 
-void testMultipleStores(){
+void testMultipleStores() {
     int defaultStoreId = GetDefaultObjectStoreManager()->GetCurrentStore()->GetStoreId();
-    ObjectStore* pNewStore = GetDefaultObjectStoreManager()->CreateStore();
+    ObjectStore *pNewStore = GetDefaultObjectStoreManager()->CreateStore();
 
     int newStore = pNewStore->GetStoreId();
 
@@ -316,28 +316,54 @@ void testMultipleStores(){
     assert(result);
 }
 
-void testCloneObject(){
-    ObjectStoreManager* objectStoreManager = GetDefaultObjectStoreManager();
+void testCloneObject() {
+    ObjectStoreManager *objectStoreManager = GetDefaultObjectStoreManager();
     objectStoreManager->GetCurrentStore()->CreateLayer("TestTest");
-    Layer* currentLayer = objectStoreManager->GetCurrentStore()->GetCurrentLayer();
+    Layer *currentLayer = objectStoreManager->GetCurrentStore()->GetCurrentLayer();
 
-    RectangleShape* rectangleShape = (RectangleShape*)BaseShape::CreateShape("RectangleShape");
-    rectangleShape->SetStartPoint(2,2,2);
-    rectangleShape->SetEndPoint(3,3,3);
+    RectangleShape *rectangleShape = (RectangleShape *) BaseShape::CreateShape("RectangleShape");
+    rectangleShape->SetStartPoint(2, 2, 2);
+    rectangleShape->SetEndPoint(3, 3, 3);
     rectangleShape->SetColor(1.0, 0.0, 1.0, 1.0);
 
     rectangleShape->SetPosition(10, 10, 10);
 
     currentLayer->SetCurrentFrame(10);
-    rectangleShape->SetPosition( 100, 100, 100);
+    rectangleShape->SetPosition(100, 100, 100);
     currentLayer->AddShapeInternal(rectangleShape);
 
-    RectangleShape* clonedRectangle = (RectangleShape*)CloneObject(*rectangleShape);
+    RectangleShape *clonedRectangle = (RectangleShape *) CloneObject(*rectangleShape);
     currentLayer->AddShapeInternal(clonedRectangle);
 
     currentLayer->SetCurrentFrame(0);
-    Vector3f* curPosition = clonedRectangle->GetPosition();
+    Vector3f *curPosition = clonedRectangle->GetPosition();
     Assert(curPosition != NULL);
+}
+
+void testDelete() {
+    ObjectStoreManager *objectStoreManager = GetDefaultObjectStoreManager();
+    objectStoreManager->GetCurrentStore()->CreateLayer("TestTest");
+    Layer *currentLayer = objectStoreManager->GetCurrentStore()->GetCurrentLayer();
+
+    RectangleShape *rectangleShape = (RectangleShape *) BaseShape::CreateShape("RectangleShape");
+
+    float segments[] = {
+            0.0f, 0.0f,
+            0.0f, 0.0f,
+            0.0f, 0.0f,
+            1.0f, 1.0f,
+            1.0f, 1.0f,
+            1.0f, 1.0f,
+            2.0f, 2.0f,
+            2.0f, 2.0f,
+            2.0f, 2.0f,
+            3.0f, 3.0f,
+            3.0f, 3.0f,
+            3.0f, 3.0f
+    };
+
+    rectangleShape->SetSegments(segments, 4);
+    rectangleShape->RemoveSegment(2);
 }
 
 int main() {
@@ -351,6 +377,7 @@ int main() {
     testRecordKeyFrames();
     testSegmentKeyFrames();
     testCloneObject();
+    testDelete();
 
     testMultipleStores();
     return 0;

@@ -464,14 +464,12 @@ abstract class BaseShapeJS {
     }
 
     removeSegment(segment){
-        console.log("Trying to remove segment!")
+        // Update all frames.
+        this.rawObj.RemoveSegment(segment.index)
 
         segment.remove()
 
         this.updateBoundingBox()
-
-        // Update all frames.
-        this.rawObj.RemoveSegment(segment.index)
     }
 
     applySegments() {

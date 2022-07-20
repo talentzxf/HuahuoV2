@@ -106,19 +106,26 @@ bool BaseShape::IsVisibleInFrame(SInt32 frameId) {
 }
 
 bool BaseShape::IsVisible() {
-    if(!mIsVisible)
+    if (!mIsVisible)
         return false;
 
     return IsVisibleInFrame(GetLayer()->GetCurrentFrame());
 }
 
 void BaseShape::SetSegments(float segmentBuffer[], int size) {
-    Layer* shapeLayer = GetLayer();
+    Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     mSegmentFrames.RecordSegments(currentFrameId, segmentBuffer, size);
     shapeLayer->AddKeyFrame(currentFrameId);
 }
 
-void BaseShape::SetSegmentsAtFrame(float segmentBuffer[], int size, int keyFrameId){
+void BaseShape::SetSegmentsAtFrame(float segmentBuffer[], int size, int keyFrameId) {
     mSegmentFrames.RecordSegments(keyFrameId, segmentBuffer, size);
+}
+
+void BaseShape::RemoveSegment(int index) {
+    this->mSegmentFrames.RemoveSegment(index);
+
+    int currentFrameId = this->GetLayer()->GetCurrentFrame();
+    this->Apply(currentFrameId);
 }
