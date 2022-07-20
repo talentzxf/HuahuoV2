@@ -108,7 +108,7 @@ class ShapeSelector extends BaseShapeDrawer {
                 },
                 {
                     itemName: "Delete",
-                    onclick: _this.deleteObj.bind(_this)
+                    onclick: _this.deleteSelectedObj.bind(_this)
                 }
                 ])
 
@@ -137,7 +137,7 @@ class ShapeSelector extends BaseShapeDrawer {
 
 
 
-    deleteObj(){
+    deleteSelectedObj(){
         if(this.selectedSegment){
             objectDeleter.deleteSegment(this.selectedSegment)
         }else{
@@ -151,11 +151,20 @@ class ShapeSelector extends BaseShapeDrawer {
         let targetContent = e.target as HHContent
         if(!targetContent.getAttribute("selected"))
             return
+
+        let handled = false
         if(e.ctrlKey && e.code == 'KeyD'){
+            this.duplicateShape()
+            handled = true
+        } else if(e.code == "Delete"){
+            handled = true
+
+            this.deleteSelectedObj()
+        }
+
+        if(handled){
             e.preventDefault()
             e.stopPropagation()
-
-            this.duplicateShape()
         }
     }
 

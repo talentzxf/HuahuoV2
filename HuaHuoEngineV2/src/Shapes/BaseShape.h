@@ -118,6 +118,10 @@ public:
 
     void SetSegmentsAtFrame(float segmentBuffer[], int size, int keyFrameId);
 
+    void RemoveSegment(int index){
+        this->mSegmentFrames.RemoveSegment(index);
+    }
+
     int GetSegmentCount(){
         return mSegmentFrames.GetSegmentCount();
     }

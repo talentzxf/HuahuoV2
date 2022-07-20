@@ -463,6 +463,17 @@ abstract class BaseShapeJS {
         newObj.remove()
     }
 
+    removeSegment(segment){
+        console.log("Trying to remove segment!")
+
+        segment.remove()
+
+        this.updateBoundingBox()
+
+        // Update all frames.
+        this.rawObj.RemoveSegment(segment.index)
+    }
+
     applySegments() {
         let segmentCount = this.rawObj.GetSegmentCount();
         if (segmentCount > 0 && this.paperShape.segments.length > 0) {

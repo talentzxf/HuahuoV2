@@ -132,6 +132,7 @@ interface BaseShape{
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
+    void RemoveSegment(long index);
 
     long GetSegmentKeyFrameCount();
     long GetSegmentCount();
@@ -169,6 +170,7 @@ interface LineShape{
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
+    void RemoveSegment(long index);
 
     long GetSegmentKeyFrameCount();
     long GetSegmentCount();
@@ -205,6 +207,7 @@ interface RectangleShape{
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
+    void RemoveSegment(long index);
 
     long GetSegmentKeyFrameCount();
     long GetSegmentCount();
@@ -241,6 +244,7 @@ interface CircleShape{
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
+    void RemoveSegment(long index);
 
     long GetSegmentKeyFrameCount();
     long GetSegmentCount();
@@ -283,6 +287,7 @@ interface AudioShape{
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
+    void RemoveSegment(long index);
 
     long GetSegmentKeyFrameCount();
     long GetSegmentCount();
@@ -328,6 +333,7 @@ interface ImageShape{
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
+    void RemoveSegment(long index);
 
     long GetSegmentKeyFrameCount();
     long GetSegmentCount();
@@ -363,6 +369,7 @@ interface ElementShape{
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
+    void RemoveSegment(long index);
 
     long GetSegmentKeyFrameCount();
     long GetSegmentCount();

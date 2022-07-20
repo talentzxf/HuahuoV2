@@ -11,6 +11,12 @@ IMPLEMENT_OBJECT_SERIALIZE(ShapeSegmentFrameState);
 
 INSTANTIATE_TEMPLATE_TRANSFER(ShapeSegmentFrameState);
 
+void ShapeSegmentFrameState::RemoveSegment(int index){
+    for(SegmentKeyFrame& segmentKeyFrame: m_KeyFrames){
+        segmentKeyFrame.removeSegment(index);
+    }
+}
+
 void ShapeSegmentFrameState::RecordSegments(int currentFrameId, float segmentBuffer[], int size) {
     SegmentKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, this->m_KeyFrames);
     pKeyFrame->positionArray.resize(size);

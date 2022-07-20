@@ -8,7 +8,7 @@
 
 #include "FrameState.h"
 
-struct SegmentKeyFrame{
+struct SegmentKeyFrame {
     int frameId;
 
     std::vector<Vector3f> positionArray;
@@ -17,70 +17,81 @@ struct SegmentKeyFrame{
 
     DECLARE_SERIALIZE(SegmentKeyFrame)
 
-    int GetFrameId(){
+    int GetFrameId() {
         return frameId;
     }
 
-    int GetTotalSegments(){
+    int GetTotalSegments() {
         return positionArray.size();
     }
 
-    Vector3f* GetPosition(long segmentId){
+    Vector3f *GetPosition(long segmentId) {
         return &positionArray[segmentId];
     }
 
-    Vector3f* GetHandleIn(long segmentId){
+    Vector3f *GetHandleIn(long segmentId) {
         return &handleInArray[segmentId];
     }
 
-    Vector3f* GetHandleOut(long segmentId){
+    Vector3f *GetHandleOut(long segmentId) {
         return &handleOutArray[segmentId];
+    }
+
+    void removeSegment(int index) {
+        positionArray.erase(positionArray.begin() + index);
+        handleInArray.erase(handleInArray.begin() + index);
+        handleOutArray.erase(handleOutArray.begin() + index);
     }
 };
 
-template<class TransferFunction> void SegmentKeyFrame::Transfer(TransferFunction &transfer){
+template<class TransferFunction>
+void SegmentKeyFrame::Transfer(TransferFunction &transfer) {
     TRANSFER(frameId);
     TRANSFER(positionArray);
     TRANSFER(handleInArray);
     TRANSFER(handleOutArray);
 }
 
-class ShapeSegmentFrameState: public AbstractFrameState {
-    REGISTER_CLASS(ShapeSegmentFrameState);
-    DECLARE_OBJECT_SERIALIZE();
+class ShapeSegmentFrameState : public AbstractFrameState {
+REGISTER_CLASS(ShapeSegmentFrameState);
+
+DECLARE_OBJECT_SERIALIZE();
 public:
     ShapeSegmentFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
-    :Super(memLabelId, creationMode)
-    {
+            : Super(memLabelId, creationMode) {
 
     }
 
     virtual bool Apply(int frameId) override;
+
     void RecordSegments(int currentFrameId, float segmentBuffer[], int size);
 
-    int GetSegmentCount(){
+    int GetSegmentCount() {
         return m_currentPositionArray.size();
     }
 
-    Vector3f* GetSegmentPosition(int segmentId){
+    Vector3f *GetSegmentPosition(int segmentId) {
         return &m_currentPositionArray[segmentId];
     }
 
-    Vector3f* GetSegmentHandleIn(int segmentId){
+    Vector3f *GetSegmentHandleIn(int segmentId) {
         return &m_currentHandleInArray[segmentId];
     }
 
-    Vector3f* GetSegmentHandleOut(int segmentId){
+    Vector3f *GetSegmentHandleOut(int segmentId) {
         return &m_currentHandleOutArray[segmentId];
     }
 
-    int GetKeyFrameCount(){
+    int GetKeyFrameCount() {
         return m_KeyFrames.size();
     }
 
-    SegmentKeyFrame* GetSegmentKeyFrameAtFrameIndex(int keyFrameIndex){
-        if(keyFrameIndex >= m_KeyFrames.size()){
-            printf("Error, totally %d keyframes, but want to get the %dth keyframe.\n", m_KeyFrames.size(), keyFrameIndex);
+    void RemoveSegment(int index);
+
+    SegmentKeyFrame *GetSegmentKeyFrameAtFrameIndex(int keyFrameIndex) {
+        if (keyFrameIndex >= m_KeyFrames.size()) {
+            printf("Error, totally %d keyframes, but want to get the %dth keyframe.\n", m_KeyFrames.size(),
+                   keyFrameIndex);
             return NULL;
         }
 
