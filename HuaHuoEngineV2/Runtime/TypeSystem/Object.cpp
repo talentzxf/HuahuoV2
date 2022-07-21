@@ -287,8 +287,8 @@ void DestroySingleObject(Object* o)
         return;
     }
 
-//    if (o->IsPersistent())
-//        GetPersistentManager().MakeObjectUnpersistent(o->GetInstanceID(), kDestroyFromFile);
+    if (o->IsPersistent())
+        GetPersistentManager().MakeObjectUnpersistent(o->GetInstanceID(), kDestroyFromFile);
 
     delete_object_internal(o);
 }
