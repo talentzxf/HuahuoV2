@@ -25,6 +25,23 @@ ObjectStore *Layer::GetObjectStore() {
     return objectStore;
 }
 
+void Layer::RemoveShape(BaseShape* shape){
+    long instanceId = shape->GetInstanceID();
+    long index = 0;
+    for(;index < shapes.size(); index++){
+        if(shapes[index].GetInstanceID() == instanceId){
+            break;
+        }
+    }
+
+    if(index == shapes.size()){
+        printf("Can't find the shape in the layer\n");
+        return;
+    }
+
+    shapes.erase(shapes.begin() + index);
+}
+
 void Layer::AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode) {
     for (ShapePPtrVector::iterator itr = shapes.begin(); itr != shapes.end(); itr++) {
         (*itr)->SetLayer(this);

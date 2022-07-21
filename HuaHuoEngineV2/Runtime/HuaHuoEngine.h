@@ -44,6 +44,8 @@ public:
     }
 
     BaseShape* DuplicateShape(BaseShape *object);
+
+    void DestroyShape(BaseShape *object);
 };
 
 

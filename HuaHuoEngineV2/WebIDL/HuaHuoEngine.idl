@@ -389,4 +389,5 @@ interface HuaHuoEngine {
     boolean IsEventRegistered(DOMString eventType);
     BaseShape CreateShape(DOMString shapeName);
     BaseShape DuplicateShape(BaseShape shape);
+    void DestroyShape(BaseShape shape);
 };

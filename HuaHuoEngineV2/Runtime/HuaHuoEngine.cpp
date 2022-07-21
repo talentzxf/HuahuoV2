@@ -57,3 +57,10 @@ BaseShape *HuaHuoEngine::DuplicateShape(BaseShape *object) {
 
     return clonedObject;
 }
+
+void HuaHuoEngine::DestroyShape(BaseShape *shape){
+    // Remove the object from it's belonging layer
+    shape->GetLayer()->RemoveShape(shape);
+
+    DestroySingleObject(shape);
+}

@@ -143,6 +143,8 @@ public:
         return this->isSelected;
     }
 
+    void RemoveShape(BaseShape* shape);
+
 private:
     // Frame Id-- starting from 0.
     int currentFrameId;
