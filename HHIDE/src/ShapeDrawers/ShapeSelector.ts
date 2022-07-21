@@ -130,7 +130,7 @@ class ShapeSelector extends BaseShapeDrawer {
                 this.selectedSegment.handleIn.selected = false
                 this.selectedSegment.handleOut.selected = false
             }
-            
+
             this.selectedSegment = targetObj
         }
     }
