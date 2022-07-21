@@ -11,8 +11,25 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
 
     valueChangeHandlerMap: Map<string, Function> = new Map<string, Function>()
 
+    protected pressingShift: boolean = false
+
     constructor() {
         super();
+
+        document.body.addEventListener("keydown", this.onKeyDown.bind(this))
+        document.body.addEventListener("keyup", this.onKeyUp.bind(this))
+    }
+
+    onKeyDown(e:KeyboardEvent){
+        if(e.shiftKey){
+            this.pressingShift = true
+        }
+    }
+
+    onKeyUp(e:KeyboardEvent){
+        if(!e.shiftKey){
+            this.pressingShift = false
+        }
     }
 
     setSegment(hitSegment: paper.Segment) {
@@ -146,6 +163,14 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
             let localPos = this.targetShape.globalToLocal(posPoint)
             let offset = localPos.subtract(localStart)
 
+            if(this.pressingShift){
+                if(Math.abs(offset.x) > Math.abs(offset.y)){
+                    offset.y = 0.0
+                }else{
+                    offset.x = 0.0
+                }
+            }
+
             let proposedNewPosition = this.curSegmentStartPos.add(offset)
             this.curSegment.point = proposedNewPosition;
 
@@ -182,6 +207,15 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
             let localStart = this.targetShape.globalToLocal(startPoint)
             let localPos = this.targetShape.globalToLocal(posPoint)
             let offset = localPos.subtract(localStart)
+
+            if(this.pressingShift){
+                if(Math.abs(offset.x) > Math.abs(offset.y)){
+                    offset.y = 0.0
+                }else{
+                    offset.x = 0.0
+                }
+            }
+
             let targetHandlePos = this.targetHandleStartPos.add(offset)
 
             this.curSegment[this.targetHandleName] = targetHandlePos
