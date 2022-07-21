@@ -7,6 +7,8 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase{
     protected targetShape: BaseShapeJS
     protected lastPos: paper.Point = null
 
+    private rotationDegree: number = 0.0;
+
     constructor() {
         super();
     }
@@ -17,6 +19,8 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase{
         this.targetShape = this.curObjs.values().next().value // There's only one object in the set, get it.
 
         this.rotationCenter = this.targetShape.position
+
+        this.rotationDegree = 0.0;
     }
 
     dragging(pos) {
@@ -27,9 +31,13 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase{
             let vec2 = pos.subtract(this.rotationCenter)
 
             let theta = vec1.getDirectedAngle(vec2)
+
+            this.rotationDegree += theta
+
+            console.log("Rotation degree is:" + this.rotationDegree)
+
             this.targetShape.rotate(theta, this.rotationCenter)
             this.lastPos = new paper.Point(pos.x, pos.y)
-
             this.targetShape.store()
             this.targetShape.updateBoundingBox()
         }

@@ -84,7 +84,7 @@ abstract class BaseShapeJS {
     }
 
     get rotation(): number {
-        return this.paperItem.rotation
+        return this.rawObj.GetRotation()
     }
 
     get scaling(): paper.Point {
@@ -144,7 +144,9 @@ abstract class BaseShapeJS {
 
     rotate(angle: number, center: paper.Point) {
         this.paperItem.rotate(angle, center)
-        this.callHandlers("rotation", this.paperItem.rotation)
+        let newRotationDegree = this.rawObj.GetRotation() + angle
+        this.rawObj.SetRotation(newRotationDegree)
+        this.callHandlers("rotation", newRotationDegree)
     }
 
     set position(val: paper.Point) {
@@ -247,7 +249,6 @@ abstract class BaseShapeJS {
         this.rawObj.SetScale(scaling.x, scaling.y, 0)
 
         let rotation = this.paperItem.rotation
-        this.rawObj.SetRotation(rotation)
 
         // Store rotation (rotation is complicated)
         let prevPosition = this.position
@@ -321,6 +322,7 @@ abstract class BaseShapeJS {
 
     private setRotation(val: number) {
         this.paperItem.rotation = val
+        this.rawObj.SetRotation(val)
         this.store()
     }
 
