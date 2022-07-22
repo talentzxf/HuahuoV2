@@ -48,9 +48,8 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase {
         let endPoint = new paper.Point(position.x + radius * Math.cos(endAngleRad), position.y + radius * Math.sin(endAngleRad))
 
         let fanShape = paper.Path.Arc(startPoint, midPoint, endPoint)
-
+        fanShape.add(position)
         fanShape.closed = true
-
         return fanShape
     }
 
