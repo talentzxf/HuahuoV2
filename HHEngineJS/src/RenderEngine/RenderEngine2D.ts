@@ -7,6 +7,7 @@ interface RenderEngine2D{
     zoomIn(scale:number):void
     zoomOut(scale:number):void
     zoomReset():void
+    resize(width:number, height:number): void
 }
 
 export {RenderEngine2D}

@@ -260,6 +260,8 @@ class SceneView extends HTMLElement {
         let canvasWidth = containerWidth - margin
         let canvasHeight = containerHeight - margin
 
+        renderEngine2D.resize(canvasWidth, canvasHeight)
+
         // if(canvasHeight > containerHeight){
         //     canvasHeight = containerHeight * margin
         //     canvasWidth = canvasHeight * this.aspectRatio

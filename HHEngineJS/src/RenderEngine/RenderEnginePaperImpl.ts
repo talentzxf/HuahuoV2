@@ -139,6 +139,11 @@ class RenderEnginePaperJs implements RenderEngine2D{
         this.canvasPaperMap.set(canvas, paper.project.index)
     }
 
+    resize(width: number, height: number){
+        // paper.view.viewSize = new paper.Size(width, height)
+        // TODO: Use Zoom
+    }
+
     public setDefaultCanvas(canvas:HTMLCanvasElement){
         if(this.canvasPaperMap.has(canvas)){
             let view:any = paper.project.view
