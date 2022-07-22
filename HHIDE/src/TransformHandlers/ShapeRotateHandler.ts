@@ -34,7 +34,7 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase {
     }
 
     drawFanShape(position: paper.Point, radius: number, startAngle: number, endAngle: number) {
-        if(startAngle == 0 && endAngle == 360){
+        if (startAngle == 0 && endAngle == 360) {
             let circleShape = paper.Path.Circle(position, radius)
             return circleShape
         }
@@ -49,7 +49,6 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase {
 
         let fanShape = paper.Path.Arc(startPoint, midPoint, endPoint)
 
-        let triangle = paper.Path.Triangle()
         fanShape.closed = true
 
         return fanShape
@@ -64,34 +63,36 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase {
 
         p1.remove()
         p2.remove()
-
-        donut.fillColor = new paper.Color("yellow")
         return donut
     }
 
     drawRotationIndicator(position, degree: number) {
         this.clearRotationIndicator()
 
-        if (degree > 0) {
-            let circles = Math.floor(degree / 360);
-            let residual = degree - circles * 360;
+        let circles = degree > 0?Math.floor(degree / 360):Math.ceil(degree/360);
+        let residual = degree - circles * 360;
 
-            let radius1 = 20.0;
-            let radius2 = 25.0;
+        let radius1 = 20.0;
+        let radius2 = 25.0;
 
-            for (let circleIdx = 0; circleIdx < circles; circleIdx++) {
-                let circleShape = this.drawDonut(position, radius1, radius2)
-                circleShape.fillColor = new paper.Color("yellow")
-                radius1 += 6.0;
-                radius2 += 6.0;
-                this.rotationIndicator.push(circleShape)
-            }
+        let fillColor = degree > 0 ? new paper.Color("yellow") : new paper.Color("red")
+        let radiusStep = 6.0
 
-            let startAngle = Math.atan2(this.startPos.y - position.y, this.startPos.x - position.x)
+        for (let circleIdx = 0; circleIdx < Math.abs(circles); circleIdx++) {
+            let circleShape = this.drawDonut(position, radius1, radius2)
 
-            let residualFanShape = this.drawDonut(position, radius1, radius2, startAngle, startAngle + residual)
-            this.rotationIndicator.push(residualFanShape)
+            circleShape.fillColor = fillColor
+            radius1 += radiusStep
+            radius2 += radiusStep;
+
+            this.rotationIndicator.push(circleShape)
         }
+
+        let startAngle = Math.atan2(this.startPos.y - position.y, this.startPos.x - position.x)
+
+        let residualFanShape = this.drawDonut(position, radius1, radius2, startAngle, startAngle + residual)
+        residualFanShape.fillColor = fillColor
+        this.rotationIndicator.push(residualFanShape)
     }
 
     dragging(pos) {
