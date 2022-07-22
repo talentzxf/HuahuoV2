@@ -10,6 +10,8 @@ class RenderEnginePaperJs implements RenderEngine2D{
 
     // From canvas to project index
     private canvasPaperMap: Map<HTMLCanvasElement, number> = new Map()
+    private canvasOriginalSize: Map<paper.View, [number, number]> = new Map()
+    private canvasOriginalTranslate: Map<paper.View, paper.Point> = new Map()
 
     private isPlayer = false
     private aspectRatio:number = 4/3  //  W:H = 4:3
@@ -137,11 +139,26 @@ class RenderEnginePaperJs implements RenderEngine2D{
         this.clearBackground()
 
         this.canvasPaperMap.set(canvas, paper.project.index)
+        this.canvasOriginalSize.set(paper.view, [canvas.width, canvas.height])
+        this.canvasOriginalTranslate.set(paper.view, new paper.Point(0.0, 0.0))
     }
 
     resize(width: number, height: number){
-        // paper.view.viewSize = new paper.Size(width, height)
-        // TODO: Use Zoom
+        let originalSize = this.canvasOriginalSize.get(paper.view)
+        let originalContentDim = this.getContentWH(originalSize[0], originalSize[1])
+        let originalX = (originalSize[0] - originalContentDim[0])/2
+        let originalY = (originalSize[1] - originalContentDim[1])/2
+
+        let currentContentDim = this.getContentWH(width, height)
+        let currentX = (width - currentContentDim[0])/2
+        let currentY = (height - currentContentDim[1])/2
+
+        let currentTranslate = this.canvasOriginalTranslate.get(paper.view)
+
+        let offset = new paper.Point(currentX - currentTranslate.x, currentY - currentTranslate.y)
+        let newTranslate = currentTranslate.add(offset)
+        this.canvasOriginalTranslate.set(paper.view, newTranslate)
+        paper.view.translate(offset)
     }
 
     public setDefaultCanvas(canvas:HTMLCanvasElement){
