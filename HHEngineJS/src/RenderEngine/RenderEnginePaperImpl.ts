@@ -153,12 +153,20 @@ class RenderEnginePaperJs implements RenderEngine2D{
         let currentX = (width - currentContentDim[0])/2
         let currentY = (height - currentContentDim[1])/2
 
-        let currentTranslate = this.canvasOriginalTranslate.get(paper.view)
+        let ratio = currentContentDim[0]/originalSize[0]
 
-        let offset = new paper.Point(currentX - currentTranslate.x, currentY - currentTranslate.y)
-        let newTranslate = currentTranslate.add(offset)
-        this.canvasOriginalTranslate.set(paper.view, newTranslate)
+        let beforeScalingOriginPos = paper.view.projectToView(new paper.Point(0,0)) // Current origin in view coordinate
+        paper.view.scaling.x = ratio
+        paper.view.scaling.y = ratio
+
+        console.log("Ratio:" + ratio)
+
+        let projectOriginPos = paper.view.projectToView(new paper.Point(0,0)) // Current origin in view coordinate
+
+        // let offset = new paper.Point(projectOriginPos.x- beforeScalingOriginPos.x, projectOriginPos.y - beforeScalingOriginPos.y)
+        let offset = new paper.Point(-projectOriginPos.x/ratio, -projectOriginPos.y/ratio)
         paper.view.translate(offset)
+        paper.view.translate(new paper.Point(currentX/ratio, currentY/ratio))
     }
 
     public setDefaultCanvas(canvas:HTMLCanvasElement){

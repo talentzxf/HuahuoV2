@@ -559,6 +559,8 @@ abstract class BaseShapeJS {
 
     remove(){
         // TODO: TODO
+        huahuoEngine.DestroyShape(this.rawObj)
+        this.paperItem.remove()
     }
 }
 

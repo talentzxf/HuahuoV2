@@ -125,6 +125,10 @@ class EngineAPI{
     dispatchEvent(eventName, ...params){
         engineEventManager.dispatchEvent(eventName, ...params)
     }
+
+    DestroyShape(shape){
+        this.cppEngine.DestroyShape(shape)
+    }
 }
 
 let huahuoEngine = window.huahuoEngine
