@@ -344,6 +344,7 @@ void testDelete() {
     ObjectStoreManager *objectStoreManager = GetDefaultObjectStoreManager();
     objectStoreManager->GetCurrentStore()->CreateLayer("TestTest");
     Layer *currentLayer = objectStoreManager->GetCurrentStore()->GetCurrentLayer();
+    currentLayer->SetCurrentFrame(5);
 
     RectangleShape *rectangleShape = (RectangleShape *) BaseShape::CreateShape("RectangleShape");
 
@@ -364,6 +365,10 @@ void testDelete() {
 
     rectangleShape->SetSegments(segments, 4);
     rectangleShape->RemoveSegment(2);
+
+    currentLayer->AddShapeInternal(rectangleShape);
+
+    currentLayer->RemoveShape(rectangleShape);
 }
 
 int main() {

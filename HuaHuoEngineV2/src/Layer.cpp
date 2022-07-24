@@ -41,6 +41,22 @@ void Layer::RemoveShape(BaseShape* shape){
     }
 
     shapes.erase(shapes.begin() + index);
+
+    std::vector<int> toDeleteFrames;
+    // Remove the shape from keyframes.
+    for(auto keyframe : keyFrames){
+        if(keyframe.second.contains(shape)){
+            keyframe.second.erase(shape);
+        }
+
+        if(keyframe.second.empty()){
+            toDeleteFrames.push_back(keyframe.first);
+        }
+    }
+
+    for(int toDeleteFrameId: toDeleteFrames){
+        keyFrames.erase(toDeleteFrameId);
+    }
 }
 
 void Layer::AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode) {

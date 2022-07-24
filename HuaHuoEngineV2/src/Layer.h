@@ -121,7 +121,7 @@ public:
     void AddKeyFrame(int frameId, BaseShape* shape);
 
     bool IsKeyFrame(int frameId) {
-        if (keyFrames.contains(frameId))
+        if (keyFrames.contains(frameId) && !keyFrames[frameId].empty())
             return true;
 
         return false;
