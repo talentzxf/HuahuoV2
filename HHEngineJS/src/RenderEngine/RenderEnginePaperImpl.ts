@@ -145,13 +145,22 @@ class RenderEnginePaperJs implements RenderEngine2D {
         this.canvasOriginalTranslate.set(paper.view, new paper.Point(0.0, 0.0))
     }
 
-    resize(width: number, height: number) {
-        if (!this.canvasOriginalSize.has(paper.view)) {
+    resize(canvas: HTMLCanvasElement, width: number, height: number) {
+
+        if(!this.canvasPaperMap.has(canvas)){
+            return
+        }
+
+        let canvasPaperIdx = this.canvasPaperMap.get(canvas)
+        let canvasPaper = paper.projects[canvasPaperIdx]
+        let canvasView = canvasPaper.view
+
+        if (!this.canvasOriginalSize.has(canvasView)) {
             if (width > 0 && height > 0) {
-                this.canvasOriginalSize.set(paper.view, [width, height])
+                this.canvasOriginalSize.set(canvasView, [width, height])
             }
         } else {
-            let originalSize = this.canvasOriginalSize.get(paper.view)
+            let originalSize = this.canvasOriginalSize.get(canvasView)
             let originalContentDim = this.getContentWH(originalSize[0], originalSize[1])
             let originalX = (originalSize[0] - originalContentDim[0]) / 2
             let originalY = (originalSize[1] - originalContentDim[1]) / 2
@@ -162,18 +171,18 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
             let ratio = currentContentDim[0] / originalSize[0]
 
-            let beforeScalingOriginPos = paper.view.projectToView(new paper.Point(0, 0)) // Current origin in view coordinate
-            paper.view.scaling.x = ratio
-            paper.view.scaling.y = ratio
+            let beforeScalingOriginPos = canvasView.projectToView(new paper.Point(0, 0)) // Current origin in view coordinate
+            canvasView.scaling.x = ratio
+            canvasView.scaling.y = ratio
 
             console.log("Ratio:" + ratio)
 
-            let projectOriginPos = paper.view.projectToView(new paper.Point(0, 0)) // Current origin in view coordinate
+            let projectOriginPos = canvasView.projectToView(new paper.Point(0, 0)) // Current origin in view coordinate
 
             // let offset = new paper.Point(projectOriginPos.x- beforeScalingOriginPos.x, projectOriginPos.y - beforeScalingOriginPos.y)
             let offset = new paper.Point(-projectOriginPos.x / ratio, -projectOriginPos.y / ratio)
-            paper.view.translate(offset)
-            paper.view.translate(new paper.Point(currentX / ratio, currentY / ratio))
+            canvasView.translate(offset)
+            canvasView.translate(new paper.Point(currentX / ratio, currentY / ratio))
         }
     }
 
