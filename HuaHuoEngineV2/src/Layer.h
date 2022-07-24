@@ -118,7 +118,7 @@ public:
         return cellManager;
     }
 
-    void AddKeyFrame(int frameId);
+    void AddKeyFrame(int frameId, BaseShape* shape);
 
     bool IsKeyFrame(int frameId) {
         if (keyFrames.contains(frameId))
@@ -151,7 +151,10 @@ private:
     ShapePPtrVector shapes;
     std::string name;
     PPtr<TimeLineCellManager> cellManager;
-    std::set<int> keyFrames;
+
+    typedef std::map<int, std::set<PPtr<BaseShape>>> KeyFrameObjectSetMap;
+
+    KeyFrameObjectSetMap keyFrames;
     PPtr<ObjectStore> objectStore;
     bool isVisible;
     bool isSelected;

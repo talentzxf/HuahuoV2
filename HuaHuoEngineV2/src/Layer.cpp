@@ -4,6 +4,7 @@
 
 #include "Layer.h"
 #include "ObjectStore.h"
+#include <map>
 
 IMPLEMENT_REGISTER_CLASS(Layer, 10001);
 
@@ -60,12 +61,14 @@ void Layer::SetIsVisible(bool isVisible) {
     GetScriptEventManager()->TriggerEvent("OnLayerUpdated", &args);
 }
 
-void Layer::AddKeyFrame(int frameId) {
-    if (keyFrames.contains(frameId))
-        return;
+void Layer::AddKeyFrame(int frameId, BaseShape* shape) {
+    if (!keyFrames.contains(frameId)){
+        keyFrames.insert(std::pair<int, std::set<PPtr<BaseShape>>>(frameId, set<PPtr<BaseShape>>()));
+    }
 
     objectStore->UpdateMaxFrameId(frameId);
-    keyFrames.insert(frameId);
+    std::set<PPtr<BaseShape>>& shapeSet = keyFrames[frameId];
+    shapeSet.insert(shape);
 
     KeyFrameAddedEventHandlerArgs args(this, frameId);
     GetScriptEventManager()->TriggerEvent("OnKeyFrameAdded", &args);

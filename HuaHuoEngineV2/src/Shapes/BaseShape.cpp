@@ -59,7 +59,7 @@ void BaseShape::SetPosition(float x, float y, float z) {
     int currentFrameId = shapeLayer->GetCurrentFrame();
     mTransformKeyFrames.RecordPosition(currentFrameId, x, y, z);
 
-    shapeLayer->AddKeyFrame(currentFrameId);
+    shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
 void BaseShape::SetRotation(float rotation) {
@@ -69,14 +69,14 @@ void BaseShape::SetRotation(float rotation) {
     int currentFrameId = shapeLayer->GetCurrentFrame();
     mTransformKeyFrames.RecordRotation(currentFrameId, rotation);
 
-    shapeLayer->AddKeyFrame(currentFrameId);
+    shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
 void BaseShape::SetScale(float xScale, float yScale, float zScale) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     mTransformKeyFrames.RecordScale(currentFrameId, xScale, yScale, zScale);
-    shapeLayer->AddKeyFrame(currentFrameId);
+    shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
 Vector3f *BaseShape::GetScale() {
@@ -88,7 +88,7 @@ void BaseShape::SetColor(float r, float g, float b, float a) {
     int currentFrameId = shapeLayer->GetCurrentFrame();
     mColorKeyFrames.RecordColor(currentFrameId, r, g, b, a);
 
-    shapeLayer->AddKeyFrame(currentFrameId);
+    shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
 bool BaseShape::IsVisibleInFrame(SInt32 frameId) {
@@ -116,7 +116,7 @@ void BaseShape::SetSegments(float segmentBuffer[], int size) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     mSegmentFrames.RecordSegments(currentFrameId, segmentBuffer, size);
-    shapeLayer->AddKeyFrame(currentFrameId);
+    shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
 void BaseShape::SetSegmentsAtFrame(float segmentBuffer[], int size, int keyFrameId) {
