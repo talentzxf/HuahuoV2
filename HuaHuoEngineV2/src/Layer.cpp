@@ -64,6 +64,8 @@ void Layer::RemoveShape(BaseShape* shape){
         GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
     }
 
+    shape->SetLayer(NULL);
+
     // Inform the script to remove the shape in JS side.
     ShapeRemovedEventHandlerArgs args(this, shape);
     GetScriptEventManager()->TriggerEvent("OnShapeRemoved", &args);

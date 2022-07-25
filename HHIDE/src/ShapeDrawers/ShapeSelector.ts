@@ -140,10 +140,14 @@ class ShapeSelector extends BaseShapeDrawer {
     deleteSelectedObj(){
         if(this.selectedSegment){
             objectDeleter.deleteSegment(this.selectedSegment)
+
+            this.selectedSegment = null
         }else{
             for(let shape of this.selectedShapes){
                 objectDeleter.deleteShape(shape)
             }
+
+            this.clearSelection(false)
         }
     }
 
@@ -223,12 +227,15 @@ class ShapeSelector extends BaseShapeDrawer {
         EventBus.getInstance().emit(EventNames.OBJECTSELECTED, selectedObj.getPropertySheet(), selectedObj)
     }
 
-    clearSelection() {
-        // 1. Clear current selections. TODO: How about multiple selection ???
-        for (let shape of this.selectedShapes) {
-            shape.selected = false
-            shape.update()
+    clearSelection(updateSelectedShapes:boolean = true) {
+        if(updateSelectedShapes){
+            // 1. Clear current selections. TODO: How about multiple selection ???
+            for (let shape of this.selectedShapes) {
+                shape.selected = false
+                shape.update()
+            }
         }
+
         this.selectedShapes = new Set()
         this.selectedSegment = null
         this.transformHandler = null
