@@ -31,9 +31,9 @@ private:
     Layer *layer;
 };
 
-class KeyFrameAddedEventHandlerArgs : public ScriptEventHandlerArgs {
+class KeyFrameChangedEventHandlerArgs : public ScriptEventHandlerArgs {
 public:
-    KeyFrameAddedEventHandlerArgs(Layer *layer, int frameId) {
+    KeyFrameChangedEventHandlerArgs(Layer *layer, int frameId) {
         this->layer = layer;
         this->frameId = frameId;
     }

@@ -18,7 +18,7 @@ interface ScriptEventHandlerArgs{
 };
 
 [NoDelete]
-interface KeyFrameAddedEventHandlerArgs{
+interface KeyFrameChangedEventHandlerArgs{
     Layer GetLayer();
     long GetFrameId();
 };

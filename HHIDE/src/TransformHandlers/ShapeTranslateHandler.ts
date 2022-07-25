@@ -50,7 +50,6 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
                 }
 
                 let proposedNewPosition = obj.position.add(offset)
-
                 // obj.position = proposedNewPosition
                 obj.position = proposedNewPosition
                 obj.store()

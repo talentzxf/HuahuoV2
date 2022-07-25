@@ -68,7 +68,6 @@ public:
 
     void UpdateMaxFrameId(int frameId){
         this->maxFrameId = std::max(this->maxFrameId, frameId);
-        printf("Update maxFrameId:%d\n", this->maxFrameId);
     }
 
     int GetMaxFrameId(){

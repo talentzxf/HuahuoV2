@@ -46,16 +46,22 @@ void Layer::RemoveShape(BaseShape* shape){
     // Remove the shape from keyframes.
     for(auto keyframe : keyFrames){
         if(keyframe.second.contains(shape)){
+            printf("Erasing shape!!!!\n");
             keyframe.second.erase(shape);
         }
 
         if(keyframe.second.empty()){
+            printf("Begin to erase keyframe!!!!\n");
             toDeleteFrames.push_back(keyframe.first);
         }
     }
 
     for(int toDeleteFrameId: toDeleteFrames){
+        printf("Erased keyframe:%d\n", toDeleteFrameId);
         keyFrames.erase(toDeleteFrameId);
+
+        KeyFrameChangedEventHandlerArgs args(this, toDeleteFrameId);
+        GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
     }
 }
 
@@ -78,6 +84,10 @@ void Layer::SetIsVisible(bool isVisible) {
 }
 
 void Layer::AddKeyFrame(int frameId, BaseShape* shape) {
+    if(keyFrames.contains(frameId) && keyFrames[frameId].contains(shape)){
+        return;
+    }
+
     if (!keyFrames.contains(frameId)){
         keyFrames.insert(std::pair<int, std::set<PPtr<BaseShape>>>(frameId, set<PPtr<BaseShape>>()));
     }
@@ -86,8 +96,8 @@ void Layer::AddKeyFrame(int frameId, BaseShape* shape) {
     std::set<PPtr<BaseShape>>& shapeSet = keyFrames[frameId];
     shapeSet.insert(shape);
 
-    KeyFrameAddedEventHandlerArgs args(this, frameId);
-    GetScriptEventManager()->TriggerEvent("OnKeyFrameAdded", &args);
+    KeyFrameChangedEventHandlerArgs args(this, frameId);
+    GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
 }
 
 void Layer::SetObjectStore(ObjectStore *store) {

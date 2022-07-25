@@ -255,7 +255,6 @@ abstract class BaseShapeJS {
         this.paperItem.rotation = 0
         let zeroPointPosition = this.paperItem.localToGlobal(new paper.Point(0, 0))
         this.rawObj.SetPosition(zeroPointPosition.x, zeroPointPosition.y, 0)
-
         this.position = new paper.Point(0, 0)
         this.paperItem.rotation = rotation
         this.position = prevPosition

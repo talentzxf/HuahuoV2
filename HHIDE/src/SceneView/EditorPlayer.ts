@@ -21,10 +21,10 @@ class EditorPlayer extends Player{
 
         let _this = this
         huahuoEngine.ExecuteAfterInited(()=>{
-            let keyFrameAddedHandler = new Module.ScriptEventHandlerImpl()
-            keyFrameAddedHandler.handleEvent = _this.onKeyFrameAdded.bind(_this)
+            let keyFrameChangedHandler = new Module.ScriptEventHandlerImpl()
+            keyFrameChangedHandler.handleEvent = _this.onKeyFrameChanged.bind(_this)
 
-            huahuoEngine.GetInstance().RegisterEvent("OnKeyFrameAdded", keyFrameAddedHandler)
+            huahuoEngine.GetInstance().RegisterEvent("OnKeyFrameChanged", keyFrameChangedHandler)
 
             let layerUpdatedHandler = new Module.ScriptEventHandlerImpl()
             layerUpdatedHandler.handleEvent = _this.onLayerUpdated.bind(_this)
@@ -64,10 +64,10 @@ class EditorPlayer extends Player{
         this.timeline.setTimeElapsed(playFrameId / GlobalConfig.fps)
     }
 
-    onKeyFrameAdded(args){
-        let keyframeAddedArgs = Module.wrapPointer(args, Module.KeyFrameAddedEventHandlerArgs)
-        let layer = keyframeAddedArgs.GetLayer()
-        let frameId = keyframeAddedArgs.GetFrameId()
+    onKeyFrameChanged(args){
+        let keyframeChangedArgs = Module.wrapPointer(args, Module.KeyFrameChangedEventHandlerArgs)
+        let layer = keyframeChangedArgs.GetLayer()
+        let frameId = keyframeChangedArgs.GetFrameId()
 
         this.timeline.redrawCell(layer, frameId)
     }
