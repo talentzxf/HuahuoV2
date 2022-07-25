@@ -30,6 +30,10 @@ class EditorPlayer extends Player{
             layerUpdatedHandler.handleEvent = _this.onLayerUpdated.bind(_this)
 
             huahuoEngine.GetInstance().RegisterEvent("OnLayerUpdated", layerUpdatedHandler)
+
+            let shapeRemovedHander = new Module.ScriptEventHandlerImpl()
+            shapeRemovedHander.handleEvent = _this.onShapeRemoved.bind(_this)
+            huahuoEngine.GetInstance().RegisterEvent("OnShapeRemoved", shapeRemovedHander)
         })
 
         document.addEventListener('keydown', this.onKeyEvent.bind(this));
@@ -73,10 +77,18 @@ class EditorPlayer extends Player{
     }
 
     onLayerUpdated(args){
-        let layerUpdatedArgs = Module.wrapPointer(args, Module.LayerUpdatedEventHanderArgs)
+        let layerUpdatedArgs = Module.wrapPointer(args, Module.LayerUpdatedEventHandlerArgs)
         let layer = layerUpdatedArgs.GetLayer()
 
         this.layerShapesManager.updateLayerShapes(layer)
+    }
+
+    onShapeRemoved(args){
+        let shapeRemovedArgs = Module.wrapPointer(args, Module.ShapeRemovedEventHandlerArgs)
+        let layer = shapeRemovedArgs.GetLayer()
+        let obj = shapeRemovedArgs.GetShape()
+
+        this.layerShapesManager.removeShape(layer, obj)
     }
 }
 

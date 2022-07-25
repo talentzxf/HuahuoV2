@@ -24,8 +24,14 @@ interface KeyFrameChangedEventHandlerArgs{
 };
 
 [NoDelete]
-interface LayerUpdatedEventHanderArgs{
+interface LayerUpdatedEventHandlerArgs{
     Layer GetLayer();
+};
+
+[NoDelete]
+interface ShapeRemovedEventHandlerArgs{
+    Layer GetLayer();
+    BaseShape GetShape();
 };
 
 [JSImplementation="ScriptEventHandler", NoDelete]

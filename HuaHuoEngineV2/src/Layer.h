@@ -17,9 +17,9 @@ extern std::string StoreFilePath;
 
 class ObjectStore;
 
-class LayerUpdatedEventHanderArgs: public ScriptEventHandlerArgs{
+class LayerUpdatedEventHandlerArgs: public ScriptEventHandlerArgs{
 public:
-    LayerUpdatedEventHanderArgs(Layer *layer) {
+    LayerUpdatedEventHandlerArgs(Layer *layer) {
         this->layer = layer;
     }
 
@@ -49,6 +49,26 @@ public:
 private:
     Layer *layer;
     int frameId;
+};
+
+class ShapeRemovedEventHandlerArgs : public ScriptEventHandlerArgs{
+public:
+    ShapeRemovedEventHandlerArgs(Layer* layer, BaseShape* baseShape){
+        this->layer = layer;
+        this->baseShape = baseShape;
+    }
+
+    Layer* GetLayer(){
+        return this->layer;
+    }
+
+    BaseShape* GetShape(){
+        return this->baseShape;
+    }
+
+private:
+    Layer* layer;
+    BaseShape* baseShape;
 };
 
 class Layer : public Object {

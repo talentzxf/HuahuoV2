@@ -1,8 +1,19 @@
 import {huahuoEngine} from "../EngineAPI";
 import {BaseShapeJS, shapeFactory} from "../Shapes/BaseShapeJS";
+import {Logger} from "hhcommoncomponents"
 
 class LayerShapesManager {
     layerShapes = new Map();
+
+
+    removeShape(layer, obj){
+        if(!this.layerShapes.has(layer)){
+            Logger.error("Can't find layer!");
+        }else{
+            let shapesMap = this.layerShapes.get(layer)
+            shapesMap.delete(obj.ptr)
+        }
+    }
 
     getLayerShapes(layer):Map<number, any> {
 

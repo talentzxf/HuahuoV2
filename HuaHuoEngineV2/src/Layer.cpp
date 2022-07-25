@@ -63,6 +63,10 @@ void Layer::RemoveShape(BaseShape* shape){
         KeyFrameChangedEventHandlerArgs args(this, toDeleteFrameId);
         GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
     }
+
+    // Inform the script to remove the shape in JS side.
+    ShapeRemovedEventHandlerArgs args(this, shape);
+    GetScriptEventManager()->TriggerEvent("OnShapeRemoved", &args);
 }
 
 void Layer::AwakeAllShapes(AwakeFromLoadMode awakeFromLoadMode) {
@@ -79,7 +83,7 @@ void Layer::SetIsVisible(bool isVisible) {
         shape->SetIsVisible(isVisible);
     }
 
-    LayerUpdatedEventHanderArgs args(this);
+    LayerUpdatedEventHandlerArgs args(this);
     GetScriptEventManager()->TriggerEvent("OnLayerUpdated", &args);
 }
 

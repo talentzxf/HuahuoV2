@@ -364,11 +364,41 @@ void testDelete() {
     };
 
     rectangleShape->SetSegments(segments, 4);
+    rectangleShape->SetPosition(100.0f, 200.0f, 300.0f);
     rectangleShape->RemoveSegment(2);
 
     currentLayer->AddShapeInternal(rectangleShape);
 
     currentLayer->RemoveShape(rectangleShape);
+
+    for(int i = 0 ; i < 100; i++){
+        RectangleShape *rectangleShape2 = (RectangleShape *) BaseShape::CreateShape("RectangleShape");
+
+        float segments2[] = {
+                0.0f, 0.0f,
+                0.0f, 0.0f,
+                0.0f, 0.0f,
+                1.0f, 1.0f,
+                1.0f, 1.0f,
+                1.0f, 1.0f,
+                2.0f, 2.0f,
+                2.0f, 2.0f,
+                2.0f, 2.0f,
+                3.0f, 3.0f,
+                3.0f, 3.0f,
+                3.0f, 3.0f
+        };
+
+        rectangleShape2->SetSegments(segments, 4);
+        rectangleShape2->SetPosition(300.0f, 400.0f, 500.0f);
+        rectangleShape2->RemoveSegment(2);
+
+        currentLayer->AddShapeInternal(rectangleShape2);
+
+        rectangleShape2->SetPosition(500.0f, 600.0f, 700.0f);
+
+        currentLayer->RemoveShape(rectangleShape2);
+    }
 }
 
 int main() {
