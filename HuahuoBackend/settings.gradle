@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'HuahuoBackend'
-include('app', 'list', 'utilities')
+include('app', 'interfaces', 'utilities')

@@ -6,6 +6,3 @@ plugins {
     id 'HuahuoBackend.java-library-conventions'
 }
 
-dependencies {
-    api project(':list')
-}
