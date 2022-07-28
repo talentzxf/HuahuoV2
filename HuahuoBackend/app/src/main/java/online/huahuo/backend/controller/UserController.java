@@ -1,26 +1,30 @@
 package online.huahuo.backend.controller;
 
-import online.huahuo.backend.db.UserEntity;
+import lombok.AllArgsConstructor;
+import online.huahuo.backend.db.UserDB;
 import online.huahuo.backend.db.UserRepository;
 import online.huahuo.backend.exception.UserNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
+@AllArgsConstructor
 public class UserController {
     private final UserRepository userRepository;
 
-
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @GetMapping("/users")
+    List<UserDB> all(){
+        return (List<UserDB>) userRepository.findAll();
     }
 
-    @GetMapping("/user/{id}")
-    UserEntity one(@PathVariable Long id){
+    @GetMapping("/users/{id}")
+    UserDB one(@PathVariable Long id){
         return userRepository.findById(id).orElseThrow( ()-> new UserNotFoundException(id));
     }
 
-    @PostMapping("/user")
-    UserEntity newUser(@RequestBody UserEntity userEntity){
-        return userRepository.save(userEntity);
+    @PostMapping("/users")
+    UserDB newUser(@RequestBody UserDB userDB){
+        return userRepository.save(userDB);
     }
 }
