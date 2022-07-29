@@ -2,15 +2,17 @@ package online.huahuo.backend.db;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Required;
 
 import javax.persistence.*;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class FileDB {
+@Table(name = "PROJECTS", indexes = {
+        @Index(columnList = "name"),
+        @Index(columnList = "createdByUserId")
+})
+public class ProjectFileDB {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,13 +20,18 @@ public class FileDB {
 
     private String name;
     private String type;
+    private String version;
+
+    private Long createdByUserId;
 
     @Lob
     private byte[] data;
 
-    public FileDB(String name, String type, byte[] data){
+    public ProjectFileDB(String name, String type, String version, byte[] data, Long createdByUserId){
         this.name = name;
         this.type = type;
+        this.version = version;
         this.data = data;
+        this.createdByUserId = createdByUserId;
     }
 }

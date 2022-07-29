@@ -171,4 +171,18 @@ else ()
     target_link_libraries(TestHuaHuoEngine ${ALL_LIBS})
 endif ()
 
+include_directories("src")
+include_directories("Runtime")
+include_directories (${CMAKE_BINARY_DIR})
+
+set(JAVA_FILE "../../HuahuoBackend/app/src/main/java/online/huahuo/backend/hhenginejni/HuahuoEngineJNIInterface.java")
+# Generate java header file
+add_custom_command(OUTPUT online_huahuo_backend_hhenginejni_HuahuoEngineJNIInterface.h
+        COMMAND javac -h . ${JAVA_FILE}
+        VERBATIM )
+
+include_directories("jni")
+# build the lib for backend
+add_library(HuahuoEngineLib SHARED online_huahuo_backend_hhenginejni_HuahuoEngineJNIInterface.h  ${CPPFILES} jni/jniimpl.cpp)
+
 target_include_directories(${TARGETNAME} PUBLIC "${PROJECT_BINARY_DIR}" ${EXTRA_INCLUDE_DIR})

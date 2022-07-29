@@ -2,7 +2,7 @@ package online.huahuo.backend.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import online.huahuo.backend.db.FileDB;
+import online.huahuo.backend.db.ProjectFileDB;
 import online.huahuo.backend.storage.StorageService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 
@@ -32,13 +31,13 @@ public class FileUploadController {
     @ResponseBody
     @PostMapping("/projects/upload")
     public FileUploadStatus handleFileUpload(@RequestParam("file")MultipartFile file) throws IOException {
-        FileDB fileDB = storageService.store(file);
+        ProjectFileDB fileDB = storageService.store(file);
         return new FileUploadStatus(fileDB.getId(), true, "File uploaded successfully!");
     }
 
     @GetMapping("/projects/{projectId}")
     public ResponseEntity<Resource>  downloadProject(@PathVariable Long projectId){
-        FileDB fileDB = storageService.getById(projectId);
+        ProjectFileDB fileDB = storageService.getById(projectId);
         byte[] fileData = fileDB.getData();
         ByteArrayResource resource = new ByteArrayResource(fileData);
 

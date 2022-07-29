@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @Log
+@Table(name = "USERACCOUNTS", indexes = @Index(columnList = "identifier"))
 public class UserDB {
     @Id
     @Column(name = "id", nullable = false)
