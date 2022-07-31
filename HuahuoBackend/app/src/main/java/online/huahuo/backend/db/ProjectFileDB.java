@@ -23,15 +23,16 @@ public class ProjectFileDB {
     private String version;
 
     private Long createdByUserId;
+    private String path;
+    private String checksum;
 
-    @Lob
-    private byte[] data;
-
-    public ProjectFileDB(String name, String type, String version, byte[] data, Long createdByUserId){
+    public ProjectFileDB(String name, String type, String version, Long createdByUserId,
+                         String path, String checksum){
         this.name = name;
         this.type = type;
         this.version = version;
-        this.data = data;
+        this.path = path;
+        this.checksum = checksum;
         this.createdByUserId = createdByUserId;
     }
 }

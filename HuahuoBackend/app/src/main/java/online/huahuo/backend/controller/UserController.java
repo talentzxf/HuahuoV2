@@ -4,8 +4,13 @@ import lombok.AllArgsConstructor;
 import online.huahuo.backend.db.UserDB;
 import online.huahuo.backend.db.UserRepository;
 import online.huahuo.backend.exception.UserNotFoundException;
+import online.huahuo.backend.utils.Utils;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
@@ -13,6 +18,7 @@ import java.util.List;
 public class UserController {
     private final UserRepository userRepository;
 
+    @Secured("ADMIN")
     @GetMapping("/users")
     List<UserDB> all(){
         return (List<UserDB>) userRepository.findAll();
@@ -23,8 +29,13 @@ public class UserController {
         return userRepository.findById(id).orElseThrow( ()-> new UserNotFoundException(id));
     }
 
+    @Secured("ADMIN")
     @PostMapping("/users")
-    UserDB newUser(@RequestBody UserDB userDB){
+    UserDB newUser(@RequestBody UserDB userDB) throws NoSuchAlgorithmException {
+        String rawPassword = userDB.getPassword();
+        MessageDigest md = MessageDigest.getInstance("SHA3-256");
+        String hashedPassword = Utils.hashString(rawPassword);
+        userDB.setPassword(hashedPassword);
         return userRepository.save(userDB);
     }
 }

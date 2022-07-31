@@ -3,6 +3,7 @@
 //
 
 #include "online_huahuo_backend_hhenginejni_HuahuoEngineJNIInterface.h"
+#include "HuaHuoEngine.h"
 
 JNIEXPORT jobject JNICALL Java_online_huahuo_backend_hhenginejni_HuahuoEngineJNIInterface_getProjectFileMetaInfo
         (JNIEnv * env, jclass callerClass, jstring path){
@@ -12,6 +13,8 @@ JNIEXPORT jobject JNICALL Java_online_huahuo_backend_hhenginejni_HuahuoEngineJNI
     const char* projectFilePath = env->GetStringUTFChars(path, NULL);
 
     printf("Got project file path:%s\n", projectFilePath);
+
+    HuaHuoEngine::InitEngine();
 
     return newProjectMetaObj;
 }

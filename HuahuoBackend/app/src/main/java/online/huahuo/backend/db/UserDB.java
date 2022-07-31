@@ -15,6 +15,15 @@ public class UserDB {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String identifier; // Might be a phone number, might be email, but be external ref.
+    @Column(unique = true)
+    private String username; // Might be a phone number, might be email, might be external ref. but need to be unique.
+
+    @Column(name = "password_hash")
     private String password;
+
+    private String nickname;
+
+    // Huahuo has following foles:
+    // CREATOR/CREATOR/READER/ANONYMOUS
+    private String roles;
 }
