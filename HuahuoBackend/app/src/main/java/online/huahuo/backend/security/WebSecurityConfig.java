@@ -25,7 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationProvider authenticationProvider;
     private final JwtRequestFilter jwtFilter;
 
-    @Value("${hermes.security.disableCSRF}")
+    @Value("${huahuo.security.disableCSRF}")
     private boolean disableCSRF;
 
     @Override

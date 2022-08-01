@@ -1,15 +1,19 @@
 package online.huahuo.backend.db;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.extern.java.Log;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Data
-@Log
+@Builder
 @Table(name = "USERACCOUNTS")
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDB {
     @Id
     @Column(name = "id", nullable = false)

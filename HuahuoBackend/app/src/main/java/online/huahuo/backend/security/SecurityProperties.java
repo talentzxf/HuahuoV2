@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 import java.time.Duration;
 
 @ConstructorBinding
-@ConfigurationProperties(prefix = "hermes.jwt")
+@ConfigurationProperties(prefix = "huahuo.jwt")
 @Getter
 @RequiredArgsConstructor
 public class SecurityProperties implements InitializingBean {
