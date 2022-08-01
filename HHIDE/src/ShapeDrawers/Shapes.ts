@@ -5,6 +5,7 @@ import {RectangleDrawer} from "./RectangleDrawer"
 import {ShapeSelector} from "./ShapeSelector";
 import {AudioClipSelector} from "./AudioClipSelector";
 import {TextDrawer} from "./TextDrawer";
+import {ImageSelector} from "./ImageSelector"
 
 let shapes = [
     new ShapeSelector(),
@@ -13,7 +14,8 @@ let shapes = [
     new RectangleDrawer(),
     new CurveDrawer(),
     new TextDrawer(),
-    new AudioClipSelector()
+    new AudioClipSelector(),
+    new ImageSelector()
 ]
 
 let defaultShapeDrawerArray = shapes.filter(drawer=>{
