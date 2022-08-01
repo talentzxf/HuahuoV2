@@ -8,9 +8,14 @@ class LoginForm extends HTMLElement {
         this.style.position = "absolute"
         this.style.top = "50%"
         this.style.left = "50%"
-        let span = document.createElement("span")
-        span.innerText = "Login!!!!!"
-        this.appendChild(span)
+        let container = document.createElement("form")
+        container.innerHTML = "" +
+            "<div class=container>" +
+            "   <label for='uname'><b>Username</b></label>" +
+            "   <input type='text' placeholder='Enter Username' name='username'> " +
+            "</div>"
+
+        this.appendChild(container)
     }
 }
 
