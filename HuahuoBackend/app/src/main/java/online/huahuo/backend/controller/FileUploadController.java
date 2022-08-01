@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 @Data
 @AllArgsConstructor
@@ -30,24 +31,24 @@ public class FileUploadController {
 
     @ResponseBody
     @PostMapping("/projects/upload")
-    public FileUploadStatus handleFileUpload(@RequestParam("file")MultipartFile file) throws IOException {
+    public FileUploadStatus handleFileUpload(@RequestParam("file")MultipartFile file) throws IOException, NoSuchAlgorithmException {
         ProjectFileDB fileDB = storageService.store(file);
         return new FileUploadStatus(fileDB.getId(), true, "File uploaded successfully!");
     }
 
-    @GetMapping("/projects/{projectId}")
-    public ResponseEntity<Resource>  downloadProject(@PathVariable Long projectId){
-        ProjectFileDB fileDB = storageService.getById(projectId);
-        byte[] fileData = fileDB.getData();
-        ByteArrayResource resource = new ByteArrayResource(fileData);
+//    @GetMapping("/projects/{projectId}")
+//    public ResponseEntity<Resource>  downloadProject(@PathVariable Long projectId){
+//        ProjectFileDB fileDB = storageService.getById(projectId);
+//        byte[] fileData = fileDB.getData();
+//        ByteArrayResource resource = new ByteArrayResource(fileData);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + fileDB.getName() + "\"");
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + fileDB.getName() + "\"");
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(fileData.length)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
-    }
+//        return ResponseEntity.ok()
+//                .headers(headers)
+//                .contentLength(fileData.length)
+//                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+//                .body(resource);
+//    }
 }

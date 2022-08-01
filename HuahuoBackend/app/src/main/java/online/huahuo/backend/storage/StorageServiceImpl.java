@@ -1,6 +1,7 @@
 package online.huahuo.backend.storage;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import online.huahuo.backend.db.ProjectFileDB;
 import online.huahuo.backend.db.FileRepository;
 import online.huahuo.backend.utils.Utils;
@@ -14,7 +15,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class StorageServiceImpl implements StorageService{
     private FileRepository fileRepository;
 
@@ -26,8 +27,6 @@ public class StorageServiceImpl implements StorageService{
             return dataFilePath;
         return dataFilePath + File.separator;
     }
-
-
 
     @Override
     public ProjectFileDB store(MultipartFile file) throws IOException, NoSuchAlgorithmException {

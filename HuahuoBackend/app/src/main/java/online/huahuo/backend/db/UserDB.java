@@ -4,11 +4,12 @@ import lombok.Data;
 import lombok.extern.java.Log;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
 @Log
-@Table(name = "USERACCOUNTS", indexes = @Index(columnList = "identifier"))
+@Table(name = "USERACCOUNTS")
 public class UserDB {
     @Id
     @Column(name = "id", nullable = false)
@@ -23,7 +24,11 @@ public class UserDB {
 
     private String nickname;
 
-    // Huahuo has following foles:
-    // CREATOR/CREATOR/READER/ANONYMOUS
-    private String roles;
+    private UserRole role;
+
+    private UserStatus status;
+
+    private Date createTime;
+    private Date lastLoginTime;
+    private Date modifiedTime;
 }

@@ -33,7 +33,6 @@ public class UserController {
     @PostMapping("/users")
     UserDB newUser(@RequestBody UserDB userDB) throws NoSuchAlgorithmException {
         String rawPassword = userDB.getPassword();
-        MessageDigest md = MessageDigest.getInstance("SHA3-256");
         String hashedPassword = Utils.hashString(rawPassword);
         userDB.setPassword(hashedPassword);
         return userRepository.save(userDB);
