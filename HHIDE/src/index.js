@@ -7,6 +7,8 @@ import {NavTree} from "./UIComponents/NavTree"
 import {DrawToolBar} from "./UIComponents/DrawToolBar";
 import {SceneView} from "./SceneView/SceneView";
 import {Inspector} from "./Inspector/Inspector";
+import {LoginForm} from "./Login/LoginForm";
+import {dataFileUploader} from "./RESTApis/DataFileUploader";
 
 import "vanilla-colorful"
 
@@ -86,7 +88,12 @@ function load(fName, e) {
     reader.readAsArrayBuffer(file)
 }
 
+function upload(){
+    dataFileUploader.upload()
+}
+
 window.menuoperations = {
     save: save,
     load: load,
+    upload: upload
 }
