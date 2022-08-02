@@ -8,14 +8,13 @@ class LoginForm extends HTMLElement {
         this.style.position = "absolute"
         this.style.top = "50%"
         this.style.left = "50%"
-        let container = document.createElement("form")
-        container.innerHTML = "" +
+        this.style.transform = "translate(-50%, -50%)"
+        let container = document.createElement("div")
+        container.innerHTML =
             "<style>" +
             "form{" +
             "    width: 400px;\n" +
             "    background-color: rgba(255,255,255,0.13);\n" +
-            "    position: absolute;\n" +
-            "    transform: translate(-50%,-50%);\n" +
             "    top: 50%;\n" +
             "    left: 50%;\n" +
             "    border-radius: 10px;\n" +
@@ -37,6 +36,17 @@ class LoginForm extends HTMLElement {
             "    text-align: center;\n" +
             "}" +
             "" +
+            "form input{\n" +
+            "    display: block;\n" +
+            "    height: 50px;\n" +
+            "    width: 100%;\n" +
+            "    background-color: rgba(255,255,255,0.07);\n" +
+            "    border-radius: 3px;\n" +
+            "    padding: 0 10px;\n" +
+            "    margin-top: 8px;\n" +
+            "    font-size: 14px;\n" +
+            "    font-weight: 300;\n" +
+            "}" +
             "/* Full-width inputs */\n" +
             "form input[type=text], input[type=password] {" +
             "  width: 100%;" +
@@ -57,15 +67,20 @@ class LoginForm extends HTMLElement {
             "  cursor: pointer;" +
             "  width: 100%;" +
             "}" +
-            "</style>" +
-            "<form>" +
-            "   <h3>Login Here</h3>" +
-            "   <label for='uname'><b>Username</b></label>" +
-            "   <input type='text' placeholder='Enter Username' name='username'> " +
-            "   <label for='pwd'><b>Password</b></label>" +
-            "   <input type='password' placeholder='Enter Password' name='password'> " +
-            "   <button type='submit'>Login</button>" +
-            "</form>"
+            "</style>"
+
+        container.innerHTML+=
+            "   <div>" +
+            "       <img></img>" +
+            "   </div>" +
+            "   <form>" +
+            "       <h3>Login Here</h3>" +
+            "       <label for='uname'><b>Username</b></label>" +
+            "       <input type='text' placeholder='Enter Username' name='username'> " +
+            "       <label for='pwd'><b>Password</b></label>" +
+            "       <input type='password' placeholder='Enter Password' name='password'> " +
+            "       <button type='submit'>Login</button>" +
+            "   </form>"
 
         this.appendChild(container)
     }
