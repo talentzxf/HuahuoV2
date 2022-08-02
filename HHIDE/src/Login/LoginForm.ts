@@ -12,11 +12,33 @@ class LoginForm extends HTMLElement {
         container.innerHTML = "" +
             "<style>" +
             "form{" +
-            "   border: 3px solid #f1f1f1" +
+            "    width: 400px;\n" +
+            "    background-color: rgba(255,255,255,0.13);\n" +
+            "    position: absolute;\n" +
+            "    transform: translate(-50%,-50%);\n" +
+            "    top: 50%;\n" +
+            "    left: 50%;\n" +
+            "    border-radius: 10px;\n" +
+            "    backdrop-filter: blur(10px);\n" +
+            "    border: 2px solid rgba(255,255,255,0.1);\n" +
+            "    box-shadow: 0 0 40px rgba(8,7,16,0.6);\n" +
+            "    padding: 50px 35px;" +
+            "}" +
+            "form *{\n" +
+            "    font-family: 'Poppins',sans-serif;\n" +
+            "    letter-spacing: 0.5px;\n" +
+            "    outline: none;\n" +
+            "    border: none;\n" +
+            "}\n" +
+            "form h3{\n" +
+            "    font-size: 32px;\n" +
+            "    font-weight: 500;\n" +
+            "    line-height: 42px;\n" +
+            "    text-align: center;\n" +
             "}" +
             "" +
             "/* Full-width inputs */\n" +
-            "input[type=text], input[type=password] {" +
+            "form input[type=text], input[type=password] {" +
             "  width: 100%;" +
             "  padding: 12px 20px;" +
             "  margin: 8px 0;" +
@@ -26,7 +48,7 @@ class LoginForm extends HTMLElement {
             "}" +
             "" +
             "/* Set a style for all buttons */" +
-            "button {" +
+            "form button {" +
             "  background-color: #04AA6D;" +
             "  color: white;" +
             "  padding: 14px 20px;" +
@@ -36,13 +58,14 @@ class LoginForm extends HTMLElement {
             "  width: 100%;" +
             "}" +
             "</style>" +
-            "<div class=container>" +
+            "<form>" +
+            "   <h3>Login Here</h3>" +
             "   <label for='uname'><b>Username</b></label>" +
             "   <input type='text' placeholder='Enter Username' name='username'> " +
             "   <label for='pwd'><b>Password</b></label>" +
             "   <input type='password' placeholder='Enter Password' name='password'> " +
             "   <button type='submit'>Login</button>" +
-            "</div>"
+            "</form>"
 
         this.appendChild(container)
     }
