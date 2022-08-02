@@ -1,7 +1,8 @@
 class UserInfo{
     username: string
-    pwd: string
+    password: string
     isLoggedIn: boolean = false
+    jwtToken: string
 }
 
 let userInfo = new UserInfo()

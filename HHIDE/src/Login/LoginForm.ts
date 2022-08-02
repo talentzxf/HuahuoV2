@@ -1,14 +1,9 @@
 import {CustomElement, Logger} from "hhcommoncomponents";
-import axios from 'axios';
 import huahuoProperties from "../hhide.properties"
+import {userInfo} from "./UserInfo";
+import {api} from "../RESTApis/RestApi";
 
 let loginForm = null;
-
-class CreateUserResponse {
-    userName: string
-    password: string
-}
-
 @CustomElement({
     selector: "hh-login-form"
 })
@@ -19,11 +14,8 @@ class LoginForm extends HTMLElement {
 
     anonymouseBtn: HTMLButtonElement = null;
     loginFormContainer: HTMLElement = null;
-    baseUrl: string;
 
     connectedCallback() {
-        this.baseUrl = huahuoProperties["huahuo.backend.url"]
-
         this.style.position = "absolute"
         this.style.top = "50%"
         this.style.left = "50%"
@@ -122,35 +114,6 @@ class LoginForm extends HTMLElement {
         this.anonymouseBtn.addEventListener("click", this.anonymousLogin.bind(this))
     }
 
-    async createAnonymousUser() {
-        let loginUrl = this.baseUrl + "/users"
-
-        try {
-            const {data, status} = await axios.post<CreateUserResponse>(
-                loginUrl,
-                null,
-                {
-                    headers: {
-                        isAnonymous: true,
-                        'Content-Type': 'application/json'
-                    }
-                }
-            )
-
-            console.log(data)
-            window.localStorage.setItem("username", data.userName)
-            window.localStorage.setItem("password", data.password)
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                Logger.error("Axios error happened!", error.message);
-                return error.message
-            } else {
-                Logger.error("Unexpected error happened!", error);
-                return "Unexcepted error happened!"
-            }
-        }
-    }
-
     login() {
         this._login();
     }
@@ -169,10 +132,14 @@ class LoginForm extends HTMLElement {
             }
 
             if (needToCreateAnonymousUser) {
-                await this.createAnonymousUser()
+                await api.createAnonymousUser()
             }
         } else {
             window.alert("Not implemented!")
+        }
+
+        if(userInfo.username != null && userInfo.password != null && !userInfo.isLoggedIn){
+            this.login
         }
     }
 
