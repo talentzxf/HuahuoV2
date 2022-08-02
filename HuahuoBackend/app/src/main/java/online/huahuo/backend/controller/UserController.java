@@ -20,6 +20,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
+    private final String passwordMask = "XXXXXXXXXX";
+
     private final UserService userService;
 
     @Value("${huahuo.anonymous.usernameLength}")
@@ -42,17 +44,18 @@ public class UserController {
 //    // TODO: Disable cross origin in PROD!
 //    @CrossOrigin(origins = "http://127.0.0.1:8989")
     @PostMapping("/users")
-    ResponseEntity<UserDB> newUser(@RequestHeader(required = false) Boolean isAnonymous, @RequestBody(required = false) UserDB userDB) throws NoSuchAlgorithmException {
-        if(isAnonymous == null && userDB == null){
+    ResponseEntity<UserDB> newUser(@RequestHeader(required = false) Boolean isAnonymous, @RequestBody(required = false) UserDB user) throws NoSuchAlgorithmException {
+        if(isAnonymous == null && user == null){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
-        if(!isAnonymous){
-            String rawPassword = userDB.getPassword();
+        if(isAnonymous == null || !isAnonymous){
+            String rawPassword = user.getPassword();
             String hashedPassword = Utils.hashString(rawPassword);
-            userDB.setPassword(hashedPassword);
+            user.setPassword(hashedPassword);
 
-            UserDB usrDB = userService.save(userDB);
+            UserDB usrDB = userService.save(user);
+            usrDB.setPassword(passwordMask);
             return new ResponseEntity<UserDB>(usrDB, HttpStatus.OK);
         }else{
             String username = RandomStringUtils.random(anonymousUserNameLength, true, true);
