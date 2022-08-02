@@ -1,16 +1,37 @@
-import {CustomElement} from "hhcommoncomponents";
+import {CustomElement, Logger} from "hhcommoncomponents";
+import axios from 'axios';
+import huahuoProperties from "../hhide.properties"
+
+let loginForm = null;
+
+class CreateUserResponse{
+    userName: string
+    password: string
+    httpStatus: string
+    failReason: string
+}
 
 @CustomElement({
     selector: "hh-login-form"
 })
 class LoginForm extends HTMLElement {
+    closeBtn: HTMLElement = null;
+    loginBtn: HTMLButtonElement = null;
+    loginForm: HTMLFormElement = null;
+
+    anonymouseBtn: HTMLButtonElement = null;
+    loginFormContainer: HTMLElement = null;
+    baseUrl: string;
+
     connectedCallback(){
+        this.baseUrl = huahuoProperties["huahuo.backend.url"]
+
         this.style.position = "absolute"
         this.style.top = "50%"
         this.style.left = "50%"
         this.style.transform = "translate(-50%, -50%)"
-        let container = document.createElement("div")
-        container.innerHTML =
+        this.loginFormContainer = document.createElement("div")
+        this.loginFormContainer.innerHTML =
             "<style>" +
             "form{" +
             "    width: 400px;\n" +
@@ -69,24 +90,87 @@ class LoginForm extends HTMLElement {
             "}" +
             "</style>"
 
-        container.innerHTML+=
-            "   <div>" +
-            "       <img></img>" +
+
+        this.loginFormContainer.innerHTML+=
+            "   <form id='loginForm'>" +
+            "   <div style='display: flex; flex-direction: row-reverse'>" +
+            "       <div id='loginFormCloseBtn' >" +
+            "           <img class='far fa-circle-xmark'></img>" +
+            "       </div>" +
             "   </div>" +
-            "   <form>" +
             "       <h3>Login Here</h3>" +
             "       <label for='uname'><b>Username</b></label>" +
             "       <input type='text' placeholder='Enter Username' name='username'> " +
             "       <label for='pwd'><b>Password</b></label>" +
             "       <input type='password' placeholder='Enter Password' name='password'> " +
-            "       <button type='submit'>Login</button>" +
+            "       <button id='loginBtn'>Login</button>" +
+            "       <button id='anonymousLoginBtn'>Anonymous Login</button>" +
             "   </form>"
 
-        this.appendChild(container)
+        this.appendChild(this.loginFormContainer)
+
+        this.loginForm = this.loginFormContainer.querySelector("form")
+        this.loginForm.addEventListener("submit", function(e){
+            e.stopPropagation()
+            e.preventDefault()
+        })
+
+        this.closeBtn = this.loginFormContainer.querySelector("#loginFormCloseBtn")
+        this.closeBtn.addEventListener("mousedown", this.closeForm.bind(this))
+
+        this.loginBtn = this.loginFormContainer.querySelector("#loginBtn")
+        this.loginBtn.addEventListener("click", this.login.bind(this))
+        this.anonymouseBtn = this.loginFormContainer.querySelector("#anonymousLoginBtn")
+        this.loginBtn.addEventListener("click", this.anonymousLogin.bind(this))
+    }
+
+    async createAnonymousUser(){
+        let loginUrl = this.baseUrl + "/login"
+
+        try{
+            const {data, status} = await axios.post<CreateUserResponse>(
+                loginUrl,
+            )
+        }catch (error){
+            if(axios.isAxiosError(error)){
+                Logger.error("Axios error happened!", error.message);
+                return error.message
+            } else {
+                Logger.error("Unexpected error happened!", error);
+                return "Unexcepted error happened!"
+            }
+        }
+    }
+
+    login(anonymousLogin:boolean){
+        if(anonymousLogin){
+            let needToCreateAnonymousUser = true;
+            let userName = window.localStorage.getItem("username")
+            if(userName){
+                let pwd = window.localStorage.getItem("password")
+                if(pwd != null){
+                    needToCreateAnonymousUser = false;
+                }else{
+                    Logger.error("User name is there but pwd is not???")
+                }
+            }
+
+            if(needToCreateAnonymousUser){
+                this.createAnonymousUser()
+            }
+        }else{
+            window.alert("Not implemented!")
+        }
+    }
+
+    anonymousLogin(){
+        this.login(true)
+    }
+
+    closeForm(){
+        this.style.display = "none";
     }
 }
-
-let loginForm = null;
 
 function openLoginForm() {
     if(loginForm == null){
@@ -94,6 +178,6 @@ function openLoginForm() {
         document.body.appendChild(loginForm)
     }
 
-
+    loginForm.style.display = "block"
 }
 export {openLoginForm}

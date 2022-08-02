@@ -25,6 +25,7 @@ import {faEye} from "@fortawesome/free-regular-svg-icons"
 import {faEyeSlash} from "@fortawesome/free-regular-svg-icons";
 import {faEdit} from "@fortawesome/free-regular-svg-icons";
 import {faFileImage} from "@fortawesome/free-regular-svg-icons";
+import {faTimesCircle} from "@fortawesome/free-regular-svg-icons";
 import {saveAs} from 'file-saver';
 import {Logger} from "hhcommoncomponents";
 import {fileLoader} from "./SceneView/FileLoader";
@@ -43,6 +44,7 @@ library.add(faEye)
 library.add(faEyeSlash)
 library.add(faEdit)
 library.add(faFileImage)
+library.add(faTimesCircle)
 dom.watch();
 
 function save() {

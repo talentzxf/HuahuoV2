@@ -22,7 +22,15 @@ module.exports = {
             {
                 test: /\.css$/i,
                 use:["style-loader","css-loader"]
-            }
+            },
+            {
+                test: /\.properties$/i,
+                use: [
+                    {
+                        loader: 'properties-file/webpack-loader',
+                    },
+                ],
+            },
         ]
     },
     devServer: {
