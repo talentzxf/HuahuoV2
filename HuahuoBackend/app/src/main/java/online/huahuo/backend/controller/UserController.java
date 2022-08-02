@@ -41,8 +41,8 @@ public class UserController {
         return userService.findById(id).orElseThrow( ()-> new UserNotFoundException(id));
     }
 
-//    // TODO: Disable cross origin in PROD!
-//    @CrossOrigin(origins = "http://127.0.0.1:8989")
+    // TODO: Disable cross origin in PROD!
+    @CrossOrigin(origins = "http://127.0.0.1:8989")
     @PostMapping("/users")
     ResponseEntity<UserDB> newUser(@RequestHeader(required = false) Boolean isAnonymous, @RequestBody(required = false) UserDB user) throws NoSuchAlgorithmException {
         if(isAnonymous == null && user == null){

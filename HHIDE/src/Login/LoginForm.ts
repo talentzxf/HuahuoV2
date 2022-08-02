@@ -4,7 +4,7 @@ import huahuoProperties from "../hhide.properties"
 
 let loginForm = null;
 
-class CreateUserResponse{
+class CreateUserResponse {
     userName: string
     password: string
 }
@@ -21,7 +21,7 @@ class LoginForm extends HTMLElement {
     loginFormContainer: HTMLElement = null;
     baseUrl: string;
 
-    connectedCallback(){
+    connectedCallback() {
         this.baseUrl = huahuoProperties["huahuo.backend.url"]
 
         this.style.position = "absolute"
@@ -89,7 +89,7 @@ class LoginForm extends HTMLElement {
             "</style>"
 
 
-        this.loginFormContainer.innerHTML+=
+        this.loginFormContainer.innerHTML +=
             "   <form id='loginForm'>" +
             "   <div style='display: flex; flex-direction: row-reverse'>" +
             "       <div id='loginFormCloseBtn' >" +
@@ -108,7 +108,7 @@ class LoginForm extends HTMLElement {
         this.appendChild(this.loginFormContainer)
 
         this.loginForm = this.loginFormContainer.querySelector("form")
-        this.loginForm.addEventListener("submit", function(e){
+        this.loginForm.addEventListener("submit", function (e) {
             e.stopPropagation()
             e.preventDefault()
         })
@@ -122,17 +122,26 @@ class LoginForm extends HTMLElement {
         this.anonymouseBtn.addEventListener("click", this.anonymousLogin.bind(this))
     }
 
-    async createAnonymousUser(){
-        let loginUrl = this.baseUrl + "/users?isAnonymous=true"
+    async createAnonymousUser() {
+        let loginUrl = this.baseUrl + "/users"
 
-        try{
+        try {
             const {data, status} = await axios.post<CreateUserResponse>(
-                loginUrl
+                loginUrl,
+                null,
+                {
+                    headers: {
+                        isAnonymous: true,
+                        'Content-Type': 'application/json'
+                    }
+                }
             )
 
             console.log(data)
-        }catch (error){
-            if(axios.isAxiosError(error)){
+            window.localStorage.setItem("username", data.userName)
+            window.localStorage.setItem("password", data.password)
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
                 Logger.error("Axios error happened!", error.message);
                 return error.message
             } else {
@@ -142,46 +151,47 @@ class LoginForm extends HTMLElement {
         }
     }
 
-    login(){
+    login() {
         this._login();
     }
 
-    _login(anonymousLogin:boolean = false){
-        if(anonymousLogin){
+    async _login(anonymousLogin: boolean = false) {
+        if (anonymousLogin) {
             let needToCreateAnonymousUser = true;
             let userName = window.localStorage.getItem("username")
-            if(userName){
+            if (userName) {
                 let pwd = window.localStorage.getItem("password")
-                if(pwd != null){
+                if (pwd != null) {
                     needToCreateAnonymousUser = false;
-                }else{
+                } else {
                     Logger.error("User name is there but pwd is not???")
                 }
             }
 
-            if(needToCreateAnonymousUser){
-                this.createAnonymousUser()
+            if (needToCreateAnonymousUser) {
+                await this.createAnonymousUser()
             }
-        }else{
+        } else {
             window.alert("Not implemented!")
         }
     }
 
-    anonymousLogin(){
+    anonymousLogin() {
         this._login(true)
     }
 
-    closeForm(){
+    closeForm() {
         this.style.display = "none";
     }
 }
 
 function openLoginForm() {
-    if(loginForm == null){
+    if (loginForm == null) {
         loginForm = document.createElement("hh-login-form")
         document.body.appendChild(loginForm)
     }
 
     loginForm.style.display = "block"
 }
+
 export {openLoginForm}
