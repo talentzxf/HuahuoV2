@@ -1,5 +1,6 @@
 package online.huahuo.backend.security;
 
+import lombok.RequiredArgsConstructor;
 import online.huahuo.backend.db.UserDB;
 import online.huahuo.backend.db.UserRepository;
 import online.huahuo.backend.db.UserRole;
@@ -24,6 +25,7 @@ import java.util.regex.Pattern;
 import static java.util.function.Predicate.not;
 
 @Component
+@RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter{
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final Pattern BEARER_PATTERN = Pattern.compile("^Bearer (.+?)$");

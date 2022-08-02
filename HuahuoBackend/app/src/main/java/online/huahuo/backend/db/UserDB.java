@@ -29,7 +29,6 @@ public class UserDB {
     private String nickname;
 
     private UserRole role;
-
     private UserStatus status;
 
     private Date createTime;

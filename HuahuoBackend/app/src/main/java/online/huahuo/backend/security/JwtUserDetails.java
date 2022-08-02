@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @RequiredArgsConstructor
 public class JwtUserDetails implements UserDetails {
-    private final String username; // This is actually email, in our system, we auth by email. Username is for display purpose only.
+    private final String username;
     private final String password;
     private final List<SimpleGrantedAuthority> authorities;
     private final String token;
