@@ -13,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Data
 class LoginStatus{
@@ -62,6 +59,8 @@ public class LoginController {
         return loginStatus;
     }
 
+    // TODO: Disable cross origin in PROD!
+    @CrossOrigin(origins = "http://127.0.0.1:8989")
     @PostMapping("/login")
     ResponseEntity<?> login(@RequestParam(required = false) String username, @RequestParam(required = false) String password){
         LoginStatus loginStatus = new LoginStatus();

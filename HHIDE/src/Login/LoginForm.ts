@@ -125,12 +125,14 @@ class LoginForm extends HTMLElement {
     }
 
     async createAnonymousUser(){
-        let loginUrl = this.baseUrl + "/login"
+        let loginUrl = this.baseUrl + "/user?anonymous=true"
 
         try{
             const {data, status} = await axios.post<CreateUserResponse>(
-                loginUrl,
+                loginUrl
             )
+
+            console.log(data)
         }catch (error){
             if(axios.isAxiosError(error)){
                 Logger.error("Axios error happened!", error.message);
@@ -142,7 +144,11 @@ class LoginForm extends HTMLElement {
         }
     }
 
-    login(anonymousLogin:boolean){
+    login(){
+        this._login();
+    }
+
+    _login(anonymousLogin:boolean = false){
         if(anonymousLogin){
             let needToCreateAnonymousUser = true;
             let userName = window.localStorage.getItem("username")
@@ -164,7 +170,7 @@ class LoginForm extends HTMLElement {
     }
 
     anonymousLogin(){
-        this.login(true)
+        this._login(true)
     }
 
     closeForm(){
