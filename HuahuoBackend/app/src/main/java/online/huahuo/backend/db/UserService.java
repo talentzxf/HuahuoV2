@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,22 @@ public class UserService implements InitializingBean {
     private String defaultUserName;
     @Value("${huahuo.jwt.passwordStrength}")
     private int passwordStrength;
+
+    public Iterable<UserDB> findAll(){
+        return userRepository.findAll();
+    }
+
+    public Optional<UserDB> findById(Long id){
+        return userRepository.findById(id);
+    }
+
+    public UserDB save(UserDB userDB){
+        return userRepository.save(userDB);
+    }
+
+    public UserDB findByUsername(String userName){
+        return userRepository.findByUsername(userName);
+    }
 
     public UserDB createUser(String username, String pwd, UserRole role){
         UserDB user = UserDB.builder()

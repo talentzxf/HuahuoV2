@@ -7,8 +7,6 @@ let loginForm = null;
 class CreateUserResponse{
     userName: string
     password: string
-    httpStatus: string
-    failReason: string
 }
 
 @CustomElement({
@@ -121,11 +119,11 @@ class LoginForm extends HTMLElement {
         this.loginBtn = this.loginFormContainer.querySelector("#loginBtn")
         this.loginBtn.addEventListener("click", this.login.bind(this))
         this.anonymouseBtn = this.loginFormContainer.querySelector("#anonymousLoginBtn")
-        this.loginBtn.addEventListener("click", this.anonymousLogin.bind(this))
+        this.anonymouseBtn.addEventListener("click", this.anonymousLogin.bind(this))
     }
 
     async createAnonymousUser(){
-        let loginUrl = this.baseUrl + "/user?anonymous=true"
+        let loginUrl = this.baseUrl + "/users?isAnonymous=true"
 
         try{
             const {data, status} = await axios.post<CreateUserResponse>(

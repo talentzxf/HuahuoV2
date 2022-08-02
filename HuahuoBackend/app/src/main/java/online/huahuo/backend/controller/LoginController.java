@@ -29,43 +29,12 @@ public class LoginController {
     private final AuthenticationProvider authenticationProvider;
     private final UserService userService;
 
-    @Value("${huahuo.anonymous.usernameLength}")
-    private int anonymousUserNameLength;
-
-    @Value("${huahuo.anonymous.passwordLength}")
-    private int anonymousPwdLength;
-
-    LoginStatus loginAnonymousUser(){
-        String username = RandomStringUtils.random(anonymousUserNameLength, true, true);
-
-        while(userRepository.findByUsername(username) != null){
-            username = RandomStringUtils.random(anonymousUserNameLength, true, true);
-        }
-
-        LoginStatus loginStatus = new LoginStatus();
-        loginStatus.setUserName(username);
-        String pwd = RandomStringUtils.random(anonymousPwdLength, true, true);
-
-        if(null == userService.createUser(username, pwd, UserRole.ANONYMOUS) ){
-            loginStatus.setHttpStatus(HttpStatus.SERVICE_UNAVAILABLE);
-            loginStatus.setFailReason("Can't create user!");
-            return loginStatus;
-        }
-
-        UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(username, pwd);
-        SecurityContextHolder.getContext().setAuthentication(authenticationProvider.authenticate(credentials));
-
-        loginStatus.setHttpStatus(HttpStatus.OK);
-        return loginStatus;
-    }
-
-    // TODO: Disable cross origin in PROD!
-    @CrossOrigin(origins = "http://127.0.0.1:8989")
     @PostMapping("/login")
     ResponseEntity<?> login(@RequestParam(required = false) String username, @RequestParam(required = false) String password){
         LoginStatus loginStatus = new LoginStatus();
         if(username == null || password == null){
-            loginStatus = loginAnonymousUser();
+            loginStatus.setFailReason("Username or pwd is null");
+            loginStatus.setHttpStatus(HttpStatus.BAD_REQUEST);
             return new ResponseEntity<>(loginStatus, loginStatus.getHttpStatus());
         }
 

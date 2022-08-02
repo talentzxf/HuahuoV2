@@ -43,7 +43,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(jwtFilter, RequestHeaderAuthenticationFilter.class);
 
-        if(disableCSRF)
+        if(disableCSRF){
             httpSecurity.csrf().disable();
+            httpSecurity.cors().disable();
+        }
     }
 }
