@@ -18,10 +18,6 @@ public class SecurityProperties implements InitializingBean {
      */
     private final int passwordStrength;
     /**
-     * Secret used to generate and verify JWT tokens
-     */
-    private final String tokenSecret;
-    /**
      * Name of the token issuer
      */
     private final String tokenIssuer;

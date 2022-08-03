@@ -10,7 +10,8 @@ class CreateUserResponse {
 
 class LoginResponse {
     userName: string
-    failReason: null
+    failReason: string
+    jwtToken: string
     httpStatus: string
 }
 
@@ -54,6 +55,7 @@ class RestApi {
         let loginResponse:LoginResponse = await this._callApi<LoginResponse>(loginUrl)
 
         if(loginResponse.httpStatus && loginResponse.httpStatus == "OK"){
+            userInfo.jwtToken = loginResponse.jwtToken
             userInfo.isLoggedIn = true
         }
 
