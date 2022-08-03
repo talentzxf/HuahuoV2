@@ -1,7 +1,6 @@
 import {CustomElement, Logger} from "hhcommoncomponents";
-import huahuoProperties from "../hhide.properties"
 import {userInfo} from "./UserInfo";
-import {api} from "../RESTApis/RestApi";
+import {api, LoginResponse} from "../RESTApis/RestApi";
 
 let loginForm = null;
 @CustomElement({
@@ -119,6 +118,11 @@ class LoginForm extends HTMLElement {
     }
 
     async _login(anonymousLogin: boolean = false) {
+        if(userInfo.isLoggedIn){
+            Logger.warn("Has already logged in, no need to login again!")
+            return
+        }
+
         if (anonymousLogin) {
             let needToCreateAnonymousUser = true;
             let userName = window.localStorage.getItem("username")
@@ -126,6 +130,10 @@ class LoginForm extends HTMLElement {
                 let pwd = window.localStorage.getItem("password")
                 if (pwd != null) {
                     needToCreateAnonymousUser = false;
+
+                    userInfo.username = userName
+                    userInfo.password = pwd
+                    userInfo.isLoggedIn = false
                 } else {
                     Logger.error("User name is there but pwd is not???")
                 }
@@ -139,7 +147,14 @@ class LoginForm extends HTMLElement {
         }
 
         if(userInfo.username != null && userInfo.password != null && !userInfo.isLoggedIn){
-            this.login
+            let loginResponse:LoginResponse = await api.login()
+
+            if(userInfo.isLoggedIn)
+                Logger.info("User:" + userInfo.username + " just logged in!")
+            else
+                Logger.error("User:" + userInfo.username + " login failed! Reason:" + loginResponse.failReason)
+        }else{
+            Logger.error("User name or pwd is null!")
         }
     }
 

@@ -6,4 +6,4 @@ class UserInfo{
 }
 
 let userInfo = new UserInfo()
-export {userInfo}
+export {userInfo, UserInfo}

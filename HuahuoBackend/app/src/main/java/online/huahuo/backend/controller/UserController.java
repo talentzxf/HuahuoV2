@@ -6,6 +6,7 @@ import online.huahuo.backend.db.UserDB;
 import online.huahuo.backend.db.UserRole;
 import online.huahuo.backend.db.UserService;
 import online.huahuo.backend.exception.UserNotFoundException;
+import online.huahuo.backend.security.UserPasswordEncoder;
 import online.huahuo.backend.utils.Utils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -23,6 +25,8 @@ public class UserController {
     private final String passwordMask = "XXXXXXXXXX";
 
     private final UserService userService;
+
+    private final UserPasswordEncoder userPasswordEncoder;
 
     @Value("${huahuo.anonymous.usernameLength}")
     private int anonymousUserNameLength;
@@ -41,8 +45,6 @@ public class UserController {
         return userService.findById(id).orElseThrow( ()-> new UserNotFoundException(id));
     }
 
-    // TODO: Disable cross origin in PROD!
-    @CrossOrigin(origins = "http://127.0.0.1:8989")
     @PostMapping("/users")
     ResponseEntity<UserDB> newUser(@RequestHeader(required = false) Boolean isAnonymous, @RequestBody(required = false) UserDB user) throws NoSuchAlgorithmException {
         if(isAnonymous == null && user == null){
@@ -50,9 +52,16 @@ public class UserController {
         }
 
         if(isAnonymous == null || !isAnonymous){
+            if(user.getUsername() == null || user.getPassword() == null){
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+
             String rawPassword = user.getPassword();
-            String hashedPassword = Utils.hashString(rawPassword);
+            String hashedPassword = userPasswordEncoder.encode(rawPassword);
             user.setPassword(hashedPassword);
+            user.setCreateTime(new Date());
+            user.setModifiedTime(new Date());
+            user.setLastLoginTime(new Date());
 
             UserDB usrDB = userService.save(user);
             usrDB.setPassword(passwordMask);
