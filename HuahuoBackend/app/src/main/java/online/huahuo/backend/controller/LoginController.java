@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Optional;
 
 @Data
 class LoginStatus{
@@ -40,21 +41,24 @@ public class LoginController {
     private final SecurityProperties properties;
 
     @Transactional
-    public String issueToken(String username) {
-        UserDB user = userRepository.findByUsername(username);
-        if (user == null) throw new UserNotFoundException(username);
+    public String issueToken(Long userId) {
+        Optional<UserDB> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) throw new UserNotFoundException(userId);
+
+        UserDB user = userOptional.get();
         Instant now = Instant.now();
         Instant expiry = Instant.now().plus(properties.getTokenExpiration());
 
-        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        SignatureAlgorithm algorithm = SignatureAlgorithm.HS512;
+        SecretKey key = Keys.secretKeyFor(algorithm);
 
         String token = Jwts.builder()
                 .setIssuer(properties.getTokenIssuer())
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(expiry))
-                .setSubject(username)
+                .setSubject(String.valueOf(userId))
                 .claim("role", user.getRole().name())
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(key, algorithm)
                 .compact();
 
         return token;
@@ -83,7 +87,7 @@ public class LoginController {
             return new ResponseEntity<>(loginStatus, loginStatus.getHttpStatus());
         }
 
-        String token = issueToken(username);
+        String token = issueToken(user.getId());
 
         loginStatus.setJwtToken(token);
         UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(username, password);

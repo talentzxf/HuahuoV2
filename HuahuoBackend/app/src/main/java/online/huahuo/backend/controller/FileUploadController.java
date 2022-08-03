@@ -9,6 +9,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +35,12 @@ public class FileUploadController {
     @ResponseBody
     @PostMapping("/projects/upload")
     public FileUploadStatus handleFileUpload(@RequestParam("file")MultipartFile file) throws IOException, NoSuchAlgorithmException {
-        ProjectFileDB fileDB = storageService.store(file);
+
+        // Get the userId from the JWT token.
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        ProjectFileDB fileDB = storageService.store(username, file);
         return new FileUploadStatus(fileDB.getId(), true, "File uploaded successfully!");
     }
 

@@ -5,7 +5,6 @@ import online.huahuo.backend.db.UserDB;
 import online.huahuo.backend.db.UserRepository;
 import online.huahuo.backend.db.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -87,7 +86,7 @@ public class JwtRequestFilter extends OncePerRequestFilter{
                     .ifPresent(authentication -> SecurityContextHolder.getContext().setAuthentication(authentication));
 
             filterChain.doFilter(request, response);
-        }catch(AuthorizationServiceException ex){
+        }catch(Exception ex){
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
