@@ -149,8 +149,9 @@ class LoginForm extends HTMLElement {
         if(userInfo.username != null && userInfo.password != null && !userInfo.isLoggedIn){
             let loginResponse:LoginResponse = await api.login()
 
-            if(userInfo.isLoggedIn)
+            if(userInfo.isLoggedIn){
                 Logger.info("User:" + userInfo.username + " just logged in!")
+            }
             else
                 Logger.error("User:" + userInfo.username + " login failed! Reason:" + loginResponse.failReason)
         }else{
