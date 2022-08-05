@@ -35,8 +35,11 @@ class RestApi {
             let fileName = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
 
             formData = new FormData()
-            formData.append("file",  new File([requestData], fileName))
-            inHeaders["Content-Type"] = "application/multipart/form-data"
+            requestData["lastModifiedDate"] = new Date();
+            requestData["name"] = fileName;
+
+            formData.append("file",  requestData)
+            inHeaders["Content-Type"] = "multipart/form-data"
         }else{
             inHeaders["Content-Type"] = "application/json"
         }
@@ -51,7 +54,7 @@ class RestApi {
 
             const {data, status} = await axios.post<T>(
                 targetUrl,
-                null,
+                formData,
                 config
             )
 
