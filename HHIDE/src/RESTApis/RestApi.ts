@@ -22,19 +22,37 @@ class RestApi {
         this.baseUrl = huahuoProperties["huahuo.backend.url"]
     }
 
-    async _callApi<T>(url: string): Promise<T> {
+    async _callApi<T>(url: string, inHeaders: Object = null, requestData: Blob = null): Promise<T> {
         let targetUrl = this.baseUrl + url;
 
+        let formData = null
+        if(inHeaders == null){
+            inHeaders = {}
+        }
+
+        if(requestData){
+            // Generate a random file name for now.
+            let fileName = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+
+            formData = new FormData()
+            formData.append("file",  new File([requestData], fileName))
+            inHeaders["Content-Type"] = "application/multipart/form-data"
+        }else{
+            inHeaders["Content-Type"] = "application/json"
+        }
+
         try {
+
+            let config = {headers:{}}
+
+            if(inHeaders) {
+                config.headers = inHeaders
+            }
+
             const {data, status} = await axios.post<T>(
                 targetUrl,
                 null,
-                {
-                    headers: {
-                        isAnonymous: true,
-                        'Content-Type': 'application/json'
-                    }
-                }
+                config
             )
 
             return data;
@@ -50,11 +68,11 @@ class RestApi {
         }
     }
 
-    async login():Promise<LoginResponse> {
+    async login(): Promise<LoginResponse> {
         let loginUrl = "/login?username=" + userInfo.username + "&password=" + userInfo.password
-        let loginResponse:LoginResponse = await this._callApi<LoginResponse>(loginUrl)
+        let loginResponse: LoginResponse = await this._callApi<LoginResponse>(loginUrl)
 
-        if(loginResponse.httpStatus && loginResponse.httpStatus == "OK"){
+        if (loginResponse.httpStatus && loginResponse.httpStatus == "OK") {
             userInfo.jwtToken = loginResponse.jwtToken
             userInfo.isLoggedIn = true
         }
@@ -63,7 +81,12 @@ class RestApi {
     }
 
     async createAnonymousUser() {
-        let createUserResponse: CreateUserResponse = await this._callApi<CreateUserResponse>("/users");
+
+        let headers = {
+            isAnonymous: true
+        };
+
+        let createUserResponse: CreateUserResponse = await this._callApi<CreateUserResponse>("/users", headers);
 
         window.localStorage.setItem("username", createUserResponse.username)
         window.localStorage.setItem("password", createUserResponse.password)
@@ -71,6 +94,25 @@ class RestApi {
         userInfo.username = createUserResponse.username
         userInfo.password = createUserResponse.password
         userInfo.isLoggedIn = false
+    }
+
+    async uploadProject(data: Blob): Promise<boolean> {
+        let token = userInfo.jwtToken
+        if (token == null) {
+            Logger.error("Token is null, login again!")
+            return false
+        }
+
+        let headers = {
+            "Authorization": "Bearer " + token
+        };
+
+        let uploadPath = "/upload"
+        let responseData = this._callApi(uploadPath)
+
+        console.log(responseData)
+
+        return true
     }
 }
 

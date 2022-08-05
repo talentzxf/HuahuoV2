@@ -13,6 +13,7 @@ class LoginForm extends HTMLElement {
 
     anonymouseBtn: HTMLButtonElement = null;
     loginFormContainer: HTMLElement = null;
+    afterLogin: Function = null;
 
     connectedCallback() {
         this.style.position = "absolute"
@@ -151,6 +152,13 @@ class LoginForm extends HTMLElement {
 
             if(userInfo.isLoggedIn){
                 Logger.info("User:" + userInfo.username + " just logged in!")
+
+                // Call back the after login func
+                if(this.afterLogin){
+                    if(userInfo.isLoggedIn){
+                        this.afterLogin()
+                    }
+                }
             }
             else
                 Logger.error("User:" + userInfo.username + " login failed! Reason:" + loginResponse.failReason)
@@ -168,13 +176,14 @@ class LoginForm extends HTMLElement {
     }
 }
 
-function openLoginForm() {
+function openLoginForm(afterLoginAction:Function = null) {
     if (loginForm == null) {
         loginForm = document.createElement("hh-login-form")
         document.body.appendChild(loginForm)
     }
 
     loginForm.style.display = "block"
+    loginForm.afterLogin = afterLoginAction
 }
 
 export {openLoginForm}
