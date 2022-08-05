@@ -107,8 +107,8 @@ class RestApi {
             "Authorization": "Bearer " + token
         };
 
-        let uploadPath = "/upload"
-        let responseData = this._callApi(uploadPath)
+        let uploadPath = "/projects/upload"
+        let responseData = this._callApi(uploadPath, headers, data)
 
         console.log(responseData)
 
