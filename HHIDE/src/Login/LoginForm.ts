@@ -3,6 +3,7 @@ import {userInfo} from "./UserInfo";
 import {api, LoginResponse} from "../RESTApis/RestApi";
 
 let loginForm = null;
+
 @CustomElement({
     selector: "hh-login-form"
 })
@@ -115,11 +116,15 @@ class LoginForm extends HTMLElement {
     }
 
     login() {
-        this._login();
+        try {
+            this._login();
+        } finally {
+            this.closeForm();
+        }
     }
 
     async _login(anonymousLogin: boolean = false) {
-        if(userInfo.isLoggedIn){
+        if (userInfo.isLoggedIn) {
             Logger.warn("Has already logged in, no need to login again!")
             return
         }
@@ -147,28 +152,31 @@ class LoginForm extends HTMLElement {
             window.alert("Not implemented!")
         }
 
-        if(userInfo.username != null && userInfo.password != null && !userInfo.isLoggedIn){
-            let loginResponse:LoginResponse = await api.login()
+        if (userInfo.username != null && userInfo.password != null && !userInfo.isLoggedIn) {
+            let loginResponse: LoginResponse = await api.login()
 
-            if(userInfo.isLoggedIn){
+            if (userInfo.isLoggedIn) {
                 Logger.info("User:" + userInfo.username + " just logged in!")
 
                 // Call back the after login func
-                if(this.afterLogin){
-                    if(userInfo.isLoggedIn){
+                if (this.afterLogin) {
+                    if (userInfo.isLoggedIn) {
                         this.afterLogin()
                     }
                 }
-            }
-            else
+            } else
                 Logger.error("User:" + userInfo.username + " login failed! Reason:" + loginResponse.failReason)
-        }else{
+        } else {
             Logger.error("User name or pwd is null!")
         }
     }
 
     anonymousLogin() {
-        this._login(true)
+        try {
+            this._login(true)
+        } finally {
+            this.closeForm()
+        }
     }
 
     closeForm() {
@@ -176,7 +184,7 @@ class LoginForm extends HTMLElement {
     }
 }
 
-function openLoginForm(afterLoginAction:Function = null) {
+function openLoginForm(afterLoginAction: Function = null) {
     if (loginForm == null) {
         loginForm = document.createElement("hh-login-form")
         document.body.appendChild(loginForm)
