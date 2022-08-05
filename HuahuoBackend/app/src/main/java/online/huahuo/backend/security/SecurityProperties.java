@@ -22,6 +22,8 @@ public class SecurityProperties implements InitializingBean {
      */
     private final String tokenIssuer;
 
+    private final String keyFile;
+
     private final int tokenExpirationHours;
     /**
      * Duration after which a token will expire

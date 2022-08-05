@@ -7,10 +7,17 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import online.huahuo.backend.db.UserDB;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
@@ -20,7 +27,7 @@ import java.util.function.Function;
 
 @Component
 @RequiredArgsConstructor
-public class JwtTokenUtil implements Serializable {
+public class JwtTokenUtil implements Serializable, InitializingBean {
 
     private final SecurityProperties properties;
     private static final long serialVersionUID = 5238463920221750041L;
@@ -28,10 +35,8 @@ public class JwtTokenUtil implements Serializable {
     private static SecretKey key;
     private static SignatureAlgorithm algorithm;
 
-
     static{
         algorithm = SignatureAlgorithm.HS512;
-        key = Keys.secretKeyFor(algorithm);
     }
 
     public String getUsernameFromToken(String token) {
@@ -83,6 +88,24 @@ public class JwtTokenUtil implements Serializable {
                 String.valueOf(userDetails.getUsername()),
                 Collections.singletonMap("username1", "password1")
         );
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        File keyFile = new File(properties.getKeyFile());
+        if(keyFile.exists()){
+            byte[] data = Files.readAllBytes(Paths.get(properties.getKeyFile()));
+
+            key = new SecretKeySpec(data, algorithm.getJcaName());
+        }else{
+            key = Keys.secretKeyFor(algorithm);
+
+            byte[] keyData = key.getEncoded();
+
+            try(FileOutputStream outputStream = new FileOutputStream(keyFile)){
+                outputStream.write(keyData);
+            }
+        }
     }
 
 //    //while creating the token -

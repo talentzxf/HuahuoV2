@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import online.huahuo.backend.db.FileRepository;
 import online.huahuo.backend.db.ProjectFileDB;
+import online.huahuo.backend.exception.DuplicateFileException;
 import online.huahuo.backend.utils.Utils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -39,7 +40,7 @@ public class StorageServiceImpl implements StorageService{
         String absoluteFilePath = savePath + fileName;
 
         if(new File(absoluteFilePath).exists()){
-            throw new IOException("File already exists!");
+            throw new DuplicateFileException(fileName);
         }
 
         new File(savePath).mkdirs();
