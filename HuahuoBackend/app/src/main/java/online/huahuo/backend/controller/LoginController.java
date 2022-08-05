@@ -9,6 +9,7 @@ import online.huahuo.backend.db.UserDB;
 import online.huahuo.backend.db.UserRepository;
 import online.huahuo.backend.db.UserStatus;
 import online.huahuo.backend.exception.UserNotFoundException;
+import online.huahuo.backend.security.JwtTokenUtil;
 import online.huahuo.backend.security.SecurityProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,7 @@ public class LoginController {
     private final UserRepository userRepository;
     private final AuthenticationProvider authenticationProvider;
     private final SecurityProperties properties;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Transactional
     public String issueToken(Long userId) {
@@ -46,22 +48,7 @@ public class LoginController {
         if (userOptional.isEmpty()) throw new UserNotFoundException(userId);
 
         UserDB user = userOptional.get();
-        Instant now = Instant.now();
-        Instant expiry = Instant.now().plus(properties.getTokenExpiration());
-
-        SignatureAlgorithm algorithm = SignatureAlgorithm.HS512;
-        SecretKey key = Keys.secretKeyFor(algorithm);
-
-        String token = Jwts.builder()
-                .setIssuer(properties.getTokenIssuer())
-                .setIssuedAt(Date.from(now))
-                .setExpiration(Date.from(expiry))
-                .setSubject(String.valueOf(userId))
-                .claim("role", user.getRole().name())
-                .signWith(key, algorithm)
-                .compact();
-
-        return token;
+        return jwtTokenUtil.generateToken(user);
     }
 
     @PostMapping("/login")

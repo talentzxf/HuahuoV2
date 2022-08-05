@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(name = "PROJECTS", indexes = {
         @Index(columnList = "name"),
-        @Index(columnList = "createdByUserId")
+        @Index(columnList = "createdBy")
 })
 public class ProjectFileDB {
     @Id
@@ -22,17 +22,17 @@ public class ProjectFileDB {
     private String type;
     private String version;
 
-    private Long createdByUserId;
-    private String path;
+    private String createdBy;
+    private String fullPath;
     private String checksum;
 
-    public ProjectFileDB(String name, String type, String version, Long createdByUserId,
-                         String path, String checksum){
+    public ProjectFileDB(String name, String type, String version, String createdBy,
+                         String fullPath, String checksum){
         this.name = name;
         this.type = type;
         this.version = version;
-        this.path = path;
+        this.fullPath = fullPath;
         this.checksum = checksum;
-        this.createdByUserId = createdByUserId;
+        this.createdBy = createdBy;
     }
 }

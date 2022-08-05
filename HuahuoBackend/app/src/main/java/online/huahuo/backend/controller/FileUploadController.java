@@ -36,7 +36,6 @@ public class FileUploadController {
     @PostMapping("/projects/upload")
     public FileUploadStatus handleFileUpload(@RequestParam("file")MultipartFile file) throws IOException, NoSuchAlgorithmException {
 
-        // Get the userId from the JWT token.
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
