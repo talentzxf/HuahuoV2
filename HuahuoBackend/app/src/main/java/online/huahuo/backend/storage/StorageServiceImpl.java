@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 
 @Service
@@ -45,10 +47,7 @@ public class StorageServiceImpl implements StorageService{
 
         new File(savePath).mkdirs();
 
-        File targetFile = new File(absoluteFilePath);
-        try (OutputStream os = new FileOutputStream(targetFile)) {
-            os.write(file.getBytes());
-        }
+        Files.write(Paths.get(absoluteFilePath), file.getBytes());
 
         // Get the userId from the JWT token.
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
