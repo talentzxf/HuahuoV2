@@ -1,5 +1,7 @@
 package online.huahuo.backend.security;
 
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
 import online.huahuo.backend.db.UserDB;
 import online.huahuo.backend.db.UserRepository;
@@ -86,7 +88,7 @@ public class JwtRequestFilter extends OncePerRequestFilter{
                     .ifPresent(authentication -> SecurityContextHolder.getContext().setAuthentication(authentication));
 
             filterChain.doFilter(request, response);
-        }catch(Exception ex){
+        }catch(JwtException ex){
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }

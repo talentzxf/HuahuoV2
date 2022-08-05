@@ -19,7 +19,7 @@ import java.security.NoSuchAlgorithmException;
 
 @Service
 @RequiredArgsConstructor
-public class StorageServiceImpl implements StorageService {
+public class StorageServiceImpl implements StorageService{
 
     final private FileRepository fileRepository;
 
@@ -37,6 +37,10 @@ public class StorageServiceImpl implements StorageService {
         String fileName = file.getOriginalFilename();
         String savePath = getPath() + path + File.separator;
         String absoluteFilePath = savePath + fileName;
+
+        if(new File(absoluteFilePath).exists()){
+            throw new IOException("File already exists!");
+        }
 
         new File(savePath).mkdirs();
 
