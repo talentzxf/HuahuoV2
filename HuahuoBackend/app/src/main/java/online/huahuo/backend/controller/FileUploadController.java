@@ -42,20 +42,4 @@ public class FileUploadController {
         ProjectFileDB fileDB = storageService.store(username, file);
         return new FileUploadStatus(fileDB.getId(), true, "File uploaded successfully!");
     }
-
-//    @GetMapping("/projects/{projectId}")
-//    public ResponseEntity<Resource>  downloadProject(@PathVariable Long projectId){
-//        ProjectFileDB fileDB = storageService.getById(projectId);
-//        byte[] fileData = fileDB.getData();
-//        ByteArrayResource resource = new ByteArrayResource(fileData);
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + fileDB.getName() + "\"");
-
-//        return ResponseEntity.ok()
-//                .headers(headers)
-//                .contentLength(fileData.length)
-//                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-//                .body(resource);
-//    }
 }
