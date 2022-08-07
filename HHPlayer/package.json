@@ -1,0 +1,19 @@
+{
+  "name": "hhplayer",
+  "version": "0.0.1",
+  "description": "Player of Huahuo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "vincentzhang",
+  "license": "ISC",
+  "devDependencies": {
+    "hhcommoncomponents": "file:../HHCommonComponents",
+    "hhenginejs": "file:../HHEngineJS",
+    "ts-loader": "^9.3.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.9.3"
+  }
+}
