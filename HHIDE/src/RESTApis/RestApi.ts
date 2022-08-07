@@ -38,7 +38,7 @@ class RestApi {
             requestData["lastModifiedDate"] = new Date();
             requestData["name"] = fileName;
 
-            formData.append("file",  requestData)
+            formData.append("file",  requestData, fileName)
             inHeaders["Content-Type"] = "multipart/form-data"
         }else{
             inHeaders["Content-Type"] = "application/json"
@@ -111,7 +111,7 @@ class RestApi {
         };
 
         let uploadPath = "/projects/upload"
-        let responseData = this._callApi(uploadPath, headers, data)
+        let responseData = await this._callApi(uploadPath, headers, data)
 
         console.log(responseData)
 
