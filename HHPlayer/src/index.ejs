@@ -5,5 +5,30 @@ HuahuoPlayer!!!!
 </body>
     <hh-player></hh-player>
 
+    <script lang="text/javascript">
+        var Module = {
+            print: (function outputLog() {
+                var element = document.getElementById('stdout');
+                if (element) element.value = ''; // clear browser cache
+                return function (text) {
+                    if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+                    // These replacements are necessary if you render to raw HTML
+                    //text = text.replace(/&/g, "&amp;");
+                    //text = text.replace(/</g, "&lt;");
+                    //text = text.replace(/>/g, "&gt;");
+                    //text = text.replace('\n', '<br>', 'g');
+                    console.log(text);
+                    if (element) {
+                        element.value += text + "\n";
+                        element.scrollTop = element.scrollHeight; // focus on bottom
+                    }
+                };
+            })()
+        }
+
+        window.onerror = function(event) {
+            console.error(event)
+        };
+    </script>
     <script async type="text/javascript" src="wasm/HuaHuoEngineV2.js"></script>
 </html>

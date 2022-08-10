@@ -6,7 +6,7 @@ class FileDownloader{
         let absoluteUrl = huahuoProperties["huahuo.backend.url"] + "/projects/" + projectId
         axios.get(absoluteUrl, {responseType: 'blob'}).then(
             response=>{
-                let fileName = response.headers["x-suggested-filename"].split("filename=")[1];
+                let fileName = response.headers["x-suggested-filename"];
                 onSuccess(response.data, fileName)
             }
         ).catch((reason: AxiosError)=>{
