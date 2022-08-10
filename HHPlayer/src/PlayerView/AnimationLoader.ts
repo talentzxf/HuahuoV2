@@ -1,12 +1,23 @@
 import {fileDownloader} from "../RestApis/FileDownloader";
 import {Logger} from "hhcommoncomponents";
+import {PlayerView} from "./PlayerView";
+
+declare var Module: any;
 
 class AnimationLoader{
     projectId:string = "unknownProject"
     loadAnimation(projectId: string){
         this.projectId = projectId
-        // 1. Download the file
-        fileDownloader.downloadFile(projectId, this.onProjectDownloaded.bind(this), this.onFailed.bind(this))
+
+        // 1. Wait for the PlayerView ready.
+
+        let playerView:PlayerView = document.querySelector("hh-player")
+
+        let _this = this
+        playerView.executeAfterInit(function(){
+            // 2. Download the file
+            fileDownloader.downloadFile(projectId, _this.onProjectDownloaded.bind(_this), _this.onFailed.bind(_this))
+        })
     }
 
     onProjectDownloaded(data: Blob, fileName: string){

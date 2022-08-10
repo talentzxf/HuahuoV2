@@ -34,6 +34,7 @@ public class FileDownloadController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + fileDB.getName() + "\"");
+        headers.add("X-Suggested-Filename", fileDB.getName());
 
         return ResponseEntity.ok()
                 .headers(headers)
