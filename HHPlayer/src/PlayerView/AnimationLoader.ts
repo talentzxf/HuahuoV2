@@ -1,6 +1,7 @@
 import {fileDownloader} from "../RestApis/FileDownloader";
 import {Logger} from "hhcommoncomponents";
 import {PlayerView} from "./PlayerView";
+import {huahuoEngine} from "hhenginejs"
 
 declare var Module: any;
 
@@ -27,14 +28,19 @@ class AnimationLoader{
             (fileContent)=>{
                 let storeMemoryFile = "mem://" + fileName;
                 let fileSize = data.size;
-                let memoryFileContent = Module.createMemFile(storeMemoryFile, fileSize);
-                for (let i = 0; i < fileSize; i++) { // Copy to the file, byte by byte
-                    memoryFileContent[i] = fileContent[i];
-                }
 
-                let result = Module.LoadFileCompletely(storeMemoryFile);
-                if (result == 0)
-                    console.log("Can't load file: " + storeMemoryFile)
+                huahuoEngine.ExecuteAfterInited(() => {
+                    let memoryFileContent = Module.createMemFile(storeMemoryFile, fileSize);
+                    for (let i = 0; i < fileSize; i++) { // Copy to the file, byte by byte
+                        memoryFileContent[i] = fileContent[i];
+                    }
+
+                    let result = Module.LoadFileCompletely(storeMemoryFile);
+                    if (result == 0)
+                        Logger.error("Can't load file: " + storeMemoryFile)
+                    else
+                        Logger.info("File successfully loaded:" + storeMemoryFile)
+                })
             }
         ).catch((error)=>{
             Logger.error("Error happened:" + error)

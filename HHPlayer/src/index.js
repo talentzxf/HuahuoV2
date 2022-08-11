@@ -1,3 +1,4 @@
+import {huahuoEngine, BaseShapeJS, shapeFactory} from "hhenginejs";
 import {PlayerView} from "./PlayerView/PlayerView";
 import {animationLoader} from "./PlayerView/AnimationLoader";
 
