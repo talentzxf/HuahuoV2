@@ -45,7 +45,7 @@ class EngineAPI{
         Module.HuaHuoEngine.prototype.InitEngine();
         this.cppEngine = Module.HuaHuoEngine.prototype.GetInstance();
         this.inited = true
-        Logger.error("Engine inited!!!!!")
+        Logger.info("Engine inited!!!!!")
 
         this.PendingInitFunctions.forEach(func=>{
             func();
