@@ -29,10 +29,12 @@ class AnimationLoader{
                 let storeMemoryFile = "mem://" + fileName;
                 let fileSize = data.size;
 
+                let u8array = new Uint8Array(fileContent)
+
                 huahuoEngine.ExecuteAfterInited(() => {
                     let memoryFileContent = Module.createMemFile(storeMemoryFile, fileSize);
                     for (let i = 0; i < fileSize; i++) { // Copy to the file, byte by byte
-                        memoryFileContent[i] = fileContent[i];
+                        memoryFileContent[i] = u8array[i];
                     }
 
                     let result = Module.LoadFileCompletely(storeMemoryFile);
