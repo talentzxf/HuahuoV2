@@ -7,6 +7,6 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 public interface StorageService {
-    ProjectFileDB store(String path, MultipartFile file) throws IOException, NoSuchAlgorithmException;
+    ProjectFileDB store(String path, MultipartFile file, Boolean forceOverride) throws IOException, NoSuchAlgorithmException;
     ProjectFileDB getById(Long projectId);
 }

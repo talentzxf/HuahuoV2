@@ -36,13 +36,15 @@ public class StorageServiceImpl implements StorageService{
     }
 
     @Override
-    public ProjectFileDB store(String path, MultipartFile file) throws IOException, NoSuchAlgorithmException {
+    public ProjectFileDB store(String path, MultipartFile file, Boolean forceOverride) throws IOException, NoSuchAlgorithmException {
         String fileName = file.getOriginalFilename();
         String savePath = getPath() + path + File.separator;
         String absoluteFilePath = savePath + fileName;
 
-        if(new File(absoluteFilePath).exists()){
-            throw new DuplicateFileException(fileName);
+        if(!forceOverride){ // Don't override if the file exists and forceOverride = false.
+            if(new File(absoluteFilePath).exists()){
+                throw new DuplicateFileException(fileName);
+            }
         }
 
         new File(savePath).mkdirs();

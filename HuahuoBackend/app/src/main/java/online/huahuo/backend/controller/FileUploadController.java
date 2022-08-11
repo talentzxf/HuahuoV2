@@ -34,12 +34,15 @@ public class FileUploadController {
 
     @ResponseBody
     @PostMapping("/projects/upload")
-    public FileUploadStatus handleFileUpload(@RequestParam("file")MultipartFile file) throws IOException, NoSuchAlgorithmException {
-
+    public FileUploadStatus handleFileUpload(@RequestParam("file")MultipartFile file, @RequestParam(value = "force_override", required = false) Boolean forceOverride) throws IOException, NoSuchAlgorithmException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        ProjectFileDB fileDB = storageService.store(username, file);
+        if(forceOverride == null){ // By default, override previous project
+            forceOverride = true;
+        }
+
+        ProjectFileDB fileDB = storageService.store(username, file, forceOverride);
         return new FileUploadStatus(fileDB.getId(), true, "File uploaded successfully!");
     }
 }
