@@ -1,5 +1,7 @@
 // This piece of code is almost the same as LineDrawer, maybe we should extract a common base class??
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
+import {TextShapeJS} from "hhenginejs"
+import {Vector2} from "hhcommoncomponents";
 
 class TextDrawer extends BaseShapeDrawer{
     name = "Text"
@@ -7,7 +9,8 @@ class TextDrawer extends BaseShapeDrawer{
 
     textInput: HTMLTextAreaElement
 
-    pendingText: string
+    textShape: TextShapeJS = new TextShapeJS()
+    textPos:Vector2 = new Vector2
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
         super.onBeginToDrawShape(canvas);
 
@@ -23,8 +26,7 @@ class TextDrawer extends BaseShapeDrawer{
             this.textInput.style.position = "absolute"
             document.body.appendChild(this.textInput)
 
-            this.textInput.addEventListener("focus", this.onGetFocus.bind(this))
-
+            this.textInput.addEventListener("input", this.onTextChanged.bind(this))
             this.textInput.addEventListener("focusout", this.onLossFocus.bind(this))
         }
 
@@ -32,23 +34,22 @@ class TextDrawer extends BaseShapeDrawer{
         this.textInput.style.left = evt.clientX + "px"
         this.textInput.style.top = evt.clientY + "px"
 
+        this.textPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+
         let _this = this
         window.setTimeout(()=>{
             _this.textInput.focus()
         }, 0)
     }
 
-    onGetFocus(e){
-        console.log("OnGetFocus")
-        e.preventDefault()
-        e.stopPropagation()
+    onLossFocus(e){
+        this.textInput.style.display = "none"
     }
 
-    onLossFocus(e){
-        console.log("OnLossFocus")
-        e.preventDefault()
-        e.stopPropagation()
-        this.textInput.style.display = "none"
+    onTextChanged(){
+        let curText:string = this.textInput.value
+
+        this.textShape.setText(curText, this.textPos)
     }
 
     onMouseUp(evt: MouseEvent) {

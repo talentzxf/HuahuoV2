@@ -10,6 +10,7 @@
 #include "Shapes/ImageShape.h"
 #include "Shapes/AudioShape.h"
 #include "Shapes/ElementShape.h"
+#include "Shapes/TextShape.h"
 #ifdef HUAHUO_EDITOR
 #include "Editor/SceneInspector.h"
 #include "Editor/SceneView.h"
