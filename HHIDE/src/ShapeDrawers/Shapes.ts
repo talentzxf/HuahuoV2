@@ -6,6 +6,7 @@ import {ShapeSelector} from "./ShapeSelector";
 import {AudioClipSelector} from "./AudioClipSelector";
 import {TextDrawer} from "./TextDrawer";
 import {ImageSelector} from "./ImageSelector"
+import {MirrorDrawer} from "./MirrorDrawer";
 
 let shapes = [
     new ShapeSelector(),
@@ -14,6 +15,7 @@ let shapes = [
     new RectangleDrawer(),
     new CurveDrawer(),
     new TextDrawer(),
+    new MirrorDrawer(),
     new AudioClipSelector(),
     new ImageSelector()
 ]

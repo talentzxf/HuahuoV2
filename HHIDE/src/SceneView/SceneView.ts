@@ -180,7 +180,7 @@ class SceneView extends HTMLElement {
             renderEngine2D.init(this.canvas)
 
             this.createGizmos();
-            this.drawCoordinate();
+            // this.drawCoordinate();
             this.setupEventsAndCreateFirstTrack()
 
             this.animationPlayer = new EditorPlayer(this)

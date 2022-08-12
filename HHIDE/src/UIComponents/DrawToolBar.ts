@@ -63,7 +63,16 @@ class DrawToolBar extends HTMLElement{
 
     createButton(shape: BaseShapeDrawer){
         let img = document.createElement("img")
-        img.className = shape.imgClass
+        if(shape.imgClass != "unknown_img")
+            img.className = shape.imgClass
+        else if(shape.imgCss){
+            img.src = shape.imgCss
+        }
+
+        img.title = shape.name
+        img.style.width = "20px"
+        img.style.height = "20px"
+
 
         let button = document.createElement('button')
         button.onclick = shape.onClicked.bind(shape)

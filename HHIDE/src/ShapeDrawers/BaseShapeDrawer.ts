@@ -7,6 +7,7 @@ import {elementCreator} from "../SceneView/ElementCreator";
 class BaseShapeDrawer{
     name = "unknown_shape"
     imgClass = "unknown_img"
+    imgCss:string = null
 
     isDrawing = false
     isSelected = false
