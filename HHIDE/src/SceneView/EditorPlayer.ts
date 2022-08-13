@@ -2,7 +2,6 @@ import {HHTimeLine, TimelineEventNames} from "hhtimeline"
 import {huahuoEngine, GlobalConfig} from "hhenginejs"
 import {Player} from "hhenginejs/src/Player/Player"
 import {SceneView} from "./SceneView";
-import {BaseShapeJS} from "hhenginejs/dist/src/Shapes/BaseShapeJS";
 
 declare var Module:any;
 

@@ -1,7 +1,7 @@
 import {Logger, Vector2} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {huahuoEngine, renderEngine2D} from "hhenginejs"
-import {BaseShapeJS} from "hhenginejs/dist/src/Shapes/BaseShapeJS";
+import {BaseShapeJS} from "hhenginejs";
 import {elementCreator} from "../SceneView/ElementCreator";
 
 class BaseShapeDrawer{
