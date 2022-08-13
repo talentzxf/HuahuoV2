@@ -9,7 +9,7 @@ import {shapeRotateHandler} from "../TransformHandlers/ShapeRotateHandler";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {elementCreator} from "../SceneView/ElementCreator";
 import {huahuoEngine} from "hhenginejs";
-import {HHContent} from "HHPanel"
+import {HHContent} from "hhpanel"
 import {findParentContent} from "../Utilities/PanelUtilities";
 import {objectDeleter} from "./ObjectDeleter";
 
