@@ -25,6 +25,8 @@ class TextShapeJS extends BaseShapeJS{
         textItem.fillColor = new paper.Color("black")
         textItem.content = this.text
         textItem.fontSize = "20px"
+
+        textItem.data.meta = this
     }
 
     setText(inText:string, position: Vector2){
@@ -38,7 +40,7 @@ class TextShapeJS extends BaseShapeJS{
             textItem.content = inText;
         }
 
-        // this.store()
+        this.store()
     }
 }
 

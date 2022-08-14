@@ -69,8 +69,15 @@ class SceneView extends HTMLElement {
         })
     }
 
+    OnKeyDown(e:KeyboardEvent){
+        if(e.key == "Escape"){
+            this.endOfDrawingShape(this.currentShapeDrawer)
+        }
+    }
+
     setupEventsAndCreateFirstTrack() {
         window.addEventListener("resize", this.OnResize.bind(this))
+        window.addEventListener("keydown", this.OnKeyDown.bind(this))
 
         let resizeObserver = new ResizeObserver(this.OnResize.bind(this))
         resizeObserver.observe(this.canvasContainer)
