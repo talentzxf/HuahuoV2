@@ -1746,6 +1746,8 @@ int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, con
 
 #if WEB_ENV
 
+#ifndef REGISTERED_LOADFILEBINDING
+#define REGISTERED_LOADFILEBINDING
 size_t LoadFileCompletely(std::string fName){
     return GetPersistentManager().LoadFileCompletely(fName);
 }
@@ -1753,6 +1755,8 @@ size_t LoadFileCompletely(std::string fName){
 EMSCRIPTEN_BINDINGS(HuaHuoEngineV2) {
     emscripten::function("LoadStoreFileCompletely", &LoadFileCompletely);
 }
+
+#endif
 
 #endif
 #endif
