@@ -5,7 +5,8 @@
   "main": "./dist/hhenginejs.bundle",
   "scripts": {
     "build": "webpack",
-    "start": "webpack serve --open"
+    "start": "webpack serve --open",
+    "postinstall": "npm-install-peers"
   },
   "author": "vincentzhang",
   "license": "ISC",
