@@ -24,13 +24,20 @@ class TextShapeJS extends BaseShapeJS{
         textItem.justification = "center";
         textItem.fillColor = new paper.Color("black")
         textItem.content = this.text
+        textItem.fontSize = "20px"
     }
 
     setText(inText:string, position: Vector2){
         this.text = inText
         this.textPosition = position
 
-        this.createShape()
+        if(!this.paperItem){
+            this.createShape()
+        }else{
+            let textItem = this.paperItem as paper.PointText
+            textItem.content = inText;
+        }
+
         // this.store()
     }
 }
