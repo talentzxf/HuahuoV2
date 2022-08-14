@@ -1752,7 +1752,7 @@ size_t LoadFileCompletely(std::string fName){
     return GetPersistentManager().LoadFileCompletely(fName);
 }
 
-EMSCRIPTEN_BINDINGS(HuaHuoEngineV2) {
+EMSCRIPTEN_BINDINGS(HuaHuoEngineV2_PM) {
     emscripten::function("LoadStoreFileCompletely", &LoadFileCompletely);
 }
 
