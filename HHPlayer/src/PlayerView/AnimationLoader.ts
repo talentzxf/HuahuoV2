@@ -37,7 +37,7 @@ class AnimationLoader{
                         memoryFileContent[i] = u8array[i];
                     }
 
-                    let result = Module.LoadFileCompletely(storeMemoryFile);
+                    let result = Module.LoadStoreFileCompletely(storeMemoryFile);
                     if (result == 0)
                         Logger.error("Can't load file: " + storeMemoryFile)
                     else

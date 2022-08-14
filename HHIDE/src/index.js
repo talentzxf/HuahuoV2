@@ -79,7 +79,7 @@ function load(fName, e) {
             memoryFileContent[i] = fileContent[i];
         }
 
-        let result = Module.LoadFileCompletely(storeMemoryFile);
+        let result = Module.LoadStoreFileCompletely(storeMemoryFile);
         if (result == 0) {
             let timeline = document.querySelector("hh-timeline")
             timeline.reloadTracks();

@@ -1751,7 +1751,7 @@ size_t LoadFileCompletely(std::string fName){
 }
 
 EMSCRIPTEN_BINDINGS(HuaHuoEngineV2) {
-    emscripten::function("LoadFileCompletely", &LoadFileCompletely);
+    emscripten::function("LoadStoreFileCompletely", &LoadFileCompletely);
 }
 
 #endif
