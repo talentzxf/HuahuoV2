@@ -11,7 +11,7 @@ class TextShapeJS extends BaseShapeJS{
     textPosition:paper.Point = null
 
     getShapeName(): string {
-        return super.getShapeName();
+        return shapeName
     }
 
     createShape() {
