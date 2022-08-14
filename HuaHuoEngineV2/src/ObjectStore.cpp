@@ -94,7 +94,7 @@ emscripten::val writeObjectStoreInMemoryFile(){
     }
 
 
-EMSCRIPTEN_BINDINGS(HuaHuoEngineV2) {
+EMSCRIPTEN_BINDINGS(HuaHuoEngineV2_OBJECTSTORE) {
     emscripten::function("writeObjectStoreInMemoryFile", &writeObjectStoreInMemoryFile);
 }
 #endif

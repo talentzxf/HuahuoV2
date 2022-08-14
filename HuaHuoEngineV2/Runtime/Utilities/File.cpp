@@ -268,7 +268,7 @@ emscripten::val createMemFile(std::string fileName, size_t length){
                 );
 }
 
-EMSCRIPTEN_BINDINGS(HuaHuoEngineV2) {
+EMSCRIPTEN_BINDINGS(HuaHuoEngineV2_File) {
     function("createMemFile", &createMemFile);
 }
 #endif
