@@ -54,6 +54,8 @@ class TextDrawer extends BaseShapeDrawer{
 
             _this.textShape = new TextShapeJS()
         })
+
+        this.textInput.value = ""
     }
 
     onTextChanged(){

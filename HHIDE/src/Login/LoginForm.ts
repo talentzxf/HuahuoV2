@@ -4,17 +4,47 @@ import {api, LoginResponse} from "../RESTApis/RestApi";
 
 let loginForm = null;
 
+const css2obj = css => {
+
+    const r = /(?<=^|;)\s*([^:]+)\s*:\s*([^;]+)\s*/g, o = {};
+    css.replace(r, (m,p,v) => o[p] = v);
+    return o;
+
+}
+
 @CustomElement({
     selector: "hh-login-form"
 })
 class LoginForm extends HTMLElement {
     closeBtn: HTMLElement = null;
-    loginBtn: HTMLButtonElement = null;
     loginForm: HTMLFormElement = null;
+    registerForm: HTMLElement = null;
 
+    loginBtn: HTMLButtonElement = null;
+    registerBtn: HTMLButtonElement = null;
     anonymouseBtn: HTMLButtonElement = null;
     loginFormContainer: HTMLElement = null;
     afterLogin: Function = null;
+
+    static get observedAttributes(){
+        return ["style"]
+    }
+
+    attributeChangedCallback(name, oldValue, newValue){
+        if(name == "style"){
+            let oldCssObj:object = css2obj(oldValue)
+            let newCssObj:object = css2obj(newValue)
+
+            if(oldCssObj["display"] == "none" && newCssObj["display"] != "none"){
+
+                if(this.registerForm)
+                    this.registerForm.style.display = "none"
+                if(this.loginForm)
+                    this.loginForm.style.display = "block"
+            }
+        }
+    }
+
 
     connectedCallback() {
         this.style.position = "absolute"
@@ -95,6 +125,7 @@ class LoginForm extends HTMLElement {
             "       <label for='pwd'><b>Password</b></label>" +
             "       <input type='password' placeholder='Enter Password' name='password'> " +
             "       <button id='loginBtn'>Login</button>" +
+            "       <button id='registerBtn'>Register</button>" +
             "       <button id='anonymousLoginBtn'>Anonymous Login</button>" +
             "   </form>"
 
@@ -111,8 +142,22 @@ class LoginForm extends HTMLElement {
 
         this.loginBtn = this.loginFormContainer.querySelector("#loginBtn")
         this.loginBtn.addEventListener("click", this.login.bind(this))
+
+        this.registerBtn = this.loginFormContainer.querySelector("#registerBtn")
+        this.registerBtn.addEventListener("click", this.register.bind(this))
         this.anonymouseBtn = this.loginFormContainer.querySelector("#anonymousLoginBtn")
         this.anonymouseBtn.addEventListener("click", this.anonymousLogin.bind(this))
+    }
+
+    register(){
+        this.loginForm.style.display = "none"
+
+        if(!this.registerForm){
+            this.registerForm = document.createElement("hh-register-form")
+            this.appendChild(this.registerForm)
+        }
+
+        this.registerForm.style.display = "block"
     }
 
     login() {
@@ -194,4 +239,4 @@ function openLoginForm(afterLoginAction: Function = null) {
     loginForm.afterLogin = afterLoginAction
 }
 
-export {openLoginForm}
+export {openLoginForm, LoginForm}
