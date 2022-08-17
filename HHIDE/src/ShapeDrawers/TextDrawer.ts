@@ -1,7 +1,8 @@
 // This piece of code is almost the same as LineDrawer, maybe we should extract a common base class??
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
-import {TextShapeJS} from "hhenginejs"
+import {TextShapeJS, huahuoEngine} from "hhenginejs"
 import {Vector2} from "hhcommoncomponents";
+import {EventBus, EventNames} from "../Events/GlobalEvents";
 
 class TextDrawer extends BaseShapeDrawer{
     name = "Text"
@@ -44,7 +45,15 @@ class TextDrawer extends BaseShapeDrawer{
 
     onLossFocus(e){
         this.textInput.style.display = "none"
-        this.textShape = new TextShapeJS()
+        let _this = this
+        huahuoEngine.ExecuteAfterInited(()=>{
+            _this.isDrawing = false
+            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
+
+            _this.addShapeToCurrentLayer(_this.textShape)
+
+            _this.textShape = new TextShapeJS()
+        })
     }
 
     onTextChanged(){

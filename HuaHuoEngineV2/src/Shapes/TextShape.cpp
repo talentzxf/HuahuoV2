@@ -12,4 +12,5 @@ INSTANTIATE_TEMPLATE_TRANSFER(TextShape);
 template<class TransferFunction>
 void TextShape::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
+    TRANSFER(text);
 }

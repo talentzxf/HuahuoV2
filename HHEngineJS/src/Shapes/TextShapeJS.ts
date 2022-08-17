@@ -7,7 +7,14 @@ class TextShapeJS extends BaseShapeJS{
         return new TextShapeJS(rawObj)
     }
 
-    text:string = ""
+    get text():string{
+        return this.rawObj.GetText()
+    }
+
+    set text(val:string){
+        this.rawObj.SetText(val)
+    }
+
     textPosition:paper.Point = null
 
     getShapeName(): string {
