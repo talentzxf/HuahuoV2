@@ -1,9 +1,13 @@
 import {CustomElement} from "hhcommoncomponents"
+import {LoginForm} from "./LoginForm";
 
 @CustomElement({
     selector: "hh-register-form"
 })
 class RegisterForm extends HTMLElement {
+    closeBtn: HTMLButtonElement
+    form: HTMLFormElement
+
     connectedCallback(){
         this.innerHTML =
             "   <form id='registerForm'>" +
@@ -19,6 +23,15 @@ class RegisterForm extends HTMLElement {
             "       <input type='password' placeholder='Enter Password' name='password'> " +
             "       <button id='Create'>Create User</button>" +
             "   </form>"
+
+        this.form = this.querySelector("#registerForm")
+
+        this.closeBtn = this.form.querySelector("#registerFormCloseBtn")
+        this.closeBtn.addEventListener("click", this.close.bind(this))
+    }
+
+    close(){
+        (this.parentElement as LoginForm).closeForm();
     }
 }
 

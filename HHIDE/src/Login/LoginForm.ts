@@ -4,6 +4,14 @@ import {api, LoginResponse} from "../RESTApis/RestApi";
 
 let loginForm = null;
 
+const css2obj = css => {
+
+    const r = /(?<=^|;)\s*([^:]+)\s*:\s*([^;]+)\s*/g, o = {};
+    css.replace(r, (m,p,v) => o[p] = v);
+    return o;
+
+}
+
 @CustomElement({
     selector: "hh-login-form"
 })
@@ -17,6 +25,26 @@ class LoginForm extends HTMLElement {
     anonymouseBtn: HTMLButtonElement = null;
     loginFormContainer: HTMLElement = null;
     afterLogin: Function = null;
+
+    static get observedAttributes(){
+        return ["style"]
+    }
+
+    attributeChangedCallback(name, oldValue, newValue){
+        if(name == "style"){
+            let oldCssObj:object = css2obj(oldValue)
+            let newCssObj:object = css2obj(newValue)
+
+            if(oldCssObj["display"] == "none" && newCssObj["display"] != "none"){
+
+                if(this.registerForm)
+                    this.registerForm.style.display = "none"
+                if(this.loginForm)
+                    this.loginForm.style.display = "block"
+            }
+        }
+    }
+
 
     connectedCallback() {
         this.style.position = "absolute"
@@ -124,8 +152,12 @@ class LoginForm extends HTMLElement {
     register(){
         this.loginForm.style.display = "none"
 
-        this.registerForm = document.createElement("hh-register-form")
-        this.appendChild(this.registerForm)
+        if(!this.registerForm){
+            this.registerForm = document.createElement("hh-register-form")
+            this.appendChild(this.registerForm)
+        }
+
+        this.registerForm.style.display = "block"
     }
 
     login() {
@@ -207,4 +239,4 @@ function openLoginForm(afterLoginAction: Function = null) {
     loginForm.afterLogin = afterLoginAction
 }
 
-export {openLoginForm}
+export {openLoginForm, LoginForm}
