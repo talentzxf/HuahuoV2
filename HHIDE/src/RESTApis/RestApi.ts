@@ -2,6 +2,7 @@ import {Logger} from "hhcommoncomponents"
 import axios from "axios";
 import {userInfo} from "../Login/UserInfo";
 import huahuoProperties from "../hhide.properties";
+import * as http from "http";
 
 class CreateUserResponse {
     username: string
@@ -15,6 +16,16 @@ class LoginResponse {
     httpStatus: string
 }
 
+class UserExistResponse{
+    userName: string
+    exist: boolean
+}
+
+enum HTTP_METHOD{
+    POST,
+    GET
+}
+
 class RestApi {
     baseUrl: string;
 
@@ -22,7 +33,7 @@ class RestApi {
         this.baseUrl = huahuoProperties["huahuo.backend.url"]
     }
 
-    async _callApi<T>(url: string, inHeaders: Object = null, requestData: Blob = null): Promise<T> {
+    async _callApi<T>(url: string, inHeaders: Object = null, requestData: Blob = null, httpMethod: HTTP_METHOD = HTTP_METHOD.POST): Promise<T> {
         let targetUrl = this.baseUrl + url;
 
         let formData = null
@@ -52,13 +63,26 @@ class RestApi {
                 config.headers = inHeaders
             }
 
-            const {data, status} = await axios.post<T>(
-                targetUrl,
-                formData,
-                config
-            )
+            let returnObj = {}
+            switch(httpMethod){
 
-            return data;
+                case HTTP_METHOD.POST:
+                    returnObj = await axios.post<T>(
+                        targetUrl,
+                        formData,
+                        config
+                    )
+                    break;
+                case HTTP_METHOD.GET:
+                    returnObj = await axios.get<T>(
+                        targetUrl,
+                        config
+                    )
+                    break;
+            }
+
+
+            return returnObj["data"];
 
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -116,6 +140,16 @@ class RestApi {
         console.log(responseData)
 
         return true
+    }
+
+    async isUserExist(username: string, existUserFunc: Function, userNotExistFunc: Function){
+        let userExistPath = "/users?username=" + username
+        let userExistResponseData:UserExistResponse = await this._callApi(userExistPath, null, null, HTTP_METHOD.GET)
+        if(userExistResponseData.exist){
+            existUserFunc()
+        }else{
+            userNotExistFunc()
+        }
     }
 }
 

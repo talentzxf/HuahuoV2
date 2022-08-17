@@ -1,5 +1,6 @@
 import {CustomElement} from "hhcommoncomponents"
 import {LoginForm} from "./LoginForm";
+import {api} from "../RESTApis/RestApi";
 
 @CustomElement({
     selector: "hh-register-form"
@@ -7,6 +8,8 @@ import {LoginForm} from "./LoginForm";
 class RegisterForm extends HTMLElement {
     closeBtn: HTMLButtonElement
     form: HTMLFormElement
+    userNameInput: HTMLInputElement
+    createUserBtn: HTMLButtonElement
 
     connectedCallback(){
         this.innerHTML =
@@ -21,13 +24,31 @@ class RegisterForm extends HTMLElement {
             "       <input type='text' placeholder='Enter Username' name='username'> " +
             "       <label for='pwd'><b>Password</b></label>" +
             "       <input type='password' placeholder='Enter Password' name='password'> " +
-            "       <button id='Create'>Create User</button>" +
+            "       <input type='password' placeholder='Retype Password' name='retype_password'> " +
+            "       <button id='Create' name='create_user_btn'>Create User</button>" +
             "   </form>"
 
         this.form = this.querySelector("#registerForm")
 
+        this.form.addEventListener("submit", function (e) {
+            e.stopPropagation()
+            e.preventDefault()
+        })
+
+        this.userNameInput = this.querySelector("#username")
+
         this.closeBtn = this.form.querySelector("#registerFormCloseBtn")
         this.closeBtn.addEventListener("click", this.close.bind(this))
+
+        this.createUserBtn = this.form.querySelector("#create_user_btn")
+
+        this.userNameInput.addEventListener("input", this.onUserNameChanged.bind(this))
+    }
+
+    onUserNameChanged(e:KeyboardEvent){
+        let curUserName = this.userNameInput.value
+
+        api.isUserExist(curUserName)
     }
 
     close(){
