@@ -45,6 +45,8 @@ class TextDrawer extends BaseShapeDrawer{
     onLossFocus(e){
         this.textInput.style.display = "none"
         this.textShape = new TextShapeJS()
+
+        this.textInput.value = ""
     }
 
     onTextChanged(){
