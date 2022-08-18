@@ -1,6 +1,6 @@
 import {Logger} from "hhcommoncomponents"
 import axios from "axios";
-import {userInfo} from "../Login/UserInfo";
+import {userInfo} from "../Identity/UserInfo";
 import huahuoProperties from "../hhide.properties";
 import * as http from "http";
 

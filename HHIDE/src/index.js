@@ -7,8 +7,8 @@ import {NavTree} from "./UIComponents/NavTree"
 import {DrawToolBar} from "./UIComponents/DrawToolBar";
 import {SceneView} from "./SceneView/SceneView";
 import {Inspector} from "./Inspector/Inspector";
-import {LoginForm} from "./Login/LoginForm";
-import {RegisterForm} from "./Login/RegisterForm";
+import {LoginForm} from "./Identity/LoginForm";
+import {RegisterForm} from "./Identity/RegisterForm";
 import {dataFileUploader} from "./RESTApis/DataFileUploader";
 
 import "vanilla-colorful"

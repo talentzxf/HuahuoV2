@@ -29,6 +29,9 @@
 <rgba-color-picker></rgba-color-picker>
 <hh-container id="outmost_container">
     <hh-container direction="row" size="fit-content" hasSplitter="false">
+        <span id="UserNameSpan">
+            Not Logged In
+        </span>
         <button onclick="window.menuoperations.save()">Save</button>
         <input type="file" onchange="window.menuoperations.load(this.value, event)">
         <button onclick="window.menuoperations.upload()">Upload</button>
