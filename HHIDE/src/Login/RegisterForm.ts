@@ -21,10 +21,10 @@ class RegisterForm extends HTMLElement {
             "   </div>" +
             "       <h3>Register Here</h3>" +
             "       <label for='uname'><b>Username</b></label>" +
-            "       <input type='text' placeholder='Enter Username' name='username'> " +
+            "       <input type='text' placeholder='Enter Username' id='username'> " +
             "       <label for='pwd'><b>Password</b></label>" +
-            "       <input type='password' placeholder='Enter Password' name='password'> " +
-            "       <input type='password' placeholder='Retype Password' name='retype_password'> " +
+            "       <input type='password' placeholder='Enter Password' id='password'> " +
+            "       <input type='password' placeholder='Retype Password' id='retype_password'> " +
             "       <button id='Create' name='create_user_btn'>Create User</button>" +
             "   </form>"
 
@@ -35,8 +35,7 @@ class RegisterForm extends HTMLElement {
             e.preventDefault()
         })
 
-        this.userNameInput = this.querySelector("#username")
-
+        this.userNameInput = this.form.querySelector("#username")
         this.closeBtn = this.form.querySelector("#registerFormCloseBtn")
         this.closeBtn.addEventListener("click", this.close.bind(this))
 
@@ -48,7 +47,15 @@ class RegisterForm extends HTMLElement {
     onUserNameChanged(e:KeyboardEvent){
         let curUserName = this.userNameInput.value
 
-        api.isUserExist(curUserName)
+        api.isUserExist(curUserName, this.userExistCallback.bind(this), this.userNotExistCallback.bind(this))
+    }
+
+    userExistCallback(){
+
+    }
+
+    userNotExistCallback(){
+
     }
 
     close(){

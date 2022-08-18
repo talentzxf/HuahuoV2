@@ -6,12 +6,16 @@ let loginForm = null;
 
 const css2obj = css => {
 
+    if(!css)
+        return {}
+
     const r = /(?<=^|;)\s*([^:]+)\s*:\s*([^;]+)\s*/g, o = {};
     css.replace(r, (m,p,v) => o[p] = v);
     return o;
 
 }
 
+// TODO: Extract the framework and make a webflow like lib.
 @CustomElement({
     selector: "hh-login-form"
 })

@@ -143,7 +143,7 @@ class RestApi {
     }
 
     async isUserExist(username: string, existUserFunc: Function, userNotExistFunc: Function){
-        let userExistPath = "/users?username=" + username
+        let userExistPath = "/users/exist?username=" + username
         let userExistResponseData:UserExistResponse = await this._callApi(userExistPath, null, null, HTTP_METHOD.GET)
         if(userExistResponseData.exist){
             existUserFunc()

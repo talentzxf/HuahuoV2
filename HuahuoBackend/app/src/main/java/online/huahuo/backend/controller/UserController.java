@@ -36,23 +36,39 @@ public class UserController {
 
     @Secured("ADMIN")
     @GetMapping("/users")
-    List<UserDB> all(){
+    List<UserDB> all() {
         return (List<UserDB>) userService.findAll();
     }
 
+    // TODO: Avoid DDOS.
+    @GetMapping("/users/exist")
+    ResponseEntity<UserExistResponse> exist(@RequestParam String username) {
+        UserDB userDB = userService.findByUsername(username);
+
+        UserExistResponse response = new UserExistResponse();
+        response.setUsername(username);
+
+        if (userDB != null) {
+            response.setExist(true);
+        } else {
+            response.setExist(false);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/users/{id}")
-    UserDB one(@PathVariable Long id){
-        return userService.findById(id).orElseThrow( ()-> new UserNotFoundException(id));
+    UserDB one(@PathVariable Long id) {
+        return userService.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @PostMapping("/users")
     ResponseEntity<UserDB> newUser(@RequestHeader(required = false) Boolean isAnonymous, @RequestBody(required = false) UserDB user) throws NoSuchAlgorithmException {
-        if(isAnonymous == null && user == null){
+        if (isAnonymous == null && user == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
-        if(isAnonymous == null || !isAnonymous){
-            if(user.getUsername() == null || user.getPassword() == null){
+        if (isAnonymous == null || !isAnonymous) {
+            if (user.getUsername() == null || user.getPassword() == null) {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
 
@@ -66,10 +82,10 @@ public class UserController {
             UserDB usrDB = userService.save(user);
             usrDB.setPassword(passwordMask);
             return new ResponseEntity<UserDB>(usrDB, HttpStatus.OK);
-        }else{
+        } else {
             String username = RandomStringUtils.random(anonymousUserNameLength, true, true);
 
-            while(userService.findByUsername(username) != null){
+            while (userService.findByUsername(username) != null) {
                 username = RandomStringUtils.random(anonymousUserNameLength, true, true);
             }
 
@@ -79,9 +95,9 @@ public class UserController {
             // Set the pwd back for anonymous users.
             usr.setPassword(pwd);
 
-            if(null == usr){
+            if (null == usr) {
                 return new ResponseEntity<>(null, HttpStatus.SERVICE_UNAVAILABLE);
-            }else{
+            } else {
                 return new ResponseEntity<>(usr, HttpStatus.OK);
             }
         }
