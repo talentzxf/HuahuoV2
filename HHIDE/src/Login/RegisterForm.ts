@@ -155,10 +155,13 @@ class RegisterForm extends HTMLElement {
             let password = this.passwordInput.value
             let nickname = this.nickNameInput.value
 
-            api.createUser(username, password, nickname).then(()=>{
+            let _this = this
+
+            api.createUser(username, password, nickname).then((response)=>{
                 userInfo.username = username
                 userInfo.password = password
                 api.login()
+                _this.close()
             })
         }
     }
