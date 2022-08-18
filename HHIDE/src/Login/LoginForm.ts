@@ -120,7 +120,7 @@ class LoginForm extends HTMLElement {
             "   <form id='loginForm'>" +
             "   <div style='display: flex; flex-direction: row-reverse'>" +
             "       <div id='loginFormCloseBtn' >" +
-            "           <img class='far fa-circle-xmark'></img>" +
+            "           <img class='far fa-circle-xmark'>" +
             "       </div>" +
             "   </div>" +
             "       <h3>Login Here</h3>" +

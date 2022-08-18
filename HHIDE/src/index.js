@@ -18,6 +18,7 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 import {faMinus} from "@fortawesome/free-solid-svg-icons/faMinus"
 import {faSlash} from "@fortawesome/free-solid-svg-icons/faSlash";
 import {faCircle} from "@fortawesome/free-solid-svg-icons/faCircle";
+import {faCircleXmark} from "@fortawesome/free-regular-svg-icons";
 import {faBezierCurve} from "@fortawesome/free-solid-svg-icons/faBezierCurve";
 import {faArrowPointer} from "@fortawesome/free-solid-svg-icons";
 import {faSquare} from "@fortawesome/free-solid-svg-icons";
@@ -46,6 +47,7 @@ library.add(faEyeSlash)
 library.add(faEdit)
 library.add(faFileImage)
 library.add(faTimesCircle)
+library.add(faCircleXmark)
 dom.watch();
 
 function save() {

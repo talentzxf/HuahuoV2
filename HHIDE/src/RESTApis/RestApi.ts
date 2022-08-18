@@ -33,25 +33,14 @@ class RestApi {
         this.baseUrl = huahuoProperties["huahuo.backend.url"]
     }
 
-    async _callApi<T>(url: string, inHeaders: Object = null, requestData: Blob = null, httpMethod: HTTP_METHOD = HTTP_METHOD.POST): Promise<T> {
+    async _callApi<T>(url: string, inHeaders: Object = null, requestBody: object = null, httpMethod: HTTP_METHOD = HTTP_METHOD.POST): Promise<T> {
         let targetUrl = this.baseUrl + url;
 
-        let formData = null
         if(inHeaders == null){
             inHeaders = {}
         }
 
-        if(requestData){
-            // Generate a random file name for now.
-            let fileName = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-
-            formData = new FormData()
-            requestData["lastModifiedDate"] = new Date();
-            requestData["name"] = fileName;
-
-            formData.append("file",  requestData, fileName)
-            inHeaders["Content-Type"] = "multipart/form-data"
-        }else{
+        if(!inHeaders["Content-Type"]){
             inHeaders["Content-Type"] = "application/json"
         }
 
@@ -69,7 +58,7 @@ class RestApi {
                 case HTTP_METHOD.POST:
                     returnObj = await axios.post<T>(
                         targetUrl,
-                        formData,
+                        requestBody,
                         config
                     )
                     break;
@@ -135,7 +124,18 @@ class RestApi {
         };
 
         let uploadPath = "/projects/upload"
-        let responseData = await this._callApi(uploadPath, headers, data)
+
+            // Generate a random file name for now.
+            let fileName = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+
+            let formData = new FormData()
+            data["lastModifiedDate"] = new Date();
+            data["name"] = fileName;
+
+            formData.append("file",  data, fileName)
+            headers["Content-Type"] = "multipart/form-data"
+
+        let responseData = await this._callApi(uploadPath, headers, formData)
 
         console.log(responseData)
 
@@ -150,6 +150,19 @@ class RestApi {
         }else{
             userNotExistFunc()
         }
+    }
+
+    async createUser(username: string, pwd: string, nickname: string): Promise<CreateUserResponse>{
+        let createUserPath = "/users"
+        let requestBody = {
+            username: username,
+            password: pwd,
+            nickname: nickname,
+            role: "CREATOR",
+            status: "ACTIVE"
+        }
+
+        return this._callApi(createUserPath, null, requestBody, HTTP_METHOD.POST)
     }
 }
 
