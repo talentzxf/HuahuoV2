@@ -217,13 +217,19 @@ class LoginForm extends HTMLElement {
 }
 
 function openLoginForm(afterLoginAction: Function = null) {
+
+    let needAppend = false
     if (loginForm == null) {
         loginForm = document.createElement("hh-login-form")
-        document.body.appendChild(loginForm)
+        needAppend = true
     }
 
     loginForm.style.display = "block"
     loginForm.afterLogin = afterLoginAction
+
+    if(needAppend){
+        document.body.appendChild(loginForm)
+    }
 }
 
 export {openLoginForm, LoginForm}

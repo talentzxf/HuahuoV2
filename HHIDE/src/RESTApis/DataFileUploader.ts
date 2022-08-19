@@ -3,16 +3,14 @@ import {openLoginForm} from "../Identity/LoginForm";
 import {huahuoEngine} from "hhenginejs";
 import {SceneView} from "../SceneView/SceneView";
 import {api} from "./RestApi";
+import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 declare var Module:any;
 
 class DataFileUploader{
+
+    @NeedLogin()
     upload(){
-        if(!userInfo.isLoggedIn){
-            // Prompt login window
-            let loginForm = openLoginForm(this._uploadProject.bind(this))
-        }else{
-            this._uploadProject()
-        }
+        this._uploadProject()
     }
 
     getProjectData():Blob{
