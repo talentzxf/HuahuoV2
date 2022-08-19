@@ -109,7 +109,7 @@ class RestApi {
         userInfo.isLoggedIn = false
     }
 
-    async uploadProject(data: Blob): Promise<boolean> {
+    async uploadProject(data: Blob, fileName: string): Promise<boolean> {
         let token = userInfo.jwtToken
         if (token == null) {
             Logger.error("Token is null, login again!")
@@ -121,16 +121,12 @@ class RestApi {
         };
 
         let uploadPath = "/projects/upload"
+        let formData = new FormData()
+        data["lastModifiedDate"] = new Date();
+        data["name"] = fileName;
 
-            // Generate a random file name for now.
-            let fileName = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-
-            let formData = new FormData()
-            data["lastModifiedDate"] = new Date();
-            data["name"] = fileName;
-
-            formData.append("file",  data, fileName)
-            headers["Content-Type"] = "multipart/form-data"
+        formData.append("file",  data, fileName)
+        headers["Content-Type"] = "multipart/form-data"
 
         let responseData = await this._callApi(uploadPath, headers, formData)
 
