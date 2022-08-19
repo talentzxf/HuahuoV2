@@ -34,6 +34,7 @@ import {Logger} from "hhcommoncomponents";
 import {fileLoader} from "./SceneView/FileLoader";
 import {huahuoEngine} from "hhenginejs/src";
 
+import huahuoProperties from "./hhide.properties";
 
 library.add(faMinus)
 library.add(faPlus)
@@ -95,7 +96,13 @@ function load(fName, e) {
 }
 
 function upload(){
-    dataFileUploader.upload()
+    dataFileUploader.upload().then((response)=>{
+        let fileId = response.fileId
+
+        let playerUrl = huahuoProperties["huahuo.player.url"] + "?projectId=" + fileId
+
+        window.open(playerUrl, '_blank')
+    })
 }
 
 window.menuoperations = {

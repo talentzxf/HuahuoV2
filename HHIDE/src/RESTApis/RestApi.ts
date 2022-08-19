@@ -15,12 +15,12 @@ class LoginResponse {
     httpStatus: string
 }
 
-class UserExistResponse{
+class UserExistResponse {
     userName: string
     exist: boolean
 }
 
-enum HTTP_METHOD{
+enum HTTP_METHOD {
     POST,
     GET
 }
@@ -36,24 +36,24 @@ class RestApi {
     async _callApi<T>(url: string, inHeaders: Object = null, requestBody: object = null, httpMethod: HTTP_METHOD = HTTP_METHOD.POST): Promise<T> {
         let targetUrl = this.baseUrl + url;
 
-        if(inHeaders == null){
+        if (inHeaders == null) {
             inHeaders = {}
         }
 
-        if(!inHeaders["Content-Type"]){
+        if (!inHeaders["Content-Type"]) {
             inHeaders["Content-Type"] = "application/json"
         }
 
         try {
 
-            let config = {headers:{}}
+            let config = {headers: {}}
 
-            if(inHeaders) {
+            if (inHeaders) {
                 config.headers = inHeaders
             }
 
             let returnObj = {}
-            switch(httpMethod){
+            switch (httpMethod) {
 
                 case HTTP_METHOD.POST:
                     returnObj = await axios.post<T>(
@@ -109,7 +109,7 @@ class RestApi {
         userInfo.isLoggedIn = false
     }
 
-    async uploadProject(data: Blob, fileName: string): Promise<boolean> {
+    async uploadProject(data: Blob, fileName: string) {
         let token = userInfo.jwtToken
         if (token == null) {
             Logger.error("Token is null, login again!")
@@ -125,27 +125,23 @@ class RestApi {
         data["lastModifiedDate"] = new Date();
         data["name"] = fileName;
 
-        formData.append("file",  data, fileName)
+        formData.append("file", data, fileName)
         headers["Content-Type"] = "multipart/form-data"
 
-        let responseData = await this._callApi(uploadPath, headers, formData)
-
-        console.log(responseData)
-
-        return true
+        return this._callApi(uploadPath, headers, formData)
     }
 
-    async isUserExist(username: string, existUserFunc: Function, userNotExistFunc: Function){
+    async isUserExist(username: string, existUserFunc: Function, userNotExistFunc: Function) {
         let userExistPath = "/users/exist?username=" + username
-        let userExistResponseData:UserExistResponse = await this._callApi(userExistPath, null, null, HTTP_METHOD.GET)
-        if(userExistResponseData.exist){
+        let userExistResponseData: UserExistResponse = await this._callApi(userExistPath, null, null, HTTP_METHOD.GET)
+        if (userExistResponseData.exist) {
             existUserFunc()
-        }else{
+        } else {
             userNotExistFunc()
         }
     }
 
-    async createUser(username: string, pwd: string, nickname: string): Promise<CreateUserResponse>{
+    async createUser(username: string, pwd: string, nickname: string): Promise<CreateUserResponse> {
         let createUserPath = "/users"
         let requestBody = {
             username: username,
@@ -158,7 +154,7 @@ class RestApi {
         return this._callApi(createUserPath, null, requestBody)
     }
 
-    async isTokenValid(username: string, jwtToken: string){
+    async isTokenValid(username: string, jwtToken: string) {
         let isTokenValidUrl = "/tokenValid?userName=" + username + "&jwtToken=" + jwtToken
         return this._callApi(isTokenValidUrl, null, null, HTTP_METHOD.GET)
     }

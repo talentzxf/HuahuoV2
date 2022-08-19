@@ -9,10 +9,10 @@ function NeedLogin() {
         descriptor.value = (...args: any[]) => {
             if (!userInfo.isLoggedIn) {
                 openLoginForm(() => {
-                    realMethod.apply(target, args)
+                    return realMethod.apply(target, args)
                 })
             } else {
-                realMethod.apply(target, args);
+                return realMethod.apply(target, args);
             }
         }
 

@@ -22,7 +22,7 @@ class DataFileUploader {
 
     @NeedLogin()
     upload() {
-        this._uploadProject()
+        return this._uploadProject()
     }
 
     getProjectData(): Blob {
@@ -40,9 +40,9 @@ class DataFileUploader {
         }
     }
 
-    _uploadProject() {
+    async _uploadProject() {
         let data = this.getProjectData()
-        api.uploadProject(data, this.fileName)
+        return api.uploadProject(data, this.fileName)
     }
 }
 
