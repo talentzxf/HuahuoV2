@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Data
@@ -97,6 +98,10 @@ public class LoginController {
         SecurityContextHolder.getContext().setAuthentication(authenticationProvider.authenticate(credentials));
 
         loginStatus.setHttpStatus(HttpStatus.OK);
+
+        user.setLastLoginTime(new Date());
+        userRepository.save(user);
+
         return new ResponseEntity<>(loginStatus, loginStatus.getHttpStatus());
     }
 }

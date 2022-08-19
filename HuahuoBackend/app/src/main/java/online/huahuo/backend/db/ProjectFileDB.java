@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -28,6 +29,9 @@ public class ProjectFileDB {
     private String fullPath;
     private String checksum;
 
+    private Date createTime;
+    private Date modifiedTime;
+
     public ProjectFileDB(String name, String type, String version, String createdBy,
                          String fullPath, String checksum){
         this.name = name;
@@ -36,5 +40,7 @@ public class ProjectFileDB {
         this.fullPath = fullPath;
         this.checksum = checksum;
         this.createdBy = createdBy;
+        this.createTime = new Date();
+        this.modifiedTime = new Date();
     }
 }

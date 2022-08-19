@@ -19,6 +19,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -65,6 +66,7 @@ public class StorageServiceImpl implements StorageService{
         else
         {
             fileDB.setChecksum(fileHash);
+            fileDB.setModifiedTime(new Date());
         }
 
         return fileRepository.save(fileDB);
