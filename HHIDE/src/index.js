@@ -9,6 +9,7 @@ import {SceneView} from "./SceneView/SceneView";
 import {Inspector} from "./Inspector/Inspector";
 import {LoginForm} from "./Identity/LoginForm";
 import {RegisterForm} from "./Identity/RegisterForm";
+import {UserInfoBar} from "./Identity/UserInfoBar";
 import {dataFileUploader} from "./RESTApis/DataFileUploader";
 
 import "vanilla-colorful"
