@@ -57,8 +57,15 @@ public class StorageServiceImpl implements StorageService{
 
         String fileHash = Utils.hashBytes(file.getBytes());
 
+        ProjectFileDB fileDB = fileRepository.findByFullPath(absoluteFilePath);
+
         // TODO: Read the version from the file.
-        ProjectFileDB fileDB = new ProjectFileDB(fileName, file.getContentType(), "0.0.1", username, absoluteFilePath, fileHash);
+        if(fileDB == null)
+            fileDB = new ProjectFileDB(fileName, file.getContentType(), "0.0.1", username, absoluteFilePath, fileHash);
+        else
+        {
+            fileDB.setChecksum(fileHash);
+        }
 
         return fileRepository.save(fileDB);
     }

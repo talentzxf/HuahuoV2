@@ -23,6 +23,8 @@ public class ProjectFileDB {
     private String version;
 
     private String createdBy;
+
+    @Column(unique = true)
     private String fullPath;
     private String checksum;
 
