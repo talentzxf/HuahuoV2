@@ -104,9 +104,6 @@ class RestApi {
 
         let createUserResponse: CreateUserResponse = await this._callApi<CreateUserResponse>("/users", headers);
 
-        window.localStorage.setItem("username", createUserResponse.username)
-        window.localStorage.setItem("password", createUserResponse.password)
-
         userInfo.username = createUserResponse.username
         userInfo.password = createUserResponse.password
         userInfo.isLoggedIn = false

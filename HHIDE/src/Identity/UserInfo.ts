@@ -25,6 +25,9 @@ class UserInfo {
             for(let loginEventHandler of this._onLoggedInHandler){
                 loginEventHandler(this.username)
             }
+
+            window.localStorage.setItem("username", this.username)
+            window.localStorage.setItem("password", this.password)
         }
     }
 }

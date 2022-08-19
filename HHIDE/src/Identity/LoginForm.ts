@@ -179,24 +179,7 @@ class LoginForm extends HTMLElement {
         }
 
         if (anonymousLogin) {
-            let needToCreateAnonymousUser = true;
-            let userName = window.localStorage.getItem("username")
-            if (userName) {
-                let pwd = window.localStorage.getItem("password")
-                if (pwd != null) {
-                    needToCreateAnonymousUser = false;
-
-                    userInfo.username = userName
-                    userInfo.password = pwd
-                    userInfo.isLoggedIn = false
-                } else {
-                    Logger.error("User name is there but pwd is not???")
-                }
-            }
-
-            if (needToCreateAnonymousUser) {
-                await api.createAnonymousUser()
-            }
+            await api.createAnonymousUser()
         } else {
             window.alert("Not implemented!")
         }
