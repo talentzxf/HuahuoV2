@@ -2,7 +2,6 @@ import {Logger} from "hhcommoncomponents"
 import axios from "axios";
 import {userInfo} from "../Identity/UserInfo";
 import huahuoProperties from "../hhide.properties";
-import * as http from "http";
 
 class CreateUserResponse {
     username: string
@@ -26,6 +25,7 @@ enum HTTP_METHOD{
     GET
 }
 
+// TODO: Use Swagger to generate the API class
 class RestApi {
     baseUrl: string;
 
@@ -85,7 +85,7 @@ class RestApi {
     }
 
     async login(): Promise<LoginResponse> {
-        let loginUrl = "/login?username=" + userInfo.username + "&password=" + userInfo.password
+        let loginUrl = "/login?userName=" + userInfo.username + "&password=" + userInfo.password
         let loginResponse: LoginResponse = await this._callApi<LoginResponse>(loginUrl)
 
         if (loginResponse.httpStatus && loginResponse.httpStatus == "OK") {
@@ -159,7 +159,12 @@ class RestApi {
             status: "ACTIVE"
         }
 
-        return this._callApi(createUserPath, null, requestBody, HTTP_METHOD.POST)
+        return this._callApi(createUserPath, null, requestBody)
+    }
+
+    async isTokenValid(username: string, jwtToken: string){
+        let isTokenValidUrl = "/tokenValid?userName=" + username + "&jwtToken=" + jwtToken
+        return this._callApi(isTokenValidUrl, null, null, HTTP_METHOD.GET)
     }
 }
 

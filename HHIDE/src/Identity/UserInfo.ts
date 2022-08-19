@@ -27,7 +27,7 @@ class UserInfo {
             }
 
             window.localStorage.setItem("username", this.username)
-            window.localStorage.setItem("password", this.password)
+            window.localStorage.setItem("jwtToken", this.jwtToken)
         }
     }
 }

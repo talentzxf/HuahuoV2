@@ -31,24 +31,22 @@ class UserInfoBar extends HTMLElement {
 
             userInfo.addLoginEventHandler(this.setUserName.bind(this))
 
-            // Try to login using the saved user info
+            // Try to validate if the jwtToken is still valid
             let userName = window.localStorage.getItem("username")
             if (userName) {
-                let pwd = window.localStorage.getItem("password")
-                if (pwd != null) {
-                    userInfo.username = userName
-                    userInfo.password = pwd
-                    userInfo.isLoggedIn = false
+                let token = window.localStorage.getItem("jwtToken")
+                if (token != null) {
+                    api.isTokenValid(userName, token).then((response: any)=>{
+                        if(response && response["isValid"]){
+                            userInfo.username = userName
+                            userInfo.jwtToken = token
+                            userInfo.isLoggedIn = true
+                        }
+                    })
                 } else {
-                    Logger.error("User name is there but pwd is not???")
+                    Logger.error("User name is there but token is not???")
                 }
             }
-
-            api.login().then(()=>{
-                Logger.info("User:" + userInfo.username + " logged in!")
-            }).catch(()=>{
-                Logger.info("User:" + userInfo.username + " login failed!")
-            })
         }
     }
 }
