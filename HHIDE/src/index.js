@@ -95,7 +95,7 @@ function load(fName, e) {
     reader.readAsArrayBuffer(file)
 }
 
-function upload(){
+function uploadAndOpenPlayer(){
     dataFileUploader.upload().then((response)=>{
         let fileId = response.fileId
 
@@ -108,5 +108,5 @@ function upload(){
 window.menuoperations = {
     save: save,
     load: load,
-    upload: upload
+    uploadAndOpenPlayer: uploadAndOpenPlayer
 }
