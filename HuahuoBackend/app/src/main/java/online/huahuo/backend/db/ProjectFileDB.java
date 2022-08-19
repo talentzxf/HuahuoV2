@@ -32,6 +32,9 @@ public class ProjectFileDB {
     private Date createTime;
     private Date modifiedTime;
 
+    @Column(nullable = false)
+    private ProjectStatus status;
+
     public ProjectFileDB(String name, String type, String version, String createdBy,
                          String fullPath, String checksum){
         this.name = name;
@@ -42,5 +45,6 @@ public class ProjectFileDB {
         this.createdBy = createdBy;
         this.createTime = new Date();
         this.modifiedTime = new Date();
+        this.status = ProjectStatus.ACTIVE;
     }
 }

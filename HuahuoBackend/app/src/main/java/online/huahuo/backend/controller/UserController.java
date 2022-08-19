@@ -1,13 +1,11 @@
 package online.huahuo.backend.controller;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import online.huahuo.backend.db.UserDB;
 import online.huahuo.backend.db.UserRole;
 import online.huahuo.backend.db.UserService;
 import online.huahuo.backend.exception.UserNotFoundException;
 import online.huahuo.backend.security.UserPasswordEncoder;
-import online.huahuo.backend.utils.Utils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

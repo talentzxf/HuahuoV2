@@ -50,7 +50,13 @@ public class JwtRequestFilter extends OncePerRequestFilter{
     JwtUserDetails getUserDetails(UserDB user, String token){
         List<SimpleGrantedAuthority> authorities = new ArrayList<>(1);
         authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
-        if(user.getRole().equals(UserRole.ADMIN) || user.getRole().equals(UserRole.CREATOR)){
+        if(user.getRole().equals(UserRole.ADMIN)){
+            authorities.add(new SimpleGrantedAuthority(UserRole.ADMIN.name()));
+            authorities.add(new SimpleGrantedAuthority(UserRole.CREATOR.name()));
+            authorities.add(new SimpleGrantedAuthority(UserRole.READER.name()));
+            authorities.add(new SimpleGrantedAuthority(UserRole.ANONYMOUS.name()));
+        }
+        else if(user.getRole().equals(UserRole.CREATOR)){
             authorities.add(new SimpleGrantedAuthority(UserRole.CREATOR.name()));
             authorities.add(new SimpleGrantedAuthority(UserRole.READER.name()));
             authorities.add(new SimpleGrantedAuthority(UserRole.ANONYMOUS.name()));
