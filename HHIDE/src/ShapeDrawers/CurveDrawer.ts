@@ -1,11 +1,12 @@
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
-import {CurveShapeJS} from "hhenginejs";
+import {huahuoEngine, CurveShapeJS} from "hhenginejs";
+import {EventBus, EventNames} from "../Events/GlobalEvents";
 
-class CurveDrawer extends BaseShapeDrawer{
+class CurveDrawer extends BaseShapeDrawer {
     name = "Curve"
     imgClass = "fas fa-bezier-curve"
 
-    curvePath:CurveShapeJS = new CurveShapeJS()
+    curvePath: CurveShapeJS = new CurveShapeJS()
 
     onMouseDown(evt: MouseEvent) {
         super.onMouseDown(evt);
@@ -19,7 +20,7 @@ class CurveDrawer extends BaseShapeDrawer{
     onMouseMove(evt: MouseEvent) {
         super.onMouseMove(evt);
 
-        if(this.isDrawing){
+        if (this.isDrawing) {
             let newPoint = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
             this.curvePath.addPoint(newPoint)
         }
@@ -28,11 +29,18 @@ class CurveDrawer extends BaseShapeDrawer{
     onMouseUp(evt: MouseEvent) {
         super.onMouseUp(evt);
 
-        this.curvePath.simplify(10)
+        this.curvePath.endDrawingCurve()
 
-        this.isDrawing = false
+        let _this = this
+        huahuoEngine.ExecuteAfterInited(() => {
+            _this.isDrawing = false
 
-        this.curvePath = new CurveShapeJS()
+            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
+            _this.addShapeToCurrentLayer(_this.curvePath)
+            _this.curvePath = new CurveShapeJS()
+        })
+
+
     }
 }
 

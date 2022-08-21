@@ -28,8 +28,10 @@ class CurveShapeJS extends BaseSolidShape{
         this.paperShape.add(p)
     }
 
-    simplify(){
+    endDrawingCurve(){
         this.paperShape.simplify(10)
+
+        this.store()
     }
 }
 
