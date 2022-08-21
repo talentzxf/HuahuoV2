@@ -1,4 +1,5 @@
 import {BaseSolidShape} from "./BaseSolidShape";
+import {PropertyType} from "hhcommoncomponents";
 
 let shapeName = "CurveShape"
 class CurveShapeJS extends BaseSolidShape{
@@ -18,6 +19,7 @@ class CurveShapeJS extends BaseSolidShape{
             strokeColor: 'black',
             fullySelected: true
         })
+        this.paperShape.applyMatrix = false
 
         this.paperShape.data.meta = this
     }
@@ -33,6 +35,20 @@ class CurveShapeJS extends BaseSolidShape{
     endDrawingCurve(){
         this.paperShape.simplify(10)
         this.store()
+    }
+
+    encloseCurve(){
+        this.paperShape.closed = true
+    }
+
+    afterWASMReady() {
+        super.afterWASMReady();
+
+        this.propertySheet.addProperty({
+            key: "EnClose",
+            type: PropertyType.BUTTON,
+            action: this.encloseCurve.bind(this)
+        })
     }
 }
 
