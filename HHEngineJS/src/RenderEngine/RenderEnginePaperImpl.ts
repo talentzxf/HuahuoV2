@@ -68,7 +68,7 @@ class RenderEnginePaperJs implements RenderEngine2D {
         })
     }
 
-    private getContentWH(canvasWidth, canvasHeight) {
+    public getContentWH(canvasWidth, canvasHeight):[number, number] {
         let returnWidth = canvasWidth
         let returnHeight = canvasWidth / this.aspectRatio
         if (returnHeight > canvasHeight) {

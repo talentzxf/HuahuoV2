@@ -14,6 +14,8 @@ interface RenderEngine2D {
     zoomReset(): void
 
     resize(canvas: HTMLCanvasElement, width: number, height: number): void
+
+    getContentWH(canvasWidth, canvasHeight):[number, number];
 }
 
 export {RenderEngine2D}

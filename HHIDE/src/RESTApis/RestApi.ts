@@ -75,7 +75,11 @@ class RestApi {
 
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                Logger.error("Axios error happened!", error.message);
+                if(error.response.status == 401){
+                    Logger.error("Auth failed", error.message) // TODO: Relogin the user. TODO: Rememeber me.
+                }else{
+                    Logger.error("Axios error happened!", error.message);
+                }
                 return null;
             } else {
                 Logger.error("Unexpected error happened!", error);

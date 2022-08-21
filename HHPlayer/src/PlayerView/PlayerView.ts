@@ -58,23 +58,24 @@ class PlayerView extends HTMLElement {
         let containerWidth = this.canvasContainer.clientWidth
         let containerHeight = this.canvasContainer.clientHeight
         let margin = 15
-        let canvasWidth = containerWidth - margin
-        let canvasHeight = containerHeight - margin
-
-        renderEngine2D.resize(this.canvas, canvasWidth, canvasHeight)
-
+        let proposedCanvasWidth = containerWidth - margin
+        let proposedCanvasHeight = containerHeight - margin
         // if(canvasHeight > containerHeight){
         //     canvasHeight = containerHeight * margin
         //     canvasWidth = canvasHeight * this.aspectRatio
         // }
 
-        this.canvas.width = canvasWidth
-        this.canvas.height = canvasHeight
-        this.canvas.style.width = canvasWidth + "px"
-        this.canvas.style.height = canvasHeight + "px"
+        let [actualCanvasWidth, actualCanvasHeight] = renderEngine2D.getContentWH(proposedCanvasWidth, proposedCanvasHeight)
+
+        renderEngine2D.resize(this.canvas, actualCanvasWidth, actualCanvasHeight)
+
+        this.canvas.width = actualCanvasWidth
+        this.canvas.height = actualCanvasHeight
+        this.canvas.style.width = actualCanvasWidth + "px"
+        this.canvas.style.height = actualCanvasHeight + "px"
         this.canvas.style.position = "relative"
-        this.canvas.style.left = (containerWidth - canvasWidth) / 2 + "px"
-        this.canvas.style.top = (containerHeight - canvasHeight) / 2 + "px"
+        this.canvas.style.left = (containerWidth - actualCanvasWidth) / 2 + "px"
+        this.canvas.style.top = (containerHeight - actualCanvasHeight) / 2 + "px"
         this.Redraw()
     }
 
@@ -115,9 +116,6 @@ class PlayerView extends HTMLElement {
 
     connectedCallback(){
         if(!this.inited){
-            this.style.width = "100%"
-            this.style.height = "100%"
-
             this.createCanvasContainer()
             this.createCanvas()
             renderEngine2D.init(this.canvas)
@@ -126,15 +124,18 @@ class PlayerView extends HTMLElement {
 
             let resizeObserver = new ResizeObserver(this.OnResize.bind(this))
             resizeObserver.observe(this.canvasContainer)
-
-
             this.animationPlayer = new Player();
+
+            this.style.width = "100%"
+            this.style.height = "100%"
 
             this.createControllers()
 
             for(let callback of this.readyCallbacks){
                 callback()
             }
+
+            this.OnResize()
 
             this.inited = true
         }
