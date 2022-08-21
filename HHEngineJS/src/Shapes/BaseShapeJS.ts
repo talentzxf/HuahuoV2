@@ -511,9 +511,6 @@ abstract class BaseShapeJS {
         let scale = this.rawObj.GetScale()
         this.scaling = new paper.Point(scale.x, scale.y)
 
-        this.paperItem.position = new paper.Point(0, 0)
-        this.paperItem.rotation = 0
-
         let pos = this.rawObj.GetPosition();// This position is the new global coordinate of the local (0,0).
         let currentZeroPoint = this.paperItem.localToParent(new paper.Point(0, 0))
         let currentCenter = this.position

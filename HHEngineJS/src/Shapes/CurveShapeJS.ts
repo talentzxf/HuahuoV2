@@ -18,6 +18,8 @@ class CurveShapeJS extends BaseSolidShape{
             strokeColor: 'black',
             fullySelected: true
         })
+
+        this.paperShape.data.meta = this
     }
 
     addPoint(p:paper.Point){
@@ -30,7 +32,6 @@ class CurveShapeJS extends BaseSolidShape{
 
     endDrawingCurve(){
         this.paperShape.simplify(10)
-
         this.store()
     }
 }
