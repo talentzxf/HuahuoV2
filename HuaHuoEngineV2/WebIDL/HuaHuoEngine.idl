@@ -388,6 +388,40 @@ interface ImageShape{
 };
 
 [NoDelete]
+interface CurveShape{
+
+    // inherited from BaseShape
+    DOMString GetTypeName();
+    DOMString GetName();
+    void SetName(DOMString name);
+    void SetPosition(float x, float y, float z);
+    Vector3f GetPosition();
+    float GetRotation();
+    void SetRotation(float rotation);
+    void SetScale(float xScale, float yScale, float zScale);
+    Vector3f GetScale();
+
+    void SetColor(float r, float g, float b, float a);
+    ColorRGBAf GetColor();
+
+    Layer GetLayer();
+    boolean IsVisible();
+    void SetSegments(float[] segmentBuffer, long size);
+    void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
+    void RemoveSegment(long index);
+
+    long GetSegmentKeyFrameCount();
+    long GetSegmentCount();
+    Vector3f GetSegmentPosition(long segmentId);
+    Vector3f GetSegmentHandleIn(long segmentId);
+    Vector3f GetSegmentHandleOut(long segmentId);
+    SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
+    long GetIndex();
+    void SetIndex(long index);
+    long GetBornFrameId();
+};
+
+[NoDelete]
 interface ElementShape{
     void SetStoreId(long storeId);
     long GetStoreId();

@@ -11,6 +11,7 @@
 #include "Shapes/AudioShape.h"
 #include "Shapes/ElementShape.h"
 #include "Shapes/TextShape.h"
+#include "Shapes/CurveShape.h"
 #ifdef HUAHUO_EDITOR
 #include "Editor/SceneInspector.h"
 #include "Editor/SceneView.h"

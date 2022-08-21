@@ -20,6 +20,7 @@
 #include "Shapes/AbstractMediaShape.h"
 #include "Shapes/ElementShape.h"
 #include "Shapes/TextShape.h"
+#include "Shapes/CurveShape.h"
 
 void RegisterBuiltinTypes()
 {
@@ -73,4 +74,5 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<ShapeTransformFrameState>("ObjectStore");
     RegisterHuaHuoClass<ShapeColorFrameState>("ObjectStore");
     RegisterHuaHuoClass<ShapeSegmentFrameState>("ObjectStore");
+    RegisterHuaHuoClass<CurveShape>("ObjectStore");
 }

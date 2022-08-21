@@ -12,7 +12,7 @@ class CurveShapeJS extends BaseSolidShape{
 
     createShape() {
         super.createShape();
-
-        
+        let paperjs = this.getPaperJs()
+        this.paperShape = new paperjs.Path()
     }
 }
