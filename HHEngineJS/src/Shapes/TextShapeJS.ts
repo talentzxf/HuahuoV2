@@ -1,5 +1,6 @@
 import {Vector2} from "hhcommoncomponents"
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
+import {PropertyType} from "hhcommoncomponents";
 
 let shapeName = "TextShape"
 class TextShapeJS extends BaseShapeJS{
@@ -13,6 +14,11 @@ class TextShapeJS extends BaseShapeJS{
 
     set text(val:string){
         this.rawObj.SetText(val)
+
+        let textItem = this.paperItem as paper.PointText
+        if(textItem && textItem.content != val){
+            textItem.content = val
+        }
     }
 
     textPosition:paper.Point = null
@@ -36,7 +42,7 @@ class TextShapeJS extends BaseShapeJS{
         textItem.data.meta = this
     }
 
-    setText(inText:string, position: Vector2){
+    setTextWithPosition(inText:string, position: Vector2){
         this.text = inText
         this.textPosition = position
 
@@ -48,6 +54,29 @@ class TextShapeJS extends BaseShapeJS{
         }
 
         this.store()
+    }
+
+    getText(){
+        return this.text
+    }
+
+    setText(inText:string){
+        this.text = inText
+
+        this.updateBoundingBox()
+    }
+
+    afterWASMReady() {
+        super.afterWASMReady();
+
+        this.propertySheet.addProperty({
+            key: "Text",
+            type: PropertyType.STRING,
+            getter: this.getText.bind(this),
+            setter: this.setText.bind(this),
+            registerValueChangeFunc: this.registerValueChangeHandler("text").bind(this),
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("text").bind(this)
+        })
     }
 }
 

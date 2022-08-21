@@ -61,7 +61,7 @@ class TextDrawer extends BaseShapeDrawer{
     onTextChanged(){
         let curText:string = this.textInput.value
 
-        this.textShape.setText(curText, this.textPos)
+        this.textShape.setTextWithPosition(curText, this.textPos)
     }
 
     onMouseUp(evt: MouseEvent) {

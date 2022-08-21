@@ -2,6 +2,8 @@ import {BasePropertyDesc, BasePropertyDivGenerator} from "./BasePropertyDivGener
 import {Property} from "hhcommoncomponents"
 
 class StringPropertyDesc extends BasePropertyDesc{
+    input: HTMLInputElement
+
     constructor(property: Property) {
         super(property);
 
@@ -12,13 +14,21 @@ class StringPropertyDesc extends BasePropertyDesc{
             let div = document.createElement("span")
             div.innerText = currentValue
             this.contentDiv.appendChild(div)
+        }else{ // Create Input
+            this.input = document.createElement("input")
+            this.input.value = currentValue
+            this.input.addEventListener("keyup", this.inputValueChanged.bind(this))
+            this.contentDiv.append(this.input)
         }
+    }
+
+    inputValueChanged(){
+        let newValue = this.input.value
+        this.property.setter(newValue)
     }
 
     onValueChanged(val) {
     }
-
-
 }
 
 class StringPropertyDivGenerator extends BasePropertyDivGenerator{
