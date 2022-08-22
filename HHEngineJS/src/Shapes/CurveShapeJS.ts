@@ -1,5 +1,7 @@
 import {BaseSolidShape} from "./BaseSolidShape";
 import {PropertyType} from "hhcommoncomponents";
+import {shapeFactory} from "./BaseShapeJS";
+import {TextShapeJS} from "./TextShapeJS";
 
 let shapeName = "CurveShape"
 class CurveShapeJS extends BaseSolidShape{
@@ -52,4 +54,5 @@ class CurveShapeJS extends BaseSolidShape{
     }
 }
 
+shapeFactory.RegisterClass(shapeName, CurveShapeJS.createCurveShape)
 export {CurveShapeJS}

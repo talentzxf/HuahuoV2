@@ -475,7 +475,7 @@ abstract class BaseShapeJS {
 
     applySegments() {
         let segmentCount = this.rawObj.GetSegmentCount();
-        if (segmentCount > 0 && this.paperShape.segments.length > 0) {
+        if (segmentCount > 0 && this.paperShape.segments != null){
             let currentSegmentCount = this.paperShape.segments.length
             let createSegments = false
             if (currentSegmentCount != segmentCount) {
