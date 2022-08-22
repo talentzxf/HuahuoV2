@@ -19,8 +19,8 @@ void BaseShape::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
     TRANSFER(mShapeName);
     TRANSFER(mBornFrameId);
-    TRANSFER(mFrameStates);
     TRANSFER(mIndex);
+    TRANSFER(mFrameStates);
 }
 
 void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
