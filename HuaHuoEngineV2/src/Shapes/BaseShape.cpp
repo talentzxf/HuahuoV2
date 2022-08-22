@@ -19,9 +19,7 @@ void BaseShape::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
     TRANSFER(mShapeName);
     TRANSFER(mBornFrameId);
-    TRANSFER(mTransformKeyFrames);
-    TRANSFER(mColorKeyFrames);
-    TRANSFER(mSegmentFrames);
+    TRANSFER(mFrameStates);
     TRANSFER(mIndex);
 }
 
@@ -52,12 +50,19 @@ Layer *BaseShape::GetLayer() {
     return mLayer;
 }
 
+AbstractFrameState* BaseShape::AddFrameStateInternal(AbstractFrameState* frameState){
+    Assert(frameState != NULL);
+    mFrameStates.push_back(FrameStatePair::FromState(frameState));
+
+    return frameState;
+}
+
 void BaseShape::SetPosition(float x, float y, float z) {
 
     Layer *shapeLayer = GetLayer();
 
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    mTransformKeyFrames.RecordPosition(currentFrameId, x, y, z);
+    GetFrameState<ShapeTransformFrameState>().RecordPosition(currentFrameId, x, y, z);
 
     shapeLayer->AddKeyFrame(currentFrameId, this);
 }
@@ -67,7 +72,7 @@ void BaseShape::SetRotation(float rotation) {
     Layer *shapeLayer = GetLayer();
 
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    mTransformKeyFrames.RecordRotation(currentFrameId, rotation);
+    GetFrameState<ShapeTransformFrameState>().RecordRotation(currentFrameId, rotation);
 
     shapeLayer->AddKeyFrame(currentFrameId, this);
 }
@@ -75,18 +80,18 @@ void BaseShape::SetRotation(float rotation) {
 void BaseShape::SetScale(float xScale, float yScale, float zScale) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    mTransformKeyFrames.RecordScale(currentFrameId, xScale, yScale, zScale);
+    GetFrameState<ShapeTransformFrameState>().RecordScale(currentFrameId, xScale, yScale, zScale);
     shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
 Vector3f *BaseShape::GetScale() {
-    return mTransformKeyFrames.GetScale();
+    return GetFrameState<ShapeTransformFrameState>().GetScale();
 }
 
 void BaseShape::SetColor(float r, float g, float b, float a) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    mColorKeyFrames.RecordColor(currentFrameId, r, g, b, a);
+    GetFrameState<ShapeColorFrameState>().RecordColor(currentFrameId, r, g, b, a);
 
     shapeLayer->AddKeyFrame(currentFrameId, this);
 }
@@ -115,17 +120,44 @@ bool BaseShape::IsVisible() {
 void BaseShape::SetSegments(float segmentBuffer[], int size) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    mSegmentFrames.RecordSegments(currentFrameId, segmentBuffer, size);
+    GetFrameState<ShapeSegmentFrameState>().RecordSegments(currentFrameId, segmentBuffer, size);
     shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
 void BaseShape::SetSegmentsAtFrame(float segmentBuffer[], int size, int keyFrameId) {
-    mSegmentFrames.RecordSegments(keyFrameId, segmentBuffer, size);
+    GetFrameState<ShapeSegmentFrameState>().RecordSegments(keyFrameId, segmentBuffer, size);
 }
 
 void BaseShape::RemoveSegment(int index) {
-    this->mSegmentFrames.RemoveSegment(index);
+    this->GetFrameState<ShapeSegmentFrameState>().RemoveSegment(index);
 
     int currentFrameId = this->GetLayer()->GetCurrentFrame();
     this->Apply(currentFrameId);
+}
+
+AbstractFrameState* BaseShape::ProduceFrameStateByType(const HuaHuo::Type *type) {
+    AbstractFrameState* component = AbstractFrameState::Produce(type);
+
+    if (component == NULL)
+    {
+        return NULL;
+    }
+
+    Assert(component->Is<AbstractFrameState>());
+
+    component->Reset();
+
+    return component;
+}
+
+
+AbstractFrameState* BaseShape::AddFrameStateByName(const char *frameStateName) {
+    const HuaHuo::Type* componentType = HuaHuo::Type::FindTypeByName(frameStateName);
+    if (componentType != NULL && componentType->IsDerivedFrom<AbstractFrameState>())
+    {
+        AbstractFrameState* newFrameState = ProduceFrameStateByType(componentType);
+        return AddFrameStateInternal(newFrameState);
+    }
+
+    return NULL;
 }

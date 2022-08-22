@@ -13,6 +13,7 @@
 #include "KeyFrames/ShapeColorFrameState.h"
 #include "Serialize/PersistentManager.h"
 #include "KeyFrames/ShapeSegmentFrameState.h"
+#include "BaseClasses/ImmediatePtr.h"
 
 extern std::string StoreFilePath;
 class BaseShape;
@@ -34,27 +35,51 @@ class BaseShape : public Object{
     REGISTER_CLASS_TRAITS(kTypeIsAbstract);
     REGISTER_CLASS(BaseShape);
     DECLARE_OBJECT_SERIALIZE();
+public:
+
+    struct FrameStatePair
+    {
+        FrameStatePair() {}
+
+        static FrameStatePair FromState(AbstractFrameState* component);
+        DECLARE_SERIALIZE(ComponentPair);
+
+        inline RuntimeTypeIndex const GetTypeIndex() const { return typeIndex; }
+        inline ImmediatePtr<AbstractFrameState> const& GetComponentPtr() const { return component; }
+
+        void SetComponentPtr(AbstractFrameState* const ptr);
+
+    private:
+        RuntimeTypeIndex typeIndex;
+        ImmediatePtr<AbstractFrameState> component;
+    };
+
 private:
-    ShapeTransformFrameState mTransformKeyFrames;
-    ShapeColorFrameState mColorKeyFrames;
-    ShapeSegmentFrameState mSegmentFrames;
+
+    typedef std::vector<FrameStatePair>    Container;
+    Container   mFrameStates;
+
     Layer* mLayer;
     SInt32 mBornFrameId;
     SInt32 mIndex;
     bool mIsVisible;
     std::string mShapeName;
 
+private:
+    AbstractFrameState* AddFrameStateInternal(AbstractFrameState* frameState);
+    AbstractFrameState* ProduceFrameStateByType(const HuaHuo::Type* type);
+
 public:
     BaseShape(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
-        ,mTransformKeyFrames(label, mode)
-        ,mColorKeyFrames(label, mode)
-        ,mSegmentFrames(label, mode)
         ,mLayer(NULL)
         ,mBornFrameId(-1)
         ,mIndex(-1)
         ,mIsVisible(true)
     {
+        AddFrameStateByName("ShapeTransformFrameState");
+        AddFrameStateByName("ShapeSegmentFrameState");
+        AddFrameStateByName("ShapeColorFrameState");
     }
 
     /// Get and set the name
@@ -65,6 +90,14 @@ public:
     virtual void SetName(char const* name) override{
         this->mShapeName = name;
     }
+
+    // ------------------------------------------------------------------------
+
+    template<class T> T& GetFrameState() const;
+    template<class T> T* QueryFrameState() const;
+
+    AbstractFrameState* QueryFrameStateByType(const HuaHuo::Type* type) const;
+    AbstractFrameState* QueryFrameStateByExactType(const HuaHuo::Type* type) const;
 
     void SetBornFrameId(SInt32 bornFrameId){
         mBornFrameId = bornFrameId;
@@ -92,17 +125,17 @@ public:
     }
 
     Vector3f* GetPosition(){
-        return mTransformKeyFrames.GetPosition();
+        return GetFrameState<ShapeTransformFrameState>().GetPosition();
     }
 
     float GetRotation(){
-        return mTransformKeyFrames.GetRotation();
+        return GetFrameState<ShapeTransformFrameState>().GetRotation();
     }
 
     virtual void Apply(int frameId){
-        mTransformKeyFrames.Apply(frameId);
-        mColorKeyFrames.Apply(frameId);
-        mSegmentFrames.Apply(frameId);
+        GetFrameState<ShapeTransformFrameState>().Apply(frameId);
+        GetFrameState<ShapeColorFrameState>().Apply(frameId);
+        GetFrameState<ShapeSegmentFrameState>().Apply(frameId);
     }
 
     void SetScale(float xScale, float yScale, float zScale);
@@ -121,31 +154,31 @@ public:
     void RemoveSegment(int index);
 
     int GetSegmentCount(){
-        return mSegmentFrames.GetSegmentCount();
+        return GetFrameState<ShapeSegmentFrameState>().GetSegmentCount();
     }
 
     Vector3f* GetSegmentPosition(int segmentId){
-        return mSegmentFrames.GetSegmentPosition(segmentId);
+        return GetFrameState<ShapeSegmentFrameState>().GetSegmentPosition(segmentId);
     }
 
     Vector3f* GetSegmentHandleIn(int segmentId){
-        return mSegmentFrames.GetSegmentHandleIn(segmentId);
+        return GetFrameState<ShapeSegmentFrameState>().GetSegmentHandleIn(segmentId);
     }
 
     Vector3f* GetSegmentHandleOut(int segmentId){
-        return mSegmentFrames.GetSegmentHandleOut(segmentId);
+        return GetFrameState<ShapeSegmentFrameState>().GetSegmentHandleOut(segmentId);
     }
 
     int GetSegmentKeyFrameCount(){
-        return mSegmentFrames.GetKeyFrameCount();
+        return GetFrameState<ShapeSegmentFrameState>().GetKeyFrameCount();
     }
 
     SegmentKeyFrame* GetSegmentKeyFrameAtKeyFrameIndex(int keyFrameIndex){
-        return mSegmentFrames.GetSegmentKeyFrameAtFrameIndex(keyFrameIndex);
+        return GetFrameState<ShapeSegmentFrameState>().GetSegmentKeyFrameAtFrameIndex(keyFrameIndex);
     }
 
     ColorRGBAf* GetColor(){
-        return mColorKeyFrames.GetColor();
+        return GetFrameState<ShapeColorFrameState>().GetColor();
     }
 
     void SetIndex(SInt32 index){
@@ -158,7 +191,31 @@ public:
 
     virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
     static BaseShape* CreateShape(const char* shapeName);
+
+    AbstractFrameState* AddFrameStateByName(const char* frameStateName);
 };
+
+template<class T> inline
+T& BaseShape::GetFrameState() const
+{
+    T* component = QueryFrameState<T>();
+    DebugAssertMsg(component != NULL, "GetComponent returned NULL. You cannot use GetComponent unless the component is guaranteed to be part of the GO");
+    return *component;
+}
+
+template<class T> inline
+T* BaseShape::QueryFrameState() const
+{
+    return static_cast<T*>(QueryFrameStateByType(TypeOf<T>()));
+}
+
+inline BaseShape::FrameStatePair BaseShape::FrameStatePair::FromState(AbstractFrameState* frameState)
+{
+    FrameStatePair ret;
+    ret.typeIndex = frameState->GetType()->GetRuntimeTypeIndex();
+    ret.component = frameState;
+    return ret;
+}
 
 
 #endif //HUAHUOENGINEV2_BASESHAPE_H
