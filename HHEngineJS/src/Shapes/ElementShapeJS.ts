@@ -24,10 +24,6 @@ class ElementShapeJS extends BaseShapeJS {
         this.size = new paper.Point(100, 100)
     }
 
-    protected isUpdateFillColor(): boolean {
-        return false;
-    }
-
     protected isUpdateStrokeColor(): boolean {
         return false;
     }

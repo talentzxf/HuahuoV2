@@ -33,10 +33,6 @@ abstract class BaseShapeJS {
         return this.bornStoreId
     }
 
-    protected isUpdateFillColor() {
-        return true;
-    }
-
     protected isUpdateStrokeColor() {
         return true;
     }
@@ -505,8 +501,6 @@ abstract class BaseShapeJS {
 
         this.rotation = this.rawObj.GetRotation() // Trigger property change events
         this.position = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
-
-
 
         // Adjust index
         if (this.paperItem.index != this.rawObj.GetIndex() && this.paperItem.index > 0) {
