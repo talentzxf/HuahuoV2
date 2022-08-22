@@ -1,9 +1,10 @@
 import {Vector2} from "hhcommoncomponents"
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
 import {PropertyType} from "hhcommoncomponents";
+import {BaseSolidShape} from "./BaseSolidShape";
 
 let shapeName = "TextShape"
-class TextShapeJS extends BaseShapeJS{
+class TextShapeJS extends BaseSolidShape{
     static createTextShape(rawObj){
         return new TextShapeJS(rawObj)
     }

@@ -82,6 +82,7 @@ public:
         AddFrameStateByName("ShapeSegmentFrameState");
         AddFrameStateByName("ShapeColorFrameState");
         AddFrameStateByName("ShapeStrokeColorFrameState");
+        AddFrameStateByName("ShapeStrokeWidthFrameState");
     }
 
     /// Get and set the name
