@@ -180,9 +180,11 @@ abstract class BaseShapeJS {
                 this.boundingBoxRect.strokeColor = new paper.Color("black")
             }
 
-            this.paperItem.selected = true
+            if(this.paperItem)
+                this.paperItem.selected = true
         } else {
-            this.paperItem.selected = false
+            if(this.paperItem)
+                this.paperItem.selected = false
             if (this.boundingBoxRect)
                 this.boundingBoxRect.remove()
         }
