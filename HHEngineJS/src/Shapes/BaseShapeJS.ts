@@ -2,7 +2,6 @@ import {huahuoEngine} from "../EngineAPI";
 import {Logger} from "hhcommoncomponents"
 import {relaxRectangle, PropertySheet, PropertyType} from "hhcommoncomponents"
 import * as paper from "paper";
-import {engineEventManager} from "../EngineEvents/EngineEventManager";
 
 declare function castObject(obj: any, clz: any): any;
 
@@ -89,10 +88,6 @@ abstract class BaseShapeJS {
 
     get scaling(): paper.Point {
         return this.paperItem.scaling
-    }
-
-    get color(): paper.Color {
-        return this.paperItem.fillColor
     }
 
     setParent(parentShape: BaseShapeJS) {
@@ -197,11 +192,6 @@ abstract class BaseShapeJS {
         }
     }
 
-    set color(val: paper.Color) {
-        this.paperItem.fillColor = val
-        this.callHandlers("color", val)
-    }
-
     getLayer() {
         return this.rawObj.GetLayer()
     }
@@ -258,13 +248,6 @@ abstract class BaseShapeJS {
         this.position = new paper.Point(0, 0)
         this.paperItem.rotation = rotation
         this.position = prevPosition
-
-        if (this.isUpdateFillColor()) {
-            // Store color
-            let fillColor = this.paperItem.fillColor
-            if (fillColor) // Some shapes doesn't have fille color
-                this.rawObj.SetColor(fillColor.red, fillColor.green, fillColor.blue, fillColor.alpha)
-        }
 
         // Store index
         let index = this.paperItem.index
@@ -523,10 +506,7 @@ abstract class BaseShapeJS {
         this.rotation = this.rawObj.GetRotation() // Trigger property change events
         this.position = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
 
-        if (this.isUpdateFillColor()) {
-            let rawFillColor = this.rawObj.GetColor()
-            this.color = new paper.Color(rawFillColor.r, rawFillColor.g, rawFillColor.b, rawFillColor.a)
-        }
+
 
         // Adjust index
         if (this.paperItem.index != this.rawObj.GetIndex() && this.paperItem.index > 0) {

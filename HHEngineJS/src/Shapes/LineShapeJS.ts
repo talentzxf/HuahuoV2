@@ -1,10 +1,11 @@
 import {Vector2, PropertyType} from "hhcommoncomponents"
 import * as paper from "paper";
 import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
+import {BaseSolidShape} from "./BaseSolidShape";
 
 let shapeName = "LineShape"
 
-class LineShapeJS extends BaseShapeJS{
+class LineShapeJS extends BaseSolidShape{
     static createLine(rawObj){
         return new LineShapeJS(rawObj);
     }
