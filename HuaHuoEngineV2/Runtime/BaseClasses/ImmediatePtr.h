@@ -46,10 +46,10 @@ public:
 
     void AssignObjectFromInstanceID(InstanceID instanceID, bool threadedLoading)
     {
-//        Assert(!(InstanceID_AsSInt32Ref(instanceID) & 1));
-//
-//        T* obj = dynamic_pptr_cast<T*>(PreallocateObjectFromPersistentManager(instanceID, threadedLoading));
-//        m_Ptr = obj;
+        Assert(!(InstanceID_AsSInt32Ref(instanceID) & 1));
+
+        T* obj = dynamic_pptr_cast<T*>(PreallocateObjectFromPersistentManager(instanceID, threadedLoading));
+        m_Ptr = obj;
     }
 
     bool operator==(const T* p) const  { return m_Ptr == p; }

@@ -485,4 +485,6 @@ inline InstanceID GetInstanceIDFrom(const Object* object) { return object != NUL
 inline InstanceID GetInstanceIDFrom(const Object& object) { return object.GetInstanceID(); }
 
 void InstanceIDToLocalSerializedObjectIdentifier(InstanceID id, LocalSerializedObjectIdentifier& localIdentifier);
+
+Object* PreallocateObjectFromPersistentManager(InstanceID instanceID, bool threadedLoading);
 #endif //HUAHUOENGINE_OBJECT_H

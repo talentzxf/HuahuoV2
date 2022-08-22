@@ -24,6 +24,8 @@
 #include "Shapes/RectangleShape.h"
 #include "CloneObject.h"
 
+#define ASSERT assert
+
 void testTransform() {
     GameObject *go = MonoCreateGameObject("Go1");
     GameObject *go2 = MonoCreateGameObject("Go2");
@@ -126,12 +128,12 @@ void testShapeStore() {
     fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath), length, 1, fp);
     fclose(fp);
 
-    // std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo (1).data");
-    std::string filenamestr(filename);
+    std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo (57).data");
+    // std::string filenamestr(filename);
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
     GetScriptEventManager()->IsEventRegistered("Hello");
-
+//
 //    std::string path = StoreFilePath;
 //    GetPersistentManager().BeginFileWriting(path);
 //

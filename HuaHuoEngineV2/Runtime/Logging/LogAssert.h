@@ -219,11 +219,11 @@ bool AssertImplementation(InstanceID objID, const char* fileStripped, int line, 
 #   define HuaHuo__ASSERT_IMPL(test, objID, msg) PP_WRAP_CODE(                                       \
     if (!(test))                                                                                    \
     {                                                                                               \
-        if (AssertImplementation(objID, __FILE_STRIPPED__, __LINE__, -1, StringTraits::AsConstTChars(msg)))                              \
-        {                                                                                           \
-            NON_HuaHuo_RELEASE_ONLY(DEBUG_BREAK);                                                    \
-        }                                                                                           \
-        ANALYSIS_ASSUME(test);                                                                      \
+//        if (AssertImplementation(objID, __FILE_STRIPPED__, __LINE__, -1, StringTraits::AsConstTChars(msg)))                              \
+//        {                                                                                           \
+//            NON_HuaHuo_RELEASE_ONLY(DEBUG_BREAK);                                                    \
+//        }                                                                                           \
+//        ANALYSIS_ASSUME(test);                                                                      \
     })
 #else
 #   define HuaHuo__ASSERT_IMPL(test, objID, msg) UNUSED(test)

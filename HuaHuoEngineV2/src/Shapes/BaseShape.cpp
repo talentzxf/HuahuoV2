@@ -147,6 +147,8 @@ AbstractFrameState* BaseShape::ProduceFrameStateByType(const HuaHuo::Type *type)
 
     component->Reset();
 
+    GetPersistentManagerPtr()->MakeObjectPersistent(component->GetInstanceID(), StoreFilePath);
+
     return component;
 }
 
@@ -157,6 +159,26 @@ AbstractFrameState* BaseShape::AddFrameStateByName(const char *frameStateName) {
     {
         AbstractFrameState* newFrameState = ProduceFrameStateByType(componentType);
         return AddFrameStateInternal(newFrameState);
+    }
+
+    return NULL;
+}
+
+template<class TransferFunction>
+void BaseShape::FrameStatePair::Transfer(TransferFunction &transfer) {
+    transfer.Transfer(component, "component");
+    if (transfer.IsReadingPPtr()) {
+        typeIndex = component ? component->GetType()->GetRuntimeTypeIndex() : 0;
+    }
+}
+
+AbstractFrameState *BaseShape::QueryFrameStateByType(const HuaHuo::Type *type) const {
+    // Find a component with the requested ID
+    Container::const_iterator i;
+    Container::const_iterator end = mFrameStates.end();
+    for (i = mFrameStates.begin(); i != end; ++i) {
+        if (type->IsBaseOf(i->GetTypeIndex()))
+            return i->GetComponentPtr();
     }
 
     return NULL;
