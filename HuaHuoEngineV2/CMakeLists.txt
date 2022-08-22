@@ -131,6 +131,7 @@ list(APPEND CPPFILES src/Shapes/ElementShape.cpp)
 list(APPEND CPPFILES src/CloneObject.cpp)
 list(APPEND CPPFILES src/Shapes/TextShape.cpp)
 list(APPEND CPPFILES  src/Shapes/CurveShape.cpp)
+list(APPEND CPPFILES  src/KeyFrames/ShapeStrokeColorFrameState.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)

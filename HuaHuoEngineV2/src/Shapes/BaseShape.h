@@ -14,6 +14,7 @@
 #include "Serialize/PersistentManager.h"
 #include "KeyFrames/ShapeSegmentFrameState.h"
 #include "BaseClasses/ImmediatePtr.h"
+#include "KeyFrames/ShapeStrokeColorFrameState.h"
 
 extern std::string StoreFilePath;
 class BaseShape;
@@ -80,6 +81,7 @@ public:
         AddFrameStateByName("ShapeTransformFrameState");
         AddFrameStateByName("ShapeSegmentFrameState");
         AddFrameStateByName("ShapeColorFrameState");
+        AddFrameStateByName("ShapeStrokeColorFrameState");
     }
 
     /// Get and set the name
@@ -133,9 +135,11 @@ public:
     }
 
     virtual void Apply(int frameId){
-        GetFrameState<ShapeTransformFrameState>().Apply(frameId);
-        GetFrameState<ShapeColorFrameState>().Apply(frameId);
-        GetFrameState<ShapeSegmentFrameState>().Apply(frameId);
+        Container::const_iterator i;
+        Container::const_iterator end = mFrameStates.end();
+        for (i = mFrameStates.begin(); i != end; ++i) {
+            i->GetComponentPtr()->Apply(frameId);
+        }
     }
 
     void SetScale(float xScale, float yScale, float zScale);
@@ -144,6 +148,8 @@ public:
     void SetPosition(float x, float y, float z);
 
     void SetColor(float r, float g, float b, float a);
+
+    void SetStrokeColor(float r, float g, float b, float a);
 
     void SetRotation(float rotation);
 
@@ -179,6 +185,10 @@ public:
 
     ColorRGBAf* GetColor(){
         return GetFrameState<ShapeColorFrameState>().GetColor();
+    }
+
+    ColorRGBAf* GetStrokeColor(){
+        return GetFrameState<ShapeStrokeColorFrameState>().GetColor();
     }
 
     void SetIndex(SInt32 index){

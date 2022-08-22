@@ -131,7 +131,9 @@ interface BaseShape{
     Vector3f GetScale();
 
     void SetColor(float r, float g, float b, float a);
+    void SetStrokeColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
+    ColorRGBAf GetStrokeColor();
 
     Layer GetLayer();
 
@@ -170,7 +172,9 @@ interface LineShape{
     Vector3f GetScale();
 
     void SetColor(float r, float g, float b, float a);
+    void SetStrokeColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
+    ColorRGBAf GetStrokeColor();
 
     Layer GetLayer();
     boolean IsVisible();
@@ -205,7 +209,9 @@ interface TextShape{
     Vector3f GetScale();
 
     void SetColor(float r, float g, float b, float a);
+    void SetStrokeColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
+    ColorRGBAf GetStrokeColor();
 
     Layer GetLayer();
     boolean IsVisible();
@@ -242,7 +248,9 @@ interface RectangleShape{
     Vector3f GetScale();
 
     void SetColor(float r, float g, float b, float a);
+    void SetStrokeColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
+    ColorRGBAf GetStrokeColor();
 
     Layer GetLayer();
     boolean IsVisible();
@@ -279,7 +287,9 @@ interface CircleShape{
     Vector3f GetScale();
 
     void SetColor(float r, float g, float b, float a);
+    void SetStrokeColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
+    ColorRGBAf GetStrokeColor();
 
     Layer GetLayer();
     boolean IsVisible();
@@ -322,7 +332,9 @@ interface AudioShape{
     Vector3f GetScale();
 
     void SetColor(float r, float g, float b, float a);
+    void SetStrokeColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
+    ColorRGBAf GetStrokeColor();
 
     Layer GetLayer();
     boolean IsVisible();
@@ -368,7 +380,9 @@ interface ImageShape{
     Vector3f GetScale();
 
     void SetColor(float r, float g, float b, float a);
+    void SetStrokeColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
+    ColorRGBAf GetStrokeColor();
 
     Layer GetLayer();
     boolean IsVisible();
@@ -402,7 +416,9 @@ interface CurveShape{
     Vector3f GetScale();
 
     void SetColor(float r, float g, float b, float a);
+    void SetStrokeColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
+    ColorRGBAf GetStrokeColor();
 
     Layer GetLayer();
     boolean IsVisible();
@@ -438,7 +454,9 @@ interface ElementShape{
     Vector3f GetScale();
 
     void SetColor(float r, float g, float b, float a);
+    void SetStrokeColor(float r, float g, float b, float a);
     ColorRGBAf GetColor();
+    ColorRGBAf GetStrokeColor();
 
     Layer GetLayer();
     boolean IsVisible();

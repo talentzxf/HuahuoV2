@@ -16,7 +16,6 @@ public:
     CurveShape(MemLabelId label, ObjectCreationMode mode)
     :Super(label, mode)
     {
-
     }
 
     virtual char* GetTypeName(){
