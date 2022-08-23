@@ -82,7 +82,7 @@ static BaseShape& CollectAndProduceBaseShape(BaseShape& baseShape, TempRemapTabl
     BaseShape* cloneBaseShape = BaseShape::Produce(InstanceID_None, kMemBaseObject, kCreateObjectDefaultNoLock);
     remappedPtrs.get_vector().push_back(std::make_pair(baseShape.GetInstanceID(), cloneBaseShape->GetInstanceID()));
 
-    baseShape.CopyProperties(*cloneBaseShape);
+    // baseShape.CopyProperties(*cloneBaseShape);
 
     BaseShape::Container& baseShapeContainer = baseShape.GetFrameStateContainerInternal();
     BaseShape::Container& clonedContainer = cloneBaseShape->GetFrameStateContainerInternal();
@@ -94,12 +94,12 @@ static BaseShape& CollectAndProduceBaseShape(BaseShape& baseShape, TempRemapTabl
         AbstractFrameState& clone = static_cast<AbstractFrameState&>(ProduceClone(frameState));
 
         clonedContainer[i].SetComponentPtr(&clone);
-        clone.SetGameObjectInternal(cloneGO);
+        // clone.SetGameObjectInternal(cloneGO);
 
-        remappedPtrs.get_vector().push_back(std::make_pair(component.GetInstanceID(), clone.GetInstanceID()));
+        remappedPtrs.get_vector().push_back(std::make_pair(frameState.GetInstanceID(), clone.GetInstanceID()));
     }
 
-    return *cloneGO;
+    return *cloneBaseShape;
 }
 
 void CollectAndProduceClonedIsland(Object& o, TempRemapTable& remappedPtrs)
