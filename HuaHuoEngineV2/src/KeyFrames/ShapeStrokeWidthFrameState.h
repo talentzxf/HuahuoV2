@@ -19,9 +19,9 @@ template<class TransferFunction> void StrokeWidthKeyFrame::Transfer(TransferFunc
     TRANSFER(strokeWidth);
 }
 
-class ShapeStrokeWidthFrameState : public AbstractFrameS{
-
-};
+//class ShapeStrokeWidthFrameState : public AbstractFrameS{
+//
+//};
 
 
 #endif //HUAHUOENGINEV2_SHAPESTROKEWIDTHFRAMESTATE_H

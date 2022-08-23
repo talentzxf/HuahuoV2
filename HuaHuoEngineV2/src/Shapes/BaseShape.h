@@ -37,7 +37,6 @@ class BaseShape : public Object{
     REGISTER_CLASS(BaseShape);
     DECLARE_OBJECT_SERIALIZE();
 public:
-
     struct FrameStatePair
     {
         FrameStatePair() {}
@@ -55,9 +54,12 @@ public:
         ImmediatePtr<AbstractFrameState> component;
     };
 
+    typedef std::vector<FrameStatePair>    Container;
+
+    Container& GetFrameStateContainerInternal() { return mFrameStates; }
 private:
 
-    typedef std::vector<FrameStatePair>    Container;
+
     Container   mFrameStates;
 
     Layer* mLayer;

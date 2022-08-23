@@ -9,6 +9,7 @@
 #include "Components/BaseComponent.h"
 #include "Serialize/TransferFunctions/RemapPPtrTransfer.h"
 #include "Serialize/AwakeFromLoadQueue.h"
+#include "Shapes/BaseShape.h"
 #include <cstring>
 
 inline GameObject* GetGameObjectPtr(Object& o)
@@ -68,20 +69,51 @@ static void CollectAndProduceSingleObject(Object& singleObject, TempRemapTable& 
     remappedPtrs.get_vector().push_back(std::make_pair(singleObject.GetInstanceID(), clone.GetInstanceID()));
 }
 
+inline BaseShape* GetBaseShapePtr(Object& o)
+{
+    BaseShape* baseShape = dynamic_pptr_cast<BaseShape*>(&o);
+    if (baseShape != NULL)
+        return baseShape;
+    return NULL;
+}
 
-void CollectAndProduceClonedIsland(Object& o, Transform* newFather, TempRemapTable& remappedPtrs)
+static BaseShape& CollectAndProduceBaseShape(BaseShape& baseShape, TempRemapTable& remappedPtrs)
+{
+    BaseShape* cloneBaseShape = BaseShape::Produce(InstanceID_None, kMemBaseObject, kCreateObjectDefaultNoLock);
+    remappedPtrs.get_vector().push_back(std::make_pair(baseShape.GetInstanceID(), cloneBaseShape->GetInstanceID()));
+
+    baseShape.CopyProperties(*cloneBaseShape);
+
+    BaseShape::Container& baseShapeContainer = baseShape.GetFrameStateContainerInternal();
+    BaseShape::Container& clonedContainer = cloneBaseShape->GetFrameStateContainerInternal();
+
+    clonedContainer.resize(baseShapeContainer.size());
+    for (size_t i = 0; i < baseShapeContainer.size(); i++)
+    {
+        AbstractFrameState& frameState = *baseShapeContainer[i].GetComponentPtr();
+        AbstractFrameState& clone = static_cast<AbstractFrameState&>(ProduceClone(frameState));
+
+        clonedContainer[i].SetComponentPtr(&clone);
+        clone.SetGameObjectInternal(cloneGO);
+
+        remappedPtrs.get_vector().push_back(std::make_pair(component.GetInstanceID(), clone.GetInstanceID()));
+    }
+
+    return *cloneGO;
+}
+
+void CollectAndProduceClonedIsland(Object& o, TempRemapTable& remappedPtrs)
 {
     // PROFILER_AUTO(gInstantiateProfileProduce, &o)
 
     remappedPtrs.reserve(64);
 
-//    GameObject* go = GetGameObjectPtr(o);
-
+    BaseShape* baseShape = GetBaseShapePtr(o);
     // SetObjectLockForWrite();
 
-//    if (go)
-//        CollectAndProduceGameObjectHierarchy(go->GetComponent<Transform>(), newFather, remappedPtrs);
-//    else
+    if (baseShape)
+        CollectAndProduceBaseShape(baseShape, remappedPtrs);
+    else
         CollectAndProduceSingleObject(o, remappedPtrs);
 
     // ReleaseObjectLock();
@@ -90,9 +122,9 @@ void CollectAndProduceClonedIsland(Object& o, Transform* newFather, TempRemapTab
 }
 
 
-static Object* CloneObjectImpl(Object* object, Transform* newFather, TempRemapTable& ptrs)
+static Object* CloneObjectImpl(Object* object, TempRemapTable& ptrs)
 {
-    CollectAndProduceClonedIsland(*object, newFather, ptrs);
+    CollectAndProduceClonedIsland(*object, ptrs);
 
 //    PROFILER_AUTO(gInstantiateProfileCopy, object);
 
@@ -192,7 +224,7 @@ void AwakeAndActivateClonedObjects(Object** inOutInstantiatedObject, const TempR
 Object* CloneObject(Object& inObject)
 {
     TempRemapTable ptrs;
-    Object* object = CloneObjectImpl(&inObject, NULL, ptrs);
+    Object* object = CloneObjectImpl(&inObject,  ptrs);
 
     if (object){
         const char* name = object->GetName();
