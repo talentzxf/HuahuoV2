@@ -26,6 +26,11 @@ void BaseShape::Transfer(TransferFunction &transfer) {
 
 template<class TransferFunction>
 void BaseShape::TransferFrameStates(TransferFunction& transfer){
+    // When cloning objects for prefabs and instantiate, we don't use serialization to duplicate the hierarchy,
+    // we duplicate the hierarchy directly
+    if (!SerializePrefabIgnoreProperties(transfer))
+        return;
+
     if (transfer.IsWriting() && transfer.NeedsInstanceIDRemapping())
     {
         Container filtered_framestates;
@@ -39,6 +44,8 @@ void BaseShape::TransferFrameStates(TransferFunction& transfer){
         transfer.Transfer(filtered_framestates, "mFrameStates", kHideInEditorMask | kStrongPPtrMask | kDisallowSerializedPropertyModification);
         return;
     }
+
+
 
     transfer.Transfer(mFrameStates, "mFrameStates", kHideInEditorMask | kStrongPPtrMask | kDisallowSerializedPropertyModification);
 }
