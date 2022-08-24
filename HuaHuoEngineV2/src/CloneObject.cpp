@@ -79,7 +79,7 @@ inline BaseShape* GetBaseShapePtr(Object& o)
 
 static BaseShape& CollectAndProduceBaseShape(BaseShape& baseShape, TempRemapTable& remappedPtrs)
 {
-    BaseShape* cloneBaseShape = BaseShape::Produce(InstanceID_None, kMemBaseObject, kCreateObjectDefaultNoLock);
+    BaseShape* cloneBaseShape = (BaseShape*) Object::Produce(baseShape.GetType(), InstanceID_None, kMemBaseObject, kCreateObjectDefaultNoLock);
     remappedPtrs.get_vector().push_back(std::make_pair(baseShape.GetInstanceID(), cloneBaseShape->GetInstanceID()));
 
     // baseShape.CopyProperties(*cloneBaseShape);
@@ -112,7 +112,7 @@ void CollectAndProduceClonedIsland(Object& o, TempRemapTable& remappedPtrs)
     // SetObjectLockForWrite();
 
     if (baseShape)
-        CollectAndProduceBaseShape(baseShape, remappedPtrs);
+        CollectAndProduceBaseShape(*baseShape, remappedPtrs);
     else
         CollectAndProduceSingleObject(o, remappedPtrs);
 

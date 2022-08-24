@@ -20,7 +20,27 @@ void BaseShape::Transfer(TransferFunction &transfer) {
     TRANSFER(mShapeName);
     TRANSFER(mBornFrameId);
     TRANSFER(mIndex);
-    TRANSFER(mFrameStates);
+
+    TransferFrameStates(transfer);
+}
+
+template<class TransferFunction>
+void BaseShape::TransferFrameStates(TransferFunction& transfer){
+    if (transfer.IsWriting() && transfer.NeedsInstanceIDRemapping())
+    {
+        Container filtered_framestates;
+        for (Container::iterator i = mFrameStates.begin(); i != mFrameStates.end(); i++)
+        {
+            LocalSerializedObjectIdentifier localIdentifier;
+            InstanceIDToLocalSerializedObjectIdentifier(i->GetComponentPtr()->GetInstanceID(), localIdentifier);
+            if (localIdentifier.localIdentifierInFile != 0)
+                filtered_framestates.push_back(*i);
+        }
+        transfer.Transfer(filtered_framestates, "mFrameStates", kHideInEditorMask | kStrongPPtrMask | kDisallowSerializedPropertyModification);
+        return;
+    }
+
+    transfer.Transfer(mFrameStates, "mFrameStates", kHideInEditorMask | kStrongPPtrMask | kDisallowSerializedPropertyModification);
 }
 
 void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
@@ -50,7 +70,7 @@ Layer *BaseShape::GetLayer() {
     return mLayer;
 }
 
-AbstractFrameState* BaseShape::AddFrameStateInternal(AbstractFrameState* frameState){
+AbstractFrameState *BaseShape::AddFrameStateInternal(AbstractFrameState *frameState) {
     Assert(frameState != NULL);
     mFrameStates.push_back(FrameStatePair::FromState(frameState));
 
@@ -143,11 +163,10 @@ void BaseShape::RemoveSegment(int index) {
     this->Apply(currentFrameId);
 }
 
-AbstractFrameState* BaseShape::ProduceFrameStateByType(const HuaHuo::Type *type) {
-    AbstractFrameState* component = AbstractFrameState::Produce(type);
+AbstractFrameState *BaseShape::ProduceFrameStateByType(const HuaHuo::Type *type) {
+    AbstractFrameState *component = AbstractFrameState::Produce(type);
 
-    if (component == NULL)
-    {
+    if (component == NULL) {
         return NULL;
     }
 
@@ -161,11 +180,10 @@ AbstractFrameState* BaseShape::ProduceFrameStateByType(const HuaHuo::Type *type)
 }
 
 
-AbstractFrameState* BaseShape::AddFrameStateByName(const char *frameStateName) {
-    const HuaHuo::Type* componentType = HuaHuo::Type::FindTypeByName(frameStateName);
-    if (componentType != NULL && componentType->IsDerivedFrom<AbstractFrameState>())
-    {
-        AbstractFrameState* newFrameState = ProduceFrameStateByType(componentType);
+AbstractFrameState *BaseShape::AddFrameStateByName(const char *frameStateName) {
+    const HuaHuo::Type *componentType = HuaHuo::Type::FindTypeByName(frameStateName);
+    if (componentType != NULL && componentType->IsDerivedFrom<AbstractFrameState>()) {
+        AbstractFrameState *newFrameState = ProduceFrameStateByType(componentType);
         return AddFrameStateInternal(newFrameState);
     }
 
@@ -190,4 +208,15 @@ AbstractFrameState *BaseShape::QueryFrameStateByType(const HuaHuo::Type *type) c
     }
 
     return NULL;
+}
+
+void BaseShape::FrameStatePair::SetComponentPtr(AbstractFrameState *const ptr) {
+    if (ptr != NULL) {
+        component = ptr;
+        typeIndex = ptr->GetType()->GetRuntimeTypeIndex();
+        return;
+    }
+
+    component = NULL;
+    typeIndex = RTTI::DefaultTypeIndex;
 }

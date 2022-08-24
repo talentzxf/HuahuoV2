@@ -33,7 +33,6 @@ private:
 
 class Layer;
 class BaseShape : public Object{
-    REGISTER_CLASS_TRAITS(kTypeIsAbstract);
     REGISTER_CLASS(BaseShape);
     DECLARE_OBJECT_SERIALIZE();
 public:
@@ -71,7 +70,7 @@ private:
 private:
     AbstractFrameState* AddFrameStateInternal(AbstractFrameState* frameState);
     AbstractFrameState* ProduceFrameStateByType(const HuaHuo::Type* type);
-
+    template<class TransferFunction> void TransferFrameStates(TransferFunction& transfer);
 public:
     BaseShape(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
