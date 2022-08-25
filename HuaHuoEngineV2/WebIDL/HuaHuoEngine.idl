@@ -151,6 +151,9 @@ interface BaseShape{
 
     long GetIndex();
     void SetIndex(long index);
+    void SetStrokeWidth(float strokeWidth);
+    float GetStrokeWidth();
+    long GetBornFrameId();
 };
 
 [NoDelete]
@@ -190,6 +193,9 @@ interface LineShape{
     SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
     long GetIndex();
     void SetIndex(long index);
+    void SetStrokeWidth(float strokeWidth);
+    float GetStrokeWidth();
+    long GetBornFrameId();
 };
 
 [NoDelete]
@@ -227,6 +233,9 @@ interface TextShape{
     SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
     long GetIndex();
     void SetIndex(long index);
+    void SetStrokeWidth(float strokeWidth);
+    float GetStrokeWidth();
+    long GetBornFrameId();
 };
 
 [NoDelete]
@@ -266,6 +275,9 @@ interface RectangleShape{
     SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
     long GetIndex();
     void SetIndex(long index);
+    void SetStrokeWidth(float strokeWidth);
+    float GetStrokeWidth();
+    long GetBornFrameId();
 };
 
 [NoDelete]
@@ -305,6 +317,9 @@ interface CircleShape{
     SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
     long GetIndex();
     void SetIndex(long index);
+    void SetStrokeWidth(float strokeWidth);
+    float GetStrokeWidth();
+    long GetBornFrameId();
 };
 
 [NoDelete]
@@ -350,6 +365,8 @@ interface AudioShape{
     SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
     long GetIndex();
     void SetIndex(long index);
+    void SetStrokeWidth(float strokeWidth);
+    float GetStrokeWidth();
     long GetBornFrameId();
 };
 
@@ -398,6 +415,8 @@ interface ImageShape{
     SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
     long GetIndex();
     void SetIndex(long index);
+    void SetStrokeWidth(float strokeWidth);
+    float GetStrokeWidth();
     long GetBornFrameId();
 };
 
@@ -434,6 +453,8 @@ interface CurveShape{
     SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
     long GetIndex();
     void SetIndex(long index);
+    void SetStrokeWidth(float strokeWidth);
+    float GetStrokeWidth();
     long GetBornFrameId();
 };
 
@@ -472,6 +493,9 @@ interface ElementShape{
     SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
     long GetIndex();
     void SetIndex(long index);
+
+    void SetStrokeWidth(float strokeWidth);
+    float GetStrokeWidth();
     long GetBornFrameId();
 };
 

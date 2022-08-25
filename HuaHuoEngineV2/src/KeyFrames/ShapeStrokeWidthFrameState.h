@@ -6,6 +6,7 @@
 #define HUAHUOENGINEV2_SHAPESTROKEWIDTHFRAMESTATE_H
 
 #include "Serialize/SerializeUtility.h"
+#include "FrameState.h"
 
 class StrokeWidthKeyFrame{
 public:
@@ -19,9 +20,29 @@ template<class TransferFunction> void StrokeWidthKeyFrame::Transfer(TransferFunc
     TRANSFER(strokeWidth);
 }
 
-//class ShapeStrokeWidthFrameState : public AbstractFrameS{
-//
-//};
+class ShapeStrokeWidthFrameState : public AbstractFrameState{
+    REGISTER_CLASS(ShapeStrokeWidthFrameState);
+    DECLARE_OBJECT_SERIALIZE();
+public:
+    ShapeStrokeWidthFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
+        :Super(memLabelId, creationMode)
+    {
+    }
+
+    virtual bool Apply(int frameId) override;
+
+    float GetStrokeWidth(){
+        if(isValidFrame)
+            return m_CurrentStrokeWidth;
+        return NULL;
+    }
+
+    void RecordStrokeWidth(int frameId, float strokeWidth);
+
+private:
+    float m_CurrentStrokeWidth;
+    std::vector<StrokeWidthKeyFrame> m_KeyFrames;
+};
 
 
 #endif //HUAHUOENGINEV2_SHAPESTROKEWIDTHFRAMESTATE_H

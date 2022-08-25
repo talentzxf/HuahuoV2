@@ -15,6 +15,7 @@
 #include "KeyFrames/ShapeSegmentFrameState.h"
 #include "BaseClasses/ImmediatePtr.h"
 #include "KeyFrames/ShapeStrokeColorFrameState.h"
+#include "KeyFrames/ShapeStrokeWidthFrameState.h"
 
 extern std::string StoreFilePath;
 class BaseShape;
@@ -199,6 +200,12 @@ public:
 
     SInt32 GetIndex(){
         return this->mIndex;
+    }
+
+    void SetStrokeWidth(float strokeWidth);
+
+    float GetStrokeWidth(){
+        return GetFrameState<ShapeStrokeWidthFrameState>().GetStrokeWidth();
     }
 
     virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;

@@ -159,6 +159,13 @@ void BaseShape::SetSegments(float segmentBuffer[], int size) {
     shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
+void BaseShape::SetStrokeWidth(float strokeWidth) {
+    Layer *shapeLayer = GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+    GetFrameState<ShapeStrokeWidthFrameState>().RecordStrokeWidth(currentFrameId, strokeWidth);
+    shapeLayer->AddKeyFrame(currentFrameId, this);
+}
+
 void BaseShape::SetSegmentsAtFrame(float segmentBuffer[], int size, int keyFrameId) {
     GetFrameState<ShapeSegmentFrameState>().RecordSegments(keyFrameId, segmentBuffer, size);
 }
@@ -169,6 +176,8 @@ void BaseShape::RemoveSegment(int index) {
     int currentFrameId = this->GetLayer()->GetCurrentFrame();
     this->Apply(currentFrameId);
 }
+
+
 
 AbstractFrameState *BaseShape::ProduceFrameStateByType(const HuaHuo::Type *type) {
     AbstractFrameState *component = AbstractFrameState::Produce(type);
