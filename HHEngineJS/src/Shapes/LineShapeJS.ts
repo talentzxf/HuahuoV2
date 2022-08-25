@@ -46,26 +46,6 @@ class LineShapeJS extends BaseSolidShape{
         this.createShape()
         this.store()
     }
-
-    getStrokeWidth(){
-        return this.paperShape.strokeWidth
-    }
-
-    setStrokeWidth(val){
-        this.paperShape.strokeWidth = val
-    }
-
-    afterWASMReady() {
-        super.afterWASMReady();
-        this.propertySheet.addProperty({
-            key: "StrokeWidth",
-            type: PropertyType.FLOAT,
-            getter: this.getStrokeWidth.bind(this),
-            setter: this.setStrokeWidth.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("strokeWidth").bind(this),
-            unregisterValueChangeFunc: this.unregisterValueChangeHandler("strokeWidth").bind(this)
-        })
-    }
 }
 
 shapeFactory.RegisterClass(shapeName, LineShapeJS.createLine)
