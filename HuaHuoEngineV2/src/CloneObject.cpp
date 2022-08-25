@@ -93,6 +93,8 @@ static BaseShape& CollectAndProduceBaseShape(BaseShape& baseShape, TempRemapTabl
         AbstractFrameState& frameState = *baseShapeContainer[i].GetComponentPtr();
         AbstractFrameState& clone = static_cast<AbstractFrameState&>(ProduceClone(frameState));
 
+        GetPersistentManagerPtr()->MakeObjectPersistent(clone.GetInstanceID(), StoreFilePath);
+
         clonedContainer[i].SetComponentPtr(&clone);
         // clone.SetGameObjectInternal(cloneGO);
 
@@ -235,5 +237,7 @@ Object* CloneObject(Object& inObject)
     }
 
     AwakeAndActivateClonedObjects(&object, ptrs);
+
+    GetPersistentManagerPtr()->MakeObjectPersistent(object->GetInstanceID(), StoreFilePath);
     return object;
 }

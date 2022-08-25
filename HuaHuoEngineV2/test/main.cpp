@@ -117,6 +117,7 @@ void testShapeStore() {
     rectangleShape->SetColor(1.0, 0.0, 1.0, 1.0);
     currentLayer->AddShapeInternal(rectangleShape);
 
+    RectangleShape* clonedRectangleShape = (RectangleShape*) CloneObject(*rectangleShape);
 
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
 
@@ -128,7 +129,7 @@ void testShapeStore() {
     fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath), length, 1, fp);
     fclose(fp);
 
-    std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo (57).data");
+    std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo (72).data");
     // std::string filenamestr(filename);
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
