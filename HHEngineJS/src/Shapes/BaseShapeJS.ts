@@ -14,7 +14,7 @@ abstract class BaseShapeJS {
     protected paperItem: paper.Item
     protected isSelected = false
 
-    protected boundingBoxRect = null;
+    protected boundingBoxGroup = null;
 
     public isPermanent: boolean = false;
 
@@ -28,6 +28,13 @@ abstract class BaseShapeJS {
     private parent: BaseShapeJS = null
 
     private bornStoreId: number = -1;
+
+    // Just for testing purpose
+    private centerOffset:paper.Point = new paper.Point(0,0)
+
+    get centerPosition(): paper.Point{
+        return this.paperItem.position.add( this.centerOffset )
+    }
 
     public getBornStoreId():number{
         return this.bornStoreId
@@ -169,15 +176,22 @@ abstract class BaseShapeJS {
     updateBoundingBox() {
         if (this.isSelected) {
             {
-                if (this.boundingBoxRect)
-                    this.boundingBoxRect.remove()
+                if (this.boundingBoxGroup)
+                    this.boundingBoxGroup.remove()
 
                 let boundingBox = this.paperItem.bounds;
 
                 let paperjs = this.getPaperJs()
-                this.boundingBoxRect = new paperjs.Path.Rectangle(relaxRectangle(boundingBox, BOUNDMARGIN))
-                this.boundingBoxRect.dashArray = [4, 10]
-                this.boundingBoxRect.strokeColor = new paper.Color("black")
+                this.boundingBoxGroup = new paperjs.Group()
+
+                let boundingBoxRect = new paperjs.Path.Rectangle(relaxRectangle(boundingBox, BOUNDMARGIN))
+                boundingBoxRect.dashArray = [4, 10]
+                boundingBoxRect.strokeColor = new paper.Color("black")
+                this.boundingBoxGroup.addChild(boundingBoxRect)
+
+                let centerCircle = new paperjs.Path.Circle(this.centerPosition, 10)
+                centerCircle.fillColor = new paper.Color("red")
+                this.boundingBoxGroup.addChild(centerCircle)
             }
 
             if(this.paperItem)
@@ -185,8 +199,8 @@ abstract class BaseShapeJS {
         } else {
             if(this.paperItem)
                 this.paperItem.selected = false
-            if (this.boundingBoxRect)
-                this.boundingBoxRect.remove()
+            if (this.boundingBoxGroup)
+                this.boundingBoxGroup.remove()
         }
     }
 
@@ -539,7 +553,7 @@ abstract class BaseShapeJS {
         huahuoEngine.DestroyShape(this.rawObj)
         this.paperItem.remove()
 
-        this.boundingBoxRect.remove()
+        this.boundingBoxGroup.remove()
 
     }
 }
