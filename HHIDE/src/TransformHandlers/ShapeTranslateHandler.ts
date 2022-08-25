@@ -12,8 +12,6 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
 
         document.body.addEventListener("keydown", this.onKeyDown.bind(this))
         document.body.addEventListener("keyup", this.onKeyUp.bind(this))
-
-
     }
 
     onKeyDown(e:KeyboardEvent){
