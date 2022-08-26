@@ -13,12 +13,15 @@ public:
     Vector3f scale;
     float rotation;
 
+    Vector3f centerOffset;
+
     DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(TransformData)
 
     TransformData()
         :position(0.0,0.0,0.0)
         ,scale(1.0,1.0,1.0)
         ,rotation(0.0f)
+        ,centerOffset(0.0f, 0.0f, 0.0f)
     {
 
     }
@@ -28,6 +31,7 @@ template<class TransferFunction> void TransformData::Transfer(TransferFunction &
     TRANSFER(position);
     TRANSFER(scale);
     TRANSFER(rotation);
+    TRANSFER(centerOffset);
 }
 
 TransformData Lerp(TransformData& k1, TransformData& k2, float ratio);
@@ -74,11 +78,19 @@ public:
         return NULL;
     }
 
+    Vector3f* GetCenterOffset(){
+        if(isValidFrame)
+            return &m_CurrentTransformData.centerOffset;
+        return NULL;
+    }
+
     void RecordPosition(int frameId, float x, float y, float z);
 
     void RecordScale(int frameId, float xScale, float yScale, float zScale);
 
     void RecordRotation(int frameId, float rotation);
+
+    void RecordCenterOffset(int frameId, float x, float y, float z);
 
     friend class BaseShape;
 private:

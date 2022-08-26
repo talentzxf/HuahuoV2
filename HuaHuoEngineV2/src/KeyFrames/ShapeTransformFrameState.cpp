@@ -76,3 +76,11 @@ void ShapeTransformFrameState::RecordRotation(int frameId, float rotation) {
 
     Apply(frameId);
 }
+
+void ShapeTransformFrameState::RecordCenterOffset(int frameId, float x, float y, float z) {
+    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+    pKeyFrame->transformData = m_CurrentTransformData; // Record current state.
+    pKeyFrame->transformData.centerOffset.Set(x, y, z);
+
+    Apply(frameId);
+}

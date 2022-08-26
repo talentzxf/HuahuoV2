@@ -124,6 +124,8 @@ interface BaseShape{
     DOMString GetName();
     void SetName(DOMString name);
     void SetPosition(float x, float y, float z);
+    void SetCenterOffset(float x, float y, float z);
+    Vector3f GetCenterOffset();
     Vector3f GetPosition();
     float GetRotation();
     void SetRotation(float rotation);
@@ -171,6 +173,8 @@ interface LineShape{
     Vector3f GetPosition();
     float GetRotation();
     void SetRotation(float rotation);
+    void SetCenterOffset(float x, float y, float z);
+    Vector3f GetCenterOffset();
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f GetScale();
 
@@ -213,6 +217,8 @@ interface TextShape{
     void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f GetScale();
+    void SetCenterOffset(float x, float y, float z);
+    Vector3f GetCenterOffset();
 
     void SetColor(float r, float g, float b, float a);
     void SetStrokeColor(float r, float g, float b, float a);
@@ -253,6 +259,8 @@ interface RectangleShape{
     Vector3f GetPosition();
     float GetRotation();
     void SetRotation(float rotation);
+    void SetCenterOffset(float x, float y, float z);
+    Vector3f GetCenterOffset();
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f GetScale();
 
@@ -294,6 +302,8 @@ interface CircleShape{
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
     float GetRotation();
+    void SetCenterOffset(float x, float y, float z);
+    Vector3f GetCenterOffset();
     void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f GetScale();
@@ -341,6 +351,8 @@ interface AudioShape{
     void SetName(DOMString name);
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+    void SetCenterOffset(float x, float y, float z);
+    Vector3f GetCenterOffset();
     float GetRotation();
     void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
@@ -391,6 +403,8 @@ interface ImageShape{
     void SetName(DOMString name);
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+    void SetCenterOffset(float x, float y, float z);
+    Vector3f GetCenterOffset();
     float GetRotation();
     void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
@@ -429,6 +443,8 @@ interface CurveShape{
     void SetName(DOMString name);
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+    void SetCenterOffset(float x, float y, float z);
+    Vector3f GetCenterOffset();
     float GetRotation();
     void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
@@ -469,6 +485,8 @@ interface ElementShape{
     void SetName(DOMString name);
     void SetPosition(float x, float y, float z);
     Vector3f GetPosition();
+    void SetCenterOffset(float x, float y, float z);
+    Vector3f GetCenterOffset();
     float GetRotation();
     void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
