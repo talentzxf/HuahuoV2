@@ -16,7 +16,6 @@ abstract class BaseShapeJS {
     protected isSelected = false
 
     protected boundingBoxGroup = null;
-    private _centerCircleShape: paper.Path;
 
     public isPermanent: boolean = false;
 
@@ -177,10 +176,6 @@ abstract class BaseShapeJS {
         this.updateBoundingBox()
     }
 
-    getCenterCircleShape(){
-        return this._centerCircleShape;
-    }
-
     updateBoundingBox() {
         if (this.isSelected) {
             {
@@ -201,7 +196,6 @@ abstract class BaseShapeJS {
                 centerCircle.fillColor = new paper.Color("red")
                 centerCircle.data.meta = this.shapeCenterSelector
 
-                this._centerCircleShape = centerCircle
                 this.boundingBoxGroup.addChild(centerCircle)
             }
 
@@ -212,7 +206,6 @@ abstract class BaseShapeJS {
                 this.paperItem.selected = false
             if (this.boundingBoxGroup)
                 this.boundingBoxGroup.remove()
-            this._centerCircleShape = null
         }
     }
 

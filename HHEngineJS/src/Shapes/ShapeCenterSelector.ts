@@ -4,6 +4,8 @@ import {PropertySheet} from "hhcommoncomponents";
 class ShapeCenterSelector{
     private _targetObj: BaseShapeJS;
     private propertySheet: PropertySheet
+
+    private circleShape: paper.Path
     constructor(targetObj: BaseShapeJS) {
         this._targetObj = targetObj
 
@@ -19,7 +21,12 @@ class ShapeCenterSelector{
     }
 
     get paperShape(){
-        return this._targetObj.getCenterCircleShape()
+        if(!this.circleShape){
+            let paperJs = this._targetObj.getPaperJs()
+            this.circleShape = new paperJs.Path.Circle(this._targetObj.centerPosition, 20)
+            this.circleShape.fillColor = new paper.Color("red")
+        }
+        return this.circleShape
     }
 
     isSelectable() {
