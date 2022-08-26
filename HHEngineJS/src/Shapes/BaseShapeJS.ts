@@ -2,6 +2,7 @@ import {huahuoEngine} from "../EngineAPI";
 import {Logger} from "hhcommoncomponents"
 import {relaxRectangle, PropertySheet, PropertyType} from "hhcommoncomponents"
 import * as paper from "paper";
+import {ShapeCenterSelector} from "./ShapeCenterSelector";
 
 declare function castObject(obj: any, clz: any): any;
 
@@ -31,6 +32,8 @@ abstract class BaseShapeJS {
 
     // Just for testing purpose
     private centerOffset:paper.Point = new paper.Point(0,0)
+
+    private shapeCenterSelector = new ShapeCenterSelector(this)
 
     get centerPosition(): paper.Point{
         return this.paperItem.position.add( this.centerOffset )
@@ -191,6 +194,7 @@ abstract class BaseShapeJS {
 
                 let centerCircle = new paperjs.Path.Circle(this.centerPosition, 10)
                 centerCircle.fillColor = new paper.Color("red")
+                centerCircle.data.meta = this.shapeCenterSelector
                 this.boundingBoxGroup.addChild(centerCircle)
             }
 
