@@ -18,6 +18,8 @@ class ShapeCenterSelector{
 
     set position(val:paper.Point){
         this.paperShape.position = val
+
+        this._targetObj.centerPosition = val
     }
 
     get paperShape(){
@@ -43,6 +45,14 @@ class ShapeCenterSelector{
 
     getPropertySheet(){
         return this.propertySheet
+    }
+
+    store(){
+
+    }
+
+    getBornStoreId(){
+        return this._targetObj.getBornStoreId()
     }
 }
 

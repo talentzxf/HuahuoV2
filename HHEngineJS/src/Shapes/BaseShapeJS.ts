@@ -1,6 +1,5 @@
 import {huahuoEngine} from "../EngineAPI";
-import {Logger} from "hhcommoncomponents"
-import {relaxRectangle, PropertySheet, PropertyType} from "hhcommoncomponents"
+import {relaxRectangle, PropertySheet, PropertyType, Logger} from "hhcommoncomponents"
 import * as paper from "paper";
 import {ShapeCenterSelector} from "./ShapeCenterSelector";
 
@@ -30,13 +29,16 @@ abstract class BaseShapeJS {
 
     private bornStoreId: number = -1;
 
-    // Just for testing purpose
-    private centerOffset:paper.Point = new paper.Point(0,0)
-
     private shapeCenterSelector = new ShapeCenterSelector(this)
 
     get centerPosition(): paper.Point{
-        return this.paperItem.position.add( this.centerOffset )
+        return this.paperItem.position.add( this.rawObj.GetCenterOffset() )
+    }
+
+    set centerPosition(centerPosition: paper.Point){
+        let offset = centerPosition.subtract(this.paperItem.position)
+
+        this.rawObj.SetCenterOffset(offset.x, offset.y, 0.0)
     }
 
     public getBornStoreId():number{
