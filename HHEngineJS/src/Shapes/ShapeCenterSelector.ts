@@ -4,6 +4,7 @@ import {PropertySheet} from "hhcommoncomponents";
 class ShapeCenterSelector{
     private _targetObj: BaseShapeJS;
     private propertySheet: PropertySheet
+    private _isSelected: boolean = false;
 
     private circleShape: paper.Path
     constructor(targetObj: BaseShapeJS) {
@@ -25,7 +26,9 @@ class ShapeCenterSelector{
     }
 
     setPosition(val:paper.Point){
-        this.position = this._targetObj.centerPosition
+        if(this._isSelected){
+            this.position = this._targetObj.centerPosition
+        }
     }
 
     get paperShape(){
@@ -45,15 +48,18 @@ class ShapeCenterSelector{
         return null
     }
 
-    unselect(){
-        if(this.circleShape){
-            this.circleShape.remove()
-            this.circleShape = null
+    set selected(val: boolean){
+        if(!val){
+            if(this.circleShape){
+                this.circleShape.remove()
+                this.circleShape = null
+            }
         }
+
+        this._isSelected = val
     }
 
     update(){
-        this.paperShape
     }
 
     getPropertySheet(){

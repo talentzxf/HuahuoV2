@@ -209,7 +209,7 @@ abstract class BaseShapeJS {
             if (this.boundingBoxGroup)
                 this.boundingBoxGroup.remove()
             if(this.shapeCenterSelector)
-                this.shapeCenterSelector.unselect()
+                this.shapeCenterSelector.selected = false
         }
     }
 
