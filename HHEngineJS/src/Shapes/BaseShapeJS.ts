@@ -29,7 +29,7 @@ abstract class BaseShapeJS {
 
     private bornStoreId: number = -1;
 
-    private shapeCenterSelector = new ShapeCenterSelector(this)
+    private shapeCenterSelector:ShapeCenterSelector;
 
     get centerPosition(): paper.Point{
         return this.paperItem.position.add( this.rawObj.GetCenterOffset() )
@@ -208,6 +208,8 @@ abstract class BaseShapeJS {
                 this.paperItem.selected = false
             if (this.boundingBoxGroup)
                 this.boundingBoxGroup.remove()
+            if(this.shapeCenterSelector)
+                this.shapeCenterSelector.unselect()
         }
     }
 
@@ -289,6 +291,8 @@ abstract class BaseShapeJS {
                 Logger.info("BaseShapeJS: Executing afterWASMReady")
                 _this.afterWASMReady();
                 Logger.info("BaseShapeJS: Executed afterWASMReady")
+
+                _this.shapeCenterSelector = new ShapeCenterSelector(_this)
             })
         } else {
             this.rawObj = rawObj
@@ -379,7 +383,7 @@ abstract class BaseShapeJS {
             this.valueChangeHandlersMap.get(valueName).set(id, valueChangedHandler)
             this.handlerId++
             return id;
-        }
+        }.bind(this)
     }
 
     unregisterValueChangeHandler(valueName: string) {

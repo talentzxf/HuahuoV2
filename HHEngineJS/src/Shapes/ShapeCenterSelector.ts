@@ -10,6 +10,8 @@ class ShapeCenterSelector{
         this._targetObj = targetObj
 
         this.propertySheet = new PropertySheet();
+
+        this._targetObj.registerValueChangeHandler("position")(this.setPosition.bind(this))
     }
 
     get position(){
@@ -20,6 +22,10 @@ class ShapeCenterSelector{
         this.paperShape.position = val
 
         this._targetObj.centerPosition = val
+    }
+
+    setPosition(val:paper.Point){
+        this.position = this._targetObj.centerPosition
     }
 
     get paperShape(){
@@ -39,8 +45,15 @@ class ShapeCenterSelector{
         return null
     }
 
-    update(){
+    unselect(){
+        if(this.circleShape){
+            this.circleShape.remove()
+            this.circleShape = null
+        }
+    }
 
+    update(){
+        this.paperShape
     }
 
     getPropertySheet(){
