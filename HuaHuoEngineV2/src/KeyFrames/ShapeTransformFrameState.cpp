@@ -21,6 +21,7 @@ TransformData Lerp(TransformData &k1, TransformData &k2, float ratio) {
     TransformData resultData;
 
     resultData.position = Lerp(k1.position, k2.position, ratio);
+    resultData.centerOffset = Lerp(k1.centerOffset, k2.centerOffset, ratio);
     resultData.scale = Lerp(k1.scale, k2.scale, ratio);
     resultData.rotation = Lerp(k1.rotation, k2.rotation, ratio);
     return resultData;

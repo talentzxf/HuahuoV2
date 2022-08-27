@@ -54,6 +54,8 @@ class ShapeCenterSelector{
                 this.circleShape.remove()
                 this.circleShape = null
             }
+        }else{
+            this.paperShape
         }
 
         this._isSelected = val

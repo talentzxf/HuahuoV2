@@ -291,8 +291,6 @@ abstract class BaseShapeJS {
                 Logger.info("BaseShapeJS: Executing afterWASMReady")
                 _this.afterWASMReady();
                 Logger.info("BaseShapeJS: Executed afterWASMReady")
-
-                _this.shapeCenterSelector = new ShapeCenterSelector(_this)
             })
         } else {
             this.rawObj = rawObj
@@ -335,6 +333,8 @@ abstract class BaseShapeJS {
 
     afterWASMReady() {
         this.rawObj = castObject(this.rawObj, Module[this.getShapeName()]);
+
+        this.shapeCenterSelector = new ShapeCenterSelector(this)
 
         this.propertySheet = new PropertySheet();
 
