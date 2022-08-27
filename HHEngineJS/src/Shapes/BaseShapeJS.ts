@@ -164,7 +164,7 @@ abstract class BaseShapeJS {
     }
 
     set rotation(val: number) {
-        this.paperItem.rotation = val
+        this.rawObj.SetRotation(val)
         this.callHandlers("rotation", val)
     }
 
@@ -259,7 +259,7 @@ abstract class BaseShapeJS {
         let scaling = this.paperItem.scaling
         this.rawObj.SetScale(scaling.x, scaling.y, 0)
 
-        let rotation = this.paperItem.rotation
+        let rotation = this.rawObj.GetRotation()
 
         // Store rotation (rotation is complicated)
         let prevPosition = this.position
@@ -267,7 +267,6 @@ abstract class BaseShapeJS {
         let zeroPointPosition = this.paperItem.localToParent(new paper.Point(0, 0))
         this.rawObj.SetPosition(zeroPointPosition.x, zeroPointPosition.y, 0)
 
-        console.log(this.rawObj.GetTypeName() + ":Set position:" + zeroPointPosition.x + "," + zeroPointPosition.y)
         this.position = new paper.Point(0, 0)
         this.paperItem.rotation = rotation
         this.position = prevPosition
@@ -326,7 +325,6 @@ abstract class BaseShapeJS {
     }
 
     private setRotation(val: number) {
-        this.paperItem.rotation = val
         this.rawObj.SetRotation(val)
         this.store()
     }
@@ -528,7 +526,7 @@ abstract class BaseShapeJS {
 
         let centerOffset = currentCenter.subtract(currentZeroPoint)
 
-        this.rotation = this.rawObj.GetRotation() // Trigger property change events
+        this.paperItem.rotation = this.rawObj.GetRotation() // Trigger property change events
         this.position = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
 
         // Adjust index
