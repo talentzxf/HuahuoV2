@@ -13,15 +13,15 @@ public:
     Vector3f scale;
     float rotation;
 
-    Vector3f centerOffset;
+    Vector3f localCenterPosition;
 
     DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(TransformData)
 
     TransformData()
-        :position(0.0,0.0,0.0)
-        ,scale(1.0,1.0,1.0)
-        ,rotation(0.0f)
-        ,centerOffset(0.0f, 0.0f, 0.0f)
+        : position(0.0,0.0,0.0)
+        , scale(1.0,1.0,1.0)
+        , rotation(0.0f)
+        , localCenterPosition(0.0f, 0.0f, 0.0f)
     {
 
     }
@@ -31,7 +31,7 @@ template<class TransferFunction> void TransformData::Transfer(TransferFunction &
     TRANSFER(position);
     TRANSFER(scale);
     TRANSFER(rotation);
-    TRANSFER(centerOffset);
+    TRANSFER(localCenterPosition);
 }
 
 TransformData Lerp(TransformData& k1, TransformData& k2, float ratio);
@@ -78,9 +78,9 @@ public:
         return NULL;
     }
 
-    Vector3f* GetCenterOffset(){
+    Vector3f* GetLocalCenterPosition(){
         if(isValidFrame)
-            return &m_CurrentTransformData.centerOffset;
+            return &m_CurrentTransformData.localCenterPosition;
         return NULL;
     }
 

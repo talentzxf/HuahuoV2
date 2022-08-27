@@ -156,7 +156,7 @@ public:
 
     void SetRotation(float rotation);
 
-    void SetCenterOffset(float x, float y, float z);
+    void SetLocalCenterPosition(float x, float y, float z);
 
     void SetSegments(float segmentBuffer[], int size);
 
@@ -180,8 +180,8 @@ public:
         return GetFrameState<ShapeSegmentFrameState>().GetSegmentHandleOut(segmentId);
     }
 
-    Vector3f* GetCenterOffset(){
-        return GetFrameState<ShapeTransformFrameState>().GetCenterOffset();
+    Vector3f* GetLocalCenterPosition(){
+        return GetFrameState<ShapeTransformFrameState>().GetLocalCenterPosition();
     }
 
     int GetSegmentKeyFrameCount(){

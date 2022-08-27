@@ -21,7 +21,7 @@ TransformData Lerp(TransformData &k1, TransformData &k2, float ratio) {
     TransformData resultData;
 
     resultData.position = Lerp(k1.position, k2.position, ratio);
-    resultData.centerOffset = Lerp(k1.centerOffset, k2.centerOffset, ratio);
+    resultData.localCenterPosition = Lerp(k1.localCenterPosition, k2.localCenterPosition, ratio);
     resultData.scale = Lerp(k1.scale, k2.scale, ratio);
     resultData.rotation = Lerp(k1.rotation, k2.rotation, ratio);
     return resultData;
@@ -81,7 +81,7 @@ void ShapeTransformFrameState::RecordRotation(int frameId, float rotation) {
 void ShapeTransformFrameState::RecordCenterOffset(int frameId, float x, float y, float z) {
     TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
     pKeyFrame->transformData = m_CurrentTransformData; // Record current state.
-    pKeyFrame->transformData.centerOffset.Set(x, y, z);
+    pKeyFrame->transformData.localCenterPosition.Set(x, y, z);
 
     Apply(frameId);
 }

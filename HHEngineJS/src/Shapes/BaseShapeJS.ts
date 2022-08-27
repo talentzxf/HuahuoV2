@@ -32,13 +32,14 @@ abstract class BaseShapeJS {
     private shapeCenterSelector:ShapeCenterSelector;
 
     get centerPosition(): paper.Point{
-        return this.paperItem.position.add( this.rawObj.GetCenterOffset() )
+        let currentCenterPos = this.rawObj.GetLocalCenterPosition()
+        return this.paperItem.localToGlobal(currentCenterPos)
     }
 
     set centerPosition(centerPosition: paper.Point){
-        let offset = centerPosition.subtract(this.paperItem.position)
+        let globalCenterPos = this.paperItem.globalToLocal(centerPosition)
 
-        this.rawObj.SetCenterOffset(offset.x, offset.y, 0.0)
+        this.rawObj.SetLocalCenterPosition(globalCenterPos.x, globalCenterPos.y, 0.0)
     }
 
     public getBornStoreId():number{

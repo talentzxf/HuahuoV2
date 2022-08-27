@@ -94,7 +94,7 @@ void BaseShape::SetPosition(float x, float y, float z) {
     shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
-void BaseShape::SetCenterOffset(float x, float y, float z) {
+void BaseShape::SetLocalCenterPosition(float x, float y, float z) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     GetFrameState<ShapeTransformFrameState>().RecordCenterOffset(currentFrameId, x, y, z);
