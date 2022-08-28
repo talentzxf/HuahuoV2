@@ -29,20 +29,20 @@ abstract class BaseShapeJS {
 
     private bornStoreId: number = -1;
 
-    private shapeCenterSelector:ShapeCenterSelector;
+    private shapeCenterSelector: ShapeCenterSelector;
 
-    get centerPosition(): paper.Point{
-        let currentCenterPos = this.rawObj.GetLocalCenterPosition()
-        return this.paperItem.localToGlobal(currentCenterPos)
+    get pivotPosition(): paper.Point {
+        return this.rawObj.GetGlobalPivotPosition()
     }
 
-    set centerPosition(centerPosition: paper.Point){
+    set pivotPosition(centerPosition: paper.Point) {
         let globalCenterPos = this.paperItem.globalToLocal(centerPosition)
 
-        this.rawObj.SetLocalCenterPosition(globalCenterPos.x, globalCenterPos.y, 0.0)
+        this.rawObj.SetGlobalPivotPosition(globalCenterPos.x, globalCenterPos.y, 0.0)
+        this.rawObj.SetLocalPivotPosition(centerPosition.x, centerPosition.y, 0.0)
     }
 
-    public getBornStoreId():number{
+    public getBornStoreId(): number {
         return this.bornStoreId
     }
 
@@ -75,11 +75,11 @@ abstract class BaseShapeJS {
         return this.paperShape.divideAt(length)
     }
 
-    get name(): string{
+    get name(): string {
         return this.rawObj.GetName()
     }
 
-    set name(name:string){
+    set name(name: string) {
         this.rawObj.SetName(name)
     }
 
@@ -88,7 +88,7 @@ abstract class BaseShapeJS {
     }
 
     get position(): paper.Point {
-        return this.paperItem.position
+        return new paper.Point(this.pivotPosition.x, this.pivotPosition.y)
     }
 
     get rotation(): number {
@@ -128,7 +128,7 @@ abstract class BaseShapeJS {
         }
     }
 
-    duplicate(){
+    duplicate() {
         let newRawObj = huahuoEngine.DuplicateObject(this.rawObj)
         let shapeLayer = newRawObj.GetLayer()
 
@@ -154,7 +154,16 @@ abstract class BaseShapeJS {
     }
 
     set position(val: paper.Point) {
-        this.paperItem.position = val
+        let curGlobalPivot = this.rawObj.GetGlobalPivotPosition()
+        let curShapePosition = this.paperShape.position
+
+        let offset = val.subtract(new paper.Point(curGlobalPivot.x, curGlobalPivot.y))
+        let nextShapePosition = curShapePosition.add(offset)
+        this.paperShape.position = nextShapePosition
+
+        this.rawObj.SetGlobalPivotPosition(val.x, val.y, 0.0)
+        let localPivotPosition = this.globalToLocal(val)
+        this.rawObj.SetLocalPivotPosition(localPivotPosition.x, localPivotPosition.y, 0.0)
         this.callHandlers("position", val)
     }
 
@@ -195,21 +204,21 @@ abstract class BaseShapeJS {
                 boundingBoxRect.strokeColor = new paper.Color("black")
                 this.boundingBoxGroup.addChild(boundingBoxRect)
 
-                let centerCircle = new paperjs.Path.Circle(this.centerPosition, 10)
+                let centerCircle = new paperjs.Path.Circle(this.pivotPosition, 10)
                 centerCircle.fillColor = new paper.Color("red")
                 centerCircle.data.meta = this.shapeCenterSelector
 
                 this.boundingBoxGroup.addChild(centerCircle)
             }
 
-            if(this.paperItem)
+            if (this.paperItem)
                 this.paperItem.selected = true
         } else {
-            if(this.paperItem)
+            if (this.paperItem)
                 this.paperItem.selected = false
             if (this.boundingBoxGroup)
                 this.boundingBoxGroup.remove()
-            if(this.shapeCenterSelector)
+            if (this.shapeCenterSelector)
                 this.shapeCenterSelector.selected = false
         }
     }
@@ -251,6 +260,7 @@ abstract class BaseShapeJS {
             this.rawObj.SetSegmentsAtFrame(segmentBuffer, segments.length, keyframeId)
     }
 
+    // TODO: Do we really need a store ????
     store() {
         let segments = this.paperShape.segments
         if (segments) {
@@ -259,18 +269,6 @@ abstract class BaseShapeJS {
 
         let scaling = this.paperItem.scaling
         this.rawObj.SetScale(scaling.x, scaling.y, 0)
-
-        let rotation = this.rawObj.GetRotation()
-
-        // Store rotation (rotation is complicated)
-        let prevPosition = this.position
-        this.paperItem.rotation = 0
-        let zeroPointPosition = this.paperItem.localToParent(new paper.Point(0, 0))
-        this.rawObj.SetPosition(zeroPointPosition.x, zeroPointPosition.y, 0)
-
-        this.position = new paper.Point(0, 0)
-        this.paperItem.rotation = rotation
-        this.position = prevPosition
 
         // Store index
         let index = this.paperItem.index
@@ -412,18 +410,19 @@ abstract class BaseShapeJS {
         }
     }
 
-    createShape(){
+    createShape() {
         this.bornStoreId = huahuoEngine.GetCurrentStoreId()
 
         huahuoEngine.dispatchEvent("OnJSShapeCreated", this)
     }
 
-    afterCreateShape(){
+    afterCreateShape() {
         let paperPos = this.paperShape.position
 
         let localPos = this.paperShape.globalToLocal(paperPos)
 
-        this.rawObj.SetLocalCenterPosition(localPos.x, localPos.y, 0.0);
+        this.rawObj.SetGlobalPivotPosition(paperPos.x, paperPos.y, 0.0);
+        this.rawObj.SetLocalPivotPosition(localPos.x, localPos.y, 0.0);
     }
 
     duringUpdate() {
@@ -432,7 +431,7 @@ abstract class BaseShapeJS {
         }
     }
 
-    getTypeName(){
+    getTypeName() {
         return this.rawObj.GetTypeName()
     }
 
@@ -468,7 +467,7 @@ abstract class BaseShapeJS {
             let nearestPoint = newObj.getNearestPoint(localPos)
             let offset = newObj.getOffsetOf(nearestPoint)
 
-            while(!newObj.divideAt(offset)) {
+            while (!newObj.divideAt(offset)) {
                 offset += 0.01 // Hit the corner points, offset a little and divide again.
             }
 
@@ -479,7 +478,7 @@ abstract class BaseShapeJS {
         newObj.remove()
     }
 
-    removeSegment(segment){
+    removeSegment(segment) {
         // Update all frames.
         this.rawObj.RemoveSegment(segment.index)
 
@@ -490,7 +489,7 @@ abstract class BaseShapeJS {
 
     applySegments() {
         let segmentCount = this.rawObj.GetSegmentCount();
-        if (segmentCount > 0 && this.paperShape.segments != null){
+        if (segmentCount > 0 && this.paperShape.segments != null) {
             let currentSegmentCount = this.paperShape.segments.length
             let createSegments = false
             if (currentSegmentCount != segmentCount) {
@@ -526,17 +525,17 @@ abstract class BaseShapeJS {
         let scale = this.rawObj.GetScale()
         this.scaling = new paper.Point(scale.x, scale.y)
 
-        this.paperItem.position = new paper.Point(0, 0)
-        this.paperItem.rotation = 0
-
-        let pos = this.rawObj.GetPosition();// This position is the new global coordinate of the local (0,0).
-        let currentZeroPoint = this.paperItem.localToParent(new paper.Point(0, 0))
-        let currentCenter = this.position
-
-        let centerOffset = currentCenter.subtract(currentZeroPoint)
-
-        let candidatePosition = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
-        this.position = candidatePosition
+        // this.paperItem.position = new paper.Point(0, 0)
+        // this.paperItem.rotation = 0
+        //
+        // let pos = this.rawObj.GetPosition();// This position is the new global coordinate of the local (0,0).
+        // let currentZeroPoint = this.paperItem.localToParent(new paper.Point(0, 0))
+        // let currentCenter = this.position
+        //
+        // let centerOffset = currentCenter.subtract(currentZeroPoint)
+        //
+        // let candidatePosition = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
+        // this.position = candidatePosition
 
         this.paperItem.rotate(this.rawObj.GetRotation()); //, this.centerPosition)
 
@@ -568,7 +567,7 @@ abstract class BaseShapeJS {
         return new paper.Point(engineV3Point.x, engineV3Point.y)
     }
 
-    remove(){
+    remove() {
         // TODO: TODO
         huahuoEngine.DestroyShape(this.rawObj)
         this.paperItem.remove()
@@ -591,7 +590,7 @@ class ShapeFactory {
 }
 
 let shapeFactory = window["shapeFactory"]
-if(!shapeFactory){
+if (!shapeFactory) {
     shapeFactory = new ShapeFactory()
     window["shapeFactory"] = shapeFactory
 }
@@ -607,11 +606,11 @@ huahuoEngine.ExecuteAfterInited(() => {
         let baseShape = arg.GetBaseShape();
 
         let shapeStoreId = baseShape.GetLayer().GetObjectStore().GetStoreId()
-        if(shapeStoreId != huahuoEngine.GetCurrentStoreId()){
+        if (shapeStoreId != huahuoEngine.GetCurrentStoreId()) {
             let elementShapes = huahuoEngine.GetElementShapeByStoreId(shapeStoreId)
-            if(elementShapes){
-                for(let elementShape of elementShapes){
-                    if(elementShape){
+            if (elementShapes) {
+                for (let elementShape of elementShapes) {
+                    if (elementShape) {
                         elementShape.update();
                     }
                 }

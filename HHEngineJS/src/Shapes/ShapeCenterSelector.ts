@@ -22,19 +22,19 @@ class ShapeCenterSelector{
     set position(val:paper.Point){
         this.paperShape.position = val
 
-        this._targetObj.centerPosition = val
+        this._targetObj.pivotPosition = val
     }
 
     setPosition(val:paper.Point){
         if(this._isSelected){
-            this.position = this._targetObj.centerPosition
+            this.position = this._targetObj.pivotPosition
         }
     }
 
     get paperShape(){
         if(!this.circleShape){
             let paperJs = this._targetObj.getPaperJs()
-            this.circleShape = new paperJs.Path.Circle(this._targetObj.centerPosition, 20)
+            this.circleShape = new paperJs.Path.Circle(this._targetObj.pivotPosition, 20)
             this.circleShape.fillColor = new paper.Color("red")
         }
         return this.circleShape
