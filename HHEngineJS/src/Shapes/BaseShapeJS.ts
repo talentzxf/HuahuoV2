@@ -36,10 +36,10 @@ abstract class BaseShapeJS {
     }
 
     set pivotPosition(centerPosition: paper.Point) {
-        let globalCenterPos = this.paperItem.globalToLocal(centerPosition)
+        let localCenterPos = this.paperItem.globalToLocal(centerPosition)
 
-        this.rawObj.SetGlobalPivotPosition(globalCenterPos.x, globalCenterPos.y, 0.0)
-        this.rawObj.SetLocalPivotPosition(centerPosition.x, centerPosition.y, 0.0)
+        this.rawObj.SetGlobalPivotPosition(centerPosition.x, centerPosition.y, 0.0)
+        this.rawObj.SetLocalPivotPosition(localCenterPos.x, localCenterPos.y, 0.0)
     }
 
     public getBornStoreId(): number {
