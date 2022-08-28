@@ -116,7 +116,10 @@ void testShapeStore() {
     rectangleShape->SetEndPoint(3, 3, 3);
     rectangleShape->SetColor(1.0, 0.0, 1.0, 1.0);
     rectangleShape->SetStrokeWidth(10.0);
+    rectangleShape->SetLocalCenterPosition(1.0, 2.0, 3.0);
     currentLayer->AddShapeInternal(rectangleShape);
+
+    Vector3f* localCenterPos = rectangleShape->GetLocalCenterPosition();
 
     RectangleShape* clonedRectangleShape = (RectangleShape*) CloneObject(*rectangleShape);
 

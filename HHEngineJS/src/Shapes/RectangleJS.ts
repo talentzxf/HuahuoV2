@@ -27,6 +27,8 @@ class RectangleJS extends BaseSolidShape{
         this.paperShape.strokeColor = new paperjs.Color("black");
         this.paperShape.fillColor = this.randomFillColor
         this.paperShape.data.meta = this
+
+        super.afterCreateShape()
     }
 
     setStartPoint(startPoint: Vector2){

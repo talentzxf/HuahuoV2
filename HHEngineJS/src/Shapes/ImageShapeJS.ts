@@ -92,6 +92,8 @@ class ImageShapeJS extends AbstractMediaShapeJS{
         this.paperItem = tempShape
 
         this.appendProperties()
+
+        super.afterCreateShape()
     }
 
     appendProperties(){

@@ -57,6 +57,8 @@ class ElementShapeJS extends BaseShapeJS {
         this.emptyPlaceHolder.addChild(boundingBox)
         this.emptyPlaceHolder.addChild(pointText)
         this.paperItem.addChild(this.emptyPlaceHolder)
+
+        super.afterCreateShape()
     }
 
     get storeId(): number {

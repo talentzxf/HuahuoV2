@@ -21,6 +21,8 @@ class AudioShapeJS extends AbstractMediaShapeJS {
         this.paperShape.data.meta = this
 
         this.appendProperties()
+
+        this.afterCreateShape()
     }
 
     appendProperties(){

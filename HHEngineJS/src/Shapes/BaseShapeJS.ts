@@ -418,6 +418,14 @@ abstract class BaseShapeJS {
         huahuoEngine.dispatchEvent("OnJSShapeCreated", this)
     }
 
+    afterCreateShape(){
+        let paperPos = this.paperShape.position
+
+        let localPos = this.paperShape.globalToLocal(paperPos)
+
+        this.rawObj.SetLocalCenterPosition(localPos.x, localPos.y, 0.0);
+    }
+
     duringUpdate() {
         if (!this.paperItem) {
             this.createShape()

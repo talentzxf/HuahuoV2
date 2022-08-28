@@ -31,6 +31,8 @@ class CircleShapeJS extends BaseSolidShape{
         this.paperShape.strokeColor = new paper.Color("black")
         this.paperShape.fillColor = this.randomColor
         this.paperShape.data.meta = this
+
+        super.afterCreateShape()
     }
 
     setRadius(radius){

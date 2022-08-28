@@ -28,6 +28,8 @@ class LineShapeJS extends BaseSolidShape{
         this.paperShape.applyMatrix = false;
         this.paperShape.strokeColor = this.randomStrokeColor
         this.paperShape.data.meta = this
+
+        super.afterCreateShape()
     }
 
     setStartPoint(startPoint: Vector2){

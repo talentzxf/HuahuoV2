@@ -41,6 +41,8 @@ class TextShapeJS extends BaseSolidShape{
         textItem.fontSize = "20px"
 
         textItem.data.meta = this
+
+        super.afterCreateShape()
     }
 
     setTextWithPosition(inText:string, position: Vector2){
