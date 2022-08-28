@@ -110,7 +110,7 @@ interface ColorRGBAf{
 interface SegmentKeyFrame{
     long GetFrameId();
     long GetTotalSegments();
-    Vector3f SetLocalPivotPosition(long segmentId);
+    Vector3f GetPosition(long segmentId);
     Vector3f GetHandleIn(long segmentId);
     Vector3f GetHandleOut(long segmentId);
 };
@@ -123,10 +123,7 @@ interface BaseShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
-    void GetLocalPivotPosition(float x, float y, float z);
-    void SetGlobalPivotPosition(float x, float y, float z);
-    Vector3f GetGlobalPivotPosition();
-    Vector3f SetLocalPivotPosition();
+
     float GetRotation();
     void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
@@ -169,12 +166,12 @@ interface LineShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
-    void GetLocalPivotPosition(float x, float y, float z);
-    Vector3f SetLocalPivotPosition();
-    float GetRotation();
-    void SetRotation(float rotation);
+    void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
+    Vector3f GetLocalPivotPosition();
+    float GetRotation();
+    void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f GetScale();
 
@@ -211,14 +208,14 @@ interface TextShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
-    void GetLocalPivotPosition(float x, float y, float z);
-    Vector3f SetLocalPivotPosition();
+    void SetLocalPivotPosition(float x, float y, float z);
+    void SetGlobalPivotPosition(float x, float y, float z);
+    Vector3f GetGlobalPivotPosition();
+    Vector3f GetLocalPivotPosition();
     float GetRotation();
     void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f GetScale();
-    void SetGlobalPivotPosition(float x, float y, float z);
-    Vector3f GetGlobalPivotPosition();
 
     void SetColor(float r, float g, float b, float a);
     void SetStrokeColor(float r, float g, float b, float a);
@@ -255,12 +252,12 @@ interface RectangleShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
-    void GetLocalPivotPosition(float x, float y, float z);
-    Vector3f SetLocalPivotPosition();
-    float GetRotation();
-    void SetRotation(float rotation);
+    void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
+    Vector3f GetLocalPivotPosition();
+    float GetRotation();
+    void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f GetScale();
 
@@ -299,11 +296,11 @@ interface CircleShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
-    void GetLocalPivotPosition(float x, float y, float z);
-    Vector3f SetLocalPivotPosition();
-    float GetRotation();
+    void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
+    Vector3f GetLocalPivotPosition();
+    float GetRotation();
     void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f GetScale();
@@ -349,10 +346,10 @@ interface AudioShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
-    void GetLocalPivotPosition(float x, float y, float z);
-    Vector3f SetLocalPivotPosition();
+    void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
+    Vector3f GetLocalPivotPosition();
     float GetRotation();
     void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
@@ -401,10 +398,10 @@ interface ImageShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
-    void GetLocalPivotPosition(float x, float y, float z);
-    Vector3f SetLocalPivotPosition();
+    void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
+    Vector3f GetLocalPivotPosition();
     float GetRotation();
     void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
@@ -441,10 +438,10 @@ interface CurveShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
-    void GetLocalPivotPosition(float x, float y, float z);
-    Vector3f SetLocalPivotPosition();
+    void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
+    Vector3f GetLocalPivotPosition();
     float GetRotation();
     void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
@@ -483,10 +480,10 @@ interface ElementShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
-    void GetLocalPivotPosition(float x, float y, float z);
-    Vector3f SetLocalPivotPosition();
+    void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
+    Vector3f GetLocalPivotPosition();
     float GetRotation();
     void SetRotation(float rotation);
     void SetScale(float xScale, float yScale, float zScale);
