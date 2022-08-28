@@ -84,20 +84,20 @@ AbstractFrameState *BaseShape::AddFrameStateInternal(AbstractFrameState *frameSt
     return frameState;
 }
 
-void BaseShape::SetPosition(float x, float y, float z) {
+void BaseShape::SetLocalPivotPosition(float x, float y, float z) {
 
     Layer *shapeLayer = GetLayer();
 
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    GetFrameState<ShapeTransformFrameState>().RecordPosition(currentFrameId, x, y, z);
+    GetFrameState<ShapeTransformFrameState>().RecordLocalPivotPosition(currentFrameId, x, y, z);
 
     shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
-void BaseShape::SetLocalCenterPosition(float x, float y, float z) {
+void BaseShape::SetGlobalPivotPosition(float x, float y, float z) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    GetFrameState<ShapeTransformFrameState>().RecordCenterOffset(currentFrameId, x, y, z);
+    GetFrameState<ShapeTransformFrameState>().RecordGlobalPivotPosition(currentFrameId, x, y, z);
     shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 

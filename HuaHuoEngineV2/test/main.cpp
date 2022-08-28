@@ -116,10 +116,7 @@ void testShapeStore() {
     rectangleShape->SetEndPoint(3, 3, 3);
     rectangleShape->SetColor(1.0, 0.0, 1.0, 1.0);
     rectangleShape->SetStrokeWidth(10.0);
-    rectangleShape->SetLocalCenterPosition(1.0, 2.0, 3.0);
     currentLayer->AddShapeInternal(rectangleShape);
-
-    Vector3f* localCenterPos = rectangleShape->GetLocalCenterPosition();
 
     RectangleShape* clonedRectangleShape = (RectangleShape*) CloneObject(*rectangleShape);
 
@@ -215,7 +212,7 @@ void testKeyFrames() {
 
     TransformKeyFrame k1;
     k1.frameId = 0;
-    k1.transformData.position = Vector3f(0.0, 1.0, 0.0);
+    k1.transformData.globalPivotPosition = Vector3f(0.0, 1.0, 0.0);
     transformKeyFrames.push_back(k1);
 
     result = FindKeyFramePair(0, transformKeyFrames, framePair);
@@ -223,7 +220,7 @@ void testKeyFrames() {
 
     transformKeyFrames.clear();
     k1.frameId = 1;
-    k1.transformData.position = Vector3f(0.0, 1.0, 0.0);
+    k1.transformData.globalPivotPosition = Vector3f(0.0, 1.0, 0.0);
     transformKeyFrames.push_back(k1);
     result = FindKeyFramePair(0, transformKeyFrames, framePair);
     assert(result == true);
@@ -233,14 +230,14 @@ void testKeyFrames() {
 
     TransformKeyFrame k2;
     k2.frameId = 5;
-    k2.transformData.position = Vector3f(0.0, 5.0, 0.0);
+    k2.transformData.globalPivotPosition = Vector3f(0.0, 5.0, 0.0);
     transformKeyFrames.push_back(k2);
     result = FindKeyFramePair(3, transformKeyFrames, framePair);
     assert(result == true);
 
     TransformKeyFrame k3;
     k3.frameId = 10;
-    k3.transformData.position = Vector3f(0.0, 10.0, 0.0);
+    k3.transformData.globalPivotPosition = Vector3f(0.0, 10.0, 0.0);
     transformKeyFrames.push_back(k3);
     result = FindKeyFramePair(6, transformKeyFrames, framePair);
     assert(result == true);
@@ -255,31 +252,31 @@ void testKeyFrames() {
 void testRecordKeyFrames() {
     std::vector<TransformKeyFrame> transformKeyFrames;
     TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(0, transformKeyFrames);
-    pKeyFrame->transformData.position.Set(1.0, 0.0, 0.0f);
+    pKeyFrame->transformData.globalPivotPosition.Set(1.0, 0.0, 0.0f);
     assert(transformKeyFrames.size() == 1);
-    assert(transformKeyFrames[0].transformData.position == Vector3f(1.0, 0.0, 0.0));
+    assert(transformKeyFrames[0].transformData.globalPivotPosition == Vector3f(1.0, 0.0, 0.0));
 
     pKeyFrame = InsertOrUpdateKeyFrame(5, transformKeyFrames);
-    pKeyFrame->transformData.position.Set(5.0, 1.0, 0.0f);
+    pKeyFrame->transformData.globalPivotPosition.Set(5.0, 1.0, 0.0f);
     assert(transformKeyFrames.size() == 2);
-    assert(transformKeyFrames[1].transformData.position == Vector3f(5.0, 1.0, 0.0));
+    assert(transformKeyFrames[1].transformData.globalPivotPosition == Vector3f(5.0, 1.0, 0.0));
 
     pKeyFrame = InsertOrUpdateKeyFrame(3, transformKeyFrames);
-    pKeyFrame->transformData.position.Set(3.0, 1.0, 0.0f);
+    pKeyFrame->transformData.globalPivotPosition.Set(3.0, 1.0, 0.0f);
     assert(transformKeyFrames.size() == 3);
-    assert(transformKeyFrames[1].transformData.position == Vector3f(3.0, 1.0, 0.0));
-    assert(transformKeyFrames[2].transformData.position == Vector3f(5.0, 1.0, 0.0));
+    assert(transformKeyFrames[1].transformData.globalPivotPosition == Vector3f(3.0, 1.0, 0.0));
+    assert(transformKeyFrames[2].transformData.globalPivotPosition == Vector3f(5.0, 1.0, 0.0));
 
     pKeyFrame = InsertOrUpdateKeyFrame(10, transformKeyFrames);
-    pKeyFrame->transformData.position.Set(10.0, 1.0, 0.0f);
+    pKeyFrame->transformData.globalPivotPosition.Set(10.0, 1.0, 0.0f);
     assert(transformKeyFrames.size() == 4);
-    assert(transformKeyFrames[3].transformData.position == Vector3f(10.0, 1.0, 0.0));
+    assert(transformKeyFrames[3].transformData.globalPivotPosition == Vector3f(10.0, 1.0, 0.0));
 
     pKeyFrame = InsertOrUpdateKeyFrame(5, transformKeyFrames);
-    pKeyFrame->transformData.position.Set(5.0, 2.0, 0.0f);
+    pKeyFrame->transformData.globalPivotPosition.Set(5.0, 2.0, 0.0f);
     assert(transformKeyFrames.size() == 4);
     assert(transformKeyFrames[2].frameId == 5);
-    assert(transformKeyFrames[2].transformData.position == Vector3f(5.0, 2.0, 0.0));
+    assert(transformKeyFrames[2].transformData.globalPivotPosition == Vector3f(5.0, 2.0, 0.0));
 }
 
 void testSegmentKeyFrames() {
@@ -333,17 +330,17 @@ void testCloneObject() {
     rectangleShape->SetEndPoint(3, 3, 3);
     rectangleShape->SetColor(1.0, 0.0, 1.0, 1.0);
 
-    rectangleShape->SetPosition(10, 10, 10);
+    rectangleShape->SetGlobalPivotPosition(10, 10, 10);
 
     currentLayer->SetCurrentFrame(10);
-    rectangleShape->SetPosition(100, 100, 100);
+    rectangleShape->SetGlobalPivotPosition(100, 100, 100);
     currentLayer->AddShapeInternal(rectangleShape);
 
     RectangleShape *clonedRectangle = (RectangleShape *) CloneObject(*rectangleShape);
     currentLayer->AddShapeInternal(clonedRectangle);
 
     currentLayer->SetCurrentFrame(0);
-    Vector3f *curPosition = clonedRectangle->GetPosition();
+    Vector3f *curPosition = clonedRectangle->GetGlobalPivotPosition();
     Assert(curPosition != NULL);
 }
 
@@ -371,7 +368,7 @@ void testDelete() {
     };
 
     rectangleShape->SetSegments(segments, 4);
-    rectangleShape->SetPosition(100.0f, 200.0f, 300.0f);
+    rectangleShape->SetGlobalPivotPosition(100.0f, 200.0f, 300.0f);
     rectangleShape->RemoveSegment(2);
 
     currentLayer->AddShapeInternal(rectangleShape);
@@ -397,12 +394,12 @@ void testDelete() {
         };
 
         rectangleShape2->SetSegments(segments, 4);
-        rectangleShape2->SetPosition(300.0f, 400.0f, 500.0f);
+        rectangleShape2->SetGlobalPivotPosition(300.0f, 400.0f, 500.0f);
         rectangleShape2->RemoveSegment(2);
 
         currentLayer->AddShapeInternal(rectangleShape2);
 
-        rectangleShape2->SetPosition(500.0f, 600.0f, 700.0f);
+        rectangleShape2->SetGlobalPivotPosition(500.0f, 600.0f, 700.0f);
 
         currentLayer->RemoveShape(rectangleShape2);
     }

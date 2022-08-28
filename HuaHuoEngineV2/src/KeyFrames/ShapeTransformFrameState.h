@@ -67,7 +67,7 @@ public:
 
     Vector3f* GetGlobalPivotPosition(){
         if(isValidFrame)
-            return &m_CurrentTransformData.localPivotPosition;
+            return &m_CurrentTransformData.globalPivotPosition;
         return NULL;
     }
 

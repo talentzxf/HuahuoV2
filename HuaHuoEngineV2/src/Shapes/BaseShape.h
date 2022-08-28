@@ -153,8 +153,6 @@ public:
 
     void SetRotation(float rotation);
 
-    void SetLocalCenterPosition(float x, float y, float z);
-
     void SetSegments(float segmentBuffer[], int size);
 
     void SetSegmentsAtFrame(float segmentBuffer[], int size, int keyFrameId);
