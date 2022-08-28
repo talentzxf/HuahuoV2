@@ -20,7 +20,7 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase {
         this.lastPos = new paper.Point(startPos.x, startPos.y)
         this.targetShape = this.curObjs.values().next().value // There's only one object in the set, get it.
 
-        this.rotationCenter = this.targetShape.centerPosition
+        this.rotationCenter = this.targetShape.pivotPosition
 
         this.rotationDegree = 0.0;
     }
