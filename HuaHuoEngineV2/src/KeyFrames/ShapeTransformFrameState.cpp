@@ -20,8 +20,8 @@ void ShapeTransformFrameState::Transfer(TransferFunction &transfer) {
 TransformData Lerp(TransformData &k1, TransformData &k2, float ratio) {
     TransformData resultData;
 
-    resultData.position = Lerp(k1.position, k2.position, ratio);
-    resultData.localCenterPosition = Lerp(k1.localCenterPosition, k2.localCenterPosition, ratio);
+    resultData.localPivotPosition = Lerp(k1.localPivotPosition, k2.localPivotPosition, ratio);
+    resultData.globalPivotPosition = Lerp(k1.globalPivotPosition, k2.globalPivotPosition, ratio);
     resultData.scale = Lerp(k1.scale, k2.scale, ratio);
     resultData.rotation = Lerp(k1.rotation, k2.rotation, ratio);
     return resultData;
@@ -51,13 +51,18 @@ bool ShapeTransformFrameState::Apply(int frameId) {
     return false;
 }
 
-
-
-// TODO: Optimize this one.
-void ShapeTransformFrameState::RecordPosition(int frameId, float x, float y, float z) {
+void ShapeTransformFrameState::RecordLocalPivotPosition(int frameId, float x, float y, float z){
     TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
     pKeyFrame->transformData = m_CurrentTransformData;
-    pKeyFrame->transformData.position.Set(x, y, z);
+    pKeyFrame->transformData.localPivotPosition.Set(x, y, z);
+
+    Apply(frameId);
+}
+
+void ShapeTransformFrameState::RecordGlobalPivotPosition(int frameId, float x, float y, float z){
+    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+    pKeyFrame->transformData = m_CurrentTransformData;
+    pKeyFrame->transformData.globalPivotPosition.Set(x, y, z);
 
     Apply(frameId);
 }
@@ -74,14 +79,6 @@ void ShapeTransformFrameState::RecordRotation(int frameId, float rotation) {
     TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
     pKeyFrame->transformData = m_CurrentTransformData; // Record current state.
     pKeyFrame->transformData.rotation = rotation;
-
-    Apply(frameId);
-}
-
-void ShapeTransformFrameState::RecordCenterOffset(int frameId, float x, float y, float z) {
-    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
-    pKeyFrame->transformData = m_CurrentTransformData; // Record current state.
-    pKeyFrame->transformData.localCenterPosition.Set(x, y, z);
 
     Apply(frameId);
 }

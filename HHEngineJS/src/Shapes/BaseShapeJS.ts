@@ -538,8 +538,8 @@ abstract class BaseShapeJS {
         let candidatePosition = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
         this.position = candidatePosition
 
-        this.paperItem.rotate(this.rawObj.GetRotation(), this.centerPosition)
-        
+        this.paperItem.rotate(this.rawObj.GetRotation()); //, this.centerPosition)
+
         // Adjust index
         if (this.paperItem.index != this.rawObj.GetIndex() && this.paperItem.index > 0) {
             let parent = this.paperItem.parent

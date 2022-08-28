@@ -129,10 +129,6 @@ public:
         return "Unknown";
     }
 
-    Vector3f* GetPosition(){
-        return GetFrameState<ShapeTransformFrameState>().GetPosition();
-    }
-
     float GetRotation(){
         return GetFrameState<ShapeTransformFrameState>().GetRotation();
     }
@@ -148,7 +144,8 @@ public:
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f* GetScale();
 
-    void SetPosition(float x, float y, float z);
+    void SetLocalPivotPosition(float x, float y, float z);
+    void SetGlobalPivotPosition(float x, float y, float z);
 
     void SetColor(float r, float g, float b, float a);
 
@@ -180,8 +177,12 @@ public:
         return GetFrameState<ShapeSegmentFrameState>().GetSegmentHandleOut(segmentId);
     }
 
-    Vector3f* GetLocalCenterPosition(){
-        return GetFrameState<ShapeTransformFrameState>().GetLocalCenterPosition();
+    Vector3f* GetLocalPivotPosition(){
+        return GetFrameState<ShapeTransformFrameState>().GetLocalPivotPosition();
+    }
+
+    Vector3f* GetGlobalPivotPosition(){
+        return GetFrameState<ShapeTransformFrameState>().GetGlobalPivotPosition();
     }
 
     int GetSegmentKeyFrameCount(){

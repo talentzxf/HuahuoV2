@@ -9,29 +9,28 @@
 
 class TransformData{
 public:
-    Vector3f position;
     Vector3f scale;
     float rotation;
-
-    Vector3f localCenterPosition;
+    Vector3f localPivotPosition;
+    Vector3f globalPivotPosition;
 
     DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(TransformData)
 
     TransformData()
-        : position(0.0,0.0,0.0)
-        , scale(1.0,1.0,1.0)
+        : scale(1.0,1.0,1.0)
         , rotation(0.0f)
-        , localCenterPosition(0.0f, 0.0f, 0.0f)
+        , localPivotPosition(0.0f, 0.0f, 0.0f)
+        , globalPivotPosition(0.0f, 0.0f, 0.0f)
     {
 
     }
 };
 
 template<class TransferFunction> void TransformData::Transfer(TransferFunction &transfer){
-    TRANSFER(position);
+    TRANSFER(localPivotPosition);
     TRANSFER(scale);
     TRANSFER(rotation);
-    TRANSFER(localCenterPosition);
+    TRANSFER(globalPivotPosition);
 }
 
 TransformData Lerp(TransformData& k1, TransformData& k2, float ratio);
@@ -60,9 +59,15 @@ public:
 
     virtual bool Apply(int frameId) override;
 
-    Vector3f* GetPosition(){
+    Vector3f* GetLocalPivotPosition(){
         if(isValidFrame)
-            return &m_CurrentTransformData.position;
+            return &m_CurrentTransformData.localPivotPosition;
+        return NULL;
+    }
+
+    Vector3f* GetGlobalPivotPosition(){
+        if(isValidFrame)
+            return &m_CurrentTransformData.localPivotPosition;
         return NULL;
     }
 
@@ -78,20 +83,12 @@ public:
         return NULL;
     }
 
-    Vector3f* GetLocalCenterPosition(){
-        if(isValidFrame)
-            return &m_CurrentTransformData.localCenterPosition;
-        return NULL;
-    }
-
-    void RecordPosition(int frameId, float x, float y, float z);
+    void RecordLocalPivotPosition(int frameId, float x, float y, float z);
+    void RecordGlobalPivotPosition(int frameId, float x, float y, float z);
 
     void RecordScale(int frameId, float xScale, float yScale, float zScale);
 
     void RecordRotation(int frameId, float rotation);
-
-    void RecordCenterOffset(int frameId, float x, float y, float z);
-
     friend class BaseShape;
 private:
     std::vector<TransformKeyFrame> m_KeyFrames;
