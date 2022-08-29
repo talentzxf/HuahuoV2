@@ -427,12 +427,16 @@ abstract class BaseShapeJS {
     }
 
     afterCreateShape() {
-        let paperPos = this.paperShape.position
+        if(!this.isPermanent){
+            console.log("After create shape!!!!!!")
+            let paperPos = this.paperShape.position
 
-        let localPos = this.paperShape.globalToLocal(paperPos)
+            let localPos = this.paperShape.globalToLocal(paperPos)
 
-        this.rawObj.SetGlobalPivotPosition(paperPos.x, paperPos.y, 0.0);
-        this.rawObj.SetLocalPivotPosition(localPos.x, localPos.y, 0.0);
+            this.rawObj.SetGlobalPivotPosition(paperPos.x, paperPos.y, 0.0);
+            this.rawObj.SetLocalPivotPosition(localPos.x, localPos.y, 0.0);
+
+        }
     }
 
     duringUpdate() {
