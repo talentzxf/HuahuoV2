@@ -146,10 +146,11 @@ abstract class BaseShapeJS {
         this.storeSameLayerShapes()
     }
 
-    rotate(angle: number, center: paper.Point) {
-        this.paperItem.rotate(angle, center)
+    rotateAroundPivot(angle: number) {
+        this.paperItem.rotate(angle, this.pivotPosition)
         let newRotationDegree = this.rawObj.GetRotation() + angle
         this.rawObj.SetRotation(newRotationDegree)
+
         this.callHandlers("rotation", newRotationDegree)
     }
 
@@ -525,6 +526,22 @@ abstract class BaseShapeJS {
         let scale = this.rawObj.GetScale()
         this.scaling = new paper.Point(scale.x, scale.y)
 
+        this.paperItem.position = new paper.Point(0.0, 0.0)
+        // Reset the rotation.
+        this.paperItem.rotation = this.rawObj.GetRotation();
+        // Rotation around zero point.
+        
+        // The coordinate should have been aligned now.
+        let globalPivotPosition = this.rawObj.GetGlobalPivotPosition()
+        let localPivotPosition = this.rawObj.GetLocalPivotPosition()
+        let shapeZero = new paper.Point(globalPivotPosition.x - localPivotPosition.x, globalPivotPosition.y - localPivotPosition.y)
+
+        let offset = this.paperShape.globalToLocal(this.paperItem.position) // As position is already (0,0). The global position of (0,0) indicates the center of the bounding rect.
+
+        let newPosition = shapeZero.add(offset)
+
+        this.paperItem.position = newPosition
+
         // this.paperItem.position = new paper.Point(0, 0)
         // this.paperItem.rotation = 0
         //
@@ -536,8 +553,6 @@ abstract class BaseShapeJS {
         //
         // let candidatePosition = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
         // this.position = candidatePosition
-
-        this.paperItem.rotate(this.rawObj.GetRotation()); //, this.centerPosition)
 
         // Adjust index
         if (this.paperItem.index != this.rawObj.GetIndex() && this.paperItem.index > 0) {
