@@ -530,6 +530,20 @@ abstract class BaseShapeJS {
         return false
     }
 
+    backCalculateZeroPoint(localPos:paper.Point, globalPos: paper.Point, radian:number){
+        let OB = localPos.x + localPos.y * Math.tan(radian)
+        let OC = OB * Math.cos(radian)
+        let zx = globalPos.x - OC
+
+        let PB = localPos.y / Math.cos(radian)
+        let CB = OB * Math.sin(radian)
+        let PC = PB - CB
+
+        let zy = globalPos.y - PC
+
+        return new paper.Point(zx, zy)
+    }
+
     afterUpdate() {
         this.applySegments()
         let scale = this.rawObj.GetScale()
@@ -545,11 +559,13 @@ abstract class BaseShapeJS {
         let globalPivotPosition = this.rawObj.GetGlobalPivotPosition()
         let localPivotPosition = this.rawObj.GetLocalPivotPosition()
 
-        let shapeZero = new paper.Point(0,0).rotate(this.rawObj.GetRotation(), new paper.Point(globalPivotPosition.x, globalPivotPosition.y))
+        let radian = this.rawObj.GetRotation() / 180 * Math.PI
 
-        let offset = this.paperShape.globalToLocal(this.paperItem.position) // As position is already (0,0). The global position of (0,0) indicates the center of the bounding rect.
+        let shapeZero = this.backCalculateZeroPoint(localPivotPosition, globalPivotPosition, -radian)
 
-        let newPosition = shapeZero.add(offset)
+        let offset = this.paperShape.localToGlobal(new paper.Point(0,0)) // As position is already (0,0). The global position of (0,0) indicates the center of the bounding rect.
+
+        let newPosition = shapeZero.subtract(offset)
         if(this.paperItem.parent)
             this.paperItem.position = this.paperItem.parent.globalToLocal(newPosition)
         else
