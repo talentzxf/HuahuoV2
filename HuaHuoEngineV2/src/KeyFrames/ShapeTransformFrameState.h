@@ -27,9 +27,9 @@ public:
 };
 
 template<class TransferFunction> void TransformData::Transfer(TransferFunction &transfer){
-    TRANSFER(localPivotPosition);
     TRANSFER(scale);
     TRANSFER(rotation);
+    TRANSFER(localPivotPosition);
     TRANSFER(globalPivotPosition);
 }
 
