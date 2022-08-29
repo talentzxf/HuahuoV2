@@ -147,7 +147,16 @@ abstract class BaseShapeJS {
     }
 
     rotateAroundPivot(angle: number) {
+        let zeroP = new paper.Point(0,0)
+        console.log("Before rotate zero:" + this.paperItem.localToGlobal(zeroP))
+
         this.paperItem.rotate(angle, this.pivotPosition)
+
+        console.log("Pivot position:" + this.pivotPosition.x + "," + this.pivotPosition.y)
+
+        console.log("After rotate zero:" + this.paperItem.localToGlobal(zeroP))
+        console.log("After rotate zero:" + this.paperItem.localToGlobal(zeroP))
+
         let newRotationDegree = this.rawObj.GetRotation() + angle
         this.rawObj.SetRotation(newRotationDegree)
 
@@ -526,21 +535,25 @@ abstract class BaseShapeJS {
         let scale = this.rawObj.GetScale()
         this.scaling = new paper.Point(scale.x, scale.y)
 
+        console.log("Before paperItem position:" + this.paperItem.position)
         this.paperItem.position = new paper.Point(0.0, 0.0)
         // Reset the rotation.
         this.paperItem.rotation = this.rawObj.GetRotation();
         // Rotation around zero point.
-        
+
         // The coordinate should have been aligned now.
         let globalPivotPosition = this.rawObj.GetGlobalPivotPosition()
         let localPivotPosition = this.rawObj.GetLocalPivotPosition()
-        let shapeZero = new paper.Point(globalPivotPosition.x - localPivotPosition.x, globalPivotPosition.y - localPivotPosition.y)
+
+        let shapeZero = new paper.Point(0,0).rotate(this.rawObj.GetRotation(), new paper.Point(globalPivotPosition.x, globalPivotPosition.y))
 
         let offset = this.paperShape.globalToLocal(this.paperItem.position) // As position is already (0,0). The global position of (0,0) indicates the center of the bounding rect.
 
         let newPosition = shapeZero.add(offset)
-
-        this.paperItem.position = newPosition
+        if(this.paperItem.parent)
+            this.paperItem.position = this.paperItem.parent.globalToLocal(newPosition)
+        else
+            this.paperItem.position = newPosition
 
         // this.paperItem.position = new paper.Point(0, 0)
         // this.paperItem.rotation = 0
