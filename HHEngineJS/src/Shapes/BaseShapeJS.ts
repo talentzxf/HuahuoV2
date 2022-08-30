@@ -148,14 +148,7 @@ abstract class BaseShapeJS {
 
     rotateAroundPivot(angle: number) {
         let zeroP = new paper.Point(0,0)
-        console.log("Before rotate zero:" + this.paperItem.localToGlobal(zeroP))
-
         this.paperItem.rotate(angle, this.pivotPosition)
-
-        console.log("Pivot position:" + this.pivotPosition.x + "," + this.pivotPosition.y)
-
-        console.log("After rotate zero:" + this.paperItem.localToGlobal(zeroP))
-        console.log("After rotate zero:" + this.paperItem.localToGlobal(zeroP))
 
         let newRotationDegree = this.rawObj.GetRotation() + angle
         this.rawObj.SetRotation(newRotationDegree)
@@ -428,7 +421,6 @@ abstract class BaseShapeJS {
 
     afterCreateShape() {
         if(!this.isPermanent){
-            console.log("After create shape!!!!!!")
             let paperPos = this.paperShape.position
 
             let localPos = this.paperShape.globalToLocal(paperPos)
@@ -553,7 +545,6 @@ abstract class BaseShapeJS {
         let scale = this.rawObj.GetScale()
         this.scaling = new paper.Point(scale.x, scale.y)
 
-        console.log("Before paperItem position:" + this.paperItem.position)
         this.paperItem.position = new paper.Point(0.0, 0.0)
         // Reset the rotation.
         this.paperItem.rotation = this.rawObj.GetRotation();
