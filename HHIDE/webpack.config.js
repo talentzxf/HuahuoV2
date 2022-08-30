@@ -44,7 +44,8 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 { from:"../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to:"wasm"},
-                { from:"../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to:"wasm"}
+                { from:"../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to:"wasm"},
+                { from:"./src/i18n", to:"i18n"}
             ]
         }),
         new HtmlWebpackPlugin({

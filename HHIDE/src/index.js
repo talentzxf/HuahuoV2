@@ -11,6 +11,7 @@ import {LoginForm} from "./Identity/LoginForm";
 import {RegisterForm} from "./Identity/RegisterForm";
 import {UserInfoBar} from "./Identity/UserInfoBar";
 import {dataFileUploader} from "./RESTApis/DataFileUploader";
+import i18next from "i18next"
 
 import "vanilla-colorful"
 
@@ -31,10 +32,10 @@ import {faFileImage} from "@fortawesome/free-regular-svg-icons";
 import {faTimesCircle} from "@fortawesome/free-regular-svg-icons";
 import {saveAs} from 'file-saver';
 import {Logger} from "hhcommoncomponents";
-import {fileLoader} from "./SceneView/FileLoader";
-import {huahuoEngine} from "hhenginejs/src";
-
+import {huahuoEngine} from "hhenginejs";
 import huahuoProperties from "./hhide.properties";
+
+import "./i18nInit"
 
 library.add(faMinus)
 library.add(faPlus)
