@@ -1,5 +1,9 @@
 {
   "helloWorld": "你好！",
   "save": "保存",
-  "uploadAndOpen": "上传并打开"
+  "uploadAndOpen": "上传并打开",
+  "tools": "工具",
+  "logs": "日志",
+  "scene": "场景",
+  "zoomin": "放大"
 }

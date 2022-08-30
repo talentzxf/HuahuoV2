@@ -9,6 +9,7 @@ import {EditorPlayer} from "./EditorPlayer";
 import {fileLoader} from "./FileLoader";
 import {findParentContent, findParentPanel} from "../Utilities/PanelUtilities";
 import {sceneViewManager} from "./SceneViewManager";
+import i18next from "i18next";
 
 @CustomElement({
     selector: "hh-sceneview"
@@ -144,7 +145,7 @@ class SceneView extends HTMLElement {
         this.appendChild(this.gizmoContainer)
 
         this.zoomInBtn = document.createElement("button")
-        this.zoomInBtn.innerHTML = "ZoomIn"
+        this.zoomInBtn.innerHTML = i18next.t("zoomin")
         this.zoomInBtn.style.userSelect = 'none'
         this.zoomInBtn.onclick = () => {
             renderEngine2D.zoomIn()

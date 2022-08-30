@@ -1,5 +1,9 @@
 {
   "helloWorld": "Hello World!",
   "save": "Save",
-  "uploadAndOpen": "Upload and Open"
+  "uploadAndOpen": "Upload and Open",
+  "tools": "Tools",
+  "logs": "Logs",
+  "scene": "Scene",
+  "zoomin": "ZoomIn"
 }
