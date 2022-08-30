@@ -153,7 +153,7 @@ class SceneView extends HTMLElement {
         this.gizmoContainer.appendChild(this.zoomInBtn)
 
         this.zoomOutBtn = document.createElement("button")
-        this.zoomOutBtn.innerHTML = "ZoomOut"
+        this.zoomOutBtn.innerHTML = i18next.t("zoomout")
         this.zoomOutBtn.style.userSelect = 'none'
         this.zoomOutBtn.onclick = () => {
             renderEngine2D.zoomOut()
@@ -161,7 +161,7 @@ class SceneView extends HTMLElement {
         this.gizmoContainer.appendChild(this.zoomOutBtn)
 
         this.zoomResetBtn = document.createElement("button")
-        this.zoomResetBtn.innerHTML = "Reset"
+        this.zoomResetBtn.innerHTML = i18next.t("reset")
         this.zoomResetBtn.style.userSelect = 'none'
         this.zoomResetBtn.onclick = () => {
             renderEngine2D.zoomReset()
@@ -187,7 +187,8 @@ class SceneView extends HTMLElement {
             this.createCanvas()
             renderEngine2D.init(this.canvas)
 
-            this.createGizmos();
+            i18next.on("loaded", this.createGizmos.bind(this)) // Need translate here!
+
             // this.drawCoordinate();
             this.setupEventsAndCreateFirstTrack()
 

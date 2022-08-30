@@ -2,6 +2,7 @@ import {shapes} from "../ShapeDrawers/Shapes";
 import {CustomElement, Logger} from "hhcommoncomponents"
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
+import i18next from "i18next";
 
 @CustomElement({
     selector: "hh-draw-toolbar"
@@ -20,8 +21,7 @@ class DrawToolBar extends HTMLElement{
         button.style.backgroundColor = bgColor
     }
 
-    connectedCallback(){
-
+    initializeTools(loaded){
         for(let shape of shapes){
             this.createButton(shape)
             if(shape.isDefaultDrawer())
@@ -30,6 +30,10 @@ class DrawToolBar extends HTMLElement{
 
         EventBus.getInstance().on(EventNames.DRAWSHAPEBEGINS, this.onDrawShapeBegins.bind(this))
         EventBus.getInstance().on(EventNames.DRAWSHAPEENDS, this.onEndOfDrawingShape.bind(this))
+    }
+
+    connectedCallback(){
+        i18next.on("loaded", this.initializeTools.bind(this))
     }
 
     getButtonFromDrawer(drawer: BaseShapeDrawer){
@@ -69,7 +73,7 @@ class DrawToolBar extends HTMLElement{
             img.src = shape.imgCss
         }
 
-        img.title = shape.name
+        img.title = i18next.t(shape.name)
         img.style.width = "20px"
         img.style.height = "20px"
 

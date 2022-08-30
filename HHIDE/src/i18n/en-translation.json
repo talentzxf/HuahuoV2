@@ -5,5 +5,9 @@
   "tools": "Tools",
   "logs": "Logs",
   "scene": "Scene",
-  "zoomin": "ZoomIn"
+  "zoomin": "ZoomIn",
+  "zoomout": "ZoomOut",
+  "reset": "Reset",
+  "unknown_shape": "Unknown Shape",
+  "ShapeSelector": "ShapeSelector"
 }
