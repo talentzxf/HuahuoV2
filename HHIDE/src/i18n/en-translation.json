@@ -9,5 +9,8 @@
   "zoomout": "ZoomOut",
   "reset": "Reset",
   "unknown_shape": "Unknown Shape",
-  "ShapeSelector": "ShapeSelector"
+  "ShapeSelector": "ShapeSelector",
+  "Circle": "Circle",
+  "Curve": "Curve",
+  "Image": "Element"
 }

@@ -9,5 +9,8 @@
   "zoomout": "缩小",
   "reset": "重置",
   "unknown_shape": "未知形状",
-  "ShapeSelector": "形状选择器"
+  "ShapeSelector": "形状选择器",
+  "Circle": "圆形",
+  "Curve": "自由曲线",
+  "Image": "图片"
 }
