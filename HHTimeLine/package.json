@@ -11,15 +11,15 @@
   "license": "ISC",
   "devDependencies": {
     "ejs-loader": "^0.5.0",
+    "hhcommoncomponents": "file:../HHCommonComponents",
+    "hhenginejs": "file:../HHEngineJS",
     "html-webpack-plugin": "^5.5.0",
     "tiny-typed-emitter": "^2.1.0",
     "ts-loader": "^9.3.0",
     "typescript": "^4.7.2",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.9.0",
-    "hhcommoncomponents": "file:../HHCommonComponents",
-    "hhenginejs": "file:../HHEngineJS"
+    "webpack-dev-server": "^4.9.0"
   },
   "peerDependencies": {
     "hhcommoncomponents": "file:../HHCommonComponents",
