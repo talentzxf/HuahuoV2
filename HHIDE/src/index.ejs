@@ -26,8 +26,13 @@
 
 </head>
 <body>
+<div id="loading">
+    Loading...
+</div>
+
+<div id="mainScene" style="width: 100%; height: 100%; display: none">
     <rgba-color-picker></rgba-color-picker>
-    <hh-container id="outmost_container" translateAll='true'>
+    <hh-container id="outmost_container" translateAll='true' hide="true">
         <hh-container direction="row" size="fit-content" hasSplitter="false">
             <hh-userinfo-bar></hh-userinfo-bar>
             <button onclick="window.menuoperations.save()">save</button>
@@ -66,15 +71,16 @@
                     </hh-panel>
                 </hh-container>
             </hh-container>
-            <hh-container direction="row" style="height:10%">
-                <hh-panel>
-                    <hh-content title="logs" style="width:100%; height:100%">
-                        <textarea id="stdout" style="height:100%;width: 100%;resize:none;box-sizing:border-box;overflow-y:auto;overflow-x:auto;" disabled></textarea>
-                    </hh-content>
-                </hh-panel>
-            </hh-container>
+<!--            <hh-container direction="row" style="height:10%">-->
+<!--                <hh-panel>-->
+<!--                    <hh-content title="logs" style="width:100%; height:100%">-->
+<!--                        <textarea id="stdout" style="height:100%;width: 100%;resize:none;box-sizing:border-box;overflow-y:auto;overflow-x:auto;" disabled></textarea>-->
+<!--                    </hh-content>-->
+<!--                </hh-panel>-->
+<!--            </hh-container>-->
         </hh-container>
     </hh-container>
+</div>
 
     <script lang="text/javascript">
         var Module = {

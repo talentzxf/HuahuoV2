@@ -34,6 +34,7 @@ import {saveAs} from 'file-saver';
 import {Logger} from "hhcommoncomponents";
 import {huahuoEngine} from "hhenginejs";
 import huahuoProperties from "./hhide.properties";
+import {init} from "./init"
 
 import "./i18nInit"
 
@@ -111,3 +112,5 @@ window.menuoperations = {
     load: load,
     uploadAndOpenPlayer: uploadAndOpenPlayer
 }
+
+init()
