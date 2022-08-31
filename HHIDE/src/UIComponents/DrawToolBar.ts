@@ -22,14 +22,16 @@ class DrawToolBar extends HTMLElement{
     }
 
     initializeTools(loaded){
-        for(let shape of shapes){
-            this.createButton(shape)
-            if(shape.isDefaultDrawer())
-                this.defaultDrawer = shape;
-        }
+        if(loaded.hasOwnProperty("en")){
+            for(let shape of shapes){
+                this.createButton(shape)
+                if(shape.isDefaultDrawer())
+                    this.defaultDrawer = shape;
+            }
 
-        EventBus.getInstance().on(EventNames.DRAWSHAPEBEGINS, this.onDrawShapeBegins.bind(this))
-        EventBus.getInstance().on(EventNames.DRAWSHAPEENDS, this.onEndOfDrawingShape.bind(this))
+            EventBus.getInstance().on(EventNames.DRAWSHAPEBEGINS, this.onDrawShapeBegins.bind(this))
+            EventBus.getInstance().on(EventNames.DRAWSHAPEENDS, this.onEndOfDrawingShape.bind(this))
+        }
     }
 
     connectedCallback(){
