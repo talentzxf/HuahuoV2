@@ -11,12 +11,14 @@ function init(){
     huahuoEngine.ExecuteAfterInited(()=>{
         if(i18next.isInitialized)
             showMainDiv()
+        else{
+            i18next.on("loaded", function(load){
+                if(load.hasOwnProperty("en")){
+                    showMainDiv()
+                }
+            })
+        }
 
-        i18next.on("load", function(load){
-            if(load.hasOwnProperty("en")){
-               showMainDiv()
-            }
-        })
     })
 }
 
