@@ -9,7 +9,6 @@ import {EditorPlayer} from "./EditorPlayer";
 import {fileLoader} from "./FileLoader";
 import {findParentContent, findParentPanel} from "../Utilities/PanelUtilities";
 import {sceneViewManager} from "./SceneViewManager";
-import i18next from "i18next";
 
 @CustomElement({
     selector: "hh-sceneview"
@@ -145,7 +144,7 @@ class SceneView extends HTMLElement {
         this.appendChild(this.gizmoContainer)
 
         this.zoomInBtn = document.createElement("button")
-        this.zoomInBtn.innerHTML = i18next.t("zoomin")
+        this.zoomInBtn.innerHTML = (window as any).i18n.t("zoomin")
         this.zoomInBtn.style.userSelect = 'none'
         this.zoomInBtn.onclick = () => {
             renderEngine2D.zoomIn()
@@ -153,7 +152,7 @@ class SceneView extends HTMLElement {
         this.gizmoContainer.appendChild(this.zoomInBtn)
 
         this.zoomOutBtn = document.createElement("button")
-        this.zoomOutBtn.innerHTML = i18next.t("zoomout")
+        this.zoomOutBtn.innerHTML = (window as any).i18n.t("zoomout")
         this.zoomOutBtn.style.userSelect = 'none'
         this.zoomOutBtn.onclick = () => {
             renderEngine2D.zoomOut()
@@ -161,7 +160,7 @@ class SceneView extends HTMLElement {
         this.gizmoContainer.appendChild(this.zoomOutBtn)
 
         this.zoomResetBtn = document.createElement("button")
-        this.zoomResetBtn.innerHTML = i18next.t("reset")
+        this.zoomResetBtn.innerHTML = (window as any).i18n.t("reset")
         this.zoomResetBtn.style.userSelect = 'none'
         this.zoomResetBtn.onclick = () => {
             renderEngine2D.zoomReset()
@@ -187,7 +186,7 @@ class SceneView extends HTMLElement {
             this.createCanvas()
             renderEngine2D.init(this.canvas)
 
-            i18next.on("loaded", this.createGizmos.bind(this)) // Need translate here!
+            (window as any).i18n.ExecuteAfterInited(this.createGizmos.bind(this)) // Need translate here!
 
             // this.drawCoordinate();
             this.setupEventsAndCreateFirstTrack()

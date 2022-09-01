@@ -1,5 +1,4 @@
 import {huahuoEngine} from "hhenginejs";
-import i18next from "i18next";
 
 function showMainDiv(){
     let loadingElement = document.querySelector("#loading") as HTMLDivElement
@@ -7,18 +6,14 @@ function showMainDiv(){
     let mainDiv = document.querySelector("#mainScene") as HTMLDivElement
     mainDiv.style.display = "block"
 }
+
+let i18n = (window as any).i18n
+
 function init(){
     huahuoEngine.ExecuteAfterInited(()=>{
-        if(i18next.isInitialized)
+        i18n.ExecuteAfterInited(()=>{
             showMainDiv()
-        else{
-            i18next.on("loaded", function(load){
-                if(load.hasOwnProperty("en")){
-                    showMainDiv()
-                }
-            })
-        }
-
+        })
     })
 }
 

@@ -11,7 +11,6 @@ import {LoginForm} from "./Identity/LoginForm";
 import {RegisterForm} from "./Identity/RegisterForm";
 import {UserInfoBar} from "./Identity/UserInfoBar";
 import {dataFileUploader} from "./RESTApis/DataFileUploader";
-import i18next from "i18next"
 
 import "vanilla-colorful"
 

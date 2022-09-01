@@ -12,5 +12,14 @@
   "ShapeSelector": "ShapeSelector",
   "Circle": "Circle",
   "Curve": "Curve",
-  "Image": "Element"
+  "Image": "Element",
+  "Line": "Line",
+  "Mirror": "Mirror",
+  "Rectangle": "Rectangle",
+  "Text": "Text",
+  "not_logged_in": "Not Logged In",
+  "sendToBack": "Send To Back",
+  "bringToFront": "Bring to Front",
+  "duplicate": "Duplicate",
+  "delete": "Delete"
 }

@@ -1,6 +1,7 @@
 import {CustomElement, Logger} from "hhcommoncomponents";
 import {userInfo} from "./UserInfo";
 import {api, LoginResponse} from "../RESTApis/RestApi";
+import i18next from "i18next";
 
 @CustomElement({
     selector: "hh-userinfo-bar"
@@ -27,7 +28,11 @@ class UserInfoBar extends HTMLElement {
             this.usernameSpan = document.createElement("span")
             this.appendChild(this.usernameSpan)
 
-            this.username = "Not Logged In"
+            let _this = this
+            let i18n = (window as any).i18n
+            i18n.ExecuteAfterInited( ()=>{
+                _this.username = i18n.t("not_logged_in")
+            })
 
             userInfo.addLoginEventHandler(this.setUserName.bind(this))
 

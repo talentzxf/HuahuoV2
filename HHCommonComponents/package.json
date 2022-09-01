@@ -21,6 +21,10 @@
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.9.0",
-    "typescript-declaration-webpack-plugin": "^0.2.2"
+    "typescript-declaration-webpack-plugin": "^0.2.2",
+    "i18next": "^21.9.1",
+    "i18next-browser-languagedetector": "^6.1.5",
+    "i18next-http-backend": "^1.4.1",
+    "i18next-localstorage-cache": "^1.1.1"
   }
 }

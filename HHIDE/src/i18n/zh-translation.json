@@ -12,5 +12,14 @@
   "ShapeSelector": "形状选择器",
   "Circle": "圆形",
   "Curve": "自由曲线",
-  "Image": "图片"
+  "Image": "图片",
+  "Line": "直线",
+  "Mirror": "镜像",
+  "Rectangle": "矩形",
+  "Text": "文本",
+  "not_logged_in": "尚未登录",
+  "sendToBack": "放到下面",
+  "bringToFront": "放到上面",
+  "duplicate": "复制形状",
+  "delete": "删除形状"
 }

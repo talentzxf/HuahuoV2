@@ -14,7 +14,7 @@ import {findParentContent} from "../Utilities/PanelUtilities";
 import {objectDeleter} from "./ObjectDeleter";
 
 
-const BOUNDMARGIN:number = 10
+const BOUNDMARGIN: number = 10
 const VERYNEARMARGIN = 10
 const NEARBOUNDMARGIN = 25
 
@@ -54,21 +54,21 @@ class ShapeSelector extends BaseShapeDrawer {
         return true
     }
 
-    sendSelectedToBack(){
-        for(let shape of this.selectedShapes){
+    sendSelectedToBack() {
+        for (let shape of this.selectedShapes) {
             shape.sendToBack()
         }
     }
 
-    bringToFrond(){
-        for(let shape of this.selectedShapes){
+    bringToFrond() {
+        for (let shape of this.selectedShapes) {
             shape.bringToFront()
         }
     }
 
-    duplicateShape(){
+    duplicateShape() {
         console.log("Trying to duplicate shape")
-        for(let shape of this.selectedShapes){
+        for (let shape of this.selectedShapes) {
             console.log("Duplicating shape")
             let duplicatedShape = shape.duplicate();
 
@@ -84,48 +84,53 @@ class ShapeSelector extends BaseShapeDrawer {
         this.canvas = canvas
         this.clearSelection()
 
-        // setup right click context menu
-        if(!this.contextMenuInitedMap.get(canvas)){
-            this.canvas.addEventListener("contextmenu", this.contextMenu.onContextMenu.bind(this.contextMenu))
+        let _this = this
 
-            let _this = this
-            this.contextMenu.setItems([
-                {
-                    itemName: "Send To Back",
-                    onclick: _this.sendSelectedToBack.bind(_this)
-                },
-                {
-                    itemName: "Bring to Front",
-                    onclick: _this.bringToFrond.bind(_this)
-                },
-                {
-                    itemName:"Duplicate",
-                    onclick: _this.duplicateShape.bind(_this)
-                },
-                {
-                    itemName: "Create New Element",
-                    onclick: elementCreator.onNewElement.bind(elementCreator)
-                },
-                {
-                    itemName: "Delete",
-                    onclick: _this.deleteSelectedObj.bind(_this)
-                }
+        let i18n = (window as any).i18n
+
+        i18n.ExecuteAfterInited(() => {
+
+            // setup right click context menu
+            if (!_this.contextMenuInitedMap.get(canvas)) {
+                _this.canvas.addEventListener("contextmenu", _this.contextMenu.onContextMenu.bind(_this.contextMenu))
+
+                _this.contextMenu.setItems([
+                    {
+                        itemName: i18n.t("sendToBack"),
+                        onclick: _this.sendSelectedToBack.bind(_this)
+                    },
+                    {
+                        itemName: i18n.t("bringToFront"),
+                        onclick: _this.bringToFrond.bind(_this)
+                    },
+                    {
+                        itemName: i18n.t("duplicate"),
+                        onclick: _this.duplicateShape.bind(_this)
+                    },
+                    {
+                        itemName: i18n.t("createNewElement"),
+                        onclick: elementCreator.onNewElement.bind(elementCreator)
+                    },
+                    {
+                        itemName: i18n.t("Delete"),
+                        onclick: _this.deleteSelectedObj.bind(_this)
+                    }
                 ])
 
-            // Setup other short cuts.
-            let parentContent = findParentContent(this.canvas)
-            parentContent.addEventListener('keydown', this.onKeyDown.bind(this))
+                // Setup other short cuts.
+                let parentContent = findParentContent(_this.canvas)
+                parentContent.addEventListener('keydown', _this.onKeyDown.bind(this))
 
-            this.contextMenuInitedMap.set(this.canvas, true)
-
-            EventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onShapeSelected.bind(this))
-        }
+                _this.contextMenuInitedMap.set(_this.canvas, true)
+            }
+        })
+        EventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onShapeSelected.bind(this))
     }
 
-    onShapeSelected(property, targetObj: any){
+    onShapeSelected(property, targetObj: any) {
         console.log("Something selected")
-        if(targetObj instanceof paper.Segment){
-            if(this.selectedSegment && this.selectedSegment != targetObj){
+        if (targetObj instanceof paper.Segment) {
+            if (this.selectedSegment && this.selectedSegment != targetObj) {
                 this.selectedSegment.selected = false
                 this.selectedSegment.handleIn.selected = false
                 this.selectedSegment.handleOut.selected = false
@@ -136,14 +141,13 @@ class ShapeSelector extends BaseShapeDrawer {
     }
 
 
-
-    deleteSelectedObj(){
-        if(this.selectedSegment){
+    deleteSelectedObj() {
+        if (this.selectedSegment) {
             objectDeleter.deleteSegment(this.selectedSegment)
 
             this.selectedSegment = null
-        }else{
-            for(let shape of this.selectedShapes){
+        } else {
+            for (let shape of this.selectedShapes) {
                 objectDeleter.deleteShape(shape)
             }
 
@@ -151,33 +155,33 @@ class ShapeSelector extends BaseShapeDrawer {
         }
     }
 
-    onKeyDown(e:KeyboardEvent){
+    onKeyDown(e: KeyboardEvent) {
         let targetContent = e.target as HHContent
-        if(!targetContent.getAttribute("selected"))
+        if (!targetContent.getAttribute("selected"))
             return
 
         let handled = false
-        if(e.ctrlKey && e.code == 'KeyD'){
+        if (e.ctrlKey && e.code == 'KeyD') {
             this.duplicateShape()
             handled = true
-        } else if(e.code == "Delete"){
+        } else if (e.code == "Delete") {
             handled = true
 
             this.deleteSelectedObj()
         }
 
-        if(handled){
+        if (handled) {
             e.preventDefault()
             e.stopPropagation()
         }
     }
 
     // Find the outmost parent of the shape (Will change to find the correct hierarchy later
-    findParentOf(shape:BaseShapeJS){
+    findParentOf(shape: BaseShapeJS) {
         let parent = shape.getParent()
         let itr = shape
 
-        while(parent != null){
+        while (parent != null) {
             itr = parent
             parent = parent.getParent()
         }
@@ -227,8 +231,8 @@ class ShapeSelector extends BaseShapeDrawer {
         EventBus.getInstance().emit(EventNames.OBJECTSELECTED, selectedObj.getPropertySheet(), selectedObj)
     }
 
-    clearSelection(updateSelectedShapes:boolean = true) {
-        if(updateSelectedShapes){
+    clearSelection(updateSelectedShapes: boolean = true) {
+        if (updateSelectedShapes) {
             // 1. Clear current selections. TODO: How about multiple selection ???
             for (let shape of this.selectedShapes) {
                 shape.selected = false
@@ -263,7 +267,7 @@ class ShapeSelector extends BaseShapeDrawer {
     }
 
     showRotateScaleCursor(pos: Vector2) {
-        if (this.selectedShapes.size != 1){
+        if (this.selectedShapes.size != 1) {
             this.canvas.style.cursor = "default"
             this.transformHandler = null
             return
@@ -274,7 +278,7 @@ class ShapeSelector extends BaseShapeDrawer {
         let targetShape = this.selectedShapes.values().next().value
         let bounds = relaxRectangle(targetShape.paperShape.bounds, BOUNDMARGIN)
 
-        if(!bounds.contains(targetPos)){
+        if (!bounds.contains(targetPos)) {
             if (pointsNear(bounds.topLeft, targetPos, VERYNEARMARGIN)) {
                 this.canvas.style.cursor = "nw-resize"
                 this.setTransformHandler(this.selectedShapes, pos, shapeScaleHandler)
@@ -320,10 +324,10 @@ class ShapeSelector extends BaseShapeDrawer {
             if (this.transformHandler && this.transformHandler.getIsDragging()) {
                 this.transformHandler.dragging(pos)
 
-                for(let shape of this.selectedShapes){
+                for (let shape of this.selectedShapes) {
                     let targetStoreId = shape.getBornStoreId()
 
-                    while(targetStoreId){
+                    while (targetStoreId) {
                         elementCreator.dispatchElementChange(targetStoreId)
                         targetStoreId = huahuoEngine.getElementParentByStoreId(targetStoreId)
                     }
@@ -360,7 +364,7 @@ class ShapeSelector extends BaseShapeDrawer {
     onMouseUp(evt: MouseEvent) {
         super.onMouseUp(evt);
 
-        if(this.transformHandler){
+        if (this.transformHandler) {
             this.transformHandler.endMove();
             this.transformHandler = null;
         }
@@ -391,9 +395,9 @@ class ShapeSelector extends BaseShapeDrawer {
 
     onDblClick(evt: MouseEvent) {
         super.onDblClick(evt);
-        if(this.selectedShapes.size == 1){
+        if (this.selectedShapes.size == 1) {
             let selectedShape = this.selectedShapes.values().next().value
-            if(selectedShape.getTypeName() == "ElementShape"){
+            if (selectedShape.getTypeName() == "ElementShape") {
                 elementCreator.openElementEditTab(selectedShape)
             }
         }
