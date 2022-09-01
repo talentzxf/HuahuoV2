@@ -8,21 +8,23 @@ import {findParentPanel} from "../Utilities/PanelUtilities";
     selector: "hh-inspector"
 })
 class Inspector extends HTMLElement{
+    contentScrollerDiv:HTMLDivElement;
     contentDiv:HTMLElement;
     propertyDescArray: Array<BasePropertyDesc> = new Array<BasePropertyDesc>()
 
     connectedCallback() {
-        let parentHeight = this.parentElement.parentElement.clientHeight;
+        let parentPanel = findParentPanel(this)
+        let parentHeight = parentPanel.clientHeight;
 
-        let div = document.createElement("div")
-        div.style.width = "100%"
-        div.style.height = parentHeight + "px"
-        div.style.overflowY = "scroll"
-        this.appendChild(div)
+        this.contentScrollerDiv = document.createElement("div")
+        this.contentScrollerDiv .style.width = "100%"
+        this.contentScrollerDiv .style.height = parentHeight + "px"
+        this.contentScrollerDiv .style.overflowY = "scroll"
+        this.appendChild(this.contentScrollerDiv )
 
         this.contentDiv = document.createElement("div")
         this.contentDiv.style.width="100%"
-        div.appendChild(this.contentDiv)
+        this.contentScrollerDiv.appendChild(this.contentDiv)
 
         EventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
         EventBus.getInstance().on(EventNames.UNSELECTOBJECTS, this.unselectObjects.bind(this))
@@ -47,6 +49,11 @@ class Inspector extends HTMLElement{
     onItemSelected(propertySheet: PropertySheet){
 
         findParentPanel(this).style.display = "block"
+
+        let parentPanel = findParentPanel(this)
+        let parentHeight = parentPanel.clientHeight;
+
+        this.contentScrollerDiv.style.height = parentHeight + "px"
 
         Logger.info("Selected something")
         this.clearCurrentProperties()

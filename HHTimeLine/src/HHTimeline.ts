@@ -39,6 +39,7 @@ class HHTimeline extends HTMLElement {
         // Because canvas has a width limit. So the canvas can't be very big: https://www.tutorialspoint.com/Maximum-size-of-a-canvas-element-in-HTML#:~:text=All%20web%20browsers%20limit%20the,allowable%20area%20is%20268%2C435%2C456%20pixels.
 
         this.canvasScrollContainer = document.createElement("div")
+        this.canvasScrollContainer.id = "canvasScrollContainer"
         this.canvasContainer = document.createElement("div")
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
@@ -66,6 +67,8 @@ class HHTimeline extends HTMLElement {
 
         this.canvas.addEventListener('contextmenu', this.contextMenu.onContextMenu.bind(this.contextMenu))
         this.setTimeElapsed(0.5 / GlobalConfig.fps)
+
+        this.Resize()
     }
 
     setTimeElapsed(playTime) {
@@ -239,10 +242,18 @@ class HHTimeline extends HTMLElement {
         let heightPixel: number = this.totalTrackHeight;
         this.canvasContainer.style.width = widthPixel + "px";
         this.canvasContainer.style.height = heightPixel + "px";
-        this.canvas.width = this.canvasScrollContainer.clientWidth;
-        this.canvas.height = this.canvasScrollContainer.clientHeight;
 
-        this.redrawCanvas();
+        console.log("HHTimeline, setting canvasContainerWH:" + this.canvasContainer.style.width + this.canvasContainer.style.width)
+
+        let _this = this
+        setTimeout(()=>{
+
+            console.log("HHTimeline, setting canvasWidth,canvasHeight:" + _this.canvasScrollContainer.clientWidth, _this.canvasScrollContainer.clientHeight)
+            _this.canvas.width = _this.canvasScrollContainer.clientWidth;
+            _this.canvas.height = _this.canvasScrollContainer.clientHeight;
+
+            _this.redrawCanvas();
+        }, 0)
     }
 
     onScroll() {
@@ -278,6 +289,7 @@ class HHTimeline extends HTMLElement {
     }
 
     redrawCanvas() {
+        console.log("TimeLine: Redraw canvas!!!!" + this.canvasWidth + "," + this.canvasHeight)
         this.updateStartEndPos()
 
         // Clear bg
