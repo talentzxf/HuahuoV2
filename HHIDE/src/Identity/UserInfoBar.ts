@@ -1,7 +1,6 @@
 import {CustomElement, Logger} from "hhcommoncomponents";
 import {userInfo} from "./UserInfo";
-import {api, LoginResponse} from "../RESTApis/RestApi";
-import i18next from "i18next";
+import {api} from "../RESTApis/RestApi";
 
 @CustomElement({
     selector: "hh-userinfo-bar"

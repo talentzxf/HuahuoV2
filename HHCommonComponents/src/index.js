@@ -11,5 +11,7 @@ if(!window.i18n){
     window.i18n = new I18nHandler()
 }
 
-export {ContextMenu, CustomElement, Logger, Vector2, pointsNear, relaxRectangle, PropertySheet, Property, PropertyType, getMimeTypeFromDataURI, dataURItoBlob}
+let i18n = window.i18n
+
+export {i18n, ContextMenu, CustomElement, Logger, Vector2, pointsNear, relaxRectangle, PropertySheet, Property, PropertyType, getMimeTypeFromDataURI, dataURItoBlob}
 
