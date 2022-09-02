@@ -369,6 +369,7 @@ abstract class BaseShapeJS {
                 },
                 {
                     key: "inspector.FollowPath",
+                    type: PropertyType.VECTOR2,
                     getter: this.getPosition.bind(this),
                     setter: this.setPosition.bind(this),
                     registerValueChangeFunc: this.registerValueChangeHandler("position").bind(this),

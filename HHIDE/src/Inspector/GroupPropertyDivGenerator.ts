@@ -11,22 +11,60 @@ class GroupPropertyDesc extends BasePropertyDesc{
 
         let groupPropertyDiv = document.createElement("div")
 
+        groupPropertyDiv.style.borderStyle = "solid"
+        groupPropertyDiv.style.borderWidth = "1px"
+        groupPropertyDiv.style.borderColor = "blue"
+
         let titleDivs = document.createElement("div")
+        titleDivs.style.display = "flex"
+        titleDivs.style.flexDirection = "row"
         groupPropertyDiv.appendChild(titleDivs)
 
         let contentDivs = document.createElement("div")
         groupPropertyDiv.appendChild(contentDivs)
+
+        let firstProperty = true
 
         for(let childProperty of property.children){
 
             let divGenerator = GetPropertyDivGenerator(childProperty.type)
             let propertyDesc = divGenerator.generatePropertyDesc(childProperty)
 
-            titleDivs.appendChild(propertyDesc.getTitleDiv())
-            this.titleTabs.push(titleDivs)
+            let titleDiv = propertyDesc.getTitleDiv()
+            if(firstProperty)
+                titleDiv.style.background = "darkgray"
+            else
+                titleDiv.style.background = "lightgray"
 
-            contentDivs.appendChild(propertyDesc.getContentDiv())
-            this.contentDivs.push(contentDivs)
+            titleDivs.appendChild(titleDiv)
+            this.titleTabs.push(titleDiv)
+
+            let contentDiv = propertyDesc.getContentDiv()
+
+            if(firstProperty)
+                contentDiv.style.display = "none"
+            else
+                contentDiv.style.display = "block"
+
+            contentDivs.appendChild(contentDiv)
+            this.contentDivs.push(contentDiv)
+
+            let _this = this
+            titleDiv.addEventListener("mousedown", function(){
+                for(let titleTab of _this.titleTabs){
+                    titleTab.style.background = "lightgray"
+                }
+
+                titleDiv.style.background = "darkgray"
+
+                for(let candidateDiv of _this.contentDivs){
+                    candidateDiv.style.display = "none"
+                }
+
+                contentDiv.style.display = "block"
+            })
+
+            firstProperty = false
         }
 
         this.contentDiv.appendChild(groupPropertyDiv)
