@@ -41,7 +41,9 @@
       "Frames": "帧数"
     },
     "FixedPosition": "指定",
-    "FollowPath": "跟随"
+    "FollowPath": "跟随",
+    "Unknown": "未知",
+    "Pickup": "选择"
   },
   "timeline": {
     "Frames": "帧",

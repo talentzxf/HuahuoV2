@@ -42,9 +42,9 @@ class GroupPropertyDesc extends BasePropertyDesc{
             let contentDiv = propertyDesc.getContentDiv()
 
             if(firstProperty)
-                contentDiv.style.display = "none"
-            else
                 contentDiv.style.display = "block"
+            else
+                contentDiv.style.display = "none"
 
             contentDivs.appendChild(contentDiv)
             this.contentDivs.push(contentDiv)

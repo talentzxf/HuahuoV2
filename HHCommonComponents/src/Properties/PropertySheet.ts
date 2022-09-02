@@ -4,7 +4,8 @@ enum PropertyType{
     FLOAT,
     COLOR,
     BUTTON,
-    GROUP
+    GROUP,
+    REFERENCE
 }
 
 class Property{

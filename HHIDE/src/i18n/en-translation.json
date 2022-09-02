@@ -41,7 +41,9 @@
       "Frames": "Frames"
     },
     "FixedPosition": "Fixed",
-    "FollowPath": "Follow"
+    "FollowPath": "Follow",
+    "Unknown": "Unknown",
+    "Pickup": "PickUp"
   },
   "timeline": {
     "Frames": "Frames",

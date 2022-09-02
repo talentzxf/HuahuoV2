@@ -31,6 +31,10 @@ abstract class BaseShapeJS {
 
     private shapeCenterSelector: ShapeCenterSelector;
 
+    get typename(): string{
+        return this.rawObj.GetTypeName()
+    }
+
     get pivotPosition(): paper.Point {
         return this.rawObj.GetGlobalPivotPosition()
     }
@@ -331,6 +335,17 @@ abstract class BaseShapeJS {
         this.store()
     }
 
+    // TODO: Move this into Cpp part
+    followCurve: BaseShapeJS
+
+    getFollowCurve(){
+        return this.followCurve
+    }
+
+    setFollowCurve(curve:BaseShapeJS){
+        this.followCurve = curve
+    }
+
     afterWASMReady() {
         this.rawObj = castObject(this.rawObj, Module[this.getShapeName()]);
 
@@ -343,16 +358,6 @@ abstract class BaseShapeJS {
             type: PropertyType.STRING,
             getter: this.getTypeName.bind(this)
         })
-
-        // // Position
-        // this.propertySheet.addProperty({
-        //     key: "inspector.Position",
-        //     type: PropertyType.VECTOR2,
-        //     getter: this.getPosition.bind(this),
-        //     setter: this.setPosition.bind(this),
-        //     registerValueChangeFunc: this.registerValueChangeHandler("position").bind(this),
-        //     unregisterValueChangeFunc: this.unregisterValueChangeHandler("position").bind(this)
-        // });
 
         // Position
         this.propertySheet.addProperty({
@@ -369,11 +374,9 @@ abstract class BaseShapeJS {
                 },
                 {
                     key: "inspector.FollowPath",
-                    type: PropertyType.VECTOR2,
-                    getter: this.getPosition.bind(this),
-                    setter: this.setPosition.bind(this),
-                    registerValueChangeFunc: this.registerValueChangeHandler("position").bind(this),
-                    unregisterValueChangeFunc: this.unregisterValueChangeHandler("position").bind(this)
+                    type: PropertyType.REFERENCE,
+                    getter: this.getFollowCurve.bind(this),
+                    setter: this.setFollowCurve.bind(this)
                 }
             ]
         });
