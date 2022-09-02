@@ -33,7 +33,8 @@
     "Rotation": "旋转",
     "FillColor": "填充颜色",
     "StrokeColor": "描边颜色",
-    "StrokeWidth": "描边宽度"
+    "StrokeWidth": "描边宽度",
+    "enclose": "封闭"
   },
   "RectangleShape": "矩形",
   "CircleShape": "圆形",

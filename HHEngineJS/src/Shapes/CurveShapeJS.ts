@@ -49,7 +49,7 @@ class CurveShapeJS extends BaseSolidShape{
         super.afterWASMReady();
 
         this.propertySheet.addProperty({
-            key: "EnClose",
+            key: "inspector.enclose",
             type: PropertyType.BUTTON,
             action: this.encloseCurve.bind(this)
         })

@@ -33,7 +33,8 @@
     "Rotation": "Rotation",
     "FillColor": "FillColor",
     "StrokeColor": "StrokeColor",
-    "StrokeWidth": "StrokeWidth"
+    "StrokeWidth": "StrokeWidth",
+    "enclose": "EnClose"
   },
   "RectangleShape": "Rectangle",
   "CircleShape": "Circle",
