@@ -117,7 +117,9 @@ class HHTimeline extends HTMLElement {
     addNewTrack(layer = null, icons: Array<any> = null) {
         let seqId = this.timelineTracks.length;
 
-        let title = (window as any).i18n.t("timeline.defaultTrackName", {trackId:seqId})
+        console.log("TimeLine: Sequence is:" + seqId)
+
+        let title = (window as any).i18n.t("timeline.defaultTrackName", {"trackId":seqId})
 
         let track = new TimelineTrack(seqId, this.frameCount, this.canvas.getContext('2d'), this.totalTrackHeight, layer, title)
         if(icons && icons.length > 0){

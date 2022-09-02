@@ -22,7 +22,7 @@ class I18nHandler{
         }
     }
 
-    t(...args:string[]):string{
+    t(...args):string{
         return i18next.t.apply(i18next, args)
     }
 }

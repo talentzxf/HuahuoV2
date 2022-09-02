@@ -94,23 +94,26 @@ class SceneView extends HTMLElement {
         huahuoEngine.ExecuteAfterInited(() => {
             let timeline: HHTimeline = document.querySelector("hh-timeline")
 
-            timeline.contextMenu.setItems([
-                {
-                    itemName: i18n.t("contextmenu.mergecells"),
-                    onclick: timeline.mergeCells.bind(timeline)
-                },
-                {
-                    itemName: i18n.t("contextmenu.createNewTrack"),
-                    onclick: function(e){
-                        _this.createNewTrack(timeline)
+            let i18n = (window as any).i18n;
+            i18n.ExecuteAfterInited(()=>{
+                timeline.contextMenu.setItems([
+                    {
+                        itemName: i18n.t("contextmenu.mergecells"),
+                        onclick: timeline.mergeCells.bind(timeline)
+                    },
+                    {
+                        itemName: i18n.t("contextmenu.createNewTrack"),
+                        onclick: function(e){
+                            _this.createNewTrack(timeline)
+                        }
                     }
-                }
-            ])
+                ])
 
-            // If no layer in the store now, create a new track.
-            let layerCount = huahuoEngine.GetCurrentStore().GetLayerCount()
-            if(layerCount == 0)
-                _this.createNewTrack(timeline)
+                // If no layer in the store now, create a new track.
+                let layerCount = huahuoEngine.GetCurrentStore().GetLayerCount()
+                if(layerCount == 0)
+                    _this.createNewTrack(timeline)
+            })
         })
     }
 
