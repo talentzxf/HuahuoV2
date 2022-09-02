@@ -3,7 +3,8 @@ enum PropertyType{
     VECTOR2,
     FLOAT,
     COLOR,
-    BUTTON
+    BUTTON,
+    GROUP
 }
 
 class Property{
@@ -13,8 +14,8 @@ class Property{
     getter?: Function
     registerValueChangeFunc?: Function
     unregisterValueChangeFunc?: Function
-
-    action?: Function
+    action?: Function // For Button property
+    children: Array<Property> // For Group property
 }
 
 class PropertySheet{

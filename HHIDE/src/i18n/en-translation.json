@@ -39,7 +39,9 @@
     "enclose": "EnClose",
     "image": {
       "Frames": "Frames"
-    }
+    },
+    "FixedPosition": "Fixed",
+    "FollowPath": "Follow"
   },
   "timeline": {
     "Frames": "Frames",

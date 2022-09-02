@@ -5,6 +5,7 @@ import {floatPropertyDivGenerator} from "./FloatPropertyDivGenerator";
 import {colorPropertyDivGenerator} from "./ColorPropertyDivGenerator";
 import {stringPropertyDivGenerator} from "./StringPropertyDivGenerator";
 import {buttonPropertyDivGenerator} from "./ButtonPropertyDivGenerator";
+import {groupPropertyDivGenerator} from "./GroupPropertyDivGenerator";
 
 
 // Avoid being imported twice.
@@ -15,5 +16,6 @@ if(!window["IsTypesRegistered"]){
     RegisterDivGenerator(PropertyType.VECTOR2, vector2PropertyGenerator)
     RegisterDivGenerator(PropertyType.STRING, stringPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.BUTTON, buttonPropertyDivGenerator)
+    RegisterDivGenerator(PropertyType.GROUP, groupPropertyDivGenerator)
     window["IsTypeRegistered"] = true
 }

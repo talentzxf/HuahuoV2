@@ -147,7 +147,7 @@ abstract class BaseShapeJS {
     }
 
     rotateAroundPivot(angle: number) {
-        let zeroP = new paper.Point(0,0)
+        let zeroP = new paper.Point(0, 0)
         this.paperItem.rotate(angle, this.pivotPosition)
 
         let newRotationDegree = this.rawObj.GetRotation() + angle
@@ -344,14 +344,37 @@ abstract class BaseShapeJS {
             getter: this.getTypeName.bind(this)
         })
 
+        // // Position
+        // this.propertySheet.addProperty({
+        //     key: "inspector.Position",
+        //     type: PropertyType.VECTOR2,
+        //     getter: this.getPosition.bind(this),
+        //     setter: this.setPosition.bind(this),
+        //     registerValueChangeFunc: this.registerValueChangeHandler("position").bind(this),
+        //     unregisterValueChangeFunc: this.unregisterValueChangeHandler("position").bind(this)
+        // });
+
         // Position
         this.propertySheet.addProperty({
             key: "inspector.Position",
-            type: PropertyType.VECTOR2,
-            getter: this.getPosition.bind(this),
-            setter: this.setPosition.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("position").bind(this),
-            unregisterValueChangeFunc: this.unregisterValueChangeHandler("position").bind(this)
+            type: PropertyType.GROUP,
+            children: [
+                {
+                    key: "inspector.FixedPosition",
+                    type: PropertyType.VECTOR2,
+                    getter: this.getPosition.bind(this),
+                    setter: this.setPosition.bind(this),
+                    registerValueChangeFunc: this.registerValueChangeHandler("position").bind(this),
+                    unregisterValueChangeFunc: this.unregisterValueChangeHandler("position").bind(this)
+                },
+                {
+                    key: "inspector.FollowPath",
+                    getter: this.getPosition.bind(this),
+                    setter: this.setPosition.bind(this),
+                    registerValueChangeFunc: this.registerValueChangeHandler("position").bind(this),
+                    unregisterValueChangeFunc: this.unregisterValueChangeHandler("position").bind(this)
+                }
+            ]
         });
 
         this.propertySheet.addProperty({
@@ -420,7 +443,7 @@ abstract class BaseShapeJS {
     }
 
     afterCreateShape() {
-        if(!this.isPermanent){
+        if (!this.isPermanent) {
             let paperPos = this.paperShape.position
 
             let localPos = this.paperShape.globalToLocal(paperPos)
@@ -526,7 +549,7 @@ abstract class BaseShapeJS {
         return false
     }
 
-    backCalculateZeroPoint(localPos:paper.Point, globalPos: paper.Point, radian:number){
+    backCalculateZeroPoint(localPos: paper.Point, globalPos: paper.Point, radian: number) {
         let OB = localPos.x + localPos.y * Math.tan(radian)
         let OC = OB * Math.cos(radian)
         let zx = globalPos.x - OC
@@ -558,10 +581,10 @@ abstract class BaseShapeJS {
 
         let shapeZero = this.backCalculateZeroPoint(localPivotPosition, globalPivotPosition, -radian)
 
-        let offset = this.paperShape.localToGlobal(new paper.Point(0,0)) // As position is already (0,0). The global position of (0,0) indicates the center of the bounding rect.
+        let offset = this.paperShape.localToGlobal(new paper.Point(0, 0)) // As position is already (0,0). The global position of (0,0) indicates the center of the bounding rect.
 
         let newPosition = shapeZero.subtract(offset)
-        if(this.paperItem.parent)
+        if (this.paperItem.parent)
             this.paperItem.position = this.paperItem.parent.globalToLocal(newPosition)
         else
             this.paperItem.position = newPosition
