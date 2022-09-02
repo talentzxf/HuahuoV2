@@ -242,18 +242,18 @@ class HHTimeline extends HTMLElement {
         let heightPixel: number = this.totalTrackHeight;
         this.canvasContainer.style.width = widthPixel + "px";
         this.canvasContainer.style.height = heightPixel + "px";
-
         console.log("HHTimeline, setting canvasContainerWH:" + this.canvasContainer.style.width + this.canvasContainer.style.width)
 
-        let _this = this
-        setTimeout(()=>{
+        let resizeObserver = new ResizeObserver(this.OnCanvasScrollerResize.bind(this))
+        resizeObserver.observe(this.canvasScrollContainer)
+    }
 
-            console.log("HHTimeline, setting canvasWidth,canvasHeight:" + _this.canvasScrollContainer.clientWidth, _this.canvasScrollContainer.clientHeight)
-            _this.canvas.width = _this.canvasScrollContainer.clientWidth;
-            _this.canvas.height = _this.canvasScrollContainer.clientHeight;
+    OnCanvasScrollerResize(){
+        console.log("HHTimeline, setting canvasWidth,canvasHeight:" + this.canvasScrollContainer.clientWidth, this.canvasScrollContainer.clientHeight)
+        this.canvas.width = this.canvasScrollContainer.clientWidth;
+        this.canvas.height = this.canvasScrollContainer.clientHeight;
 
-            _this.redrawCanvas();
-        }, 0)
+        this.redrawCanvas();
     }
 
     onScroll() {
