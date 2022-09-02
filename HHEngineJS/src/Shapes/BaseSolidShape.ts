@@ -66,7 +66,7 @@ abstract class BaseSolidShape extends BaseShapeJS {
         super.afterWASMReady();
 
         this.propertySheet.addProperty({
-            key: "FillColor",
+            key: "inspector.FillColor",
             type: PropertyType.COLOR,
             getter: this.getFillColor.bind(this),
             setter: this.setFillColor.bind(this),
@@ -75,7 +75,7 @@ abstract class BaseSolidShape extends BaseShapeJS {
         })
 
         this.propertySheet.addProperty({
-            key:"StrokeColor",
+            key:"inspector.StrokeColor",
             type: PropertyType.COLOR,
             getter: this.getStrokeColor.bind(this),
             setter: this.setStrokeColor.bind(this),
@@ -84,7 +84,7 @@ abstract class BaseSolidShape extends BaseShapeJS {
         })
 
         this.propertySheet.addProperty({
-            key:"strokeWidth",
+            key:"inspector.StrokeWidth",
             type: PropertyType.FLOAT,
             getter: this.getStrokeWidth.bind(this),
             setter: this.setStrokeWidth.bind(this),

@@ -12,11 +12,11 @@ class StringPropertyDesc extends BasePropertyDesc{
         if(!property.setter) // Create Read only properties
         {
             let div = document.createElement("span")
-            div.innerText = currentValue
+            div.innerText = i18n.t(currentValue)
             this.contentDiv.appendChild(div)
         }else{ // Create Input
             this.input = document.createElement("input")
-            this.input.value = currentValue
+            this.input.value = i18n.t(currentValue)
             this.input.addEventListener("keyup", this.inputValueChanged.bind(this))
             this.contentDiv.append(this.input)
         }

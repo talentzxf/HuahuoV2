@@ -96,23 +96,23 @@ class ShapeSelector extends BaseShapeDrawer {
 
                 _this.contextMenu.setItems([
                     {
-                        itemName: i18n.t("sendToBack"),
+                        itemName: i18n.t("contextmenu.sendToBack"),
                         onclick: _this.sendSelectedToBack.bind(_this)
                     },
                     {
-                        itemName: i18n.t("bringToFront"),
+                        itemName: i18n.t("contextmenu.bringToFront"),
                         onclick: _this.bringToFrond.bind(_this)
                     },
                     {
-                        itemName: i18n.t("duplicate"),
+                        itemName: i18n.t("contextmenu.duplicate"),
                         onclick: _this.duplicateShape.bind(_this)
                     },
                     {
-                        itemName: i18n.t("createNewElement"),
+                        itemName: i18n.t("contextmenu.createNewElement"),
                         onclick: elementCreator.onNewElement.bind(elementCreator)
                     },
                     {
-                        itemName: i18n.t("Delete"),
+                        itemName: i18n.t("contextmenu.delete"),
                         onclick: _this.deleteSelectedObj.bind(_this)
                     }
                 ])

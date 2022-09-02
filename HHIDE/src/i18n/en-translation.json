@@ -19,15 +19,25 @@
   "Rectangle": "Rectangle",
   "Text": "Text",
   "not_logged_in": "Not Logged In",
-  "sendToBack": "Send To Back",
-  "bringToFront": "Bring to Front",
-  "duplicate": "Duplicate",
-  "delete": "Delete",
+  "contextmenu": {
+    "sendToBack": "Send To Back",
+    "bringToFront": "Bring to Front",
+    "duplicate": "Duplicate",
+    "createNewElement": "Create New Element",
+    "delete": "Delete"
+  },
   "inspector": {
     "Type": "Type",
     "Position": "Position",
     "Scaling": "Scaling",
     "Rotation": "Rotation",
-    "FillColor": "FillColor"
-  }
+    "FillColor": "FillColor",
+    "StrokeColor": "StrokeColor",
+    "StrokeWidth": "StrokeWidth"
+  },
+  "RectangleShape": "Rectangle",
+  "CircleShape": "Circle",
+  "TextShape": "Text",
+  "CurveShape": "Curve",
+  "LineShape": "Line"
 }
