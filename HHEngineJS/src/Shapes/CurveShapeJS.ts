@@ -24,8 +24,6 @@ class CurveShapeJS extends BaseSolidShape{
         this.paperShape.applyMatrix = false
 
         this.paperShape.data.meta = this
-
-        super.afterCreateShape()
     }
 
     addPoint(p:paper.Point){
@@ -38,6 +36,8 @@ class CurveShapeJS extends BaseSolidShape{
 
     endDrawingCurve(){
         this.paperShape.simplify(10)
+        super.afterCreateShape()
+
         this.store()
     }
 

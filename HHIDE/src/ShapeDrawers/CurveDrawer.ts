@@ -39,8 +39,6 @@ class CurveDrawer extends BaseShapeDrawer {
             _this.addShapeToCurrentLayer(_this.curvePath)
             _this.curvePath = new CurveShapeJS()
         })
-
-
     }
 }
 
