@@ -22,8 +22,8 @@ class I18nHandler{
         }
     }
 
-    t(input:string):string{
-        return i18next.t(input)
+    t(...args:string[]):string{
+        return i18next.t.apply(i18next, args)
     }
 }
 

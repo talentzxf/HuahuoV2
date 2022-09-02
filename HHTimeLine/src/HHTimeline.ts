@@ -54,7 +54,7 @@ class HHTimeline extends HTMLElement {
         this.canvasScrollContainer.addEventListener("scroll", this.onScroll.bind(this))
         window.addEventListener("resize", this.Resize.bind(this))
 
-        let titleTimeLineTrack = new TitleTimelineTrack(0, this.frameCount, this.canvas.getContext('2d'), 0, null,"Frames")
+        let titleTimeLineTrack = new TitleTimelineTrack(0, this.frameCount, this.canvas.getContext('2d'), 0, null,"timeline.Frames")
         this.titleTrack = titleTimeLineTrack
         // Add one timelinetrack
         this.timelineTracks.push(titleTimeLineTrack)
@@ -117,7 +117,9 @@ class HHTimeline extends HTMLElement {
     addNewTrack(layer = null, icons: Array<any> = null) {
         let seqId = this.timelineTracks.length;
 
-        let track = new TimelineTrack(seqId, this.frameCount, this.canvas.getContext('2d'), this.totalTrackHeight, layer, "Track " + seqId)
+        let title = (window as any).i18n.t("timeline.defaultTrackName", {trackId:seqId})
+
+        let track = new TimelineTrack(seqId, this.frameCount, this.canvas.getContext('2d'), this.totalTrackHeight, layer, title)
         if(icons && icons.length > 0){
             track.setIcons(icons)
             this.layerIconMap.set(track.getLayer(), icons)
