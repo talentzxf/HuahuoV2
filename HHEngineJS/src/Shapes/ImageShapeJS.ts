@@ -100,7 +100,7 @@ class ImageShapeJS extends AbstractMediaShapeJS{
         if(this.isAnimation){
             // Position
             this.propertySheet.addProperty({
-                key: "Frames",
+                key: "inspector.image.Frames",
                 type: PropertyType.STRING,
                 getter: this.getFrames.bind(this)
             });

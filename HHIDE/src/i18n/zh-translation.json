@@ -34,7 +34,10 @@
     "FillColor": "填充颜色",
     "StrokeColor": "描边颜色",
     "StrokeWidth": "描边宽度",
-    "enclose": "封闭"
+    "enclose": "封闭",
+    "image": {
+      "Frames": "帧数"
+    }
   },
   "RectangleShape": "矩形",
   "CircleShape": "圆形",

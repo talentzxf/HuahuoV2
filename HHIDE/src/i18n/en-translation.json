@@ -34,7 +34,10 @@
     "FillColor": "FillColor",
     "StrokeColor": "StrokeColor",
     "StrokeWidth": "StrokeWidth",
-    "enclose": "EnClose"
+    "enclose": "EnClose",
+    "image": {
+      "Frames": "Frames"
+    }
   },
   "RectangleShape": "Rectangle",
   "CircleShape": "Circle",
