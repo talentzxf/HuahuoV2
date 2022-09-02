@@ -339,14 +339,14 @@ abstract class BaseShapeJS {
         this.propertySheet = new PropertySheet();
 
         this.propertySheet.addProperty({
-            key: "Type",
+            key: "inspector.Type",
             type: PropertyType.STRING,
             getter: this.getTypeName.bind(this)
         })
 
         // Position
         this.propertySheet.addProperty({
-            key: "Position",
+            key: "inspector.Position",
             type: PropertyType.VECTOR2,
             getter: this.getPosition.bind(this),
             setter: this.setPosition.bind(this),
@@ -355,7 +355,7 @@ abstract class BaseShapeJS {
         });
 
         this.propertySheet.addProperty({
-            key: "Scaling",
+            key: "inspector.Scaling",
             type: PropertyType.VECTOR2,
             getter: this.getScaling.bind(this),
             setter: this.setScaling.bind(this),
@@ -364,7 +364,7 @@ abstract class BaseShapeJS {
         })
 
         this.propertySheet.addProperty({
-            key: "Rotation",
+            key: "inspector.Rotation",
             type: PropertyType.FLOAT,
             getter: this.getRotation.bind(this),
             setter: this.setRotation.bind(this),

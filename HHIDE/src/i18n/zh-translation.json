@@ -3,6 +3,7 @@
   "save": "保存",
   "uploadAndOpen": "上传并打开",
   "tools": "工具",
+  "properties": "属性",
   "logs": "日志",
   "scene": "场景",
   "zoomin": "放大",
@@ -21,5 +22,12 @@
   "sendToBack": "放到下面",
   "bringToFront": "放到上面",
   "duplicate": "复制形状",
-  "delete": "删除形状"
+  "delete": "删除形状",
+  "inspector": {
+    "Type": "类型",
+    "Position": "位置",
+    "Scaling": "缩放",
+    "Rotation": "旋转",
+    "FillColor": "填充颜色"
+  }
 }

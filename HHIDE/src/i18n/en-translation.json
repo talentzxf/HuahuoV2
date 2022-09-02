@@ -3,6 +3,7 @@
   "save": "Save",
   "uploadAndOpen": "Upload and Open",
   "tools": "Tools",
+  "properties": "Properties",
   "logs": "Logs",
   "scene": "Scene",
   "zoomin": "ZoomIn",
@@ -21,5 +22,12 @@
   "sendToBack": "Send To Back",
   "bringToFront": "Bring to Front",
   "duplicate": "Duplicate",
-  "delete": "Delete"
+  "delete": "Delete",
+  "inspector": {
+    "Type": "Type",
+    "Position": "Position",
+    "Scaling": "Scaling",
+    "Rotation": "Rotation",
+    "FillColor": "FillColor"
+  }
 }
