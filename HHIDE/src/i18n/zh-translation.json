@@ -24,7 +24,9 @@
     "bringToFront": "放到上面",
     "duplicate": "复制形状",
     "createNewElement": "创建新元件",
-    "delete": "删除形状"
+    "delete": "删除形状",
+    "mergecells": "合并帧",
+    "createNewTrack": "创建新轨道"
   },
   "inspector": {
     "Type": "类型",
@@ -38,6 +40,10 @@
     "image": {
       "Frames": "帧数"
     }
+  },
+  "timeline": {
+    "Frames": "帧",
+    "defaultTrackName": "轨道 {{trackId, number}}"
   },
   "RectangleShape": "矩形",
   "CircleShape": "圆形",

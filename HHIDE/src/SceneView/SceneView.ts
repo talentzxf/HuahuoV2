@@ -96,11 +96,11 @@ class SceneView extends HTMLElement {
 
             timeline.contextMenu.setItems([
                 {
-                    itemName: "Merge Selected Cells",
+                    itemName: i18n.t("contextmenu.mergecells"),
                     onclick: timeline.mergeCells.bind(timeline)
                 },
                 {
-                    itemName: "Create New Track",
+                    itemName: i18n.t("contextmenu.createNewTrack"),
                     onclick: function(e){
                         _this.createNewTrack(timeline)
                     }

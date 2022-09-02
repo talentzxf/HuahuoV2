@@ -24,7 +24,9 @@
     "bringToFront": "Bring to Front",
     "duplicate": "Duplicate",
     "createNewElement": "Create New Element",
-    "delete": "Delete"
+    "delete": "Delete",
+    "mergecells": "Merge selected cells",
+    "createNewTrack": "Create New Track"
   },
   "inspector": {
     "Type": "Type",
@@ -38,6 +40,10 @@
     "image": {
       "Frames": "Frames"
     }
+  },
+  "timeline": {
+    "Frames": "Frames",
+    "defaultTrackName": "Track {{trackId, number}}"
   },
   "RectangleShape": "Rectangle",
   "CircleShape": "Circle",
