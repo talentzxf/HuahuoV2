@@ -25,12 +25,18 @@ class ReferencePropertyDesc extends BasePropertyDesc{
         let shapeSelectButton = document.createElement("input")
         shapeSelectButton.type = "button"
         shapeSelectButton.value = i18n.t("inspector.Pickup")
+
+        shapeSelectButton.addEventListener("click", this.beginToPickupShape.bind(this))
         this.referenceDiv.appendChild(shapeSelectButton)
 
         this.contentDiv.appendChild(this.referenceDiv)
     }
 
     onValueChanged(val) {
+    }
+
+    beginToPickupShape(){
+        document.body
     }
 }
 

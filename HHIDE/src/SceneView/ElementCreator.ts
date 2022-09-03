@@ -79,6 +79,7 @@ class ElementCreator {
 
             let player = this.sceneView.animationPlayer
             huahuoEngine.setActivePlayer(player)
+            console.log("Setting default store by index 1:" + sceneview.storeId)
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(sceneview.storeId)
             player.updateAllShapes()
 
@@ -93,6 +94,7 @@ class ElementCreator {
 
         let eleSceneView = sceneViewManager.getSceneView(element.storeId)
         if (!eleSceneView) {
+            console.log("Setting default store by index 2:" + element.storeId)
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(element.storeId)
 
             let newEleContent = document.createElement("hh-content")
