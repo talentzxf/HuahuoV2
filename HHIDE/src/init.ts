@@ -3,7 +3,7 @@ import {huahuoEngine} from "hhenginejs";
 function showMainDiv(){
     let loadingElement = document.querySelector("#loading") as HTMLDivElement
     loadingElement.style.display = "none"
-    let mainDiv = document.querySelector("#mainScene") as HTMLDivElement
+    let mainDiv = document.querySelector("#mainSceneDiv") as HTMLDivElement
     mainDiv.style.display = "block"
 }
 

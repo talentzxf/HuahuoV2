@@ -60,12 +60,14 @@ function save() {
     let oldStoreId = huahuoEngine.GetCurrentStoreId()
 
     try{
+        console.log("Setting default store by index:" + mainSceneView.storeId)
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainSceneView.storeId)
         let Uint8Array = Module.writeObjectStoreInMemoryFile()
         let blob = new Blob([Uint8Array], {type: "application/octet-stream"})
         saveAs(blob, "huahuo.data")
         Logger.info("Good!!")
     }finally {
+        console.log("Setting default store by index asdfasdfasdf:" + oldStoreId)
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(oldStoreId)
     }
 }
