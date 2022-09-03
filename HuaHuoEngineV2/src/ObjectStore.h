@@ -25,6 +25,7 @@ public:
     ObjectStore(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
         ,maxFrameId(-1)
+        ,mStoreId(0)
     {
 
     }
@@ -92,6 +93,7 @@ public:
         :Super(label, mode)
         ,m_IsGlobal(false)
     {
+        printf("Creating new store manager!!!!\n");
     }
 
     void SetIsGlobal(bool isGlobal){
@@ -106,6 +108,7 @@ public:
         if(!currentStore.IsValid()){
             printf("currentStore invalid, creating new store\n");
             CreateStore();
+            printf("New store created, current storeId:%d\n", currentStore->GetStoreId());
         }
         return currentStore;
     }
@@ -117,6 +120,8 @@ public:
         currentStore->SetStoreId(storeId);
         GetPersistentManager().MakeObjectPersistent(currentStore.GetInstanceID(), StoreFilePath);
         allStores.push_back(currentStore);
+
+        printf("CurrentStore instance id:%d\n", currentStore.GetInstanceID());
         return currentStore;
     }
 
@@ -130,11 +135,12 @@ public:
     }
 
     bool SetDefaultStoreByIndex(UInt32 index){
-        if(allStores.size() < index){
-            printf("StoreId:%d not found\n", index);
+        if(allStores.size() < index || index <=0){
+            printf("StoreId:%d not found or is invalid\n", index);
             return false;
         }
 
+        printf("Setting default store:%d\n", index);
         currentStore = allStores[index - 1];
 
         return true;

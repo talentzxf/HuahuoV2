@@ -226,7 +226,13 @@ bool AssertImplementation(InstanceID objID, const char* fileStripped, int line, 
 //        ANALYSIS_ASSUME(test);                                                                      \
     })
 #else
-#   define HuaHuo__ASSERT_IMPL(test, objID, msg) UNUSED(test)
+// #   define HuaHuo__ASSERT_IMPL(test, objID, msg) UNUSED(test)
+# define HuaHuo__ASSERT_IMPL(test, objID, msg) PP_WRAP_CODE(\
+    if(!(test))                                             \
+    {                                                       \
+        printf("Assert error happened! %s:%d", __FILE__, __LINE__); \
+    })                                                      \
+
 #endif
 
 // The macros taking ... params here all expect either nothing, or a single argument which is a context object for the assertion

@@ -36,7 +36,10 @@ void ObjectStoreManager::Transfer(TransferFunction &transfer) {
     printf("Writing allStores:%d\n", allStores.size());
     TRANSFER(allStores);
     printf("Writing current store:%d\n", allStores.size());
+    printf("Before transfer current Store Id:%d\n", currentStore->GetStoreId());
+    printf("CurrentStore instanceId:%d\n", currentStore.GetInstanceID());
     TRANSFER(currentStore);
+    printf("After transfer current Store Id:%d\n", currentStore->GetStoreId());
 }
 
 ObjectStoreManager* ObjectStoreManager::GetDefaultObjectStoreManager(){

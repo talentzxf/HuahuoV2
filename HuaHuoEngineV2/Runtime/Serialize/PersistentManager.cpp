@@ -971,8 +971,12 @@ void PersistentManager::ClearActiveNameSpace(ActiveNameSpaceType type)
 
 LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIndex(const SerializedObjectIdentifier& globalIdentifier)
 {
+    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
+
     // AutoLock autoLock(*this);
     LocalIdentifierInFileType localIdentifierInFile = globalIdentifier.localIdentifierInFile;
+
+    printf("Global identifier:%d\n", globalIdentifier.localIdentifierInFile);
     int localSerializedFileIndex;
 
 
@@ -994,6 +998,8 @@ LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIn
         Assert(activeNameSpace < (int)m_Streams.size());
         Assert(m_Streams[activeNameSpace].stream != NULL);
 
+        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
+
         if(NULL == m_Streams[activeNameSpace].stream){
             printf("Stream is null!!\n");
         }
@@ -1001,36 +1007,40 @@ LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIn
         printf("Get stream from active namespace:%d\n", activeNameSpace);
 
         SerializedFile& serialize = *m_Streams[activeNameSpace].stream;
-
+        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
 
 
         FileIdentifier fileIdentifier = PathIDToFileIdentifierInternal(globalIdentifier.serializedFileIndex);
-
+        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
 
         serialize.AddExternalRef(fileIdentifier);
 
-
+        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
 
         // localIdentifierInFile mapping is not zero based. zero is reserved for mapping into the same file.
         localSerializedFileIndex = serialize.GetExternalRefs().size();
 
-
+        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
 
         globalToLocalNameSpace[globalIdentifier.serializedFileIndex] = localSerializedFileIndex;
-
+        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
         localToGlobalNameSpace[localSerializedFileIndex] = globalIdentifier.serializedFileIndex;
-
+        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
     }
-    else
+    else{
         localSerializedFileIndex = found->second;
+    }
 
+    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
 
     // Setup local identifier
     LocalSerializedObjectIdentifier localIdentifier;
-
+    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
     localIdentifier.localSerializedFileIndex = localSerializedFileIndex;
     localIdentifier.localIdentifierInFile = localIdentifierInFile;
 
+    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
+    printf("LocalIdentifier:%d,%lld\n",localIdentifier.localSerializedFileIndex, localIdentifier.localIdentifierInFile);
     return localIdentifier;
 }
 
@@ -1039,6 +1049,7 @@ void PersistentManager::InstanceIDToLocalSerializedObjectIdentifier(InstanceID i
 {
     // PERSISTENT_MANAGER_AUTOLOCK2(autoLock, HuaHuoEngine::kMutexLock, NULL, &gIDRemappingProfiler);
 
+    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
     if (instanceID == InstanceID_None)
     {
         localIdentifier.localSerializedFileIndex = 0;
@@ -1051,13 +1062,12 @@ void PersistentManager::InstanceIDToLocalSerializedObjectIdentifier(InstanceID i
 
     if (!m_Remapper->InstanceIDToSerializedObjectIdentifier(instanceID, globalIdentifier))
     {
-
         localIdentifier.localSerializedFileIndex = 0;
         localIdentifier.localIdentifierInFile = 0;
         return;
     }
 
-
+    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
     localIdentifier = GlobalToLocalSerializedFileIndex(globalIdentifier);
 
 }
