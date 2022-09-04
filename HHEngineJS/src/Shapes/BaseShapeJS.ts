@@ -350,9 +350,15 @@ abstract class BaseShapeJS {
         if(curve != this && curve != this.followCurve){
             this.followCurve = curve
 
-            let startPoint = this.followCurve.getPointAt(0)
+            let curveStartPoint = this.followCurve.getPointAt(0)
 
-            this.pivotPosition = startPoint
+            let currentPivotPos = this.pivotPosition
+
+            let offset = curveStartPoint.subtract(currentPivotPos)
+
+            let newPosition = this.position.add(offset)
+
+            this.position = newPosition
         }else{
             Logger.error("Can't bind the path !")
         }
