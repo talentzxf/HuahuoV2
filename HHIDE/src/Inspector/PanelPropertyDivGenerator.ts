@@ -11,8 +11,8 @@ class PanelPropertyDesc extends BasePropertyDesc{
 
         // TODO: Avoid duplication with Inspector
         for(let childProperty of property.children){
-            let divGenerator = GetPropertyDivGenerator(property.type)
-            let propertyDesc = divGenerator.generatePropertyDesc(property)
+            let divGenerator = GetPropertyDivGenerator(childProperty.type)
+            let propertyDesc = divGenerator.generatePropertyDesc(childProperty)
 
             let propertyDiv = document.createElement("div")
             propertyDiv.style.flexDirection = divGenerator.flexDirection()
