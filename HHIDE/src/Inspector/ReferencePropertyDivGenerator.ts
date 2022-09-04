@@ -1,8 +1,11 @@
 import {BasePropertyDesc, BasePropertyDivGenerator} from "./BasePropertyDivGenerator";
 import {Property} from "hhcommoncomponents";
+import {sceneViewManager} from "../SceneView/SceneViewManager";
+import {ShapePicker} from "../ShapeDrawers/ShapePicker";
 
 class ReferencePropertyDesc extends BasePropertyDesc{
 
+    shapePicker: ShapePicker
     referenceDiv: HTMLDivElement
     constructor(property: Property) {
         super(property);
@@ -16,6 +19,8 @@ class ReferencePropertyDesc extends BasePropertyDesc{
             type = targetShape.typeName
             name = targetShape.name
         }
+
+        this.shapePicker = new ShapePicker()
 
         this.referenceDiv = document.createElement("div")
         let shapeNameSpan = document.createElement("span")
@@ -36,7 +41,9 @@ class ReferencePropertyDesc extends BasePropertyDesc{
     }
 
     beginToPickupShape(){
-        document.body
+        let currentFocusedSceneView = sceneViewManager.getFocusedSceneView()
+        document.body.style.cursor = "pointer"
+        currentFocusedSceneView.beginToDrawShape(this.shapePicker)
     }
 }
 
