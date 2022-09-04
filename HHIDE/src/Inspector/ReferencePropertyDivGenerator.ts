@@ -23,7 +23,7 @@ class ReferencePropertyDesc extends BasePropertyDesc{
         let name = i18n.t("inspector.Unknown")
 
         if(targetShape){
-            type = targetShape.typeName
+            type = targetShape.typename
             name = targetShape.name
         }
 
