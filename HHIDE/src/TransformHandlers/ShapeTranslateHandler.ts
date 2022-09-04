@@ -49,7 +49,7 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
 
                 let proposedNewPosition = obj.position.add(offset)
 
-                if(obj.getFollowCurve()){
+                if(obj.getFollowCurve && obj.getFollowCurve()){
                     let followingCurve = obj.getFollowCurve()
                     proposedNewPosition = followingCurve.getGlobalNearestPoint(proposedNewPosition)
                 }
