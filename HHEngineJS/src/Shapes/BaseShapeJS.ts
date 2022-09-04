@@ -46,6 +46,10 @@ abstract class BaseShapeJS {
         this.rawObj.SetLocalPivotPosition(localCenterPos.x, localCenterPos.y, 0.0)
     }
 
+    public getPointAt(offset): paper.Point{
+        return this.paperShape.getPointAt(offset)
+    }
+
     public getBornStoreId(): number {
         return this.bornStoreId
     }
@@ -343,7 +347,15 @@ abstract class BaseShapeJS {
     }
 
     setFollowCurve(curve:BaseShapeJS){
-        this.followCurve = curve
+        if(curve != this && curve != this.followCurve){
+            this.followCurve = curve
+
+            let startPoint = this.followCurve.getPointAt(0)
+
+            this.pivotPosition = startPoint
+        }else{
+            Logger.error("Can't bind the path !")
+        }
     }
 
     afterWASMReady() {
