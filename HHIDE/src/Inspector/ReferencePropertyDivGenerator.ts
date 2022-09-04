@@ -1,5 +1,6 @@
 import {BasePropertyDesc, BasePropertyDivGenerator} from "./BasePropertyDivGenerator";
 import {Property} from "hhcommoncomponents";
+import {BaseShapeJS} from "hhenginejs"
 import {sceneViewManager} from "../SceneView/SceneViewManager";
 import {ShapePicker} from "../ShapeDrawers/ShapePicker";
 
@@ -7,6 +8,12 @@ class ReferencePropertyDesc extends BasePropertyDesc{
 
     shapePicker: ShapePicker
     referenceDiv: HTMLDivElement
+    shapeNameSpan: HTMLSpanElement
+
+    formatShapeName(type:string, name:string){
+        return type + "[" + name + "]"
+    }
+
     constructor(property: Property) {
         super(property);
 
@@ -22,10 +29,12 @@ class ReferencePropertyDesc extends BasePropertyDesc{
 
         this.shapePicker = new ShapePicker()
 
+        this.shapePicker.onShapePicked = this.onShapePicked.bind(this)
+
         this.referenceDiv = document.createElement("div")
-        let shapeNameSpan = document.createElement("span")
-        shapeNameSpan.innerText = type + "[" + name + "]"
-        this.referenceDiv.appendChild(shapeNameSpan)
+        this.shapeNameSpan = document.createElement("span")
+        this.shapeNameSpan.innerText = this.formatShapeName(type, name)
+        this.referenceDiv.appendChild(this.shapeNameSpan)
 
         let shapeSelectButton = document.createElement("input")
         shapeSelectButton.type = "button"
@@ -35,6 +44,13 @@ class ReferencePropertyDesc extends BasePropertyDesc{
         this.referenceDiv.appendChild(shapeSelectButton)
 
         this.contentDiv.appendChild(this.referenceDiv)
+    }
+
+    onShapePicked(selectedShape:BaseShapeJS){
+        let typeName = selectedShape.typename
+        let name = selectedShape.name
+
+        this.shapeNameSpan.innerText = this.formatShapeName(typeName, name)
     }
 
     onValueChanged(val) {

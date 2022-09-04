@@ -11,6 +11,8 @@ class ShapePicker extends BaseShapeDrawer{
 
     candidateShape: BaseShapeJS
 
+    onShapePicked: Function
+
     constructor() {
         super();
 
@@ -78,10 +80,16 @@ class ShapePicker extends BaseShapeDrawer{
 
     onMouseMove(evt: MouseEvent) {
         super.onMouseMove(evt);
-        if(this.hitSomething(evt.offsetX, evt.offsetY)){
-            console.log("Hit something")
-        }else{
+        if(!this.hitSomething(evt.offsetX, evt.offsetY)){
             this.clearBoundingBox()
+        }
+    }
+
+    onMouseDown(evt: MouseEvent) {
+        super.onMouseDown(evt);
+
+        if(this.candidateShape && this.onShapePicked){
+            this.onShapePicked(this.candidateShape)
         }
     }
 
