@@ -42,8 +42,11 @@
     },
     "FixedPosition": "Fixed",
     "FollowPath": "Follow",
+    "FollowTarget": "Follow Target",
     "Unknown": "Unknown",
-    "Pickup": "PickUp"
+    "Pickup": "PickUp",
+    "AtBegin": "Set At Begin",
+    "AtEnd": "Set At End"
   },
   "timeline": {
     "Frames": "Frames",

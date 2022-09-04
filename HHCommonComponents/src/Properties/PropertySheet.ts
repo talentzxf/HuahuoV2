@@ -1,10 +1,11 @@
 enum PropertyType{
+    GROUP,
+    PANEL,
     STRING,
     VECTOR2,
     FLOAT,
     COLOR,
     BUTTON,
-    GROUP,
     REFERENCE
 }
 

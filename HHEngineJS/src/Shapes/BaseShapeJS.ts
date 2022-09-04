@@ -70,6 +70,10 @@ abstract class BaseShapeJS {
         return this.paperShape.globalToLocal(globalPoint)
     }
 
+    localToGlobal(localPoint: paper.Point): paper.Point{
+        return this.paperShape.localToGlobal(localPoint)
+    }
+
     getNearestPoint(localPos: paper.Point) {
         if (this.paperShape.getNearestPoint){
             return this.paperShape.getNearestPoint(localPos)
@@ -351,6 +355,10 @@ abstract class BaseShapeJS {
     // TODO: Move this into Cpp part
     followCurve: BaseShapeJS
 
+    length(){
+        return this.paperShape.length
+    }
+
     getFollowCurve(){
         return this.followCurve
     }
@@ -367,10 +375,21 @@ abstract class BaseShapeJS {
             //
             // let newPosition = this.position.add(offset)
 
-            this.position = curveStartPoint
+            this.position = this.followCurve.localToGlobal(curveStartPoint)
         }else{
             Logger.error("Can't bind the path !")
         }
+    }
+
+    atFollowCurveStart(){
+        let curveStartPoint = this.followCurve.getPointAt(0)
+        this.position = this.followCurve.localToGlobal(curveStartPoint)
+    }
+
+    atFollowCurveEnd(){
+        let curveLength = this.followCurve.length()
+        let curveEndPoint = this.followCurve.getPointAt(curveLength)
+        this.position = this.followCurve.localToGlobal(curveEndPoint)
     }
 
     afterWASMReady() {
@@ -401,10 +420,27 @@ abstract class BaseShapeJS {
                 },
                 {
                     key: "inspector.FollowPath",
-                    type: PropertyType.REFERENCE,
-                    getter: this.getFollowCurve.bind(this),
-                    setter: this.setFollowCurve.bind(this)
-                }
+                    type: PropertyType.PANEL,
+                    children:[
+                        {
+                            key: "inspector.FollowTarget",
+                            type: PropertyType.REFERENCE,
+                            getter: this.getFollowCurve.bind(this),
+                            setter: this.setFollowCurve.bind(this)
+                        },
+                        {
+                            key:"inspector.AtBegin",
+                            type: PropertyType.BUTTON,
+                            action: this.atFollowCurveStart.bind(this)
+                        },
+                        {
+                            key:"inspector.AtEnd",
+                            type: PropertyType.BUTTON,
+                            action: this.atFollowCurveEnd.bind(this)
+                        }
+                    ]
+                },
+
             ]
         });
 
