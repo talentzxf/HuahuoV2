@@ -51,6 +51,12 @@ class ReferencePropertyDesc extends BasePropertyDesc{
         let name = selectedShape.name
 
         this.shapeNameSpan.innerText = this.formatShapeName(typeName, name)
+
+        this.property.setter(selectedShape)
+
+        let currentFocusedSceneView = sceneViewManager.getFocusedSceneView()
+        currentFocusedSceneView.resetDefaultShapeDrawer()
+        currentFocusedSceneView.endOfDrawingShape(this.shapePicker)
     }
 
     onValueChanged(val) {

@@ -87,10 +87,6 @@ class ShapePicker extends BaseShapeDrawer{
 
     onMouseDown(evt: MouseEvent) {
         super.onMouseDown(evt);
-
-        if(this.candidateShape && this.onShapePicked){
-            this.onShapePicked(this.candidateShape)
-        }
     }
 
     clearBoundingBox(){
@@ -102,6 +98,10 @@ class ShapePicker extends BaseShapeDrawer{
     onMouseUp(evt: MouseEvent) {
         super.onMouseUp(evt);
         this.clearBoundingBox()
+
+        if(this.candidateShape && this.onShapePicked){
+            this.onShapePicked(this.candidateShape)
+        }
     }
 }
 
