@@ -21,6 +21,7 @@
 #include "Shapes/CircleShape.h"
 #include "KeyFrames/FrameState.h"
 #include "KeyFrames/ShapeTransformFrameState.h"
+#include "KeyFrames/ShapeFollowCurveFrameState.h"
 #include "Shapes/RectangleShape.h"
 #include "CloneObject.h"
 
@@ -119,6 +120,16 @@ void testShapeStore() {
     currentLayer->AddShapeInternal(rectangleShape);
 
     RectangleShape* clonedRectangleShape = (RectangleShape*) CloneObject(*rectangleShape);
+
+    CircleShape* circleShape = (CircleShape*)BaseShape::CreateShape("CircleShape");
+    circleShape->SetCenter(1.0, 1.0, 1.0);
+    circleShape->SetRadius(1.0);
+
+    ShapeFollowCurveFrameState* curveFrameState = (ShapeFollowCurveFrameState*)circleShape->GetFrameStateByName("ShapeFollowCurveFrameState");
+    curveFrameState->RecordTargetShape(0, rectangleShape);
+    curveFrameState->RecordLengthRatio(0, 100);
+
+    currentLayer->AddShapeInternal(circleShape);
 
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
 

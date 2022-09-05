@@ -12,7 +12,7 @@ public:
     PPtr<BaseShape> followCurveTarget;
     float lengthRatio;
 
-    DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(ShapeFollowCurveData)
+    DECLARE_SERIALIZE(ShapeFollowCurveData)
 
     ShapeFollowCurveData(): lengthRatio(-1.0)
     {
@@ -31,7 +31,7 @@ struct ShapeFollowCurveKeyFrame{
     int frameId;
     ShapeFollowCurveData followCurveData;
 
-    DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(TransformKeyFrame)
+    DECLARE_SERIALIZE(TransformKeyFrame)
 };
 
 template<class TransferFunction> void ShapeFollowCurveKeyFrame::Transfer(TransferFunction &transfer){
