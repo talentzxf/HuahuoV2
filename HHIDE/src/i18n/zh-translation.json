@@ -41,8 +41,8 @@
       "Frames": "帧数"
     },
     "FixedPosition": "指定",
-    "FollowPath": "跟随",
-    "FollowTarget": "跟随目标",
+    "FollowPath": "贴边",
+    "FollowTarget": "贴边目标",
     "Unknown": "未知",
     "Pickup": "选择",
     "AtBegin": "置到开始位置",
