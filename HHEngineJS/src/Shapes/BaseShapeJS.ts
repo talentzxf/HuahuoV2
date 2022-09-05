@@ -215,9 +215,9 @@ abstract class BaseShapeJS {
         let offset = val.subtract(new paper.Point(curGlobalPivot.x, curGlobalPivot.y))
         let nextShapePosition = curShapePosition.add(offset)
         this.paperShape.position = nextShapePosition
-
-        this.rawObj.SetGlobalPivotPosition(val.x, val.y, 0.0)
         let localPivotPosition = this.globalToLocal(val)
+        
+        this.rawObj.SetGlobalPivotPosition(val.x, val.y, 0.0)
         this.rawObj.SetLocalPivotPosition(localPivotPosition.x, localPivotPosition.y, 0.0)
 
         if(this.followCurve){
