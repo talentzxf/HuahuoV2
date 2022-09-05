@@ -85,6 +85,7 @@ public:
         AddFrameStateByName("ShapeColorFrameState");
         AddFrameStateByName("ShapeStrokeColorFrameState");
         AddFrameStateByName("ShapeStrokeWidthFrameState");
+        AddFrameStateByName("ShapeFollowCurveFrameState");
     }
 
     /// Get and set the name
@@ -217,6 +218,8 @@ public:
     static BaseShape* CreateShape(const char* shapeName);
 
     AbstractFrameState* AddFrameStateByName(const char* frameStateName);
+
+    AbstractFrameState* GetFrameStateByName(char* frameStateName);
 };
 
 template<class T> inline
