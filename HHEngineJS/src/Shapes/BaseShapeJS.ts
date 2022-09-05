@@ -396,16 +396,7 @@ abstract class BaseShapeJS {
     setFollowCurve(curve: BaseShapeJS) {
         if (curve != this && curve != this.followCurve) {
             this.followCurve = curve
-
-            let curveStartPoint = this.followCurve.getPointAt(0)
-
-            // let currentPivotPos = this.pivotPosition
-            //
-            // let offset = curveStartPoint.subtract(currentPivotPos)
-            //
-            // let newPosition = this.position.add(offset)
-
-            this.position = this.followCurve.localToGlobal(curveStartPoint)
+            this.setFollowCurveLength(0.0)
         } else {
             Logger.error("Can't bind the path !")
         }
@@ -438,11 +429,13 @@ abstract class BaseShapeJS {
             let totalLength = this.followCurve.length()
             let targetLength = totalLength * portion
 
-            let curveStartPoint = this.followCurve.getPointAt(targetLength)
-            this.position = this.followCurve.localToGlobal(curveStartPoint)
+            let curvePoint = this.followCurve.getPointAt(targetLength)
+            this.position = this.followCurve.localToGlobal(curvePoint)
 
             let frameId = this.getLayer().GetCurrentFrame()
             this.shapeFollowCurveFrameState.RecordLengthRatio(frameId, portion)
+
+            this.update()
         }
     }
 
@@ -730,6 +723,16 @@ abstract class BaseShapeJS {
         // The coordinate should have been aligned now.
         let globalPivotPosition = this.rawObj.GetGlobalPivotPosition()
         let localPivotPosition = this.rawObj.GetLocalPivotPosition()
+
+        if(this.followCurve){
+            let lengthRatio = this.shapeFollowCurveFrameState.GetLengthRatio();
+
+            let totalLength = this.followCurve.length()
+            let targetLength = totalLength * lengthRatio
+
+            let curvePoint = this.followCurve.getPointAt(targetLength)
+            globalPivotPosition = this.followCurve.localToGlobal(curvePoint)
+        }
 
         let radian = this.rawObj.GetRotation() / 180 * Math.PI
 
