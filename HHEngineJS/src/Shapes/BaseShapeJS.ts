@@ -23,7 +23,8 @@ abstract class BaseShapeJS {
     // This is used for Editor only to set properties.
     protected propertySheet: PropertySheet
 
-    private valueChangeHandlersMap: Map<string, Array<Function>> = new Map()
+    private valueChangeHandlersMap: Map<string, Map<number, Function>> = new Map()
+    private valueChangeHandlersPreProcessorMap: Map<number, Function> = new Map()
 
     private parent: BaseShapeJS = null
 
@@ -92,6 +93,11 @@ abstract class BaseShapeJS {
         return this.paperShape.getOffsetOf(localPos)
     }
 
+    getGlobalOffsetOf(globalPos: paper.Point){
+        let localPos = this.paperShape.globalToLocal(globalPos)
+        return this.getOffsetOf(localPos)
+    }
+
     divideAt(length: number) {
         return this.paperShape.divideAt(length)
     }
@@ -131,8 +137,15 @@ abstract class BaseShapeJS {
 
     callHandlers(propertyName: string, val: any) {
         if (this.valueChangeHandlersMap.has(propertyName)) {
-            for (let handler of this.valueChangeHandlersMap.get(propertyName).values()) {
-                handler(val)
+
+            let propertyMap = this.valueChangeHandlersMap.get(propertyName)
+            for (let [handlerId, handler] of propertyMap) {
+                let preprocessor = this.valueChangeHandlersPreProcessorMap.get(handlerId)
+
+                if(preprocessor)
+                    handler(preprocessor(val))
+                else
+                    handler(val)
             }
         }
     }
@@ -189,6 +202,8 @@ abstract class BaseShapeJS {
         let localPivotPosition = this.globalToLocal(val)
         this.rawObj.SetLocalPivotPosition(localPivotPosition.x, localPivotPosition.y, 0.0)
         this.callHandlers("position", val)
+
+        this.update()
     }
 
     set scaling(val: paper.Point) {
@@ -391,8 +406,7 @@ abstract class BaseShapeJS {
 
     getFollowCurveLength() {
         if (this.followCurve) {
-            let currentCurvePosition = this.followCurve.globalToLocal(this.position)
-            return this.followCurve.getOffsetOf(currentCurvePosition)
+            return this.followCurve.getGlobalOffsetOf(this.position)
         }
     }
 
@@ -410,11 +424,19 @@ abstract class BaseShapeJS {
         }
     }
 
+    getFollowCurveLengthPotion(globalPoint:paper.Point){
+        let totalLength = this.followCurve.length()
+        let currentLength = this.followCurve.getGlobalOffsetOf(globalPoint)
+
+        return currentLength/totalLength
+    }
+
     afterWASMReady() {
         this.rawObj = castObject(this.rawObj, Module[this.getShapeName()]);
 
         this.shapeCenterSelector = new ShapeCenterSelector(this)
 
+        // TODO: Should move property related code to IDE, but how???
         this.propertySheet = new PropertySheet();
 
         this.propertySheet.addProperty({
@@ -460,7 +482,9 @@ abstract class BaseShapeJS {
                             key: "inspector.AtLength",
                             type: PropertyType.FLOAT,
                             getter: this.getFollowCurveLength.bind(this),
-                            setter: this.setFollowCurveLength.bind(this)
+                            setter: this.setFollowCurveLength.bind(this),
+                            registerValueChangeFunc: this.registerValueChangeHandler("position", this.getFollowCurveLengthPotion.bind(this)).bind(this),
+                            unregisterValueChangeFunc: this.unregisterValueChangeHandler("position").bind(this)
                         }
                     ]
                 },
@@ -487,14 +511,16 @@ abstract class BaseShapeJS {
         })
     }
 
-    registerValueChangeHandler(valueName: string) {
+    registerValueChangeHandler(valueName: string, preProcessor: Function = null) {
         return function (valueChangedHandler: Function) {
             if (!this.valueChangeHandlersMap.has(valueName)) {
-                this.valueChangeHandlersMap.set(valueName, new Map<Number, Function>())
+                this.valueChangeHandlersMap.set(valueName, new Map<Number, Map<number, Function>>())
             }
 
             let id = this.handlerId
             this.valueChangeHandlersMap.get(valueName).set(id, valueChangedHandler)
+            if(preProcessor)
+                this.valueChangeHandlersPreProcessorMap.set(id, preProcessor)
             this.handlerId++
             return id;
         }.bind(this)
@@ -505,6 +531,10 @@ abstract class BaseShapeJS {
             if (this.valueChangeHandlersMap.has(valueName)) {
                 let valueChangeHandlerMap = this.valueChangeHandlersMap.get(valueName)
                 valueChangeHandlerMap.delete(handlerId)
+
+                if(this.valueChangeHandlersPreProcessorMap.has(handlerId)){
+                    valueChangeHandlerMap.delete(handlerId)
+                }
             }
         }
     }

@@ -46,7 +46,8 @@
     "Unknown": "未知",
     "Pickup": "选择",
     "AtBegin": "置到开始位置",
-    "AtEnd": "置到结束位置"
+    "AtEnd": "置到结束位置",
+    "AtLength": "指定长度"
   },
   "timeline": {
     "Frames": "帧",

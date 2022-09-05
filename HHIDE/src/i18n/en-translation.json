@@ -46,7 +46,8 @@
     "Unknown": "Unknown",
     "Pickup": "PickUp",
     "AtBegin": "Set At Begin",
-    "AtEnd": "Set At End"
+    "AtEnd": "Set At End",
+    "AtLength": "At Length"
   },
   "timeline": {
     "Frames": "Frames",
