@@ -45,7 +45,17 @@ abstract class BaseShapeJS {
     }
 
     get pivotPosition(): paper.Point {
-        return this.rawObj.GetGlobalPivotPosition()
+        if(!this.followCurve){
+            return this.rawObj.GetGlobalPivotPosition()
+        }
+
+        let lengthRatio = this.shapeFollowCurveFrameState.GetLengthRatio();
+
+        let totalLength = this.followCurve.length()
+        let targetLength = totalLength * lengthRatio
+
+        let curvePoint = this.followCurve.getPointAt(targetLength)
+        return this.followCurve.localToGlobal(curvePoint)
     }
 
     set pivotPosition(centerPosition: paper.Point) {
@@ -731,18 +741,8 @@ abstract class BaseShapeJS {
         // Rotation around zero point.
 
         // The coordinate should have been aligned now.
-        let globalPivotPosition = this.rawObj.GetGlobalPivotPosition()
+        let globalPivotPosition = this.pivotPosition
         let localPivotPosition = this.rawObj.GetLocalPivotPosition()
-
-        if(this.followCurve){
-            let lengthRatio = this.shapeFollowCurveFrameState.GetLengthRatio();
-
-            let totalLength = this.followCurve.length()
-            let targetLength = totalLength * lengthRatio
-
-            let curvePoint = this.followCurve.getPointAt(targetLength)
-            globalPivotPosition = this.followCurve.localToGlobal(curvePoint)
-        }
 
         let radian = this.rawObj.GetRotation() / 180 * Math.PI
 
