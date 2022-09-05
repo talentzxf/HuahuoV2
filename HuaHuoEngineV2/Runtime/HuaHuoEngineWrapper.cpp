@@ -12,6 +12,8 @@
 #include "Shapes/ElementShape.h"
 #include "Shapes/TextShape.h"
 #include "Shapes/CurveShape.h"
+#include "KeyFrames/ShapeFollowCurveFrameState.h"
+
 #ifdef HUAHUO_EDITOR
 #include "Editor/SceneInspector.h"
 #include "Editor/SceneView.h"

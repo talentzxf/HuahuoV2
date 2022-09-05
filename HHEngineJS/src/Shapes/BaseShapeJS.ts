@@ -6,6 +6,7 @@ import {ShapeCenterSelector} from "./ShapeCenterSelector";
 declare function castObject(obj: any, clz: any): any;
 
 declare var Module: any;
+declare class ShapeFollowCurveFrameState;
 
 const BOUNDMARGIN: number = 10
 
@@ -31,6 +32,8 @@ abstract class BaseShapeJS {
     private bornStoreId: number = -1;
 
     private shapeCenterSelector: ShapeCenterSelector;
+
+    private shapeFollowCurveFrameState: ShapeFollowCurveFrameState;
 
     get typename(): string {
         return this.rawObj.GetTypeName()
@@ -440,6 +443,8 @@ abstract class BaseShapeJS {
     }
 
     afterWASMReady() {
+        this.shapeFollowCurveFrameState = castObject( this.rawObj.GetFrameStateByName("ShapeFollowCurveFrameState"), Module["ShapeFollowCurveFrameState"])
+
         this.rawObj = castObject(this.rawObj, Module[this.getShapeName()]);
 
         this.shapeCenterSelector = new ShapeCenterSelector(this)
