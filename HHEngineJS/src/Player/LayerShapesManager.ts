@@ -53,6 +53,24 @@ class LayerShapesManager {
         })
     }
 
+    getJSShapeFromRawShape(rawObj):BaseShapeJS{
+        let store = huahuoEngine.GetCurrentStore()
+
+        let layerCount = store.GetLayerCount();
+
+        let retShape:BaseShapeJS = null;
+        for (let i = 0; i < layerCount; i++) {
+            let layer = store.GetLayer(i)
+            let shapes = this.getLayerShapes(layer)
+
+            if(shapes.has(rawObj.ptr)){
+                return shapes.get(rawObj.ptr)
+            }
+        }
+
+        return retShape
+    }
+
     loadShapesFromStore(parent: BaseShapeJS): number {
         let layerShapeCount = 0
 

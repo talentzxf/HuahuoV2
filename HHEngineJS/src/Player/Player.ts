@@ -26,6 +26,10 @@ class Player{
         this.layerShapesManager.updateAllShapes()
     }
 
+    getJSShapeFromRawShape(rawObj){
+        return this.layerShapesManager.getJSShapeFromRawShape(rawObj)
+    }
+
     animationFrameStep(timeStamp){
         if(this.isPlaying){
             if(this.animationStartTime < 0){

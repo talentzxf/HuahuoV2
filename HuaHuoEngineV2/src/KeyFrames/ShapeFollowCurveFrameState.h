@@ -51,16 +51,24 @@ public:
 
     virtual bool Apply(int frameId) override;
 
-    BaseShape* GetFollowTarget(){
-        return m_CurrentShapeFollowCurveData.followCurveTarget;
+    void RecordTargetShape(int frameId, BaseShape* targetCurve);
+    void RecordLengthRatio(int frameId, float lengthRatio);
+
+    BaseShape* GetTargetShape(){
+        if(isValidFrame){
+            return m_CurrentShapeFollowCurveData.followCurveTarget;
+        }
+
+        return NULL;
     }
 
     float GetLengthRatio(){
-        return m_CurrentShapeFollowCurveData.lengthRatio;
-    }
+        if(isValidFrame){
+            return m_CurrentShapeFollowCurveData.lengthRatio;
+        }
 
-    void RecordTargetShape(int frameId, BaseShape* targetCurve);
-    void RecordLengthRatio(int frameId, float lengthRatio);
+        return -1.0f;
+    }
 
 private:
     std::vector<ShapeFollowCurveKeyFrame> m_KeyFrames;

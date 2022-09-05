@@ -6,7 +6,12 @@ import {ShapeCenterSelector} from "./ShapeCenterSelector";
 declare function castObject(obj: any, clz: any): any;
 
 declare var Module: any;
-declare class ShapeFollowCurveFrameState;
+declare class ShapeFollowCurveFrameState{
+    GetTargetShape()
+    GetLengthRatio():number
+    RecordTargetShape(frameId:number, targetCurve)
+    RecordLengthRatio(frameId:number, lengthRatio:number)
+}
 
 const BOUNDMARGIN: number = 10
 
@@ -370,8 +375,15 @@ abstract class BaseShapeJS {
         this.store()
     }
 
-    // TODO: Move this into Cpp part
-    followCurve: BaseShapeJS
+    get followCurve():BaseShapeJS{
+        let shapeObj = this.shapeFollowCurveFrameState.GetTargetShape()
+        return huahuoEngine.getActivePlayer().getJSShapeFromRawShape(shapeObj)
+    }
+
+    set followCurve(target:BaseShapeJS){
+        let frameId = this.getLayer().GetCurrentFrame()
+        this.shapeFollowCurveFrameState.RecordTargetShape(frameId, target.getRawShape())
+    }
 
     length() {
         return this.paperShape.length
@@ -428,6 +440,9 @@ abstract class BaseShapeJS {
 
             let curveStartPoint = this.followCurve.getPointAt(targetLength)
             this.position = this.followCurve.localToGlobal(curveStartPoint)
+
+            let frameId = this.getLayer().GetCurrentFrame()
+            this.shapeFollowCurveFrameState.RecordLengthRatio(frameId, portion)
         }
     }
 

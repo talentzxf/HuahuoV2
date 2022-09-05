@@ -124,6 +124,8 @@ interface AbstractFrameState{
 interface ShapeFollowCurveFrameState{
     void RecordTargetShape(long frameId, BaseShape targetCurve);
     void RecordLengthRatio(long frameId, float lengthRatio);
+    BaseShape GetTargetShape();
+    float GetLengthRatio();
 };
 
 [NoDelete]

@@ -16,7 +16,6 @@ void ShapeFollowCurveFrameState::Transfer(TransferFunction &transfer) {
     TRANSFER(m_KeyFrames);
 }
 
-
 ShapeFollowCurveData Lerp(ShapeFollowCurveData &k1, ShapeFollowCurveData &k2, float ratio) {
     ShapeFollowCurveData resultData;
 
