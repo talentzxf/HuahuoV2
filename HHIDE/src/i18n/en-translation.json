@@ -47,7 +47,8 @@
     "Pickup": "PickUp",
     "AtBegin": "Set At Begin",
     "AtEnd": "Set At End",
-    "AtLength": "At Length"
+    "AtLength": "At Length",
+    "Unfollow": "UnFollow"
   },
   "timeline": {
     "Frames": "Frames",

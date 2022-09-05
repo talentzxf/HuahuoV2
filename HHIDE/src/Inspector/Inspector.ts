@@ -1,6 +1,6 @@
 import {CustomElement, Logger, PropertySheet} from "hhcommoncomponents"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
-import {BasePropertyDesc, GetPropertyDivGenerator} from "./BasePropertyDivGenerator"
+import {BasePropertyDesc, GenerateDiv, GetPropertyDivGenerator} from "./BasePropertyDivGenerator"
 import "./PropertyTypes"
 import {findParentPanel} from "../Utilities/PanelUtilities";
 
@@ -63,14 +63,7 @@ class Inspector extends HTMLElement{
             let divGenerator = GetPropertyDivGenerator(property.type)
             let propertyDesc = divGenerator.generatePropertyDesc(property)
 
-            let propertyDiv = document.createElement("div")
-            propertyDiv.style.flexDirection = divGenerator.flexDirection()
-            propertyDiv.style.display = "flex"
-            propertyDiv.style.width = "100%"
-            propertyDiv.style.gap = "10px"
-
-            propertyDiv.appendChild(propertyDesc.getTitleDiv())
-            propertyDiv.appendChild(propertyDesc.getContentDiv())
+            let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
             this.contentDiv.appendChild(propertyDiv)
 
             this.propertyDescArray.push(propertyDesc)

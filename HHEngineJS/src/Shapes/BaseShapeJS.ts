@@ -396,6 +396,10 @@ abstract class BaseShapeJS {
         }
     }
 
+    unfollowCurve(){
+        this.followCurve = null
+    }
+
     atFollowCurveStart() {
         this.setFollowCurveLength(0.0)
     }
@@ -425,10 +429,14 @@ abstract class BaseShapeJS {
     }
 
     getFollowCurveLengthPotion(globalPoint:paper.Point){
-        let totalLength = this.followCurve.length()
-        let currentLength = this.followCurve.getGlobalOffsetOf(globalPoint)
+        if(this.followCurve){
+            let totalLength = this.followCurve.length()
+            let currentLength = this.followCurve.getGlobalOffsetOf(globalPoint)
 
-        return currentLength/totalLength
+            return currentLength/totalLength
+        }
+
+        return -1.0
     }
 
     afterWASMReady() {
@@ -467,6 +475,11 @@ abstract class BaseShapeJS {
                             type: PropertyType.REFERENCE,
                             getter: this.getFollowCurve.bind(this),
                             setter: this.setFollowCurve.bind(this)
+                        },
+                        {
+                            key:"inspector.Unfollow",
+                            type: PropertyType.BUTTON,
+                            action: this.unfollowCurve.bind(this)
                         },
                         {
                             key: "inspector.AtBegin",

@@ -1,4 +1,9 @@
-import {BasePropertyDesc, BasePropertyDivGenerator, GetPropertyDivGenerator} from "./BasePropertyDivGenerator";
+import {
+    BasePropertyDesc,
+    BasePropertyDivGenerator,
+    GenerateDiv,
+    GetPropertyDivGenerator
+} from "./BasePropertyDivGenerator";
 import {Property} from "hhcommoncomponents";
 
 class PanelPropertyDesc extends BasePropertyDesc{
@@ -14,14 +19,8 @@ class PanelPropertyDesc extends BasePropertyDesc{
             let divGenerator = GetPropertyDivGenerator(childProperty.type)
             let propertyDesc = divGenerator.generatePropertyDesc(childProperty)
 
-            let propertyDiv = document.createElement("div")
-            propertyDiv.style.flexDirection = divGenerator.flexDirection()
-            propertyDiv.style.display = "flex"
-            propertyDiv.style.width = "100%"
-            propertyDiv.style.gap = "10px"
+            let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
 
-            propertyDiv.appendChild(propertyDesc.getTitleDiv())
-            propertyDiv.appendChild(propertyDesc.getContentDiv())
             this.contentDiv.appendChild(propertyDiv)
         }
     }

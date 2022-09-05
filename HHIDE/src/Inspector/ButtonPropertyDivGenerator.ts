@@ -7,8 +7,12 @@ class ButtonPropertyDesc extends BasePropertyDesc{
 
         let button = document.createElement("button")
         button.onclick = property.action
-        button.innerText = "Execute"
+        button.innerText = i18n.t(property.key)
         this.contentDiv.appendChild(button)
+    }
+
+    getTitleDiv(): HTMLElement {
+        return null;
     }
 
     onValueChanged(val) {

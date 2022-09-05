@@ -59,4 +59,18 @@ function GetPropertyDivGenerator(type: PropertyType){
     return propertyGeneratorMap.get(type)
 }
 
-export {BasePropertyDivGenerator, RegisterDivGenerator, GetPropertyDivGenerator, BasePropertyDesc}
+function GenerateDiv(divGenerator: BasePropertyDivGenerator, propertyDesc:BasePropertyDesc){
+    let propertyDiv = document.createElement("div")
+    propertyDiv.style.flexDirection = divGenerator.flexDirection()
+    propertyDiv.style.display = "flex"
+    propertyDiv.style.width = "100%"
+    propertyDiv.style.gap = "10px"
+
+    if(propertyDesc.getTitleDiv())
+        propertyDiv.appendChild(propertyDesc.getTitleDiv())
+    propertyDiv.appendChild(propertyDesc.getContentDiv())
+
+    return propertyDiv
+}
+
+export {BasePropertyDivGenerator, RegisterDivGenerator, GetPropertyDivGenerator, BasePropertyDesc, GenerateDiv}
