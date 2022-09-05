@@ -209,6 +209,16 @@ abstract class BaseShapeJS {
         this.rawObj.SetGlobalPivotPosition(val.x, val.y, 0.0)
         let localPivotPosition = this.globalToLocal(val)
         this.rawObj.SetLocalPivotPosition(localPivotPosition.x, localPivotPosition.y, 0.0)
+
+        if(this.followCurve){
+            let followCurveShape = this.followCurve
+            let length = followCurveShape.getGlobalOffsetOf(val)
+            let lengthPortion = length / followCurveShape.length()
+
+            let frameId = this.getLayer().GetCurrentFrame()
+            this.shapeFollowCurveFrameState.RecordLengthRatio(frameId, lengthPortion)
+        }
+
         this.callHandlers("position", val)
 
         this.update()
