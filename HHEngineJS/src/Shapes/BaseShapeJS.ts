@@ -238,7 +238,9 @@ abstract class BaseShapeJS {
         this.paperItem.scaling = val
 
         // After scaling, the relative position of the pivot might change.
-        this.rawObj.SetLocalPivotPosition( this.globalToLocal(this.position) )
+        let localPivotPosition = this.globalToLocal(this.position)
+
+        this.rawObj.SetLocalPivotPosition( localPivotPosition.x, localPivotPosition.y, 0.0 )
 
         this.callHandlers("scaling", val)
     }
@@ -735,8 +737,8 @@ abstract class BaseShapeJS {
 
     afterUpdate() {
         this.applySegments()
-        let scale = this.rawObj.GetScale()
-        this.scaling = new paper.Point(scale.x, scale.y)
+
+        this.paperItem.scaling = new paper.Point(1.0, 1.0)
 
         this.paperItem.position = new paper.Point(0.0, 0.0)
         // Reset the rotation.
@@ -759,17 +761,8 @@ abstract class BaseShapeJS {
         else
             this.paperItem.position = newPosition
 
-        // this.paperItem.position = new paper.Point(0, 0)
-        // this.paperItem.rotation = 0
-        //
-        // let pos = this.rawObj.GetPosition();// This position is the new global coordinate of the local (0,0).
-        // let currentZeroPoint = this.paperItem.localToParent(new paper.Point(0, 0))
-        // let currentCenter = this.position
-        //
-        // let centerOffset = currentCenter.subtract(currentZeroPoint)
-        //
-        // let candidatePosition = new paper.Point(pos.x, pos.y).add(new paper.Point(centerOffset))
-        // this.position = candidatePosition
+        let scaling = this.rawObj.GetScale()
+        this.paperItem.scaling = new paper.Point(scaling.x, scaling.y)
 
         // Adjust index
         if (this.paperItem.index != this.rawObj.GetIndex() && this.paperItem.index > 0) {
