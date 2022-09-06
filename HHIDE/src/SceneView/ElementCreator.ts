@@ -146,7 +146,6 @@ class ElementCreator {
         let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
         newElementShape.storeId = newStore.GetStoreId()
 
-
         this.openElementEditTab(newElementShape)
 
         console.log("Created new store, store id:" + newElementShape.storeId)
