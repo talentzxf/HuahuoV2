@@ -74,7 +74,7 @@ class ElementCreator {
 
             sceneViewManager.focusSceneView(sceneview)
 
-            let canvas = content.querySelector("canvas")
+            let canvas = content.querySelector(".SceneViewCanvas")
             renderEngine2D.setDefaultCanvas(canvas)
 
             let player = this.sceneView.animationPlayer

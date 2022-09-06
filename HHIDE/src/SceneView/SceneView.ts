@@ -49,6 +49,7 @@ class SceneView extends HTMLElement {
 
     createCanvas() {
         this.canvas = document.createElement("canvas")
+        this.canvas.className = "SceneViewCanvas"
         this.canvas.setAttribute("resize", "true")
         this.canvas.style.padding = "0"
         this.canvas.style.margin = "0"
