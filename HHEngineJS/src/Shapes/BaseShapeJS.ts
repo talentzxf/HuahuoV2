@@ -59,10 +59,16 @@ abstract class BaseShapeJS {
     }
 
     set pivotPosition(centerPosition: paper.Point) {
+        let currentScaling = this.paperItem.scaling
+
+        this.paperItem.scaling = new paper.Point(1.0, 1.0)
+
         let localCenterPos = this.paperItem.globalToLocal(centerPosition)
 
         this.rawObj.SetGlobalPivotPosition(centerPosition.x, centerPosition.y, 0.0)
         this.rawObj.SetLocalPivotPosition(localCenterPos.x, localCenterPos.y, 0.0)
+
+        this.paperItem.scaling = currentScaling
     }
 
     public getPointAt(offset): paper.Point {
@@ -209,6 +215,11 @@ abstract class BaseShapeJS {
     }
 
     set position(val: paper.Point) {
+
+        let currentScaling = this.paperItem.scaling
+
+        this.paperItem.scaling = new paper.Point(1.0, 1.0)
+
         let curGlobalPivot = this.rawObj.GetGlobalPivotPosition()
         let curShapePosition = this.paperShape.position
 
@@ -230,18 +241,13 @@ abstract class BaseShapeJS {
         }
 
         this.callHandlers("position", val)
+        this.paperItem.scaling = currentScaling
 
         this.update()
     }
 
     set scaling(val: paper.Point) {
         this.paperItem.scaling = val
-
-        // After scaling, the relative position of the pivot might change.
-        let localPivotPosition = this.globalToLocal(this.position)
-
-        this.rawObj.SetLocalPivotPosition( localPivotPosition.x, localPivotPosition.y, 0.0 )
-
         this.callHandlers("scaling", val)
     }
 
@@ -743,8 +749,6 @@ abstract class BaseShapeJS {
         this.paperItem.position = new paper.Point(0.0, 0.0)
         // Reset the rotation.
         this.paperItem.rotation = this.rawObj.GetRotation();
-        // Rotation around zero point.
-
         // The coordinate should have been aligned now.
         let globalPivotPosition = this.pivotPosition
         let localPivotPosition = this.rawObj.GetLocalPivotPosition()
