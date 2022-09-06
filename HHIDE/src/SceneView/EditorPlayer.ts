@@ -15,7 +15,7 @@ class EditorPlayer extends Player{
 
         this.sceneView = sceneView
 
-        this.timeline = document.querySelector("hh-timeline")
+        this.timeline = sceneView.timeline
         this.timeline.addEventListener(TimelineEventNames.TRACKCELLCLICKED, this.onSetFrameTime.bind(this))
 
         let _this = this

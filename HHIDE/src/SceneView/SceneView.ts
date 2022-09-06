@@ -115,6 +115,8 @@ class SceneView extends HTMLElement {
                 let layerCount = huahuoEngine.GetCurrentStore().GetLayerCount()
                 if(layerCount == 0)
                     _this.createNewTrack(_this.timeline)
+
+                _this.animationPlayer = new EditorPlayer(_this)
             })
         })
     }
@@ -196,7 +198,6 @@ class SceneView extends HTMLElement {
             // this.drawCoordinate();
             this.setupEventsAndCreateFirstTrack()
 
-            this.animationPlayer = new EditorPlayer(this)
             defaultShapeDrawer.onBeginToDrawShape(this.canvas)
 
             let _this = this
@@ -212,7 +213,7 @@ class SceneView extends HTMLElement {
     }
 
     onDbClick(evt:MouseEvent){
-        if (this.currentShapeDrawer && !this.animationPlayer.isPlaying) {
+        if (this.currentShapeDrawer && !this.isPlaying) {
             this.currentShapeDrawer.onDblClick(evt)
         }
     }
@@ -226,7 +227,7 @@ class SceneView extends HTMLElement {
         let title = content.getTitle()
         panel.selectTab(title.tabIndex)
 
-        if (this.currentShapeDrawer && !this.animationPlayer.isPlaying) {
+        if (this.currentShapeDrawer && !this.isPlaying) {
             this.currentShapeDrawer.onMouseDown(evt)
         }
     }
@@ -235,14 +236,18 @@ class SceneView extends HTMLElement {
         defaultShapeDrawer.onBeginToDrawShape(this.canvas)
     }
 
+    get isPlaying():boolean{
+        return null != this.animationPlayer && this.animationPlayer.isPlaying
+    }
+
     onMouseMove(evt: MouseEvent) {
-        if (this.currentShapeDrawer && !this.animationPlayer.isPlaying) {
+        if (this.currentShapeDrawer && !this.isPlaying) {
             this.currentShapeDrawer.onMouseMove(evt)
         }
     }
 
     onMouseUp(evt: MouseEvent) {
-        if (this.currentShapeDrawer && !this.animationPlayer.isPlaying) {
+        if (this.currentShapeDrawer && !this.isPlaying) {
             this.currentShapeDrawer.onMouseUp(evt)
         }
     }
