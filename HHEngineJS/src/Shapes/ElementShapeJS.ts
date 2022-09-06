@@ -98,7 +98,6 @@ class ElementShapeJS extends BaseShapeJS {
         let previousStoreIdx = defaultStoreManager.GetCurrentStore().GetStoreId();
 
         try{
-            console.log("Set default storeByIdx:" + this.storeId)
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId);
 
             let store = defaultStoreManager.GetCurrentStore()
@@ -130,7 +129,6 @@ class ElementShapeJS extends BaseShapeJS {
 
         }finally {
             this.restoreLayerFrameIds();
-            console.log("Set default store By index:" + previousStoreIdx)
             defaultStoreManager.SetDefaultStoreByIndex(previousStoreIdx)
         }
     }
