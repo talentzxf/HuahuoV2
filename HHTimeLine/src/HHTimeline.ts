@@ -226,14 +226,14 @@ class HHTimeline extends HTMLElement {
             if (this.selectedTrackSeqId >= 0) {
                 this.timelineTracks[this.selectedTrackSeqId].clearSelect();
             }
-            this.timelineTracks[trackSeqId].selectTrack(evt.clientX);
+            this.timelineTracks[trackSeqId].selectTrack(evt.offsetX);
 
             if(this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId){
                 this.timelineTracks[this.selectedTrackSeqId].unSelectTrack();
             }
             this.selectedTrackSeqId = trackSeqId;
         }else{
-            this.timelineTracks[trackSeqId].rangeSelect(evt.clientX);
+            this.timelineTracks[trackSeqId].rangeSelect(evt.offsetX);
         }
 
         this.redrawCanvas()
