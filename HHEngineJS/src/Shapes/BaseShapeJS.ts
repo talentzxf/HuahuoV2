@@ -237,6 +237,9 @@ abstract class BaseShapeJS {
     set scaling(val: paper.Point) {
         this.paperItem.scaling = val
 
+        // After scaling, the relative position of the pivot might change.
+        this.rawObj.SetLocalPivotPosition( this.globalToLocal(this.position) )
+
         this.callHandlers("scaling", val)
     }
 
