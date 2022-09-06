@@ -413,7 +413,11 @@ abstract class BaseShapeJS {
 
     set followCurve(target:BaseShapeJS){
         let frameId = this.getLayer().GetCurrentFrame()
-        this.shapeFollowCurveFrameState.RecordTargetShape(frameId, target.getRawShape())
+
+        if(target != null && target.getRawShape)
+            this.shapeFollowCurveFrameState.RecordTargetShape(frameId, target.getRawShape())
+        else
+            this.shapeFollowCurveFrameState.RecordTargetShape(frameId, null)
     }
 
     length() {
