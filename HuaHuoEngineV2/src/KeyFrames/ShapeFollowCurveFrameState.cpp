@@ -4,6 +4,8 @@
 
 #include "ShapeFollowCurveFrameState.h"
 
+float eps = 0.00001f;
+
 IMPLEMENT_REGISTER_CLASS(ShapeFollowCurveFrameState, 10020);
 
 IMPLEMENT_OBJECT_SERIALIZE(ShapeFollowCurveFrameState);
@@ -34,13 +36,13 @@ bool ShapeFollowCurveFrameState::Apply(int frameId) {
         ShapeFollowCurveKeyFrame *k1 = resultKeyFrames.first;
         ShapeFollowCurveKeyFrame *k2 = resultKeyFrames.second;
 
-        if (k2 == NULL || k2->frameId == k1->frameId ) { // Avoid 0/0 during ratio calculation. Or beyond the last frame. k1 is the last frame.
+        if ((k1 != NULL && k1->frameId == frameId) || (k2 == NULL || k2->frameId == k1->frameId) ) { // Avoid 0/0 during ratio calculation. Or beyond the last frame. k1 is the last frame.
             this->m_CurrentShapeFollowCurveData = k1->followCurveData;
         }
-        else
-        {
+        else if(k2 != NULL && k2->frameId == frameId){
+            this->m_CurrentShapeFollowCurveData = k2->followCurveData;
+        } else {
             float ratio = float(frameId - k1->frameId) / float(k2->frameId - k1->frameId);
-
             this->m_CurrentShapeFollowCurveData = Lerp(k1->followCurveData, k2->followCurveData, ratio);
         }
 

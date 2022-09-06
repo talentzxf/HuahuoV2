@@ -127,7 +127,13 @@ void testShapeStore() {
 
     ShapeFollowCurveFrameState* curveFrameState = (ShapeFollowCurveFrameState*)circleShape->GetFrameStateByName("ShapeFollowCurveFrameState");
     curveFrameState->RecordTargetShape(0, rectangleShape);
-    curveFrameState->RecordLengthRatio(0, 100);
+    curveFrameState->RecordLengthRatio(0, 0.0f);
+
+    curveFrameState->RecordTargetShape(10, rectangleShape);
+    curveFrameState->RecordLengthRatio(10, 1.0f);
+
+    curveFrameState->RecordTargetShape(20, clonedRectangleShape);
+    curveFrameState->RecordLengthRatio(20, 0.0f);
 
     currentLayer->AddShapeInternal(circleShape);
 
