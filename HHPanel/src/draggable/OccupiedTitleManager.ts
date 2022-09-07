@@ -112,7 +112,11 @@ class OccupiedTitleManager {
     splitPanel(title: HHTitle) {
         let parentContainer: HTMLElement = this.mTargetPanel.parentElement
         let grandParentElement: HTMLElement = parentContainer.parentElement
-        let panelContainer = this.createContainer("column", "100%", "100%")
+
+        let containerWidth = "100%"
+        let containerHeight = "100%"
+
+        let panelContainer = this.createContainer("column", containerWidth, containerHeight)
         let newPanel = document.createElement('hh-panel') as HHPanel
         newPanel.id = "newPanel"
         newPanel.style.width = "100%"
@@ -144,6 +148,22 @@ class OccupiedTitleManager {
         title.setParentPanel(newPanel)
 
         this.mTargetPanel = title.getParentPanel()
+
+        // After split, recalculate child container width.
+        let isColumn = TypeIsColumn(this.mSplitPanelDir)
+        let totalSize = isColumn?newParentContainer.clientHeight:newParentContainer.clientWidth
+        let childContainers = DomHelper.getChildElements(newParentContainer, ["hh-container"])
+        let totalSizeWithoutSplitters = totalSize - (childContainers.length - 1 ) * (isColumn? newSplitter.offsetHeight:newSplitter.offsetWidth)
+
+        let eachContainterSize = totalSizeWithoutSplitters/childContainers.length
+        let sizePercentage = (100.0* eachContainterSize / totalSize) + "%"
+        childContainers.forEach((container) => {
+            if (isColumn) {
+                container.style.height = sizePercentage
+            } else {
+                container.style.width = sizePercentage
+            }
+        })
     }
 
     dropTitle(title: HHTitle) {
