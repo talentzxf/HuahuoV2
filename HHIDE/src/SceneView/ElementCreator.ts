@@ -83,9 +83,6 @@ class ElementCreator {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(sceneview.storeId)
             player.updateAllShapes()
 
-            let timeline: HHTimeline = document.querySelector("hh-timeline")
-            timeline.reloadTracks()
-
             sceneview.resetDefaultShapeDrawer()
         }
     }
