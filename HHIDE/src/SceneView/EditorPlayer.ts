@@ -2,6 +2,7 @@ import {HHTimeLine, TimelineEventNames} from "hhtimeline"
 import {huahuoEngine, GlobalConfig} from "hhenginejs"
 import {Player} from "hhenginejs/src/Player/Player"
 import {SceneView} from "./SceneView";
+import {sceneViewManager} from "./SceneViewManager";
 
 declare var Module:any;
 
@@ -54,21 +55,31 @@ class EditorPlayer extends Player{
         this.updateAllShapes()
     }
 
+    // TODO. Move this logic out. EditorPlayer should not care about keyboard events.
     onKeyEvent(e){
         if(e.key == "Enter" && e.ctrlKey){ // Ctrl+Enter
-            e.preventDefault()
+
+            if(sceneViewManager.getFocusedSceneView() != this.sceneView) { // I'm not the currently focused view. Nothing to do with me.
+                return
+            }
 
             if(!this.isPlaying){
                 this.startPlay()
             }else{
                 this.stopPlay()
             }
+
+            e.preventDefault()
         }
     }
 
     onPlayFrame(playFrameId){
-        super.onPlayFrame(playFrameId)
-        this.timeline.setTimeElapsed(playFrameId / GlobalConfig.fps)
+        if(sceneViewManager.getFocusedSceneView() != this.sceneView){
+            this.stopPlay() // Lost focus, stop play
+        }else{
+            super.onPlayFrame(playFrameId)
+            this.timeline.setTimeElapsed(playFrameId / GlobalConfig.fps)
+        }
     }
 
     onKeyFrameChanged(args){
