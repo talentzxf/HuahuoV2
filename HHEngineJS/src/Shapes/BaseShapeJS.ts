@@ -223,23 +223,15 @@ abstract class BaseShapeJS {
         let curGlobalPivot = this.rawObj.GetGlobalPivotPosition()
         let curShapePosition = this.paperShape.position
 
-        console.log("val:" + val)
-        console.log("CurrentGlobal:" + curGlobalPivot.x + "," + curGlobalPivot.y)
         let offset = val.subtract(new paper.Point(curGlobalPivot.x, curGlobalPivot.y))
-        console.log("Offset:" + offset)
         let nextShapePosition = curShapePosition.add(offset)
 
-        console.log("Current paperShape position:" + this.paperShape.position)
         this.paperShape.position = nextShapePosition
-        console.log("After paperShape position:" + this.paperShape.position)
 
         let localPivotPosition = this.globalToLocal(val)
 
         this.rawObj.SetGlobalPivotPosition(val.x, val.y, 0.0)
         this.rawObj.SetLocalPivotPosition(localPivotPosition.x, localPivotPosition.y, 0.0)
-
-        console.log("After global pivot:" + val.x + "," + val.y)
-        console.log("After local pivot:" + localPivotPosition.x + "," + localPivotPosition.y)
 
         if(this.followCurve){
             let followCurveShape = this.followCurve
@@ -252,12 +244,7 @@ abstract class BaseShapeJS {
 
         this.callHandlers("position", val)
         this.paperItem.scaling = currentScaling
-
-        console.log("Current zero point:" + this.paperShape.localToGlobal(new paper.Point(0,0)))
-        console.log("Updating!!!!!")
         this.update()
-
-        console.log("After update paperShape position:" + this.paperShape.position)
     }
 
     set scaling(val: paper.Point) {
@@ -771,24 +758,14 @@ abstract class BaseShapeJS {
         let globalPivotPosition = this.pivotPosition
         let localPivotPosition = this.rawObj.GetLocalPivotPosition()
 
-        console.log("Global pivot:" + globalPivotPosition.x + "," + globalPivotPosition.y)
-        console.log("Local pivot:" + localPivotPosition.x + "," + localPivotPosition.y)
-
         let radian = this.rawObj.GetRotation() / 180 * Math.PI
 
         let shapeZero = this.backCalculateZeroPoint(localPivotPosition, globalPivotPosition, -radian)
 
-        console.log("Shape zero:" + shapeZero)
-
-        let offset = this.paperShape.localToGlobal(new paper.Point(0, 0)) // As position is already (0,0). The global position of (0,0) indicates the center of the bounding rect.
-
-        console.log("Offset:" + offset)
+        let offset = this.paperShape.localToParent(new paper.Point(0, 0)) // As position is already (0,0). The global position of (0,0) indicates the center of the bounding rect.
 
         let newPosition = shapeZero.subtract(offset)
-        if (this.paperItem.parent)
-            this.paperItem.position = this.paperItem.parent.globalToLocal(newPosition)
-        else
-            this.paperItem.position = newPosition
+        this.paperItem.position = newPosition
 
         let scaling = this.rawObj.GetScale()
         this.paperItem.scaling = new paper.Point(scaling.x, scaling.y)

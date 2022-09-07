@@ -34,41 +34,51 @@ class HHTimeline extends HTMLElement {
 
     public elapsedTime: number = 0.0
 
+    private isInited: boolean = false
+
     connectedCallback() {
-        // canvasScrollContainer wraps canvasContainer wraps cavnas.
-        // Because canvas has a width limit. So the canvas can't be very big: https://www.tutorialspoint.com/Maximum-size-of-a-canvas-element-in-HTML#:~:text=All%20web%20browsers%20limit%20the,allowable%20area%20is%20268%2C435%2C456%20pixels.
+        if(!this.isInited) {
 
-        this.canvasScrollContainer = document.createElement("div")
-        this.canvasScrollContainer.id = "canvasScrollContainer"
-        this.canvasContainer = document.createElement("div")
-        this.canvas = document.createElement("canvas");
-        this.ctx = this.canvas.getContext("2d");
-        this.appendChild(this.canvasScrollContainer)
-        this.canvasScrollContainer.appendChild(this.canvasContainer)
-        this.canvasContainer.appendChild(this.canvas)
+            // canvasScrollContainer wraps canvasContainer wraps cavnas.
+            // Because canvas has a width limit. So the canvas can't be very big: https://www.tutorialspoint.com/Maximum-size-of-a-canvas-element-in-HTML#:~:text=All%20web%20browsers%20limit%20the,allowable%20area%20is%20268%2C435%2C456%20pixels.
 
-        this.canvasScrollContainer.style.overflowX = "auto"
-        this.canvasScrollContainer.style.overflowY = "hidden"
-        this.canvas.style.position = "relative"
+            this.canvasScrollContainer = document.createElement("div")
+            this.canvasScrollContainer.id = "canvasScrollContainer"
+            this.canvasContainer = document.createElement("div")
+            this.canvas = document.createElement("canvas");
+            this.ctx = this.canvas.getContext("2d");
+            this.appendChild(this.canvasScrollContainer)
+            this.canvasScrollContainer.appendChild(this.canvasContainer)
+            this.canvasContainer.appendChild(this.canvas)
 
-        this.canvasScrollContainer.addEventListener("scroll", this.onScroll.bind(this))
-        window.addEventListener("resize", this.Resize.bind(this))
+            this.canvasScrollContainer.style.overflowX = "auto"
+            this.canvasScrollContainer.style.overflowY = "hidden"
+            this.canvas.style.position = "relative"
 
-        let titleTimeLineTrack = new TitleTimelineTrack(0, this.frameCount, this.canvas.getContext('2d'), 0, null,"timeline.Frames")
-        this.titleTrack = titleTimeLineTrack
-        // Add one timelinetrack
-        this.timelineTracks.push(titleTimeLineTrack)
-        this.totalTrackHeight = titleTimeLineTrack.getCellHeight()
+            this.canvasScrollContainer.addEventListener("scroll", this.onScroll.bind(this))
+            window.addEventListener("resize", this.Resize.bind(this))
 
-        //
-        this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this))
-        this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this))
-        this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this))
+            let titleTimeLineTrack = new TitleTimelineTrack(0, this.frameCount, this.canvas.getContext('2d'), 0, null, "timeline.Frames")
+            this.titleTrack = titleTimeLineTrack
+            // Add one timelinetrack
+            this.timelineTracks.push(titleTimeLineTrack)
+            this.totalTrackHeight = titleTimeLineTrack.getCellHeight()
 
-        this.canvas.addEventListener('contextmenu', this.contextMenu.onContextMenu.bind(this.contextMenu))
-        this.setTimeElapsed(0.5 / GlobalConfig.fps)
+            //
+            this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this))
+            this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this))
+            this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this))
 
-        this.Resize()
+            this.canvas.addEventListener('contextmenu', this.contextMenu.onContextMenu.bind(this.contextMenu))
+            this.setTimeElapsed(0.5 / GlobalConfig.fps)
+
+            this.Resize()
+
+            let resizeObserver = new ResizeObserver(this.OnCanvasScrollerResize.bind(this))
+            resizeObserver.observe(this.canvasScrollContainer)
+
+            this.isInited = true
+        }
     }
 
     setTimeElapsed(playTime) {
@@ -79,17 +89,17 @@ class HHTimeline extends HTMLElement {
 
         this.redrawCanvas()
 
-        if(this.timelineTracks.length >= 1){
+        if (this.timelineTracks.length >= 1) {
             let indicatorOffsetX = this.timelineTracks[0].calculateCanvasOffsetX(Math.floor(this.elapsedTime * GlobalConfig.fps), false)
 
             let deltaIndicatorOffsetX = indicatorOffsetX - this.canvasScrollContainer.scrollLeft
-            if(deltaIndicatorOffsetX > this.canvasScrollContainer.clientWidth || deltaIndicatorOffsetX < 0){
+            if (deltaIndicatorOffsetX > this.canvasScrollContainer.clientWidth || deltaIndicatorOffsetX < 0) {
                 this.canvasScrollContainer.scrollLeft += deltaIndicatorOffsetX
             }
         }
     }
 
-    reloadTracks(){
+    reloadTracks() {
         // if(this.selectedTrackSeqId >= 0){
         //     this.timelineTracks[this.selectedTrackSeqId].clearSelect()
         //     this.timelineTracks[this.selectedTrackSeqId].unSelectTrack()
@@ -101,11 +111,11 @@ class HHTimeline extends HTMLElement {
         let currentStore = huahuoEngine.GetCurrentStore()
         let layerCount = currentStore.GetLayerCount()
         this.totalTrackHeight = this.titleTrack.getCellHeight()
-        for(let layerId = 0 ; layerId < layerCount; layerId++){
+        for (let layerId = 0; layerId < layerCount; layerId++) {
             let layer = currentStore.GetLayer(layerId)
 
             let icons = null
-            if(this.layerIconMap.has(layer)){
+            if (this.layerIconMap.has(layer)) {
                 icons = this.layerIconMap.get(layer)
             }
             this.addNewTrack(layer, icons)
@@ -119,10 +129,10 @@ class HHTimeline extends HTMLElement {
 
         console.log("TimeLine: Sequence is:" + seqId)
 
-        let title = (window as any).i18n.t("timeline.defaultTrackName", {"trackId":seqId})
+        let title = (window as any).i18n.t("timeline.defaultTrackName", {"trackId": seqId})
 
         let track = new TimelineTrack(seqId, this.frameCount, this.canvas.getContext('2d'), this.totalTrackHeight, layer, title)
-        if(icons && icons.length > 0){
+        if (icons && icons.length > 0) {
             track.setIcons(icons)
             this.layerIconMap.set(track.getLayer(), icons)
         }
@@ -150,7 +160,7 @@ class HHTimeline extends HTMLElement {
         this.setTimeElapsed(elapsedTime)
 
         let customEvent = new CustomEvent(TimelineEventNames.TRACKCELLCLICKED, {
-            detail:{
+            detail: {
                 track: track,
                 cellId: cellId,
                 elapsedTime: elapsedTime
@@ -222,17 +232,17 @@ class HHTimeline extends HTMLElement {
         }
 
         let shiftPressed = evt.shiftKey;
-        if(!shiftPressed || this.selectedTrackSeqId < 0){
+        if (!shiftPressed || this.selectedTrackSeqId < 0) {
             if (this.selectedTrackSeqId >= 0) {
                 this.timelineTracks[this.selectedTrackSeqId].clearSelect();
             }
             this.timelineTracks[trackSeqId].selectTrack(evt.offsetX);
 
-            if(this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId){
+            if (this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId) {
                 this.timelineTracks[this.selectedTrackSeqId].unSelectTrack();
             }
             this.selectedTrackSeqId = trackSeqId;
-        }else{
+        } else {
             this.timelineTracks[trackSeqId].rangeSelect(evt.offsetX);
         }
 
@@ -247,15 +257,20 @@ class HHTimeline extends HTMLElement {
         this.canvasContainer.style.width = widthPixel + "px";
         this.canvasContainer.style.height = heightPixel + "px";
         console.log("HHTimeline, setting canvasContainerWH:" + this.canvasContainer.style.width + this.canvasContainer.style.width)
-
-        let resizeObserver = new ResizeObserver(this.OnCanvasScrollerResize.bind(this))
-        resizeObserver.observe(this.canvasScrollContainer)
     }
 
-    OnCanvasScrollerResize(){
-        console.log("HHTimeline, setting canvasWidth,canvasHeight:" + this.canvasScrollContainer.clientWidth, this.canvasScrollContainer.clientHeight)
+    OnCanvasScrollerResize() {
+        console.log("HHTimeline, setting canvasScrollContainerWidth,canvasScrollContainerHeight:" + this.canvasScrollContainer.clientWidth, this.canvasScrollContainer.clientHeight)
+        console.log("HHTimeline, setting canvasWidth,canvasHeight:" + this.canvas.width, this.canvas.height)
+
+        if (this.canvas.width == this.canvasScrollContainer.clientWidth && this.canvas.height == this.canvasScrollContainer.clientHeight)
+            return;
+
         this.canvas.width = this.canvasScrollContainer.clientWidth;
         this.canvas.height = this.canvasScrollContainer.clientHeight;
+
+        this.canvasWidth = this.canvasScrollContainer.clientWidth
+        this.canvasHeight = this.canvasScrollContainer.clientHeight
 
         this.redrawCanvas();
     }
@@ -273,19 +288,19 @@ class HHTimeline extends HTMLElement {
         this.canvas.style.left = this.canvasScrollContainer.scrollLeft + "px";
     }
 
-    getTrackFromLayer(layer):TimelineTrack{
-        if(!this.layerTrackMap.has(layer)){
-            for(let track of this.timelineTracks){
-                this.layerTrackMap.set( track.getLayer(), track);
+    getTrackFromLayer(layer): TimelineTrack {
+        if (!this.layerTrackMap.has(layer)) {
+            for (let track of this.timelineTracks) {
+                this.layerTrackMap.set(track.getLayer(), track);
             }
         }
 
         return this.layerTrackMap.get(layer)
     }
 
-    redrawCell(layer, frameId){
-        let track:TimelineTrack = this.getTrackFromLayer(layer)
-        if(track){ // It's possible that we are saving an element belong to a layer that's not belong to current timeline. In that case, we won't update the track.
+    redrawCell(layer, frameId) {
+        let track: TimelineTrack = this.getTrackFromLayer(layer)
+        if (track) { // It's possible that we are saving an element belong to a layer that's not belong to current timeline. In that case, we won't update the track.
             track.selectCell(frameId)
             track.drawCell(frameId)
             track.drawTimelineIndicator()
