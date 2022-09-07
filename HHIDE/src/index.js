@@ -11,6 +11,7 @@ import {LoginForm} from "./Identity/LoginForm";
 import {RegisterForm} from "./Identity/RegisterForm";
 import {UserInfoBar} from "./Identity/UserInfoBar";
 import {dataFileUploader} from "./RESTApis/DataFileUploader";
+import {HHToolBar} from "./UIComponents/ToolBar";
 
 import "vanilla-colorful"
 
@@ -29,7 +30,6 @@ import {faEyeSlash} from "@fortawesome/free-regular-svg-icons";
 import {faEdit} from "@fortawesome/free-regular-svg-icons";
 import {faFileImage} from "@fortawesome/free-regular-svg-icons";
 import {faTimesCircle} from "@fortawesome/free-regular-svg-icons";
-import {saveAs} from 'file-saver';
 import {Logger} from "hhcommoncomponents";
 import {huahuoEngine} from "hhenginejs";
 import huahuoProperties from "./hhide.properties";
@@ -53,50 +53,9 @@ library.add(faTimesCircle)
 library.add(faCircleXmark)
 dom.watch();
 
-function save() {
-    // Restore current scene view.
 
-    let mainSceneView = document.querySelector("#mainScene")
-    let oldStoreId = huahuoEngine.GetCurrentStoreId()
 
-    try{
-        console.log("Setting default store by index:" + mainSceneView.storeId)
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainSceneView.storeId)
-        let Uint8Array = Module.writeObjectStoreInMemoryFile()
-        let blob = new Blob([Uint8Array], {type: "application/octet-stream"})
-        saveAs(blob, "huahuo.data")
-        Logger.info("Good!!")
-    }finally {
-        console.log("Setting default store by index asdfasdfasdf:" + oldStoreId)
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(oldStoreId)
-    }
-}
 
-function load(fName, e) {
-    Logger.info("Opening:" + fName)
-
-    let fileName = fName.split("\\").pop();
-    let file = e.target.files[0];
-    let reader = new FileReader()
-    reader.onload = function (e) {
-        let fileContent = new Uint8Array(e.target.result);
-        let storeMemoryFile = "mem://" + fileName;
-        let fileSize = fileContent.length;
-        let memoryFileContent = Module.createMemFile(storeMemoryFile, fileSize);
-        for (let i = 0; i < fileSize; i++) { // Copy to the file, byte by byte
-            memoryFileContent[i] = fileContent[i];
-        }
-
-        let result = Module.LoadStoreFileCompletely(storeMemoryFile);
-        if (result == 0) {
-            let timeline = document.querySelector("hh-timeline")
-            timeline.reloadTracks();
-        } else {
-            console.log("Can't load file: " + storeMemoryFile)
-        }
-    }
-    reader.readAsArrayBuffer(file)
-}
 
 function uploadAndOpenPlayer(){
     dataFileUploader.upload().then((response)=>{
@@ -109,8 +68,6 @@ function uploadAndOpenPlayer(){
 }
 
 window.menuoperations = {
-    save: save,
-    load: load,
     uploadAndOpenPlayer: uploadAndOpenPlayer
 }
 

@@ -34,10 +34,12 @@
     <rgba-color-picker></rgba-color-picker>
     <hh-container id="outmost_container" translateAll='true' hide="true">
         <hh-container direction="row" size="fit-content" hasSplitter="false" style="border: 1px solid blue">
-            <hh-userinfo-bar></hh-userinfo-bar>
-            <button onclick="window.menuoperations.save()">save</button>
-            <input type="file" onchange="window.menuoperations.load(this.value, event)">
-            <button onclick="window.menuoperations.uploadAndOpenPlayer()">uploadAndOpen</button>
+            <div style="width: 50%">
+                <hh-tool-bar></hh-tool-bar>
+            </div>
+            <div style="display: flex; width:50%; flex-direction: row-reverse">
+                <hh-userinfo-bar></hh-userinfo-bar>
+            </div>
         </hh-container>
 
         <hh-container direction="column">
