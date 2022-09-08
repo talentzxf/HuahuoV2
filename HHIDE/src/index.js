@@ -10,6 +10,7 @@ import {Inspector} from "./Inspector/Inspector";
 import {LoginForm} from "./Identity/LoginForm";
 import {RegisterForm} from "./Identity/RegisterForm";
 import {UserInfoBar} from "./Identity/UserInfoBar";
+import {PlayerController} from "./AnimationPlayer/PlayerController";
 import {dataFileUploader} from "./RESTApis/DataFileUploader";
 import {HHToolBar} from "./UIComponents/ToolBar";
 

@@ -1,8 +1,8 @@
 import {HHTimeLine, TimelineEventNames} from "hhtimeline"
 import {huahuoEngine, GlobalConfig} from "hhenginejs"
-import {Player} from "hhenginejs/src/Player/Player"
-import {SceneView} from "./SceneView";
-import {sceneViewManager} from "./SceneViewManager";
+import {Player} from "hhenginejs/src/Player/Player"; // Not sure what's the best way to import a class and extend it in another package....
+import {SceneView} from "../SceneView/SceneView";
+import {sceneViewManager} from "../SceneView/SceneViewManager";
 
 declare var Module:any;
 

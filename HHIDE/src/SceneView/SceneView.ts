@@ -5,7 +5,7 @@ import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {HHTimeline} from "hhtimeline"
 import {ResizeObserver} from 'resize-observer';
 import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
-import {EditorPlayer} from "./EditorPlayer";
+import {EditorPlayer} from "../AnimationPlayer/EditorPlayer";
 import {fileLoader} from "./FileLoader";
 import {findParentContent, findParentPanel} from "../Utilities/PanelUtilities";
 import {sceneViewManager} from "./SceneViewManager";
@@ -178,14 +178,14 @@ class SceneView extends HTMLElement {
         this.gizmoContainer.appendChild(this.zoomResetBtn)
     }
 
-    drawCoordinate(){
-        let yCoord = new paper.Path.Line(new paper.Point(0.0, 0.0), new paper.Point(0.0, 1000.0))
-        yCoord.strokeColor = new paper.Color("Black")
-        yCoord.strokeWidth = 10
-        let xCoord = new paper.Path.Line(new paper.Point(0.0, 0.0), new paper.Point(1000.0, 0.0))
-        xCoord.strokeColor = new paper.Color("Black")
-        xCoord.strokeWidth = 10
-    }
+    // drawCoordinate(){
+    //     let yCoord = new paper.Path.Line(new paper.Point(0.0, 0.0), new paper.Point(0.0, 1000.0))
+    //     yCoord.strokeColor = new paper.Color("Black")
+    //     yCoord.strokeWidth = 10
+    //     let xCoord = new paper.Path.Line(new paper.Point(0.0, 0.0), new paper.Point(1000.0, 0.0))
+    //     xCoord.strokeColor = new paper.Color("Black")
+    //     xCoord.strokeWidth = 10
+    // }
 
     connectedCallback() {
         if(!this.inited){
