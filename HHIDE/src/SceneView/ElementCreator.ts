@@ -1,5 +1,5 @@
 import {SceneView} from "./SceneView";
-import {findParentContent, findParentPanel} from "../Utilities/PanelUtilities";
+import {findParentContent, findParentPanel} from "hhpanel";
 import {HHPanel} from "hhpanel";
 import {renderEngine2D, huahuoEngine, ElementShapeJS, paper} from "hhenginejs"
 import {HHContent, PanelEventNames} from "hhpanel";

@@ -10,7 +10,7 @@ import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {elementCreator} from "../SceneView/ElementCreator";
 import {huahuoEngine} from "hhenginejs";
 import {HHContent} from "hhpanel"
-import {findParentContent} from "../Utilities/PanelUtilities";
+import {findParentContent} from "hhpanel";
 import {objectDeleter} from "./ObjectDeleter";
 
 

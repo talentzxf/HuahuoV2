@@ -7,7 +7,7 @@ import {ResizeObserver} from 'resize-observer';
 import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
 import {EditorPlayer} from "../AnimationPlayer/EditorPlayer";
 import {fileLoader} from "./FileLoader";
-import {findParentContent, findParentPanel} from "../Utilities/PanelUtilities";
+import {findParentContent, findParentPanel} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
 
 @CustomElement({

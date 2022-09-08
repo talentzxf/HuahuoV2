@@ -2,7 +2,7 @@ import {CustomElement, Logger, PropertySheet} from "hhcommoncomponents"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {BasePropertyDesc, GenerateDiv, GetPropertyDivGenerator} from "./BasePropertyDivGenerator"
 import "./PropertyTypes"
-import {findParentPanel} from "../Utilities/PanelUtilities";
+import {findParentContainer, findParentPanel} from "hhpanel";
 
 @CustomElement({
     selector: "hh-inspector"
@@ -29,11 +29,11 @@ class Inspector extends HTMLElement{
         EventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
         EventBus.getInstance().on(EventNames.UNSELECTOBJECTS, this.unselectObjects.bind(this))
 
-        findParentPanel(this).style.display = "none"
+        findParentContainer(this).hide()
     }
 
     unselectObjects(){
-        findParentPanel(this).style.display = "none"
+        findParentContainer(this).hide()
     }
 
     clearCurrentProperties(){
@@ -48,10 +48,11 @@ class Inspector extends HTMLElement{
 
     onItemSelected(propertySheet: PropertySheet){
 
-        findParentPanel(this).style.display = "block"
+        findParentContainer(this).show()
 
         let parentPanel = findParentPanel(this)
-        let parentHeight = parentPanel.clientHeight;
+        let titleBarHeight = parentPanel.querySelector(".title_tabs").offsetHeight
+        let parentHeight = parentPanel.clientHeight - titleBarHeight;
 
         this.contentScrollerDiv.style.height = parentHeight + "px"
 

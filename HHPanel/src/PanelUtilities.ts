@@ -1,4 +1,6 @@
-import {HHPanel, HHContainer, HHContent} from "hhpanel"
+import {HHPanel} from "./HHPanel";
+import {HHContainer} from "./HHContainer";
+import {HHContent} from "./HHContent";
 
 function findParentElement(ele, clz){
     let candidate = ele.parentElement

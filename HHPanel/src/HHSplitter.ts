@@ -60,6 +60,9 @@ class HHSplitter extends HTMLElement {
             ResizeManager.getInstance().adjustSiblingsSize(this, offset, this.isColumn)
 
             this.prevPos = new Vector2D(evt.clientX, evt.clientY)
+
+            evt.preventDefault()
+            evt.stopPropagation()
         }
     }
 
