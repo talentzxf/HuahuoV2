@@ -19,7 +19,8 @@ class Inspector extends HTMLElement{
         this.contentScrollerDiv = document.createElement("div")
         this.contentScrollerDiv .style.width = "100%"
         this.contentScrollerDiv .style.height = parentHeight + "px"
-        this.contentScrollerDiv .style.overflowY = "scroll"
+        this.contentScrollerDiv .style.overflowY = "auto"
+        this.contentScrollerDiv.style.overflowX = "clip"
         this.appendChild(this.contentScrollerDiv )
 
         this.contentDiv = document.createElement("div")
@@ -50,11 +51,10 @@ class Inspector extends HTMLElement{
 
         findParentContainer(this).show()
 
-        let parentPanel = findParentPanel(this)
-        let titleBarHeight = parentPanel.querySelector(".title_tabs").offsetHeight
-        let parentHeight = parentPanel.clientHeight - titleBarHeight;
-
-        this.contentScrollerDiv.style.height = parentHeight + "px"
+        let parentContainer = findParentContainer(this)
+        let titleBarHeight = parentContainer.querySelector(".title_tabs").offsetHeight
+        let parentHeight = parentContainer.clientHeight - titleBarHeight;
+        this.contentScrollerDiv.style.height = (parentHeight) + "px"
 
         Logger.info("Selected something")
         this.clearCurrentProperties()
