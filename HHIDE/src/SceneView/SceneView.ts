@@ -116,6 +116,8 @@ class SceneView extends HTMLElement {
                 let layerCount = huahuoEngine.GetCurrentStore().GetLayerCount()
                 if(layerCount == 0)
                     _this.createNewTrack(_this.timeline)
+                else
+                    _this.timeline.reloadTracks()
 
                 _this.animationPlayer = new EditorPlayer(_this)
             })
