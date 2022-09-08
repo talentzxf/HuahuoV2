@@ -5,6 +5,8 @@ import {SceneView} from "../SceneView/SceneView";
 import {HHTimeline} from "hhtimeline"
 import {saveAs} from 'file-saver';
 import {SVGFiles} from "../Utilities/Svgs";
+import {dataFileUploader} from "../RESTApis/DataFileUploader";
+import huahuoProperties from "../hhide.properties";
 
 declare var Module:any
 
@@ -54,12 +56,23 @@ function load(fName:string, e) {
     reader.readAsArrayBuffer(file)
 }
 
+function uploadAndOpenPlayer(){
+    dataFileUploader.upload().then((response)=>{
+        let fileId = response["fileId"]
+
+        let playerUrl = huahuoProperties["huahuo.player.url"] + "?projectId=" + fileId
+
+        window.open(playerUrl, '_blank')
+    })
+}
+
 @CustomElement({
     selector: "hh-tool-bar"
 })
 class HHToolBar extends HTMLElement{
     saveButton: HTMLButtonElement
     loadButton: HTMLButtonElement
+    previewButton: HTMLButtonElement
     constructor() {
         super();
 
@@ -82,6 +95,13 @@ class HHToolBar extends HTMLElement{
 
         this.loadButton.addEventListener("click", this.onFileSelected.bind(this))
         this.appendChild(this.loadButton)
+
+        this.previewButton = document.createElement("button")
+        this.previewButton.style.width = "30px"
+        this.previewButton.style.height = "30px"
+        this.previewButton.innerHTML = SVGFiles.previewBtn
+        this.previewButton.addEventListener("click", uploadAndOpenPlayer)
+        this.appendChild(this.previewButton)
     }
 
     onFileSelected(){

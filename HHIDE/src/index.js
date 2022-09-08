@@ -54,18 +54,4 @@ library.add(faTimesCircle)
 library.add(faCircleXmark)
 dom.watch();
 
-function uploadAndOpenPlayer(){
-    dataFileUploader.upload().then((response)=>{
-        let fileId = response.fileId
-
-        let playerUrl = huahuoProperties["huahuo.player.url"] + "?projectId=" + fileId
-
-        window.open(playerUrl, '_blank')
-    })
-}
-
-window.menuoperations = {
-    uploadAndOpenPlayer: uploadAndOpenPlayer
-}
-
 init()
