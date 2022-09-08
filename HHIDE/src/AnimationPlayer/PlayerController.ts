@@ -1,5 +1,7 @@
 import {CustomElement} from "hhcommoncomponents";
 import {SVGFiles} from "../Utilities/Svgs";
+import {sceneViewManager} from "../SceneView/SceneViewManager";
+import {Player} from "hhenginejs";
 
 @CustomElement({
     selector: "hh-player-controller"
@@ -27,6 +29,43 @@ class PlayerController extends HTMLElement{
         this.appendChild(this.playButton)
         this.appendChild(this.pauseButton)
         this.appendChild(this.stopButton)
+
+        this.playButton.onclick = this.playAnimation.bind(this)
+        this.pauseButton.onclick = this.pauseAnimation.bind(this)
+        this.stopButton.onclick = this.stopAnimation.bind(this)
+
+        document.addEventListener('keydown', this.onKeyEvent.bind(this));
+    }
+
+    onKeyEvent(evt:KeyboardEvent){
+            if(evt.key == "Enter" && evt.ctrlKey){ // Ctrl+Enter
+
+                let player:Player = sceneViewManager.getFocusedViewAnimationPlayer()
+
+                if(!player.isPlaying){
+                    player.startPlay()
+                }else{
+                    player.stopPlay()
+                }
+
+                evt.preventDefault()
+            }
+    }
+
+    playAnimation(){
+        let player:Player = sceneViewManager.getFocusedViewAnimationPlayer()
+        player.startPlay()
+    }
+
+    pauseAnimation(){
+        let player:Player = sceneViewManager.getFocusedViewAnimationPlayer()
+        player.stopPlay()
+    }
+
+    stopAnimation(){
+        let player:Player = sceneViewManager.getFocusedViewAnimationPlayer()
+        player.stopPlay()
+        player.setFrameId(0) // Reset to frame 0
     }
 }
 

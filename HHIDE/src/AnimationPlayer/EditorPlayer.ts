@@ -35,8 +35,6 @@ class EditorPlayer extends Player{
             shapeRemovedHander.handleEvent = _this.onShapeRemoved.bind(_this)
             huahuoEngine.GetInstance().RegisterEvent("OnShapeRemoved", shapeRemovedHander)
         })
-
-        document.addEventListener('keydown', this.onKeyEvent.bind(this));
     }
 
     onSetFrameTime(e){
@@ -55,29 +53,11 @@ class EditorPlayer extends Player{
         this.updateAllShapes()
     }
 
-    // TODO. Move this logic out. EditorPlayer should not care about keyboard events.
-    onKeyEvent(e){
-        if(e.key == "Enter" && e.ctrlKey){ // Ctrl+Enter
-
-            if(sceneViewManager.getFocusedSceneView() != this.sceneView) { // I'm not the currently focused view. Nothing to do with me.
-                return
-            }
-
-            if(!this.isPlaying){
-                this.startPlay()
-            }else{
-                this.stopPlay()
-            }
-
-            e.preventDefault()
-        }
-    }
-
-    onPlayFrame(playFrameId){
+    setFrameId(playFrameId){
         if(sceneViewManager.getFocusedSceneView() != this.sceneView){
             this.stopPlay() // Lost focus, stop play
         }else{
-            super.onPlayFrame(playFrameId)
+            super.setFrameId(playFrameId)
             this.timeline.setTimeElapsed(playFrameId / GlobalConfig.fps)
         }
     }

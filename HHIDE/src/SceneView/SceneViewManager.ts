@@ -1,4 +1,6 @@
 import {SceneView} from "./SceneView";
+import {Logger} from "hhcommoncomponents"
+import {Player} from "hhenginejs"
 
 class SceneViewManager{
     // Map from storeId->SceneView
@@ -26,6 +28,16 @@ class SceneViewManager{
 
     removeSceneViewMap(storeId: number){
         this.sceneViews.delete(storeId)
+    }
+
+    getFocusedViewAnimationPlayer(): Player{
+        let targetSceneView:SceneView = sceneViewManager.getFocusedSceneView()
+        if(targetSceneView == null) { // Currently, no scene view is focused. But Why???
+            Logger.error("No scene view is focused!")
+            return null
+        }
+
+        return targetSceneView.animationPlayer
     }
 }
 

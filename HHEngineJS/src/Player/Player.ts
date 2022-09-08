@@ -45,7 +45,7 @@ class Player{
                 let activePlayTime = activeFrames / GlobalConfig.fps;
                 let playTime = (timeStamp - this.animationStartTime) / 1000.0 % activePlayTime;
                 let frameId = Math.floor(playTime * GlobalConfig.fps)
-                this.onPlayFrame(frameId)
+                this.setFrameId(frameId)
                 console.log("Rendering")
                 this.lastAnimateTime = timeStamp
             }else{
@@ -55,7 +55,7 @@ class Player{
         }
     }
 
-    onPlayFrame(playFrameId){
+    setFrameId(playFrameId){
         // Update time for all layers in the default store.
         let currentStore = huahuoEngine.GetCurrentStore()
 

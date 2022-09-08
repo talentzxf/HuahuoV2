@@ -76,10 +76,6 @@ class HHToolBar extends HTMLElement{
     constructor() {
         super();
 
-        //                <button onclick="window.menuoperations.save()">save</button>
-        //                 <input type="file" onchange="window.menuoperations.load(this.value, event)">
-        //                 <button onclick="window.menuoperations.uploadAndOpenPlayer()">uploadAndOpen</button>
-
         this.saveButton = document.createElement("button")
         this.saveButton.style.width = "30px"
         this.saveButton.style.height = "30px"
