@@ -54,10 +54,6 @@ library.add(faTimesCircle)
 library.add(faCircleXmark)
 dom.watch();
 
-
-
-
-
 function uploadAndOpenPlayer(){
     dataFileUploader.upload().then((response)=>{
         let fileId = response.fileId
