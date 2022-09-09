@@ -78,12 +78,15 @@ class RestApi {
             if (axios.isAxiosError(error)) {
                 if(error.response.status == 401){
                     Logger.error("Auth failed", error.message) // TODO: Relogin the user. TODO: Rememeber me.
+                    HHToast.error("Auth failed! Invalid username/pwd!")
                 }else{
                     Logger.error("Axios error happened!", error.message);
+                    HHToast.error("Axios error happened!" + error.message)
                 }
                 return null;
             } else {
                 Logger.error("Unexpected error happened!", error);
+                HHToast.error("Unexpected error happened during Api call!")
                 return null;
             }
         }
@@ -120,6 +123,7 @@ class RestApi {
         let token = userInfo.jwtToken
         if (token == null) {
             Logger.error("Token is null, login again!")
+            HHToast.error("Token is null, please re-login!")
             return false
         }
 

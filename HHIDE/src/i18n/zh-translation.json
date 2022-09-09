@@ -20,6 +20,11 @@
   "Text": "文本",
   "not_logged_in": "尚未登录",
   "welcomeMsg": "欢迎使用花火网!",
+  "RectangleShape": "矩形",
+  "CircleShape": "圆形",
+  "TextShape": "文本",
+  "CurveShape": "曲线",
+  "LineShape": "直线",
   "contextmenu": {
     "sendToBack": "放到下面",
     "bringToFront": "放到上面",
@@ -56,9 +61,10 @@
     "Frames": "帧",
     "defaultTrackName": "轨道 {{trackId, number}}"
   },
-  "RectangleShape": "矩形",
-  "CircleShape": "圆形",
-  "TextShape": "文本",
-  "CurveShape": "曲线",
-  "LineShape": "直线"
+  "toast": {
+    "projectSaved": "项目已经成功保存！",
+    "projectSaveFailed": "保存项目失败!",
+    "openProjectSucceeded": "成功加载项目!",
+    "openProjectFailed": "加载项目失败!"
+  }
 }

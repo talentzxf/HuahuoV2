@@ -7,6 +7,7 @@ import {saveAs} from 'file-saver';
 import {SVGFiles} from "../Utilities/Svgs";
 import {dataFileUploader} from "../RESTApis/DataFileUploader";
 import huahuoProperties from "../hhide.properties";
+import {HHToast} from "hhcommoncomponents";
 
 declare var Module:any
 
@@ -17,14 +18,16 @@ function save() {
     let oldStoreId = huahuoEngine.GetCurrentStoreId()
 
     try{
-        console.log("Setting default store by index:" + mainSceneView.storeId)
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainSceneView.storeId)
         let Uint8Array = Module.writeObjectStoreInMemoryFile()
         let blob = new Blob([Uint8Array], {type: "application/octet-stream"})
         saveAs(blob, "huahuo.data")
-        Logger.info("Good!!")
-    }finally {
-        console.log("Setting default store by index asdfasdfasdf:" + oldStoreId)
+        HHToast.info(i18n.t("toast.projectSaved"))
+    }
+    catch (e){
+        HHToast.info(i18n.t("toast.projectSaveFailed"))
+    }
+    finally {
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(oldStoreId)
     }
 }
@@ -49,8 +52,9 @@ function load(fName:string, e) {
         if (result == 0) {
             let timeline:HHTimeline = document.querySelector("hh-timeline")
             timeline.reloadTracks();
+            HHToast.info(i18n.t("toast.openProjectSucceeded"))
         } else {
-            console.log("Can't load file: " + storeMemoryFile)
+            HHToast.error(i18n.t("toast.openProjectFailed"))
         }
     }
     reader.readAsArrayBuffer(file)

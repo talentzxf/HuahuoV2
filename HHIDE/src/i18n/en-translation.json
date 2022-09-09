@@ -20,6 +20,11 @@
   "Text": "Text",
   "not_logged_in": "Not Logged In",
   "welcomeMsg": "Welcome to HuaHuo!",
+  "RectangleShape": "Rectangle",
+  "CircleShape": "Circle",
+  "TextShape": "Text",
+  "CurveShape": "Curve",
+  "LineShape": "Line",
   "contextmenu": {
     "sendToBack": "Send To Back",
     "bringToFront": "Bring to Front",
@@ -56,9 +61,10 @@
     "Frames": "Frames",
     "defaultTrackName": "Track {{trackId}}"
   },
-  "RectangleShape": "Rectangle",
-  "CircleShape": "Circle",
-  "TextShape": "Text",
-  "CurveShape": "Curve",
-  "LineShape": "Line"
+  "toast": {
+    "projectSaved": "Project has been successfully saved!",
+    "projectSaveFailed": "Save project failed!",
+    "openProjectSucceeded": "Successfully opened project!",
+    "openProjectFailed": "Open project failed!"
+  }
 }
