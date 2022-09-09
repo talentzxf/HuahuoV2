@@ -1,6 +1,7 @@
 import {CustomElement, Logger} from "hhcommoncomponents";
 import {userInfo} from "./UserInfo";
 import {api} from "../RESTApis/RestApi";
+import {SVGFiles} from "../Utilities/Svgs";
 
 @CustomElement({
     selector: "hh-userinfo-bar"
@@ -24,14 +25,15 @@ class UserInfoBar extends HTMLElement {
 
     connectedCallback(){
         if(!this.usernameSpan){
+            this.style.display = "flex"
             this.usernameSpan = document.createElement("span")
+            this.usernameSpan.style.lineHeight = "30px"
+            this.usernameSpan.style.verticalAlign = "middle"
             this.appendChild(this.usernameSpan)
 
             let _this = this
             let i18n = (window as any).i18n
-            i18n.ExecuteAfterInited( ()=>{
-                _this.username = i18n.t("not_logged_in")
-            })
+            this.username = i18n.t("not_logged_in")
 
             userInfo.addLoginEventHandler(this.setUserName.bind(this))
 
@@ -45,6 +47,12 @@ class UserInfoBar extends HTMLElement {
                             userInfo.username = userName
                             userInfo.jwtToken = token
                             userInfo.isLoggedIn = true
+
+                            _this.setUserName(userName)
+                            // Add a log out button
+                            let signOut:HTMLButtonElement = document.createElement("button")
+                            signOut.innerHTML = SVGFiles.logoutBtn
+                            _this.appendChild(signOut)
                         }
                     })
                 } else {
