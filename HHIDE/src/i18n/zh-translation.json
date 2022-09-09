@@ -19,6 +19,7 @@
   "Rectangle": "矩形",
   "Text": "文本",
   "not_logged_in": "尚未登录",
+  "welcomeMsg": "欢迎使用花火网!",
   "contextmenu": {
     "sendToBack": "放到下面",
     "bringToFront": "放到上面",

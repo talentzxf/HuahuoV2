@@ -13,7 +13,7 @@ let i18n = (window as any).i18n
 function init(){
     huahuoEngine.ExecuteAfterInited(()=>{
         i18n.ExecuteAfterInited(()=>{
-            HHToast.info("Welcome!")
+            HHToast.info(i18n.t("welcomeMsg"))
             showMainDiv()
         })
     })
