@@ -486,6 +486,14 @@ abstract class BaseShapeJS {
         return -1.0
     }
 
+    getName():string{
+        return this.name
+    }
+
+    setName(name:string){
+        this.name = name
+    }
+
     afterWASMReady() {
         this.shapeFollowCurveFrameState = castObject( this.rawObj.GetFrameStateByName("ShapeFollowCurveFrameState"), Module["ShapeFollowCurveFrameState"])
 
@@ -500,6 +508,13 @@ abstract class BaseShapeJS {
             key: "inspector.Type",
             type: PropertyType.STRING,
             getter: this.getTypeName.bind(this)
+        })
+
+        this.propertySheet.addProperty({
+            key: "inspector.Name",
+            type: PropertyType.STRING,
+            getter: this.getName.bind(this),
+            setter: this.setName.bind(this)
         })
 
         // Position

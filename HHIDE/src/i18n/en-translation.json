@@ -30,6 +30,7 @@
   },
   "inspector": {
     "Type": "Type",
+    "Name": "Name",
     "Position": "Position",
     "Scaling": "Scaling",
     "Rotation": "Rotation",

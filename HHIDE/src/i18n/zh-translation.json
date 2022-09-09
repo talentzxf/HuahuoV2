@@ -30,6 +30,7 @@
   },
   "inspector": {
     "Type": "类型",
+    "Name": "名字",
     "Position": "位置",
     "Scaling": "缩放",
     "Rotation": "旋转",
