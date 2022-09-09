@@ -1,0 +1,53 @@
+hh-toast{
+    visibility: hidden;
+    border-radius: 15px;
+    position: fixed;
+    bottom:30px;
+    left:50%;
+    minWidth: 250px;
+    text-align: center;
+    font-size: 17px;
+    z-index: 1;
+    padding: 16px
+}
+
+hh-toast.info{
+    background-color: green;
+    color: #fff;
+}
+
+hh-toast.warn{
+    background-color: yellow;
+    color: black;
+}
+
+hh-toast.error{
+    background-color: red;
+    color: #fff;
+}
+
+hh-toast.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}

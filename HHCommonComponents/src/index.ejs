@@ -11,7 +11,15 @@
             padding: 0;
         }
     </style>
+
+    <script>
+        function init(){
+                let toast = document.querySelector("hh-toast")
+                toast.setText(1, "asdfasdfsadfsadf")
+        }
+    </script>
 </head>
-<body>
+<body onload="init()">
+    <hh-toast position="LEFTUP"></hh-toast>
 </body>
 </html>

@@ -1,4 +1,5 @@
 import {huahuoEngine} from "hhenginejs";
+import {HHToast} from "hhcommoncomponents";
 
 function showMainDiv(){
     let loadingElement = document.querySelector("#loading") as HTMLDivElement
@@ -12,6 +13,7 @@ let i18n = (window as any).i18n
 function init(){
     huahuoEngine.ExecuteAfterInited(()=>{
         i18n.ExecuteAfterInited(()=>{
+            HHToast.info("Welcome!")
             showMainDiv()
         })
     })
