@@ -2,6 +2,7 @@ import {CustomElement, Logger} from "hhcommoncomponents";
 import {userInfo} from "./UserInfo";
 import {api} from "../RESTApis/RestApi";
 import {SVGFiles} from "../Utilities/Svgs";
+import {openLoginForm} from "./LoginForm";
 
 @CustomElement({
     selector: "hh-userinfo-bar"
@@ -9,6 +10,7 @@ import {SVGFiles} from "../Utilities/Svgs";
 class UserInfoBar extends HTMLElement {
     _username: string
     usernameSpan: HTMLSpanElement
+    loginLogoutBtn: HTMLButtonElement
 
     get username(){
         return this._username
@@ -29,7 +31,13 @@ class UserInfoBar extends HTMLElement {
             this.usernameSpan = document.createElement("span")
             this.usernameSpan.style.lineHeight = "30px"
             this.usernameSpan.style.verticalAlign = "middle"
+
+            this.loginLogoutBtn = document.createElement("button")
+            this.loginLogoutBtn.innerHTML = SVGFiles.signInBtn
             this.appendChild(this.usernameSpan)
+            this.appendChild(this.loginLogoutBtn)
+
+            this.loginLogoutBtn.onclick = this.login
 
             let _this = this
             let i18n = (window as any).i18n
@@ -49,10 +57,10 @@ class UserInfoBar extends HTMLElement {
                             userInfo.isLoggedIn = true
 
                             _this.setUserName(userName)
+
                             // Add a log out button
-                            let signOut:HTMLButtonElement = document.createElement("button")
-                            signOut.innerHTML = SVGFiles.logoutBtn
-                            _this.appendChild(signOut)
+                            _this.loginLogoutBtn.innerHTML = SVGFiles.logoutBtn
+                            _this.loginLogoutBtn.onclick = _this.logout.bind(_this)
                         }
                     })
                 } else {
@@ -60,6 +68,14 @@ class UserInfoBar extends HTMLElement {
                 }
             }
         }
+    }
+
+    login(){
+        openLoginForm()
+    }
+
+    logout(){
+
     }
 }
 

@@ -46,7 +46,6 @@ class RestApi {
         }
 
         try {
-
             let config = {headers: {}}
 
             if (inHeaders) {
