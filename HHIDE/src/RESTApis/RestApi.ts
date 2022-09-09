@@ -2,6 +2,7 @@ import {Logger} from "hhcommoncomponents"
 import axios from "axios";
 import {userInfo} from "../Identity/UserInfo";
 import huahuoProperties from "../hhide.properties";
+import {HHToast} from "hhcommoncomponents";
 
 class CreateUserResponse {
     username: string
@@ -111,6 +112,8 @@ class RestApi {
         userInfo.username = createUserResponse.username
         userInfo.password = createUserResponse.password
         userInfo.isLoggedIn = false
+
+        HHToast.info("Anonymous user:" + userInfo.username + " has been created")
     }
 
     async uploadProject(data: Blob, fileName: string) {

@@ -1,6 +1,7 @@
 import {CustomElement, Logger} from "hhcommoncomponents";
 import {userInfo} from "./UserInfo";
 import {api, LoginResponse} from "../RESTApis/RestApi";
+import {HHToast} from "hhcommoncomponents";
 
 let loginForm = null;
 
@@ -188,7 +189,7 @@ class LoginForm extends HTMLElement {
             let loginResponse: LoginResponse = await api.login()
 
             if (userInfo.isLoggedIn) {
-                Logger.info("User:" + userInfo.username + " just logged in!")
+                HHToast.info("User:" + userInfo.username + " just logged in!")
 
                 // Call back the after login func
                 if (this.afterLogin) {
