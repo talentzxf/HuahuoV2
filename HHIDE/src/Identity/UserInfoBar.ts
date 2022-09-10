@@ -75,7 +75,11 @@ class UserInfoBar extends HTMLElement {
     }
 
     logout(){
-
+        userInfo.logout()
+        this.username = i18n.t("not_logged_in")
+        // Add a log out button
+        this.loginLogoutBtn.innerHTML = SVGFiles.signInBtn
+        this.loginLogoutBtn.onclick = this.login.bind(this)
     }
 }
 

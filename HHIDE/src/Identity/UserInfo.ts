@@ -30,6 +30,16 @@ class UserInfo {
             window.localStorage.setItem("jwtToken", this.jwtToken)
         }
     }
+
+    logout(){
+        this._isLoggedIn = false
+        window.localStorage.removeItem("username")
+        window.localStorage.removeItem("jwtToken")
+        window.localStorage.removeItem("password")
+        this.username = null
+        this.jwtToken = null
+        this.password = null
+    }
 }
 
 let userInfo = new UserInfo()
