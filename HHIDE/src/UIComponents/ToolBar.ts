@@ -8,6 +8,7 @@ import {SVGFiles} from "../Utilities/Svgs";
 import {dataFileUploader} from "../RESTApis/DataFileUploader";
 import huahuoProperties from "../hhide.properties";
 import {HHToast} from "hhcommoncomponents";
+import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 
 declare var Module:any
 
@@ -77,31 +78,44 @@ class HHToolBar extends HTMLElement{
     saveButton: HTMLButtonElement
     loadButton: HTMLButtonElement
     previewButton: HTMLButtonElement
+    projectListButton: HTMLButtonElement
     constructor() {
         super();
 
-        this.saveButton = document.createElement("button")
-        this.saveButton.style.width = "30px"
-        this.saveButton.style.height = "30px"
-        this.saveButton.innerHTML = SVGFiles.saveBtn
+        i18n.ExecuteAfterInited(function(){
+            this.saveButton = document.createElement("button")
+            this.saveButton.style.width = "30px"
+            this.saveButton.style.height = "30px"
+            this.saveButton.innerHTML = SVGFiles.saveBtn
+            this.saveButton.title = i18n.t("hint.saveLocal")
+            this.saveButton.addEventListener("click", save)
+            this.appendChild(this.saveButton)
 
-        this.saveButton.addEventListener("click", save)
-        this.appendChild(this.saveButton)
+            this.loadButton = document.createElement("button")
+            this.loadButton.style.width = "30px"
+            this.loadButton.style.height = "30px"
+            this.loadButton.title = i18n.t("hint.localLocal")
+            this.loadButton.innerHTML = SVGFiles.loadBtn
 
-        this.loadButton = document.createElement("button")
-        this.loadButton.style.width = "30px"
-        this.loadButton.style.height = "30px"
-        this.loadButton.innerHTML = SVGFiles.loadBtn
+            this.loadButton.addEventListener("click", this.onFileSelected.bind(this))
+            this.appendChild(this.loadButton)
 
-        this.loadButton.addEventListener("click", this.onFileSelected.bind(this))
-        this.appendChild(this.loadButton)
+            this.previewButton = document.createElement("button")
+            this.previewButton.style.width = "30px"
+            this.previewButton.style.height = "30px"
+            this.previewButton.innerHTML = SVGFiles.previewBtn
+            this.previewButton.title = i18n.t("hint.preview")
+            this.previewButton.addEventListener("click", uploadAndOpenPlayer)
+            this.appendChild(this.previewButton)
 
-        this.previewButton = document.createElement("button")
-        this.previewButton.style.width = "30px"
-        this.previewButton.style.height = "30px"
-        this.previewButton.innerHTML = SVGFiles.previewBtn
-        this.previewButton.addEventListener("click", uploadAndOpenPlayer)
-        this.appendChild(this.previewButton)
+            this.projectListButton = document.createElement("button")
+            this.projectListButton.style.width = "30px"
+            this.projectListButton.style.height = "30px"
+            this.projectListButton.innerHTML = SVGFiles.projectListBtn
+            this.projectListButton.title = i18n.t("hint.listProject")
+            this.projectListButton.addEventListener("click", this.listProjects.bind(this))
+            this.appendChild(this.projectListButton)
+        }.bind(this))
     }
 
     onFileSelected(){
@@ -113,6 +127,11 @@ class HHToolBar extends HTMLElement{
             let fName = hiddenFileButton.value
             load(fName, evt)
         })
+    }
+
+    @NeedLogin()
+    listProjects(){
+
     }
 }
 

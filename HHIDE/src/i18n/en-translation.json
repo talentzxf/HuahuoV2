@@ -68,5 +68,11 @@
     "openProjectFailed": "Open project failed!",
     "userLoggedOut": "User has logged out!",
     "userLoginSuccess": "User {{userName}} just logged in!"
+  },
+  "hint": {
+    "saveLocal": "Save project to local",
+    "localLocal": "Load project from local",
+    "preview": "Upload and preview animation",
+    "listProject": "List my projects"
   }
 }
