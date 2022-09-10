@@ -1,3 +1,5 @@
+import {HHToast} from "hhcommoncomponents";
+
 class UserInfo {
 
     private _isLoggedIn: boolean = false
@@ -39,6 +41,8 @@ class UserInfo {
         this.username = null
         this.jwtToken = null
         this.password = null
+
+        HHToast.info(i18n.t("toast.userLoggedOut"))
     }
 }
 

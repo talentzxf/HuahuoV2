@@ -65,6 +65,7 @@
     "projectSaved": "项目已经成功保存！",
     "projectSaveFailed": "保存项目失败!",
     "openProjectSucceeded": "成功加载项目!",
-    "openProjectFailed": "加载项目失败!"
+    "openProjectFailed": "加载项目失败!",
+    "userLoggedOut": "用户已退出"
   }
 }

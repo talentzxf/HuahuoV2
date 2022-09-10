@@ -65,6 +65,7 @@
     "projectSaved": "Project has been successfully saved!",
     "projectSaveFailed": "Save project failed!",
     "openProjectSucceeded": "Successfully opened project!",
-    "openProjectFailed": "Open project failed!"
+    "openProjectFailed": "Open project failed!",
+    "userLoggedOut": "User has logged out!"
   }
 }
