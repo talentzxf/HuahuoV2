@@ -29,6 +29,8 @@ class LoginForm extends HTMLElement {
     registerBtn: HTMLButtonElement = null;
     anonymouseBtn: HTMLButtonElement = null;
     loginFormContainer: HTMLElement = null;
+    userNameInput: HTMLInputElement
+    passwordInput: HTMLInputElement
     afterLogin: Function = null;
 
     static get observedAttributes(){
@@ -142,6 +144,9 @@ class LoginForm extends HTMLElement {
             e.preventDefault()
         })
 
+        this.userNameInput = this.querySelector("input[name='username']")
+        this.passwordInput = this.querySelector("input[name='password']")
+
         this.closeBtn = this.loginFormContainer.querySelector("#loginFormCloseBtn")
         this.closeBtn.addEventListener("mousedown", this.closeForm.bind(this))
 
@@ -182,7 +187,8 @@ class LoginForm extends HTMLElement {
         if (anonymousLogin) {
             await api.createAnonymousUser()
         } else {
-            window.alert("Not implemented!")
+            userInfo.username = this.userNameInput.value
+            userInfo.password = this.passwordInput.value
         }
 
         if (userInfo.username != null && userInfo.password != null && !userInfo.isLoggedIn) {
