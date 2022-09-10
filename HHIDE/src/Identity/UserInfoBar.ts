@@ -18,11 +18,26 @@ class UserInfoBar extends HTMLElement {
 
     set username(val: string){
         this._username = val
-        this.usernameSpan.innerText = this._username
+
+        if(!val){
+            this.usernameSpan.innerText = i18n.t("not_logged_in")
+        }else{
+            this.usernameSpan.innerText = this._username
+        }
     }
 
     setUserName(val: string){
         this.username = val
+
+        if(val){
+            // Change to log out button
+            this.loginLogoutBtn.innerHTML = SVGFiles.logoutBtn
+            this.loginLogoutBtn.onclick = this.logout.bind(this)
+        }else{
+            // Change to sign in button
+            this.loginLogoutBtn.innerHTML = SVGFiles.signInBtn
+            this.loginLogoutBtn.onclick = this.login.bind(this)
+        }
     }
 
     connectedCallback(){
@@ -40,8 +55,7 @@ class UserInfoBar extends HTMLElement {
             this.loginLogoutBtn.onclick = this.login
 
             let _this = this
-            let i18n = (window as any).i18n
-            this.username = i18n.t("not_logged_in")
+            this.username = null
 
             userInfo.addLoginEventHandler(this.setUserName.bind(this))
 
@@ -57,10 +71,6 @@ class UserInfoBar extends HTMLElement {
                             userInfo.isLoggedIn = true
 
                             _this.setUserName(userName)
-
-                            // Add a log out button
-                            _this.loginLogoutBtn.innerHTML = SVGFiles.logoutBtn
-                            _this.loginLogoutBtn.onclick = _this.logout.bind(_this)
                         }
                     })
                 } else {
@@ -76,10 +86,7 @@ class UserInfoBar extends HTMLElement {
 
     logout(){
         userInfo.logout()
-        this.username = i18n.t("not_logged_in")
-        // Add a log out button
-        this.loginLogoutBtn.innerHTML = SVGFiles.signInBtn
-        this.loginLogoutBtn.onclick = this.login.bind(this)
+        this.setUserName(null)
     }
 }
 
