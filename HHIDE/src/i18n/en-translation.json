@@ -66,6 +66,7 @@
     "projectSaveFailed": "Save project failed!",
     "openProjectSucceeded": "Successfully opened project!",
     "openProjectFailed": "Open project failed!",
-    "userLoggedOut": "User has logged out!"
+    "userLoggedOut": "User has logged out!",
+    "userLoginSuccess": "User {{userName}} just logged in!"
   }
 }

@@ -195,7 +195,8 @@ class LoginForm extends HTMLElement {
             let loginResponse: LoginResponse = await api.login()
 
             if (userInfo.isLoggedIn) {
-                HHToast.info("User:" + userInfo.username + " just logged in!")
+                // HHToast.info("User:" + userInfo.username + " just logged in!")
+                HHToast.info(i18n.t("toast.userLoginSuccess", {userName: userInfo.username}))
 
                 // Call back the after login func
                 if (this.afterLogin) {
