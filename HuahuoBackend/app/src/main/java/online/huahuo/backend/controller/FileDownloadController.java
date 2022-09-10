@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -41,5 +41,10 @@ public class FileDownloadController {
                 .contentLength(fileData.length)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
+    }
+
+    @GetMapping("/projects")
+    public ResponseEntity<List<ProjectFileDB>> listProjects(@PathVariable Long pageNumber, @PathVariable Long pageSize){
+
     }
 }

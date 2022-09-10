@@ -196,7 +196,7 @@ class SceneView extends HTMLElement {
             this.createCanvas()
             renderEngine2D.init(this.canvas);
 
-            (window as any).i18n.ExecuteAfterInited(this.createGizmos.bind(this)) // Need translate here!
+            // (window as any).i18n.ExecuteAfterInited(this.createGizmos.bind(this)) // Need translate here!
 
             // this.drawCoordinate();
             this.setupEventsAndCreateFirstTrack()
