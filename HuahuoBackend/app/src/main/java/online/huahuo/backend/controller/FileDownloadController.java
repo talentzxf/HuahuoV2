@@ -55,7 +55,7 @@ public class FileDownloadController {
 
     @PreAuthorize("hasRole('READER')")
     @GetMapping("/projects")
-    public ResponseEntity<List<ProjectFileDB>> listProjects(@RequestParam(defaultValue = "1") int pageNumber, @RequestParam(defaultValue = "10") int pageSize){
+    public ResponseEntity<List<ProjectFileDB>> listProjects(@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int pageSize){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
