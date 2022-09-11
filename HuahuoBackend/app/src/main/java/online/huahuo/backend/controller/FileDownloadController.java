@@ -3,15 +3,22 @@ package online.huahuo.backend.controller;
 
 import lombok.AllArgsConstructor;
 import online.huahuo.backend.db.ProjectFileDB;
+import online.huahuo.backend.db.ProjectRespository;
 import online.huahuo.backend.storage.StorageService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,6 +29,9 @@ import java.util.List;
 @AllArgsConstructor
 public class FileDownloadController {
     private final StorageService storageService;
+
+    @javax.annotation.Resource
+    private ProjectRespository projectRespository;
 
     @GetMapping("/projects/{projectId}")
     public ResponseEntity<Resource> downloadProject(@PathVariable Long projectId) throws IOException {
@@ -43,8 +53,15 @@ public class FileDownloadController {
                 .body(resource);
     }
 
+    @PreAuthorize("hasRole('READER')")
     @GetMapping("/projects")
-    public ResponseEntity<List<ProjectFileDB>> listProjects(@PathVariable Long pageNumber, @PathVariable Long pageSize){
+    public ResponseEntity<List<ProjectFileDB>> listProjects(@RequestParam(defaultValue = "1") int pageNumber, @RequestParam(defaultValue = "10") int pageSize){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
 
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<ProjectFileDB> resultList = projectRespository.findAllByCreatedBy(username, pageable);
+        return ResponseEntity.ok()
+                .body(resultList);
     }
 }
