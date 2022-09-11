@@ -32,6 +32,7 @@ public class JwtRequestFilter extends OncePerRequestFilter{
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final Pattern BEARER_PATTERN = Pattern.compile("^Bearer (.+?)$");
 
+    private static final String SECURITY_DEFAULT_PREFIX = "ROLE_";
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -51,20 +52,20 @@ public class JwtRequestFilter extends OncePerRequestFilter{
         List<SimpleGrantedAuthority> authorities = new ArrayList<>(1);
         authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
         if(user.getRole().equals(UserRole.ADMIN)){
-            authorities.add(new SimpleGrantedAuthority(UserRole.ADMIN.name()));
-            authorities.add(new SimpleGrantedAuthority(UserRole.CREATOR.name()));
-            authorities.add(new SimpleGrantedAuthority(UserRole.READER.name()));
-            authorities.add(new SimpleGrantedAuthority(UserRole.ANONYMOUS.name()));
+            authorities.add(new SimpleGrantedAuthority(SECURITY_DEFAULT_PREFIX  + UserRole.ADMIN.name()));
+            authorities.add(new SimpleGrantedAuthority(SECURITY_DEFAULT_PREFIX  + UserRole.CREATOR.name()));
+            authorities.add(new SimpleGrantedAuthority(SECURITY_DEFAULT_PREFIX  + UserRole.READER.name()));
+            authorities.add(new SimpleGrantedAuthority(SECURITY_DEFAULT_PREFIX  + UserRole.ANONYMOUS.name()));
         }
         else if(user.getRole().equals(UserRole.CREATOR)){
-            authorities.add(new SimpleGrantedAuthority(UserRole.CREATOR.name()));
-            authorities.add(new SimpleGrantedAuthority(UserRole.READER.name()));
-            authorities.add(new SimpleGrantedAuthority(UserRole.ANONYMOUS.name()));
+            authorities.add(new SimpleGrantedAuthority(SECURITY_DEFAULT_PREFIX + UserRole.CREATOR.name()));
+            authorities.add(new SimpleGrantedAuthority(SECURITY_DEFAULT_PREFIX + UserRole.READER.name()));
+            authorities.add(new SimpleGrantedAuthority(SECURITY_DEFAULT_PREFIX + UserRole.ANONYMOUS.name()));
         } else if(user.getRole().equals(UserRole.READER)){
-            authorities.add(new SimpleGrantedAuthority(UserRole.READER.name()));
-            authorities.add(new SimpleGrantedAuthority(UserRole.ANONYMOUS.name()));
+            authorities.add(new SimpleGrantedAuthority(SECURITY_DEFAULT_PREFIX + UserRole.READER.name()));
+            authorities.add(new SimpleGrantedAuthority(SECURITY_DEFAULT_PREFIX + UserRole.ANONYMOUS.name()));
         }else{
-            authorities.add(new SimpleGrantedAuthority(UserRole.ANONYMOUS.name()));
+            authorities.add(new SimpleGrantedAuthority(SECURITY_DEFAULT_PREFIX + UserRole.ANONYMOUS.name()));
         }
 
         return JwtUserDetails.builder()
