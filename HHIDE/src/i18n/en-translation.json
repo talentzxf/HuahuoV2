@@ -1,5 +1,6 @@
 {
   "helloWorld": "Hello World!",
+  "notImplemented": "Sorry, this functionality has not been implemented yet!",
   "save": "Save",
   "uploadAndOpen": "Upload and Open",
   "tools": "Tools",
@@ -73,6 +74,7 @@
     "saveLocal": "Save project to local",
     "localLocal": "Load project from local",
     "preview": "Upload and preview animation",
-    "listProject": "List my projects"
+    "listProject": "List my projects",
+    "uploadProject": "Upload project"
   }
 }

@@ -1,5 +1,6 @@
 {
   "helloWorld": "你好！",
+  "notImplemented": "对不起，该功能仍在开发中!",
   "save": "保存",
   "uploadAndOpen": "上传并打开",
   "tools": "工具",
@@ -73,6 +74,7 @@
     "saveLocal": "将项目保存到本地",
     "localLocal": "从本地加载项目",
     "preview": "上传并预览动画",
-    "listProject": "列出我的项目"
+    "listProject": "列出我的项目",
+    "uploadProject": "上传项目"
   }
 }
