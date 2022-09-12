@@ -13,6 +13,7 @@ import {UserInfoBar} from "./Identity/UserInfoBar";
 import {PlayerController} from "./AnimationPlayer/PlayerController";
 import {dataFileUploader} from "./RESTApis/DataFileUploader";
 import {HHToolBar} from "./UIComponents/ToolBar";
+import {ProjectListForm} from "./Utilities/ProjectListForm";
 
 import "vanilla-colorful"
 

@@ -1,5 +1,3 @@
-import {userInfo} from "../Identity/UserInfo";
-import {openLoginForm} from "../Identity/LoginForm";
 import {huahuoEngine} from "hhenginejs";
 import {SceneView} from "../SceneView/SceneView";
 import {api} from "./RestApi";

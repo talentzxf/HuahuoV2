@@ -3,8 +3,7 @@ import {userInfo} from "./UserInfo";
 import {api, LoginResponse} from "../RESTApis/RestApi";
 import {HHToast} from "hhcommoncomponents";
 import {CSSDefines} from "../Utilities/CSSDefines";
-
-let loginForm = null;
+import {HHForm} from "../Utilities/HHForm";
 
 const css2obj = css => {
 
@@ -21,7 +20,7 @@ const css2obj = css => {
 @CustomElement({
     selector: "hh-login-form"
 })
-class LoginForm extends HTMLElement {
+class LoginForm extends HTMLElement implements HHForm{
     closeBtn: HTMLElement = null;
     loginForm: HTMLFormElement = null;
     registerForm: HTMLElement = null;
@@ -37,6 +36,8 @@ class LoginForm extends HTMLElement {
     static get observedAttributes(){
         return ["style"]
     }
+
+    selector: string;
 
     attributeChangedCallback(name, oldValue, newValue){
         if(name == "style"){
@@ -167,20 +168,4 @@ class LoginForm extends HTMLElement {
     }
 }
 
-function openLoginForm(afterLoginAction: Function = null) {
-
-    let needAppend = false
-    if (loginForm == null) {
-        loginForm = document.createElement("hh-login-form")
-        needAppend = true
-    }
-
-    loginForm.style.display = "block"
-    loginForm.afterLogin = afterLoginAction
-
-    if(needAppend){
-        document.body.appendChild(loginForm)
-    }
-}
-
-export {openLoginForm, LoginForm}
+export {LoginForm}

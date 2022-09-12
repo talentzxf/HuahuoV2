@@ -2,7 +2,8 @@ import {CustomElement, Logger} from "hhcommoncomponents";
 import {userInfo} from "./UserInfo";
 import {api} from "../RESTApis/RestApi";
 import {SVGFiles} from "../Utilities/Svgs";
-import {openLoginForm} from "./LoginForm";
+import {formManager} from "../Utilities/FormManager";
+import {LoginForm} from "./LoginForm";
 
 @CustomElement({
     selector: "hh-userinfo-bar"
@@ -81,7 +82,7 @@ class UserInfoBar extends HTMLElement {
     }
 
     login(){
-        openLoginForm()
+        formManager.openForm(LoginForm)
     }
 
     logout(){

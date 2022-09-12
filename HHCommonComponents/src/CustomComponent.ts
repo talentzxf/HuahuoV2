@@ -30,6 +30,7 @@ const CustomElement = (config: CustomElementConfig) => (cls:any) => {
     const connectedCallback = cls.prototype.connectedCallback || function () {};
     const disconnectedCallback = cls.prototype.disconnectedCallback || function () {};
 
+    cls.selector = config.selector
     cls.prototype.connectedCallback = function() {
         const clone = document.importNode(template.content, true);
         if (config.useShadow) {

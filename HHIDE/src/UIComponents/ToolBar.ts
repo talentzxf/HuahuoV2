@@ -10,6 +10,8 @@ import huahuoProperties from "../hhide.properties";
 import {HHToast} from "hhcommoncomponents";
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 import {api} from "../RESTApis/RestApi"
+import {ProjectListForm} from "../Utilities/ProjectListForm";
+import {formManager} from "../Utilities/FormManager";
 
 declare var Module:any
 
@@ -145,7 +147,7 @@ class HHToolBar extends HTMLElement{
     @NeedLogin()
     listProjects(){
         api.listProjects((projects)=>{
-            console.log(projects)
+            formManager.openForm(ProjectListForm)
         })
     }
 }
