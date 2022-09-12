@@ -30,6 +30,16 @@ enum HTTP_METHOD {
 class RestApi {
     baseUrl: string;
 
+    getJwtToken(){
+        let token = userInfo.jwtToken
+        if (token == null) {
+            Logger.error("Token is null, login again!")
+            HHToast.error("Token is null, please re-login!")
+        }
+        return token
+    }
+
+
     constructor() {
         this.baseUrl = huahuoProperties["huahuo.backend.url"]
     }
@@ -75,10 +85,10 @@ class RestApi {
 
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                if(error.response.status == 401){
+                if (error.response.status == 401) {
                     Logger.error("Auth failed", error.message) // TODO: Relogin the user. TODO: Rememeber me.
                     HHToast.error("Auth failed! Invalid username/pwd!")
-                }else{
+                } else {
                     Logger.error("Axios error happened!", error.message);
                     HHToast.error("Axios error happened!" + error.message)
                 }
@@ -119,15 +129,8 @@ class RestApi {
     }
 
     async uploadProject(data: Blob, fileName: string) {
-        let token = userInfo.jwtToken
-        if (token == null) {
-            Logger.error("Token is null, login again!")
-            HHToast.error("Token is null, please re-login!")
-            return false
-        }
-
         let headers = {
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer " + this.getJwtToken()
         };
 
         let uploadPath = "/projects/upload"
@@ -169,9 +172,18 @@ class RestApi {
         return this._callApi(isTokenValidUrl, null, null, HTTP_METHOD.GET)
     }
 
-    async listProjects(callBack:Function){
+    async listProjects(callBack: Function, pageNo: number = 0, pageSize: number = 10) {
+
+        let headers = {
+            "Authorization": "Bearer " + this.getJwtToken()
+        };
         let listProjectApi = "/projects"
-        let apiCallPromise = this._callApi()
+        let apiCallPromise = this._callApi(listProjectApi, headers, null, HTTP_METHOD.GET)
+        apiCallPromise.then((projects)=>{
+            callBack(projects)
+        }).catch((ex)=>{
+            HHToast.error("Exception happened when listing projects!" + ex)
+        })
     }
 }
 

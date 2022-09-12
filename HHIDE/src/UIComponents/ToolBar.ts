@@ -144,7 +144,9 @@ class HHToolBar extends HTMLElement{
 
     @NeedLogin()
     listProjects(){
-        api.listProjects()
+        api.listProjects((projects)=>{
+            console.log(projects)
+        })
     }
 }
 
