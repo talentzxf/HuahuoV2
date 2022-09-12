@@ -168,6 +168,11 @@ class RestApi {
         let isTokenValidUrl = "/tokenValid?userName=" + username + "&jwtToken=" + jwtToken
         return this._callApi(isTokenValidUrl, null, null, HTTP_METHOD.GET)
     }
+
+    async listProjects(callBack:Function){
+        let listProjectApi = "/projects"
+        let apiCallPromise = this._callApi()
+    }
 }
 
 let api = new RestApi()

@@ -9,6 +9,7 @@ import {dataFileUploader} from "../RESTApis/DataFileUploader";
 import huahuoProperties from "../hhide.properties";
 import {HHToast} from "hhcommoncomponents";
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
+import {api} from "../RESTApis/RestApi"
 
 declare var Module:any
 
@@ -143,7 +144,7 @@ class HHToolBar extends HTMLElement{
 
     @NeedLogin()
     listProjects(){
-
+        api.listProjects()
     }
 }
 
