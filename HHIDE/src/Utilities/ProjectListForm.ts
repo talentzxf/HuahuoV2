@@ -11,6 +11,7 @@ class ProjectListForm extends HTMLElement implements HHForm{
     selector: string;
     closeBtn: HTMLElement
     projectListUL:HTMLUListElement
+    projectPageSpan: HTMLSpanElement
 
     connectedCallback(){
         this.style.position = "absolute"
@@ -39,7 +40,8 @@ class ProjectListForm extends HTMLElement implements HHForm{
             "       </div>" +
             "   </div>" +
             "       <h3>Your Projects</h3>" +
-            "       <ul id='projectListUl'></ul>"
+            "       <ul id='projectListUl'></ul>" +
+            "       <div id='projectPageSpan'></div>" +
             "   </form>"
         this.appendChild(this.projectListDiv)
 
@@ -47,7 +49,7 @@ class ProjectListForm extends HTMLElement implements HHForm{
         this.closeBtn.addEventListener("mousedown", this.closeForm.bind(this))
 
         this.projectListUL = this.projectListDiv.querySelector("#projectListUl")
-
+        this.projectPageSpan = this.projectListDiv.querySelector("#projectPageSpan")
 
     }
 
@@ -55,7 +57,7 @@ class ProjectListForm extends HTMLElement implements HHForm{
         this.style.display = "none"
     }
 
-    updateProjectList(projects){
+    updateProjectList(totalPage, curPageNo, projects){
         let ulInnerHTML = ""
         for(let project of projects){
             ulInnerHTML += "<li>"
@@ -65,6 +67,15 @@ class ProjectListForm extends HTMLElement implements HHForm{
         }
 
         this.projectListUL.innerHTML = ulInnerHTML
+
+        let pageSpanHTML = ""
+        for(let pageNo = 0 ; pageNo < totalPage; pageNo++){
+            pageSpanHTML += "<span>"
+            pageSpanHTML += pageNo
+            pageSpanHTML += "</span>"
+        }
+
+        this.projectPageSpan.innerHTML = pageSpanHTML
     }
 }
 

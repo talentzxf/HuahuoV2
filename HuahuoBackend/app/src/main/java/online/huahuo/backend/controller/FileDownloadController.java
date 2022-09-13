@@ -2,8 +2,10 @@ package online.huahuo.backend.controller;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import online.huahuo.backend.db.ProjectFileDB;
 import online.huahuo.backend.db.ProjectRespository;
+import online.huahuo.backend.db.ProjectStatus;
 import online.huahuo.backend.storage.StorageService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -24,6 +26,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+
+@Data
+class ListProjectResult{
+    private int totalCount;
+    private List<ProjectFileDB> projectFiles;
+}
 
 @Controller
 @AllArgsConstructor
@@ -55,13 +63,18 @@ public class FileDownloadController {
 
     @PreAuthorize("hasRole('READER')")
     @GetMapping("/projects")
-    public ResponseEntity<List<ProjectFileDB>> listProjects(@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int pageSize){
+    public ResponseEntity<ListProjectResult> listProjects(@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int pageSize){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        List<ProjectFileDB> resultList = projectRespository.findAllByCreatedBy(username, pageable);
+        List<ProjectFileDB> resultList = projectRespository.findByCreatedByAndStatus(username, ProjectStatus.ACTIVE, pageable);
+
+        int totalProjectCount = projectRespository.countByCreatedByAndStatus(username, ProjectStatus.ACTIVE);
+        ListProjectResult listProjectResult = new ListProjectResult();
+        listProjectResult.setProjectFiles(resultList);
+        listProjectResult.setTotalCount(totalProjectCount);
         return ResponseEntity.ok()
-                .body(resultList);
+                .body(listProjectResult);
     }
 }

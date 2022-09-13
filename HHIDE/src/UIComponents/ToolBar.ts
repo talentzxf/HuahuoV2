@@ -145,10 +145,12 @@ class HHToolBar extends HTMLElement{
     }
 
     @NeedLogin()
-    listProjects(){
-        api.listProjects((projects)=>{
+    listProjects(pageNo:number = 0, pageSize:number = 10){
+        api.listProjects((listProjectResult)=>{
             let form = formManager.openForm(ProjectListForm)
-            form.updateProjectList(projects)
+            let totalPage = listProjectResult.totalCount/pageSize
+
+            form.updateProjectList(totalPage, pageNo, listProjectResult.projectFiles)
         })
     }
 }
