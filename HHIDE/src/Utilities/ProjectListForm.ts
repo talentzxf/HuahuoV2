@@ -8,6 +8,7 @@ import {HHForm} from "../Utilities/HHForm";
 class ProjectListForm extends HTMLElement implements HHForm{
     projectListDiv:HTMLElement
     selector: string;
+    closeBtn: HTMLElement
 
     connectedCallback(){
         this.style.position = "absolute"
@@ -27,6 +28,9 @@ class ProjectListForm extends HTMLElement implements HHForm{
             "       <h3>Your Projects</h3>" +
             "   </form>"
         this.appendChild(this.projectListDiv)
+
+        this.closeBtn = this.projectListDiv.querySelector("#projectListCloseBtn")
+        this.closeBtn.addEventListener("mousedown", this.closeForm.bind(this))
     }
 
     closeForm(){
