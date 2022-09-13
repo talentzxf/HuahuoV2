@@ -44,6 +44,11 @@ class RestApi {
         this.baseUrl = huahuoProperties["huahuo.backend.url"]
     }
 
+    getProjectPreviewImageUrl(projectId){
+        let previewURLTemplate = `/project/${projectId}/preview`
+        return this.baseUrl + previewURLTemplate
+    }
+
     async _callApi<T>(url: string, inHeaders: Object = null, requestBody: object = null, httpMethod: HTTP_METHOD = HTTP_METHOD.POST): Promise<T> {
         let targetUrl = this.baseUrl + url;
 

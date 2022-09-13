@@ -147,7 +147,8 @@ class HHToolBar extends HTMLElement{
     @NeedLogin()
     listProjects(){
         api.listProjects((projects)=>{
-            formManager.openForm(ProjectListForm)
+            let form = formManager.openForm(ProjectListForm)
+            form.updateProjectList(projects)
         })
     }
 }
