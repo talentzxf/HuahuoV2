@@ -93,6 +93,7 @@ class RestApi {
                 if (error.response.status == 401) {
                     Logger.error("Auth failed", error.message) // TODO: Relogin the user. TODO: Rememeber me.
                     HHToast.error("Auth failed! Invalid username/pwd!")
+                    userInfo.logout()
                 } else {
                     Logger.error("Axios error happened!", error.message);
                     HHToast.error("Axios error happened!" + error.message)
