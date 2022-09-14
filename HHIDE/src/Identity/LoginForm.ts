@@ -2,19 +2,10 @@ import {CustomElement, Logger} from "hhcommoncomponents";
 import {userInfo} from "./UserInfo";
 import {api, LoginResponse} from "../RESTApis/RestApi";
 import {HHToast} from "hhcommoncomponents";
-import {CSSDefines} from "../Utilities/CSSDefines";
+import {CSSUtils} from "../Utilities/CSSUtils";
 import {HHForm} from "../Utilities/HHForm";
 
-const css2obj = css => {
 
-    if(!css)
-        return {}
-
-    const r = /(?<=^|;)\s*([^:]+)\s*:\s*([^;]+)\s*/g, o = {};
-    css.replace(r, (m,p,v) => o[p] = v);
-    return o;
-
-}
 
 // TODO: Extract the framework and make a webflow like lib.
 @CustomElement({
@@ -32,17 +23,16 @@ class LoginForm extends HTMLElement implements HHForm{
     userNameInput: HTMLInputElement
     passwordInput: HTMLInputElement
     afterLogin: Function = null;
+    selector: string;
 
     static get observedAttributes(){
         return ["style"]
     }
 
-    selector: string;
-
     attributeChangedCallback(name, oldValue, newValue){
         if(name == "style"){
-            let oldCssObj:object = css2obj(oldValue)
-            let newCssObj:object = css2obj(newValue)
+            let oldCssObj:object = CSSUtils.css2obj(oldValue)
+            let newCssObj:object = CSSUtils.css2obj(newValue)
 
             if(oldCssObj["display"] == "none" && newCssObj["display"] != "none"){
 
@@ -61,7 +51,7 @@ class LoginForm extends HTMLElement implements HHForm{
         this.style.left = "50%"
         this.style.transform = "translate(-50%, -50%)"
         this.loginFormContainer = document.createElement("div")
-        this.loginFormContainer.innerHTML = CSSDefines.formStyle
+        this.loginFormContainer.innerHTML = CSSUtils.formStyle
 
         this.loginFormContainer.innerHTML +=
             "   <form id='loginForm'>" +

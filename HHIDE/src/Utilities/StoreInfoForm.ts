@@ -1,6 +1,6 @@
 import {CustomElement} from "hhcommoncomponents";
 import {renderEngine2D, Player, huahuoEngine} from "hhenginejs"
-import {CSSDefines} from "./CSSDefines";
+import {CSSUtils} from "./CSSUtils";
 import {HHForm} from "./HHForm";
 
 @CustomElement({
@@ -15,6 +15,8 @@ class StoreInfoForm extends HTMLElement implements HHForm{
     previewCanvas: HTMLCanvasElement
     previewAnimationPlayer: Player
 
+    frameId: number = 0
+
     onOKCallback: Function;
 
     connectedCallback(){
@@ -23,7 +25,7 @@ class StoreInfoForm extends HTMLElement implements HHForm{
         this.style.left = "50%"
         this.style.transform = "translate(-50%, -50%)"
 
-        this.innerHTML += CSSDefines.formStyle
+        this.innerHTML += CSSUtils.formStyle
 
         // Add title.
         this.innerHTML += "<form>" +
@@ -92,10 +94,10 @@ class StoreInfoForm extends HTMLElement implements HHForm{
         this.previewCanvas.style.position = "relative"
         this.previewCanvas.style.left = (containerWidth - actualCanvasWidth) / 2 + "px"
         this.previewCanvas.style.top = (containerHeight - actualCanvasHeight) / 2 + "px"
-        this.RedrawFrame(0)
+        this.RedrawFrame()
     }
 
-    RedrawFrame(frameId:number){
+    RedrawFrame(){
         let prevStore = huahuoEngine.GetCurrentStoreId()
         let layer = huahuoEngine.GetCurrentLayer()
         let prevFrameId = layer.GetCurrentFrame()
@@ -104,7 +106,7 @@ class StoreInfoForm extends HTMLElement implements HHForm{
         let previousCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
         renderEngine2D.clearBackground()
         this.previewAnimationPlayer.loadShapesFromStore()
-        this.previewAnimationPlayer.setFrameId(frameId)
+        this.previewAnimationPlayer.setFrameId(this.frameId)
         if(previousCanvas)
             renderEngine2D.setDefaultCanvas(previousCanvas)
 

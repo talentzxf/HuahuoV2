@@ -1,5 +1,5 @@
 import {CustomElement} from "hhcommoncomponents";
-import {CSSDefines} from "./CSSDefines";
+import {CSSUtils} from "./CSSUtils";
 import {HHForm} from "../Utilities/HHForm";
 import {api} from "../RESTApis/RestApi"
 
@@ -31,7 +31,7 @@ class ProjectListForm extends HTMLElement implements HHForm{
             "</style>"
 
         this.projectListDiv = document.createElement("div")
-        this.projectListDiv.innerHTML = CSSDefines.formStyle
+        this.projectListDiv.innerHTML = CSSUtils.formStyle
         this.projectListDiv.innerHTML +=
             "   <form id='projectListForm'>" +
             "   <div style='display: flex; flex-direction: row-reverse'>" +

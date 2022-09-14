@@ -1,4 +1,13 @@
-class CSSDefines{
+class CSSUtils {
+    static css2obj(css){
+        if(!css)
+            return {}
+
+        const r = /(?<=^|;)\s*([^:]+)\s*:\s*([^;]+)\s*/g, o = {};
+        css.replace(r, (m,p,v) => o[p] = v);
+        return o;
+    }
+
     static formStyle = "<style>" +
         "form{" +
         "    width: 400px;\n" +
@@ -58,4 +67,4 @@ class CSSDefines{
         "</style>"
 }
 
-export {CSSDefines}
+export {CSSUtils}
