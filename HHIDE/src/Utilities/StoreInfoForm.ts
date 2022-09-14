@@ -92,6 +92,9 @@ class StoreInfoForm extends HTMLElement implements HHForm{
 
     RedrawFrame(frameId:number){
         let prevStore = huahuoEngine.GetCurrentStoreId()
+        let layer = huahuoEngine.GetCurrentLayer()
+        let prevFrameId = layer.GetCurrentFrame()
+
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(1) // Only render the main store.i.e. the 1st store.
         let previousCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
         renderEngine2D.clearBackground()
@@ -101,6 +104,7 @@ class StoreInfoForm extends HTMLElement implements HHForm{
             renderEngine2D.setDefaultCanvas(previousCanvas)
 
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStore)
+        this.previewAnimationPlayer.setFrameId(prevFrameId)
     }
 }
 
