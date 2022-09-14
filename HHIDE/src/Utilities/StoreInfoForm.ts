@@ -82,7 +82,7 @@ class StoreInfoForm extends HTMLElement implements HHForm{
 
         if(containerWidth <= 0 || containerHeight <= 0)
             return
-        
+
         let margin = 15
         let proposedCanvasWidth = containerWidth - margin
         let proposedCanvasHeight = containerHeight - margin

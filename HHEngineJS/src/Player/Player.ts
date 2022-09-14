@@ -11,7 +11,6 @@ class Player{
     layerShapesManager: LayerShapesManager = new LayerShapesManager()
 
     constructor() {
-        huahuoEngine.setActivePlayer(this)
     }
 
     getLayerShapes(layer){
