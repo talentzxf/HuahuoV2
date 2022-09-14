@@ -12,6 +12,7 @@ import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 import {api} from "../RESTApis/RestApi"
 import {ProjectListForm} from "../Utilities/ProjectListForm";
 import {formManager} from "../Utilities/FormManager";
+import {StoreInfoForm} from "../Utilities/StoreInfoForm";
 
 declare var Module:any
 
@@ -64,8 +65,20 @@ function load(fName:string, e) {
     reader.readAsArrayBuffer(file)
 }
 
+function uploadProject(afterAction:Function = null){
+    // Prompt the Project description page.
+    let storeInforForm = formManager.openForm(StoreInfoForm)
+
+    storeInforForm.onOKCallback = ()=>{
+        dataFileUploader.upload().then((response)=>{
+            if(afterAction)
+                afterAction(response)
+        })
+    }
+}
+
 function uploadAndOpenPlayer(){
-    dataFileUploader.upload().then((response)=>{
+    uploadProject((response)=>{
         let fileId = response["fileId"]
 
         let playerUrl = huahuoProperties["huahuo.player.url"] + "?projectId=" + fileId
@@ -73,6 +86,8 @@ function uploadAndOpenPlayer(){
         window.open(playerUrl, '_blank')
     })
 }
+
+
 
 @CustomElement({
     selector: "hh-tool-bar"
@@ -126,7 +141,7 @@ class HHToolBar extends HTMLElement{
             this.uploadButton.innerHTML = SVGFiles.uploadBtn
             this.uploadButton.title = i18n.t("hint.uploadProject")
             this.uploadButton.onclick = function(){
-                HHToast.warn(i18n.t("notImplemented"))
+                uploadProject()
             }
             this.appendChild(this.uploadButton)
 

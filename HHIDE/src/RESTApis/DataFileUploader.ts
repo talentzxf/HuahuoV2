@@ -2,6 +2,8 @@ import {huahuoEngine} from "hhenginejs";
 import {SceneView} from "../SceneView/SceneView";
 import {api} from "./RestApi";
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
+import {StoreInfoForm} from "../Utilities/StoreInfoForm";
+import {formManager} from "../Utilities/FormManager";
 
 declare var Module: any;
 

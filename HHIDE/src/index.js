@@ -14,6 +14,7 @@ import {PlayerController} from "./AnimationPlayer/PlayerController";
 import {dataFileUploader} from "./RESTApis/DataFileUploader";
 import {HHToolBar} from "./UIComponents/ToolBar";
 import {ProjectListForm} from "./Utilities/ProjectListForm";
+import {StoreInfoForm} from "./Utilities/StoreInfoForm";
 
 import "vanilla-colorful"
 
@@ -32,9 +33,6 @@ import {faEyeSlash} from "@fortawesome/free-regular-svg-icons";
 import {faEdit} from "@fortawesome/free-regular-svg-icons";
 import {faFileImage} from "@fortawesome/free-regular-svg-icons";
 import {faTimesCircle} from "@fortawesome/free-regular-svg-icons";
-import {Logger} from "hhcommoncomponents";
-import {huahuoEngine} from "hhenginejs";
-import huahuoProperties from "./hhide.properties";
 import {init} from "./init"
 
 import "./i18nInit"

@@ -1,5 +1,6 @@
 import {HHForm} from "./HHForm"
 
+// Do I need to write a more robust/flexible UI framework?? Sounds like another big project!
 class FormManager {
     currentForm: HHForm = null
 
