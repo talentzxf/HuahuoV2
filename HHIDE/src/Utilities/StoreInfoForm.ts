@@ -79,6 +79,10 @@ class StoreInfoForm extends HTMLElement implements HHForm{
 
         let containerWidth = this.previewSceneContainer.clientWidth
         let containerHeight = this.previewSceneContainer.clientHeight
+
+        if(containerWidth <= 0 || containerHeight <= 0)
+            return
+        
         let margin = 15
         let proposedCanvasWidth = containerWidth - margin
         let proposedCanvasHeight = containerHeight - margin
@@ -104,8 +108,9 @@ class StoreInfoForm extends HTMLElement implements HHForm{
 
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(1) // Only render the main store.i.e. the 1st store.
         let previousCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
-        renderEngine2D.clearBackground()
         this.previewAnimationPlayer.loadShapesFromStore()
+
+        console.log("Drawing shapes in StoreInfoForm")
         this.previewAnimationPlayer.setFrameId(this.frameId)
         if(previousCanvas)
             renderEngine2D.setDefaultCanvas(previousCanvas)
