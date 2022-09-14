@@ -15,8 +15,6 @@ class StoreInfoForm extends HTMLElement implements HHForm{
     previewCanvas: HTMLCanvasElement
     previewAnimationPlayer: Player
 
-    frameId: number = 0
-
     onOKCallback: Function;
 
     connectedCallback(){
@@ -103,20 +101,17 @@ class StoreInfoForm extends HTMLElement implements HHForm{
 
     RedrawFrame(){
         let prevStore = huahuoEngine.GetCurrentStoreId()
-        let layer = huahuoEngine.GetCurrentLayer()
-        let prevFrameId = layer.GetCurrentFrame()
-
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(1) // Only render the main store.i.e. the 1st store.
+
+        let currentLayer = huahuoEngine.GetCurrentLayer()
+        let currentFrameId = currentLayer.GetCurrentFrame()
         let previousCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
         this.previewAnimationPlayer.loadShapesFromStore()
-
-        console.log("Drawing shapes in StoreInfoForm")
-        this.previewAnimationPlayer.setFrameId(this.frameId)
+        this.previewAnimationPlayer.setFrameId(currentFrameId)
         if(previousCanvas)
             renderEngine2D.setDefaultCanvas(previousCanvas)
 
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStore)
-        this.previewAnimationPlayer.setFrameId(prevFrameId)
     }
 }
 
