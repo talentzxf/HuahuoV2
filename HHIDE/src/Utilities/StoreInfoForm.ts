@@ -2,15 +2,18 @@ import {CustomElement} from "hhcommoncomponents";
 import {renderEngine2D, Player, huahuoEngine} from "hhenginejs"
 import {CSSUtils} from "./CSSUtils";
 import {HHForm} from "./HHForm";
+import {storeInfo} from "../SceneView/StoreInfo";
 
 @CustomElement({
     selector: "hh-store-info"
 })
 class StoreInfoForm extends HTMLElement implements HHForm{
+    storeNameInput: HTMLInputElement
     form: HTMLFormElement
     formCloseBtn: HTMLElement
     previewSceneContainer: HTMLDivElement
     selector: string;
+    okBtn: HTMLButtonElement
 
     previewCanvas: HTMLCanvasElement
     previewAnimationPlayer: Player
@@ -25,6 +28,31 @@ class StoreInfoForm extends HTMLElement implements HHForm{
 
         this.innerHTML += CSSUtils.formStyle
 
+        this.innerHTML +=
+            "<style>" +
+            "form textarea{\n" +
+            "    display: block;\n" +
+            "    height: 50px;\n" +
+            "    width: 100%;\n" +
+            "    background-color: rgba(255,255,255,0.07);\n" +
+            "    border-radius: 3px;\n" +
+            "    padding: 0 10px;\n" +
+            "    margin-top: 8px;\n" +
+            "    font-size: 14px;\n" +
+            "    font-weight: 300;\n" +
+            "}" +
+            "/* Full-width inputs */\n" +
+            "form textarea{" +
+            "  width: 100%;" +
+            "  padding: 12px 20px;" +
+            "  margin: 8px 0;" +
+            "  display: inline-block;" +
+            "  border: 1px solid #ccc;" +
+            "  box-sizing: border-box;" +
+            "  resize: none" +
+            "}" +
+            "</style>"
+
         // Add title.
         this.innerHTML += "<form>" +
             "   <div style='display: flex; flex-direction: row-reverse'>" +
@@ -33,19 +61,28 @@ class StoreInfoForm extends HTMLElement implements HHForm{
             "       </div>" +
             "   </div>" +
             "<h3>Store Info</h3>" +
+            "   <label for='storename'><b>StoreName</b></label>" +
+            "   <input type='text' placeholder='Enter Storename' name='storename'> " +
+            "   <label for='description'><b>Descripition</b></label>" +
+            "   <textarea type='text' placeholder='Enter Description' name='storedescription'> </textarea>" +
+            "   <label for='preview'><b>Preview</b></label>" +
+            "<div id='storeinfo-canvas-container' style='width:300px; height: 200px'>" +
+            "   <canvas id='storeinfo-preview-canvas' style='border: 1px solid blue'></canvas>" +
+            "</div>" +
+            "    <button id='okBtn'>OK</button>" +
             "</form>"
 
         this.form = this.querySelector("form")
         this.formCloseBtn = this.querySelector("#formCloseBtn")
         this.formCloseBtn.addEventListener("mousedown", this.closeForm.bind(this))
 
-        this.previewSceneContainer = document.createElement("div")
-        this.previewSceneContainer.style.width = "300px"
-        this.previewSceneContainer.style.height = "300px"
-        this.previewCanvas = document.createElement("canvas") as HTMLCanvasElement
-        this.previewCanvas.style.border = "1px solid blue"
-        this.previewSceneContainer.appendChild(this.previewCanvas)
-        this.form.appendChild(this.previewSceneContainer)
+        this.storeNameInput = this.querySelector("#storename")
+
+        this.previewSceneContainer = this.querySelector("#storeinfo-canvas-container")
+        this.previewCanvas = this.querySelector("#storeinfo-preview-canvas")
+
+        this.okBtn = this.querySelector("#okBtn")
+        this.okBtn.onclick = this.onOK.bind(this)
 
         this.previewAnimationPlayer = new Player()
 
@@ -67,6 +104,15 @@ class StoreInfoForm extends HTMLElement implements HHForm{
         resizeObserver.observe(this.previewSceneContainer)
     }
 
+    onOK(){
+
+        // storeInfo.Setup(this.storeNameInput.value, )
+
+        if(this.onOKCallback){
+            this.onOKCallback()
+        }
+    }
+
     closeForm() {
         this.style.display = "none"
     }
@@ -81,7 +127,7 @@ class StoreInfoForm extends HTMLElement implements HHForm{
         if(containerWidth <= 0 || containerHeight <= 0)
             return
 
-        let margin = 15
+        let margin = 0
         let proposedCanvasWidth = containerWidth - margin
         let proposedCanvasHeight = containerHeight - margin
 
