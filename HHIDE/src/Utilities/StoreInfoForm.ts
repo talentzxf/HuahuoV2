@@ -40,6 +40,8 @@ class StoreInfoForm extends HTMLElement implements HHForm{
         this.formCloseBtn.addEventListener("mousedown", this.closeForm.bind(this))
 
         this.previewSceneContainer = document.createElement("div")
+        this.previewSceneContainer.style.width = "300px"
+        this.previewSceneContainer.style.height = "300px"
         this.previewCanvas = document.createElement("canvas") as HTMLCanvasElement
         this.previewCanvas.style.border = "1px solid blue"
         this.previewSceneContainer.appendChild(this.previewCanvas)
@@ -47,19 +49,47 @@ class StoreInfoForm extends HTMLElement implements HHForm{
 
         this.previewAnimationPlayer = new Player()
         renderEngine2D.init(this.previewCanvas)
-        this.RedrawFrame(0)
+
+        window.addEventListener("resize", this.OnResize.bind(this))
+
+        let resizeObserver = new ResizeObserver(this.OnResize.bind(this))
+        resizeObserver.observe(this.previewSceneContainer)
     }
 
     closeForm() {
         this.style.display = "none"
     }
 
+    OnResize(){
+        if(window.getComputedStyle(this.parentElement).display == "none")
+            return;
+
+        let containerWidth = this.previewSceneContainer.clientWidth
+        let containerHeight = this.previewSceneContainer.clientHeight
+        let margin = 15
+        let proposedCanvasWidth = containerWidth - margin
+        let proposedCanvasHeight = containerHeight - margin
+
+        let [actualCanvasWidth, actualCanvasHeight] = renderEngine2D.getContentWH(proposedCanvasWidth, proposedCanvasHeight)
+
+        renderEngine2D.resize(this.previewCanvas, actualCanvasWidth, actualCanvasHeight)
+
+        this.previewCanvas.width = actualCanvasWidth
+        this.previewCanvas.height = actualCanvasHeight
+        this.previewCanvas.style.width = actualCanvasWidth + "px"
+        this.previewCanvas.style.height = actualCanvasHeight + "px"
+        this.previewCanvas.style.position = "relative"
+        this.previewCanvas.style.left = (containerWidth - actualCanvasWidth) / 2 + "px"
+        this.previewCanvas.style.top = (containerHeight - actualCanvasHeight) / 2 + "px"
+        this.RedrawFrame(0)
+    }
+
     RedrawFrame(frameId:number){
         let prevStore = huahuoEngine.GetCurrentStoreId()
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(0) // Only render the main store.
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(1) // Only render the main store.i.e. the 1st store.
         let previousCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
         renderEngine2D.clearBackground()
-        huahuoEngine.Set
+        this.previewAnimationPlayer.loadShapesFromStore()
         this.previewAnimationPlayer.setFrameId(frameId)
         if(previousCanvas)
             renderEngine2D.setDefaultCanvas(previousCanvas)
