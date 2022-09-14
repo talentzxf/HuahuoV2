@@ -11,7 +11,6 @@ class RenderEnginePaperJs implements RenderEngine2D {
     // From canvas to project index
     private canvasPaperMap: Map<HTMLCanvasElement, number> = new Map()
     private canvasOriginalSize: Map<paper.View, [number, number]> = new Map()
-    private canvasOriginalTranslate: Map<paper.View, paper.Point> = new Map()
 
     private isPlayer = false
     private aspectRatio: number = 4 / 3  //  W:H = 4:3
@@ -138,7 +137,6 @@ class RenderEnginePaperJs implements RenderEngine2D {
         this.clearBackground()
 
         this.canvasPaperMap.set(canvas, paper.project.index)
-        this.canvasOriginalTranslate.set(paper.view, new paper.Point(0.0, 0.0))
     }
 
     resize(canvas: HTMLCanvasElement, width: number, height: number) {
