@@ -48,7 +48,12 @@ class StoreInfoForm extends HTMLElement implements HHForm{
         this.form.appendChild(this.previewSceneContainer)
 
         this.previewAnimationPlayer = new Player()
+
+        let prevCanvas = renderEngine2D.getDefaultCanvas()
         renderEngine2D.init(this.previewCanvas)
+
+        if(prevCanvas) // Restore the previous canvas as default. Or else functionality will be broken.
+            renderEngine2D.setDefaultCanvas(prevCanvas)
 
         let [initW, initH] = renderEngine2D.getInitCanvasWH()
 
