@@ -50,6 +50,12 @@ class StoreInfoForm extends HTMLElement implements HHForm{
         this.previewAnimationPlayer = new Player()
         renderEngine2D.init(this.previewCanvas)
 
+        let [initW, initH] = renderEngine2D.getInitCanvasWH()
+
+        if(initW > 0){
+            renderEngine2D.resize(this.previewCanvas, initW, initH)
+        }
+
         window.addEventListener("resize", this.OnResize.bind(this))
 
         let resizeObserver = new ResizeObserver(this.OnResize.bind(this))

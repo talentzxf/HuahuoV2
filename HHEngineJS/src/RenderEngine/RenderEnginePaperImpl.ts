@@ -15,6 +15,13 @@ class RenderEnginePaperJs implements RenderEngine2D {
     private isPlayer = false
     private aspectRatio: number = 4 / 3  //  W:H = 4:3
 
+    private initCanvasWidth: number = -1
+    private initCanvasHeight: number = -1
+
+    getInitCanvasWH(){
+        return [this.initCanvasWidth, this.initCanvasHeight]
+    }
+
     getLayerByName(layerName) {
         let project = this.getProject()
         let targetLayers = project.layers.filter((layer) => {
@@ -154,6 +161,11 @@ class RenderEnginePaperJs implements RenderEngine2D {
             if (width > 0 && height > 0) {
                 console.log("Added canvas original size here:" + width)
                 this.canvasOriginalSize.set(canvasView, [width, height])
+
+                if(this.initCanvasWidth < 0 ){
+                    this.initCanvasWidth = width
+                    this.initCanvasHeight = height
+                }
             }
         } else {
             let originalSize = this.canvasOriginalSize.get(canvasView)
