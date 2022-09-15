@@ -3,12 +3,15 @@ import {renderEngine2D, Player, huahuoEngine} from "hhenginejs"
 import {CSSUtils} from "./CSSUtils";
 import {HHForm} from "./HHForm";
 import {storeInfo} from "../SceneView/StoreInfo";
+import {SVGFiles} from "./Svgs";
+import {SnapshotUtils} from "./SnapshotUtils";
 
 @CustomElement({
     selector: "hh-store-info"
 })
 class StoreInfoForm extends HTMLElement implements HHForm{
     storeNameInput: HTMLInputElement
+    storeDescriptionInput: HTMLTextAreaElement
     form: HTMLFormElement
     formCloseBtn: HTMLElement
     previewSceneContainer: HTMLDivElement
@@ -19,6 +22,10 @@ class StoreInfoForm extends HTMLElement implements HHForm{
     previewAnimationPlayer: Player
 
     onOKCallback: Function;
+
+    storeNameCheckImg:HTMLImageElement
+    okImg: string = SVGFiles.okImg
+    notOkImg: string = SVGFiles.notOKImg
 
     connectedCallback(){
         this.style.position = "absolute"
@@ -62,9 +69,12 @@ class StoreInfoForm extends HTMLElement implements HHForm{
             "   </div>" +
             "<h3>Store Info</h3>" +
             "   <label for='storename'><b>StoreName</b></label>" +
-            "   <input type='text' placeholder='Enter Storename' name='storename'> " +
+            "   <div style='display: flex; align-items: center'>" +
+            "       <input type='text' placeholder='Enter Storename' id='storename'> " +
+            "       <img id='storeNameCheckImg' style='width:20px; height:20px'> " +
+            "   </div>" +
             "   <label for='description'><b>Descripition</b></label>" +
-            "   <textarea type='text' placeholder='Enter Description' name='storedescription'> </textarea>" +
+            "   <textarea type='text' placeholder='Enter Description' id='storedescription'> </textarea>" +
             "   <label for='preview'><b>Preview</b></label>" +
             "<div id='storeinfo-canvas-container' style='width:300px; height: 200px'>" +
             "   <canvas id='storeinfo-preview-canvas' style='border: 1px solid blue'></canvas>" +
@@ -72,17 +82,30 @@ class StoreInfoForm extends HTMLElement implements HHForm{
             "    <button id='okBtn'>OK</button>" +
             "</form>"
 
+        this.storeNameCheckImg = this.querySelector("#storeNameCheckImg")
+        this.storeNameCheckImg.src = this.notOkImg
+
+        this.storeDescriptionInput = this.querySelector("#storedescription")
+
         this.form = this.querySelector("form")
         this.formCloseBtn = this.querySelector("#formCloseBtn")
         this.formCloseBtn.addEventListener("mousedown", this.closeForm.bind(this))
 
         this.storeNameInput = this.querySelector("#storename")
+        let _this = this
+        this.storeNameInput.addEventListener("input", (evt)=>{
+            if(_this.validateText(_this.storeNameInput.value)){
+                _this.storeNameCheckImg.src = SVGFiles.okImg
+            }else{
+                _this.storeNameCheckImg.src = SVGFiles.notOKImg
+            }
+        })
 
         this.previewSceneContainer = this.querySelector("#storeinfo-canvas-container")
         this.previewCanvas = this.querySelector("#storeinfo-preview-canvas")
 
         this.okBtn = this.querySelector("#okBtn")
-        this.okBtn.onclick = this.onOK.bind(this)
+        this.okBtn.onclick = this.onOK
 
         this.previewAnimationPlayer = new Player()
 
@@ -104,9 +127,21 @@ class StoreInfoForm extends HTMLElement implements HHForm{
         resizeObserver.observe(this.previewSceneContainer)
     }
 
-    onOK(){
+    validateText(val: string):boolean{
+        return /^[a-zA-Z0-9_-]+$/.test(val)
+    }
 
-        // storeInfo.Setup(this.storeNameInput.value, )
+    onOK(evt){
+        evt.stopPropagation()
+        evt.preventDefault()
+
+        let storeName = this.storeNameInput.value
+        if(!this.validateText(storeName)){
+            return;
+        }
+
+        let coverPageBinary = SnapshotUtils.takeSnapshot(this.previewCanvas)
+        storeInfo.Setup(storeName, this.storeDescriptionInput.value, coverPageBinary)
 
         if(this.onOKCallback){
             this.onOKCallback()

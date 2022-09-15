@@ -3,22 +3,20 @@
 class StoreInfo{
     name:string;
     description: string;
-    coverPage: Uint8Array // Image of the cover page.
+    coverPage: Blob // Image of the cover page.
     inited: boolean = false
 
     Clear(){
         this.name = "";
         this.description = ""
-        this.coverPage = new Uint8Array()
+        this.coverPage = null
         this.inited = false
     }
 
-    Setup(name, description, frameId:number = 0, canvas: HTMLCanvasElement){
+    Setup(name:string, description:string, coverPageBinary:Blob){
         this.name = name
         this.description = description
-
-        // TODO: Take photo of the selected frameId and render in the specified canvas.
-
+        this.coverPage = coverPageBinary
     }
 }
 
