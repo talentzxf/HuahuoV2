@@ -68,7 +68,8 @@
     "openProjectSucceeded": "成功加载项目!",
     "openProjectFailed": "加载项目失败!",
     "userLoggedOut": "用户已退出",
-    "userLoginSuccess": "用户 {{userName}} 登录成功!"
+    "userLoginSuccess": "用户 {{userName}} 登录成功!",
+    "projectUploaded": "项目已被成功上传"
   },
   "hint": {
     "saveLocal": "将项目保存到本地",

@@ -22,7 +22,9 @@ public class HuahuoApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").exposedHeaders("X-Suggested-Filename");
+                registry.addMapping("/**")
+                        .allowedMethods("GET","POST","PUT")
+                        .exposedHeaders("X-Suggested-Filename");
             }
         };
     }

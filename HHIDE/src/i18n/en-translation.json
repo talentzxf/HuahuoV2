@@ -68,7 +68,8 @@
     "openProjectSucceeded": "Successfully opened project!",
     "openProjectFailed": "Open project failed!",
     "userLoggedOut": "User has logged out!",
-    "userLoginSuccess": "User {{userName}} just logged in!"
+    "userLoginSuccess": "User {{userName}} just logged in!",
+    "projectUploaded": "Project has been successfully uploaded"
   },
   "hint": {
     "saveLocal": "Save project to local",

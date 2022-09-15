@@ -24,9 +24,11 @@ public class ProjectFileDB {
     private String version;
 
     private String createdBy;
+    private String description;
 
     @Column(unique = true)
     private String fullPath;
+    private String coverPagePath;
     private String checksum;
 
     private Date createTime;
@@ -36,7 +38,7 @@ public class ProjectFileDB {
     private ProjectStatus status;
 
     public ProjectFileDB(String name, String type, String version, String createdBy,
-                         String fullPath, String checksum){
+                         String fullPath, String checksum, String description){
         this.name = name;
         this.type = type;
         this.version = version;
@@ -46,5 +48,6 @@ public class ProjectFileDB {
         this.createTime = new Date();
         this.modifiedTime = new Date();
         this.status = ProjectStatus.ACTIVE;
+        this.description = description;
     }
 }

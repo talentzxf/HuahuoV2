@@ -23,7 +23,8 @@ class UserExistResponse {
 
 enum HTTP_METHOD {
     POST,
-    GET
+    GET,
+    PUT = 2
 }
 
 // TODO: Use Swagger to generate the API class
@@ -57,7 +58,10 @@ class RestApi {
         }
 
         if (!inHeaders["Content-Type"]) {
-            inHeaders["Content-Type"] = "application/json"
+            if(typeof requestBody === "string")
+                inHeaders["Content-Type"] = "text/plain"
+            else
+                inHeaders["Content-Type"] = "application/json"
         }
 
         try {
@@ -83,8 +87,13 @@ class RestApi {
                         config
                     )
                     break;
+                case HTTP_METHOD.PUT:
+                    returnObj = await axios.put<T>(
+                        targetUrl,
+                        requestBody,
+                        config
+                    )
             }
-
 
             return returnObj["data"];
 
@@ -134,12 +143,11 @@ class RestApi {
         HHToast.info("Anonymous user:" + userInfo.username + " has been created")
     }
 
-    async uploadProject(data: Blob, fileName: string) {
+    async uploadFile(uploadPath:string, data: Blob, fileName: string){
         let headers = {
             "Authorization": "Bearer " + this.getJwtToken()
         };
 
-        let uploadPath = "/projects/upload"
         let formData = new FormData()
         data["lastModifiedDate"] = new Date();
         data["name"] = fileName;
@@ -148,6 +156,16 @@ class RestApi {
         headers["Content-Type"] = "multipart/form-data"
 
         return this._callApi(uploadPath, headers, formData)
+    }
+
+    async uploadProject(data: Blob, fileName: string) {
+        let uploadPath = "/projects/projectData"
+        return this.uploadFile(uploadPath, data, fileName)
+    }
+
+    async uploadProjectCoverPage(projectId, data:Blob, fileName){
+        let uploadPath = "/projects/" + projectId + "/coverPage"
+        return this.uploadFile(uploadPath, data, fileName)
     }
 
     async isUserExist(username: string, existUserFunc: Function, userNotExistFunc: Function) {
@@ -190,6 +208,14 @@ class RestApi {
         }).catch((ex)=>{
             HHToast.error("Exception happened when listing projects!" + ex)
         })
+    }
+
+    async updateProjectDescription(projectId, description){
+        let headers = {
+            "Authorization": "Bearer " + this.getJwtToken()
+        };
+        let updateProjectDescriptionApi = "/projects/" + projectId + "/description"
+        return this._callApi(updateProjectDescriptionApi, headers, description, HTTP_METHOD.PUT )
     }
 }
 

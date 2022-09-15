@@ -25,6 +25,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class StorageServiceImpl implements StorageService{
 
+    final private String HUAHUO_POSTFIX = ".huahuo";
     final private FileRepository fileRepository;
 
     @Value("${huahuo.backend.datafilepath}")
@@ -40,7 +41,7 @@ public class StorageServiceImpl implements StorageService{
     public ProjectFileDB store(String path, MultipartFile file, Boolean forceOverride) throws IOException, NoSuchAlgorithmException {
         String fileName = file.getOriginalFilename();
         String savePath = getPath() + path + File.separator;
-        String absoluteFilePath = savePath + fileName;
+        String absoluteFilePath = savePath + fileName + HUAHUO_POSTFIX;
 
         if(!forceOverride){ // Don't override if the file exists and forceOverride = false.
             if(new File(absoluteFilePath).exists()){
@@ -58,11 +59,11 @@ public class StorageServiceImpl implements StorageService{
 
         String fileHash = Utils.hashBytes(file.getBytes());
 
-        ProjectFileDB fileDB = fileRepository.findByFullPath(absoluteFilePath);
+        ProjectFileDB fileDB = fileRepository.findByCreatedByAndName(username, fileName);
 
         // TODO: Read the version from the file.
         if(fileDB == null)
-            fileDB = new ProjectFileDB(fileName, file.getContentType(), "0.0.1", username, absoluteFilePath, fileHash);
+            fileDB = new ProjectFileDB(fileName, file.getContentType(), "0.0.1", username, absoluteFilePath, fileHash, "");
         else
         {
             fileDB.setChecksum(fileHash);
@@ -73,8 +74,28 @@ public class StorageServiceImpl implements StorageService{
     }
 
     @Override
+    public boolean storeCoverPage(String path, Long projectId, MultipartFile coverPageFile) throws IOException {
+        ProjectFileDB projectFileDB = fileRepository.getReferenceById(projectId);
+
+        String fileName = coverPageFile.getOriginalFilename();
+        String savePath = getPath() + path + File.separator;
+        String absoluteCoverPageFilePath = savePath + fileName;
+
+        new File(savePath).mkdirs();
+        Files.write(Paths.get(absoluteCoverPageFilePath), coverPageFile.getBytes());
+
+        projectFileDB.setCoverPagePath(absoluteCoverPageFilePath);
+        fileRepository.save(projectFileDB);
+        return true;
+    }
+
+    @Override
     public ProjectFileDB getById(Long projectId) {
         return fileRepository.getReferenceById(projectId);
     }
 
+    @Override
+    public ProjectFileDB save(ProjectFileDB projectFileDB) {
+        return fileRepository.save(projectFileDB);
+    }
 }

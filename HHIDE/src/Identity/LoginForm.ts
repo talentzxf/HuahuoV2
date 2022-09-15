@@ -6,12 +6,11 @@ import {CSSUtils} from "../Utilities/CSSUtils";
 import {HHForm} from "../Utilities/HHForm";
 
 
-
 // TODO: Extract the framework and make a webflow like lib.
 @CustomElement({
     selector: "hh-login-form"
 })
-class LoginForm extends HTMLElement implements HHForm{
+class LoginForm extends HTMLElement implements HHForm {
     closeBtn: HTMLElement = null;
     loginForm: HTMLFormElement = null;
     registerForm: HTMLElement = null;
@@ -25,20 +24,20 @@ class LoginForm extends HTMLElement implements HHForm{
     afterLogin: Function = null;
     selector: string;
 
-    static get observedAttributes(){
+    static get observedAttributes() {
         return ["style"]
     }
 
-    attributeChangedCallback(name, oldValue, newValue){
-        if(name == "style"){
-            let oldCssObj:object = CSSUtils.css2obj(oldValue)
-            let newCssObj:object = CSSUtils.css2obj(newValue)
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name == "style") {
+            let oldCssObj: object = CSSUtils.css2obj(oldValue)
+            let newCssObj: object = CSSUtils.css2obj(newValue)
 
-            if(oldCssObj["display"] == "none" && newCssObj["display"] != "none"){
+            if (oldCssObj["display"] == "none" && newCssObj["display"] != "none") {
 
-                if(this.registerForm)
+                if (this.registerForm)
                     this.registerForm.style.display = "none"
-                if(this.loginForm)
+                if (this.loginForm)
                     this.loginForm.style.display = "block"
             }
         }
@@ -93,10 +92,10 @@ class LoginForm extends HTMLElement implements HHForm{
         this.anonymouseBtn.addEventListener("click", this.anonymousLogin.bind(this))
     }
 
-    register(){
+    register() {
         this.loginForm.style.display = "none"
 
-        if(!this.registerForm){
+        if (!this.registerForm) {
             this.registerForm = document.createElement("hh-register-form")
             this.appendChild(this.registerForm)
         }
@@ -104,12 +103,8 @@ class LoginForm extends HTMLElement implements HHForm{
         this.registerForm.style.display = "block"
     }
 
-    login() {
-        try {
-            this._login();
-        } finally {
-            this.closeForm();
-        }
+    login(evt){
+        return this._login()
     }
 
     async _login(anonymousLogin: boolean = false) {
@@ -131,12 +126,11 @@ class LoginForm extends HTMLElement implements HHForm{
             if (userInfo.isLoggedIn) {
                 // HHToast.info("User:" + userInfo.username + " just logged in!")
                 HHToast.info(i18n.t("toast.userLoginSuccess", {userName: userInfo.username}))
+                this.closeForm() // If logged in successfully, close the form. Or else, leave the form there so user can input username/pwd again.
 
                 // Call back the after login func
                 if (this.afterLogin) {
-                    if (userInfo.isLoggedIn) {
-                        this.afterLogin()
-                    }
+                    this.afterLogin()
                 }
             } else
                 Logger.error("User:" + userInfo.username + " login failed! Reason:" + loginResponse.failReason)
@@ -146,11 +140,7 @@ class LoginForm extends HTMLElement implements HHForm{
     }
 
     anonymousLogin() {
-        try {
-            this._login(true)
-        } finally {
-            this.closeForm()
-        }
+        this._login(true)
     }
 
     closeForm() {

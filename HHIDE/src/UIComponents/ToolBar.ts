@@ -5,14 +5,15 @@ import {SceneView} from "../SceneView/SceneView";
 import {HHTimeline} from "hhtimeline"
 import {saveAs} from 'file-saver';
 import {SVGFiles} from "../Utilities/Svgs";
-import {dataFileUploader} from "../RESTApis/DataFileUploader";
+import {projectUploader} from "../RESTApis/ProjectUploader";
 import huahuoProperties from "../hhide.properties";
 import {HHToast} from "hhcommoncomponents";
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 import {api} from "../RESTApis/RestApi"
 import {ProjectListForm} from "../Utilities/ProjectListForm";
 import {formManager} from "../Utilities/FormManager";
-import {StoreInfoForm} from "../Utilities/StoreInfoForm";
+import {ProjectInfoForm} from "../Utilities/ProjectInfoForm";
+import {projectInfo} from "../SceneView/ProjectInfo";
 
 declare var Module:any
 
@@ -65,12 +66,19 @@ function load(fName:string, e) {
     reader.readAsArrayBuffer(file)
 }
 
+// TODO: Ugly
 function uploadProject(afterAction:Function = null){
-    // Prompt the Project description page.
-    let storeInforForm = formManager.openForm(StoreInfoForm)
-
-    storeInforForm.onOKCallback = ()=>{
-        dataFileUploader.upload().then((response)=>{
+    if(!projectInfo.inited){
+        // Prompt the Project description page.
+        let storeInforForm = formManager.openForm(ProjectInfoForm)
+        storeInforForm.onOKCallback = ()=>{
+            projectUploader.upload().then((response)=>{
+                if(afterAction)
+                    afterAction(response)
+            })
+        }
+    }else{
+        projectUploader.upload().then((response)=>{
             if(afterAction)
                 afterAction(response)
         })

@@ -11,10 +11,10 @@ import {LoginForm} from "./Identity/LoginForm";
 import {RegisterForm} from "./Identity/RegisterForm";
 import {UserInfoBar} from "./Identity/UserInfoBar";
 import {PlayerController} from "./AnimationPlayer/PlayerController";
-import {dataFileUploader} from "./RESTApis/DataFileUploader";
+import {projectUploader} from "./RESTApis/ProjectUploader";
 import {HHToolBar} from "./UIComponents/ToolBar";
 import {ProjectListForm} from "./Utilities/ProjectListForm";
-import {StoreInfoForm} from "./Utilities/StoreInfoForm";
+import {ProjectInfoForm} from "./Utilities/ProjectInfoForm";
 
 import "vanilla-colorful"
 

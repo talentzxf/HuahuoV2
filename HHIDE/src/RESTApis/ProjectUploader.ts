@@ -2,22 +2,14 @@ import {huahuoEngine} from "hhenginejs";
 import {SceneView} from "../SceneView/SceneView";
 import {api} from "./RestApi";
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
-import {StoreInfoForm} from "../Utilities/StoreInfoForm";
-import {formManager} from "../Utilities/FormManager";
+import {HHToast} from "hhcommoncomponents";
+import {projectInfo} from "../SceneView/ProjectInfo";
 
 declare var Module: any;
 
-class DataFileUploader {
-
-    private _fileName: string
-
+class ProjectUploader {
     private get fileName():string{
-        if(!this._fileName){
-            // Generate a random file name for now.
-            this._fileName = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-        }
-
-        return this._fileName
+        return projectInfo.name
     }
 
     @NeedLogin()
@@ -43,10 +35,27 @@ class DataFileUploader {
     }
 
     async _uploadProject() {
+        if(!projectInfo.inited){
+            return
+        }
+
         let data = this.getProjectData()
-        return api.uploadProject(data, this.fileName)
+        let uploadProjectPromise = api.uploadProject(data, this.fileName)
+
+        return uploadProjectPromise.then((response)=>{
+            if(response["succeeded"]){
+                // Two more things after project file has been uploaded.
+                // 1. Update the project description.
+                // 2. Update the project cover page.
+                let updateDescriptionPromise = api.updateProjectDescription(response["fileId"], projectInfo.description)
+                let uploadCoverpagePromise = api.uploadProjectCoverPage(response["fileId"], projectInfo.coverPage, projectInfo.name + ".png")
+
+                HHToast.info(i18n.t("toast.projectUploaded"))
+            }
+            return response
+        })
     }
 }
 
-let dataFileUploader = new DataFileUploader()
-export {dataFileUploader}
+let projectUploader = new ProjectUploader()
+export {projectUploader}

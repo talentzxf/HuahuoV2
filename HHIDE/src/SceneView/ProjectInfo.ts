@@ -1,6 +1,6 @@
 
 // Project == Store. (Should be consolidate these two terms??)
-class StoreInfo{
+class ProjectInfo {
     name:string;
     description: string;
     coverPage: Blob // Image of the cover page.
@@ -17,9 +17,10 @@ class StoreInfo{
         this.name = name
         this.description = description
         this.coverPage = coverPageBinary
+        this.inited = true
     }
 }
 
-let storeInfo = new StoreInfo()
+let projectInfo = new ProjectInfo()
 
-export {storeInfo}
+export {projectInfo}

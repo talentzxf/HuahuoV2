@@ -2,16 +2,16 @@ import {CustomElement} from "hhcommoncomponents";
 import {renderEngine2D, Player, huahuoEngine} from "hhenginejs"
 import {CSSUtils} from "./CSSUtils";
 import {HHForm} from "./HHForm";
-import {storeInfo} from "../SceneView/StoreInfo";
+import {projectInfo} from "../SceneView/ProjectInfo";
 import {SVGFiles} from "./Svgs";
 import {SnapshotUtils} from "./SnapshotUtils";
 
 @CustomElement({
-    selector: "hh-store-info"
+    selector: "hh-project-info"
 })
-class StoreInfoForm extends HTMLElement implements HHForm{
-    storeNameInput: HTMLInputElement
-    storeDescriptionInput: HTMLTextAreaElement
+class ProjectInfoForm extends HTMLElement implements HHForm{
+    projectNameInput: HTMLInputElement
+    projectDescriptionInput: HTMLTextAreaElement
     form: HTMLFormElement
     formCloseBtn: HTMLElement
     previewSceneContainer: HTMLDivElement
@@ -23,7 +23,7 @@ class StoreInfoForm extends HTMLElement implements HHForm{
 
     onOKCallback: Function;
 
-    storeNameCheckImg:HTMLImageElement
+    projectNameCheckImg:HTMLImageElement
     okImg: string = SVGFiles.okImg
     notOkImg: string = SVGFiles.notOKImg
 
@@ -68,44 +68,44 @@ class StoreInfoForm extends HTMLElement implements HHForm{
             "       </div>" +
             "   </div>" +
             "<h3>Store Info</h3>" +
-            "   <label for='storename'><b>StoreName</b></label>" +
+            "   <label for='projectname'><b>ProjectName</b></label>" +
             "   <div style='display: flex; align-items: center'>" +
-            "       <input type='text' placeholder='Enter Storename' id='storename'> " +
-            "       <img id='storeNameCheckImg' style='width:20px; height:20px'> " +
+            "       <input type='text' placeholder='Enter Storename' id='projectname'> " +
+            "       <img id='projectNameCheckImg' style='width:20px; height:20px'> " +
             "   </div>" +
             "   <label for='description'><b>Descripition</b></label>" +
-            "   <textarea type='text' placeholder='Enter Description' id='storedescription'> </textarea>" +
+            "   <textarea type='text' placeholder='Enter Description' id='projectdescription'> </textarea>" +
             "   <label for='preview'><b>Preview</b></label>" +
-            "<div id='storeinfo-canvas-container' style='width:300px; height: 200px'>" +
-            "   <canvas id='storeinfo-preview-canvas' style='border: 1px solid blue'></canvas>" +
+            "<div id='projectinfo-canvas-container' style='width:300px; height: 200px'>" +
+            "   <canvas id='projectinfo-preview-canvas' style='border: 1px solid blue'></canvas>" +
             "</div>" +
             "    <button id='okBtn'>OK</button>" +
             "</form>"
 
-        this.storeNameCheckImg = this.querySelector("#storeNameCheckImg")
-        this.storeNameCheckImg.src = this.notOkImg
+        this.projectNameCheckImg = this.querySelector("#projectNameCheckImg")
+        this.projectNameCheckImg.src = this.notOkImg
 
-        this.storeDescriptionInput = this.querySelector("#storedescription")
+        this.projectDescriptionInput = this.querySelector("#projectdescription")
 
         this.form = this.querySelector("form")
         this.formCloseBtn = this.querySelector("#formCloseBtn")
         this.formCloseBtn.addEventListener("mousedown", this.closeForm.bind(this))
 
-        this.storeNameInput = this.querySelector("#storename")
+        this.projectNameInput = this.querySelector("#projectname")
         let _this = this
-        this.storeNameInput.addEventListener("input", (evt)=>{
-            if(_this.validateText(_this.storeNameInput.value)){
-                _this.storeNameCheckImg.src = SVGFiles.okImg
+        this.projectNameInput.addEventListener("input", (evt)=>{
+            if(_this.validateText(_this.projectNameInput.value)){
+                _this.projectNameCheckImg.src = SVGFiles.okImg
             }else{
-                _this.storeNameCheckImg.src = SVGFiles.notOKImg
+                _this.projectNameCheckImg.src = SVGFiles.notOKImg
             }
         })
 
-        this.previewSceneContainer = this.querySelector("#storeinfo-canvas-container")
-        this.previewCanvas = this.querySelector("#storeinfo-preview-canvas")
+        this.previewSceneContainer = this.querySelector("#projectinfo-canvas-container")
+        this.previewCanvas = this.querySelector("#projectinfo-preview-canvas")
 
         this.okBtn = this.querySelector("#okBtn")
-        this.okBtn.onclick = this.onOK
+        this.okBtn.onclick = this.onOK.bind(this)
 
         this.previewAnimationPlayer = new Player()
 
@@ -135,16 +135,17 @@ class StoreInfoForm extends HTMLElement implements HHForm{
         evt.stopPropagation()
         evt.preventDefault()
 
-        let storeName = this.storeNameInput.value
-        if(!this.validateText(storeName)){
+        let projectName = this.projectNameInput.value
+        if(!this.validateText(projectName)){
             return;
         }
 
         let coverPageBinary = SnapshotUtils.takeSnapshot(this.previewCanvas)
-        storeInfo.Setup(storeName, this.storeDescriptionInput.value, coverPageBinary)
+        projectInfo.Setup(projectName, this.projectDescriptionInput.value, coverPageBinary)
 
         if(this.onOKCallback){
             this.onOKCallback()
+            this.closeForm()
         }
     }
 
@@ -196,4 +197,4 @@ class StoreInfoForm extends HTMLElement implements HHForm{
     }
 }
 
-export {StoreInfoForm}
+export {ProjectInfoForm}
