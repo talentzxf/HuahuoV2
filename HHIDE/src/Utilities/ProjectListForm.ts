@@ -10,6 +10,7 @@ class ProjectListForm extends HTMLElement implements HHForm{
     projectListDiv:HTMLElement
     selector: string;
     closeBtn: HTMLElement
+    projectListUlContainer: HTMLDivElement
     projectListUL:HTMLUListElement
     projectPageSpan: HTMLSpanElement
 
@@ -40,8 +41,9 @@ class ProjectListForm extends HTMLElement implements HHForm{
             "       </div>" +
             "   </div>" +
             "       <h3>Your Projects</h3>" +
-            "       <ul id='projectListUl'></ul>" +
-            "       <div id='projectPageSpan'></div>" +
+            "       <div id='projectListUlContainer' style='height: 500px; overflow-x: hidden; overflow-y: auto'>" +
+            "           <ul id='projectListUl'></ul>" +
+            "       </div>" +
             "   </form>"
         this.appendChild(this.projectListDiv)
 
@@ -49,8 +51,8 @@ class ProjectListForm extends HTMLElement implements HHForm{
         this.closeBtn.addEventListener("mousedown", this.closeForm.bind(this))
 
         this.projectListUL = this.projectListDiv.querySelector("#projectListUl")
-        this.projectPageSpan = this.projectListDiv.querySelector("#projectPageSpan")
 
+        this.projectListUlContainer = this.querySelector("#projectListUlContainer")
     }
 
     closeForm(){
@@ -61,23 +63,14 @@ class ProjectListForm extends HTMLElement implements HHForm{
         let ulInnerHTML = ""
         for(let project of projects){
             ulInnerHTML += "<li>"
-            ulInnerHTML += "<div style='display: flex; flex-direction: row'>"
-            ulInnerHTML += "<img style='border: 1px solid blue; width: 200px; height: 100px; object-fit: scale-down' src='" + api.getProjectPreviewImageUrl(project.id) + "'>"
-            ulInnerHTML += "<span>" + project.name +"</span>"
-            ulInnerHTML += "</div>"
+            ulInnerHTML += "    <div style='display: flex; flex-direction: row'>"
+            ulInnerHTML += "    <img style='border: 1px solid blue; width: 200px; height: 100px; object-fit: scale-down' src='" + api.getProjectPreviewImageUrl(project.id) + "'>"
+            ulInnerHTML += "    <span>" + project.name +"</span>"
+            ulInnerHTML += "    </div>"
             ulInnerHTML += "</li>"
         }
 
         this.projectListUL.innerHTML = ulInnerHTML
-
-        let pageSpanHTML = ""
-        for(let pageNo = 0 ; pageNo < totalPage; pageNo++){
-            pageSpanHTML += "<span>"
-            pageSpanHTML += pageNo
-            pageSpanHTML += "</span>"
-        }
-
-        this.projectPageSpan.innerHTML = pageSpanHTML
     }
 }
 
