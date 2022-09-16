@@ -14,6 +14,8 @@ class EngineAPI{
 
     activePlayer = null
 
+    hasShape = false
+
     constructor() {
         Logger.info("Creating Engine API!!!!")
     }
@@ -81,6 +83,7 @@ class EngineAPI{
     }
 
     GetCurrentLayer(){
+        let _this = this
         let layer = this.GetCurrentStore().GetCurrentLayer();
         if(!layer.addShape){
             layer.addShape = (shape)=>{
@@ -91,6 +94,8 @@ class EngineAPI{
                 if(this.activePlayer){
                     this.activePlayer.getLayerShapes(layer).set(shape.getRawShape().ptr, shape)
                 }
+
+                _this.hasShape = true
 
                 Logger.debug("Currently there're:" + layer.GetShapeCount() + " shapes in the layer.")
             }

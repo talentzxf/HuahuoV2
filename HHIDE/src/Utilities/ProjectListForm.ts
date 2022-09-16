@@ -88,15 +88,18 @@ class ProjectListForm extends HTMLElement implements HHForm{
     }
 
     onClicked(projectId){
+        let _this = this
         return function onProjectClicked(evt){
             console.log("Clicked project:" + projectId + " evt:" + evt)
 
             if(!huahuoEngine.hasShape){
-                // Store is clear, directly load the project
+                // Store is clean, directly load the project
                 projectManager.loadFromServer(projectId)
             }else{ // Ask the user if he/she wants to clear the current store. TODO: Can we merge the two stores in the future??
                 HHToast.warn("Not implemented!!!")
             }
+
+            _this.closeForm()
         }
     }
 }

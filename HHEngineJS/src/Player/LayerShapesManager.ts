@@ -5,7 +5,6 @@ import {Logger} from "hhcommoncomponents"
 class LayerShapesManager {
     layerShapes = new Map();
 
-
     removeShape(layer, obj){
         if(!this.layerShapes.has(layer)){
             Logger.error("Can't find layer!");
