@@ -46,7 +46,7 @@ class RestApi {
     }
 
     getProjectPreviewImageUrl(projectId){
-        let previewURLTemplate = `/projects/${projectId}/coverpage`
+        let previewURLTemplate = `/projects/${projectId}/coverPage`
         return this.baseUrl + previewURLTemplate
     }
 

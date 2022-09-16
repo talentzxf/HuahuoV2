@@ -2,10 +2,10 @@ package online.huahuo.backend.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import online.huahuo.backend.db.ProjectFileDB;
 import online.huahuo.backend.db.ProjectRespository;
 import online.huahuo.backend.db.ProjectStatus;
-import online.huahuo.backend.db.UserDB;
 import online.huahuo.backend.storage.StorageService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -21,8 +21,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.google.common.io.Resources;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
@@ -37,17 +39,18 @@ class ProjectCallStatus {
 }
 
 @Data
-class ListProjectResult{
+class ListProjectResult {
     private int totalCount;
     private List<ProjectFileDB> projectFiles;
 }
 
 @Data
-class ProjectExistResponse{
+class ProjectExistResponse {
     private String projectName;
     private Boolean exist;
 }
 
+@Slf4j
 @Controller
 @AllArgsConstructor
 public class ProjectController {
@@ -57,11 +60,11 @@ public class ProjectController {
 
     @ResponseBody
     @PostMapping("/projects/projectData")
-    public ProjectCallStatus handleFileUpload(@RequestParam("file")MultipartFile file, @RequestParam(value = "force_override", required = false) Boolean forceOverride) throws IOException, NoSuchAlgorithmException {
+    public ProjectCallStatus handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam(value = "force_override", required = false) Boolean forceOverride) throws IOException, NoSuchAlgorithmException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        if(forceOverride == null){ // By default, override previous project
+        if (forceOverride == null) { // By default, override previous project
             forceOverride = true;
         }
 
@@ -71,14 +74,13 @@ public class ProjectController {
 
     @ResponseBody
     @PutMapping("/projects/{projectId}/description")
-    public ProjectCallStatus handleChangeProjectDescription(@PathVariable("projectId") Long projectId, @RequestBody String description){
+    public ProjectCallStatus handleChangeProjectDescription(@PathVariable("projectId") Long projectId, @RequestBody String description) {
         ProjectFileDB fileDB = storageService.getById(projectId);
         fileDB.setDescription(description);
         storageService.save(fileDB);
 
         return new ProjectCallStatus(fileDB.getId(), true, "Description changed successfully");
     }
-
 
 
     @GetMapping("/projects/{projectId}")
@@ -103,7 +105,7 @@ public class ProjectController {
 
     @PreAuthorize("hasRole('READER')")
     @GetMapping("/projects")
-    public ResponseEntity<ListProjectResult> listProjects(@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int pageSize){
+    public ResponseEntity<ListProjectResult> listProjects(@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int pageSize) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
@@ -139,7 +141,7 @@ public class ProjectController {
 
     @ResponseBody
     @PostMapping("/projects/{projectId}/coverPage")
-    public ProjectCallStatus handleCoverPageUpload(@RequestParam("file")MultipartFile coverPageFile, @PathVariable("projectId") Long projectId) throws IOException {
+    public ProjectCallStatus handleCoverPageUpload(@RequestParam("file") MultipartFile coverPageFile, @PathVariable("projectId") Long projectId) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
@@ -147,30 +149,50 @@ public class ProjectController {
         return new ProjectCallStatus(projectId, true, "Project cover page uploaded successfully!");
     }
 
-    // TODO: Add Auth!!!
-    // @PreAuthorize("hasRole('READER')")
-    @GetMapping("/projects/{projectId}/coverpage")
-    public ResponseEntity<Resource> projectCoverpage(@PathVariable Long projectId) throws IOException {
-        ProjectFileDB fileDB = storageService.getById(projectId);
-
-        String fullPath = fileDB.getCoverPagePath();
-        if(fullPath == null){
-            return ResponseEntity.notFound().build();
-        }
-
-        byte[] fileData = Files.readAllBytes(Paths.get(fullPath));
-
+    @GetMapping("/projects/pageNotFound")
+    public ResponseEntity<Resource> coverPageNotFound() throws IOException {
+        URL url = Resources.getResource("image-not-found-icon.png");
+        byte[] fileData = Resources.toByteArray(url);
         ByteArrayResource resource = new ByteArrayResource(fileData);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + fileDB.getName() + "\"");
-        headers.add("X-Suggested-Filename", fileDB.getName());
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=image-not-found-icon.png");
 
         return ResponseEntity.ok()
                 .headers(headers)
                 .contentLength(fileData.length)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
+    }
+
+    // TODO: Add Auth!!!
+    // @PreAuthorize("hasRole('READER')")
+    @GetMapping("/projects/{projectId}/coverPage")
+    public ResponseEntity projectCoverpage(@PathVariable Long projectId) throws IOException {
+        try {
+            ProjectFileDB fileDB = storageService.getById(projectId);
+            String fullPath = fileDB.getCoverPagePath();
+            byte[] fileData = Files.readAllBytes(Paths.get(fullPath));
+
+            ByteArrayResource resource = new ByteArrayResource(fileData);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + fileDB.getName() + "\"");
+            headers.add("X-Suggested-Filename", fileDB.getName());
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentLength(fileData.length)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(resource);
+        } catch (Exception e) {
+            log.error("Exception happened, redirect to not found page.", e);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Location", "/projects/pageNotFound");
+
+            // 302 jump to not found image
+            return new ResponseEntity<byte[]>(null, headers, HttpStatus.FOUND);
+        }
     }
 
 }
