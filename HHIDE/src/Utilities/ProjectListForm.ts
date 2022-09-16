@@ -61,8 +61,10 @@ class ProjectListForm extends HTMLElement implements HHForm{
         let ulInnerHTML = ""
         for(let project of projects){
             ulInnerHTML += "<li>"
+            ulInnerHTML += "<div style='display: flex; flex-direction: row'>"
+            ulInnerHTML += "<img style='border: 1px solid blue; width: 200px; height: 100px; object-fit: scale-down' src='" + api.getProjectPreviewImageUrl(project.id) + "'>"
             ulInnerHTML += "<span>" + project.name +"</span>"
-            ulInnerHTML += "<img src='" + api.getProjectPreviewImageUrl(project.id) + "'>"
+            ulInnerHTML += "</div>"
             ulInnerHTML += "</li>"
         }
 
