@@ -61,10 +61,13 @@ class ProjectListForm extends HTMLElement implements HHForm{
 
     updateProjectList(totalPage, curPageNo, projects){
         let ulInnerHTML = ""
+        let projectDivPrefix = "projectDiv_"
         for(let project of projects){
             ulInnerHTML += "<li>"
-            ulInnerHTML += "    <div style='display: flex; flex-direction: row; flex-grow: 8'>"
-            ulInnerHTML += "    <img style='border: 1px solid blue; width: 160px; height: 120px; object-fit: scale-down' src='" + api.getProjectPreviewImageUrl(project.id) + "'>"
+            ulInnerHTML += "    <div style='display: flex; flex-direction: row; flex-grow: 8' id='" + projectDivPrefix + project.id +"'>"
+            ulInnerHTML += "    <div>"
+            ulInnerHTML += "        <img style='border: 1px solid blue; width: 160px; height: 120px; object-fit: scale-down' src='" + api.getProjectPreviewImageUrl(project.id) + "'>"
+            ulInnerHTML += "    </div>"
             ulInnerHTML += "    <div style='display: flex; flex-direction: column; width: 100%'>"
             ulInnerHTML += "        <span>" + project.name +"</span>"
             ulInnerHTML += "        <span style='font-size: x-small; text-align: right'>" + project.createTime.split("T")[0] +"</span>"
@@ -75,6 +78,17 @@ class ProjectListForm extends HTMLElement implements HHForm{
         }
 
         this.projectListUL.innerHTML = ulInnerHTML
+
+        for(let project of projects){
+            let projectDiv = this.projectListUL.querySelector("#" + projectDivPrefix + project.id)
+            projectDiv.addEventListener("mousedown", this.onClicked(project.id).bind(this))
+        }
+    }
+
+    onClicked(projectId){
+        return function onProjectClicked(evt){
+            console.log("Clicked project:" + projectId + " evt:" + evt)
+        }
     }
 }
 
