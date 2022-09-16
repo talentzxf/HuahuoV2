@@ -2,6 +2,9 @@ import {CustomElement} from "hhcommoncomponents";
 import {CSSUtils} from "./CSSUtils";
 import {HHForm} from "../Utilities/HHForm";
 import {api} from "../RESTApis/RestApi"
+import {huahuoEngine} from "hhenginejs";
+import {HHToast} from "hhcommoncomponents";
+import {projectManager} from "../HuaHuoEngine/ProjectManager";
 
 @CustomElement({
     selector: "hh-project-list"
@@ -12,7 +15,6 @@ class ProjectListForm extends HTMLElement implements HHForm{
     closeBtn: HTMLElement
     projectListUlContainer: HTMLDivElement
     projectListUL:HTMLUListElement
-    projectPageSpan: HTMLSpanElement
 
     connectedCallback(){
         this.style.position = "absolute"
@@ -88,6 +90,13 @@ class ProjectListForm extends HTMLElement implements HHForm{
     onClicked(projectId){
         return function onProjectClicked(evt){
             console.log("Clicked project:" + projectId + " evt:" + evt)
+
+            if(!huahuoEngine.hasShape){
+                // Store is clear, directly load the project
+                projectManager.loadFromServer(projectId)
+            }else{ // Ask the user if he/she wants to clear the current store. TODO: Can we merge the two stores in the future??
+                HHToast.warn("Not implemented!!!")
+            }
         }
     }
 }

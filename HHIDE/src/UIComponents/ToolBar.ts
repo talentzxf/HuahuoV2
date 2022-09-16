@@ -14,6 +14,7 @@ import {ProjectListForm} from "../Utilities/ProjectListForm";
 import {formManager} from "../Utilities/FormManager";
 import {ProjectInfoForm} from "../Utilities/ProjectInfoForm";
 import {projectInfo} from "../SceneView/ProjectInfo";
+import {projectManager} from "../HuaHuoEngine/ProjectManager";
 
 declare var Module:any
 
@@ -36,34 +37,6 @@ function save() {
     finally {
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(oldStoreId)
     }
-}
-
-function load(fName:string, e) {
-    Logger.info("Opening:" + fName)
-
-    let fileName = fName.split("\\").pop();
-    let file = e.target.files[0];
-    let reader = new FileReader()
-    reader.onload = function (e:ProgressEvent<FileReader>) {
-        let arrayBuffer = e.target.result
-        let fileContent = new Uint8Array(arrayBuffer as ArrayBuffer);
-        let storeMemoryFile = "mem://" + fileName;
-        let fileSize = fileContent.length;
-        let memoryFileContent = Module.createMemFile(storeMemoryFile, fileSize);
-        for (let i = 0; i < fileSize; i++) { // Copy to the file, byte by byte
-            memoryFileContent[i] = fileContent[i];
-        }
-
-        let result = Module.LoadStoreFileCompletely(storeMemoryFile);
-        if (result == 0) {
-            let timeline:HHTimeline = document.querySelector("hh-timeline")
-            timeline.reloadTracks();
-            HHToast.info(i18n.t("toast.openProjectSucceeded"))
-        } else {
-            HHToast.error(i18n.t("toast.openProjectFailed"))
-        }
-    }
-    reader.readAsArrayBuffer(file)
 }
 
 @CustomElement({
@@ -163,7 +136,7 @@ class HHToolBar extends HTMLElement{
 
         hiddenFileButton.addEventListener("change", (evt)=>{
             let fName = hiddenFileButton.value
-            load(fName, evt)
+            projectManager.load(fName, evt)
         })
     }
 

@@ -50,7 +50,7 @@ class RestApi {
         return this.baseUrl + previewURLTemplate
     }
 
-    async _callApi<T>(url: string, inHeaders: Object = null, requestBody: object = null, httpMethod: HTTP_METHOD = HTTP_METHOD.POST): Promise<T> {
+    async _callApi<T>(url: string, inHeaders: Object = null, requestBody: object = null, httpMethod: HTTP_METHOD = HTTP_METHOD.POST, isBlob: boolean = false): Promise<T> {
         let targetUrl = this.baseUrl + url;
 
         if (inHeaders == null) {
@@ -66,6 +66,10 @@ class RestApi {
 
         try {
             let config = {headers: {}}
+
+            if(isBlob){
+                config["responseType"] = 'blob'
+            }
 
             if (inHeaders) {
                 config.headers = inHeaders
@@ -166,6 +170,11 @@ class RestApi {
     async uploadProjectCoverPage(projectId, data:Blob, fileName){
         let uploadPath = "/projects/" + projectId + "/coverPage"
         return this.uploadFile(uploadPath, data, fileName)
+    }
+
+    async downloadProject(projectId){
+        let downloadPath = "/projects/" + projectId
+        return this._callApi(downloadPath, null, null, HTTP_METHOD.GET, true)
     }
 
     async isUserExist(username: string, existUserFunc: Function, userNotExistFunc: Function) {
