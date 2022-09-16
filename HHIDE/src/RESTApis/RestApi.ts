@@ -46,7 +46,7 @@ class RestApi {
     }
 
     getProjectPreviewImageUrl(projectId){
-        let previewURLTemplate = `/project/${projectId}/preview`
+        let previewURLTemplate = `/projects/${projectId}/coverpage`
         return this.baseUrl + previewURLTemplate
     }
 
@@ -216,6 +216,14 @@ class RestApi {
         };
         let updateProjectDescriptionApi = "/projects/" + projectId + "/description"
         return this._callApi(updateProjectDescriptionApi, headers, description, HTTP_METHOD.PUT )
+    }
+
+    async checkProjectNameExistence(projectName) {
+        let headers = {
+            "Authorization": "Bearer " + this.getJwtToken()
+        };
+        let checkProjectNameExistenceURL = "/projects/exist?projectName=" + projectName
+        return this._callApi(checkProjectNameExistenceURL, headers, null, HTTP_METHOD.GET )
     }
 }
 

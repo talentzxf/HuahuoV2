@@ -66,37 +66,6 @@ function load(fName:string, e) {
     reader.readAsArrayBuffer(file)
 }
 
-// TODO: Ugly
-function uploadProject(afterAction:Function = null){
-    if(!projectInfo.inited){
-        // Prompt the Project description page.
-        let storeInforForm = formManager.openForm(ProjectInfoForm)
-        storeInforForm.onOKCallback = ()=>{
-            projectUploader.upload().then((response)=>{
-                if(afterAction)
-                    afterAction(response)
-            })
-        }
-    }else{
-        projectUploader.upload().then((response)=>{
-            if(afterAction)
-                afterAction(response)
-        })
-    }
-}
-
-function uploadAndOpenPlayer(){
-    uploadProject((response)=>{
-        let fileId = response["fileId"]
-
-        let playerUrl = huahuoProperties["huahuo.player.url"] + "?projectId=" + fileId
-
-        window.open(playerUrl, '_blank')
-    })
-}
-
-
-
 @CustomElement({
     selector: "hh-tool-bar"
 })
@@ -132,7 +101,7 @@ class HHToolBar extends HTMLElement{
             this.previewButton.style.height = "30px"
             this.previewButton.innerHTML = SVGFiles.previewBtn
             this.previewButton.title = i18n.t("hint.preview")
-            this.previewButton.addEventListener("click", uploadAndOpenPlayer)
+            this.previewButton.addEventListener("click", this.uploadAndOpenPlayer)
             this.appendChild(this.previewButton)
 
             this.projectListButton = document.createElement("button")
@@ -148,12 +117,43 @@ class HHToolBar extends HTMLElement{
             this.uploadButton.style.height = "30px"
             this.uploadButton.innerHTML = SVGFiles.uploadBtn
             this.uploadButton.title = i18n.t("hint.uploadProject")
+
+            let _this = this
             this.uploadButton.onclick = function(){
-                uploadProject()
+                _this.uploadProject()
             }
             this.appendChild(this.uploadButton)
 
         }.bind(this))
+    }
+
+    @NeedLogin()
+    uploadProject(afterAction:Function = null){
+        if(!projectInfo.inited){
+            // Prompt the Project description page.
+            let storeInforForm = formManager.openForm(ProjectInfoForm)
+            storeInforForm.onOKCallback = ()=>{
+                projectUploader.upload().then((response)=>{
+                    if(afterAction)
+                        afterAction(response)
+                })
+            }
+        }else{
+            projectUploader.upload().then((response)=>{
+                if(afterAction)
+                    afterAction(response)
+            })
+        }
+    }
+
+    uploadAndOpenPlayer(){
+        this.uploadProject((response)=>{
+            let fileId = response["fileId"]
+
+            let playerUrl = huahuoProperties["huahuo.player.url"] + "?projectId=" + fileId
+
+            window.open(playerUrl, '_blank')
+        })
     }
 
     onFileSelected(){

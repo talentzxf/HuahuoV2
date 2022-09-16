@@ -12,5 +12,6 @@ import java.util.List;
 @Repository
 public interface ProjectRespository extends PagingAndSortingRepository<ProjectFileDB, Long> {
     List<ProjectFileDB> findByCreatedByAndStatus(String createdBy, ProjectStatus status, Pageable pageable);
-    int countByCreatedByAndStatus(@Param("createdBy") String createdBy,@Param("status") ProjectStatus status);
+    ProjectFileDB findByCreatedByAndName(String createdBy, String projectName);
+    int countByCreatedByAndStatus(String createdBy, ProjectStatus status);
 }

@@ -5,6 +5,7 @@ import {HHForm} from "./HHForm";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {SVGFiles} from "./Svgs";
 import {SnapshotUtils} from "./SnapshotUtils";
+import {api} from "../RESTApis/RestApi";
 
 @CustomElement({
     selector: "hh-project-info"
@@ -26,6 +27,17 @@ class ProjectInfoForm extends HTMLElement implements HHForm{
     projectNameCheckImg:HTMLImageElement
     okImg: string = SVGFiles.okImg
     notOkImg: string = SVGFiles.notOKImg
+
+    _isNameValid: boolean = false
+
+    set isNameValid(val:boolean){
+        this._isNameValid = val
+        if(val){
+            this.projectNameCheckImg.src = this.okImg
+        }else{
+            this.projectNameCheckImg.src = this.notOkImg
+        }
+    }
 
     connectedCallback(){
         this.style.position = "absolute"
@@ -94,10 +106,18 @@ class ProjectInfoForm extends HTMLElement implements HHForm{
         this.projectNameInput = this.querySelector("#projectname")
         let _this = this
         this.projectNameInput.addEventListener("input", (evt)=>{
-            if(_this.validateText(_this.projectNameInput.value)){
-                _this.projectNameCheckImg.src = SVGFiles.okImg
+            let candidateName = _this.projectNameInput.value
+            if(_this.validateText(candidateName)){
+
+                api.checkProjectNameExistence(candidateName).then((result) => {
+                    if(result["exist"] === false){ // The project name doesn't exist in the system now. Name is valid
+                        _this.isNameValid = true
+                    }else{
+                        _this.isNameValid = false
+                    }
+                })
             }else{
-                _this.projectNameCheckImg.src = SVGFiles.notOKImg
+                _this.isNameValid = false
             }
         })
 
