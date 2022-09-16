@@ -41,8 +41,8 @@ class ProjectListForm extends HTMLElement implements HHForm{
             "       </div>" +
             "   </div>" +
             "       <h3>Your Projects</h3>" +
-            "       <div id='projectListUlContainer' style='height: 500px; overflow-x: hidden; overflow-y: auto'>" +
-            "           <ul id='projectListUl'></ul>" +
+            "       <div id='projectListUlContainer' style='height: 500px; overflow-x: hidden; overflow-y: auto; width: 100%'>" +
+            "           <ul id='projectListUl' style='width: 100%'></ul>" +
             "       </div>" +
             "   </form>"
         this.appendChild(this.projectListDiv)
@@ -63,9 +63,13 @@ class ProjectListForm extends HTMLElement implements HHForm{
         let ulInnerHTML = ""
         for(let project of projects){
             ulInnerHTML += "<li>"
-            ulInnerHTML += "    <div style='display: flex; flex-direction: row'>"
-            ulInnerHTML += "    <img style='border: 1px solid blue; width: 200px; height: 100px; object-fit: scale-down' src='" + api.getProjectPreviewImageUrl(project.id) + "'>"
-            ulInnerHTML += "    <span>" + project.name +"</span>"
+            ulInnerHTML += "    <div style='display: flex; flex-direction: row; flex-grow: 8'>"
+            ulInnerHTML += "    <img style='border: 1px solid blue; width: 160px; height: 120px; object-fit: scale-down' src='" + api.getProjectPreviewImageUrl(project.id) + "'>"
+            ulInnerHTML += "    <div style='display: flex; flex-direction: column; width: 100%'>"
+            ulInnerHTML += "        <span>" + project.name +"</span>"
+            ulInnerHTML += "        <span style='font-size: x-small; text-align: right'>" + project.createTime.split("T")[0] +"</span>"
+            ulInnerHTML += "        <span style='font-size: small'>" + project.description +"</span>"
+            ulInnerHTML += "    </div>"
             ulInnerHTML += "    </div>"
             ulInnerHTML += "</li>"
         }
