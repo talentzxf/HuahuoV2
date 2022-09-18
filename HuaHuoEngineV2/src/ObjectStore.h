@@ -160,6 +160,7 @@ public:
 
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
 
+    void SetStoreFilePath(char* storeFilePath);
 private:
     std::vector<PPtr<ObjectStore>> allStores;
     PPtr<ObjectStore> currentStore;

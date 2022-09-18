@@ -1,4 +1,5 @@
 import {Logger, HHToast} from "hhcommoncomponents";
+import {huahuoEngine} from "hhenginejs";
 import {HHTimeline} from "hhtimeline"
 import {api} from "../RESTApis/RestApi";
 
@@ -29,7 +30,7 @@ class ProjectManager{
         })
     }
 
-    loadFromArrayBuffer(arrayBuffer, fileName:string = "defaultStore"){
+    loadFromArrayBuffer(arrayBuffer, fileName:string = "objectstore.data"){
         let fileContent = new Uint8Array(arrayBuffer as ArrayBuffer);
         let storeMemoryFile = "mem://" + fileName;
         let fileSize = fileContent.length;
@@ -40,6 +41,7 @@ class ProjectManager{
 
         let result = Module.LoadStoreFileCompletely(storeMemoryFile);
         if (result == 0) { // TODO: Should send out event
+            huahuoEngine.SetStoreFilePath(storeMemoryFile)
             let timeline:HHTimeline = document.querySelector("hh-timeline")
             timeline.reloadTracks();
             HHToast.info(i18n.t("toast.openProjectSucceeded"))

@@ -22,7 +22,6 @@ class ProjectUploader {
         let oldStoreId = huahuoEngine.GetCurrentStoreId()
 
         try {
-            console.log("Setting default store Id 3:" + mainSceneView.storeId)
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainSceneView.storeId)
             let Uint8Array = Module.writeObjectStoreInMemoryFile()
             let blob = new Blob([Uint8Array], {type: "application/octet-stream"})

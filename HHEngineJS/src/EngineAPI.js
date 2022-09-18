@@ -134,6 +134,10 @@ class EngineAPI{
     DestroyShape(shape){
         this.cppEngine.DestroyShape(shape)
     }
+
+    SetStoreFilePath(path){
+        this.GetDefaultObjectStoreManager().SetStoreFilePath(path)
+    }
 }
 
 let huahuoEngine = window.huahuoEngine

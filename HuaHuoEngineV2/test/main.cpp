@@ -425,8 +425,18 @@ void testDelete() {
     }
 }
 
+void testReadFromFile(){
+    std::string fileName("C:\\\\Users\\\\vincentzhang\\\\Downloads\\\\huahuo - 2022-09-18T142119.898.data");
+    GetPersistentManager().LoadFileCompletely(fileName);
+
+    std::string writeFileName("mem://test2.data");
+    GetPersistentManager().WriteFile(StoreFilePath);
+}
+
 int main() {
     HuaHuoEngine::InitEngine();
+
+    testReadFromFile();
 //    testTransform();
 //    testScene();
 //    testGameObject();

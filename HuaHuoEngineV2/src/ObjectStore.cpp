@@ -25,6 +25,10 @@ void SetDefaultObjectStoreManager(ObjectStoreManager* objectStoreManager){
     gDefaultObjectStoreManager = objectStoreManager;
 }
 
+void ObjectStoreManager::SetStoreFilePath(char* storeFilePath){
+    storeFilePath = storeFilePath;
+}
+
 IMPLEMENT_REGISTER_CLASS(ObjectStoreManager, 10004);
 
 IMPLEMENT_OBJECT_SERIALIZE(ObjectStoreManager);

@@ -84,6 +84,7 @@ interface ObjectStoreManager{
     ObjectStore CreateStore();
     boolean SetDefaultStoreByIndex(long storeIdx);
     ObjectStore GetStoreById(long storeIdx);
+    void SetStoreFilePath(DOMString storeFilePath);
 };
 
 [NoDelete]
