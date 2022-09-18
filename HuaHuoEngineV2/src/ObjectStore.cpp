@@ -23,10 +23,16 @@ ObjectStoreManager* GetDefaultObjectStoreManager(){
 
 void SetDefaultObjectStoreManager(ObjectStoreManager* objectStoreManager){
     gDefaultObjectStoreManager = objectStoreManager;
+
+    printf("Set Default object store manager\n");
 }
 
-void ObjectStoreManager::SetStoreFilePath(char* storeFilePath){
-    storeFilePath = storeFilePath;
+void ObjectStoreManager::SetStoreFilePath(char* inStoreFilePath){
+    StoreFilePath = inStoreFilePath;
+}
+
+char* ObjectStoreManager::GetStoreFilePath(){
+    return const_cast<char*>(StoreFilePath.c_str());
 }
 
 IMPLEMENT_REGISTER_CLASS(ObjectStoreManager, 10004);

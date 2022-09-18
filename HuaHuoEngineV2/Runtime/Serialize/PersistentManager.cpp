@@ -1151,6 +1151,7 @@ static void CleanupStream(StreamNameSpace& stream, bool cleanupDestroyedList)
 
 StreamNameSpace& PersistentManager::GetStreamNameSpaceInternal(int nameSpaceID)
 {
+    printf("Getting namespace:%d stream\n", nameSpaceID);
     // Must lock m_Mutex BEFORE calling this function since it returns a reference to an element in m_Streams
 
     CheckedAssert(m_PreventLoadingFromFile != nameSpaceID);
@@ -1255,6 +1256,7 @@ void PersistentManager::PostLoadStreamNameSpaceInternal(StreamNameSpace& nameSpa
 
 void PersistentManager::MakeObjectsPersistent(const InstanceID* heapIDs, LocalIdentifierInFileType* fileIDs, int size, std::string pathName, int options)
 {
+    printf("MakeObjectsPersistent:%s\n", pathName.c_str());
     // PROFILER_AUTO(gMakeObjectPersistentProfiler);
 
     CheckedAssert(m_AllowLoadingFromDisk);

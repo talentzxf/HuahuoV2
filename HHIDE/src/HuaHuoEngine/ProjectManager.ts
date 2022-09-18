@@ -39,9 +39,10 @@ class ProjectManager{
             memoryFileContent[i] = fileContent[i];
         }
 
+        huahuoEngine.SetStoreFilePath(storeMemoryFile)
+
         let result = Module.LoadStoreFileCompletely(storeMemoryFile);
         if (result == 0) { // TODO: Should send out event
-            huahuoEngine.SetStoreFilePath(storeMemoryFile)
             let timeline:HHTimeline = document.querySelector("hh-timeline")
             timeline.reloadTracks();
             HHToast.info(i18n.t("toast.openProjectSucceeded"))

@@ -197,6 +197,7 @@ AbstractFrameState *BaseShape::ProduceFrameStateByType(const HuaHuo::Type *type)
 
     component->Reset();
 
+    printf("Creating component at path:%s\n", StoreFilePath.c_str());
     GetPersistentManagerPtr()->MakeObjectPersistent(component->GetInstanceID(), StoreFilePath);
 
     return component;

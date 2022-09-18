@@ -121,7 +121,7 @@ public:
         GetPersistentManager().MakeObjectPersistent(currentStore.GetInstanceID(), StoreFilePath);
         allStores.push_back(currentStore);
 
-        printf("CurrentStore instance id:%d\n", currentStore.GetInstanceID());
+        printf("CurrentStore instance id:%d at file:%d\n", currentStore.GetInstanceID(), StoreFilePath.c_str());
         return currentStore;
     }
 
@@ -160,7 +160,8 @@ public:
 
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
 
-    void SetStoreFilePath(char* storeFilePath);
+    void SetStoreFilePath(char* inStoreFilePath);
+    char* GetStoreFilePath();
 private:
     std::vector<PPtr<ObjectStore>> allStores;
     PPtr<ObjectStore> currentStore;
