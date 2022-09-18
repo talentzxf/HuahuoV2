@@ -138,6 +138,8 @@ void testShapeStore() {
 
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
 
+    GetPersistentManagerPtr()->WriteFile(StoreFilePath);
+
     size_t length = GetMemoryFileSystem()->GetFileLength(StoreFilePath);
     printf("File length:%d\n", length);
 

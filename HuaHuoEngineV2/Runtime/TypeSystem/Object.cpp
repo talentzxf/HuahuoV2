@@ -77,6 +77,11 @@ Object::Object(MemLabelId label, ObjectCreationMode mode)
     m_HideFlags = 0;
     m_TemporaryFlags = 0;
     m_IsPersistent = false;
+
+#if HUAHUO_EDITOR
+    m_DirtyIndex = 0;
+    m_FileIDHint = 0;
+#endif
 }
 
 void Object::StaticInitialize()

@@ -91,10 +91,8 @@ bool Remapper::InstanceIDToSerializedObjectIdentifier(InstanceID instanceID, Ser
 {
     // __FAKEABLE_METHOD__(Remapper, InstanceIDToSerializedObjectIdentifier, (instanceID, identifier));
 
-    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
     if (IsPreallocatedID(instanceID))
     {
-        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
         identifier.serializedFileIndex = m_ActivePreallocatedSerializedFileIndex;
         identifier.localIdentifierInFile = (InstanceID_AsSInt32Ref(instanceID) - m_ActivePreallocatedIDBase) / 2;
         return true;
@@ -108,10 +106,6 @@ bool Remapper::InstanceIDToSerializedObjectIdentifier(InstanceID instanceID, Ser
         return false;
     }
     identifier = i->second;
-
-    printf("Identifier:%d,%lld\n", identifier.serializedFileIndex, identifier.localIdentifierInFile);
-
-    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
 
     return true;
 }
