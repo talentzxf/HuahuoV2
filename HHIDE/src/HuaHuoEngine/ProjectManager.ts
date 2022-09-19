@@ -39,8 +39,6 @@ class ProjectManager{
             memoryFileContent[i] = fileContent[i];
         }
 
-        huahuoEngine.SetStoreFilePath(storeMemoryFile)
-
         let result = Module.LoadStoreFileCompletely(storeMemoryFile);
         if (result == 0) { // TODO: Should send out event
             let timeline:HHTimeline = document.querySelector("hh-timeline")

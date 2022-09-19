@@ -5,15 +5,41 @@
 #include "ObjectStore.h"
 #include "Memory/MemoryMacros.h"
 #include "Serialize/SerializeUtility.h"
+#include <ctime>
+#include <sstream>
 
 std::string StoreFilePath("mem://objectstore.data");
 
 ObjectStoreManager* gDefaultObjectStoreManager = NULL;
 
+const std::string currentTime(){
+    std::time_t timeStamp = std::time(nullptr);
+    std::stringstream ss;
+    ss << timeStamp;
+    return ss.str();
+}
+
+std::string gen_random(const int len) {
+    static const char alphanum[] =
+            "0123456789"
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "abcdefghijklmnopqrstuvwxyz";
+    std::string tmp_s;
+    tmp_s.reserve(len);
+
+    for (int i = 0; i < len; ++i) {
+        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+
+    return tmp_s;
+}
+
 ObjectStoreManager* GetDefaultObjectStoreManager(){
     if(gDefaultObjectStoreManager == NULL){
         gDefaultObjectStoreManager = Object::Produce<ObjectStoreManager>();
         gDefaultObjectStoreManager->SetIsGlobal(true);
+
+        StoreFilePath = "mem://" + gen_random(10) + currentTime();
 
         GetPersistentManager().MakeObjectPersistent(gDefaultObjectStoreManager->GetInstanceID(), StoreFilePath);
     }
@@ -25,14 +51,6 @@ void SetDefaultObjectStoreManager(ObjectStoreManager* objectStoreManager){
     gDefaultObjectStoreManager = objectStoreManager;
 
     printf("Set Default object store manager\n");
-}
-
-void ObjectStoreManager::SetStoreFilePath(char* inStoreFilePath){
-    StoreFilePath = inStoreFilePath;
-}
-
-char* ObjectStoreManager::GetStoreFilePath(){
-    return const_cast<char*>(StoreFilePath.c_str());
 }
 
 IMPLEMENT_REGISTER_CLASS(ObjectStoreManager, 10004);

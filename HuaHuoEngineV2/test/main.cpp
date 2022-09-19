@@ -426,7 +426,7 @@ void testDelete() {
 }
 
 void testReadFromFile(){
-    std::string fileName("C:\\\\Users\\\\vincentzhang\\\\Downloads\\\\huahuo - 2022-09-18T142119.898.data");
+    std::string fileName("C:\\Users\\vincentzhang\\Downloads\\huahuo (87).data");
     GetPersistentManager().LoadFileCompletely(fileName);
 
     std::string writeFileName("mem://test2.data");

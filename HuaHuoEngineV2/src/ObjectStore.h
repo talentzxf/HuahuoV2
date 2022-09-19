@@ -159,9 +159,6 @@ public:
     static ObjectStoreManager* GetDefaultObjectStoreManager();
 
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
-
-    void SetStoreFilePath(char* inStoreFilePath);
-    char* GetStoreFilePath();
 private:
     std::vector<PPtr<ObjectStore>> allStores;
     PPtr<ObjectStore> currentStore;
