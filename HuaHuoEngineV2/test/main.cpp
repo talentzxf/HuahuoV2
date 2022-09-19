@@ -426,8 +426,26 @@ void testDelete() {
 }
 
 void testReadFromFile(){
-    std::string fileName("C:\\Users\\vincentzhang\\Downloads\\huahuo (87).data");
-    GetPersistentManager().LoadFileCompletely(fileName);
+    std::string fileName("0Gp3iuAmyG1663551065.huahuo");
+    std::string filePath = "C:\\Users\\vincentzhang\\Downloads\\" + fileName;
+
+    //1. Copy the file into memory
+    std::string memFileName = "mem://" + fileName;
+    size_t fileLength = GetFileLength(filePath);
+
+    unsigned char * pBuffer = new unsigned char[fileLength];
+    FILE* fp = fopen(filePath.c_str(), "rb");
+    fread(pBuffer, 1, fileLength, fp);
+    fclose(fp);
+
+    MemoryFileAccessor* pAccessor = GetMemoryFileSystem()->OpenFile(memFileName, kWritePermission);
+    pAccessor->Write(pBuffer, fileLength);
+    GetMemoryFileSystem()->CloseFile(pAccessor);
+
+    // Set the memory file as the default file
+    StoreFileName = fileName;
+    StoreFilePath = memFileName;
+    GetPersistentManager().LoadFileCompletely(memFileName);
 
     std::string writeFileName("mem://test2.data");
     GetPersistentManager().WriteFile(StoreFilePath);

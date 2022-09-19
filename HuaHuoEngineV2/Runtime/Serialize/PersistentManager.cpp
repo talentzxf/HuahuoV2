@@ -25,7 +25,38 @@
 static const char* kResourceImageExtensions[] = { "resG", "res", "resS" };
 #endif
 
+#include <ctime>
+#include <sstream>
 
+std::string StoreFileName;
+std::string StoreFilePath;
+
+const std::string currentTime(){
+    std::time_t timeStamp = std::time(nullptr);
+    std::stringstream ss;
+    ss << timeStamp;
+    return ss.str();
+}
+
+std::string gen_random(const int len) {
+    static const char alphanum[] =
+            "0123456789"
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "abcdefghijklmnopqrstuvwxyz";
+    std::string tmp_s;
+    tmp_s.reserve(len);
+
+    for (int i = 0; i < len; ++i) {
+        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+
+    return tmp_s;
+}
+
+void InitStorFilePath(){
+    StoreFileName = gen_random(10) + currentTime();
+    StoreFilePath = "mem://" + StoreFileName;
+}
 
 #if HUAHUO_EDITOR
 class AutoResetInstanceIDResolver : NonCopyable
@@ -219,6 +250,10 @@ static PersistentManager * gPersistentManager = NULL;
 PersistentManager& GetPersistentManager()
 {
     //__FAKEABLE_FUNCTION__(GetPersistentManager, ());
+
+    if(StoreFileName.length() == 0){
+        InitStorFilePath();
+    }
 
     Assert(gPersistentManager != NULL);
     return *gPersistentManager;

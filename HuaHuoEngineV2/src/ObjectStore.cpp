@@ -5,41 +5,14 @@
 #include "ObjectStore.h"
 #include "Memory/MemoryMacros.h"
 #include "Serialize/SerializeUtility.h"
-#include <ctime>
-#include <sstream>
 
-std::string StoreFilePath("mem://objectstore.data");
 
 ObjectStoreManager* gDefaultObjectStoreManager = NULL;
-
-const std::string currentTime(){
-    std::time_t timeStamp = std::time(nullptr);
-    std::stringstream ss;
-    ss << timeStamp;
-    return ss.str();
-}
-
-std::string gen_random(const int len) {
-    static const char alphanum[] =
-            "0123456789"
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            "abcdefghijklmnopqrstuvwxyz";
-    std::string tmp_s;
-    tmp_s.reserve(len);
-
-    for (int i = 0; i < len; ++i) {
-        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
-    }
-
-    return tmp_s;
-}
 
 ObjectStoreManager* GetDefaultObjectStoreManager(){
     if(gDefaultObjectStoreManager == NULL){
         gDefaultObjectStoreManager = Object::Produce<ObjectStoreManager>();
         gDefaultObjectStoreManager->SetIsGlobal(true);
-
-        StoreFilePath = "mem://" + gen_random(10) + currentTime();
 
         GetPersistentManager().MakeObjectPersistent(gDefaultObjectStoreManager->GetInstanceID(), StoreFilePath);
     }
@@ -103,6 +76,11 @@ void ObjectStore::Transfer(TransferFunction &transfer) {
 }
 
 #if WEB_ENV
+extern std::string StoreFileName;
+std::string getStoreFileName(){
+    return StoreFileName;
+}
+
 emscripten::val writeObjectStoreInMemoryFile(){
     int writeResult = GetPersistentManager().WriteFile(StoreFilePath);
     printf("%s,%d; file:%s\n writeResult:%d\n", __FILE__, __LINE__ , StoreFilePath.c_str(), writeResult);
@@ -122,6 +100,7 @@ emscripten::val writeObjectStoreInMemoryFile(){
 
 EMSCRIPTEN_BINDINGS(HuaHuoEngineV2_OBJECTSTORE) {
     emscripten::function("writeObjectStoreInMemoryFile", &writeObjectStoreInMemoryFile);
+    emscripten::function("getStoreFileName", &getStoreFileName);
 }
 #endif
 

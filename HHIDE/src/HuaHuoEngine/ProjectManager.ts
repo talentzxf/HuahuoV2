@@ -16,7 +16,7 @@ class ProjectManager{
         reader.onload = function (e:ProgressEvent<FileReader>) {
             let arrayBuffer = e.target.result
 
-            _this.loadFromArrayBuffer(arrayBuffer, fileName)
+            _this.loadFromArrayBuffer(arrayBuffer, fileName.split(".")[0])
         }
         reader.readAsArrayBuffer(file)
     }
