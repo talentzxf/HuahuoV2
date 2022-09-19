@@ -143,13 +143,14 @@ void testShapeStore() {
     size_t length = GetMemoryFileSystem()->GetFileLength(StoreFilePath);
     printf("File length:%d\n", length);
 
-    const char *filename = "objectstore_persistent.data";
+    std::string fName = StoreFilePath.substr(StoreFilePath.find_last_of("/\\") + 1);
+    const char *filename = fName.c_str();
     FILE *fp = fopen(filename, "w+b");
     fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath), length, 1, fp);
     fclose(fp);
 
     // std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo (92).data");
-    std::string filenamestr(filename);
+    std::string filenamestr = std::string("mem://") + filename;
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
     GetScriptEventManager()->IsEventRegistered("Hello");
@@ -443,7 +444,6 @@ void testReadFromFile(){
     GetMemoryFileSystem()->CloseFile(pAccessor);
 
     // Set the memory file as the default file
-    StoreFileName = fileName;
     StoreFilePath = memFileName;
     GetPersistentManager().LoadFileCompletely(memFileName);
 
@@ -454,11 +454,11 @@ void testReadFromFile(){
 int main() {
     HuaHuoEngine::InitEngine();
 
-    testReadFromFile();
+//    testReadFromFile();
 //    testTransform();
 //    testScene();
 //    testGameObject();
-    testTimeManager();
+//    testTimeManager();
     testShapeStore();
     testKeyFrames();
     testRecordKeyFrames();

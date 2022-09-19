@@ -76,9 +76,12 @@ void ObjectStore::Transfer(TransferFunction &transfer) {
 }
 
 #if WEB_ENV
-extern std::string StoreFileName;
-std::string getStoreFileName(){
-    return StoreFileName;
+std::string getStoreFilePath(){
+    return StoreFilePath;
+}
+
+void setStoreFilePath(std::string storeFilePath){
+    StoreFilePath = storeFilePath;
 }
 
 emscripten::val writeObjectStoreInMemoryFile(){
@@ -100,7 +103,7 @@ emscripten::val writeObjectStoreInMemoryFile(){
 
 EMSCRIPTEN_BINDINGS(HuaHuoEngineV2_OBJECTSTORE) {
     emscripten::function("writeObjectStoreInMemoryFile", &writeObjectStoreInMemoryFile);
-    emscripten::function("getStoreFileName", &getStoreFileName);
+    emscripten::function("getStoreFilePath", &getStoreFilePath);
 }
 #endif
 

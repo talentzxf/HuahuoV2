@@ -28,7 +28,6 @@ static const char* kResourceImageExtensions[] = { "resG", "res", "resS" };
 #include <ctime>
 #include <sstream>
 
-std::string StoreFileName;
 std::string StoreFilePath;
 
 const std::string currentTime(){
@@ -54,8 +53,7 @@ std::string gen_random(const int len) {
 }
 
 void InitStorFilePath(){
-    StoreFileName = gen_random(10) + currentTime();
-    StoreFilePath = "mem://" + StoreFileName;
+    StoreFilePath = "mem://" + gen_random(10) + currentTime();;
 }
 
 #if HUAHUO_EDITOR
@@ -251,7 +249,7 @@ PersistentManager& GetPersistentManager()
 {
     //__FAKEABLE_FUNCTION__(GetPersistentManager, ());
 
-    if(StoreFileName.length() == 0){
+    if(StoreFilePath.length() == 0){
         InitStorFilePath();
     }
 
@@ -261,6 +259,12 @@ PersistentManager& GetPersistentManager()
 
 PersistentManager* GetPersistentManagerPtr()
 {
+    //__FAKEABLE_FUNCTION__(GetPersistentManager, ());
+
+    if(StoreFilePath.length() == 0){
+        InitStorFilePath();
+    }
+
     // __FAKEABLE_FUNCTION__(GetPersistentManagerPtr, ());
     return gPersistentManager;
 }
@@ -1795,6 +1799,7 @@ int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, con
 
 #ifndef REGISTERED_LOADFILEBINDING
 #define REGISTERED_LOADFILEBINDING
+
 size_t LoadFileCompletely(std::string fName){
     return GetPersistentManager().LoadFileCompletely(fName);
 }

@@ -28,7 +28,10 @@ function save() {
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainSceneView.storeId)
         let Uint8Array = Module.writeObjectStoreInMemoryFile()
         let blob = new Blob([Uint8Array], {type: "application/octet-stream"})
-        saveAs(blob, Module.getStoreFileName() + ".huahuo")
+
+        let storeFilePath = Module.getStoreFilePath()
+
+        saveAs(blob, storeFilePath + ".huahuo")
         HHToast.info(i18n.t("toast.projectSaved"))
     }
     catch (e){

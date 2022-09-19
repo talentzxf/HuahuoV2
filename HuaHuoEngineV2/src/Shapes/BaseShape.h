@@ -17,7 +17,6 @@
 #include "KeyFrames/ShapeStrokeColorFrameState.h"
 #include "KeyFrames/ShapeStrokeWidthFrameState.h"
 
-extern std::string StoreFileName;
 extern std::string StoreFilePath;
 class BaseShape;
 class ShapeLoadedEventArgs: public ScriptEventHandlerArgs{
