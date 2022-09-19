@@ -1,13 +1,8 @@
 import {CustomElement} from "hhcommoncomponents";
-import {huahuoEngine} from "hhenginejs";
-import {Logger} from "hhcommoncomponents";
-import {SceneView} from "../SceneView/SceneView";
-import {HHTimeline} from "hhtimeline"
-import {saveAs} from 'file-saver';
+
 import {SVGFiles} from "../Utilities/Svgs";
 import {projectUploader} from "../RESTApis/ProjectUploader";
 import huahuoProperties from "../hhide.properties";
-import {HHToast} from "hhcommoncomponents";
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 import {api} from "../RESTApis/RestApi"
 import {ProjectListForm} from "../Utilities/ProjectListForm";
@@ -15,35 +10,6 @@ import {formManager} from "../Utilities/FormManager";
 import {ProjectInfoForm} from "../Utilities/ProjectInfoForm";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
-
-import {gzipSync} from "fflate"
-
-declare var Module:any
-
-function save() {
-    // Restore current scene view.
-
-    let mainSceneView:SceneView = document.querySelector("#mainScene")
-    let oldStoreId = huahuoEngine.GetCurrentStoreId()
-
-    try{
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainSceneView.storeId)
-        let Uint8Array = Module.writeObjectStoreInMemoryFile()
-
-        let storeFilePathArray = Module.getStoreFilePath().split(/[/\\]/)
-        let storeFileName = storeFilePathArray[storeFilePathArray.length - 1]
-        let CompressedFileContent = gzipSync(Uint8Array, {filename: storeFileName});
-        let blob = new Blob([CompressedFileContent], {type: "application/octet-stream"})
-        saveAs(blob,  "huahuo_project.hua")
-        HHToast.info(i18n.t("toast.projectSaved"))
-    }
-    catch (e){
-        HHToast.info(i18n.t("toast.projectSaveFailed"))
-    }
-    finally {
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(oldStoreId)
-    }
-}
 
 @CustomElement({
     selector: "hh-tool-bar"
@@ -63,7 +29,7 @@ class HHToolBar extends HTMLElement{
             this.saveButton.style.height = "30px"
             this.saveButton.innerHTML = SVGFiles.saveBtn
             this.saveButton.title = i18n.t("hint.saveLocal")
-            this.saveButton.addEventListener("click", save)
+            this.saveButton.addEventListener("click", this.save.bind(this))
             this.appendChild(this.saveButton)
 
             this.loadButton = document.createElement("button")
@@ -144,6 +110,10 @@ class HHToolBar extends HTMLElement{
             let fName = hiddenFileButton.value
             projectManager.load(fName, evt)
         })
+    }
+
+    save(){
+        projectManager.save()
     }
 
     @NeedLogin()
