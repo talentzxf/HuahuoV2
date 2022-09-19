@@ -10,7 +10,7 @@ class TextDrawer extends BaseShapeDrawer{
 
     textInput: HTMLTextAreaElement
 
-    textShape: TextShapeJS = new TextShapeJS()
+    textShape: TextShapeJS
     textPos:Vector2 = new Vector2
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
         super.onBeginToDrawShape(canvas);
@@ -52,7 +52,7 @@ class TextDrawer extends BaseShapeDrawer{
 
             _this.addShapeToCurrentLayer(_this.textShape)
 
-            _this.textShape = new TextShapeJS()
+            this.textShape = new TextShapeJS();
         })
 
         this.textInput.value = ""
@@ -60,6 +60,9 @@ class TextDrawer extends BaseShapeDrawer{
 
     onTextChanged(){
         let curText:string = this.textInput.value
+
+        if(!this.textShape)
+            this.textShape = new TextShapeJS();
 
         this.textShape.setTextWithPosition(curText, this.textPos)
     }

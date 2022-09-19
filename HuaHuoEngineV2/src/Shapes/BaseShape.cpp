@@ -45,8 +45,6 @@ void BaseShape::TransferFrameStates(TransferFunction& transfer){
         return;
     }
 
-
-
     transfer.Transfer(mFrameStates, "mFrameStates", kHideInEditorMask | kStrongPPtrMask | kDisallowSerializedPropertyModification);
 }
 

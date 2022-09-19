@@ -1114,7 +1114,6 @@ void PersistentManager::InstanceIDToLocalSerializedObjectIdentifier(InstanceID i
 #if HUAHUO_EDITOR
 void PersistentManager::MakeObjectPersistent(InstanceID heapID, std::string pathName)
 {
-
     MakeObjectPersistentAtFileID(heapID, 0, pathName);
 }
 
@@ -1303,6 +1302,8 @@ void PersistentManager::MakeObjectsPersistent(const InstanceID* heapIDs, LocalId
     // AutoLock autoLock(*this);
     Assert(!pathName.empty());
     SInt32 globalNameSpace = InsertPathNameInternal(pathName, true);
+
+    printf("globalNameSpace:%d\n", globalNameSpace);
     StreamNameSpace* streamNameSpace = NULL;
     for (int i = 0; i < size; i++)
     {
@@ -1357,6 +1358,8 @@ void PersistentManager::MakeObjectsPersistent(const InstanceID* heapIDs, LocalId
         SerializedObjectIdentifier identifier;
         identifier.serializedFileIndex = globalNameSpace;
         identifier.localIdentifierInFile = fileID;
+
+        printf("identifier.serializedFileIndex:%d\n", identifier.serializedFileIndex);
         m_Remapper->SetupRemapping(heapID, identifier);
         fileIDs[i] = fileID;
 

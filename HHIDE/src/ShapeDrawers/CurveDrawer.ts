@@ -6,10 +6,12 @@ class CurveDrawer extends BaseShapeDrawer {
     name = "Curve"
     imgClass = "fas fa-bezier-curve"
 
-    curvePath: CurveShapeJS = new CurveShapeJS()
+    curvePath: CurveShapeJS
 
     onMouseDown(evt: MouseEvent) {
         super.onMouseDown(evt);
+
+        this.curvePath = new CurveShapeJS()
 
         let point = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.curvePath.addPoint(point)
@@ -37,7 +39,6 @@ class CurveDrawer extends BaseShapeDrawer {
 
             EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
             _this.addShapeToCurrentLayer(_this.curvePath)
-            _this.curvePath = new CurveShapeJS()
         })
     }
 }

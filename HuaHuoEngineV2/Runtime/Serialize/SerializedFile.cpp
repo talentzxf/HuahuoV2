@@ -114,6 +114,8 @@ void SerializedFile::AddExternalRef(const FileIdentifier& pathName)
 #if SUPPORT_SERIALIZE_WRITE
     Assert(m_CachedWriter != NULL);
 #endif
+
+    printf("Adding external ref:%s\n" , pathName.pathName.c_str());
     m_Externals.push_back(pathName);
     m_Externals.back().CheckValidity();
 }

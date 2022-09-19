@@ -8,7 +8,7 @@ class LineDrawer extends BaseShapeDrawer {
     name = 'Line'
     imgClass = "fas fa-slash"
 
-    tempShape = new LineShapeJS()
+    tempShape
 
     startPosition = new Vector2()
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
@@ -21,6 +21,7 @@ class LineDrawer extends BaseShapeDrawer {
         this.startPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.isDrawing = true
 
+        this.tempShape = new LineShapeJS()
         this.tempShape.setStartPoint(this.startPosition)
         this.tempShape.setEndPoint(this.startPosition)
     }
@@ -44,8 +45,6 @@ class LineDrawer extends BaseShapeDrawer {
             EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
 
             _this.addShapeToCurrentLayer(_this.tempShape)
-
-            _this.tempShape = new LineShapeJS();
         })
     }
 }

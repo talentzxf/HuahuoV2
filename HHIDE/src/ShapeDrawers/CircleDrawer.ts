@@ -7,7 +7,7 @@ import {EventBus, EventNames} from "../Events/GlobalEvents";
 class CircleDrawer extends BaseShapeDrawer{
     name = "Circle"
     imgClass = "fas fa-circle"
-    tempShape = new CircleShapeJS()
+    tempShape = null
 
     startPosition = new Vector2()
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
@@ -20,6 +20,7 @@ class CircleDrawer extends BaseShapeDrawer{
         this.startPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.isDrawing = true
 
+        this.tempShape = new CircleShapeJS()
         this.tempShape.setCenter(this.startPosition)
     }
 
@@ -42,8 +43,6 @@ class CircleDrawer extends BaseShapeDrawer{
             _this.isDrawing = false
             EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
             _this.addShapeToCurrentLayer(_this.tempShape)
-
-            _this.tempShape = new CircleShapeJS();
         })
     }
 

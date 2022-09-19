@@ -8,7 +8,7 @@ class RectangleDrawer extends BaseShapeDrawer{
     name = "Rectangle"
     imgClass = "fas fa-square"
 
-    tempShape = new RectangleJS()
+    tempShape
 
     startPosition = new Vector2()
 
@@ -23,6 +23,7 @@ class RectangleDrawer extends BaseShapeDrawer{
         this.startPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.isDrawing = true
 
+        this.tempShape = new RectangleJS()
         this.tempShape.setStartPoint(this.startPosition)
         this.tempShape.setEndPoint(this.startPosition)
     }
@@ -45,7 +46,6 @@ class RectangleDrawer extends BaseShapeDrawer{
             EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
 
             _this.addShapeToCurrentLayer(_this.tempShape)
-            _this.tempShape = new RectangleJS();
         })
     }
 }

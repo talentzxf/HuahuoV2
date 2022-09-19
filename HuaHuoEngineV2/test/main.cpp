@@ -427,34 +427,39 @@ void testDelete() {
 }
 
 void testReadFromFile(){
-    std::string fileName("0Gp3iuAmyG1663551065.huahuo");
-    std::string filePath = "C:\\Users\\vincentzhang\\Downloads\\" + fileName;
+//    std::string fileName("0Gp3iuAmyG1663567838");
+//    std::string filePath = "C:\\Users\\vincentzhang\\Downloads\\" + fileName + ".huahuo";
+//
+//    //1. Copy the file into memory
+//    std::string memFileName = "mem://" + fileName;
+//    size_t fileLength = GetFileLength(filePath);
+//
+//    unsigned char * pBuffer = new unsigned char[fileLength];
+//    FILE* fp = fopen(filePath.c_str(), "rb");
+//    fread(pBuffer, 1, fileLength, fp);
+//    fclose(fp);
+//
+//    MemoryFileAccessor* pAccessor = GetMemoryFileSystem()->OpenFile(memFileName, kWritePermission);
+//    pAccessor->Write(pBuffer, fileLength);
+//    GetMemoryFileSystem()->CloseFile(pAccessor);
+//
+//    // Set the memory file as the default file
+//    StoreFilePath = memFileName;
+    // GetPersistentManager().LoadFileCompletely(memFileName);
 
-    //1. Copy the file into memory
-    std::string memFileName = "mem://" + fileName;
-    size_t fileLength = GetFileLength(filePath);
+    GetDefaultObjectStoreManager()->GetCurrentStore()->CreateLayer("asdfasdfasdfasdf");
+    CircleShape *circleShape = (CircleShape *) BaseShape::CreateShape("CircleShape");
+    circleShape->SetRadius(10.0f);
+    circleShape->SetCenter(0.0, 1.0, 2.0);
+    GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->AddShapeInternal(circleShape);
 
-    unsigned char * pBuffer = new unsigned char[fileLength];
-    FILE* fp = fopen(filePath.c_str(), "rb");
-    fread(pBuffer, 1, fileLength, fp);
-    fclose(fp);
-
-    MemoryFileAccessor* pAccessor = GetMemoryFileSystem()->OpenFile(memFileName, kWritePermission);
-    pAccessor->Write(pBuffer, fileLength);
-    GetMemoryFileSystem()->CloseFile(pAccessor);
-
-    // Set the memory file as the default file
-    StoreFilePath = memFileName;
-    GetPersistentManager().LoadFileCompletely(memFileName);
-
-    std::string writeFileName("mem://test2.data");
     GetPersistentManager().WriteFile(StoreFilePath);
 }
 
 int main() {
     HuaHuoEngine::InitEngine();
 
-//    testReadFromFile();
+    testReadFromFile();
 //    testTransform();
 //    testScene();
 //    testGameObject();
