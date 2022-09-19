@@ -29,9 +29,9 @@ function save() {
         let Uint8Array = Module.writeObjectStoreInMemoryFile()
         let blob = new Blob([Uint8Array], {type: "application/octet-stream"})
 
-        let storeFilePath = Module.getStoreFilePath()
+        let storeFilePathArray = Module.getStoreFilePath().split(/[/\\]/)
 
-        saveAs(blob, storeFilePath + ".huahuo")
+        saveAs(blob, storeFilePathArray[storeFilePathArray.length - 1] + ".huahuo")
         HHToast.info(i18n.t("toast.projectSaved"))
     }
     catch (e){
