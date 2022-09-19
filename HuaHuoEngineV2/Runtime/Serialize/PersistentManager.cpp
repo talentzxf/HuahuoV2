@@ -1498,7 +1498,6 @@ PersistentManager* PersistentManager::GetPersistentManager() {
 
 int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, const WriteData* writeData, int size, /*const GlobalBuildData& globalBuildData,*/ VerifyWriteObjectCallback* verifyCallback, BuildTargetSelection target, TransferInstructionFlags options, const InstanceIDResolver* instanceIDResolver, LockFlags lockedFlags, ReportWriteObjectCallback* reportCallback, void* reportCallbackUserData)
 {
-
     WriteInformation writeInfo;
     return WriteFile(path, serializedFileIndex, writeData, size, /*globalBuildData,*/ verifyCallback, target, options, writeInfo, instanceIDResolver, lockedFlags, reportCallback, reportCallbackUserData);
 }

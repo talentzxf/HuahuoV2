@@ -140,7 +140,6 @@ public:
             return false;
         }
 
-        
         printf("Setting default store:%d\n", index);
         currentStore = allStores[index - 1];
 
