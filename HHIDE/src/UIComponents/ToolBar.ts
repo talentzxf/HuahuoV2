@@ -16,6 +16,8 @@ import {ProjectInfoForm} from "../Utilities/ProjectInfoForm";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
 
+import {gzipSync} from "fflate"
+
 declare var Module:any
 
 function save() {
@@ -27,11 +29,12 @@ function save() {
     try{
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainSceneView.storeId)
         let Uint8Array = Module.writeObjectStoreInMemoryFile()
-        let blob = new Blob([Uint8Array], {type: "application/octet-stream"})
 
         let storeFilePathArray = Module.getStoreFilePath().split(/[/\\]/)
-
-        saveAs(blob, storeFilePathArray[storeFilePathArray.length - 1] + ".huahuo")
+        let storeFileName = storeFilePathArray[storeFilePathArray.length - 1]
+        let CompressedFileContent = gzipSync(Uint8Array, {filename: storeFileName});
+        let blob = new Blob([CompressedFileContent], {type: "application/octet-stream"})
+        saveAs(blob,  "huahuo_project.hua")
         HHToast.info(i18n.t("toast.projectSaved"))
     }
     catch (e){

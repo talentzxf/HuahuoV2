@@ -428,7 +428,7 @@ void testDelete() {
 
 void testReadFromFile(){
 //    std::string fileName("0Gp3iuAmyG1663567838");
-//    std::string filePath = "C:\\Users\\vincentzhang\\Downloads\\" + fileName + ".huahuo";
+//    std::string filePath = "C:\\Users\\vincentzhang\\Downloads\\" + fileName + ".hua";
 //
 //    //1. Copy the file into memory
 //    std::string memFileName = "mem://" + fileName;

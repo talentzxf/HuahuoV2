@@ -25,7 +25,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class StorageServiceImpl implements StorageService{
 
-    final private String HUAHUO_POSTFIX = ".huahuo";
+    final private String HUAHUO_POSTFIX = ".hua";
     final private FileRepository fileRepository;
 
     @Value("${huahuo.backend.datafilepath}")
