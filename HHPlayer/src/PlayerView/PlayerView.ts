@@ -1,5 +1,6 @@
 import {CustomElement} from "hhcommoncomponents";
 import {renderEngine2D, Player} from "hhenginejs";
+import {huahuoEngine} from "hhenginejs"
 
 @CustomElement({
     selector: "hh-player"
@@ -102,6 +103,8 @@ class PlayerView extends HTMLElement {
         this.playButton.addEventListener("click", this.onPlayButtonClicked.bind(this))
 
         this.appendChild(this.playButton)
+
+        huahuoEngine.setActivePlayer(this.animationPlayer)
     }
 
     onPlayButtonClicked(){
