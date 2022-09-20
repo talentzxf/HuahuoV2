@@ -103,7 +103,7 @@ class ProjectListForm extends HTMLElement implements HHForm{
                     projectInfo.Setup(project.name, project.description, null)
                 })
             }else{ // Ask the user if he/she wants to clear the current store. TODO: Can we merge the two stores in the future??
-                HHToast.warn("Not implemented!!!")
+                HHToast.warn("Can't merge project, not implemented!!!")
             }
 
             _this.closeForm()
