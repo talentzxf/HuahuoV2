@@ -1,7 +1,8 @@
 import {fileDownloader} from "../RestApis/FileDownloader";
-import {Logger} from "hhcommoncomponents";
+import {Logger, getFileNameFromGZip} from "hhcommoncomponents";
 import {PlayerView} from "./PlayerView";
 import {huahuoEngine} from "hhenginejs"
+import {gunzipSync} from "fflate"
 
 declare var Module: any;
 
@@ -25,16 +26,18 @@ class AnimationLoader{
         Logger.info("Project:" + this.projectId + " downloaded!")
 
         Promise.resolve( data.arrayBuffer() ).then(
-            (fileContent)=>{
-                let storeMemoryFile = "mem://" + fileName;
-                let fileSize = data.size;
+            (arrayBuffer)=>{
+                let compressedFileContent = new Uint8Array(arrayBuffer as ArrayBuffer);
+                let fileContent = gunzipSync(compressedFileContent)
+                let fileName = getFileNameFromGZip(compressedFileContent)
 
-                let u8array = new Uint8Array(fileContent)
+                let storeMemoryFile = "mem://" + fileName;
+                let fileSize = fileContent.size;
 
                 huahuoEngine.ExecuteAfterInited(() => {
                     let memoryFileContent = Module.createMemFile(storeMemoryFile, fileSize);
                     for (let i = 0; i < fileSize; i++) { // Copy to the file, byte by byte
-                        memoryFileContent[i] = u8array[i];
+                        memoryFileContent[i] = fileContent[i];
                     }
 
                     let result = Module.LoadStoreFileCompletely(storeMemoryFile);

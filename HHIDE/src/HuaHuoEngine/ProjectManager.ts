@@ -1,4 +1,4 @@
-import {Logger, HHToast} from "hhcommoncomponents";
+import {Logger, HHToast, getFileNameFromGZip} from "hhcommoncomponents";
 import {huahuoEngine} from "hhenginejs";
 import {HHTimeline} from "hhtimeline"
 import {api} from "../RESTApis/RestApi";
@@ -7,26 +7,6 @@ import {SceneView} from "../SceneView/SceneView";
 import {saveAs} from 'file-saver';
 
 declare var Module: any
-
-function getFileNameFromGZip(d: Uint8Array){
-    if (d[0] != 31 || d[1] != 139 || d[2] != 8){
-        HHToast.error("Wrong file format")
-        return
-    }
-
-    let flg = d[3];
-    let st = 10;
-    if (flg & 4)
-        st += d[10] | (d[11] << 8) + 2;
-
-    let fileName = ""
-    // TODO: Is this the right way to get the filename??
-    for (; d[st]>0; st++){
-        fileName += String.fromCharCode(d[st])
-    }
-
-    return fileName
-}
 
 class ProjectManager {
     load(fName: string, e) {

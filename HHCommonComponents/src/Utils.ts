@@ -1,4 +1,5 @@
 import * as paper from "paper"
+import {HHToast} from "./Toast/Toast";
 
 function pointsNear(p1:paper.Point, p2:paper.Point, margin:number){
     return p1.getDistance(p2) < margin
@@ -37,4 +38,24 @@ function dataURItoBlob(dataURI): Uint8Array{
     }
     return ia;
 }
-export {pointsNear,relaxRectangle, getMimeTypeFromDataURI, dataURItoBlob}
+
+function getFileNameFromGZip(d: Uint8Array){
+    if (d[0] != 31 || d[1] != 139 || d[2] != 8){
+        HHToast.error("Wrong file format")
+        return
+    }
+
+    let flg = d[3];
+    let st = 10;
+    if (flg & 4)
+        st += d[10] | (d[11] << 8) + 2;
+
+    let fileName = ""
+    // TODO: Is this the right way to get the filename??
+    for (; d[st]>0; st++){
+        fileName += String.fromCharCode(d[st])
+    }
+
+    return fileName
+}
+export {pointsNear,relaxRectangle, getMimeTypeFromDataURI, dataURItoBlob, getFileNameFromGZip}

@@ -46,7 +46,7 @@ class HHToolBar extends HTMLElement{
             this.previewButton.style.height = "30px"
             this.previewButton.innerHTML = SVGFiles.previewBtn
             this.previewButton.title = i18n.t("hint.preview")
-            this.previewButton.addEventListener("click", this.uploadAndOpenPlayer)
+            this.previewButton.addEventListener("click", this.uploadAndOpenPlayer.bind(this))
             this.appendChild(this.previewButton)
 
             this.projectListButton = document.createElement("button")
