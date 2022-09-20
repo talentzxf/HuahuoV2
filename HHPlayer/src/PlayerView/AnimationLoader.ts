@@ -32,7 +32,7 @@ class AnimationLoader{
                 let fileName = getFileNameFromGZip(compressedFileContent)
 
                 let storeMemoryFile = "mem://" + fileName;
-                let fileSize = fileContent.size;
+                let fileSize = fileContent.length;
 
                 huahuoEngine.ExecuteAfterInited(() => {
                     let memoryFileContent = Module.createMemFile(storeMemoryFile, fileSize);
