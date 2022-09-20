@@ -92,6 +92,8 @@ public:
     ObjectStoreManager(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
         ,m_IsGlobal(false)
+        ,canvasWidth(-1)
+        ,canvasHeight(-1)
     {
         printf("Creating new store manager!!!!\n");
     }
@@ -158,9 +160,28 @@ public:
     static ObjectStoreManager* GetDefaultObjectStoreManager();
 
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
+
+    void SetStoreFilePath(char* inStoreFilePath);
+    char* GetStoreFilePath();
+
+    void SetCanvasWH(int canvasWidth, int canvasHeight){
+        this->canvasWidth = canvasWidth;
+        this->canvasHeight = canvasHeight;
+    }
+
+    int GetCanvasWidth(){
+        return this->canvasWidth;
+    }
+
+    int GetCanvasHeight(){
+        return this->canvasHeight;
+    }
+
 private:
     std::vector<PPtr<ObjectStore>> allStores;
     PPtr<ObjectStore> currentStore;
+    int canvasWidth;
+    int canvasHeight;
 };
 
 ObjectStoreManager* GetDefaultObjectStoreManager();

@@ -84,6 +84,12 @@ interface ObjectStoreManager{
     ObjectStore CreateStore();
     boolean SetDefaultStoreByIndex(long storeIdx);
     ObjectStore GetStoreById(long storeIdx);
+
+    void SetCanvasWH(unsigned long canvasWidth, unsigned long canvasHeight);
+
+    unsigned long GetCanvasWidth();
+
+    unsigned long GetCanvasHeight();
 };
 
 [NoDelete]
