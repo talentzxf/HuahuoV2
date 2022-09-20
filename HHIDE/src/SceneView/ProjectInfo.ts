@@ -1,5 +1,9 @@
 
 // Project == Store. (Should be consolidate these two terms??)
+import {SceneView} from "./SceneView";
+import {sceneViewManager} from "./SceneViewManager";
+import {SnapshotUtils} from "../Utilities/SnapshotUtils";
+
 class ProjectInfo {
     id: number;
     name:string;
@@ -24,6 +28,13 @@ class ProjectInfo {
         this.description = description
         this.coverPage = coverPageBinary
         this.inited = true
+    }
+
+    updateCoverPage(){
+        let sceneView = sceneViewManager.getFocusedSceneView()
+
+        let coverPageBinary = SnapshotUtils.takeSnapshot(sceneView.canvas)
+        this.coverPage = coverPageBinary
     }
 }
 

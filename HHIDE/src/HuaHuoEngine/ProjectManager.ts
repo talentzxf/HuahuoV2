@@ -45,7 +45,7 @@ class ProjectManager {
 
     loadFromServer(projectId: number) {
         let _this = this
-        api.downloadProject(projectId).then(function (blob: Blob) {
+        return api.downloadProject(projectId).then(function (blob: Blob) {
             Promise.resolve(blob.arrayBuffer()).then((data) => {
                 _this.loadFromArrayBuffer(data)
             })

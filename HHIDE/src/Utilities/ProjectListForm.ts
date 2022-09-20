@@ -5,6 +5,7 @@ import {api} from "../RESTApis/RestApi"
 import {huahuoEngine} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
+import {projectInfo} from "../SceneView/ProjectInfo";
 
 @CustomElement({
     selector: "hh-project-list"
@@ -15,6 +16,8 @@ class ProjectListForm extends HTMLElement implements HHForm{
     closeBtn: HTMLElement
     projectListUlContainer: HTMLDivElement
     projectListUL:HTMLUListElement
+
+    projectInfoMap: Map<number, Object> = new Map
 
     connectedCallback(){
         this.style.position = "absolute"
@@ -77,6 +80,8 @@ class ProjectListForm extends HTMLElement implements HHForm{
             ulInnerHTML += "    </div>"
             ulInnerHTML += "    </div>"
             ulInnerHTML += "</li>"
+
+            this.projectInfoMap.set(project.id, project)
         }
 
         this.projectListUL.innerHTML = ulInnerHTML
@@ -91,10 +96,12 @@ class ProjectListForm extends HTMLElement implements HHForm{
         let _this = this
         return function onProjectClicked(evt){
             console.log("Clicked project:" + projectId + " evt:" + evt)
-
             if(!huahuoEngine.hasShape){
+                let project:any = _this.projectInfoMap.get(projectId)
                 // Store is clean, directly load the project
-                projectManager.loadFromServer(projectId)
+                projectManager.loadFromServer(projectId).then(()=>{
+                    projectInfo.Setup(project.name, project.description, null)
+                })
             }else{ // Ask the user if he/she wants to clear the current store. TODO: Can we merge the two stores in the future??
                 HHToast.warn("Not implemented!!!")
             }

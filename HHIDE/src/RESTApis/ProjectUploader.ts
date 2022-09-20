@@ -28,13 +28,18 @@ class ProjectUploader {
 
         return uploadProjectPromise.then((response)=>{
             if(response["succeeded"]){
+
+                projectInfo.updateCoverPage()
+
                 // Two more things after project file has been uploaded.
                 // 1. Update the project description.
                 // 2. Update the project cover page.
                 let updateDescriptionPromise = api.updateProjectDescription(response["fileId"], projectInfo.description)
                 let uploadCoverpagePromise = api.uploadProjectCoverPage(response["fileId"], projectInfo.coverPage, projectInfo.name + ".png")
 
-                HHToast.info(i18n.t("toast.projectUploaded"))
+                Promise.all([updateDescriptionPromise, uploadCoverpagePromise]).then(()=>{
+                    HHToast.info(i18n.t("toast.projectUploaded"))
+                })
             }
             return response
         })
