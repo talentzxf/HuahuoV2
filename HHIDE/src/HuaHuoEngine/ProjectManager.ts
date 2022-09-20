@@ -21,7 +21,7 @@ function getFileNameFromGZip(d: Uint8Array){
 
     let fileName = ""
     // TODO: Is this the right way to get the filename??
-    for (let i = st; d[st]>0; st++){
+    for (; d[st]>0; st++){
         fileName += String.fromCharCode(d[st])
     }
 
@@ -75,26 +75,31 @@ class ProjectManager {
         }
     }
 
-    save() {
-        // Restore current scene view.
-
+    getProjectData(){
         let mainSceneView: SceneView = document.querySelector("#mainScene")
         let oldStoreId = huahuoEngine.GetCurrentStoreId()
 
-        try {
+        try{
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainSceneView.storeId)
             let Uint8Array = Module.writeObjectStoreInMemoryFile()
 
             let storeFilePathArray = Module.getStoreFilePath().split(/[/\\]/)
             let storeFileName = storeFilePathArray[storeFilePathArray.length - 1]
             let CompressedFileContent = gzipSync(Uint8Array, {filename: storeFileName});
-            let blob = new Blob([CompressedFileContent], {type: "application/octet-stream"})
-            saveAs(blob, "huahuo_project.hua")
+            return new Blob([CompressedFileContent], {type: "application/octet-stream"})
+        } finally {
+            console.log("Setting default store Id 4:" + oldStoreId)
+            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(oldStoreId)
+        }
+    }
+
+    save() {
+        // Restore current scene view.
+        try {
+            saveAs(this.getProjectData(), "huahuo_project.hua")
             HHToast.info(i18n.t("toast.projectSaved"))
         } catch (e) {
             HHToast.info(i18n.t("toast.projectSaveFailed"))
-        } finally {
-            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(oldStoreId)
         }
     }
 }

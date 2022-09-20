@@ -4,6 +4,7 @@ import {api} from "./RestApi";
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 import {HHToast} from "hhcommoncomponents";
 import {projectInfo} from "../SceneView/ProjectInfo";
+import {projectManager} from "../HuaHuoEngine/ProjectManager";
 
 declare var Module: any;
 
@@ -17,28 +18,12 @@ class ProjectUploader {
         return this._uploadProject()
     }
 
-    getProjectData(): Blob {
-        let mainSceneView: SceneView = document.querySelector("#mainScene")
-        let oldStoreId = huahuoEngine.GetCurrentStoreId()
-
-        try {
-            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainSceneView.storeId)
-            let Uint8Array = Module.writeObjectStoreInMemoryFile()
-            let blob = new Blob([Uint8Array], {type: "application/octet-stream"})
-
-            return blob
-        } finally {
-            console.log("Setting default store Id 4:" + oldStoreId)
-            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(oldStoreId)
-        }
-    }
-
     async _uploadProject() {
         if(!projectInfo.inited){
             return
         }
 
-        let data = this.getProjectData()
+        let data = projectManager.getProjectData()
         let uploadProjectPromise = api.uploadProject(data, this.fileName)
 
         return uploadProjectPromise.then((response)=>{
