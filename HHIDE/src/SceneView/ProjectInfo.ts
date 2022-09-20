@@ -11,6 +11,8 @@ class ProjectInfo {
     coverPage: Blob // Image of the cover page.
     inited: boolean = false
 
+    callBackFunctions: Array<Function> = new Array()
+
     constructor() {
         this.Clear()
     }
@@ -28,6 +30,14 @@ class ProjectInfo {
         this.description = description
         this.coverPage = coverPageBinary
         this.inited = true
+
+        for(let cbFunc of this.callBackFunctions){
+            cbFunc()
+        }
+    }
+
+    addOnChangedCallback(cbFunc: Function){
+        this.callBackFunctions.push(cbFunc)
     }
 
     updateCoverPage(){

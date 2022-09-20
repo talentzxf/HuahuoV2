@@ -2,16 +2,25 @@ import {CustomElement} from "hhcommoncomponents";
 import {SVGFiles} from "../Utilities/Svgs";
 import {sceneViewManager} from "../SceneView/SceneViewManager";
 import {Player} from "hhenginejs";
+import {projectInfo} from "../SceneView/ProjectInfo";
 
 @CustomElement({
     selector: "hh-player-controller"
 })
 class PlayerController extends HTMLElement{
+    projectNameSpan: HTMLSpanElement
     playButton: HTMLButtonElement
     pauseButton: HTMLButtonElement
     stopButton: HTMLButtonElement
 
     connectedCallback() {
+        this.projectNameSpan = document.createElement("span")
+        this.projectNameSpan.innerText = "Unnamed project"
+        this.projectNameSpan.style.verticalAlign = "super"
+        this.appendChild(this.projectNameSpan)
+
+        projectInfo.addOnChangedCallback(this.projectInfoChanged.bind(this))
+
         this.playButton = document.createElement("button")
         this.playButton.innerText = "Play"
         this.playButton.style.width = "30px"
@@ -35,6 +44,12 @@ class PlayerController extends HTMLElement{
         this.stopButton.onclick = this.stopAnimation.bind(this)
 
         document.addEventListener('keydown', this.onKeyEvent.bind(this));
+    }
+
+    projectInfoChanged(){
+        if(projectInfo.inited){
+            this.projectNameSpan.innerText = projectInfo.name
+        }
     }
 
     onKeyEvent(evt:KeyboardEvent){
