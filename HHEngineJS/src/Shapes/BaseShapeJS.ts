@@ -142,6 +142,10 @@ abstract class BaseShapeJS {
         return new paper.Point(this.pivotPosition.x, this.pivotPosition.y)
     }
 
+    get shapePosition(): paper.Point{
+        return this.paperShape.position
+    }
+
     get rotation(): number {
         return this.rawObj.GetRotation()
     }
