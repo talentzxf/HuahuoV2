@@ -77,5 +77,9 @@
     "preview": "上传并预览动画",
     "listProject": "列出我的项目",
     "uploadProject": "上传项目"
+  },
+  "project": {
+    "delete": "删除项目",
+    "deleted": "项目:{{projectName}} 已被删除"
   }
 }

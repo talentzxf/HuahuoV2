@@ -26,6 +26,7 @@ import com.google.common.io.Resources;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -163,6 +164,30 @@ public class ProjectController {
                 .contentLength(fileData.length)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
+    }
+
+    @PreAuthorize("hasRole('CREATOR')")
+    @DeleteMapping("/projects/{projectId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity deleteProject(@PathVariable Long projectId) throws IOException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        ProjectFileDB projectFileDB = projectRespository.findById(projectId).get();
+        if(!projectFileDB.getCreatedBy().equals(username)){
+            return ResponseEntity.badRequest().body("Project creator mismatch!");
+        }
+
+        // Delete all the project files in the folder.
+        String projectDataPath = projectFileDB.getFullPath();
+        String projectImgPath = projectFileDB.getCoverPagePath();
+
+        Files.delete(Path.of(projectDataPath));
+        Files.delete(Path.of(projectImgPath));
+
+        projectRespository.deleteById(projectId);
+
+        return ResponseEntity.ok("Project successfully deleted!");
     }
 
     // TODO: Add Auth!!!

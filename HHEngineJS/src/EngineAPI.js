@@ -134,6 +134,18 @@ class EngineAPI{
     DestroyShape(shape){
         this.cppEngine.DestroyShape(shape)
     }
+
+    getProjectWidth(){
+        return this.GetDefaultObjectStoreManager().GetCanvasWidth();
+    }
+
+    getProjectHeight(){
+        return this.GetDefaultObjectStoreManager().GetCanvasHeight();
+    }
+
+    setProjectWidthHeight(width, height){
+        this.GetDefaultObjectStoreManager().SetCanvasWH(width, height)
+    }
 }
 
 let huahuoEngine = window.huahuoEngine

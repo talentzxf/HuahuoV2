@@ -77,5 +77,9 @@
     "preview": "Upload and preview animation",
     "listProject": "List my projects",
     "uploadProject": "Upload project"
+  },
+  "project": {
+    "delete": "Delete Project",
+    "deleted": "Project {{projectName}} has been deleted"
   }
 }

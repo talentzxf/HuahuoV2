@@ -2,6 +2,7 @@ import * as paper from "paper"
 import {view} from "paper";
 import {Logger, Vector2} from "hhcommoncomponents"
 import {RenderEngine2D} from "./RenderEngine2D";
+import {huahuoEngine} from "../EngineAPI";
 
 let bgLayerName = "background"
 let contentLayerName = "content"
@@ -15,11 +16,8 @@ class RenderEnginePaperJs implements RenderEngine2D {
     private isPlayer = false
     private aspectRatio: number = 4 / 3  //  W:H = 4:3
 
-    private initCanvasWidth: number = -1
-    private initCanvasHeight: number = -1
-
-    getInitCanvasWH(){
-        return [this.initCanvasWidth, this.initCanvasHeight]
+    getInitCanvasWH():[number, number]{
+        return [huahuoEngine.getProjectWidth(), huahuoEngine.getProjectHeight()]
     }
 
     getLayerByName(layerName) {
@@ -158,14 +156,17 @@ class RenderEnginePaperJs implements RenderEngine2D {
         let canvasView = canvasPaper.view
 
         if (!this.canvasOriginalSize.has(canvasView)) {
-            if (width > 0 && height > 0) {
-                console.log("Added canvas original size here:" + width)
-                this.canvasOriginalSize.set(canvasView, [width, height])
+            if(this.isPlayer){
+                if (width > 0 && height > 0) {
+                    console.log("Added canvas original size here:" + width)
+                    this.canvasOriginalSize.set(canvasView, [width, height])
 
-                if(this.initCanvasWidth < 0 ){
-                    this.initCanvasWidth = width
-                    this.initCanvasHeight = height
+                    if(this.getInitCanvasWH()[0] < 0 ){
+                        huahuoEngine.setProjectWidthHeight(width, height)
+                    }
                 }
+            }else{
+                this.canvasOriginalSize.set(canvasView, this.getInitCanvasWH())
             }
         } else {
             let originalSize = this.canvasOriginalSize.get(canvasView)

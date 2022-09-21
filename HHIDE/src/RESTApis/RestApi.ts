@@ -24,7 +24,8 @@ class UserExistResponse {
 enum HTTP_METHOD {
     POST,
     GET,
-    PUT = 2
+    PUT = 2,
+    DELETE
 }
 
 // TODO: Use Swagger to generate the API class
@@ -97,7 +98,12 @@ class RestApi {
                         requestBody,
                         config
                     )
-            }
+                case HTTP_METHOD.DELETE:
+                    returnObj = await axios.delete<T>(
+                        targetUrl,
+                        config
+                    )
+                }
 
             return returnObj["data"];
 
@@ -233,6 +239,14 @@ class RestApi {
         };
         let checkProjectNameExistenceURL = "/projects/exist?projectName=" + projectName
         return this._callApi(checkProjectNameExistenceURL, headers, null, HTTP_METHOD.GET )
+    }
+
+    async deleteProject(projectId){
+        let headers = {
+            "Authorization": "Bearer " + this.getJwtToken()
+        };
+        let deleteProjectURL = "/projects/"+projectId
+        return this._callApi(deleteProjectURL, headers, null, HTTP_METHOD.DELETE )
     }
 }
 

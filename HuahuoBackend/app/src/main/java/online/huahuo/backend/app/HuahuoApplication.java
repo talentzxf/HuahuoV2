@@ -18,12 +18,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class HuahuoApplication {
 
     @Bean
-    public WebMvcConfigurer corsConfigurer(){
+    public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedMethods("GET","POST","PUT")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .exposedHeaders("X-Suggested-Filename");
             }
         };
