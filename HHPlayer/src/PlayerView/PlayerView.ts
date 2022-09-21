@@ -121,7 +121,7 @@ class PlayerView extends HTMLElement {
         if(!this.inited){
             this.createCanvasContainer()
             this.createCanvas()
-            renderEngine2D.init(this.canvas)
+            renderEngine2D.init(this.canvas, true)
 
             window.addEventListener("resize", this.OnResize.bind(this))
 

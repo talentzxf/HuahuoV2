@@ -36,6 +36,8 @@ void ObjectStoreManager::Transfer(TransferFunction &transfer) {
     TRANSFER(m_IsGlobal);
     TRANSFER(allStores);
     TRANSFER(currentStore);
+    TRANSFER(canvasWidth);
+    TRANSFER(canvasHeight);
 }
 
 ObjectStoreManager* ObjectStoreManager::GetDefaultObjectStoreManager(){
