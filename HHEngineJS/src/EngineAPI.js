@@ -1,5 +1,4 @@
 import {Logger} from "hhcommoncomponents"
-import {Player} from "./Player/Player";
 import {engineEventManager} from "./EngineEvents/EngineEventManager";
 
 class EngineAPI{

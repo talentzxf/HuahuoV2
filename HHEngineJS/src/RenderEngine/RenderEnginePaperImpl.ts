@@ -156,7 +156,7 @@ class RenderEnginePaperJs implements RenderEngine2D {
         let canvasView = canvasPaper.view
 
         if (!this.canvasOriginalSize.has(canvasView)) {
-            if(this.isPlayer){
+            if(!this.isPlayer){
                 if (width > 0 && height > 0) {
                     console.log("Added canvas original size here:" + width)
                     this.canvasOriginalSize.set(canvasView, [width, height])
