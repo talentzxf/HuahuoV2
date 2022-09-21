@@ -80,6 +80,7 @@
   },
   "project": {
     "delete": "Delete Project",
-    "deleted": "Project {{projectName}} has been deleted"
+    "deleted": "Project {{projectName}} has been deleted",
+    "nothing": "You have no project in Huahuo server."
   }
 }

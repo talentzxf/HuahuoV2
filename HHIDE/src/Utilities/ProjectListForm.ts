@@ -68,6 +68,8 @@ class ProjectListForm extends HTMLElement implements HHForm {
     updateProjectList(totalPage, curPageNo, projects) {
         this.projectInfoMap.clear()
 
+        this.projectListUL.innerHTML = i18n.t("project.nothing")
+
         let ulInnerHTML = ""
         let projectDivPrefix = "loadProject_"
         let deletProjectBtnPrefix = "deleteProject_"
@@ -89,7 +91,8 @@ class ProjectListForm extends HTMLElement implements HHForm {
             this.projectInfoMap.set(project.id, project)
         }
 
-        this.projectListUL.innerHTML = ulInnerHTML
+        if(projects.length > 0)
+            this.projectListUL.innerHTML = ulInnerHTML
 
         for (let project of projects) {
             let projectElements = this.projectListUL.querySelectorAll("." + projectDivPrefix + project.id)
@@ -112,17 +115,14 @@ class ProjectListForm extends HTMLElement implements HHForm {
                 Logger.info("Begin to delete project:" + projectId)
                 api.deleteProject(projectId).then(()=>{
                     HHToast.info(i18n.t("project.deleted", {projectName: project.name}))
-                    _this.refreshList.bind(_this)
+                    _this.refreshList()
                 })
             }
         }
     }
 
-    refreshList(){
+    refreshList(pageNo = 0, pageSize = 10){
         let _this = this
-        //TODO
-        let pageNo = 0
-        let pageSize = 10
         api.listProjects((listProjectResult)=>{
             let totalPage = listProjectResult.totalCount/pageSize
             _this.updateProjectList(totalPage, pageNo, listProjectResult.projectFiles)

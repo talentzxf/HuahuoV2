@@ -80,6 +80,7 @@
   },
   "project": {
     "delete": "删除项目",
-    "deleted": "项目:{{projectName}} 已被删除"
+    "deleted": "项目:{{projectName}} 已被删除",
+    "nothing": "您目前在花火服务器上并无任何项目"
   }
 }

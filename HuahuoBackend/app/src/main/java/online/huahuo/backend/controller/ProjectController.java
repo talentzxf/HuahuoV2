@@ -182,10 +182,12 @@ public class ProjectController {
         String projectDataPath = projectFileDB.getFullPath();
         String projectImgPath = projectFileDB.getCoverPagePath();
 
-        Files.delete(Path.of(projectDataPath));
-        Files.delete(Path.of(projectImgPath));
-
-        projectRespository.deleteById(projectId);
+        try{
+            Files.delete(Path.of(projectDataPath));
+            Files.delete(Path.of(projectImgPath));
+        }finally {
+            projectRespository.deleteById(projectId);
+        }
 
         return ResponseEntity.ok("Project successfully deleted!");
     }
