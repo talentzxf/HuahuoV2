@@ -2,7 +2,7 @@ import {CustomElement} from "hhcommoncomponents";
 
 import {SVGFiles} from "../Utilities/Svgs";
 import {projectUploader} from "../RESTApis/ProjectUploader";
-import huahuoProperties from "./hhide.properties";
+import huahuoProperties from "/dist/hhide.properties";
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 import {api} from "../RESTApis/RestApi"
 import {ProjectListForm} from "../Utilities/ProjectListForm";

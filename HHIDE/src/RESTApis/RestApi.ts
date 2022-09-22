@@ -1,7 +1,7 @@
 import {Logger} from "hhcommoncomponents"
 import axios from "axios";
 import {userInfo} from "../Identity/UserInfo";
-import huahuoProperties from "./hhide.default.properties";
+import huahuoProperties from "/dist/hhide.default.properties";
 import {HHToast} from "hhcommoncomponents";
 
 class CreateUserResponse {

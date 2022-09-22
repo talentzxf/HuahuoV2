@@ -1,4 +1,4 @@
-import huahuoProperties from "../hhplayer.properties";
+import huahuoProperties from "/dist/hhplayer.properties";
 import axios, {AxiosError} from "axios";
 
 class FileDownloader{
