@@ -9,9 +9,9 @@ module.exports = (env) => {
     ]
 
     if(env.production){
-        copyFilePatternArray.push({from:"./conf/hhide.prod.properties", to:"./hhide.properties"})
+        copyFilePatternArray.push({from:"./conf/hhplayer.prod.properties", to:"./hhplayer.properties"})
     }else{
-        copyFilePatternArray.push({from:"./conf/hhide.default.properties", to:"./hhide.properties"})
+        copyFilePatternArray.push({from:"./conf/hhplayer.properties", to:"./hhplayer.properties"})
     }
 
     return {
