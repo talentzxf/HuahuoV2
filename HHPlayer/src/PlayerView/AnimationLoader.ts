@@ -44,9 +44,10 @@ class AnimationLoader{
 
                     let result = Module.LoadStoreFileCompletely(storeMemoryFile);
                     if (result == 0)
-                        Logger.error("Can't load file: " + storeMemoryFile)
-                    else
                         Logger.info("File successfully loaded:" + storeMemoryFile)
+                    else
+                        Logger.error("Can't load file: " + storeMemoryFile)
+
                 })
             }
         ).catch((error)=>{
