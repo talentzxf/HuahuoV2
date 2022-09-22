@@ -4,7 +4,7 @@ buildComponent(){
   cd $SCRIPT_DIR/$1
   npm install
 
-  if [ -n "$1" ]
+  if [ -n "$1" ]; then
     npm run buildProd
   else
     npm run build
