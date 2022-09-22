@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
+    "buildProd": "webpack --env production",
     "start": "webpack serve --open --port 9090"
   },
   "author": "vincentzhang",
