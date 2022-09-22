@@ -40,6 +40,8 @@ class AnimationLoader{
                         memoryFileContent[i] = fileContent[i];
                     }
 
+                    Module.setStoreFilePath(storeMemoryFile)
+
                     let result = Module.LoadStoreFileCompletely(storeMemoryFile);
                     if (result == 0)
                         Logger.error("Can't load file: " + storeMemoryFile)
