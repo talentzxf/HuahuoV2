@@ -167,9 +167,11 @@ class RenderEnginePaperJs implements RenderEngine2D {
                 }
             }else{
                 let originalSize = this.getInitCanvasWH()
-                this.canvasOriginalSize.set(canvasView, originalSize)
+                if(originalSize[0] > 0){
+                    this.canvasOriginalSize.set(canvasView, originalSize)
 
-                this._resize(width, height, originalSize, canvasView)
+                    this._resize(width, height, originalSize, canvasView)
+                }
             }
         } else {
             let originalSize = this.canvasOriginalSize.get(canvasView)
