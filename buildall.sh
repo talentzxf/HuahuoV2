@@ -3,7 +3,12 @@ export SCRIPT_DIR=$( dirname $(realpath -s $0) )
 buildComponent(){
   cd $SCRIPT_DIR/$1
   npm install
-  npm run build
+
+  if [ -n "$1" ]
+    npm run buildProd
+  else
+    npm run build
+  fi
 }
 
 buildComponent HHCommonComponents
