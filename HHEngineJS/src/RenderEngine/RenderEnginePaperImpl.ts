@@ -220,6 +220,10 @@ class RenderEnginePaperJs implements RenderEngine2D {
         }
         return null
     }
+
+    public getGlobalPosition(viewX:number, viewY:number){
+        return this.getProject().view.viewToProject(new paper.Point(viewX, viewY))
+    }
 }
 
 export {RenderEnginePaperJs}
