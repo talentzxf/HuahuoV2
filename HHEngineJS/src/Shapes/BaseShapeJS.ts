@@ -232,10 +232,10 @@ abstract class BaseShapeJS {
 
         this.paperShape.position = nextShapePosition
 
-        let localPivotPosition = this.globalToLocal(val)
+        // let localPivotPosition = this.globalToLocal(val)
 
         this.rawObj.SetGlobalPivotPosition(val.x, val.y, 0.0)
-        this.rawObj.SetLocalPivotPosition(localPivotPosition.x, localPivotPosition.y, 0.0)
+        // this.rawObj.SetLocalPivotPosition(localPivotPosition.x, localPivotPosition.y, 0.0)
 
         if(this.followCurve){
             let followCurveShape = this.followCurve
