@@ -48,13 +48,13 @@ let moduleExports = (env)=> {
             static: {
                 directory: path.join(__dirname, "dist"),
             },
-            watchOptions:{
-                ignored:[
-                    destinationPath
-                ]
-            },
             compress: true,
             port: 8989,
+        },
+        watchOptions:{
+            ignored:[
+                destinationPath, destinationPath + "/*"
+            ]
         },
         plugins: [
             new CopyPlugin({

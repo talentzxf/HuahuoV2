@@ -51,6 +51,11 @@ module.exports = (env) => {
             compress: true,
             port: 8989,
         },
+        watchOptions:{
+            ignored:[
+                destinationPath, destinationPath + "/*"
+            ]
+        },
         plugins: [
             new CopyPlugin({
                 patterns: [
