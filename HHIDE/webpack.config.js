@@ -11,6 +11,7 @@ let moduleExports = (env)=> {
     }
 
     let destinationPath = path.resolve(__dirname, 'dist')
+    let destinationPropertyFile = destinationPath + "\\hhide.properties"
 
     return {
         mode: "development",
@@ -60,11 +61,23 @@ let moduleExports = (env)=> {
             }),
             new FileManagerPlugin({
                 events:{
-                    onStart: {
-                        copy: [
-                            {source: propertyFile, destination:path.resolve(__dirname, 'dist') + "/hhide.properties"}
-                        ]
-                    }
+                    onStart: [{
+                        delete:[{
+                            source: destinationPropertyFile,
+                            options:{
+                                force: true
+                            }
+                        }],
+                        copy: [{
+                            source: propertyFile,
+                            destination: destinationPropertyFile,
+                            options:{
+                                flat: false,
+                                preserveTimestamps: true,
+                                overwrite: true,
+                            }
+                        }]
+                    }]
                 }
             }),
             new HtmlWebpackPlugin({

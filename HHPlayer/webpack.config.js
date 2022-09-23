@@ -11,6 +11,8 @@ module.exports = (env) => {
 
     let destinationPath = path.resolve(__dirname, 'dist')
 
+    let destinationPropertyFile = destinationPath + "/hhplayer.properties"
+
     return {
         mode: "development",
         entry: ['./src/index.js'],
@@ -58,11 +60,16 @@ module.exports = (env) => {
             }),
             new FileManagerPlugin({
                 events:{
-                    onStart: {
-                        copy: [
-                            {source: propertyFile, destination:path.resolve(__dirname, 'dist') + "/hhplayer.properties"}
-                        ]
-                    }
+                    onStart: [{
+                        delete:[destinationPropertyFile],
+                        copy: [{
+                                source: propertyFile,
+                                destination: destinationPropertyFile,
+                                options:{
+                                    overwrite: true,
+                                }
+                            }]
+                    }]
                 }
             }),
             new HtmlWebpackPlugin({
