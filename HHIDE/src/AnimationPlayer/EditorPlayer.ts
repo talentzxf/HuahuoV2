@@ -58,6 +58,9 @@ class EditorPlayer extends Player{
             this.stopPlay() // Lost focus, stop play
         }else{
             super.setFrameId(playFrameId)
+
+            if(playFrameId == 0)
+                playFrameId = 0.5  // Force to start at 1 for better visualization
             this.timeline.setTimeElapsed(playFrameId / GlobalConfig.fps)
         }
     }
