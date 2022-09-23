@@ -1,18 +1,15 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
+const FileManagerPlugin = require("filemanager-webpack-plugin")
 
 module.exports = (env) => {
-    let copyFilePatternArray = [
-        {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to: "wasm"},
-        {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
-    ]
-
+    let propertyFile = "./conf/hhplayer.default.properties"
     if(env.production){
-        copyFilePatternArray.push({from:"./conf/hhplayer.prod.properties", to:"./hhplayer.properties"})
-    }else{
-        copyFilePatternArray.push({from:"./conf/hhplayer.properties", to:"./hhplayer.properties"})
+        propertyFile = "./conf/hhplayer.prod.properties"
     }
+
+    let destinationPath = path.resolve(__dirname, 'dist')
 
     return {
         mode: "development",
@@ -54,7 +51,19 @@ module.exports = (env) => {
         },
         plugins: [
             new CopyPlugin({
-                patterns: copyFilePatternArray
+                patterns: [
+                    {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to: "wasm"},
+                    {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
+                ]
+            }),
+            new FileManagerPlugin({
+                events:{
+                    onStart: {
+                        copy: [
+                            {source: propertyFile, destination:path.resolve(__dirname, 'dist') + "/hhplayer.properties"}
+                        ]
+                    }
+                }
             }),
             new HtmlWebpackPlugin({
                 title: 'Development',

@@ -216,6 +216,7 @@ class RenderEnginePaperJs implements RenderEngine2D {
             window.paper = paper
 
             this.clearBackground()
+
             return originalActiveCanvas
         }
         return null

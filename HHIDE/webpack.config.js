@@ -1,27 +1,23 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
+const FileManagerPlugin = require("filemanager-webpack-plugin")
 
 let moduleExports = (env)=> {
 
-    let copyFilePatternArray = [
-        {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to: "wasm"},
-        {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
-        {from: "./src/i18n", to: "i18n"},
-    ]
-
+    let propertyFile = "./conf/hhide.default.properties"
     if(env.production){
-        copyFilePatternArray.push({from:"./conf/hhide.prod.properties", to:"./hhide.properties"})
-    }else{
-        copyFilePatternArray.push({from:"./conf/hhide.default.properties", to:"./hhide.properties"})
+        propertyFile = "./conf/hhide.prod.properties"
     }
+
+    let destinationPath = path.resolve(__dirname, 'dist')
 
     return {
         mode: "development",
         entry: ['./src/index.js'],
         output: {
             filename: 'main.js',
-            path: path.resolve(__dirname, 'dist'),
+            path: destinationPath
         },
         resolve: {
             extensions: ['.tsx', '.ts', '.js']
@@ -56,7 +52,20 @@ let moduleExports = (env)=> {
         },
         plugins: [
             new CopyPlugin({
-                patterns: copyFilePatternArray,
+                patterns: [
+                    {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to: "wasm"},
+                    {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
+                    {from: "./src/i18n", to: "i18n"},
+                ],
+            }),
+            new FileManagerPlugin({
+                events:{
+                    onStart: {
+                        copy: [
+                            {source: propertyFile, destination:path.resolve(__dirname, 'dist') + "/hhide.properties"}
+                        ]
+                    }
+                }
             }),
             new HtmlWebpackPlugin({
                 title: 'Development',
@@ -65,6 +74,7 @@ let moduleExports = (env)=> {
             }),
         ]
     };
+
 }
 
 module.exports = moduleExports
