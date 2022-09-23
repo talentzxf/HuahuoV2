@@ -217,6 +217,13 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
             this.clearBackground()
 
+            if(this.isPlayer){
+                let _this = this
+                huahuoEngine.ExecuteAfterInited(()=>{
+                    _this.resize(canvas, canvas.width, canvas.height)
+                })
+            }
+
             return originalActiveCanvas
         }
         return null
