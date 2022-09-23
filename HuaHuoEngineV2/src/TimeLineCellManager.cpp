@@ -57,7 +57,7 @@ void TimeLineCellManager::MergeCells(unsigned int startCellId, unsigned int endC
 
     this->cellSpanMap[minCell] = newMinCellSpan;
 
-    if(this->layer.IsValid() && this->layer->GetObjectStore() != NULL){
-        this->layer->GetObjectStore()->UpdateMaxFrameId(maxCell);
-    }
+//    if(this->layer.IsValid() && this->layer->GetObjectStore() != NULL){
+//        this->layer->GetObjectStore()->UpdateMaxFrameId(maxCell);
+//    }
 }

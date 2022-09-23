@@ -104,6 +104,10 @@ void Layer::AddKeyFrame(int frameId, BaseShape* shape) {
 
     KeyFrameChangedEventHandlerArgs args(this, frameId);
     GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
+
+    if(this->GetObjectStore() != NULL){
+        this->GetObjectStore()->UpdateMaxFrameId(frameId);
+    }
 }
 
 void Layer::SetObjectStore(ObjectStore *store) {

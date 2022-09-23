@@ -1,7 +1,7 @@
 export SCRIPT_DIR=$( dirname $(realpath -s $0) )
 
 buildProd=false
-if [ $1 == "prod" ]; then
+if [ ! -z "$1" ] and [ $1 == "prod" ]; then
   buildProd=true
 fi
 
