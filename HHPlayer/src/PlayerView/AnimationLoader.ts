@@ -20,6 +20,10 @@ class AnimationLoader{
     constructor() {
     }
 
+    triggerEvent(evtName:string){
+        eventBus.triggerEvent("HHPlayer", evtName)
+    }
+
     projectId:string = "unknownProject"
     loadAnimation(projectId: string){
         this.projectId = projectId
@@ -30,17 +34,17 @@ class AnimationLoader{
 
         let _this = this
         playerView.executeAfterInit(function(){
-            eventBus.triggerEvent(AnimationLoaderEvents.DOWNLOADBEGIN)
+            _this.triggerEvent(AnimationLoaderEvents.DOWNLOADBEGIN)
             // 2. Download the file
             fileDownloader.downloadFile(projectId, _this.onProjectDownloaded.bind(_this), _this.onFailed.bind(_this))
         })
     }
 
     onProjectDownloaded(data: Blob, fileName: string){
-        eventBus.triggerEvent(AnimationLoaderEvents.DOWNLOADED)
+        this.triggerEvent(AnimationLoaderEvents.DOWNLOADED)
         Logger.info("Project:" + this.projectId + " downloaded!")
 
-        eventBus.triggerEvent(AnimationLoaderEvents.LOADBEGIN)
+        this.triggerEvent(AnimationLoaderEvents.LOADBEGIN)
         Promise.resolve( data.arrayBuffer() ).then(
             (arrayBuffer)=>{
                 let compressedFileContent = new Uint8Array(arrayBuffer as ArrayBuffer);
@@ -60,11 +64,11 @@ class AnimationLoader{
 
                     let result = Module.LoadStoreFileCompletely(storeMemoryFile);
                     if (result == 0){
-                        eventBus.triggerEvent(AnimationLoaderEvents.LOADED)
+                        this.triggerEvent(AnimationLoaderEvents.LOADED)
                         Logger.info("File successfully loaded:" + storeMemoryFile)
                     }
                     else{
-                        eventBus.triggerEvent(AnimationLoaderEvents.LOADFAILED)
+                        this.triggerEvent(AnimationLoaderEvents.LOADFAILED)
                         Logger.error("Can't load file: " + storeMemoryFile)
                     }
                 })
@@ -76,7 +80,7 @@ class AnimationLoader{
 
     onFailed(status:string, msg: string){
         Logger.error("Can't download project:" + this.projectId + " Status:" + status + " Msg:" + msg)
-        eventBus.triggerEvent(AnimationLoaderEvents.DOWNLOADFAILED)
+        this.triggerEvent(AnimationLoaderEvents.DOWNLOADFAILED)
     }
 }
 

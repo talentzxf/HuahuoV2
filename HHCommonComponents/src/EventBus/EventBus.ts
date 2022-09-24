@@ -6,29 +6,30 @@ class EventBusException{
 }
 
 class HHEventBus{
+    private namespaceSeparator = ":"
     maxHandlerId: number = 0
     handlerIdHandlerMap: Map<number, Function> = new Map()
     eventHandlerIdMap: Map<string, Set<number>> = new Map()
 
-    private getFullEventName(evtName:string, namespace:string){
-        return namespace + "." + evtName
+    private getFullEventName(namespace:string, evtName:string){
+        return namespace + this.namespaceSeparator + evtName
     }
 
-    private registerEvent(evtName:string, namespace: string = "global"){
-        if(evtName.indexOf(".") != -1)
+    private registerEvent(namespace: string, evtName:string){
+        if(evtName.indexOf(this.namespaceSeparator) != -1)
             throw new EventBusException("InvalidEventName:" + evtName)
 
-        let fullEventName = this.getFullEventName(evtName, namespace)
+        let fullEventName = this.getFullEventName(namespace, evtName)
         if(this.eventHandlerIdMap.has(fullEventName))
             return
 
         this.eventHandlerIdMap.set(fullEventName, new Set<number>())
     }
 
-    addEventHandler(evtName: string, namespace: string = "global", handler: Function): number{
-        let fullEventName = this.getFullEventName(evtName, namespace)
+    addEventHandler(namespace: string, evtName: string, handler: Function): number{
+        let fullEventName = this.getFullEventName(namespace, evtName)
         if(!this.eventHandlerIdMap.has(fullEventName)){
-            this.registerEvent(evtName, namespace)
+            this.registerEvent(namespace, evtName)
         }
 
         let handlerIdArray = this.eventHandlerIdMap.get(fullEventName)
@@ -39,8 +40,8 @@ class HHEventBus{
         return handlerId
     }
 
-    triggerEvent(evtName: string, namespace: string = "global", ...evtParams){
-        let fullEventName = this.getFullEventName(evtName, namespace)
+    triggerEvent(namespace: string, evtName: string, ...evtParams){
+        let fullEventName = this.getFullEventName(namespace, evtName)
         if(!this.eventHandlerIdMap.has(fullEventName)){
             return
         }

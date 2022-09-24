@@ -22,6 +22,12 @@ class PlayerView extends HTMLElement {
     pauseImg:string = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='iso-8859-1'%3F%3E%3C!-- Generator: Adobe Illustrator 19.0.0  SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 512 512' style='enable-background:new 0 0 512 512%3B' xml:space='preserve'%3E%3Cg%3E%3Cg%3E%3Cpath d='M256 0C114.842 0 0 114.842 0 256s114.842 256 256 256s256-114.842 256-256S397.158 0 256 0z M256 465.455c-115.493 0-209.455-93.961-209.455-209.455S140.507 46.545 256 46.545S465.455 140.507 465.455 256S371.493 465.455 256 465.455z'/%3E%3C/g%3E%3C/g%3E%3Cg%3E%3Cg%3E%3Cpath d='M318.061 139.636c-12.853 0-23.273 10.42-23.273 23.273v186.182c0 12.853 10.42 23.273 23.273 23.273c12.853 0 23.273-10.42 23.273-23.273V162.909C341.333 150.056 330.913 139.636 318.061 139.636z'/%3E%3C/g%3E%3C/g%3E%3Cg%3E%3Cg%3E%3Cpath d='M193.939 139.636c-12.853 0-23.273 10.42-23.273 23.273v186.182c0 12.853 10.42 23.273 23.273 23.273c12.853 0 23.273-10.42 23.273-23.273V162.909C217.212 150.056 206.792 139.636 193.939 139.636z'/%3E%3C/g%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3C/svg%3E"
 
     playButton: HTMLImageElement;
+    constructor() {
+        super();
+
+        eventBus.addEventHandler("HHPlayer", AnimationLoaderEvents.LOADED, this.OnResize.bind(this))
+    }
+    
     executeAfterInit(callback:Function){
         if(this.inited){
             callback()
@@ -143,8 +149,6 @@ class PlayerView extends HTMLElement {
             this.OnResize()
 
             this.inited = true
-
-            eventBus.addEventHandler(AnimationLoaderEvents.LOADED, this.OnResize.bind(this))
         }
 
     }

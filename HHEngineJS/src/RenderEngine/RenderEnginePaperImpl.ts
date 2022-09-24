@@ -209,6 +209,9 @@ class RenderEnginePaperJs implements RenderEngine2D {
         if (this.canvasPaperMap.has(canvas)) {
             let originalActiveCanvas = this.getDefaultCanvas()
 
+            if(originalActiveCanvas == canvas)
+                return;
+
             let projectIndex = this.canvasPaperMap.get(canvas)
             paper.projects[projectIndex].activate()
             console.log("Setting default canvas:" + paper.projects[projectIndex].view.element.id)

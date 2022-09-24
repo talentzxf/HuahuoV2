@@ -21,13 +21,13 @@ class EventBus{
             EventBus._instance = new EventBus()
         return EventBus._instance
     }
-    
+
     on(evtName: string, func){
-        eventBus.addEventHandler(evtName, this.ideEventNameSpace, func)
+        eventBus.addEventHandler(this.ideEventNameSpace, evtName, func)
     }
 
     emit(evtName: string, ...param){
-        eventBus.triggerEvent(evtName, this.ideEventNameSpace, ...param)
+        eventBus.triggerEvent(this.ideEventNameSpace, evtName, ...param)
     }
 }
 

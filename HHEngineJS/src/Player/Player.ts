@@ -10,6 +10,8 @@ class Player{
     isPlaying: boolean = false
     layerShapesManager: LayerShapesManager = new LayerShapesManager()
 
+    playStartTime: number = 0
+
     constructor() {
     }
 
@@ -42,7 +44,7 @@ class Player{
             if(this.lastAnimateTime < 0 || elapsedTime > 1000.0/GlobalConfig.fps){
                 let activeFrames = huahuoEngine.GetCurrentStore().GetMaxFrameId() + 1;
                 let activePlayTime = activeFrames / GlobalConfig.fps;
-                let playTime = (timeStamp - this.animationStartTime) / 1000.0 % activePlayTime;
+                let playTime = (timeStamp - this.animationStartTime + this.playStartTime * 1000.0) / 1000.0 % activePlayTime;
                 let frameId = Math.floor(playTime * GlobalConfig.fps)
                 this.setFrameId(frameId)
                 console.log("Rendering")
@@ -68,16 +70,16 @@ class Player{
     }
 
     startPlay(){
+        this.playStartTime = huahuoEngine.GetCurrentLayer().GetCurrentFrame() / GlobalConfig.fps
         this.lastAnimateTime = -1
-        this.animationStartTime = huahuoEngine.GetCurrentLayer().GetCurrentFrame() / GlobalConfig.fps;
         this.animationFrame = requestAnimationFrame(this.animationFrameStep.bind(this));
-
         this.isPlaying = true
     }
 
     stopPlay(){
         if(this.animationFrame){
             cancelAnimationFrame(this.animationFrame)
+            this.animationStartTime = -1
         }else{
             console.log("Error, animation frame is invalid");
         }
