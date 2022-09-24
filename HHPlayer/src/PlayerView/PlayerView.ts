@@ -1,6 +1,8 @@
 import {CustomElement} from "hhcommoncomponents";
 import {renderEngine2D, Player} from "hhenginejs";
 import {huahuoEngine} from "hhenginejs"
+import {eventBus} from "hhcommoncomponents";
+import {AnimationLoaderEvents} from "./AnimationLoader";
 
 @CustomElement({
     selector: "hh-player"
@@ -141,6 +143,8 @@ class PlayerView extends HTMLElement {
             this.OnResize()
 
             this.inited = true
+
+            eventBus.addEventHandler(AnimationLoaderEvents.LOADED, this.OnResize.bind(this))
         }
 
     }
