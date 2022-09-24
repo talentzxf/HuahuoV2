@@ -18,9 +18,6 @@ enum AnimationLoaderEvents{
 
 class AnimationLoader{
     constructor() {
-        for(let evtName of Object.values(AnimationLoaderEvents)){
-            eventBus.registerEvent(evtName, "HHPlayer")
-        }
     }
 
     projectId:string = "unknownProject"

@@ -21,13 +21,7 @@ class EventBus{
             EventBus._instance = new EventBus()
         return EventBus._instance
     }
-
-    constructor() {
-        for(let evtName of Object.values(EventNames)){
-            eventBus.registerEvent(evtName, "IDE")
-        }
-    }
-
+    
     on(evtName: string, func){
         eventBus.addEventHandler(evtName, this.ideEventNameSpace, func)
     }

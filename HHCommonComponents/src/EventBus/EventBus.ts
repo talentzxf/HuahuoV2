@@ -10,17 +10,17 @@ class HHEventBus{
     handlerIdHandlerMap: Map<number, Function> = new Map()
     eventHandlerIdMap: Map<string, Set<number>> = new Map()
 
-    getFullEventName(evtName:string, namespace:string){
+    private getFullEventName(evtName:string, namespace:string){
         return namespace + "." + evtName
     }
 
-    registerEvent(evtName:string, namespace: string = "global"){
+    private registerEvent(evtName:string, namespace: string = "global"){
         if(evtName.indexOf(".") != -1)
             throw new EventBusException("InvalidEventName:" + evtName)
 
         let fullEventName = this.getFullEventName(evtName, namespace)
         if(this.eventHandlerIdMap.has(fullEventName))
-            throw new EventBusException("Event has already been registered, can't register twice")
+            return
 
         this.eventHandlerIdMap.set(fullEventName, new Set<number>())
     }
@@ -28,7 +28,7 @@ class HHEventBus{
     addEventHandler(evtName: string, namespace: string = "global", handler: Function): number{
         let fullEventName = this.getFullEventName(evtName, namespace)
         if(!this.eventHandlerIdMap.has(fullEventName)){
-            throw new EventBusException("event has not been registered!")
+            this.registerEvent(evtName, namespace)
         }
 
         let handlerIdArray = this.eventHandlerIdMap.get(fullEventName)
@@ -42,7 +42,7 @@ class HHEventBus{
     triggerEvent(evtName: string, namespace: string = "global", ...evtParams){
         let fullEventName = this.getFullEventName(evtName, namespace)
         if(!this.eventHandlerIdMap.has(fullEventName)){
-            throw new EventBusException("event has not been registered!")
+            return
         }
 
         let handlerIdArray = this.eventHandlerIdMap.get(fullEventName)
