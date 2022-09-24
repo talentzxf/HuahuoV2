@@ -33,6 +33,7 @@ import {faEyeSlash} from "@fortawesome/free-regular-svg-icons";
 import {faEdit} from "@fortawesome/free-regular-svg-icons";
 import {faFileImage} from "@fortawesome/free-regular-svg-icons";
 import {faTimesCircle} from "@fortawesome/free-regular-svg-icons";
+import {faShapes} from "@fortawesome/free-solid-svg-icons";
 import {init} from "./init"
 
 import "./i18nInit"
@@ -51,6 +52,7 @@ library.add(faEdit)
 library.add(faFileImage)
 library.add(faTimesCircle)
 library.add(faCircleXmark)
+library.add(faShapes)
 dom.watch();
 
 init()
