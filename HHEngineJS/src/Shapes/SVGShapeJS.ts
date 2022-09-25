@@ -1,5 +1,4 @@
 import {BaseSolidShape} from "./BaseSolidShape";
-
 let shapeName = "BaseShape"
 
 class SVGShapeJS extends BaseSolidShape {
@@ -22,12 +21,20 @@ class SVGShapeJS extends BaseSolidShape {
 
         let _this = this
         let paperJs = this.getPaperJs()
+
+        let createShapePromiseResolver
+        let createShapePromise = new Promise( (resolve, reject)=>{
+            createShapePromiseResolver = resolve
+        })
+
         paperJs["project"]["importSVG"](this.shapeURL, function (item) {
             _this.paperShape = item
             _this.paperShape.applyMatrix = false
             // _this.paperShape.strokeColor = new paper.Color("black")
             // _this.paperShape.fillColor = new paper.Color("green")
             _this.paperShape.data.meta = this
+            _this.paperShape.strokeColor = new paper.Color("black")
+            _this.paperShape.fillColor = new paper.Color("black")
 
             // Recurisively set the meta.
             let shapeStack: Array<paper.Item> = new Array()
@@ -44,7 +51,11 @@ class SVGShapeJS extends BaseSolidShape {
             }
 
             _this.afterCreateShape()
+
+            createShapePromiseResolver()
         })
+
+        return createShapePromise
     }
 
     update() {

@@ -86,6 +86,8 @@ class SVGShapesDrawer extends BaseShapeDrawer{
         }else{
             this.tempShape = new SVGShapeJS()
             this.tempShape.setShapeURL(this.getSvgURLFromImage(this.selectedImageElement))
+
+            let _this = this
             this.tempShape.createShape()
         }
     }
