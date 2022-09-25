@@ -10,10 +10,18 @@ class BaseShapeDrawer{
     imgCss:string = null
 
     isDrawing = false
-    isSelected = false
+    _isSelected = false
 
     canvasWidth = -1;
     canvasHeight = -1;
+
+    set isSelected(val: boolean){
+        this._isSelected = val
+    }
+
+    get isSelected(): boolean{
+        return this._isSelected
+    }
 
     isDefaultDrawer(){
         return false

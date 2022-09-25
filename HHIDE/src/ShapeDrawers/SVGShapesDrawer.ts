@@ -11,9 +11,21 @@ class SVGShapesDrawer extends BaseShapeDrawer{
     shapes = [
         {
             name: "football",
-            svg: "foolball.svg"
+            svg: "svgs/football.svg"
+        },
+        {
+            name: "bus",
+            svg: "svgs/bus.svg"
         }
     ]
+
+    set isSelected(val:boolean){
+        super.isSelected = val
+        if(this.secondaryToolBar){
+            this.secondaryToolBar.style.display = "none"
+        }
+    }
+
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
         super.onBeginToDrawShape(canvas);
 
@@ -27,6 +39,8 @@ class SVGShapesDrawer extends BaseShapeDrawer{
         for(let shape of this.shapes){
             let btnImg = document.createElement("img")
             btnImg.src = shape.svg
+            btnImg.style.width = "30px"
+            btnImg.style.height = "30px"
             this.secondaryToolBar.appendChild(btnImg)
         }
 
