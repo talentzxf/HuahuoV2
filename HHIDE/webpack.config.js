@@ -46,14 +46,14 @@ let moduleExports = (env)=> {
         },
         devServer: {
             static: {
-                directory: path.join(__dirname, "dist"),
+                directory: destinationPath
             },
             compress: true,
             port: 8989,
         },
         watchOptions:{
             ignored:[
-                destinationPath, destinationPath + "/*"
+                "/node_modules/" , "/dist" , "dist/*", "**/*.properties" ,destinationPath, destinationPath + "/*", destinationPropertyFile
             ]
         },
         plugins: [

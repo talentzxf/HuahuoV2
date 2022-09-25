@@ -53,7 +53,7 @@ module.exports = (env) => {
         },
         watchOptions:{
             ignored:[
-                destinationPath, destinationPath + "/*"
+                "/node_modules/" , "/dist" , "dist/*", "**/*.properties", destinationPath, destinationPath + "/*"
             ]
         },
         plugins: [

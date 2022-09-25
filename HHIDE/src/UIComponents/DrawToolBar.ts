@@ -12,6 +12,9 @@ class DrawToolBar extends HTMLElement {
 
     private defaultDrawer: BaseShapeDrawer = null
 
+    private buttonContainer: HTMLDivElement
+    private secondaryDrawToolBar: HTMLDivElement
+
     setButtonBackgroundColor(button: HTMLButtonElement, isSelected: boolean) {
         let bgColor = "white"
         if (isSelected)
@@ -21,6 +24,13 @@ class DrawToolBar extends HTMLElement {
     }
 
     initializeTools() {
+
+        this.buttonContainer = document.createElement("div")
+        this.appendChild(this.buttonContainer)
+
+        this.secondaryDrawToolBar = document.createElement("div")
+        this.appendChild(this.secondaryDrawToolBar)
+
         for (let shape of shapes) {
             this.createButton(shape)
             if (shape.isDefaultDrawer())
@@ -29,6 +39,10 @@ class DrawToolBar extends HTMLElement {
 
         EventBus.getInstance().on(EventNames.DRAWSHAPEBEGINS, this.onDrawShapeBegins.bind(this))
         EventBus.getInstance().on(EventNames.DRAWSHAPEENDS, this.onEndOfDrawingShape.bind(this))
+    }
+
+    getSecondaryToolBar(): HTMLDivElement{
+        return this.secondaryDrawToolBar
     }
 
     connectedCallback() {
@@ -82,7 +96,7 @@ class DrawToolBar extends HTMLElement {
         let button = document.createElement('button')
         button.onclick = shape.onClicked.bind(shape)
         button.appendChild(img)
-        this.appendChild(button)
+        this.buttonContainer.appendChild(button)
 
         this.shapeButtonMap.set(shape, button)
     }

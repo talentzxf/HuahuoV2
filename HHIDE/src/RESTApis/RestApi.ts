@@ -98,11 +98,13 @@ class RestApi {
                         requestBody,
                         config
                     )
+                    break;
                 case HTTP_METHOD.DELETE:
                     returnObj = await axios.delete<T>(
                         targetUrl,
                         config
                     )
+                    break;
                 }
 
             return returnObj["data"];
