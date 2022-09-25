@@ -143,6 +143,11 @@ interface BaseShape{
     DOMString GetName();
     void SetName(DOMString name);
 
+    void SetLocalPivotPosition(float x, float y, float z);
+    void SetGlobalPivotPosition(float x, float y, float z);
+    Vector3f GetGlobalPivotPosition();
+    Vector3f GetLocalPivotPosition();
+
     AbstractFrameState GetFrameStateByName(DOMString frameStateName);
 
     float GetRotation();
