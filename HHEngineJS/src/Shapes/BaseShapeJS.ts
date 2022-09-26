@@ -379,6 +379,10 @@ abstract class BaseShapeJS {
         return true
     }
 
+    isSegmentSeletable(){
+        return true
+    }
+
     // Not sure how to pass getter/setter as functor.
     private getPosition() {
         return this.position

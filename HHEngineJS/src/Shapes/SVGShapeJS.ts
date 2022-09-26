@@ -16,6 +16,10 @@ class SVGShapeJS extends BaseSolidShape {
         this.shapeURL = shapeURL
     }
 
+    isSegmentSeletable(): boolean {
+        return false;
+    }
+
     createShape() {
         super.createShape()
 
@@ -27,33 +31,39 @@ class SVGShapeJS extends BaseSolidShape {
             createShapePromiseResolver = resolve
         })
 
-        paperJs["project"]["importSVG"](this.shapeURL, function (item) {
-            _this.paperShape = item
-            _this.paperShape.applyMatrix = false
-            // _this.paperShape.strokeColor = new paper.Color("black")
-            // _this.paperShape.fillColor = new paper.Color("green")
-            _this.paperShape.data.meta = this
-            _this.paperShape.strokeColor = new paper.Color("black")
-            _this.paperShape.fillColor = new paper.Color("black")
+        paperJs["project"]["importSVG"](this.shapeURL,
+        {
+            expandShapes: true,
+            onLoad: function (item) {
+                _this.paperShape = item
+                _this.paperShape.applyMatrix = false
+                // _this.paperShape.strokeColor = new paper.Color("black")
+                // _this.paperShape.fillColor = new paper.Color("green")
+                _this.paperShape.data.meta = this
+                _this.paperShape.strokeColor = new paper.Color("black")
+                _this.paperShape.fillColor = new paper.Color("black")
 
-            // Recurisively set the meta.
-            let shapeStack: Array<paper.Item> = new Array()
-            shapeStack.push(_this.paperShape)
-            while (shapeStack.length > 0) {
-                let currentShape = shapeStack.pop()
-                currentShape.data.meta = _this
+                // Recurisively set the meta.
+                let shapeStack: Array<paper.Item> = new Array()
+                shapeStack.push(_this.paperShape)
+                while (shapeStack.length > 0) {
+                    let currentShape = shapeStack.pop()
+                    currentShape.data.meta = _this
 
-                if(currentShape.children){
-                    for (let child of currentShape.children) {
-                        shapeStack.push(child)
+                    if (currentShape.children) {
+                        for (let child of currentShape.children) {
+                            shapeStack.push(child)
+                        }
                     }
                 }
+
+                _this.afterCreateShape()
+
+                _this.store()
+
+                createShapePromiseResolver()
             }
-
-            _this.afterCreateShape()
-
-            createShapePromiseResolver()
-        })
+            })
 
         return createShapePromise
     }

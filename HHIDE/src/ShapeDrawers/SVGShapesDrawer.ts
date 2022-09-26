@@ -1,8 +1,8 @@
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {DrawToolBar} from "../UIComponents/DrawToolBar";
-import {SVGFiles} from "../Utilities/Svgs";
-import {SVGShapeJS} from "hhenginejs";
+import {huahuoEngine, SVGShapeJS} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
+import {EventBus, EventNames} from "../Events/GlobalEvents";
 
 class SVGShapesDrawer extends BaseShapeDrawer{
     name = "Shapes"
@@ -87,9 +87,22 @@ class SVGShapesDrawer extends BaseShapeDrawer{
             this.tempShape = new SVGShapeJS()
             this.tempShape.setShapeURL(this.getSvgURLFromImage(this.selectedImageElement))
 
-            let _this = this
-            this.tempShape.createShape()
+            this.tempShape.createShape().then(()=>{
+                this.tempShape.position = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+                this.tempShape.store()
+            })
         }
+    }
+
+    onMouseUp(evt: MouseEvent) {
+        super.onMouseUp(evt);
+
+        let _this = this
+        huahuoEngine.ExecuteAfterInited(()=>{
+            _this.isDrawing = false
+            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
+            _this.addShapeToCurrentLayer(_this.tempShape)
+        })
     }
 }
 

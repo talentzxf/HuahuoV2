@@ -53,6 +53,10 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         }
 
         this.targetShape = this.curObjs.values().next().value // There's only one object in the set, get it.
+
+        if(!this.targetShape.isSegmentSeletable())
+            return
+
         super.beginMove(startPos);
 
         if (hitResult != null && hitResult.segment != null){
@@ -234,6 +238,9 @@ class ShapeInsertSegmentHandler extends ShapeMorphHandler {
 
     beginMove(startPos) {
         super.beginMove(startPos);
+
+        if(!this.targetShape.isSegmentSeletable())
+            return
 
         let localPos = this.targetShape.globalToLocal(startPos)
         let nearestPoint = this.targetShape.getNearestPoint(localPos)
