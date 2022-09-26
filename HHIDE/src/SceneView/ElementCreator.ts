@@ -155,31 +155,38 @@ class ElementCreator {
     }
 
     createElement(shapes:Set<BaseShapeJS>): boolean{
-        // 0. Ensure all shapes are in the same layer.
-        if(shapes.size > 0){
-            let firstShape: BaseShapeJS = shapes.values().next().value as BaseShapeJS;
-            let firstLayer = firstShape.getLayer()
+        let prevStoreId = huahuoEngine.GetCurrentStoreId()
 
-            for(let shape of shapes){
-                if(firstLayer.ptr != shape.getLayer().ptr)
-                {
-                    HHToast.warn("Can only group shapes in the same layer!")
-                    return false;
+        try{
+            // 0. Ensure all shapes are in the same layer.
+            if(shapes.size > 0){
+                let firstShape: BaseShapeJS = shapes.values().next().value as BaseShapeJS;
+                let firstLayer = firstShape.getLayer()
+
+                for(let shape of shapes){
+                    if(firstLayer.ptr != shape.getLayer().ptr)
+                    {
+                        HHToast.warn("Can only group shapes in the same layer!")
+                        return false;
+                    }
                 }
             }
+
+            let newElement = this.onNewElement(false)
+            // Create Layer for the store as we won't open it. (If we open it, timeline track will create it.)
+            huahuoEngine.GetCurrentStore().CreateLayer(newElement.name)
+
+            for(let shape of shapes){
+                shape.removePaperObj()
+
+                newElement.addShape(shape)
+            }
+
+            newElement.update()
+        }finally {
+            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStoreId)
         }
 
-        let newElement = this.onNewElement(false)
-        // Create Layer for the store as we won't open it. (If we open it, timeline track will create it.)
-        huahuoEngine.GetCurrentStore().CreateLayer(newElement.name)
-
-        for(let shape of shapes){
-            shape.removePaperObj()
-
-            newElement.addShape(shape)
-        }
-
-        newElement.update()
     }
 }
 

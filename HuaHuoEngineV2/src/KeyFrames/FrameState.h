@@ -9,6 +9,7 @@
 #include "Math/Color.h"
 #include "Math/Vector3f.h"
 
+// TODO: Avoid duplication of code !!!!!!!!!
 class AbstractFrameState : public Object {
 REGISTER_CLASS_TRAITS(kTypeIsAbstract);
 
@@ -28,6 +29,8 @@ public:
     bool IsValid() {
         return isValidFrame;
     }
+
+    virtual int GetMaxFrameId() = 0;
 
 protected:
     bool isValidFrame;

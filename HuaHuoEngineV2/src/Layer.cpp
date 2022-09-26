@@ -26,16 +26,16 @@ ObjectStore *Layer::GetObjectStore() {
     return objectStore;
 }
 
-void Layer::RemoveShape(BaseShape* shape){
+void Layer::RemoveShape(BaseShape *shape) {
     long instanceId = shape->GetInstanceID();
     long index = 0;
-    for(;index < shapes.size(); index++){
-        if(shapes[index].GetInstanceID() == instanceId){
+    for (; index < shapes.size(); index++) {
+        if (shapes[index].GetInstanceID() == instanceId) {
             break;
         }
     }
 
-    if(index == shapes.size()){
+    if (index == shapes.size()) {
         printf("Can't find the shape in the layer\n");
         return;
     }
@@ -44,19 +44,19 @@ void Layer::RemoveShape(BaseShape* shape){
 
     std::vector<int> toDeleteFrames;
     // Remove the shape from keyframes.
-    for(auto keyframe : keyFrames){
-        if(keyframe.second.contains(shape)){
+    for (auto keyframe: keyFrames) {
+        if (keyframe.second.contains(shape)) {
             printf("Erasing shape!!!!\n");
             keyframe.second.erase(shape);
         }
 
-        if(keyframe.second.empty()){
+        if (keyframe.second.empty()) {
             printf("Begin to erase keyframe!!!!\n");
             toDeleteFrames.push_back(keyframe.first);
         }
     }
 
-    for(int toDeleteFrameId: toDeleteFrames){
+    for (int toDeleteFrameId: toDeleteFrames) {
         printf("Erased keyframe:%d\n", toDeleteFrameId);
         keyFrames.erase(toDeleteFrameId);
 
@@ -89,27 +89,39 @@ void Layer::SetIsVisible(bool isVisible) {
     GetScriptEventManager()->TriggerEvent("OnLayerUpdated", &args);
 }
 
-void Layer::AddKeyFrame(int frameId, BaseShape* shape) {
-    if(keyFrames.contains(frameId) && keyFrames[frameId].contains(shape)){
+void Layer::AddKeyFrame(int frameId, BaseShape *shape) {
+    if (keyFrames.contains(frameId) && keyFrames[frameId].contains(shape)) {
         return;
     }
 
-    if (!keyFrames.contains(frameId)){
+    if (!keyFrames.contains(frameId)) {
         keyFrames.insert(std::pair<int, std::set<PPtr<BaseShape>>>(frameId, set<PPtr<BaseShape>>()));
     }
 
     objectStore->UpdateMaxFrameId(frameId);
-    std::set<PPtr<BaseShape>>& shapeSet = keyFrames[frameId];
+    std::set<PPtr<BaseShape>> &shapeSet = keyFrames[frameId];
     shapeSet.insert(shape);
 
     KeyFrameChangedEventHandlerArgs args(this, frameId);
     GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
 
-    if(this->GetObjectStore() != NULL){
+    if (this->GetObjectStore() != NULL) {
         this->GetObjectStore()->UpdateMaxFrameId(frameId);
     }
 }
 
 void Layer::SetObjectStore(ObjectStore *store) {
     this->objectStore = store;
+}
+
+void Layer::AddShapeInternal(BaseShape *newShape) {
+    newShape->SetLayer(this);
+    newShape->SetBornFrameId(this->currentFrameId);
+    shapes.push_back(newShape);
+
+    GetPersistentManager().MakeObjectPersistent(newShape->GetInstanceID(), StoreFilePath);
+
+    // Update the max length of the animation
+    int maxFrameId = newShape->GetMaxFrameId();
+    this->objectStore->UpdateMaxFrameId(maxFrameId);
 }

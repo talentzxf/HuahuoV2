@@ -90,6 +90,17 @@ public:
 
     void RecordRotation(int frameId, float rotation);
     friend class BaseShape;
+
+    virtual int GetMaxFrameId(){
+        int maxFrameId = -1;
+        for(TransformKeyFrame keyframe: m_KeyFrames){
+            if(keyframe.frameId > maxFrameId){
+                maxFrameId = keyframe.frameId;
+            }
+        }
+
+        return maxFrameId;
+    }
 private:
     std::vector<TransformKeyFrame> m_KeyFrames;
 

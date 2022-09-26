@@ -84,13 +84,7 @@ public:
 
     typedef std::vector<PPtr<BaseShape>> ShapePPtrVector;
 
-    void AddShapeInternal(BaseShape *newShape) {
-        newShape->SetLayer(this);
-        newShape->SetBornFrameId(this->currentFrameId);
-        shapes.push_back(newShape);
-
-        GetPersistentManager().MakeObjectPersistent(newShape->GetInstanceID(), StoreFilePath);
-    }
+    void AddShapeInternal(BaseShape *newShape);
 
     void Init() {
         this->cellManager->SetLayer(this);

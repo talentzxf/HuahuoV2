@@ -39,6 +39,16 @@ public:
 
     void RecordStrokeWidth(int frameId, float strokeWidth);
 
+    virtual int GetMaxFrameId(){
+        int maxFrameId = -1;
+        for(StrokeWidthKeyFrame keyframe: m_KeyFrames){
+            if(keyframe.frameId > maxFrameId){
+                maxFrameId = keyframe.frameId;
+            }
+        }
+
+        return maxFrameId;
+    }
 private:
     float m_CurrentStrokeWidth;
     std::vector<StrokeWidthKeyFrame> m_KeyFrames;

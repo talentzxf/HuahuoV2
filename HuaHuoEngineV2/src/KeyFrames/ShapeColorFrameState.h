@@ -42,6 +42,17 @@ public:
     void RecordColor(int frameId, float r, float g, float b, float a);
 
     friend class BaseShape;
+
+    virtual int GetMaxFrameId(){
+        int maxFrameId = -1;
+        for(ColorKeyFrame keyframe: m_KeyFrames){
+            if(keyframe.frameId > maxFrameId){
+                maxFrameId = keyframe.frameId;
+            }
+        }
+
+        return maxFrameId;
+    }
 private:
     ColorRGBAf m_CurrentColor;
     std::vector<ColorKeyFrame> m_KeyFrames;

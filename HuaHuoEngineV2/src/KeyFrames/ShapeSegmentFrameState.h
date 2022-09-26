@@ -100,6 +100,16 @@ public:
 
     friend class BaseShape;
 
+    virtual int GetMaxFrameId(){
+        int maxFrameId = -1;
+        for(SegmentKeyFrame keyframe: m_KeyFrames){
+            if(keyframe.frameId > maxFrameId){
+                maxFrameId = keyframe.frameId;
+            }
+        }
+
+        return maxFrameId;
+    }
 private:
     std::vector<Vector3f> m_currentPositionArray;
     std::vector<Vector3f> m_currentHandleInArray;

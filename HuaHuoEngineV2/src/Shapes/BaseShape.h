@@ -113,6 +113,21 @@ public:
         return mBornFrameId;
     }
 
+    int GetMaxFrameId(){
+        int maxFrameId = -1;
+
+        Container::const_iterator i;
+        Container::const_iterator end = mFrameStates.end();
+        for (i = mFrameStates.begin(); i != end; ++i) {
+            int frameStateFrameId = i->GetComponentPtr()->GetMaxFrameId();
+            if(frameStateFrameId > maxFrameId){
+                maxFrameId = frameStateFrameId;
+            }
+        }
+
+        return maxFrameId;
+    }
+
     bool IsVisibleInFrame(SInt32 frameId);
     bool IsVisible();
 

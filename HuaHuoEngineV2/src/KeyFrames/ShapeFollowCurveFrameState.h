@@ -70,6 +70,17 @@ public:
         return -1.0f;
     }
 
+    virtual int GetMaxFrameId(){
+        int maxFrameId = -1;
+        for(ShapeFollowCurveKeyFrame keyframe: m_KeyFrames){
+            if(keyframe.frameId > maxFrameId){
+                maxFrameId = keyframe.frameId;
+            }
+        }
+
+        return maxFrameId;
+    }
+
 private:
     std::vector<ShapeFollowCurveKeyFrame> m_KeyFrames;
     ShapeFollowCurveData m_CurrentShapeFollowCurveData;
