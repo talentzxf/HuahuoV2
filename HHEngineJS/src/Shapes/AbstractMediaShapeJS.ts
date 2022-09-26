@@ -1,7 +1,5 @@
-import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
-import {PropertyType, getMimeTypeFromDataURI, dataURItoBlob} from "hhcommoncomponents"
-import {parseGIF, decompressFrames, ParsedFrame} from "gifuct-js";
-import {GlobalConfig} from "../GlobalConfig"
+import {BaseShapeJS} from "./BaseShapeJS";
+import {getMimeTypeFromDataURI, dataURItoBlob} from "hhcommoncomponents"
 
 // The class is abstract and can't be instantiated.
 abstract class AbstractMediaShapeJS extends BaseShapeJS{
@@ -65,6 +63,7 @@ abstract class AbstractMediaShapeJS extends BaseShapeJS{
         if(!this.data.startsWith("blob") && this.dirty){
             let binaryData:Uint8Array = dataURItoBlob(this.data)
             this.rawObj.SetData(binaryData, binaryData.length);
+
             this.rawObj.SetMimeType(getMimeTypeFromDataURI(this.data))
             this.rawObj.SetFileName(this.fileName)
             this.dirty = false

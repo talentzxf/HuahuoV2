@@ -22,9 +22,15 @@ function getMimeTypeFromDataURI(dataURI): string{
 }
 
 function dataURItoBlob(dataURI): Uint8Array{
-    // convert base64 to raw binary data held in a string
-    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-    let byteString = atob(dataURI.split(',')[1]);
+    let splittedDataURI = dataURI.split(',')
+
+    let byteString;
+
+    if(splittedDataURI[0] == "data:image/svg+xml"){
+        byteString = decodeURIComponent(splittedDataURI[1])
+    }else{
+        byteString = atob(splittedDataURI[1]);
+    }
 
     // write the bytes of the string to an ArrayBuffer
     let ab = new ArrayBuffer(byteString.length);

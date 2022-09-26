@@ -4,8 +4,21 @@ import {huahuoEngine, SVGShapeJS} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {svgShapes} from "./SVGShapes";
+import axios from "axios";
+import {ImageShapeJS} from "hhenginejs";
 
-class SVGShapesDrawer extends BaseShapeDrawer{
+const svgToDataURL = svgStr => {
+    const encoded = encodeURIComponent(svgStr)
+        .replace(/'/g, '%27')
+        .replace(/"/g, '%22')
+
+    const header = 'data:image/svg+xml,'
+    const dataUrl = header + encoded
+
+    return dataUrl
+}
+
+class IconShapeDrawer extends BaseShapeDrawer{
     name = "Shapes"
     imgClass = "fas fa-shapes"
 
@@ -68,22 +81,26 @@ class SVGShapesDrawer extends BaseShapeDrawer{
         EventBus.getInstance().emit(EventNames.DRAWSHAPEBEGINS, this)
     }
 
-    getSvgURLFromImage(img: HTMLImageElement){
-        return this.imgSvgMap.get(img)
-    }
-
     onMouseDown(evt: MouseEvent) {
         super.onMouseDown(evt);
 
         if(this.selectedImageElement == null){
             HHToast.warn("Please select a shape from lib first!")
         }else{
-            this.tempShape = new SVGShapeJS()
-            this.tempShape.setShapeURL(this.getSvgURLFromImage(this.selectedImageElement))
+            let _this = this
+            let imgURL = this.imgSvgMap.get(this.selectedImageElement)
+            axios.get(imgURL).then(response=>{
+                let data = response["data"]
+                if(imgURL.endsWith(".svg")){
+                    data = svgToDataURL(data)
+                }
 
-            this.tempShape.createShape().then(()=>{
-                this.tempShape.position = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
-                this.tempShape.store()
+                _this.tempShape = new ImageShapeJS()
+                _this.tempShape.setData(imgURL, data)
+                _this.tempShape.createShape()
+
+                _this.tempShape.position = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+                _this.tempShape.store()
             })
         }
     }
@@ -100,4 +117,4 @@ class SVGShapesDrawer extends BaseShapeDrawer{
     }
 }
 
-export {SVGShapesDrawer}
+export {IconShapeDrawer}

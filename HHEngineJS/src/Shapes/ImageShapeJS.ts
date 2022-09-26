@@ -78,6 +78,7 @@ class ImageShapeJS extends AbstractMediaShapeJS{
         tempShape.data.meta = this
         tempShape.position = _paper.view.center
         tempShape.source = this.data // If it's gif, the first frame will be showed here.
+        tempShape.fillColor = new _paper.Color("red")
 
         tempShape.onLoad = function(){
             _this.loaded = true

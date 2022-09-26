@@ -46,6 +46,22 @@ let svgShapes = [
     {
         name: "avatar5",
         svg: "svgs/users-avatar-svgrepo-com (5).svg"
+    },
+    {
+        name: "cathedral",
+        svg: "svgs/building-burgos-cathedral-svgrepo-com.svg"
+    },
+    {
+        name: "cathedral-dame",
+        svg: "svgs/building-cathedral-dame-svgrepo-com.svg"
+    },
+    {
+        name: "cathedral-di",
+        svg: "svgs/building-cattedrale-di-svgrepo-com.svg"
+    },
+    {
+        name: "house-landmark",
+        svg: "svgs/building-house-landmark-svgrepo-com.svg"
     }
 ]
 

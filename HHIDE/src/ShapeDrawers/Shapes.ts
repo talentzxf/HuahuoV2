@@ -7,7 +7,7 @@ import {AudioClipSelector} from "./AudioClipSelector";
 import {TextDrawer} from "./TextDrawer";
 import {ImageSelector} from "./ImageSelector"
 import {MirrorDrawer} from "./MirrorDrawer";
-import {SVGShapesDrawer} from "./SVGShapesDrawer";
+import {IconShapeDrawer} from "./IconShapeDrawer";
 
 let shapes = [
     new ShapeSelector(),
@@ -19,7 +19,7 @@ let shapes = [
     new MirrorDrawer(),
     new AudioClipSelector(),
     new ImageSelector(),
-    new SVGShapesDrawer()
+    new IconShapeDrawer()
 ]
 
 let defaultShapeDrawerArray = shapes.filter(drawer=>{
