@@ -167,7 +167,7 @@ class ElementCreator {
                     if(firstLayer.ptr != shape.getLayer().ptr)
                     {
                         HHToast.warn("Can only group shapes in the same layer!")
-                        return false;
+                        return null;
                     }
                 }
             }
@@ -183,10 +183,11 @@ class ElementCreator {
             }
 
             newElement.update()
+
+            return newElement
         }finally {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStoreId)
         }
-
     }
 }
 

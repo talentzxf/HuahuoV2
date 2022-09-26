@@ -827,6 +827,8 @@ abstract class BaseShapeJS {
         this.paperItem.remove()
         this.boundingBoxGroup.remove()
         this.selected = false
+
+        this.paperItem = null
     }
 
     detachFromCurrentLayer(){

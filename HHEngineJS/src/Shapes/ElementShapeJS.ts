@@ -151,8 +151,11 @@ class ElementShapeJS extends BaseShapeJS {
         try{
             // 1. Remove the shape from current layer (both cpp and js side)
             shape.detachFromCurrentLayer();
-            // 2. Add the shape into current layer of this store.
-            huahuoEngine.GetCurrentLayer().addShape(shape)
+
+            // After detach, default store might be changed.
+            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId)
+            // 2. Add the shape into current layer of this store. And it will be loaded by the element.
+            huahuoEngine.GetCurrentLayer().AddShapeInternal(shape)
         }finally {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStoreId)
         }

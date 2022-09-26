@@ -136,6 +136,8 @@ void testShapeStore() {
 
     currentLayer->AddShapeInternal(circleShape);
 
+    printf("maxFrameId: %d\n", circleShape->GetMaxFrameId());
+
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
 
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
@@ -460,10 +462,10 @@ int main() {
     HuaHuoEngine::InitEngine();
 
     testReadFromFile();
-//    testTransform();
-//    testScene();
-//    testGameObject();
-//    testTimeManager();
+    // testTransform();
+    // testScene();
+    // testGameObject();
+    testTimeManager();
     testShapeStore();
     testKeyFrames();
     testRecordKeyFrames();

@@ -133,6 +133,10 @@ class ShapeSelector extends BaseShapeDrawer {
 
     groupAsElement(){
         let element = elementCreator.createElement(this.selectedShapes)
+
+        this.selectedShapes.clear()
+        if(element)
+            this.selectedShapes.add(element) // Only select this element
     }
 
     onShapeSelected(property, targetObj: any) {
