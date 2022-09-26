@@ -142,7 +142,8 @@ class ElementCreator {
         let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
         newElementShape.storeId = newStore.GetStoreId()
 
-        this.openElementEditTab(newElementShape)
+        if(openElementTab)
+            this.openElementEditTab(newElementShape)
 
         console.log("Created new store, store id:" + newElementShape.storeId)
 
@@ -156,7 +157,7 @@ class ElementCreator {
     createElement(shapes:Set<BaseShapeJS>): boolean{
         // 0. Ensure all shapes are in the same layer.
         if(shapes.size > 0){
-            let firstShape: BaseShapeJS = shapes.values().next() as BaseShapeJS;
+            let firstShape: BaseShapeJS = shapes.values().next().value as BaseShapeJS;
             let firstLayer = firstShape.getLayer()
 
             for(let shape of shapes){
@@ -169,10 +170,14 @@ class ElementCreator {
         }
 
         let newElement = this.onNewElement(false)
+        // Create Layer for the store as we won't open it. (If we open it, timeline track will create it.)
+        huahuoEngine.GetCurrentStore().CreateLayer(newElement.name)
 
         for(let shape of shapes){
             newElement.addShape(shape)
         }
+
+        newElement.update()
     }
 }
 

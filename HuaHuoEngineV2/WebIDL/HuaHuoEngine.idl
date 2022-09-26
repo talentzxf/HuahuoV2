@@ -64,6 +64,8 @@ interface Layer{
     boolean GetIsSelected();
 
     ObjectStore GetObjectStore();
+
+    void RemoveShape(BaseShape shape);
 };
 
 [NoDelete]
