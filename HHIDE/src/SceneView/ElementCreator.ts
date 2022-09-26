@@ -174,6 +174,8 @@ class ElementCreator {
         huahuoEngine.GetCurrentStore().CreateLayer(newElement.name)
 
         for(let shape of shapes){
+            shape.removePaperObj()
+
             newElement.addShape(shape)
         }
 
