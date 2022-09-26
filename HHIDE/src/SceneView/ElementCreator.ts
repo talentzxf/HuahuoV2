@@ -1,11 +1,11 @@
 import {SceneView} from "./SceneView";
 import {findParentContent, findParentPanel} from "hhpanel";
 import {HHPanel} from "hhpanel";
+import {HHToast} from "hhcommoncomponents";
 import {renderEngine2D, huahuoEngine, ElementShapeJS, paper} from "hhenginejs"
 import {HHContent, PanelEventNames} from "hhpanel";
-import {HHTimeline} from "hhtimeline"
-import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {sceneViewManager} from "./SceneViewManager";
+import {BaseShapeJS} from "hhenginejs";
 
 class ElementCreator {
     sceneView: SceneView
@@ -125,7 +125,7 @@ class ElementCreator {
         }
     }
 
-    onNewElement(e: PointerEvent) {
+    onNewElement(openElementTab: boolean = true) {
 
         let elementId = "NewElement_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
 
@@ -149,6 +149,30 @@ class ElementCreator {
         this.registerElementChangeEvent(newElementShape.storeId, function(){
             newElementShape.update()
         })
+
+        return newElementShape
+    }
+
+    createElement(shapes:Set<BaseShapeJS>): boolean{
+        // 0. Ensure all shapes are in the same layer.
+        if(shapes.size > 0){
+            let firstShape: BaseShapeJS = shapes.values().next() as BaseShapeJS;
+            let firstLayer = firstShape.getLayer()
+
+            for(let shape of shapes){
+                if(firstLayer.ptr != shape.getLayer().ptr)
+                {
+                    HHToast.warn("Can only group shapes in the same layer!")
+                    return false;
+                }
+            }
+        }
+
+        let newElement = this.onNewElement(false)
+
+        for(let shape of shapes){
+            newElement.addShape(shape)
+        }
     }
 }
 

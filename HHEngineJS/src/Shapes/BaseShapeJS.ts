@@ -821,9 +821,11 @@ abstract class BaseShapeJS {
         // TODO: TODO
         huahuoEngine.DestroyShape(this.rawObj)
         this.paperItem.remove()
-
         this.boundingBoxGroup.remove()
+    }
 
+    detachFromCurrentLayer(){
+        this.getLayer().RemoveShape(this.rawObj)
     }
 }
 

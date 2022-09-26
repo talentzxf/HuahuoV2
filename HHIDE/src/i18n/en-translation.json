@@ -33,7 +33,8 @@
     "createNewElement": "Create New Element",
     "delete": "Delete",
     "mergecells": "Merge selected cells",
-    "createNewTrack": "Create New Track"
+    "createNewTrack": "Create New Track",
+    "groupdAsElement": "Convert to Element"
   },
   "inspector": {
     "Type": "Type",

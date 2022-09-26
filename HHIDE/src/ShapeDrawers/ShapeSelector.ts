@@ -112,6 +112,10 @@ class ShapeSelector extends BaseShapeDrawer {
                         onclick: elementCreator.onNewElement.bind(elementCreator)
                     },
                     {
+                        itemName: i18n.t("contextmenu.groupAsElement"),
+                        onclick: _this.groupAsElement.bind(_this)
+                    },
+                    {
                         itemName: i18n.t("contextmenu.delete"),
                         onclick: _this.deleteSelectedObj.bind(_this)
                     }
@@ -125,6 +129,10 @@ class ShapeSelector extends BaseShapeDrawer {
             }
         })
         EventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onShapeSelected.bind(this))
+    }
+
+    groupAsElement(){
+        let element = elementCreator.createElement(this.selectedShapes)
     }
 
     onShapeSelected(property, targetObj: any) {

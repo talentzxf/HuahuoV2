@@ -33,7 +33,8 @@
     "createNewElement": "创建新元件",
     "delete": "删除形状",
     "mergecells": "合并帧",
-    "createNewTrack": "创建新轨道"
+    "createNewTrack": "创建新轨道",
+    "groupdAsElement": "转换为组件"
   },
   "inspector": {
     "Type": "类型",
