@@ -46,14 +46,6 @@ let svgShapes = [
     {
         name: "avatar5",
         svg: "svgs/users-avatar-svgrepo-com (5).svg"
-    },
-    {
-        name: "avatar6",
-        svg: "svgs/users-avatar-svgrepo-com (6).svg"
-    },
-    {
-        name: "avatar6",
-        svg: "svgs/users-avatar-svgrepo-com (6).svg"
     }
 ]
 

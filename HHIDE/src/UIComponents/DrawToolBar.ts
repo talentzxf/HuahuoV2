@@ -1,5 +1,5 @@
 import {shapes} from "../ShapeDrawers/Shapes";
-import {CustomElement, Logger, i18n} from "hhcommoncomponents"
+import {CustomElement, Logger} from "hhcommoncomponents"
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 

@@ -38,6 +38,7 @@ class SVGShapesDrawer extends BaseShapeDrawer{
             btnImg.src = shape.svg
             btnImg.style.width = "30px"
             btnImg.style.height = "30px"
+            btnImg.title = shape.name
             btnImg.addEventListener("click", this.onShapeClicked.bind(this))
             let btn = document.createElement("button")
             btn.appendChild(btnImg)
@@ -63,6 +64,8 @@ class SVGShapesDrawer extends BaseShapeDrawer{
         this.selectedImageElement = newlySelectedElement
 
         this.selectedImageElement.style.backgroundColor = "green"
+
+        EventBus.getInstance().emit(EventNames.DRAWSHAPEBEGINS, this)
     }
 
     getSvgURLFromImage(img: HTMLImageElement){
