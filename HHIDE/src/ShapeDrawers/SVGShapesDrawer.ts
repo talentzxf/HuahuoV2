@@ -3,6 +3,7 @@ import {DrawToolBar} from "../UIComponents/DrawToolBar";
 import {huahuoEngine, SVGShapeJS} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {svgShapes} from "./SVGShapes";
 
 class SVGShapesDrawer extends BaseShapeDrawer{
     name = "Shapes"
@@ -14,16 +15,6 @@ class SVGShapesDrawer extends BaseShapeDrawer{
     selectedImageElement: HTMLImageElement
     tempShape = null
 
-    shapes = [
-        {
-            name: "football",
-            svg: "svgs/football.svg"
-        },
-        {
-            name: "bus",
-            svg: "svgs/bus.svg"
-        }
-    ]
 
     set isSelected(val:boolean){
         super.isSelected = val
@@ -42,7 +33,7 @@ class SVGShapesDrawer extends BaseShapeDrawer{
         this.secondaryToolBar.innerHTML = null;
 
         // Create Buttons
-        for(let shape of this.shapes){
+        for(let shape of svgShapes){
             let btnImg = document.createElement("img")
             btnImg.src = shape.svg
             btnImg.style.width = "30px"
