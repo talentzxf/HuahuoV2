@@ -124,4 +124,7 @@ void Layer::AddShapeInternal(BaseShape *newShape) {
     // Update the max length of the animation
     int maxFrameId = newShape->GetMaxFrameId();
     this->objectStore->UpdateMaxFrameId(maxFrameId);
+
+    // Merge from 0 to current maxFrameId
+    this->GetTimeLineCellManager()->MergeCells(0, maxFrameId);
 }
