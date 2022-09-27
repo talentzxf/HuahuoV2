@@ -303,7 +303,7 @@ class HHTimeline extends HTMLElement {
     redrawCell(layer, frameId) {
         let track: TimelineTrack = this.getTrackFromLayer(layer)
         if (track) { // It's possible that we are saving an element belong to a layer that's not belong to current timeline. In that case, we won't update the track.
-            track.selectCell(frameId)
+            // track.selectCell(frameId)
             track.drawCell(frameId)
             track.drawTimelineIndicator()
         }
