@@ -34,7 +34,7 @@
     "delete": "Delete",
     "mergecells": "Merge selected cells",
     "createNewTrack": "Create New Track",
-    "groupAsElement": "Convert to Element",
+    "groupAsElement": "Convert to Element"
   },
   "inspector": {
     "Type": "Type",
