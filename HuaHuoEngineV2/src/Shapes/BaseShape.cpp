@@ -25,27 +25,27 @@ void BaseShape::Transfer(TransferFunction &transfer) {
 }
 
 template<class TransferFunction>
-void BaseShape::TransferFrameStates(TransferFunction& transfer){
+void BaseShape::TransferFrameStates(TransferFunction &transfer) {
     // When cloning objects for prefabs and instantiate, we don't use serialization to duplicate the hierarchy,
     // we duplicate the hierarchy directly
     if (!SerializePrefabIgnoreProperties(transfer))
         return;
 
-    if (transfer.IsWriting() && transfer.NeedsInstanceIDRemapping())
-    {
+    if (transfer.IsWriting() && transfer.NeedsInstanceIDRemapping()) {
         Container filtered_framestates;
-        for (Container::iterator i = mFrameStates.begin(); i != mFrameStates.end(); i++)
-        {
+        for (Container::iterator i = mFrameStates.begin(); i != mFrameStates.end(); i++) {
             LocalSerializedObjectIdentifier localIdentifier;
             InstanceIDToLocalSerializedObjectIdentifier(i->GetComponentPtr()->GetInstanceID(), localIdentifier);
             if (localIdentifier.localIdentifierInFile != 0)
                 filtered_framestates.push_back(*i);
         }
-        transfer.Transfer(filtered_framestates, "mFrameStates", kHideInEditorMask | kStrongPPtrMask | kDisallowSerializedPropertyModification);
+        transfer.Transfer(filtered_framestates, "mFrameStates",
+                          kHideInEditorMask | kStrongPPtrMask | kDisallowSerializedPropertyModification);
         return;
     }
 
-    transfer.Transfer(mFrameStates, "mFrameStates", kHideInEditorMask | kStrongPPtrMask | kDisallowSerializedPropertyModification);
+    transfer.Transfer(mFrameStates, "mFrameStates",
+                      kHideInEditorMask | kStrongPPtrMask | kDisallowSerializedPropertyModification);
 }
 
 void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
@@ -90,6 +90,12 @@ void BaseShape::SetLocalPivotPosition(float x, float y, float z) {
     GetFrameState<ShapeTransformFrameState>().RecordLocalPivotPosition(currentFrameId, x, y, z);
 
     shapeLayer->AddKeyFrame(currentFrameId, this);
+}
+
+void BaseShape::SetBornFrameId(SInt32 bornFrameId) {
+    mBornFrameId = bornFrameId;
+
+    GetLayer()->AddKeyFrame(bornFrameId, this);
 }
 
 void BaseShape::SetGlobalPivotPosition(float x, float y, float z) {
@@ -183,7 +189,6 @@ void BaseShape::RemoveSegment(int index) {
 }
 
 
-
 AbstractFrameState *BaseShape::ProduceFrameStateByType(const HuaHuo::Type *type) {
     AbstractFrameState *component = AbstractFrameState::Produce(type);
 
@@ -212,8 +217,8 @@ AbstractFrameState *BaseShape::AddFrameStateByName(const char *frameStateName) {
     return NULL;
 }
 
-AbstractFrameState* BaseShape::GetFrameStateByName(char *frameStateName) {
-    const HuaHuo::Type * componentType = HuaHuo::Type::FindTypeByName(frameStateName);
+AbstractFrameState *BaseShape::GetFrameStateByName(char *frameStateName) {
+    const HuaHuo::Type *componentType = HuaHuo::Type::FindTypeByName(frameStateName);
     return QueryFrameStateByType(componentType);
 }
 

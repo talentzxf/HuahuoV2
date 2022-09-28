@@ -107,9 +107,7 @@ public:
     AbstractFrameState* QueryFrameStateByType(const HuaHuo::Type* type) const;
     AbstractFrameState* QueryFrameStateByExactType(const HuaHuo::Type* type) const;
 
-    void SetBornFrameId(SInt32 bornFrameId){
-        mBornFrameId = bornFrameId;
-    }
+    void SetBornFrameId(SInt32 bornFrameId);
 
     SInt32 GetBornFrameId(){
         return mBornFrameId;
@@ -137,7 +135,7 @@ public:
             Container::const_iterator end = mFrameStates.end();
             for (i = mFrameStates.begin(); i != end; ++i) {
                 int frameStateFrameId = i->GetComponentPtr()->GetMinFrameId();
-                if(frameStateFrameId >= 0){
+                if(frameStateFrameId >= 0){eyFrame
                     if(frameStateFrameId < minFrameId){
                         minFrameId = frameStateFrameId;
                     }
