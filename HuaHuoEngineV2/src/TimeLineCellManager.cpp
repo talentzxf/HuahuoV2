@@ -7,6 +7,8 @@
 #include "Layer.h"
 #include "ObjectStore.h"
 
+const int MAX_CELLS = 86400*24*30; // 30FPS, one day. That's impossible.
+
 IMPLEMENT_REGISTER_CLASS(TimeLineCellManager, 10006);
 
 IMPLEMENT_OBJECT_SERIALIZE(TimeLineCellManager);
@@ -38,12 +40,19 @@ void TimeLineCellManager::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
 }
 
 void TimeLineCellManager::MergeCells(unsigned int startCellId, unsigned int endCellId) {
+    if(startCellId > MAX_CELLS || endCellId > MAX_CELLS)
+        return;
+
     unsigned int minCell = std::min(startCellId, endCellId);
     unsigned int maxCell = std::max(startCellId, endCellId);
 
     unsigned int currentMaxCellSpan = this->GetCellSpan(maxCell);
 
     unsigned int newMinCellSpan = maxCell - minCell + currentMaxCellSpan;
+
+    if(this->GetSpanHead(minCell) == this->GetSpanHead(maxCell)){ // The min/max Cell is already in one span, no need to do the merge.
+        return;
+    }
 
     // Update all spans in the middle
     for(unsigned int cellId = minCell; cellId <= minCell + newMinCellSpan - 1; cellId++){

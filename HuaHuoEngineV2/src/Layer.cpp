@@ -125,6 +125,8 @@ void Layer::AddShapeInternal(BaseShape *newShape) {
     int maxFrameId = newShape->GetMaxFrameId();
     this->objectStore->UpdateMaxFrameId(maxFrameId);
 
-    // Merge from 0 to current maxFrameId
-    this->GetTimeLineCellManager()->MergeCells(0, maxFrameId);
+    if(maxFrameId >= 0){
+        // Merge from 0 to current maxFrameId
+        this->GetTimeLineCellManager()->MergeCells(0, maxFrameId);
+    }
 }

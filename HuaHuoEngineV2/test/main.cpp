@@ -215,6 +215,9 @@ void testTimeManager() {
     Assert(timeLineCellManager->GetCellSpan(0) == 101);
     Assert(timeLineCellManager->GetSpanHead(1) == 0);
 
+    timeLineCellManager->MergeCells(0, 1000);
+    timeLineCellManager->MergeCells(0, 20);
+
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
     int length = GetFileLength(StoreFilePath);
     const char *filename = "objectstore_persistent2.data";
