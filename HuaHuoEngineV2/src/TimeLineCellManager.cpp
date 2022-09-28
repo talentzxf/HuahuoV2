@@ -7,7 +7,7 @@
 #include "Layer.h"
 #include "ObjectStore.h"
 
-const int MAX_FRAMES = 86400*24*30; // 30FPS, one day. That's impossible.
+const const int MAX_FRAMES = 86400*24*30; // 30FPS, one day. That's impossible.
 
 IMPLEMENT_REGISTER_CLASS(TimeLineCellManager, 10006);
 
@@ -40,7 +40,7 @@ void TimeLineCellManager::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
 }
 
 void TimeLineCellManager::MergeCells(unsigned int startCellId, unsigned int endCellId) {
-    if(startCellId > MAX_CELLS || endCellId > MAX_CELLS)
+    if(startCellId > MAX_FRAMES || endCellId > MAX_FRAMES)
         return;
 
     unsigned int minCell = std::min(startCellId, endCellId);

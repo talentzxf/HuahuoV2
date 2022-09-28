@@ -17,6 +17,8 @@
 #include "KeyFrames/ShapeStrokeColorFrameState.h"
 #include "KeyFrames/ShapeStrokeWidthFrameState.h"
 
+extern const int MAX_FRAMES;
+
 extern std::string StoreFilePath;
 class BaseShape;
 class ShapeLoadedEventArgs: public ScriptEventHandlerArgs{
@@ -127,6 +129,21 @@ public:
 
         return maxFrameId;
     }
+
+        int GetMinFrameId(){
+            int minFrameId = MAX_FRAMES;
+
+            Container::const_iterator i;
+            Container::const_iterator end = mFrameStates.end();
+            for (i = mFrameStates.begin(); i != end; ++i) {
+                int frameStateFrameId = i->GetComponentPtr()->GetMaxFrameId();
+                if(frameStateFrameId < minFrameId){
+                    minFrameId = frameStateFrameId;
+                }
+            }
+
+            return minFrameId;
+        }
 
     bool IsVisibleInFrame(SInt32 frameId);
     bool IsVisible();
