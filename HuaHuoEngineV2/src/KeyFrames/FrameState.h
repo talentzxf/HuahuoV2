@@ -9,6 +9,8 @@
 #include "Math/Color.h"
 #include "Math/Vector3f.h"
 
+extern const int MAX_FRAMES;
+
 // TODO: Avoid duplication of code !!!!!!!!!
 class AbstractFrameState : public Object {
 REGISTER_CLASS_TRAITS(kTypeIsAbstract);
@@ -31,6 +33,7 @@ public:
     }
 
     virtual int GetMaxFrameId() = 0;
+    virtual int GetMinFrameId() = 0;
 
 protected:
     bool isValidFrame;

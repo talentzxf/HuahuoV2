@@ -81,6 +81,16 @@ public:
         return maxFrameId;
     }
 
+    virtual int GetMinFrameId(){
+        int minFrameId = MAX_FRAMES;
+        for(auto keyframe: m_KeyFrames){
+            if(keyframe.frameId < minFrameId){
+                minFrameId = keyframe.frameId;
+            }
+        }
+
+        return minFrameId;
+    }
 private:
     std::vector<ShapeFollowCurveKeyFrame> m_KeyFrames;
     ShapeFollowCurveData m_CurrentShapeFollowCurveData;
