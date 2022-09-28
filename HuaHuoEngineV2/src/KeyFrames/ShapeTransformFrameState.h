@@ -40,6 +40,10 @@ struct TransformKeyFrame{
     TransformData transformData;
 
     DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(TransformKeyFrame)
+
+    TransformKeyFrame():frameId(-1){
+
+    }
 };
 
 template<class TransferFunction> void TransformKeyFrame::Transfer(TransferFunction &transfer){

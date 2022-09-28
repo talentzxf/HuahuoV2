@@ -42,6 +42,10 @@ struct SegmentKeyFrame {
         handleInArray.erase(handleInArray.begin() + index);
         handleOutArray.erase(handleOutArray.begin() + index);
     }
+
+    SegmentKeyFrame():frameId(-1){
+
+    }
 };
 
 template<class TransferFunction>

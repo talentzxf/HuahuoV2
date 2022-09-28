@@ -13,6 +13,10 @@ public:
     int frameId;
     ColorRGBAf color;
     DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(ColorKeyFrame)
+
+    ColorKeyFrame():frameId(-1){
+
+    }
 };
 
 template<class TransferFunction> void ColorKeyFrame::Transfer(TransferFunction &transfer){

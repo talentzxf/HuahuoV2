@@ -32,6 +32,10 @@ struct ShapeFollowCurveKeyFrame{
     ShapeFollowCurveData followCurveData;
 
     DECLARE_SERIALIZE(TransformKeyFrame)
+
+    ShapeFollowCurveKeyFrame():frameId(-1){
+
+    }
 };
 
 template<class TransferFunction> void ShapeFollowCurveKeyFrame::Transfer(TransferFunction &transfer){

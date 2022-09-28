@@ -136,9 +136,11 @@ public:
             Container::const_iterator i;
             Container::const_iterator end = mFrameStates.end();
             for (i = mFrameStates.begin(); i != end; ++i) {
-                int frameStateFrameId = i->GetComponentPtr()->GetMaxFrameId();
-                if(frameStateFrameId < minFrameId){
-                    minFrameId = frameStateFrameId;
+                int frameStateFrameId = i->GetComponentPtr()->GetMinFrameId();
+                if(frameStateFrameId >= 0){
+                    if(frameStateFrameId < minFrameId){
+                        minFrameId = frameStateFrameId;
+                    }
                 }
             }
 

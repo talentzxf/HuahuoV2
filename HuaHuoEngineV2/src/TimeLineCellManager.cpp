@@ -7,7 +7,7 @@
 #include "Layer.h"
 #include "ObjectStore.h"
 
-const const int MAX_FRAMES = 86400*24*30; // 30FPS, one day. That's impossible.
+const int MAX_FRAMES = 86400*24*30; // 30FPS, one day. That's impossible.
 
 IMPLEMENT_REGISTER_CLASS(TimeLineCellManager, 10006);
 

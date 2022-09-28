@@ -176,13 +176,19 @@ class ElementCreator {
             // Create Layer for the store as we won't open it. (If we open it, timeline track will create it.)
             huahuoEngine.GetCurrentStore().CreateLayer(newElement.name)
 
+            let bornFrameId = newElement.bornFrameId
             for(let shape of shapes){
+                if(shape.bornFrameId < bornFrameId)
+                    bornFrameId = shape.bornFrameId
+
                 shape.removePaperObj()
 
                 newElement.addShape(shape)
             }
 
             newElement.update()
+
+            newElement.bornFrameId = bornFrameId
 
             return newElement
         }finally {

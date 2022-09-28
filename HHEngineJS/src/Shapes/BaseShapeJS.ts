@@ -154,6 +154,10 @@ abstract class BaseShapeJS {
         return this.paperItem.scaling
     }
 
+    get bornFrameId(){
+        return this.rawObj.GetBornFrameId()
+    }
+
     setParent(parentShape: BaseShapeJS) {
         this.parent = parentShape
         parentShape.paperItem.addChild(this.paperItem)

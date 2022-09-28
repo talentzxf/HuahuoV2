@@ -504,6 +504,8 @@ interface ElementShape{
     void SetStoreId(long storeId);
     long GetStoreId();
 
+    void SetBornFrameId(long bornFrameId);
+
     // inherited from BaseShape
     DOMString GetTypeName();
     DOMString GetName();

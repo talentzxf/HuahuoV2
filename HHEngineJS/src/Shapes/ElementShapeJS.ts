@@ -71,9 +71,18 @@ class ElementShapeJS extends BaseShapeJS {
         huahuoEngine.registerElementParent(val, this.getBornStoreId())
     }
 
+    // Not sure why, but if we don't write this getter, it will fail??
+    get bornFrameId(){
+        return this.rawObj.GetBornFrameId()
+    }
+
+    set bornFrameId(val:number){
+        this.rawObj.SetBornFrameId(val)
+    }
+
     calculateLocalFrame(){
         let currentFrame = this.getLayer().GetCurrentFrame()
-        let bornFrame = this.rawObj.GetBornFrameId()
+        let bornFrame = this.bornFrameId
         let maxFrames = huahuoEngine.getStoreMaxFrames(this.storeId)
 
         return (currentFrame - bornFrame) % maxFrames

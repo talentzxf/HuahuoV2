@@ -13,6 +13,10 @@ public:
     int frameId;
     float strokeWidth;
     DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(StrokeWidthKeyFrame)
+
+    StrokeWidthKeyFrame():frameId(-1){
+        
+    }
 };
 
 template<class TransferFunction> void StrokeWidthKeyFrame::Transfer(TransferFunction &transfer) {
