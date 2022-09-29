@@ -112,13 +112,13 @@ class ElementShapeJS extends BaseShapeJS {
             let store = defaultStoreManager.GetCurrentStore()
 
             let currentLocalFrame = this.calculateLocalFrame()
+            this.layerShapesManager.loadShapesFromStore(this)
+
             this.layerShapesManager.forEachLayerInStore(store, (layer)=>{
                 this.saveLayerFrame(layer, layer.GetCurrentFrame())
 
                 layer.SetCurrentFrame(currentLocalFrame)
             })
-
-            this.layerShapesManager.loadShapesFromStore(this)
 
             let somethingIsVisible = false
             let _this = this
