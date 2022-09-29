@@ -116,7 +116,10 @@ void Layer::SetObjectStore(ObjectStore *store) {
 
 void Layer::AddShapeInternal(BaseShape *newShape) {
     newShape->SetLayer(this);
-    newShape->SetBornFrameId(this->currentFrameId);
+
+    if(newShape->GetBornFrameId() < 0) // If the born frame has been set already, keep it. This might happen if a shape is moved from one layer to another layer.
+        newShape->SetBornFrameId(this->currentFrameId);
+
     shapes.push_back(newShape);
 
     GetPersistentManager().MakeObjectPersistent(newShape->GetInstanceID(), StoreFilePath);
