@@ -77,7 +77,7 @@ REGISTER_CLASS(Layer);
 DECLARE_OBJECT_SERIALIZE();
 public:
     Layer(MemLabelId label, ObjectCreationMode mode)
-            : Super(label, mode), name("Unknown Layer"), currentFrameId(-1), isVisible(true), isSelected(false) {
+            : Super(label, mode), name("Unknown Layer"), currentFrameId(0), isVisible(true), isSelected(false) {
         cellManager = Object::Produce<TimeLineCellManager>();
         GetPersistentManagerPtr()->MakeObjectPersistent(cellManager.GetInstanceID(), StoreFilePath);
     }
@@ -101,9 +101,6 @@ public:
     }
 
     void SetCurrentFrame(int currentFrameId) {
-        if (this->currentFrameId == currentFrameId)
-            return;
-
         this->currentFrameId = currentFrameId;
         for (auto shape: shapes) {
             shape->Apply(this->currentFrameId);
