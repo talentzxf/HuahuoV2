@@ -119,7 +119,7 @@ public:
     }
 
     BaseShape *GetShapeAtIndex(size_t shapeIdx) {
-        if(shapeIdx > shapes.size())
+        if(shapeIdx >= shapes.size())
             return NULL;
 
         return shapes[shapeIdx];
