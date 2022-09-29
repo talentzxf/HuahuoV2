@@ -39,7 +39,7 @@ bool ShapeColorFrameState::Apply(int frameId) {
 }
 
 void ShapeColorFrameState::RecordColor(int frameId, float r, float g, float b, float a) {
-    ColorKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames.GetKeyFrames());
+    ColorKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
     pKeyFrame->color.Set(r, g, b, a);
 
     Apply(frameId);

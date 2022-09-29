@@ -49,7 +49,6 @@ public:
 
 private:
     ColorRGBAf m_CurrentColor;
-    KeyFrameManager<ColorKeyFrame> m_KeyFrames;
 };
 
 
