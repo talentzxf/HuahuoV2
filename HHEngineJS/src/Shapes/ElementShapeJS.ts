@@ -163,6 +163,7 @@ class ElementShapeJS extends BaseShapeJS {
 
             // After detach, default store might be changed.
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId)
+
             // 2. Add the shape into current layer of this store. And it will be loaded by the element.
             huahuoEngine.GetCurrentLayer().AddShapeInternal(shape.getRawShape())
         }finally {

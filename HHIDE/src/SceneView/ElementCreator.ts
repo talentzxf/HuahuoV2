@@ -181,8 +181,12 @@ class ElementCreator {
                 if(shape.bornFrameId < bornFrameId)
                     bornFrameId = shape.bornFrameId
 
-                shape.removePaperObj()
+                let currentPosition = shape.position
+                let currentGlobalPosition = shape.localToGlobal(currentPosition)
+                let newParentPosition = newElement.globalToLocal(currentGlobalPosition)
+                shape.position = newParentPosition
 
+                shape.removePaperObj()
                 newElement.addShape(shape)
             }
 
