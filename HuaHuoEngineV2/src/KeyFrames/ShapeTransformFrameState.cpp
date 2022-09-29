@@ -14,7 +14,7 @@ INSTANTIATE_TEMPLATE_TRANSFER(ShapeTransformFrameState);
 template<class TransferFunction>
 void ShapeTransformFrameState::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-    TRANSFER(m_KeyFrames);
+    TRANSFER(GetKeyFrames());
 }
 
 TransformData Lerp(TransformData &k1, TransformData &k2, float ratio) {
@@ -30,7 +30,7 @@ TransformData Lerp(TransformData &k1, TransformData &k2, float ratio) {
 
 bool ShapeTransformFrameState::Apply(int frameId) {
     std::pair<TransformKeyFrame *, TransformKeyFrame *> resultKeyFrames;
-    if (FindKeyFramePair(frameId, this->m_KeyFrames, resultKeyFrames)) {
+    if (FindKeyFramePair(frameId, GetKeyFrames(), resultKeyFrames)) {
         this->isValidFrame = true;
         TransformKeyFrame *k1 = resultKeyFrames.first;
         TransformKeyFrame *k2 = resultKeyFrames.second;
@@ -52,7 +52,7 @@ bool ShapeTransformFrameState::Apply(int frameId) {
 }
 
 void ShapeTransformFrameState::RecordLocalPivotPosition(int frameId, float x, float y, float z){
-    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
     pKeyFrame->transformData = m_CurrentTransformData;
     pKeyFrame->transformData.localPivotPosition.Set(x, y, z);
 
@@ -60,7 +60,7 @@ void ShapeTransformFrameState::RecordLocalPivotPosition(int frameId, float x, fl
 }
 
 void ShapeTransformFrameState::RecordGlobalPivotPosition(int frameId, float x, float y, float z){
-    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
     pKeyFrame->transformData = m_CurrentTransformData;
     pKeyFrame->transformData.globalPivotPosition.Set(x, y, z);
 
@@ -68,7 +68,7 @@ void ShapeTransformFrameState::RecordGlobalPivotPosition(int frameId, float x, f
 }
 
 void ShapeTransformFrameState::RecordScale(int frameId, float xScale, float yScale, float zScale) {
-    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
     pKeyFrame->transformData = m_CurrentTransformData; // Record current state.
     pKeyFrame->transformData.scale.Set(xScale, yScale, zScale); // Change the scale.
 
@@ -76,7 +76,7 @@ void ShapeTransformFrameState::RecordScale(int frameId, float xScale, float ySca
 }
 
 void ShapeTransformFrameState::RecordRotation(int frameId, float rotation) {
-    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
     pKeyFrame->transformData = m_CurrentTransformData; // Record current state.
     pKeyFrame->transformData.rotation = rotation;
 

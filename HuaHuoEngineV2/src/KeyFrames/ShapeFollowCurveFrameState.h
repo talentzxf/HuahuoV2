@@ -43,12 +43,12 @@ template<class TransferFunction> void ShapeFollowCurveKeyFrame::Transfer(Transfe
     TRANSFER(followCurveData);
 }
 
-class ShapeFollowCurveFrameState: public AbstractFrameState {
+class ShapeFollowCurveFrameState: public AbstractFrameStateWithKeyType<ShapeFollowCurveKeyFrame> {
     REGISTER_CLASS(ShapeFollowCurveFrameState);
     DECLARE_OBJECT_SERIALIZE();
 public:
     ShapeFollowCurveFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
-    :Super(memLabelId, creationMode)
+    :AbstractFrameStateWithKeyType(memLabelId, creationMode)
     {
 
     }
@@ -74,29 +74,7 @@ public:
         return -1.0f;
     }
 
-    virtual int GetMaxFrameId(){
-        int maxFrameId = -1;
-        for(ShapeFollowCurveKeyFrame keyframe: m_KeyFrames){
-            if(keyframe.frameId > maxFrameId){
-                maxFrameId = keyframe.frameId;
-            }
-        }
-
-        return maxFrameId;
-    }
-
-    virtual int GetMinFrameId(){
-        int minFrameId = MAX_FRAMES;
-        for(auto keyframe: m_KeyFrames){
-            if(keyframe.frameId < minFrameId){
-                minFrameId = keyframe.frameId;
-            }
-        }
-
-        return minFrameId;
-    }
 private:
-    std::vector<ShapeFollowCurveKeyFrame> m_KeyFrames;
     ShapeFollowCurveData m_CurrentShapeFollowCurveData;
 };
 

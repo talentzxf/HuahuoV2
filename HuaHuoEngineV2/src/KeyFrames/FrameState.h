@@ -11,7 +11,49 @@
 
 extern const int MAX_FRAMES;
 
-// TODO: Avoid duplication of code !!!!!!!!!
+template <class T>
+class KeyFrameManager{
+    DECLARE_SERIALIZE(KeyFrameManager)
+public:
+    virtual int GetMaxFrameId(){
+        int maxFrameId = -1;
+        for(auto keyframe: m_KeyFrames){
+            if(keyframe.frameId > maxFrameId){
+                maxFrameId = keyframe.frameId;
+            }
+        }
+
+        return maxFrameId;
+    }
+
+    virtual int GetMinFrameId(){
+        int minFrameId = MAX_FRAMES;
+        for(auto keyframe: m_KeyFrames){
+            if(keyframe.frameId < minFrameId){
+                minFrameId = keyframe.frameId;
+            }
+        }
+
+        return minFrameId;
+    }
+
+    virtual void AddAnimationOffset(int offsetFrames){
+        for(auto keyframe: m_KeyFrames){
+            if(keyframe.frameId >= 0){
+                keyframe.frameId = max(0, keyframe.frameId + offsetFrames);
+                keyframe.frameId = min(MAX_FRAMES, keyframe.frameId);
+            }
+        }
+    }
+
+    std::vector<T>& GetKeyFrames(){
+        return m_KeyFrames;
+    }
+
+private:
+    std::vector<T> m_KeyFrames;
+};
+
 class AbstractFrameState : public Object {
 REGISTER_CLASS_TRAITS(kTypeIsAbstract);
 
@@ -32,12 +74,44 @@ public:
         return isValidFrame;
     }
 
-    virtual int GetMaxFrameId() = 0;
     virtual int GetMinFrameId() = 0;
+    virtual int GetMaxFrameId() = 0;
+    virtual void AddAnimationOffset(int offset) = 0;
 
 protected:
     bool isValidFrame;
 };
+
+template<class T>
+class AbstractFrameStateWithKeyType: public AbstractFrameState{
+public:
+    AbstractFrameStateWithKeyType(MemLabelId memLabelId, ObjectCreationMode creationMode)
+        :AbstractFrameState(memLabelId, creationMode)
+    {
+
+    }
+
+    virtual int GetMinFrameId(){
+        return m_KeyFrames.GetMinFrameId();
+    }
+
+    virtual int GetMaxFrameId(){
+        return m_KeyFrames.GetMaxFrameId();
+    }
+
+    void AddAnimationOffset(int offset){
+        m_KeyFrames.AddAnimationOffset(offset);
+    }
+
+    vector<T>& GetKeyFrames(){
+        return m_KeyFrames.GetKeyFrames();
+    }
+
+private:
+    KeyFrameManager<T> m_KeyFrames;
+};
+
+
 
 // TODO: Binary search rather than linear search !!!!
 template<class T>

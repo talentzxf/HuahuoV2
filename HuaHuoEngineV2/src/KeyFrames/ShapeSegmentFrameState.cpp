@@ -12,13 +12,13 @@ IMPLEMENT_OBJECT_SERIALIZE(ShapeSegmentFrameState);
 INSTANTIATE_TEMPLATE_TRANSFER(ShapeSegmentFrameState);
 
 void ShapeSegmentFrameState::RemoveSegment(int index){
-    for(SegmentKeyFrame& segmentKeyFrame: m_KeyFrames){
+    for(SegmentKeyFrame& segmentKeyFrame: GetKeyFrames()){
         segmentKeyFrame.removeSegment(index);
     }
 }
 
 void ShapeSegmentFrameState::RecordSegments(int currentFrameId, float segmentBuffer[], int size) {
-    SegmentKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, this->m_KeyFrames);
+    SegmentKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames());
     pKeyFrame->positionArray.resize(size);
     pKeyFrame->handleOutArray.resize(size);
     pKeyFrame->handleInArray.resize(size);
@@ -53,12 +53,12 @@ std::vector<Vector3f> Lerp(std::vector<Vector3f> &k1, std::vector<Vector3f> &k2,
 template<class TransferFunction>
 void ShapeSegmentFrameState::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-    TRANSFER(m_KeyFrames);
+    TRANSFER(GetKeyFrames());
 }
 
 bool ShapeSegmentFrameState::Apply(int frameId) {
     std::pair<SegmentKeyFrame *, SegmentKeyFrame *> resultKeyFrames;
-    if (FindKeyFramePair(frameId, this->m_KeyFrames, resultKeyFrames)) {
+    if (FindKeyFramePair(frameId, GetKeyFrames(), resultKeyFrames)) {
         this->isValidFrame = true;
         SegmentKeyFrame *k1 = resultKeyFrames.first;
         SegmentKeyFrame *k2 = resultKeyFrames.second;

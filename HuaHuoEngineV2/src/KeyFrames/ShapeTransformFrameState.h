@@ -51,12 +51,12 @@ template<class TransferFunction> void TransformKeyFrame::Transfer(TransferFuncti
     TRANSFER(transformData);
 }
 
-class ShapeTransformFrameState: public AbstractFrameState{
+class ShapeTransformFrameState: public AbstractFrameStateWithKeyType<TransformKeyFrame>{
     REGISTER_CLASS(ShapeTransformFrameState);
     DECLARE_OBJECT_SERIALIZE();
 public:
     ShapeTransformFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
-            :Super(memLabelId, creationMode)
+            :AbstractFrameStateWithKeyType(memLabelId, creationMode)
     {
 
     }
@@ -95,30 +95,7 @@ public:
     void RecordRotation(int frameId, float rotation);
     friend class BaseShape;
 
-    virtual int GetMaxFrameId(){
-        int maxFrameId = -1;
-        for(TransformKeyFrame keyframe: m_KeyFrames){
-            if(keyframe.frameId > maxFrameId){
-                maxFrameId = keyframe.frameId;
-            }
-        }
-
-        return maxFrameId;
-    }
-
-    virtual int GetMinFrameId(){
-        int minFrameId = MAX_FRAMES;
-        for(auto keyframe: m_KeyFrames){
-            if(keyframe.frameId < minFrameId){
-                minFrameId = keyframe.frameId;
-            }
-        }
-
-        return minFrameId;
-    }
 private:
-    std::vector<TransformKeyFrame> m_KeyFrames;
-
     TransformData m_CurrentTransformData;
 };
 

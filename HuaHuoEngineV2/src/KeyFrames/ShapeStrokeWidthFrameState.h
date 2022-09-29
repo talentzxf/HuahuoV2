@@ -24,12 +24,12 @@ template<class TransferFunction> void StrokeWidthKeyFrame::Transfer(TransferFunc
     TRANSFER(strokeWidth);
 }
 
-class ShapeStrokeWidthFrameState : public AbstractFrameState{
+class ShapeStrokeWidthFrameState : public AbstractFrameStateWithKeyType<StrokeWidthKeyFrame>{
     REGISTER_CLASS(ShapeStrokeWidthFrameState);
     DECLARE_OBJECT_SERIALIZE();
 public:
     ShapeStrokeWidthFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
-        :Super(memLabelId, creationMode)
+        :AbstractFrameStateWithKeyType(memLabelId, creationMode)
     {
     }
 
@@ -43,30 +43,8 @@ public:
 
     void RecordStrokeWidth(int frameId, float strokeWidth);
 
-    virtual int GetMaxFrameId(){
-        int maxFrameId = -1;
-        for(StrokeWidthKeyFrame keyframe: m_KeyFrames){
-            if(keyframe.frameId > maxFrameId){
-                maxFrameId = keyframe.frameId;
-            }
-        }
-
-        return maxFrameId;
-    }
-
-    virtual int GetMinFrameId(){
-        int minFrameId = MAX_FRAMES;
-        for(auto keyframe: m_KeyFrames){
-            if(keyframe.frameId < minFrameId){
-                minFrameId = keyframe.frameId;
-            }
-        }
-
-        return minFrameId;
-    }
 private:
     float m_CurrentStrokeWidth;
-    std::vector<StrokeWidthKeyFrame> m_KeyFrames;
 };
 
 

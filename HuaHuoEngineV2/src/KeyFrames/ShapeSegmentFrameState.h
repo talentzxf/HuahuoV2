@@ -56,13 +56,13 @@ void SegmentKeyFrame::Transfer(TransferFunction &transfer) {
     TRANSFER(handleOutArray);
 }
 
-class ShapeSegmentFrameState : public AbstractFrameState {
+class ShapeSegmentFrameState : public AbstractFrameStateWithKeyType<SegmentKeyFrame> {
 REGISTER_CLASS(ShapeSegmentFrameState);
 
 DECLARE_OBJECT_SERIALIZE();
 public:
     ShapeSegmentFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
-            : Super(memLabelId, creationMode) {
+            : AbstractFrameStateWithKeyType(memLabelId, creationMode) {
 
     }
 
@@ -87,50 +87,27 @@ public:
     }
 
     int GetKeyFrameCount() {
-        return m_KeyFrames.size();
+        return GetKeyFrames().size();
     }
 
     void RemoveSegment(int index);
 
     SegmentKeyFrame *GetSegmentKeyFrameAtFrameIndex(int keyFrameIndex) {
-        if (keyFrameIndex >= m_KeyFrames.size()) {
-            printf("Error, totally %d keyframes, but want to get the %dth keyframe.\n", m_KeyFrames.size(),
+        if (keyFrameIndex >= GetKeyFrames().size()) {
+            printf("Error, totally %d keyframes, but want to get the %dth keyframe.\n", GetKeyFrames().size(),
                    keyFrameIndex);
             return NULL;
         }
 
-        return &m_KeyFrames[keyFrameIndex];
+        return &GetKeyFrames()[keyFrameIndex];
     };
 
     friend class BaseShape;
 
-    virtual int GetMaxFrameId(){
-        int maxFrameId = -1;
-        for(SegmentKeyFrame keyframe: m_KeyFrames){
-            if(keyframe.frameId > maxFrameId){
-                maxFrameId = keyframe.frameId;
-            }
-        }
-
-        return maxFrameId;
-    }
-
-    virtual int GetMinFrameId(){
-        int minFrameId = MAX_FRAMES;
-        for(auto keyframe: m_KeyFrames){
-            if(keyframe.frameId < minFrameId){
-                minFrameId = keyframe.frameId;
-            }
-        }
-
-        return minFrameId;
-    }
 private:
     std::vector<Vector3f> m_currentPositionArray;
     std::vector<Vector3f> m_currentHandleInArray;
     std::vector<Vector3f> m_currentHandleOutArray;
-
-    std::vector<SegmentKeyFrame> m_KeyFrames;
 };
 
 

@@ -15,7 +15,7 @@ INSTANTIATE_TEMPLATE_TRANSFER(ShapeFollowCurveFrameState);
 template<class TransferFunction>
 void ShapeFollowCurveFrameState::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-    TRANSFER(m_KeyFrames);
+    TRANSFER(GetKeyFrames());
 }
 
 ShapeFollowCurveData Lerp(ShapeFollowCurveData &k1, ShapeFollowCurveData &k2, float ratio) {
@@ -33,7 +33,7 @@ ShapeFollowCurveData Lerp(ShapeFollowCurveData &k1, ShapeFollowCurveData &k2, fl
 //TODO: Refactor this part. Looks very stupid now!!!
 bool ShapeFollowCurveFrameState::Apply(int frameId) {
     std::pair<ShapeFollowCurveKeyFrame *, ShapeFollowCurveKeyFrame *> resultKeyFrames;
-    if (FindKeyFramePair(frameId, this->m_KeyFrames, resultKeyFrames)) {
+    if (FindKeyFramePair(frameId, GetKeyFrames(), resultKeyFrames)) {
 
         this->isValidFrame = true;
         ShapeFollowCurveKeyFrame *k1 = resultKeyFrames.first;
@@ -66,7 +66,7 @@ bool ShapeFollowCurveFrameState::Apply(int frameId) {
 }
 
 void ShapeFollowCurveFrameState::RecordLengthRatio(int frameId, float lengthRatio) {
-    ShapeFollowCurveKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+    ShapeFollowCurveKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
     pKeyFrame->followCurveData = m_CurrentShapeFollowCurveData;
     pKeyFrame->followCurveData.lengthRatio = lengthRatio;
 
@@ -74,7 +74,7 @@ void ShapeFollowCurveFrameState::RecordLengthRatio(int frameId, float lengthRati
 }
 
 void ShapeFollowCurveFrameState::RecordTargetShape(int frameId, BaseShape *targetCurve) {
-    ShapeFollowCurveKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+    ShapeFollowCurveKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
     pKeyFrame->followCurveData = m_CurrentShapeFollowCurveData;
     pKeyFrame->followCurveData.followCurveTarget = targetCurve;
 

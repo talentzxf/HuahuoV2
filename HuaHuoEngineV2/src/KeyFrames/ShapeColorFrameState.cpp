@@ -14,13 +14,13 @@ INSTANTIATE_TEMPLATE_TRANSFER(ShapeColorFrameState);
 template<class TransferFunction>
 void ShapeColorFrameState::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-    TRANSFER(m_KeyFrames);
+    TRANSFER(GetKeyFrames());
 }
 
 // TODO: Implement this
 bool ShapeColorFrameState::Apply(int frameId) {
     std::pair<ColorKeyFrame *, ColorKeyFrame *> resultKeyFrames;
-    if (FindKeyFramePair(frameId, this->m_KeyFrames, resultKeyFrames)) {
+    if (FindKeyFramePair(frameId, GetKeyFrames(), resultKeyFrames)) {
         this->isValidFrame = true;
         ColorKeyFrame *k1 = resultKeyFrames.first;
         ColorKeyFrame *k2 = resultKeyFrames.second;
@@ -39,7 +39,7 @@ bool ShapeColorFrameState::Apply(int frameId) {
 }
 
 void ShapeColorFrameState::RecordColor(int frameId, float r, float g, float b, float a) {
-    ColorKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+    ColorKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames.GetKeyFrames());
     pKeyFrame->color.Set(r, g, b, a);
 
     Apply(frameId);

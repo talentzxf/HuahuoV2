@@ -5,4 +5,3 @@
 #include "FrameState.h"
 
 IMPLEMENT_REGISTER_CLASS(AbstractFrameState, 10007);
-

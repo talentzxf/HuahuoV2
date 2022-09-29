@@ -25,12 +25,12 @@ template<class TransferFunction> void ColorKeyFrame::Transfer(TransferFunction &
 }
 
 
-class ShapeColorFrameState: public AbstractFrameState{
+class ShapeColorFrameState: public AbstractFrameStateWithKeyType<ColorKeyFrame>{
     REGISTER_CLASS(ShapeColorFrameState);
     DECLARE_OBJECT_SERIALIZE();
 public:
     ShapeColorFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
-            :Super(memLabelId, creationMode)
+            :AbstractFrameStateWithKeyType(memLabelId, creationMode)
     {
 
     }
@@ -47,30 +47,9 @@ public:
 
     friend class BaseShape;
 
-    virtual int GetMaxFrameId(){
-        int maxFrameId = -1;
-        for(ColorKeyFrame keyframe: m_KeyFrames){
-            if(keyframe.frameId > maxFrameId){
-                maxFrameId = keyframe.frameId;
-            }
-        }
-
-        return maxFrameId;
-    }
-
-    virtual int GetMinFrameId(){
-        int minFrameId = MAX_FRAMES;
-        for(auto keyframe: m_KeyFrames){
-            if(keyframe.frameId < minFrameId){
-                minFrameId = keyframe.frameId;
-            }
-        }
-
-        return minFrameId;
-    }
 private:
     ColorRGBAf m_CurrentColor;
-    std::vector<ColorKeyFrame> m_KeyFrames;
+    KeyFrameManager<ColorKeyFrame> m_KeyFrames;
 };
 
 

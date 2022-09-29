@@ -13,12 +13,12 @@ INSTANTIATE_TEMPLATE_TRANSFER(ShapeStrokeWidthFrameState);
 template <class TransferFunction>
 void ShapeStrokeWidthFrameState::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-    TRANSFER(m_KeyFrames);
+    TRANSFER(GetKeyFrames());
 }
 
 bool ShapeStrokeWidthFrameState::Apply(int frameId) {
     std::pair<StrokeWidthKeyFrame *, StrokeWidthKeyFrame *> resultKeyFrames;
-    if (FindKeyFramePair(frameId, this->m_KeyFrames, resultKeyFrames)) {
+    if (FindKeyFramePair(frameId, GetKeyFrames(), resultKeyFrames)) {
         this->isValidFrame = true;
         StrokeWidthKeyFrame *k1 = resultKeyFrames.first;
         StrokeWidthKeyFrame *k2 = resultKeyFrames.second;
@@ -37,7 +37,7 @@ bool ShapeStrokeWidthFrameState::Apply(int frameId) {
 }
 
 void ShapeStrokeWidthFrameState::RecordStrokeWidth(int frameId, float strokeWidth) {
-    StrokeWidthKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, this->m_KeyFrames);
+    StrokeWidthKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
     pKeyFrame->strokeWidth = strokeWidth;
     Apply(frameId);
 }
