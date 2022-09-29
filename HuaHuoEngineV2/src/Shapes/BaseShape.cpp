@@ -67,12 +67,21 @@ BaseShape *BaseShape::CreateShape(const char *shapeName) {
     return baseShape;
 }
 
-Layer *BaseShape::GetLayer() {
-    if (!this->mLayer) {
-        this->mLayer = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer();
+// TODO: This logic is not good. Explicit is better than implicit!!!!
+Layer *BaseShape::GetLayer(bool assignDefaultIfNotExist) {
+    if(assignDefaultIfNotExist){
+        if (!this->mLayer) {
+            this->mLayer = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer();
+        }
     }
 
     return mLayer;
+}
+
+int BaseShape::GetStoreId() {
+    if (this->mLayer == NULL)
+        return -1;
+    return this->mLayer->GetObjectStore()->GetStoreId();
 }
 
 AbstractFrameState *BaseShape::AddFrameStateInternal(AbstractFrameState *frameState) {

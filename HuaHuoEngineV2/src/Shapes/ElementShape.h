@@ -23,11 +23,11 @@ public:
         return "ElementShape";
     }
 
-    SInt32 GetStoreId(){
+    SInt32 GetElementStoreId(){
         return mStoreId;
     }
 
-    void SetStoreId(SInt32 storeId){
+    void SetElementStoreId(SInt32 storeId){
         mStoreId = storeId;
     }
 

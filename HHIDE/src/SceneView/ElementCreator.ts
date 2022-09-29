@@ -172,7 +172,7 @@ class ElementCreator {
                 }
             }
 
-            let newElement = this.onNewElement(false)
+            let newElement = this.onNewElement(false) as ElementShapeJS
             // Create Layer for the store as we won't open it. (If we open it, timeline track will create it.)
             huahuoEngine.GetCurrentStore().CreateLayer(newElement.name)
 

@@ -145,6 +145,8 @@ interface BaseShape{
     DOMString GetName();
     void SetName(DOMString name);
 
+    long GetStoreId();
+
     void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
@@ -162,7 +164,7 @@ interface BaseShape{
     ColorRGBAf GetColor();
     ColorRGBAf GetStrokeColor();
 
-    Layer GetLayer();
+    Layer GetLayer(optional boolean assignDefaultIfNotExist );
 
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
@@ -194,6 +196,8 @@ interface LineShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
+    long GetStoreId();
+
     void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
@@ -208,7 +212,7 @@ interface LineShape{
     ColorRGBAf GetColor();
     ColorRGBAf GetStrokeColor();
 
-    Layer GetLayer();
+    Layer GetLayer(optional boolean assignDefaultIfNotExist );
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
@@ -236,6 +240,8 @@ interface TextShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
+    long GetStoreId();
+
     void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
@@ -250,7 +256,7 @@ interface TextShape{
     ColorRGBAf GetColor();
     ColorRGBAf GetStrokeColor();
 
-    Layer GetLayer();
+    Layer GetLayer(optional boolean assignDefaultIfNotExist );
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
@@ -280,6 +286,8 @@ interface RectangleShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
+    long GetStoreId();
+
     void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
@@ -294,7 +302,7 @@ interface RectangleShape{
     ColorRGBAf GetColor();
     ColorRGBAf GetStrokeColor();
 
-    Layer GetLayer();
+    Layer GetLayer(optional boolean assignDefaultIfNotExist );
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
@@ -324,6 +332,8 @@ interface CircleShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
+    long GetStoreId();
+
     void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
@@ -338,7 +348,7 @@ interface CircleShape{
     ColorRGBAf GetColor();
     ColorRGBAf GetStrokeColor();
 
-    Layer GetLayer();
+    Layer GetLayer(optional boolean assignDefaultIfNotExist );
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
@@ -373,6 +383,8 @@ interface AudioShape{
     // inherited from BaseShape
     DOMString GetTypeName();
     DOMString GetName();
+    long GetStoreId();
+
     void SetName(DOMString name);
     void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
@@ -388,7 +400,7 @@ interface AudioShape{
     ColorRGBAf GetColor();
     ColorRGBAf GetStrokeColor();
 
-    Layer GetLayer();
+    Layer GetLayer(optional boolean assignDefaultIfNotExist );
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
@@ -426,6 +438,8 @@ interface ImageShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
+    long GetStoreId();
+
     void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
@@ -440,7 +454,7 @@ interface ImageShape{
     ColorRGBAf GetColor();
     ColorRGBAf GetStrokeColor();
 
-    Layer GetLayer();
+    Layer GetLayer(optional boolean assignDefaultIfNotExist );
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
@@ -466,6 +480,8 @@ interface CurveShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
+    long GetStoreId();
+
     void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
@@ -480,7 +496,7 @@ interface CurveShape{
     ColorRGBAf GetColor();
     ColorRGBAf GetStrokeColor();
 
-    Layer GetLayer();
+    Layer GetLayer(optional boolean assignDefaultIfNotExist );
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
@@ -501,8 +517,8 @@ interface CurveShape{
 
 [NoDelete]
 interface ElementShape{
-    void SetStoreId(long storeId);
-    long GetStoreId();
+    void SetElementStoreId(long storeId);
+    long GetElementStoreId();
 
     void SetBornFrameId(long bornFrameId);
 
@@ -510,6 +526,8 @@ interface ElementShape{
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
+    long GetStoreId();
+
     void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
@@ -524,7 +542,7 @@ interface ElementShape{
     ColorRGBAf GetColor();
     ColorRGBAf GetStrokeColor();
 
-    Layer GetLayer();
+    Layer GetLayer(optional boolean assignDefaultIfNotExist);
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);
     void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);

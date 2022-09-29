@@ -156,7 +156,9 @@ public:
         this->mLayer = layer;
     }
 
-    Layer* GetLayer();
+    int GetStoreId();
+
+    Layer* GetLayer(bool assignDefaultIfNotExist = true);
 
     virtual char* GetTypeName(){
         return "Unknown";

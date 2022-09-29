@@ -40,6 +40,10 @@ abstract class BaseShapeJS {
 
     private shapeFollowCurveFrameState: ShapeFollowCurveFrameState;
 
+    get belongStoreId(): number{
+        return this.rawObj.GetStoreId()
+    }
+
     get typename(): string {
         return this.rawObj.GetTypeName()
     }
@@ -868,7 +872,10 @@ huahuoEngine.ExecuteAfterInited(() => {
         let arg = Module.wrapPointer(baseShapeEventHandler, Module.ShapeLoadedEventArgs)
         let baseShape = arg.GetBaseShape();
 
-        let shapeStoreId = baseShape.GetLayer().GetObjectStore().GetStoreId()
+        let shapeStoreId = baseShape.GetStoreId()
+        if(shapeStoreId < 0)
+            return;
+
         if (shapeStoreId != huahuoEngine.GetCurrentStoreId()) {
             let elementShapes = huahuoEngine.GetElementShapeByStoreId(shapeStoreId)
             if (elementShapes) {

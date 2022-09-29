@@ -62,11 +62,11 @@ class ElementShapeJS extends BaseShapeJS {
     }
 
     get storeId(): number {
-        return this.rawObj.GetStoreId();
+        return this.rawObj.GetElementStoreId();
     }
 
     set storeId(val: number) {
-        this.rawObj.SetStoreId(val)
+        this.rawObj.SetElementStoreId(val)
 
         huahuoEngine.registerElementParent(val, this.getBornStoreId())
     }
