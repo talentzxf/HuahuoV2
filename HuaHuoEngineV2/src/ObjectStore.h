@@ -76,7 +76,7 @@ public:
     }
 
     void SyncLayersInfo(){
-        int maxFrameId = -1;
+        maxFrameId = -1;
         for(PPtr<Layer> layer : layers){
             layer->SyncInfo();
             for(auto shape: layer->GetShapes()){
