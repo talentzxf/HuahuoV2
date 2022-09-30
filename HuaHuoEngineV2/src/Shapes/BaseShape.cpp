@@ -263,3 +263,12 @@ void BaseShape::FrameStatePair::SetComponentPtr(AbstractFrameState *const ptr) {
     component = NULL;
     typeIndex = RTTI::DefaultTypeIndex;
 }
+
+void BaseShape::AddAnimationOffset(int offset) {
+    // Find a component with the requested ID
+    Container::const_iterator i;
+    Container::const_iterator end = mFrameStates.end();
+    for (i = mFrameStates.begin(); i != end; ++i) {
+        i->GetComponentPtr()->AddAnimationOffset(offset);
+    }
+}

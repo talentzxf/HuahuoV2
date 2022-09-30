@@ -162,6 +162,10 @@ abstract class BaseShapeJS {
         return this.rawObj.GetBornFrameId()
     }
 
+    addAnimationOffset(offset){
+        this.rawObj.AddAnimationOffset(offset)
+    }
+
     setParent(parentShape: BaseShapeJS) {
         this.parent = parentShape
         parentShape.paperItem.addChild(this.paperItem)

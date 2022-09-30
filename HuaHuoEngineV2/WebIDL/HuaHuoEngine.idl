@@ -141,6 +141,7 @@ interface BaseShape{
     static BaseShape CreateShape(DOMString shapeName);
 
     // inherited from BaseShape
+    void AddAnimationOffset(long offset);
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
@@ -193,6 +194,7 @@ interface LineShape{
     Vector3f GetEndPoint();
 
     // inherited from BaseShape
+    void AddAnimationOffset(long offset);
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
@@ -237,6 +239,7 @@ interface TextShape{
     DOMString GetText();
 
     // inherited from BaseShape
+    void AddAnimationOffset(long offset);
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
@@ -283,6 +286,7 @@ interface RectangleShape{
     Vector3f GetEndPoint();
 
     // inherited from BaseShape
+    void AddAnimationOffset(long offset);
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
@@ -329,6 +333,7 @@ interface CircleShape{
     float GetRadius();
 
     // inherited from BaseShape
+    void AddAnimationOffset(long offset);
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
@@ -381,6 +386,7 @@ interface AudioShape{
     DOMString GetFileName();
 
     // inherited from BaseShape
+    void AddAnimationOffset(long offset);
     DOMString GetTypeName();
     DOMString GetName();
     long GetStoreId();
@@ -435,6 +441,7 @@ interface ImageShape{
     DOMString GetFileName();
 
     // inherited from BaseShape
+    void AddAnimationOffset(long offset);
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
@@ -477,6 +484,7 @@ interface ImageShape{
 interface CurveShape{
 
     // inherited from BaseShape
+    void AddAnimationOffset(long offset);
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
@@ -523,6 +531,7 @@ interface ElementShape{
     void SetBornFrameId(long bornFrameId);
 
     // inherited from BaseShape
+    void AddAnimationOffset(long offset);
     DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);

@@ -254,6 +254,8 @@ public:
     AbstractFrameState* AddFrameStateByName(const char* frameStateName);
 
     AbstractFrameState* GetFrameStateByName(char* frameStateName);
+
+    void AddAnimationOffset(int offset);
 };
 
 template<class T> inline
