@@ -117,7 +117,8 @@ void Layer::SetObjectStore(ObjectStore *store) {
 void Layer::AddShapeInternal(BaseShape *newShape) {
     newShape->SetLayer(this);
 
-    if(newShape->GetBornFrameId() < 0) // If the born frame has been set already, keep it. This might happen if a shape is moved from one layer to another layer.
+    if (newShape->GetBornFrameId() <
+        0) // If the born frame has been set already, keep it. This might happen if a shape is moved from one layer to another layer.
         newShape->SetBornFrameId(this->currentFrameId);
 
     shapes.push_back(newShape);
@@ -128,8 +129,20 @@ void Layer::AddShapeInternal(BaseShape *newShape) {
     int maxFrameId = newShape->GetMaxFrameId();
     this->objectStore->UpdateMaxFrameId(maxFrameId);
 
-    if(maxFrameId >= 0){
+    if (maxFrameId >= 0) {
         // Merge from 0 to current maxFrameId
         this->GetTimeLineCellManager()->MergeCells(0, maxFrameId);
+    }
+}
+
+void Layer::SyncInfo() {
+    keyFrames.clear();
+    for (auto shapePtr: this->shapes) {
+        shapePtr->RefreshKeyFrameCache();
+        int keyFrameCount = shapePtr->GetKeyFrameCount();
+        for (int keyFrameIdx = 0; keyFrameIdx < keyFrameCount; keyFrameIdx++) {
+            int keyFrameId = shapePtr->GetKeyFrameAtIdx(keyFrameIdx);
+            this->AddKeyFrame(keyFrameId, shapePtr);
+        }
     }
 }

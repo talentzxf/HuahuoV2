@@ -159,6 +159,8 @@ public:
 
     void RemoveShape(BaseShape* shape);
 
+    void SyncInfo();
+
 private:
     // Frame Id-- starting from 0.
     int currentFrameId;

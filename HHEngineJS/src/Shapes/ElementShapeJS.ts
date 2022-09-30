@@ -170,6 +170,10 @@ class ElementShapeJS extends BaseShapeJS {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStoreId)
         }
     }
+
+    syncStoreLayerInfo(){
+        huahuoEngine.GetDefaultObjectStoreManager().GetStoreById(this.storeId).SyncLayersInfo()
+    }
 }
 
 shapeFactory.RegisterClass(shapeName, ElementShapeJS.createElement)

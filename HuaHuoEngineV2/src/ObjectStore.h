@@ -75,6 +75,17 @@ public:
         return this->maxFrameId;
     }
 
+    void SyncLayersInfo(){
+        int maxFrameId = -1;
+        for(PPtr<Layer> layer : layers){
+            layer->SyncInfo();
+            for(auto shape: layer->GetShapes()){
+                if(shape->GetMaxFrameId() > maxFrameId)
+                    maxFrameId = shape->GetMaxFrameId();
+            }
+        }
+    }
+
 private:
     UInt32 mStoreId;
     int maxFrameId;

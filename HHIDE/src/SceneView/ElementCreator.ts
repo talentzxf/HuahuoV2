@@ -197,6 +197,7 @@ class ElementCreator {
                 shape.bornFrameId -= bornFrameId
             }
 
+            newElement.syncStoreLayerInfo() // Update the maxFrameId and keyFrameIds in the layer.
             newElement.update()
 
             return newElement
