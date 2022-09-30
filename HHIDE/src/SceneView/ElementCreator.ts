@@ -178,7 +178,7 @@ class ElementCreator {
 
             // It's much easier to align element with the global coordinate. Or else we need to set the position for all the keyframes
             // of all the underlying shapes!
-            newElement.position = new paper.Point(0,0)
+            newElement.position = newElement.globalToLocal(new paper.Point(0,0))
 
             // BornFrame of the element is the min of all underlying shapes.
             let bornFrameId = newElement.bornFrameId
