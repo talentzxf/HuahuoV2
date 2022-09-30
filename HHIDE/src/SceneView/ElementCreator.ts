@@ -197,12 +197,6 @@ class ElementCreator {
                 shape.bornFrameId -= bornFrameId
             }
 
-            // Set the element frameId as expected frameId.
-            // Because when elements are just created, it's frameId is zero.
-            // But maybe people are operating in a frame that's not 0.
-            // And since we don't have a setCurrentFrame for a single shape, we refresh the whole layer.
-            let currentFrameId = newElement.calculateLocalFrame()
-            newElement.getLayer().SetCurrentFrame(currentFrameId) // Update the layer, so the element itself get updated.
             newElement.update()
 
             return newElement
