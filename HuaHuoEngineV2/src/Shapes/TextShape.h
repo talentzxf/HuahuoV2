@@ -19,7 +19,7 @@ public:
 
     }
 
-    virtual char* GetTypeName() override{
+    virtual const char* GetTypeName() override{
         return "TextShape";
     }
 

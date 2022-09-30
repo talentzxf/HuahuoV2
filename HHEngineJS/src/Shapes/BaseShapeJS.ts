@@ -162,6 +162,10 @@ abstract class BaseShapeJS {
         return this.rawObj.GetBornFrameId()
     }
 
+    set bornFrameId(val:number){
+        this.rawObj.SetBornFrameId(val)
+    }
+
     addAnimationOffset(offset){
         this.rawObj.AddAnimationOffset(offset)
     }

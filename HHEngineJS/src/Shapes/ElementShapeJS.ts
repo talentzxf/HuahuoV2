@@ -71,7 +71,7 @@ class ElementShapeJS extends BaseShapeJS {
         huahuoEngine.registerElementParent(val, this.getBornStoreId())
     }
 
-    // Not sure why, but if we don't write this getter, it will fail??
+    // Not sure why, but if we don't write this getter/setter, it will fail??
     get bornFrameId(){
         return this.rawObj.GetBornFrameId()
     }

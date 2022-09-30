@@ -194,6 +194,7 @@ class ElementCreator {
                 shape.removePaperObj()
                 newElement.addShape(shape)
                 shape.addAnimationOffset(-bornFrameId);
+                shape.bornFrameId -= bornFrameId
             }
 
             // Set the element frameId as expected frameId.

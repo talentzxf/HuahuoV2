@@ -160,7 +160,7 @@ public:
 
     Layer* GetLayer(bool assignDefaultIfNotExist = true);
 
-    virtual char* GetTypeName(){
+    virtual const char* GetTypeName(){
         return "Unknown";
     }
 

@@ -141,8 +141,9 @@ interface BaseShape{
     static BaseShape CreateShape(DOMString shapeName);
 
     // inherited from BaseShape
+    void SetBornFrameId(long bornFrameId);
     void AddAnimationOffset(long offset);
-    DOMString GetTypeName();
+    [Const] DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
 
@@ -194,8 +195,9 @@ interface LineShape{
     Vector3f GetEndPoint();
 
     // inherited from BaseShape
+    void SetBornFrameId(long bornFrameId);
     void AddAnimationOffset(long offset);
-    DOMString GetTypeName();
+    [Const] DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
     long GetStoreId();
@@ -239,8 +241,9 @@ interface TextShape{
     DOMString GetText();
 
     // inherited from BaseShape
+    void SetBornFrameId(long bornFrameId);
     void AddAnimationOffset(long offset);
-    DOMString GetTypeName();
+    [Const] DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
     long GetStoreId();
@@ -286,8 +289,9 @@ interface RectangleShape{
     Vector3f GetEndPoint();
 
     // inherited from BaseShape
+    void SetBornFrameId(long bornFrameId);
     void AddAnimationOffset(long offset);
-    DOMString GetTypeName();
+    [Const] DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
     long GetStoreId();
@@ -333,8 +337,9 @@ interface CircleShape{
     float GetRadius();
 
     // inherited from BaseShape
+    void SetBornFrameId(long bornFrameId);
     void AddAnimationOffset(long offset);
-    DOMString GetTypeName();
+    [Const] DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
     long GetStoreId();
@@ -386,8 +391,9 @@ interface AudioShape{
     DOMString GetFileName();
 
     // inherited from BaseShape
+    void SetBornFrameId(long bornFrameId);
     void AddAnimationOffset(long offset);
-    DOMString GetTypeName();
+    [Const] DOMString GetTypeName();
     DOMString GetName();
     long GetStoreId();
 
@@ -441,8 +447,9 @@ interface ImageShape{
     DOMString GetFileName();
 
     // inherited from BaseShape
+    void SetBornFrameId(long bornFrameId);
     void AddAnimationOffset(long offset);
-    DOMString GetTypeName();
+    [Const] DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
     long GetStoreId();
@@ -484,8 +491,9 @@ interface ImageShape{
 interface CurveShape{
 
     // inherited from BaseShape
+    void SetBornFrameId(long bornFrameId);
     void AddAnimationOffset(long offset);
-    DOMString GetTypeName();
+    [Const] DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
     long GetStoreId();
@@ -528,11 +536,10 @@ interface ElementShape{
     void SetElementStoreId(long storeId);
     long GetElementStoreId();
 
-    void SetBornFrameId(long bornFrameId);
-
     // inherited from BaseShape
+    void SetBornFrameId(long bornFrameId);
     void AddAnimationOffset(long offset);
-    DOMString GetTypeName();
+    [Const] DOMString GetTypeName();
     DOMString GetName();
     void SetName(DOMString name);
     long GetStoreId();

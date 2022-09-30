@@ -18,7 +18,7 @@ public:
     {
     }
 
-    virtual char* GetTypeName(){
+    virtual const char* GetTypeName(){
         return "CurveShape";
     }
 
