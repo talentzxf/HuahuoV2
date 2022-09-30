@@ -38,10 +38,10 @@ public:
     }
 
     virtual void AddAnimationOffset(int offsetFrames){
-        for(auto keyframe: m_KeyFrames){
-            if(keyframe.frameId >= 0){
-                keyframe.frameId = max(0, keyframe.frameId + offsetFrames);
-                keyframe.frameId = min(MAX_FRAMES, keyframe.frameId);
+        for(auto keyframeItr = m_KeyFrames.begin(); keyframeItr != m_KeyFrames.end(); keyframeItr++ ){
+            if(keyframeItr->frameId >= 0){
+                keyframeItr->frameId = max(0, keyframeItr->frameId + offsetFrames);
+                keyframeItr->frameId = min(MAX_FRAMES, keyframeItr->frameId);
             }
         }
     }
@@ -74,6 +74,8 @@ public:
         return isValidFrame;
     }
 
+    virtual const vector<int> GetKeyFrameIds() = 0;
+
     virtual int GetMinFrameId() = 0;
     virtual int GetMaxFrameId() = 0;
     virtual void AddAnimationOffset(int offset) = 0;
@@ -105,6 +107,15 @@ public:
 
     vector<T>& GetKeyFrames(){
         return m_KeyFrames.GetKeyFrames();
+    }
+
+    const vector<int> GetKeyFrameIds(){
+        vector<int> keyFrameIds;
+        vector<T>& keyFrames = GetKeyFrames();
+        for(auto itr = keyFrames.begin(); itr != keyFrames.end(); itr++){
+            keyFrameIds.push_back(itr->frameId);
+        }
+        return keyFrameIds;
     }
 
 private:

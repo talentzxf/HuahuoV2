@@ -69,6 +69,7 @@ private:
     SInt32 mIndex;
     bool mIsVisible;
     std::string mShapeName;
+    std::vector<int> mKeyFrameCache;
 
 private:
     AbstractFrameState* AddFrameStateInternal(AbstractFrameState* frameState);
@@ -91,8 +92,8 @@ public:
     }
 
     /// Get and set the name
-    virtual char* GetName() const override{
-        return const_cast<char*>(mShapeName.c_str());
+    virtual const char* GetName() const override{
+        return mShapeName.c_str();
     }
 
     virtual void SetName(char const* name) override{
@@ -253,9 +254,36 @@ public:
 
     AbstractFrameState* AddFrameStateByName(const char* frameStateName);
 
-    AbstractFrameState* GetFrameStateByName(char* frameStateName);
+    AbstractFrameState* GetFrameStateByName(const char* frameStateName);
 
     void AddAnimationOffset(int offset);
+
+    void RefreshKeyFrameCache(){
+        Container::const_iterator end = mFrameStates.end();
+
+        std::set<int> keyFrames;
+        for (Container::const_iterator i = mFrameStates.begin(); i != end; ++i) {
+            const vector<int>& keyFrameIds = i->GetComponentPtr()->GetKeyFrameIds();
+            for(auto itr = keyFrameIds.begin(); itr != keyFrameIds.end(); itr++){
+                keyFrames.insert(*itr);
+            }
+        }
+
+        mKeyFrameCache.clear();
+        for(auto setItr = keyFrames.begin(); setItr != keyFrames.end(); setItr++){
+            mKeyFrameCache.push_back(*setItr);
+        }
+    }
+
+    int GetKeyFrameCount(){
+        return mKeyFrameCache.size();
+    }
+
+    int GetKeyFrameAtIdx(int idx){
+        if(idx >= mKeyFrameCache.size())
+            return -1;
+        return mKeyFrameCache[idx];
+    }
 };
 
 template<class T> inline

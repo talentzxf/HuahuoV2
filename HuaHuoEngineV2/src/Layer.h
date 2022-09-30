@@ -96,8 +96,8 @@ public:
         this->name = name;
     }
 
-    virtual char *GetName() const override {
-        return const_cast<char *>(this->name.c_str());
+    virtual const char *GetName() const override {
+        return this->name.c_str();
     }
 
     void SetCurrentFrame(int currentFrameId) {

@@ -84,7 +84,7 @@ public:
     float GetRotation(){
         if(isValidFrame)
             return m_CurrentTransformData.rotation;
-        return NULL;
+        return 0.0f;
     }
 
     void RecordLocalPivotPosition(int frameId, float x, float y, float z);

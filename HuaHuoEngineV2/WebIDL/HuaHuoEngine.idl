@@ -53,7 +53,7 @@ interface Layer{
     void SetName(DOMString name);
     void SetCurrentFrame(long frameId);
     long GetCurrentFrame();
-    DOMString GetName();
+    [Const] DOMString GetName();
     TimeLineCellManager GetTimeLineCellManager();
     boolean IsKeyFrame(long frameId);
 
@@ -144,7 +144,7 @@ interface BaseShape{
     void SetBornFrameId(long bornFrameId);
     void AddAnimationOffset(long offset);
     [Const] DOMString GetTypeName();
-    DOMString GetName();
+    [Const] DOMString GetName();
     void SetName(DOMString name);
 
     long GetStoreId();
@@ -154,7 +154,7 @@ interface BaseShape{
     Vector3f GetGlobalPivotPosition();
     Vector3f GetLocalPivotPosition();
 
-    AbstractFrameState GetFrameStateByName(DOMString frameStateName);
+    AbstractFrameState GetFrameStateByName([Const] DOMString frameStateName);
 
     float GetRotation();
     void SetRotation(float rotation);
@@ -185,6 +185,10 @@ interface BaseShape{
     void SetStrokeWidth(float strokeWidth);
     float GetStrokeWidth();
     long GetBornFrameId();
+
+    void RefreshKeyFrameCache();
+    long GetKeyFrameCount();
+    long GetKeyFrameAtIdx(long idx);
 };
 
 [NoDelete]

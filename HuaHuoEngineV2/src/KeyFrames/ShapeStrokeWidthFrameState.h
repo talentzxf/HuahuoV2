@@ -38,7 +38,7 @@ public:
     float GetStrokeWidth(){
         if(isValidFrame)
             return m_CurrentStrokeWidth;
-        return NULL;
+        return 0.0f;
     }
 
     void RecordStrokeWidth(int frameId, float strokeWidth);
