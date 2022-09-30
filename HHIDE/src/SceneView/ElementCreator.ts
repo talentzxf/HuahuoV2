@@ -176,23 +176,32 @@ class ElementCreator {
             // Create Layer for the store as we won't open it. (If we open it, timeline track will create it.)
             huahuoEngine.GetCurrentStore().CreateLayer(newElement.name)
 
+            // It's much easier to align element with the global coordinate. Or else we need to set the position for all the keyframes
+            // of all the underlying shapes!
+            newElement.position = new paper.Point(0,0)
+
+            // BornFrame of the element is the min of all underlying shapes.
             let bornFrameId = newElement.bornFrameId
+
             for(let shape of shapes){
                 if(shape.bornFrameId < bornFrameId)
                     bornFrameId = shape.bornFrameId
+            }
+            newElement.bornFrameId = bornFrameId
 
-                let currentPosition = shape.position
-                let currentGlobalPosition = shape.localToGlobal(currentPosition)
-                let newParentPosition = newElement.globalToLocal(currentGlobalPosition)
-                shape.position = newParentPosition
-
+            // Update the position of all the shapes.
+            for(let shape of shapes){
                 shape.removePaperObj()
                 newElement.addShape(shape)
             }
 
+            // Set the element frameId as expected frameId.
+            // Because when elements are just created, it's frameId is zero.
+            // But maybe people are operating in a frame that's not 0.
+            // And since we don't have a setCurrentFrame for a single shape, we refresh the whole layer.
+            let currentFrameId = newElement.calculateLocalFrame()
+            newElement.getLayer().SetCurrentFrame(currentFrameId) // Update the layer, so the element itself get updated.
             newElement.update()
-
-            newElement.bornFrameId = bornFrameId
 
             return newElement
         }finally {
