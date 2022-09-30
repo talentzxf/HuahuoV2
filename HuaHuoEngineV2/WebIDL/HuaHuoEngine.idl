@@ -193,93 +193,17 @@ interface LineShape{
     void SetEndPoint(float x, float y, float z);
     Vector3f GetStartPoint();
     Vector3f GetEndPoint();
-
-    // inherited from BaseShape
-    void SetBornFrameId(long bornFrameId);
-    void AddAnimationOffset(long offset);
-    [Const] DOMString GetTypeName();
-    DOMString GetName();
-    void SetName(DOMString name);
-    long GetStoreId();
-
-    void SetLocalPivotPosition(float x, float y, float z);
-    void SetGlobalPivotPosition(float x, float y, float z);
-    Vector3f GetGlobalPivotPosition();
-    Vector3f GetLocalPivotPosition();
-    float GetRotation();
-    void SetRotation(float rotation);
-    void SetScale(float xScale, float yScale, float zScale);
-    Vector3f GetScale();
-
-    void SetColor(float r, float g, float b, float a);
-    void SetStrokeColor(float r, float g, float b, float a);
-    ColorRGBAf GetColor();
-    ColorRGBAf GetStrokeColor();
-
-    Layer GetLayer(optional boolean assignDefaultIfNotExist );
-    boolean IsVisible();
-    void SetSegments(float[] segmentBuffer, long size);
-    void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
-    void RemoveSegment(long index);
-
-    long GetSegmentKeyFrameCount();
-    long GetSegmentCount();
-    Vector3f GetSegmentPosition(long segmentId);
-    Vector3f GetSegmentHandleIn(long segmentId);
-    Vector3f GetSegmentHandleOut(long segmentId);
-    SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
-    long GetIndex();
-    void SetIndex(long index);
-    void SetStrokeWidth(float strokeWidth);
-    float GetStrokeWidth();
-    long GetBornFrameId();
 };
+
+LineShape implements BaseShape;
 
 [NoDelete]
 interface TextShape{
     void SetText(DOMString inText);
     DOMString GetText();
-
-    // inherited from BaseShape
-    void SetBornFrameId(long bornFrameId);
-    void AddAnimationOffset(long offset);
-    [Const] DOMString GetTypeName();
-    DOMString GetName();
-    void SetName(DOMString name);
-    long GetStoreId();
-
-    void SetLocalPivotPosition(float x, float y, float z);
-    void SetGlobalPivotPosition(float x, float y, float z);
-    Vector3f GetGlobalPivotPosition();
-    Vector3f GetLocalPivotPosition();
-    float GetRotation();
-    void SetRotation(float rotation);
-    void SetScale(float xScale, float yScale, float zScale);
-    Vector3f GetScale();
-
-    void SetColor(float r, float g, float b, float a);
-    void SetStrokeColor(float r, float g, float b, float a);
-    ColorRGBAf GetColor();
-    ColorRGBAf GetStrokeColor();
-
-    Layer GetLayer(optional boolean assignDefaultIfNotExist );
-    boolean IsVisible();
-    void SetSegments(float[] segmentBuffer, long size);
-    void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
-    void RemoveSegment(long index);
-
-    long GetSegmentKeyFrameCount();
-    long GetSegmentCount();
-    Vector3f GetSegmentPosition(long segmentId);
-    Vector3f GetSegmentHandleIn(long segmentId);
-    Vector3f GetSegmentHandleOut(long segmentId);
-    SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
-    long GetIndex();
-    void SetIndex(long index);
-    void SetStrokeWidth(float strokeWidth);
-    float GetStrokeWidth();
-    long GetBornFrameId();
 };
+
+TextShape implements BaseShape;
 
 [NoDelete]
 interface RectangleShape{
@@ -287,47 +211,9 @@ interface RectangleShape{
     void SetEndPoint(float x, float y, float z);
     Vector3f GetStartPoint();
     Vector3f GetEndPoint();
-
-    // inherited from BaseShape
-    void SetBornFrameId(long bornFrameId);
-    void AddAnimationOffset(long offset);
-    [Const] DOMString GetTypeName();
-    DOMString GetName();
-    void SetName(DOMString name);
-    long GetStoreId();
-
-    void SetLocalPivotPosition(float x, float y, float z);
-    void SetGlobalPivotPosition(float x, float y, float z);
-    Vector3f GetGlobalPivotPosition();
-    Vector3f GetLocalPivotPosition();
-    float GetRotation();
-    void SetRotation(float rotation);
-    void SetScale(float xScale, float yScale, float zScale);
-    Vector3f GetScale();
-
-    void SetColor(float r, float g, float b, float a);
-    void SetStrokeColor(float r, float g, float b, float a);
-    ColorRGBAf GetColor();
-    ColorRGBAf GetStrokeColor();
-
-    Layer GetLayer(optional boolean assignDefaultIfNotExist );
-    boolean IsVisible();
-    void SetSegments(float[] segmentBuffer, long size);
-    void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
-    void RemoveSegment(long index);
-
-    long GetSegmentKeyFrameCount();
-    long GetSegmentCount();
-    Vector3f GetSegmentPosition(long segmentId);
-    Vector3f GetSegmentHandleIn(long segmentId);
-    Vector3f GetSegmentHandleOut(long segmentId);
-    SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
-    long GetIndex();
-    void SetIndex(long index);
-    void SetStrokeWidth(float strokeWidth);
-    float GetStrokeWidth();
-    long GetBornFrameId();
 };
+
+RectangleShape implements BaseShape;
 
 [NoDelete]
 interface CircleShape{
@@ -335,248 +221,52 @@ interface CircleShape{
     void SetRadius(float radius);
     Vector3f GetCenter();
     float GetRadius();
+};
 
-    // inherited from BaseShape
-    void SetBornFrameId(long bornFrameId);
-    void AddAnimationOffset(long offset);
-    [Const] DOMString GetTypeName();
-    DOMString GetName();
-    void SetName(DOMString name);
-    long GetStoreId();
+CircleShape implements BaseShape;
 
-    void SetLocalPivotPosition(float x, float y, float z);
-    void SetGlobalPivotPosition(float x, float y, float z);
-    Vector3f GetGlobalPivotPosition();
-    Vector3f GetLocalPivotPosition();
-    float GetRotation();
-    void SetRotation(float rotation);
-    void SetScale(float xScale, float yScale, float zScale);
-    Vector3f GetScale();
-
-    void SetColor(float r, float g, float b, float a);
-    void SetStrokeColor(float r, float g, float b, float a);
-    ColorRGBAf GetColor();
-    ColorRGBAf GetStrokeColor();
-
-    Layer GetLayer(optional boolean assignDefaultIfNotExist );
-    boolean IsVisible();
-    void SetSegments(float[] segmentBuffer, long size);
-    void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
-    void RemoveSegment(long index);
-
-    long GetSegmentKeyFrameCount();
-    long GetSegmentCount();
-    Vector3f GetSegmentPosition(long segmentId);
-    Vector3f GetSegmentHandleIn(long segmentId);
-    Vector3f GetSegmentHandleOut(long segmentId);
-    SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
-    long GetIndex();
-    void SetIndex(long index);
-    void SetStrokeWidth(float strokeWidth);
-    float GetStrokeWidth();
-    long GetBornFrameId();
+[NoDelete]
+interface AbstractMediaShape{
+    // inherited from AbstractMediaShape
+    octet GetDataAtIndex(long index);
+    void LoadData(octet[] pData);
+    long GetDataSize();
+    void SetData(octet[] pData, long dataSize);
+    void SetMimeType(DOMString type);
+    DOMString GetMimeType();
+    void SetFileName(DOMString fName);
+    DOMString GetFileName();
 };
 
 [NoDelete]
 interface AudioShape{
 
-    // inherited from AbstractMediaShape
-    octet GetDataAtIndex(long index);
-    void LoadData(octet[] pData);
-    long GetDataSize();
-    void SetData(octet[] pData, long dataSize);
-    void SetMimeType(DOMString type);
-    DOMString GetMimeType();
-    void SetFileName(DOMString fName);
-    DOMString GetFileName();
-
-    // inherited from BaseShape
-    void SetBornFrameId(long bornFrameId);
-    void AddAnimationOffset(long offset);
-    [Const] DOMString GetTypeName();
-    DOMString GetName();
-    long GetStoreId();
-
-    void SetName(DOMString name);
-    void SetLocalPivotPosition(float x, float y, float z);
-    void SetGlobalPivotPosition(float x, float y, float z);
-    Vector3f GetGlobalPivotPosition();
-    Vector3f GetLocalPivotPosition();
-    float GetRotation();
-    void SetRotation(float rotation);
-    void SetScale(float xScale, float yScale, float zScale);
-    Vector3f GetScale();
-
-    void SetColor(float r, float g, float b, float a);
-    void SetStrokeColor(float r, float g, float b, float a);
-    ColorRGBAf GetColor();
-    ColorRGBAf GetStrokeColor();
-
-    Layer GetLayer(optional boolean assignDefaultIfNotExist );
-    boolean IsVisible();
-    void SetSegments(float[] segmentBuffer, long size);
-    void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
-    void RemoveSegment(long index);
-
-    long GetSegmentKeyFrameCount();
-    long GetSegmentCount();
-    Vector3f GetSegmentPosition(long segmentId);
-    Vector3f GetSegmentHandleIn(long segmentId);
-    Vector3f GetSegmentHandleOut(long segmentId);
-    SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
-    long GetIndex();
-    void SetIndex(long index);
-    void SetStrokeWidth(float strokeWidth);
-    float GetStrokeWidth();
-    long GetBornFrameId();
 };
+
+AudioShape implements BaseShape;
+AudioShape implements AbstractMediaShape;
 
 [NoDelete]
 interface ImageShape{
     boolean GetIsAnimation();
     void SetIsAnimation(boolean isAnimation);
-
-    // inherited from AbstractMediaShape
-    octet GetDataAtIndex(long index);
-    void LoadData(octet[] pData);
-    long GetDataSize();
-    void SetData(octet[] pData, long dataSize);
-    void SetMimeType(DOMString type);
-    DOMString GetMimeType();
-    void SetFileName(DOMString fName);
-    DOMString GetFileName();
-
-    // inherited from BaseShape
-    void SetBornFrameId(long bornFrameId);
-    void AddAnimationOffset(long offset);
-    [Const] DOMString GetTypeName();
-    DOMString GetName();
-    void SetName(DOMString name);
-    long GetStoreId();
-
-    void SetLocalPivotPosition(float x, float y, float z);
-    void SetGlobalPivotPosition(float x, float y, float z);
-    Vector3f GetGlobalPivotPosition();
-    Vector3f GetLocalPivotPosition();
-    float GetRotation();
-    void SetRotation(float rotation);
-    void SetScale(float xScale, float yScale, float zScale);
-    Vector3f GetScale();
-
-    void SetColor(float r, float g, float b, float a);
-    void SetStrokeColor(float r, float g, float b, float a);
-    ColorRGBAf GetColor();
-    ColorRGBAf GetStrokeColor();
-
-    Layer GetLayer(optional boolean assignDefaultIfNotExist );
-    boolean IsVisible();
-    void SetSegments(float[] segmentBuffer, long size);
-    void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
-    void RemoveSegment(long index);
-
-    long GetSegmentKeyFrameCount();
-    long GetSegmentCount();
-    Vector3f GetSegmentPosition(long segmentId);
-    Vector3f GetSegmentHandleIn(long segmentId);
-    Vector3f GetSegmentHandleOut(long segmentId);
-    SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
-    long GetIndex();
-    void SetIndex(long index);
-    void SetStrokeWidth(float strokeWidth);
-    float GetStrokeWidth();
-    long GetBornFrameId();
 };
+
+ImageShape implements BaseShape;
+ImageShape implements AbstractMediaShape;
 
 [NoDelete]
 interface CurveShape{
-
-    // inherited from BaseShape
-    void SetBornFrameId(long bornFrameId);
-    void AddAnimationOffset(long offset);
-    [Const] DOMString GetTypeName();
-    DOMString GetName();
-    void SetName(DOMString name);
-    long GetStoreId();
-
-    void SetLocalPivotPosition(float x, float y, float z);
-    void SetGlobalPivotPosition(float x, float y, float z);
-    Vector3f GetGlobalPivotPosition();
-    Vector3f GetLocalPivotPosition();
-    float GetRotation();
-    void SetRotation(float rotation);
-    void SetScale(float xScale, float yScale, float zScale);
-    Vector3f GetScale();
-
-    void SetColor(float r, float g, float b, float a);
-    void SetStrokeColor(float r, float g, float b, float a);
-    ColorRGBAf GetColor();
-    ColorRGBAf GetStrokeColor();
-
-    Layer GetLayer(optional boolean assignDefaultIfNotExist );
-    boolean IsVisible();
-    void SetSegments(float[] segmentBuffer, long size);
-    void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
-    void RemoveSegment(long index);
-
-    long GetSegmentKeyFrameCount();
-    long GetSegmentCount();
-    Vector3f GetSegmentPosition(long segmentId);
-    Vector3f GetSegmentHandleIn(long segmentId);
-    Vector3f GetSegmentHandleOut(long segmentId);
-    SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
-    long GetIndex();
-    void SetIndex(long index);
-    void SetStrokeWidth(float strokeWidth);
-    float GetStrokeWidth();
-    long GetBornFrameId();
 };
+
+CurveShape implements BaseShape;
 
 [NoDelete]
 interface ElementShape{
     void SetElementStoreId(long storeId);
     long GetElementStoreId();
-
-    // inherited from BaseShape
-    void SetBornFrameId(long bornFrameId);
-    void AddAnimationOffset(long offset);
-    [Const] DOMString GetTypeName();
-    DOMString GetName();
-    void SetName(DOMString name);
-    long GetStoreId();
-
-    void SetLocalPivotPosition(float x, float y, float z);
-    void SetGlobalPivotPosition(float x, float y, float z);
-    Vector3f GetGlobalPivotPosition();
-    Vector3f GetLocalPivotPosition();
-    float GetRotation();
-    void SetRotation(float rotation);
-    void SetScale(float xScale, float yScale, float zScale);
-    Vector3f GetScale();
-
-    void SetColor(float r, float g, float b, float a);
-    void SetStrokeColor(float r, float g, float b, float a);
-    ColorRGBAf GetColor();
-    ColorRGBAf GetStrokeColor();
-
-    Layer GetLayer(optional boolean assignDefaultIfNotExist);
-    boolean IsVisible();
-    void SetSegments(float[] segmentBuffer, long size);
-    void SetSegmentsAtFrame(float[] segmentBuffer, long size, long keyFrameId);
-    void RemoveSegment(long index);
-
-    long GetSegmentKeyFrameCount();
-    long GetSegmentCount();
-    Vector3f GetSegmentPosition(long segmentId);
-    Vector3f GetSegmentHandleIn(long segmentId);
-    Vector3f GetSegmentHandleOut(long segmentId);
-    SegmentKeyFrame GetSegmentKeyFrameAtKeyFrameIndex(long keyFrameIndex);
-    long GetIndex();
-    void SetIndex(long index);
-
-    void SetStrokeWidth(float strokeWidth);
-    float GetStrokeWidth();
-    long GetBornFrameId();
 };
+ElementShape implements BaseShape;
 
 interface HuaHuoEngine {
     static HuaHuoEngine GetInstance();
