@@ -36,6 +36,8 @@ class HHTimeline extends HTMLElement {
 
     private isInited: boolean = false
 
+    private maxCellId: number = -1;
+
     connectedCallback() {
         if(!this.isInited) {
 
@@ -79,6 +81,10 @@ class HHTimeline extends HTMLElement {
 
             this.isInited = true
         }
+    }
+
+    setMaxCellId(maxCellId){
+        this.maxCellId = maxCellId
     }
 
     setTimeElapsed(playTime) {
@@ -323,7 +329,7 @@ class HHTimeline extends HTMLElement {
         }
 
         for (let track of this.timelineTracks) {
-            track.drawTrack(this.canvasStartPos - maxTrackNameLength, this.canvasEndPos);
+            track.drawTrack(this.canvasStartPos - maxTrackNameLength, this.canvasEndPos, this.maxCellId);
         }
     }
 }

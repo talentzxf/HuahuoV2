@@ -279,7 +279,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.iconClickFuncArray.push([xMin, xMax, onclickFunc])
     }
 
-    drawTrack(canvasStartPos: number, canvasEndPos: number) {
+    drawTrack(canvasStartPos: number, canvasEndPos: number, maxCellId: number = -1) {
         this.canvasStartPos = canvasStartPos
         this.canvasEndPos = canvasEndPos
 
@@ -319,14 +319,14 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         if (this.cellManager == null) {
             let _this = this
             this.pendingFuncs.push(function () {
-                _this.drawTrackInternal()
+                _this.drawTrackInternal(maxCellId)
             })
         } else {
-            this.drawTrackInternal()
+            this.drawTrackInternal(maxCellId)
         }
     }
 
-    drawTrackInternal() {
+    drawTrackInternal(maxCellId: number = -1) {
         let startCellIdx = this.calculateCellIdx(this.canvasStartPos - this.unitCellWidth) // Leave one cell margin
         let endCellIdx = this.calculateCellIdx(this.canvasEndPos + this.unitCellWidth)
 
@@ -343,6 +343,20 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         }
 
         this.drawTimelineIndicator()
+
+        if(maxCellId >= 0){
+            // Draw the red time line indicator
+            let offsetX = this.calculateCanvasOffsetX(maxCellId )
+
+            let oldLineWidth = this.ctx.lineWidth
+            this.ctx.beginPath();
+            this.ctx.strokeStyle = "black"
+            this.ctx.lineWidth = 10;
+            this.ctx.moveTo(offsetX, this.yOffset);
+            this.ctx.lineTo(offsetX, this.yOffset + this.getCellHeight())
+            this.ctx.stroke()
+            this.ctx.lineWidth = oldLineWidth
+        }
     }
 
     drawTimelineIndicator(){

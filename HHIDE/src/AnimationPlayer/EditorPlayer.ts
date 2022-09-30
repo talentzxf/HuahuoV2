@@ -69,7 +69,13 @@ class EditorPlayer extends Player{
         let layer = keyframeChangedArgs.GetLayer()
         let frameId = keyframeChangedArgs.GetFrameId()
 
-        this.timeline.redrawCell(layer, frameId)
+        let maxFrameId = layer.GetObjectStore().GetMaxFrameId()
+        if(maxFrameId >= 0){
+            this.timeline.setMaxCellId(maxFrameId + 1)
+        }
+
+        // this.timeline.redrawCell(layer, frameId)
+        this.timeline.redrawCanvas()
     }
 
     onLayerUpdated(args){
