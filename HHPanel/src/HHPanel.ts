@@ -284,6 +284,10 @@ class HHPanel extends HTMLElement {
         this._tabs = this.querySelector('.title_tabs');
         this._contents = this.querySelector('.panel_contents')
 
+        if(this.getAttribute("dockable")){
+            this._contents.classList.add("dockable")
+        }
+
         if(this.getAttribute("content-style")){
             let style = this.getAttribute("content-style")
             this._contents.style.cssText = style

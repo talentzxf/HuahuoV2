@@ -31,6 +31,12 @@ class HHSideBar extends HTMLElement{
         this.titleBar.innerHTML = title
         this.insertBefore(this.titleBar, content)
         this.titleBar.style.background = "lightgray"
+        this.titleBar.style.userSelect = "none"
+        this.titleBar.style.webkitUserSelect = "none"
+        this.titleBar.style["ms-user-select"] = "none"
+        this.titleBar.style["moz-user-select"] = "none"
+        this.titleBar.style["webkit-touch-callout"] = "none"
+        this.titleBar.style["khtml-user-select"] = "none"
 
         this.style.position = "absolute"
         this.style.position = "absolute"
