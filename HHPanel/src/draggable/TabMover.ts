@@ -18,7 +18,7 @@ class TabMover{
 
     private handlerChain: ResponsibleChain<TabMoveParam> = new ResponsibleChain<TabMoveParam>();
 
-    private constructor() {
+    protected constructor() {
         // Default behaviour, drag out of all the title bar holders.
         this.AddBack(this.DefaultTitleMoving)
     }

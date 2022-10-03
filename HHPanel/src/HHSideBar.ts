@@ -12,6 +12,12 @@ class SideBarContent extends HTMLElement{
 
 }
 
+class SideBarTabMover extends TabMover{
+    public constructor() { // Public the constructor.
+        super();
+    }
+}
+
 @CustomElement({
     selector: "hh-sidebar",
 })
@@ -22,6 +28,7 @@ class HHSideBar extends HTMLElement{
     startMoving: boolean = false
     startPos: Vector2D
     startElePos: Vector2D
+    tabMover: SideBarTabMover = new SideBarTabMover()
 
     connectedCallback(){
         let content = this.querySelector("hh-sidebar-content") as HHContent
@@ -45,6 +52,7 @@ class HHSideBar extends HTMLElement{
         this.style.border = "1px solid black"
 
         this.titleBar.onmousedown = this.onTitleMouseDown.bind(this)
+
     }
 
     // TODO: Avoid duplication with HHTitle
@@ -70,8 +78,8 @@ class HHSideBar extends HTMLElement{
                 let targetX = this.startElePos.X + offsetX;
                 let targetY = this.startElePos.Y + offsetY;
 
-                this.style.left = targetX + "px"
-                this.style.top = targetY + "px"
+                this.tabMover.TryMove(this, new Vector2D(targetX, targetY))
+
             }
         } else {
             this.endMoving()
@@ -87,6 +95,11 @@ class HHSideBar extends HTMLElement{
         this.isMoving = false
         document.onmousemove = null
         document.onmouseup = null
+    }
+
+    setScrPos(x, y){
+        this.style.left = x + "px"
+        this.style.top = y + "px"
     }
 
 }
