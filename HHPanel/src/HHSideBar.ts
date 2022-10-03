@@ -2,17 +2,20 @@ import {CustomElement} from "hhcommoncomponents";
 import {HHTitle} from "./HHTitle";
 import {HHContent} from "./HHContent";
 import {Vector2D} from "./math/Vector2D";
-import {TabMover} from "./draggable/TabMover";
+import {TabMoveParam, TabMover} from "./draggable/TabMover";
 import {OccupiedTitleManager} from "./draggable/OccupiedTitleManager";
+import {ChainCallback} from "./draggable/ResponsibleChain";
+
+const DOCKABLEMARGIN = 20;
 
 @CustomElement({
     selector: "hh-sidebar-content",
 })
-class SideBarContent extends HTMLElement{
+class SideBarContent extends HTMLElement {
 
 }
 
-class SideBarTabMover extends TabMover{
+class SideBarTabMover extends TabMover {
     public constructor() { // Public the constructor.
         super();
     }
@@ -21,7 +24,7 @@ class SideBarTabMover extends TabMover{
 @CustomElement({
     selector: "hh-sidebar",
 })
-class HHSideBar extends HTMLElement{
+class HHSideBar extends HTMLElement {
     titleBar: HTMLDivElement
 
     isMoving: boolean = false
@@ -30,7 +33,7 @@ class HHSideBar extends HTMLElement{
     startElePos: Vector2D
     tabMover: SideBarTabMover = new SideBarTabMover()
 
-    connectedCallback(){
+    connectedCallback() {
         let content = this.querySelector("hh-sidebar-content") as HHContent
         let title = content.getAttribute("title") || "No Title"
 
@@ -53,10 +56,48 @@ class HHSideBar extends HTMLElement{
 
         this.titleBar.onmousedown = this.onTitleMouseDown.bind(this)
 
+        let dockables: NodeListOf<HTMLElement> = document.querySelectorAll(".dockable")
+
+        for (let dockable of dockables) {
+            this.tabMover.AddFront(this.TryDock(dockable as HTMLElement))
+        }
+    }
+
+    TryDock(dockable: HTMLElement): ChainCallback<TabMoveParam> {
+        return function (tabMoverParam: TabMoveParam) {
+            let target = tabMoverParam.ele
+            let candidatePos = tabMoverParam.targetPos
+
+            let clientRect: DOMRect = dockable.getBoundingClientRect()
+
+            // Dock at top
+            if (candidatePos.Y < clientRect.top + DOCKABLEMARGIN) {
+                target.setScrPos(candidatePos.X, clientRect.top)
+                return true;
+            } else if (candidatePos.Y + target.offsetHeight > clientRect.bottom - DOCKABLEMARGIN) {
+                target.setScrPos(candidatePos.X, clientRect.bottom - target.offsetHeight)
+                return true;
+            }
+            // Dock at left.
+            else if (candidatePos.X < clientRect.left + DOCKABLEMARGIN) { // Put the element at top, up
+                target.setScrPos(clientRect.left, clientRect.top)
+                return true;
+            } // Dock at right
+            else if (candidatePos.X + target.offsetWidth > clientRect.right - DOCKABLEMARGIN) {
+                target.setScrPos(clientRect.right - target.offsetWidth, clientRect.top)
+
+                console.log("Here here!!", clientRect.right - target.offsetWidth)
+                return true;
+            }
+
+            console.log("Nothing!!!")
+
+            return false;
+        }
     }
 
     // TODO: Avoid duplication with HHTitle
-    onTitleMouseDown(evt: MouseEvent){
+    onTitleMouseDown(evt: MouseEvent) {
         this.startPos = new Vector2D(evt.clientX, evt.clientY)
         this.startMoving = true
         this.isMoving = false
@@ -65,7 +106,7 @@ class HHSideBar extends HTMLElement{
         document.onmouseup = this.mouseUp.bind(this)
     }
 
-    mouseMove(evt:MouseEvent) {
+    mouseMove(evt: MouseEvent) {
         if (evt.buttons == 1) {
             if (this.startMoving && !this.startPos.equals(evt.clientX, evt.clientY)) {
                 this.isMoving = true
@@ -86,7 +127,7 @@ class HHSideBar extends HTMLElement{
         }
     }
 
-    mouseUp(evt:MouseEvent) {
+    mouseUp(evt: MouseEvent) {
         this.endMoving()
     }
 
@@ -97,7 +138,7 @@ class HHSideBar extends HTMLElement{
         document.onmouseup = null
     }
 
-    setScrPos(x, y){
+    setScrPos(x, y) {
         this.style.left = x + "px"
         this.style.top = y + "px"
     }
