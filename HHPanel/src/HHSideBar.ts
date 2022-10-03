@@ -74,7 +74,8 @@ class HHSideBar extends HTMLElement {
             if (candidatePos.Y < clientRect.top + DOCKABLEMARGIN) {
                 target.setScrPos(candidatePos.X, clientRect.top)
                 return true;
-            } else if (candidatePos.Y + target.offsetHeight > clientRect.bottom - DOCKABLEMARGIN) {
+            } // Dock at bottom
+            else if (candidatePos.Y + target.offsetHeight > clientRect.bottom - DOCKABLEMARGIN) {
                 target.setScrPos(candidatePos.X, clientRect.bottom - target.offsetHeight)
                 return true;
             }
