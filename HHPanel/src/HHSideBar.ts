@@ -54,6 +54,8 @@ class HHSideBar extends HTMLElement {
 
         this.style.border = "1px solid black"
 
+        this.style.zIndex = "1"
+
         this.titleBar.onmousedown = this.onTitleMouseDown.bind(this)
 
         let dockables: NodeListOf<HTMLElement> = document.querySelectorAll(".dockable")
