@@ -49,7 +49,6 @@ void BaseShape::TransferFrameStates(TransferFunction &transfer) {
 }
 
 void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
-
     if(this->mLayer != NULL){ // When the shape is loaded, it's layer has not been loaded yet. It's possible as this might be a shape within another element.
         int frameId = this->GetLayer()->GetCurrentFrame();
         Apply(frameId);

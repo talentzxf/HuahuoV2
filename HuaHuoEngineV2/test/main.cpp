@@ -119,6 +119,8 @@ void testShapeStore() {
     ColorRGBAf* pColor = rectangleShape->GetColor();
     printf("r:%f,g:%f,b:%f,a:%f\n", pColor->r, pColor->g, pColor->b, pColor->a );
 
+    HuaHuoEngine::GetInstance()->DuplicateShape(rectangleShape);
+
     rectangleShape->SetStrokeWidth(10.0);
     currentLayer->AddShapeInternal(rectangleShape);
 

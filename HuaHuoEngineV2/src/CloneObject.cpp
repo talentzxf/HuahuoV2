@@ -223,11 +223,10 @@ void AwakeAndActivateClonedObjects(Object** inOutInstantiatedObject, const TempR
         *inOutInstantiatedObject = &transformGameObject->GetComponent<Transform>();
 }
 
-Object* CloneObject(Object& inObject)
+Object* CloneObject(Object& inObject, PreProcessor* preProcessor)
 {
     TempRemapTable ptrs;
     Object* object = CloneObjectImpl(&inObject,  ptrs);
-
     if (object){
         const char* name = object->GetName();
         char clonedName[255];
@@ -235,9 +234,10 @@ Object* CloneObject(Object& inObject)
         strcat(clonedName, "(Clone)");
         object->SetName(clonedName);
     }
-
+    if(preProcessor){
+        preProcessor->PreProcessBeforeAwake(object);
+    }
     AwakeAndActivateClonedObjects(&object, ptrs);
-
     GetPersistentManagerPtr()->MakeObjectPersistent(object->GetInstanceID(), StoreFilePath);
     return object;
 }

@@ -45,6 +45,26 @@ HuaHuoEngine *HuaHuoEngine::gInstance = new HuaHuoEngine();
 HuaHuoEngine::HuaHuoEngine() {
 }
 
+// TODO: Make this as lambda? But Cpp's lambda is really very mysterious.
+class LayerSetterPreprocessor: public PreProcessor{
+private:
+    BaseShape* targetShape;
+public:
+    LayerSetterPreprocessor(BaseShape* sourceShape):
+        targetShape(sourceShape)
+    {
+
+    }
+
+    bool PreProcessBeforeAwake(Object *clonedObj) override {
+        if(!clonedObj->GetType()->IsDerivedFrom<BaseShape>())
+            return false;
+        BaseShape* clonedShape = (BaseShape*)clonedObj;
+        targetShape->GetLayer()->AddShapeInternal(clonedShape);
+        return true;
+    }
+};
+
 BaseShape *HuaHuoEngine::DuplicateShape(BaseShape *object) {
     if (object == NULL || object->GetType() == NULL)
         return NULL;
@@ -52,14 +72,17 @@ BaseShape *HuaHuoEngine::DuplicateShape(BaseShape *object) {
     if (!object->GetType()->IsDerivedFrom<BaseShape>())
         return NULL;
 
-    BaseShape *clonedObject = (BaseShape *) CloneObject(*object);
-    clonedObject->GetLayer()->AddShapeInternal(clonedObject);
+    // Layer setter, the cloned object should be in the same layer of the target object.
+
+    LayerSetterPreprocessor layerSetterPreprocessor(object);
+    BaseShape *clonedObject = (BaseShape *) CloneObject(*object, &layerSetterPreprocessor);
 
     return clonedObject;
 }
 
 void HuaHuoEngine::DestroyShape(BaseShape *shape){
     // Remove the object from it's belonging layer
+
     shape->GetLayer()->RemoveShape(shape);
 
     DestroySingleObject(shape);
