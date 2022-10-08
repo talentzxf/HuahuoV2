@@ -100,14 +100,14 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         }
     }
 
-    get isSelected(){
-        if(this.layer)
+    get isSelected() {
+        if (this.layer)
             return this.layer.GetIsSelected()
         return false
     }
 
-    set isSelected(val:boolean){
-        if(this.layer)
+    set isSelected(val: boolean) {
+        if (this.layer)
             this.layer.SetIsSelected(val)
     }
 
@@ -128,7 +128,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         return this.trackId
     }
 
-    setIcons(icons:Array<HTMLImageElement>){
+    setIcons(icons: Array<HTMLImageElement>) {
         this.icons = icons
     }
 
@@ -157,8 +157,8 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     getTitleLength(withMargin: boolean = true, fontSize = this.cellFontSize): number {
 
         let iconWidth = 0;
-        if(this.icons){
-            for(let icon of this.icons){
+        if (this.icons) {
+            for (let icon of this.icons) {
                 iconWidth += Math.max(icon.clientWidth, this.iconWidth)
             }
         }
@@ -174,7 +174,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         return this.sequenceId
     }
 
-    mergeCells(startCellId: number, endCellId: number){
+    mergeCells(startCellId: number, endCellId: number) {
         if (!this.isValidCellId(startCellId) || !this.isValidCellId(endCellId)) {
             Logger.error("Trying to merge invalid cells")
             return;
@@ -207,7 +207,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     calculateCanvasOffsetX(cellId: number, relative: boolean = true) {
         let absoluteOffsetX = cellId * this.unitCellWidth
 
-        if(!relative)
+        if (!relative)
             return absoluteOffsetX
 
         let relativeOffsetX = absoluteOffsetX - this.canvasStartPos;
@@ -222,7 +222,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
         let inputCellId = cellId;
 
-        if(forceDraw || this.cellManager.IsSpanHead(cellId)){
+        if (forceDraw || this.cellManager.IsSpanHead(cellId)) {
             cellId = this.cellManager.GetSpanHead(cellId)
 
             let spanCellCount = this.cellManager.GetCellSpan(cellId);
@@ -262,7 +262,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
             let keyframeCircleRadius = this.unitCellWidth / 2 * 0.5
             this.ctx.beginPath()
-            this.ctx.arc(inputCellOffsetX + this.unitCellWidth/2, this.yOffset + keyframeCircleRadius, keyframeCircleRadius, 0, 2 * Math.PI)
+            this.ctx.arc(inputCellOffsetX + this.unitCellWidth / 2, this.yOffset + keyframeCircleRadius, keyframeCircleRadius, 0, 2 * Math.PI)
             this.ctx.fillStyle = "black"
             this.ctx.fill()
             this.ctx.strokeStyle = "black"
@@ -270,9 +270,9 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         }
     }
 
-    addOnClickFunc(xMin, xMax, onclickFunc){
-        for(let funcTuple of this.iconClickFuncArray){
-            if(funcTuple[2] == onclickFunc)
+    addOnClickFunc(xMin, xMax, onclickFunc) {
+        for (let funcTuple of this.iconClickFuncArray) {
+            if (funcTuple[2] == onclickFunc)
                 return;
         }
 
@@ -287,8 +287,8 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         let imgYOffset = this.yOffset + (this.unitCellHeight - this.iconHeight) * 0.5
 
         let xOffset = 0;
-        if(this.icons){
-            for(let icon of this.icons){
+        if (this.icons) {
+            for (let icon of this.icons) {
                 let xMin = xOffset
                 this.ctx.drawImage(icon, xOffset, imgYOffset, this.iconWidth, this.iconHeight)
                 xOffset += Math.max(icon.clientWidth, this.iconWidth)
@@ -302,7 +302,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         let textYOffset = this.yOffset + this.trackNameSize + (this.unitCellHeight - this.trackNameSize) * 0.5
 
         let i18n = (window as any).i18n
-        this.ctx.fillText( i18n.t(this.trackName), xOffset, textYOffset)
+        this.ctx.fillText(i18n.t(this.trackName), xOffset, textYOffset)
 
         if (this.isSelected) {
 
@@ -335,18 +335,18 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.ctx.strokeRect(0, this.yOffset, firstCellX, this.getCellHeight())
 
         for (let cellIdx = startCellIdx; cellIdx <= endCellIdx; cellIdx++) {
-            if(cellIdx == startCellIdx){
+            if (cellIdx == startCellIdx) {
                 this.drawCell(cellIdx, true);
-            }else{
+            } else {
                 this.drawCell(cellIdx, false);
             }
         }
 
         this.drawTimelineIndicator()
 
-        if(maxCellId >= 0){
+        if (maxCellId >= 0) {
             // Draw the red time line indicator
-            let offsetX = this.calculateCanvasOffsetX(maxCellId )
+            let offsetX = this.calculateCanvasOffsetX(maxCellId)
 
             let oldLineWidth = this.ctx.lineWidth
             this.ctx.beginPath();
@@ -359,7 +359,11 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         }
     }
 
-    drawTimelineIndicator(){
+    getCurrentCellId() {
+        return Math.floor(this.elapsedTime * GlobalConfig.fps)
+    }
+
+    drawTimelineIndicator() {
         // Draw the red time line indicator
         let offsetX = this.calculateCanvasOffsetX(this.elapsedTime * GlobalConfig.fps)
         this.ctx.beginPath();
@@ -377,11 +381,11 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         if (!this.selectable)
             return;
 
-        for(let funcTuple of this.iconClickFuncArray){
+        for (let funcTuple of this.iconClickFuncArray) {
             let min = funcTuple[0]
             let max = funcTuple[1]
-            if(relativeX > min && relativeX < max){
-                if(funcTuple[2])
+            if (relativeX > min && relativeX < max) {
+                if (funcTuple[2])
                     funcTuple[2](this.layer)
             }
         }
@@ -393,11 +397,11 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
         this.selectCell(cellId)
 
-        if(this.layer)
+        if (this.layer)
             huahuoEngine.GetCurrentStore().SetCurrentLayer(this.layer)
     }
 
-    selectCell(cellId){
+    selectCell(cellId) {
         if (this.isValidCellId(cellId)) {
             let spanHeadCellId = this.cellManager.GetSpanHead(cellId)
 
@@ -436,7 +440,7 @@ class DefaultCellManager {
         return 1;
     }
 
-    IsSpanHead(cellId){
+    IsSpanHead(cellId) {
         return true;
     }
 }

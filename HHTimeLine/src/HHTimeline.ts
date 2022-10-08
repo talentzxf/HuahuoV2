@@ -38,6 +38,12 @@ class HHTimeline extends HTMLElement {
 
     private maxCellId: number = -1;
 
+    public getTrack(idx): TimelineTrack{
+        if(idx > this.timelineTracks.length - 1)
+            return null
+        return this.timelineTracks[idx]
+    }
+
     connectedCallback() {
         if(!this.isInited) {
 
@@ -189,7 +195,7 @@ class HHTimeline extends HTMLElement {
     }
 
     onMouseDown(evt: MouseEvent) {
-        if (evt.buttons == 1) {
+        if (evt.buttons == 1 || evt.buttons == 2) {
             this.onCanvasClick(evt)
 
             this.isSelectingRangeCell = true;

@@ -109,6 +109,12 @@ class SceneView extends HTMLElement {
                         onclick: function(e){
                             _this.createNewTrack(_this.timeline)
                         }
+                    },
+                    {
+                        itemName: i18n.t("contextmenu.markAsAnimationEnd"),
+                        onclick: function(e){
+                            _this.markAsAnimationEnd(_this.timeline)
+                        }
                     }
                 ])
 
@@ -123,6 +129,25 @@ class SceneView extends HTMLElement {
                 huahuoEngine.setActivePlayer(_this.animationPlayer)
             })
         })
+    }
+
+    markAsAnimationEnd(timeline: HHTimeline){
+        let titleTrack = timeline.getTrack(0)
+        if(titleTrack == null)
+        {
+            Logger.error("No title bar??")
+            return;
+        }
+        let cellId = titleTrack.getCurrentCellId()
+        console.log("Set max animation frame as:" + cellId)
+
+        let firstTrack = timeline.getTrack(1)
+        if(firstTrack == null){
+            Logger.error("No track in the timeline??")
+            return;
+        }
+
+       //  firstTrack.getLayer().GetObjectStore()
     }
 
     createNewTrack(timeline){
