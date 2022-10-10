@@ -43,8 +43,8 @@ class EditorPlayer extends Player{
 
     onSetFrameTime(e){
         // Set current store
-        let currentStoreIf = this.sceneView.storeId
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(currentStoreIf)
+        let currentStoreId = this.sceneView.storeId
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(currentStoreId)
 
         let elapsedTime = e.detail.elapsedTime
         let defaultStore = huahuoEngine.GetCurrentStore()

@@ -249,6 +249,9 @@ class SceneView extends HTMLElement {
     }
 
     onMouseDown(evt: MouseEvent) {
+        // Operating in this sceneview, set the storeId of this sceneview as default.
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId)
+
         // Inform the panel to select my tab
         // Find the panel
         let panel = findParentPanel(this)
