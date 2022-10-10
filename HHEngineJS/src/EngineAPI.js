@@ -79,7 +79,11 @@ class EngineAPI{
 
     getStoreMaxFrames(storeId){
         // FrameId starts from 0. So, maxFames = maxFrameId + 1
-        return this.GetDefaultObjectStoreManager().GetStoreById(storeId).GetMaxFrameId() + 1
+        return this.GetStoreById(storeId).GetMaxFrameId() + 1
+    }
+
+    GetStoreById(storeId){
+        return this.GetDefaultObjectStoreManager().GetStoreById(storeId)
     }
 
     GetCurrentLayer(){

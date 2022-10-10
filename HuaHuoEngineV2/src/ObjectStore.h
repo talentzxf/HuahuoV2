@@ -72,6 +72,8 @@ public:
             this->maxFrameId = frameId;
         else
             this->maxFrameId = std::max(this->maxFrameId, frameId);
+
+        GetScriptEventManager()->TriggerEvent("OnMaxFrameIdUpdated", NULL);
     }
 
     int GetMaxFrameId(){

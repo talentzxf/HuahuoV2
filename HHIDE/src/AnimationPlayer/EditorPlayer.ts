@@ -34,6 +34,10 @@ class EditorPlayer extends Player{
             let shapeRemovedHander = new Module.ScriptEventHandlerImpl()
             shapeRemovedHander.handleEvent = _this.onShapeRemoved.bind(_this)
             huahuoEngine.GetInstance().RegisterEvent("OnShapeRemoved", shapeRemovedHander)
+
+            let maxFrameIdUpdatedHandler = new Module.ScriptEventHandlerImpl()
+            maxFrameIdUpdatedHandler.handleEvent = _this.onMaxFrameUpdated.bind(_this)
+            huahuoEngine.GetInstance().RegisterEvent("OnMaxFrameIdUpdated", maxFrameIdUpdatedHandler)
         })
     }
 
@@ -67,7 +71,7 @@ class EditorPlayer extends Player{
     onKeyFrameChanged(args){
         let keyframeChangedArgs = Module.wrapPointer(args, Module.KeyFrameChangedEventHandlerArgs)
         let layer = keyframeChangedArgs.GetLayer()
-        let frameId = keyframeChangedArgs.GetFrameId()
+        // let frameId = keyframeChangedArgs.GetFrameId()
 
         let maxFrameId = layer.GetObjectStore().GetMaxFrameId()
         if(maxFrameId >= 0){
@@ -91,6 +95,18 @@ class EditorPlayer extends Player{
         let obj = shapeRemovedArgs.GetShape()
 
         this.layerShapesManager.removeShape(layer, obj)
+    }
+
+
+    onMaxFrameUpdated(){
+        let storeId = this.sceneView.storeId
+        let store = huahuoEngine.GetStoreById(storeId)
+        let maxFrameId = store.GetMaxFrameId()
+        if(maxFrameId >= 0){
+            this.timeline.setMaxCellId(maxFrameId + 1)
+        }
+
+        this.timeline.redrawCanvas()
     }
 }
 
