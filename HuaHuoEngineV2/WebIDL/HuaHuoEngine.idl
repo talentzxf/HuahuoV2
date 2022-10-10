@@ -78,6 +78,7 @@ interface ObjectStore{
     long GetMaxFrameId();
     long GetStoreId();
     void SyncLayersInfo();
+    void UpdateMaxFrameId(long frameId, optional boolean force);
 };
 
 [NoDelete]

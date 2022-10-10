@@ -67,8 +67,11 @@ public:
         return layers[i];
     }
 
-    void UpdateMaxFrameId(int frameId){
-        this->maxFrameId = std::max(this->maxFrameId, frameId);
+    void UpdateMaxFrameId(int frameId, bool force = false){
+        if(force)
+            this->maxFrameId = frameId;
+        else
+            this->maxFrameId = std::max(this->maxFrameId, frameId);
     }
 
     int GetMaxFrameId(){

@@ -147,7 +147,7 @@ class SceneView extends HTMLElement {
             return;
         }
 
-       //  firstTrack.getLayer().GetObjectStore()
+        firstTrack.getLayer().GetObjectStore().UpdateMaxFrameId(cellId, true)
     }
 
     createNewTrack(timeline){
