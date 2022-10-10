@@ -337,12 +337,7 @@ class ShapeSelector extends BaseShapeDrawer {
                 this.transformHandler.dragging(pos)
 
                 for (let shape of this.selectedShapes) {
-                    let targetStoreId = shape.getBornStoreId()
-
-                    while (targetStoreId) {
-                        elementCreator.dispatchElementChange(targetStoreId)
-                        targetStoreId = huahuoEngine.getElementParentByStoreId(targetStoreId)
-                    }
+                    elementCreator.dispatchElementChange(shape.getBornStoreId())
                 }
             } else {
                 if (this.isDrawing) {

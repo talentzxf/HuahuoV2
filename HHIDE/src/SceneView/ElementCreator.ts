@@ -52,8 +52,8 @@ class ElementCreator {
     }
 
     dispatchElementChange(storeId){
-
         let store = huahuoEngine.GetStoreById(storeId)
+        let targetStoreId = storeId
         let layerFrameMap: Map<any, number> = new Map();
 
         // Save layer frameIds
@@ -63,18 +63,25 @@ class ElementCreator {
             layerFrameMap.set(layer, layer.GetCurrentFrame())
         }
 
-        // Execute all callback functions
-        let funcArray = this.elementChangeListeners.get(storeId)
-        if(funcArray){
-            for(let func of funcArray){
-                func()
-            }
+        while(targetStoreId){
+            this.internalDispatchElementChange(targetStoreId)
+            targetStoreId = huahuoEngine.getElementParentByStoreId(targetStoreId)
         }
 
         // Restore layer frameIds
         for(let layerIdx = 0; layerIdx < layerCount; layerIdx++ ){
             let layer = store.GetLayer(layerIdx)
             layer.SetCurrentFrame(layerFrameMap.get(layer))
+        }
+    }
+
+    internalDispatchElementChange(storeId){
+        // Execute all callback functions
+        let funcArray = this.elementChangeListeners.get(storeId)
+        if(funcArray){
+            for(let func of funcArray){
+                func()
+            }
         }
     }
 

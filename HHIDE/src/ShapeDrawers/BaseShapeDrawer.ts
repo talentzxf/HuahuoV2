@@ -51,12 +51,7 @@ class BaseShapeDrawer{
         let currentLayer = huahuoEngine.GetCurrentLayer()
         currentLayer.addShape(shape)
 
-        let targetStoreId = shape.getBornStoreId()
-
-        while(targetStoreId){
-            elementCreator.dispatchElementChange(targetStoreId)
-            targetStoreId = huahuoEngine.getElementParentByStoreId(targetStoreId)
-        }
+        elementCreator.dispatchElementChange(shape.getBornStoreId())
     }
 
     onMouseUp(evt: MouseEvent){
