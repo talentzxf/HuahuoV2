@@ -847,7 +847,8 @@ abstract class BaseShapeJS {
 
     removePaperObj(){
         this.paperItem.remove()
-        this.boundingBoxGroup.remove()
+        if(this.boundingBoxGroup)
+            this.boundingBoxGroup.remove()
         this.selected = false
 
         this.paperItem = null

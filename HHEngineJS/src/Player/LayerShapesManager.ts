@@ -109,6 +109,23 @@ class LayerShapesManager {
                 }
             }
         }
+
+        // Remove all layers and shapes that are not belong to me. This might happen when a shape is removed from an element
+        for(let layer of this.layerShapes.keys()){
+            if(layer.GetObjectStore().GetStoreId() != this.storeId){
+                this.layerShapes.delete(layer)
+            } else{
+                let shapes = this.layerShapes.get(layer)
+                for(let shapePtr of shapes.keys()){
+                    let shape = shapes.get(shapePtr)
+                    if(shape.belongStoreId != this.storeId){
+                        shape.removePaperObj()
+                        shapes.delete(shapePtr)
+                    }
+                }
+            }
+        }
+
         return layerShapeCount
     }
 
