@@ -2,7 +2,7 @@ import {SceneView} from "./SceneView";
 import {findParentContent, findParentPanel} from "hhpanel";
 import {HHPanel} from "hhpanel";
 import {HHToast} from "hhcommoncomponents";
-import {renderEngine2D, huahuoEngine, ElementShapeJS, paper} from "hhenginejs"
+import {huahuoEngine, ElementShapeJS, paper} from "hhenginejs"
 import {HHContent, PanelEventNames} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
 import {BaseShapeJS} from "hhenginejs";
@@ -83,16 +83,6 @@ class ElementCreator {
                 return;
 
             sceneViewManager.focusSceneView(sceneview)
-
-            let canvas = content.querySelector(".SceneViewCanvas")
-            renderEngine2D.setDefaultCanvas(canvas)
-
-            let player = this.sceneView.animationPlayer
-            huahuoEngine.setActivePlayer(player)
-            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(sceneview.storeId)
-            player.updateAllShapes()
-
-            sceneview.resetDefaultShapeDrawer()
         }
     }
 
@@ -189,6 +179,11 @@ class ElementCreator {
             // It's much easier to align element with the global coordinate. Or else we need to set the position for all the keyframes
             // of all the underlying shapes!
             newElement.position = newElement.globalToLocal(new paper.Point(0,0))
+
+            // StoreId of all the underlying elements should be set to the new element
+            for(let shape of shapes){
+                shape.bornStoreId = newElement.storeId
+            }
 
             // BornFrame of the element is the min of all underlying shapes.
             let bornFrameId = newElement.bornFrameId

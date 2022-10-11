@@ -134,8 +134,11 @@ class ElementShapeJS extends BaseShapeJS {
             if(!somethingIsVisible)
                 this.selected = false
 
-            this.layerShapesManager.updateAllShapes()
-
+            if(this.isVisible()){
+                this.layerShapesManager.updateAllShapes()
+            } else{
+                this.layerShapesManager.hideAllShapes() // This element is invisible, hide all it's containing shapes.
+            }
         }finally {
             this.restoreLayerFrameIds();
             defaultStoreManager.SetDefaultStoreByIndex(previousStoreIdx)

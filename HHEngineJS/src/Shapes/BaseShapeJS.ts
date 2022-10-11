@@ -814,6 +814,12 @@ abstract class BaseShapeJS {
         }
     }
 
+    hide(){
+        this.paperItem.visible = false
+        this.selected = false
+        this.updateBoundingBox()
+    }
+
     update() {
         this.beforeUpdate()
         this.duringUpdate()

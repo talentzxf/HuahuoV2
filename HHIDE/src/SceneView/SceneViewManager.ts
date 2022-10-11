@@ -1,7 +1,7 @@
 import {SceneView} from "./SceneView";
 import {Logger} from "hhcommoncomponents"
 import {Player} from "hhenginejs"
-import {huahuoEngine} from "hhenginejs";
+import {huahuoEngine, renderEngine2D} from "hhenginejs";
 
 class SceneViewManager{
     // Map from storeId->SceneView
@@ -39,6 +39,16 @@ class SceneViewManager{
         }
 
         this.curFocusedSceneView = sceneView
+
+        let canvas = sceneView.querySelector(".SceneViewCanvas")
+        renderEngine2D.setDefaultCanvas(canvas)
+
+        let player = sceneView.animationPlayer
+        huahuoEngine.setActivePlayer(player)
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(sceneView.storeId)
+        player.updateAllShapes()
+
+        sceneView.resetDefaultShapeDrawer()
     }
 
     getFocusedSceneView(){

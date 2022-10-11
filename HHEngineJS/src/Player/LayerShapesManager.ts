@@ -29,6 +29,12 @@ class LayerShapesManager {
         })
     }
 
+    hideLayerShapes(layer){
+        this.forEachShapeInLayer(layer, (shape) => {
+            shape.hide()
+        })
+    }
+
     forEachLayerInStore(store, func: (layer) => void) {
         let layerCount = store.GetLayerCount();
 
@@ -104,6 +110,11 @@ class LayerShapesManager {
     updateAllShapes() {
         let store = huahuoEngine.GetCurrentStore()
         this.forEachLayerInStore(store, this.updateLayerShapes.bind(this))
+    }
+
+    hideAllShapes(){
+        let store = huahuoEngine.GetCurrentStore()
+        this.forEachLayerInStore(store, this.hideLayerShapes.bind(this))
     }
 }
 

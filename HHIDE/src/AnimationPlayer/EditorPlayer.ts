@@ -43,7 +43,7 @@ class EditorPlayer extends Player{
 
     onSetFrameTime(e){
         sceneViewManager.focusSceneView(this.sceneView)
-        
+
         // Set current store
         let currentStoreId = this.sceneView.storeId
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(currentStoreId)
