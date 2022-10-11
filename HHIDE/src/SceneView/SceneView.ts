@@ -125,8 +125,10 @@ class SceneView extends HTMLElement {
                 else
                     _this.timeline.reloadTracks()
 
-                _this.animationPlayer = new EditorPlayer(_this)
-                huahuoEngine.setActivePlayer(_this.animationPlayer)
+                if(_this.animationPlayer == null){
+                    _this.animationPlayer = new EditorPlayer(_this)
+                    huahuoEngine.setActivePlayer(_this.animationPlayer)
+                }
             })
         })
     }
