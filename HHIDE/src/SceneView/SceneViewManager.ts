@@ -35,7 +35,7 @@ class SceneViewManager{
 
         // restore the saved frameId
         if(this.sceneViewFrameIdMap.has(sceneView)){
-            sceneView.animationPlayer.setFrameId(this.sceneViewFrameIdMap.get(sceneView))
+            sceneView.animationPlayer.setFrameId(this.sceneViewFrameIdMap.get(sceneView), true)
         }
 
         this.curFocusedSceneView = sceneView

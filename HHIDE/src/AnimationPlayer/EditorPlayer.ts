@@ -49,12 +49,12 @@ class EditorPlayer extends Player{
         let elapsedTime = e.detail.elapsedTime
         let frameId = Math.floor(elapsedTime * GlobalConfig.fps)
         this.setFrameId(frameId)
-        
+
         sceneViewManager.focusSceneView(this.sceneView)
     }
 
-    setFrameId(playFrameId){
-        if(sceneViewManager.getFocusedSceneView() != this.sceneView){
+    setFrameId(playFrameId, force = false){
+        if(sceneViewManager.getFocusedSceneView() != this.sceneView && force == false){
             this.stopPlay() // Lost focus, stop play
         }else{
             super.setFrameId(playFrameId)
