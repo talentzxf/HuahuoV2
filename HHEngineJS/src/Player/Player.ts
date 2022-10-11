@@ -8,13 +8,17 @@ class Player{
 
     lastAnimateTime = -1
     isPlaying: boolean = false
-    layerShapesManager: LayerShapesManager = new LayerShapesManager()
+    layerShapesManager: LayerShapesManager;
 
     playStartTime: number = 0
 
     public currentlyPlayingFrameId: number = 0
 
-    constructor() {
+    storeId: number = -1
+
+    constructor(storeId) {
+        this.storeId = storeId
+        this.layerShapesManager = new LayerShapesManager(storeId)
     }
 
     getLayerShapes(layer){
@@ -44,7 +48,8 @@ class Player{
             console.log("Expected time:" + 1000.0/GlobalConfig.fps)
 
             if(this.lastAnimateTime < 0 || elapsedTime > 1000.0/GlobalConfig.fps){
-                let activeFrames = huahuoEngine.GetCurrentStore().GetMaxFrameId() + 1;
+                let store = huahuoEngine.GetStoreById(this.storeId)
+                let activeFrames = store.GetMaxFrameId() + 1;
                 let activePlayTime = activeFrames / GlobalConfig.fps;
                 let playTime = (timeStamp - this.animationStartTime + this.playStartTime * 1000.0) / 1000.0 % activePlayTime;
                 let frameId = Math.floor(playTime * GlobalConfig.fps)
@@ -60,7 +65,7 @@ class Player{
 
     setFrameId(playFrameId){
         // Update time for all layers in the default store.
-        let currentStore = huahuoEngine.GetCurrentStore()
+        let currentStore = huahuoEngine.GetStoreById(this.storeId)
 
         let layerCount = currentStore.GetLayerCount()
         for(let layerIdx = 0; layerIdx < layerCount; layerIdx++){
@@ -74,7 +79,8 @@ class Player{
     }
 
     startPlay(){
-        this.playStartTime = huahuoEngine.GetCurrentLayer().GetCurrentFrame() / GlobalConfig.fps
+        let store = huahuoEngine.GetStoreById(this.storeId)
+        this.playStartTime = store.GetCurrentLayer().GetCurrentFrame() / GlobalConfig.fps
         this.lastAnimateTime = -1
         this.animationFrame = requestAnimationFrame(this.animationFrameStep.bind(this));
         this.isPlaying = true

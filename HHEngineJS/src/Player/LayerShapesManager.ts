@@ -4,6 +4,11 @@ import {Logger} from "hhcommoncomponents"
 
 class LayerShapesManager {
     layerShapes = new Map();
+    storeId:number = -1;
+
+    constructor(storeId) {
+        this.storeId = storeId
+    }
 
     removeShape(layer, obj){
         if(!this.layerShapes.has(layer)){
@@ -59,7 +64,7 @@ class LayerShapesManager {
     }
 
     getJSShapeFromRawShape(rawObj):BaseShapeJS{
-        let store = huahuoEngine.GetCurrentStore()
+        let store = huahuoEngine.GetStoreById(this.storeId)
 
         let layerCount = store.GetLayerCount();
 
@@ -79,7 +84,7 @@ class LayerShapesManager {
     loadShapesFromStore(parent: BaseShapeJS): number {
         let layerShapeCount = 0
 
-        let store = huahuoEngine.GetCurrentStore()
+        let store = huahuoEngine.GetStoreById(this.storeId)
 
         let layerCount = store.GetLayerCount();
 
@@ -108,12 +113,12 @@ class LayerShapesManager {
     }
 
     updateAllShapes() {
-        let store = huahuoEngine.GetCurrentStore()
+        let store = huahuoEngine.GetStoreById(this.storeId)
         this.forEachLayerInStore(store, this.updateLayerShapes.bind(this))
     }
 
     hideAllShapes(){
-        let store = huahuoEngine.GetCurrentStore()
+        let store = huahuoEngine.GetStoreById(this.storeId)
         this.forEachLayerInStore(store, this.hideLayerShapes.bind(this))
     }
 }

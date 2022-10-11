@@ -127,7 +127,7 @@ class ProjectInfoForm extends HTMLElement implements HHForm{
         this.okBtn = this.querySelector("#okBtn")
         this.okBtn.onclick = this.onOK.bind(this)
 
-        this.previewAnimationPlayer = new Player()
+        this.previewAnimationPlayer = new Player(1) // Default store is 1.
 
         let prevCanvas = renderEngine2D.getDefaultCanvas()
         renderEngine2D.init(this.previewCanvas)

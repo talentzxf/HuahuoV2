@@ -12,7 +12,7 @@ class EditorPlayer extends Player{
     sceneView: SceneView = null
 
     constructor(sceneView) {
-        super()
+        super(sceneView.storeId)
 
         this.sceneView = sceneView
 
