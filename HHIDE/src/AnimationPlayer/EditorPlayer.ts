@@ -42,6 +42,8 @@ class EditorPlayer extends Player{
     }
 
     onSetFrameTime(e){
+        sceneViewManager.focusSceneView(this.sceneView)
+        
         // Set current store
         let currentStoreId = this.sceneView.storeId
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(currentStoreId)
@@ -49,8 +51,6 @@ class EditorPlayer extends Player{
         let elapsedTime = e.detail.elapsedTime
         let frameId = Math.floor(elapsedTime * GlobalConfig.fps)
         this.setFrameId(frameId)
-
-        sceneViewManager.focusSceneView(this.sceneView)
     }
 
     setFrameId(playFrameId, force = false){
