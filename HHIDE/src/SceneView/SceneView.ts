@@ -234,6 +234,10 @@ class SceneView extends HTMLElement {
                 _this.storeId = huahuoEngine.GetCurrentStore().GetStoreId()
                 console.log("New store id:" + _this.storeId)
 
+                if(!_this.animationPlayer){
+                    _this.animationPlayer = new EditorPlayer(_this)
+                    huahuoEngine.setActivePlayer(_this.animationPlayer)
+                }
                 _this.animationPlayer.storeId = _this.storeId
             })
 
