@@ -12,6 +12,8 @@ class Player{
 
     playStartTime: number = 0
 
+    public currentlyPlayingFrameId: number = -1
+
     constructor() {
     }
 
@@ -67,6 +69,8 @@ class Player{
         }
 
         this.updateAllShapes()
+
+        this.currentlyPlayingFrameId = playFrameId
     }
 
     startPlay(){

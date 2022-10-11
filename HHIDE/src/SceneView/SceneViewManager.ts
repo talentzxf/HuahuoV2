@@ -27,24 +27,15 @@ class SceneViewManager{
         return null
     }
 
-    setStoreFrameId(storeId, frameId){
-        let store = huahuoEngine.GetStoreById(storeId)
-        let layerCount = store.GetLayerCount()
-        for(let layerIdx = 0; layerIdx < layerCount; layerIdx++){
-            let targetLayer = store.GetLayer(layerIdx)
-            targetLayer.SetCurrentFrame(frameId)
-        }
-    }
-
     focusSceneView(sceneView:SceneView){
         // save the currently focused scene view frameId.
         if(this.curFocusedSceneView){
-            this.sceneViewFrameIdMap.set(this.curFocusedSceneView, this.getSceneViewFrameId(this.curFocusedSceneView))
+            this.sceneViewFrameIdMap.set(this.curFocusedSceneView, this.curFocusedSceneView.animationPlayer.currentlyPlayingFrameId)
         }
 
         // restore the saved frameId
         if(this.sceneViewFrameIdMap.has(sceneView)){
-            this.setStoreFrameId(sceneView.storeId, this.sceneViewFrameIdMap.get(sceneView))
+            sceneView.animationPlayer.setFrameId(this.sceneViewFrameIdMap.get(sceneView))
         }
 
         this.curFocusedSceneView = sceneView

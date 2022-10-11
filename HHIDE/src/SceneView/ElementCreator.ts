@@ -52,26 +52,11 @@ class ElementCreator {
     }
 
     dispatchElementChange(storeId){
-        let store = huahuoEngine.GetStoreById(storeId)
         let targetStoreId = storeId
-        let layerFrameMap: Map<any, number> = new Map();
-
-        // Save layer frameIds
-        let layerCount = store.GetLayerCount()
-        for(let layerIdx = 0; layerIdx < layerCount; layerIdx++ ){
-            let layer = store.GetLayer(layerIdx)
-            layerFrameMap.set(layer, layer.GetCurrentFrame())
-        }
 
         while(targetStoreId){
             this.internalDispatchElementChange(targetStoreId)
             targetStoreId = huahuoEngine.getElementParentByStoreId(targetStoreId)
-        }
-
-        // Restore layer frameIds
-        for(let layerIdx = 0; layerIdx < layerCount; layerIdx++ ){
-            let layer = store.GetLayer(layerIdx)
-            layer.SetCurrentFrame(layerFrameMap.get(layer))
         }
     }
 

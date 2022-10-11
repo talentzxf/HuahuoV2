@@ -55,6 +55,8 @@ class EditorPlayer extends Player{
         }
 
         this.updateAllShapes()
+
+        sceneViewManager.focusSceneView(this.sceneView)
     }
 
     setFrameId(playFrameId){
