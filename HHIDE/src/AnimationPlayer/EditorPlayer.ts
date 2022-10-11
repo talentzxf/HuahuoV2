@@ -47,15 +47,9 @@ class EditorPlayer extends Player{
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(currentStoreId)
 
         let elapsedTime = e.detail.elapsedTime
-        let defaultStore = huahuoEngine.GetCurrentStore()
-        let layerCount = defaultStore.GetLayerCount()
-        for(let layerIdx = 0 ; layerIdx < layerCount; layerIdx++){
-            let layer = defaultStore.GetLayer(layerIdx)
-            layer.SetCurrentFrame(Math.floor(elapsedTime * GlobalConfig.fps))
-        }
-
-        this.updateAllShapes()
-
+        let frameId = Math.floor(elapsedTime * GlobalConfig.fps)
+        this.setFrameId(frameId)
+        
         sceneViewManager.focusSceneView(this.sceneView)
     }
 

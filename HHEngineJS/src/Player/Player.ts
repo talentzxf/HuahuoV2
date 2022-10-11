@@ -12,7 +12,7 @@ class Player{
 
     playStartTime: number = 0
 
-    public currentlyPlayingFrameId: number = -1
+    public currentlyPlayingFrameId: number = 0
 
     constructor() {
     }
