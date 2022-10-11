@@ -14,10 +14,15 @@ class Player{
 
     public currentlyPlayingFrameId: number = 0
 
-    storeId: number = -1
+    set storeId(val: number){
+        this.layerShapesManager.storeId = val
+    }
+
+    get storeId():number{
+        return this.layerShapesManager.storeId
+    }
 
     constructor(storeId) {
-        this.storeId = storeId
         this.layerShapesManager = new LayerShapesManager(storeId)
     }
 

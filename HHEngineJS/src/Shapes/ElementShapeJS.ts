@@ -69,8 +69,6 @@ class ElementShapeJS extends BaseShapeJS {
         this.rawObj.SetElementStoreId(val)
 
         huahuoEngine.registerElementParent(val, this.getBornStoreId())
-
-        this.layerShapesManager = new LayerShapesManager(this.storeId)
     }
 
     // Not sure why, but if we don't write this getter/setter, it will fail??
@@ -112,6 +110,10 @@ class ElementShapeJS extends BaseShapeJS {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId);
 
             let store = defaultStoreManager.GetCurrentStore()
+
+            if(this.layerShapesManager == null){
+                this.layerShapesManager = new LayerShapesManager(this.storeId)
+            }
 
             let currentLocalFrame = this.calculateLocalFrame()
             this.layerShapesManager.loadShapesFromStore(this)
