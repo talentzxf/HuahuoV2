@@ -219,11 +219,13 @@ abstract class BaseShapeJS {
     sendToBack() {
         this.paperItem.sendToBack()
         this.storeSameLayerShapeIndices()
+        this.callHandlers("index", this.paperItem.index)
     }
 
     bringToFront() {
         this.paperItem.bringToFront()
         this.storeSameLayerShapeIndices()
+        this.callHandlers("index", this.paperItem.index)
     }
 
     rotateAroundPivot(angle: number) {

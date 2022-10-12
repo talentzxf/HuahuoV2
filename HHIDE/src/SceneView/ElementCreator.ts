@@ -1,7 +1,7 @@
 import {SceneView} from "./SceneView";
 import {findParentContent, findParentPanel} from "hhpanel";
 import {HHPanel} from "hhpanel";
-import {HHToast} from "hhcommoncomponents";
+import {HHToast, Logger} from "hhcommoncomponents";
 import {huahuoEngine, ElementShapeJS, paper} from "hhenginejs"
 import {HHContent, PanelEventNames} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
@@ -28,43 +28,50 @@ class ElementCreator {
         })
     }
 
-    onShapeCreated(newShape){
-        if(newShape.getTypeName() == "ElementShape"){
-            this.registerElementChangeEvent(newShape.storeId, function(){
-                newShape.update()
-            })
+    onShapeCreated(newShape) {
+        if (newShape.getTypeName() == "ElementShape") {
+            if (newShape.storeId > 0) {
+                this.registerElementChangeEvent(newShape.storeId, function () {
+                    newShape.update()
+                })
+            }
         }
+
+        newShape.registerValueChangeHandler("index")(() => {
+            elementCreator.dispatchElementChange(newShape.bornStoreId)
+        })
     }
 
-    onTabClosed(e){
-        let content:HHContent = e.detail.content
-        let sceneView:SceneView = content.querySelector("hh-sceneview")
+    onTabClosed(e) {
+        let content: HHContent = e.detail.content
+        let sceneView: SceneView = content.querySelector("hh-sceneview")
         let storeId = sceneView.storeId
         sceneViewManager.removeSceneViewMap(storeId)
     }
 
-    registerElementChangeEvent(storeId, func: Function){
-        if(!this.elementChangeListeners.has(storeId)){
+    registerElementChangeEvent(storeId, func: Function) {
+        if (!this.elementChangeListeners.has(storeId)) {
             this.elementChangeListeners.set(storeId, new Array())
         }
 
         this.elementChangeListeners.get(storeId).push(func)
     }
 
-    dispatchElementChange(storeId){
+    dispatchElementChange(storeId) {
+        Logger.info("Dispatching element change for store:" + storeId)
         let targetStoreId = storeId
 
-        while(targetStoreId){
+        while (targetStoreId) {
             this.internalDispatchElementChange(targetStoreId)
             targetStoreId = huahuoEngine.getElementParentByStoreId(targetStoreId)
         }
     }
 
-    internalDispatchElementChange(storeId){
+    internalDispatchElementChange(storeId) {
         // Execute all callback functions
         let funcArray = this.elementChangeListeners.get(storeId)
-        if(funcArray){
-            for(let func of funcArray){
+        if (funcArray) {
+            for (let func of funcArray) {
                 func()
             }
         }
@@ -79,7 +86,7 @@ class ElementCreator {
         this.sceneViewPanel = findParentPanel(this.sceneView)
         if (sceneview) {
 
-            if(sceneViewManager.getFocusedSceneView() == sceneview)
+            if (sceneViewManager.getFocusedSceneView() == sceneview)
                 return;
 
             sceneViewManager.focusSceneView(sceneview)
@@ -114,12 +121,12 @@ class ElementCreator {
 
             elementSceneView.animationPlayer.loadShapesFromStore()
             elementSceneView.animationPlayer.updateAllShapes()
-        }else{ // Switch to the SceneView
-            let panel:HHPanel = findParentPanel(eleSceneView)
-            let hhcontent:HHContent = findParentContent(eleSceneView)
+        } else { // Switch to the SceneView
+            let panel: HHPanel = findParentPanel(eleSceneView)
+            let hhcontent: HHContent = findParentContent(eleSceneView)
             let title = hhcontent.getTitle()
 
-            if(panel && title){
+            if (panel && title) {
                 panel.selectTab(title.tabIndex)
             }
         }
@@ -133,7 +140,7 @@ class ElementCreator {
         let newElementShape = new ElementShapeJS()
         newElementShape.name = elementId
         newElementShape.createShape()
-        newElementShape.position = new paper.Point(0,0)
+        newElementShape.position = new paper.Point(0, 0)
         newElementShape.store()
 
         let currentLayer = huahuoEngine.GetCurrentLayer()
@@ -142,30 +149,29 @@ class ElementCreator {
         let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
         newElementShape.storeId = newStore.GetStoreId()
 
-        if(openElementTab)
+        if (openElementTab)
             this.openElementEditTab(newElementShape)
 
         console.log("Created new store, store id:" + newElementShape.storeId)
 
-        this.registerElementChangeEvent(newElementShape.storeId, function(){
+        this.registerElementChangeEvent(newElementShape.storeId, function () {
             newElementShape.update()
         })
 
         return newElementShape
     }
 
-    createElement(shapes:Set<BaseShapeJS>): boolean{
+    createElement(shapes: Set<BaseShapeJS>): boolean {
         let prevStoreId = huahuoEngine.GetCurrentStoreId()
 
-        try{
+        try {
             // 0. Ensure all shapes are in the same layer.
-            if(shapes.size > 0){
+            if (shapes.size > 0) {
                 let firstShape: BaseShapeJS = shapes.values().next().value as BaseShapeJS;
                 let firstLayer = firstShape.getLayer()
 
-                for(let shape of shapes){
-                    if(firstLayer.ptr != shape.getLayer().ptr)
-                    {
+                for (let shape of shapes) {
+                    if (firstLayer.ptr != shape.getLayer().ptr) {
                         HHToast.warn("Can only group shapes in the same layer!")
                         return null;
                     }
@@ -178,24 +184,24 @@ class ElementCreator {
 
             // It's much easier to align element with the global coordinate. Or else we need to set the position for all the keyframes
             // of all the underlying shapes!
-            newElement.position = newElement.globalToLocal(new paper.Point(0,0))
+            newElement.position = newElement.globalToLocal(new paper.Point(0, 0))
 
             // StoreId of all the underlying elements should be set to the new element
-            for(let shape of shapes){
+            for (let shape of shapes) {
                 shape.bornStoreId = newElement.storeId
             }
 
             // BornFrame of the element is the min of all underlying shapes.
             let bornFrameId = newElement.bornFrameId
 
-            for(let shape of shapes){
-                if(shape.bornFrameId < bornFrameId)
+            for (let shape of shapes) {
+                if (shape.bornFrameId < bornFrameId)
                     bornFrameId = shape.bornFrameId
             }
             newElement.bornFrameId = bornFrameId
 
             // Update the position of all the shapes.
-            for(let shape of shapes){
+            for (let shape of shapes) {
                 shape.removePaperObj()
                 newElement.addShape(shape)
                 shape.addAnimationOffset(-bornFrameId);
@@ -206,7 +212,7 @@ class ElementCreator {
             newElement.update()
 
             return newElement
-        }finally {
+        } finally {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStoreId)
         }
     }
