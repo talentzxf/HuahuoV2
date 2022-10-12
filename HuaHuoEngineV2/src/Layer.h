@@ -10,6 +10,7 @@
 #include "BaseClasses/PPtr.h"
 #include "Serialize/PersistentManager.h"
 #include "TimeLineCellManager.h"
+#include "Shapes/ElementShape.h"
 
 #include <vector>
 
@@ -103,7 +104,11 @@ public:
     void SetCurrentFrame(int currentFrameId) {
         this->currentFrameId = currentFrameId;
         for (auto shape: shapes) {
-            shape->Apply(this->currentFrameId);
+            // If we update an element shape, it will calculate it's local frameId.
+            // No need to update along with other shapes in the layer.
+            if(!shape->GetType()->IsDerivedFrom<ElementShape>()){
+                shape->Apply(this->currentFrameId);
+            }
         }
     }
 
