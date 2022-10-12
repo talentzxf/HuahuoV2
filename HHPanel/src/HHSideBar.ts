@@ -86,6 +86,11 @@ class HHSideBar extends HTMLElement implements MovableElement {
                 if (dockStatusArray.length == 2) {
                     this.setScrPos(clientRect[dockStatusArray[0]], clientRect[dockStatusArray[1]])
                 }
+            } else {
+                let dockStatusArray = initDockStatus.split("-")
+                if (dockStatusArray.length == 2) {
+                    this.setScrPos(clientRect[dockStatusArray[0]], clientRect[dockStatusArray[1]])
+                }
             }
         }
     }

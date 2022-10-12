@@ -359,6 +359,12 @@ class SceneView extends HTMLElement {
 
         if(this.gizmoContainer)
             this.gizmoContainer.style.top = this.canvas.offsetHeight + timelineHeight + "px"
+
+        // Refresh sidebar content.
+        let sidebars = document.querySelectorAll("hh-sidebar")
+        for(let sidebar of sidebars){
+            (sidebar as HHSideBar).refreshDockables()
+        }
     }
 
     Redraw() {
