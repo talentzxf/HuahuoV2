@@ -246,7 +246,10 @@ class SceneView extends HTMLElement {
             this.inited = true
 
             sceneViewManager.registerSceneView(this)
-            sceneViewManager.focusSceneView(this)
+
+            huahuoEngine.ExecuteAfterInited(()=>{
+                sceneViewManager.focusSceneView(_this)
+            })
         }
     }
 
