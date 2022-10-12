@@ -663,7 +663,10 @@ abstract class BaseShapeJS {
     createShape() {
         this.bornStoreId = huahuoEngine.GetCurrentStoreId()
 
-        huahuoEngine.dispatchEvent("OnJSShapeCreated", this)
+        // Dispatch the event only once, we will create paperItem for all the shapes.
+        // Event for audio, we will create a placeholder shape, but might hide it in play mode.
+        if(!this.paperItem)
+            huahuoEngine.dispatchEvent("BeforeJSShapeCreated", this)
     }
 
     afterCreateShape() {

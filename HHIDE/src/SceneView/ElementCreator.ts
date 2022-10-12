@@ -24,7 +24,7 @@ class ElementCreator {
             outmostDiv.addEventListener(PanelEventNames.CONTENTSELECTED, _this.onContentSelected.bind(_this))
             outmostDiv.addEventListener(PanelEventNames.TABCLOSED, _this.onTabClosed.bind(_this))
 
-            huahuoEngine.registerEventListener("OnJSShapeCreated", _this.onShapeCreated.bind(_this))
+            huahuoEngine.registerEventListener("BeforeJSShapeCreated", _this.onShapeCreated.bind(_this))
         })
     }
 
