@@ -73,8 +73,12 @@ class ShapeSelector extends BaseShapeDrawer {
             let duplicatedShape = shape.duplicate();
 
             // Offset the shape a little to avoid covering the original shape.
-            duplicatedShape.position.x += 10.0
-            duplicatedShape.position.y += 10.0
+            let position = duplicatedShape.position
+            position.x += Math.floor( Math.random() * 5 - 10 )
+            position.y += Math.floor( Math.random() * 5 - 10 )
+
+            duplicatedShape.position = position
+
             duplicatedShape.store()
         }
     }

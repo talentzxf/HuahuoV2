@@ -77,6 +77,8 @@ BaseShape *HuaHuoEngine::DuplicateShape(BaseShape *object) {
     LayerSetterPreprocessor layerSetterPreprocessor(object);
     BaseShape *clonedObject = (BaseShape *) CloneObject(*object, &layerSetterPreprocessor);
 
+    clonedObject->SetIndex(-1); // Unset the index, as the index need to be updated by JS side.
+
     return clonedObject;
 }
 

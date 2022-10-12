@@ -194,13 +194,15 @@ abstract class BaseShapeJS {
         }
     }
 
-    storeSameLayerShapes() {
+    storeSameLayerShapeIndices() {
         let parent = this.paperItem.parent
         if (parent) {
             for (let childShape of parent.children) {
                 if (childShape.data && childShape.data.meta) {
                     let baseShape = childShape.data.meta
-                    baseShape.store()
+
+                    let shapeIndex = baseShape.paperItem.index
+                    baseShape.rawObj.SetIndex(shapeIndex)
                 }
             }
         }
@@ -216,12 +218,12 @@ abstract class BaseShapeJS {
 
     sendToBack() {
         this.paperItem.sendToBack()
-        this.storeSameLayerShapes()
+        this.storeSameLayerShapeIndices()
     }
 
     bringToFront() {
         this.paperItem.bringToFront()
-        this.storeSameLayerShapes()
+        this.storeSameLayerShapeIndices()
     }
 
     rotateAroundPivot(angle: number) {
@@ -367,7 +369,9 @@ abstract class BaseShapeJS {
 
         // Store index
         let index = this.paperItem.index
-        this.rawObj.SetIndex(index)
+        if(index != this.rawObj.GetIndex()){ // If index changed, all the shapes in the same layer might also be changed.
+            this.storeSameLayerShapeIndices()
+        }
 
         this.updateBoundingBox()
     }
