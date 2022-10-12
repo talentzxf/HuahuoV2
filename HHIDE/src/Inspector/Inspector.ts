@@ -2,7 +2,7 @@ import {CustomElement, Logger, PropertySheet} from "hhcommoncomponents"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {BasePropertyDesc, GenerateDiv, GetPropertyDivGenerator} from "./BasePropertyDivGenerator"
 import "./PropertyTypes"
-import {findParentContainer, findParentPanel} from "hhpanel";
+import {findParentSideBar, findParentPanel} from "hhpanel";
 
 @CustomElement({
     selector: "hh-inspector"
@@ -14,7 +14,7 @@ class Inspector extends HTMLElement{
 
     connectedCallback() {
         let parentPanel = findParentPanel(this)
-        let parentHeight = parentPanel.clientHeight;
+        let parentHeight = parentPanel?parentPanel.clientHeight: 300;
 
         this.contentScrollerDiv = document.createElement("div")
         this.contentScrollerDiv .style.width = "100%"
@@ -30,11 +30,11 @@ class Inspector extends HTMLElement{
         EventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
         EventBus.getInstance().on(EventNames.UNSELECTOBJECTS, this.unselectObjects.bind(this))
 
-        findParentContainer(this).hide()
+        findParentSideBar(this).hide()
     }
 
     unselectObjects(){
-        findParentContainer(this).hide()
+        findParentSideBar(this).hide()
     }
 
     clearCurrentProperties(){
@@ -49,9 +49,9 @@ class Inspector extends HTMLElement{
 
     onItemSelected(propertySheet: PropertySheet){
 
-        findParentContainer(this).show()
+        findParentSideBar(this).show()
 
-        let parentContainer = findParentContainer(this)
+        let parentContainer = findParentSideBar(this)
         let titleBarHeight = parentContainer.querySelector(".title_tabs").offsetHeight
         let parentHeight = parentContainer.clientHeight - titleBarHeight;
         this.contentScrollerDiv.style.height = (parentHeight) + "px"

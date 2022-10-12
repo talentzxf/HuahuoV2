@@ -4,7 +4,7 @@ import {HHContent} from './HHContent'
 import {HHTitle} from "./HHTitle";
 import {HHSplitter} from "./HHSplitter";
 import {HHSideBar} from "./HHSideBar";
-import {findParentPanel, findParentContent, findParentContainer} from "./PanelUtilities";
+import {findParentPanel, findParentContent, findParentContainer, findParentSideBar} from "./PanelUtilities";
 
 export{HHContainer, HHPanel, HHContent, HHTitle, HHSplitter, HHSideBar,
-    PanelEventNames, findParentPanel, findParentContainer, findParentContent}
+    PanelEventNames, findParentPanel, findParentContainer, findParentContent, findParentSideBar}

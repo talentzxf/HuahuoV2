@@ -3,8 +3,15 @@ import {ResponsibleChain, ChainCallback} from "./ResponsibleChain";
 import {HHTitle} from "../HHTitle";
 import {OccupiedTitleManager} from "./OccupiedTitleManager";
 
+interface MovableElement{
+    setScrPos(x, y);
+    offsetHeight: number;
+    offsetWidth: number;
+    currentlyDockedElement: HTMLElement;
+}
+
 class TabMoveParam {
-    public ele: HHTitle
+    public ele: MovableElement
     public targetPos: Vector2D
 
     public constructor(inEle: HHTitle, inTargetPos: Vector2D) {
@@ -50,4 +57,4 @@ class TabMover{
     }
 }
 
-export {TabMover, TabMoveParam}
+export {TabMover, TabMoveParam, MovableElement}

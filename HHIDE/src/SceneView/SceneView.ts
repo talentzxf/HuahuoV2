@@ -7,7 +7,7 @@ import {ResizeObserver} from 'resize-observer';
 import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
 import {EditorPlayer} from "../AnimationPlayer/EditorPlayer";
 import {fileLoader} from "./FileLoader";
-import {findParentContent, findParentPanel} from "hhpanel";
+import {findParentContent, findParentPanel, HHSideBar} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
 
 @CustomElement({
@@ -53,6 +53,7 @@ class SceneView extends HTMLElement {
         this.canvas.setAttribute("resize", "true")
         this.canvas.style.padding = "0"
         this.canvas.style.margin = "0"
+        this.canvas.classList.add("dockable")
         this.canvasContainer.appendChild(this.canvas)
 
         this.ctx = this.canvas.getContext("2d")
@@ -250,6 +251,12 @@ class SceneView extends HTMLElement {
             huahuoEngine.ExecuteAfterInited(()=>{
                 sceneViewManager.focusSceneView(_this)
             })
+
+            // Refresh sidebar content.
+            let sidebars = document.querySelectorAll("hh-sidebar")
+            for(let sidebar of sidebars){
+                (sidebar as HHSideBar).refreshDockables()
+            }
         }
     }
 

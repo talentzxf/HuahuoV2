@@ -47,34 +47,26 @@
             </div>
         </hh-container>
 
+        <hh-sidebar initDockStatus="left-top">
+            <hh-sidebar-content title="Tools">
+                <hh-draw-toolbar></hh-draw-toolbar>
+            </hh-sidebar-content>
+        </hh-sidebar>
+
+        <hh-sidebar>
+            <hh-sidebar-content title="Properties">
+                <hh-inspector></hh-inspector>
+            </hh-sidebar-content>
+        </hh-sidebar>
+
         <hh-container direction="column">
             <hh-container direction="row">
-                <hh-container direction="column" style="width: 15%">
-                    <hh-container>
-                        <hh-panel>
-                            <hh-content title="tools">
-                                <hh-draw-toolbar></hh-draw-toolbar>
-        <!--                        NavTree Content-->
-        <!--                        <hh-navtree></hh-navtree>-->
-                            </hh-content>
-                        </hh-panel>
-                    </hh-container>
-                    <hh-container>
-                        <hh-panel>
-                            <hh-content title="properties">
-                                <hh-inspector></hh-inspector>
-                            </hh-content>
-                        </hh-panel>
-                    </hh-container>
-                </hh-container>
-                <hh-container direction="row" style="width: 85%">
                     <hh-panel content-style="flex-basis:100%; display:flex; align-items: stretch">
                         <hh-content closable="false" title="scene" style="width:85%; height:100%; flex-basis:100%; align-items: stretch">
                             <hh-sceneview id="mainScene" style="flex-basis:100%; display:flex; align-items: stretch"></hh-sceneview>
                         </hh-content>
     <!--                    <hh-content title="Game">Game Content</hh-content>-->
                     </hh-panel>
-                </hh-container>
             </hh-container>
 <!--            <hh-container direction="row" style="height:10%">-->
 <!--                <hh-panel>-->

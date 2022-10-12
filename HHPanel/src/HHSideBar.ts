@@ -1,9 +1,7 @@
 import {CustomElement} from "hhcommoncomponents";
-import {HHTitle} from "./HHTitle";
 import {HHContent} from "./HHContent";
 import {Vector2D} from "./math/Vector2D";
-import {TabMoveParam, TabMover} from "./draggable/TabMover";
-import {OccupiedTitleManager} from "./draggable/OccupiedTitleManager";
+import {MovableElement, TabMoveParam, TabMover} from "./draggable/TabMover";
 import {ChainCallback} from "./draggable/ResponsibleChain";
 
 const DOCKABLEMARGIN = 20;
@@ -24,7 +22,8 @@ class SideBarTabMover extends TabMover {
 @CustomElement({
     selector: "hh-sidebar",
 })
-class HHSideBar extends HTMLElement {
+class HHSideBar extends HTMLElement implements MovableElement {
+    currentlyDockedElement: HTMLElement = null;
     titleBar: HTMLDivElement
 
     isMoving: boolean = false
@@ -32,6 +31,8 @@ class HHSideBar extends HTMLElement {
     startPos: Vector2D
     startElePos: Vector2D
     tabMover: SideBarTabMover = new SideBarTabMover()
+
+    registeredDockables: Set<HTMLElement> = new Set<HTMLElement>()
 
     connectedCallback() {
         let content = this.querySelector("hh-sidebar-content") as HHContent
@@ -42,6 +43,7 @@ class HHSideBar extends HTMLElement {
         this.insertBefore(this.titleBar, content)
         this.titleBar.style.background = "lightgray"
         this.titleBar.style.userSelect = "none"
+        this.titleBar.classList.add("title_tabs")
         this.titleBar.style.webkitUserSelect = "none"
         this.titleBar.style["ms-user-select"] = "none"
         this.titleBar.style["moz-user-select"] = "none"
@@ -58,10 +60,33 @@ class HHSideBar extends HTMLElement {
 
         this.titleBar.onmousedown = this.onTitleMouseDown.bind(this)
 
+        this.refreshDockables()
+    }
+
+    refreshDockables() {
         let dockables: NodeListOf<HTMLElement> = document.querySelectorAll(".dockable")
 
+        let firstDockable = null
         for (let dockable of dockables) {
-            this.tabMover.AddFront(this.TryDock(dockable as HTMLElement))
+            if (firstDockable == null)
+                firstDockable = dockable
+
+            if (!this.registeredDockables.has(dockable)) {
+                this.tabMover.AddFront(this.TryDock(dockable as HTMLElement))
+                this.registeredDockables.add(dockable)
+            }
+        }
+
+        let initDockStatus = this.getAttribute("initDockStatus")
+        if (initDockStatus && initDockStatus != "none" && firstDockable != null) {
+            let clientRect: DOMRect = firstDockable.getBoundingClientRect()
+
+            if (this.currentlyDockedElement == null) {
+                let dockStatusArray = initDockStatus.split("-")
+                if (dockStatusArray.length == 2) {
+                    this.setScrPos(clientRect[dockStatusArray[0]], clientRect[dockStatusArray[1]])
+                }
+            }
         }
     }
 
@@ -75,25 +100,27 @@ class HHSideBar extends HTMLElement {
             // Dock at top
             if (candidatePos.Y < clientRect.top + DOCKABLEMARGIN) {
                 target.setScrPos(candidatePos.X, clientRect.top)
+                target.currentlyDockedElement = dockable
                 return true;
             } // Dock at bottom
             else if (candidatePos.Y + target.offsetHeight > clientRect.bottom - DOCKABLEMARGIN) {
                 target.setScrPos(candidatePos.X, clientRect.bottom - target.offsetHeight)
+                target.currentlyDockedElement = dockable
                 return true;
             }
             // Dock at left.
             else if (candidatePos.X < clientRect.left + DOCKABLEMARGIN) { // Put the element at top, up
                 target.setScrPos(clientRect.left, clientRect.top)
+                target.currentlyDockedElement = dockable
                 return true;
             } // Dock at right
             else if (candidatePos.X + target.offsetWidth > clientRect.right - DOCKABLEMARGIN) {
                 target.setScrPos(clientRect.right - target.offsetWidth, clientRect.top)
-
-                console.log("Here here!!", clientRect.right - target.offsetWidth)
+                target.currentlyDockedElement = dockable
                 return true;
+            } else {
+                target.currentlyDockedElement = null
             }
-
-            console.log("Nothing!!!")
 
             return false;
         }
@@ -144,6 +171,14 @@ class HHSideBar extends HTMLElement {
     setScrPos(x, y) {
         this.style.left = x + "px"
         this.style.top = y + "px"
+    }
+
+    hide() {
+        this.style.display = "none"
+    }
+
+    show(){
+        this.style.display = "block"
     }
 
 }

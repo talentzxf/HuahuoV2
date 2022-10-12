@@ -1,5 +1,5 @@
 import {Vector2D} from "./math/Vector2D";
-import {TabMover} from "./draggable/TabMover";
+import {MovableElement, TabMover} from "./draggable/TabMover";
 import {CustomElement} from "hhcommoncomponents";
 import {OccupiedTitleManager} from "./draggable/OccupiedTitleManager";
 import {HHPanel} from "./HHPanel";
@@ -10,13 +10,15 @@ let closeButtonSvg: string = "data:image/svg+xml,%3C%3Fxml version='1.0' encodin
 @CustomElement({
     selector:"hh-title",
 })
-class HHTitle extends HTMLElement {
+class HHTitle extends HTMLElement implements MovableElement{
     private startMoving: Boolean = false
     private isMoving: Boolean = false
     private startElePos: Vector2D = new Vector2D()
     private startPos: Vector2D
     private parentPanel: HHPanel
     private content: HHContent
+
+    currentlyDockedElement: HTMLElement; // No use for HHTitle.
 
     private inited: boolean = false;
 
