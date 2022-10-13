@@ -6,6 +6,13 @@ import {ChainCallback} from "./draggable/ResponsibleChain";
 
 const DOCKABLEMARGIN = 20;
 
+enum DIRECTIONS{
+    LEFT = 0,
+    RIGHT = 1,
+    TOP = 2,
+    BOTTOM = 3
+}
+
 @CustomElement({
     selector: "hh-sidebar-content",
 })
@@ -34,6 +41,8 @@ class HHSideBar extends HTMLElement implements MovableElement {
 
     registeredDockables: Set<HTMLElement> = new Set<HTMLElement>()
 
+    allowedDirectionBoolean: boolean[] = [false, false, false, false] // left, right, top, bottom
+
     connectedCallback() {
         let content = this.querySelector("hh-sidebar-content") as HHContent
         let title = content.getAttribute("title") || "No Title"
@@ -61,6 +70,21 @@ class HHSideBar extends HTMLElement implements MovableElement {
         this.titleBar.onmousedown = this.onTitleMouseDown.bind(this)
 
         this.refreshDockables()
+
+        let allowedDockDirectionStr = this.getAttribute("allowedDockDirection")
+        let allowedDockDirections = allowedDockDirectionStr == null ? []: allowedDockDirectionStr.split(",")
+        if(allowedDockDirections.length == 0 || allowedDockDirections[0] == "all")
+        {
+            for(let idx:number = 0 ; idx < this.allowedDirectionBoolean.length; idx++){
+                this.allowedDirectionBoolean[idx] = true
+            }
+        }
+
+        for(let allowedDockDirection of allowedDockDirections){
+            let dirNameUpper = allowedDockDirection.toUpperCase()
+            let dirIdx = DIRECTIONS[dirNameUpper]
+            this.allowedDirectionBoolean[dirIdx] = true
+        }
     }
 
     isVisible(ele: HTMLElement) {
@@ -146,23 +170,23 @@ class HHSideBar extends HTMLElement implements MovableElement {
                 return false
 
             // Dock at top
-            if (candidatePos.Y < clientRect.top + DOCKABLEMARGIN) {
+            if (_this.allowedDirectionBoolean[DIRECTIONS.TOP] && candidatePos.Y < clientRect.top + DOCKABLEMARGIN) {
                 target.setScrPos(candidatePos.X, clientRect.top)
                 target.currentlyDockedElement = dockable
                 return true;
             } // Dock at bottom
-            else if (candidatePos.Y + target.offsetHeight > clientRect.bottom - DOCKABLEMARGIN) {
+            else if (_this.allowedDirectionBoolean[DIRECTIONS.BOTTOM] && candidatePos.Y + target.offsetHeight > clientRect.bottom - DOCKABLEMARGIN) {
                 target.setScrPos(candidatePos.X, Math.max(clientRect.bottom - target.offsetHeight, 0))
                 target.currentlyDockedElement = dockable
                 return true;
             }
             // Dock at left.
-            else if (candidatePos.X < clientRect.left + DOCKABLEMARGIN) { // Put the element at top, up
+            else if (_this.allowedDirectionBoolean[DIRECTIONS.LEFT] && candidatePos.X < clientRect.left + DOCKABLEMARGIN) { // Put the element at top, up
                 target.setScrPos(clientRect.left, clientRect.top)
                 target.currentlyDockedElement = dockable
                 return true;
             } // Dock at right
-            else if (candidatePos.X + target.offsetWidth > clientRect.right - DOCKABLEMARGIN) {
+            else if (_this.allowedDirectionBoolean[DIRECTIONS.RIGHT] && candidatePos.X + target.offsetWidth > clientRect.right - DOCKABLEMARGIN) {
                 target.setScrPos(Math.max(clientRect.right - target.offsetWidth, 0), clientRect.top)
                 target.currentlyDockedElement = dockable
                 return true;
