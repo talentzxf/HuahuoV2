@@ -184,6 +184,7 @@ class HHSideBar extends HTMLElement implements MovableElement {
 
     show(){
         this.style.display = "block"
+        this.refreshDockables()
     }
 
 }
