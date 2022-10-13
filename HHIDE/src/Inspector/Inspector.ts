@@ -20,7 +20,8 @@ class Inspector extends HTMLElement{
         this.contentScrollerDiv .style.width = "100%"
         this.contentScrollerDiv .style.height = parentHeight + "px"
         this.contentScrollerDiv .style.overflowY = "auto"
-        this.contentScrollerDiv.style.overflowX = "clip"
+        this.contentScrollerDiv.style.overflowX = "auto"
+        this.contentScrollerDiv.style.resize = "both"
         this.appendChild(this.contentScrollerDiv )
 
         this.contentDiv = document.createElement("div")
