@@ -1,5 +1,6 @@
 import {CustomElement} from "hhcommoncomponents";
 import {SVGFiles} from "../Utilities/Svgs";
+import {undoManager} from "../RedoUndo/UndoManager";
 
 @CustomElement({
     selector: "hh-editor-tool-bar"
@@ -21,8 +22,19 @@ class HHEditorToolBar extends HTMLElement{
         this.redoButton.style.transform = "scaleX(-1)"
         this.redoButton.title = i18n.t("hint.undo")
         this.redoButton.innerHTML = SVGFiles.undoBtn
+
+        this.undoButton.addEventListener("click", this.undo.bind(this))
+        this.redoButton.addEventListener("click", this.redo.bind(this))
         this.appendChild(this.undoButton)
         this.appendChild(this.redoButton)
+    }
+
+    undo(){
+        undoManager.UnDo()
+    }
+
+    redo(){
+        undoManager.ReDo()
     }
 }
 
