@@ -13,3 +13,7 @@ class UndoManager{
         this.currentCmdIdx = this.undoCommandStack.length - 1
     }
 }
+
+let undoManager = new UndoManager()
+
+export {UndoableCommand, undoManager}

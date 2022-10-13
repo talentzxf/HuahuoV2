@@ -3,6 +3,8 @@ import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {huahuoEngine, renderEngine2D} from "hhenginejs"
 import {BaseShapeJS} from "hhenginejs";
 import {elementCreator} from "../SceneView/ElementCreator";
+import {CreateShapeCommand} from "../RedoUndo/CreateShapeCommand";
+import {undoManager} from "../RedoUndo/UndoManager";
 
 class BaseShapeDrawer{
     name = "unknown_shape"
@@ -49,7 +51,11 @@ class BaseShapeDrawer{
 
     addShapeToCurrentLayer(shape:BaseShapeJS){
         let currentLayer = huahuoEngine.GetCurrentLayer()
-        currentLayer.addShape(shape)
+
+        let createShapeCommand = new CreateShapeCommand(currentLayer, shape)
+        createShapeCommand.DoCommand()
+
+        undoManager.PushCommand(createShapeCommand)
 
         elementCreator.dispatchElementChange(shape.getBornStoreId())
     }

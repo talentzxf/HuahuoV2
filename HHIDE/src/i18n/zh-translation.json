@@ -78,7 +78,9 @@
     "localLocal": "从本地加载项目",
     "preview": "上传并预览动画",
     "listProject": "列出我的项目",
-    "uploadProject": "上传项目"
+    "uploadProject": "上传项目",
+    "undo": "撤销",
+    "redo": "重做"
   },
   "project": {
     "delete": "删除项目",

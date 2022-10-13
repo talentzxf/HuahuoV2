@@ -3,6 +3,8 @@ import {CircleShapeJS} from "hhenginejs"
 import {huahuoEngine} from "hhenginejs"
 import {Vector2} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {undoManager} from "../RedoUndo/UndoManager";
+import {CreateShapeCommand} from "../RedoUndo/CreateShapeCommand";
 
 class CircleDrawer extends BaseShapeDrawer {
     name = "Circle"

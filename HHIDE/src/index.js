@@ -15,6 +15,7 @@ import {projectUploader} from "./RESTApis/ProjectUploader";
 import {HHToolBar} from "./UIComponents/ToolBar";
 import {ProjectListForm} from "./Utilities/ProjectListForm";
 import {ProjectInfoForm} from "./Utilities/ProjectInfoForm";
+import {HHEditorToolBar} from "./UIComponents/HHEditorToolBar";
 
 import "vanilla-colorful"
 
