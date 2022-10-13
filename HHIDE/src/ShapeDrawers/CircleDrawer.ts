@@ -4,18 +4,19 @@ import {huahuoEngine} from "hhenginejs"
 import {Vector2} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 
-class CircleDrawer extends BaseShapeDrawer{
+class CircleDrawer extends BaseShapeDrawer {
     name = "Circle"
     imgClass = "fas fa-circle"
     tempShape = null
 
     startPosition = new Vector2()
+
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
         super.onBeginToDrawShape(canvas);
         canvas.style.cursor = "crosshair"
     }
 
-    onMouseDown(evt:MouseEvent) {
+    onMouseDown(evt: MouseEvent) {
         super.onMouseDown(evt);
         this.startPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.isDrawing = true
@@ -26,7 +27,7 @@ class CircleDrawer extends BaseShapeDrawer{
 
     onMouseMove(evt: MouseEvent) {
         super.onMouseMove(evt);
-        if(this.isDrawing){
+        if (this.isDrawing) {
             let endPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
 
             let radius = endPosition.distance(this.startPosition)
@@ -39,7 +40,7 @@ class CircleDrawer extends BaseShapeDrawer{
         super.onMouseUp(evt);
 
         let _this = this
-        huahuoEngine.ExecuteAfterInited(()=>{
+        huahuoEngine.ExecuteAfterInited(() => {
             _this.isDrawing = false
             EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
             _this.addShapeToCurrentLayer(_this.tempShape)
