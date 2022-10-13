@@ -63,12 +63,16 @@ class HHSideBar extends HTMLElement implements MovableElement {
         this.refreshDockables()
     }
 
+    isVisible(ele: HTMLElement) {
+        return ele.offsetWidth > 0 && ele.offsetHeight > 0
+    }
+
     refreshDockables() {
         let dockables: NodeListOf<HTMLElement> = document.querySelectorAll(".dockable")
 
         let firstDockable = null
         for (let dockable of dockables) {
-            if (firstDockable == null)
+            if (this.isVisible(dockable) && firstDockable == null)
                 firstDockable = dockable
 
             if (!this.registeredDockables.has(dockable)) {
@@ -81,16 +85,16 @@ class HHSideBar extends HTMLElement implements MovableElement {
         if (initDockStatus && initDockStatus != "none" && firstDockable != null) {
             let clientRect: DOMRect = firstDockable.getBoundingClientRect()
 
-            if (this.currentlyDockedElement == null) {
+            if (this.currentlyDockedElement == null || !this.isVisible(this.currentlyDockedElement)) {
                 let dockStatusArray = initDockStatus.split("-")
                 if (dockStatusArray.length == 2) {
                     let posX = clientRect[dockStatusArray[0]]
                     let posY = clientRect[dockStatusArray[1]]
-                    if(dockStatusArray[0] == "right"){
+                    if (dockStatusArray[0] == "right") {
                         posX -= this.offsetWidth
                     }
 
-                    if(dockStatusArray[1] == "bottom"){
+                    if (dockStatusArray[1] == "bottom") {
                         posY -= this.offsetHeight
                     }
 
@@ -100,17 +104,46 @@ class HHSideBar extends HTMLElement implements MovableElement {
                 let dockStatusArray = initDockStatus.split("-")
                 if (dockStatusArray.length == 2) {
                     this.setScrPos(clientRect[dockStatusArray[0]], clientRect[dockStatusArray[1]])
+                    this.currentlyDockedElement = firstDockable
                 }
             }
         }
     }
 
+    hasOverlap(rect1: DOMRect, rect2: DOMRect){
+        // Either one of the rectanges is a line
+        if(rect1.width == 0 || rect1.height == 0 || rect2.width == 0 || rect2.height == 0)
+            return false;
+
+        // Either one is in the left of another one.
+        if(rect1.x > rect2.x + rect2.width || rect1.x + rect1.width < rect2.x){
+            return false
+        }
+
+        // Either one is on top of another
+        if(rect1.y > rect2.y + rect2.height || rect1.y + rect1.height < rect2.y)
+        {
+            return false
+        }
+
+        return true
+    }
+
     TryDock(dockable: HTMLElement): ChainCallback<TabMoveParam> {
+        let _this = this
         return function (tabMoverParam: TabMoveParam) {
             let target = tabMoverParam.ele
             let candidatePos = tabMoverParam.targetPos
+            if (!_this.isVisible(dockable))
+                return false
 
             let clientRect: DOMRect = dockable.getBoundingClientRect()
+
+            // Check if these two rects has overlap
+            let targetRect: DOMRect = target.getBoundingClientRect()
+
+            if(!_this.hasOverlap(clientRect, targetRect))
+                return false
 
             // Dock at top
             if (candidatePos.Y < clientRect.top + DOCKABLEMARGIN) {
@@ -119,7 +152,7 @@ class HHSideBar extends HTMLElement implements MovableElement {
                 return true;
             } // Dock at bottom
             else if (candidatePos.Y + target.offsetHeight > clientRect.bottom - DOCKABLEMARGIN) {
-                target.setScrPos(candidatePos.X, clientRect.bottom - target.offsetHeight)
+                target.setScrPos(candidatePos.X, Math.max(clientRect.bottom - target.offsetHeight, 0))
                 target.currentlyDockedElement = dockable
                 return true;
             }
@@ -130,7 +163,7 @@ class HHSideBar extends HTMLElement implements MovableElement {
                 return true;
             } // Dock at right
             else if (candidatePos.X + target.offsetWidth > clientRect.right - DOCKABLEMARGIN) {
-                target.setScrPos(clientRect.right - target.offsetWidth, clientRect.top)
+                target.setScrPos(Math.max(clientRect.right - target.offsetWidth, 0), clientRect.top)
                 target.currentlyDockedElement = dockable
                 return true;
             } else {
@@ -192,7 +225,7 @@ class HHSideBar extends HTMLElement implements MovableElement {
         this.style.display = "none"
     }
 
-    show(){
+    show() {
         this.style.display = "block"
         this.refreshDockables()
     }

@@ -8,6 +8,7 @@ interface MovableElement{
     offsetHeight: number;
     offsetWidth: number;
     currentlyDockedElement: HTMLElement;
+    getBoundingClientRect(): DOMRect;
 }
 
 class TabMoveParam {
