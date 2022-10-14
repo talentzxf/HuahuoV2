@@ -1,20 +1,25 @@
 import {huahuoEngine} from "hhenginejs";
+import {sceneViewManager} from "../SceneView/SceneViewManager";
 
 class ExecutionStackFrame{
     private store
     private layer
     private frameId
+    private player
 
     constructor() {
         this.store = huahuoEngine.GetCurrentStore()
         this.layer = huahuoEngine.GetCurrentLayer()
         this.frameId = this.layer.GetCurrentFrame()
+        this.player = sceneViewManager.getFocusedViewAnimationPlayer()
     }
 
     restore(){
         this.layer.SetCurrentFrame(this.frameId)
         this.store.SetCurrentLayer(this.layer)
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.store.storeId)
+
+        this.player.updateAllShapes()
     }
 
     equals(otherFrame: ExecutionStackFrame){
