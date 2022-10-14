@@ -7,11 +7,15 @@ interface UndoableCommand {
 class UndoManager {
     undoCommandStack: Array<UndoableCommand> = new Array<UndoableCommand>()
 
-    currentCmdIdx: number = 0
+    currentCmdIdx: number = -1 // -1 means currently no command.
+
+    isValidIndex(idx):boolean{
+        return idx >= 0 && idx <= this.undoCommandStack.length - 1
+    }
 
     PushCommand(cmd: UndoableCommand) {
         // Discard all commands behind current index
-        while (this.currentCmdIdx != this.undoCommandStack.length) {
+        while (this.currentCmdIdx != this.undoCommandStack.length - 1) {
             this.undoCommandStack.pop()
         }
 
@@ -20,16 +24,23 @@ class UndoManager {
     }
 
     UnDo() {
-        this.currentCmdIdx = Math.max(this.currentCmdIdx - 1 , 0 )
+        if(this.currentCmdIdx == this.undoCommandStack.length){ // At the top, can only undo the last command.
+            this.currentCmdIdx = Math.max(this.currentCmdIdx - 1 , -1 )
+        }
 
-        let currentCommand = this.undoCommandStack[this.currentCmdIdx]
-        currentCommand.UnDoCommand()
+        if(this.isValidIndex(this.currentCmdIdx)){
+            let currentCommand = this.undoCommandStack[this.currentCmdIdx]
+            currentCommand.UnDoCommand()
+        }
+        this.currentCmdIdx = Math.max(this.currentCmdIdx - 1 , -1 )
     }
 
     ReDo() {
-        this.currentCmdIdx = Math.min(this.currentCmdIdx + 1 , this.undoCommandStack.length - 1)
-        let currentCommand = this.undoCommandStack[this.currentCmdIdx]
-        currentCommand.DoCommand()
+        this.currentCmdIdx = Math.min(this.currentCmdIdx + 1 , this.undoCommandStack.length)
+        if(this.isValidIndex(this.currentCmdIdx)){
+            let currentCommand = this.undoCommandStack[this.currentCmdIdx]
+            currentCommand.DoCommand()
+        }
     }
 }
 
