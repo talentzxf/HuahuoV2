@@ -6,6 +6,8 @@ import {huahuoEngine, ElementShapeJS, paper} from "hhenginejs"
 import {HHContent, PanelEventNames} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
 import {BaseShapeJS} from "hhenginejs";
+import {FocusSceneViewCommand} from "../RedoUndo/FocusSceneViewCommand";
+import {undoManager} from "../RedoUndo/UndoManager";
 
 class ElementCreator {
     sceneView: SceneView

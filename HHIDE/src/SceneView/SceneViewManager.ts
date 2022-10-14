@@ -2,6 +2,9 @@ import {SceneView} from "./SceneView";
 import {Logger} from "hhcommoncomponents"
 import {Player} from "hhenginejs"
 import {huahuoEngine, renderEngine2D} from "hhenginejs";
+import {undoManager} from "../RedoUndo/UndoManager";
+import {FocusSceneViewCommand} from "../RedoUndo/FocusSceneViewCommand";
+import {findParentPanel} from "hhpanel"
 
 class SceneViewManager{
     // Map from storeId->SceneView
@@ -27,7 +30,9 @@ class SceneViewManager{
         return null
     }
 
-    focusSceneView(sceneView:SceneView){
+    focusSceneView(sceneView:SceneView, pushCommand = true){
+        let previousSceneView = this.curFocusedSceneView
+
         // save the currently focused scene view frameId.
         if(this.curFocusedSceneView){
             this.sceneViewFrameIdMap.set(this.curFocusedSceneView, this.curFocusedSceneView.animationPlayer.currentlyPlayingFrameId)
@@ -49,6 +54,11 @@ class SceneViewManager{
         player.updateAllShapes()
 
         sceneView.resetDefaultShapeDrawer()
+
+        if(pushCommand){
+            undoManager.PushCommand(new FocusSceneViewCommand(previousSceneView, this.curFocusedSceneView))
+        }
+
     }
 
     getFocusedSceneView(){
