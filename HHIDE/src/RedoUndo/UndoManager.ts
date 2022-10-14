@@ -23,7 +23,7 @@ class UndoManager {
         this.currentCmdIdx = Math.max(this.currentCmdIdx - 1 , 0 )
 
         let currentCommand = this.undoCommandStack[this.currentCmdIdx]
-        currentCommand.DoCommand()
+        currentCommand.UnDoCommand()
     }
 
     ReDo() {

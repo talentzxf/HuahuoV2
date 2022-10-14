@@ -15,6 +15,8 @@ class CreateShapeCommand implements UndoableCommand{
     }
 
     UnDoCommand() {
+        this.targetShape.detachFromCurrentLayer()
+        this.targetShape.removePaperObj()
     }
 }
 

@@ -292,6 +292,11 @@ class ShapeSelector extends BaseShapeDrawer {
         let targetPos = new paper.Point(pos.x, pos.y)
 
         let targetShape = this.selectedShapes.values().next().value
+        if(targetShape == null || targetShape.paperShape == null){
+            this.selectedShapes.delete(targetShape)
+            return
+        }
+
         let bounds = relaxRectangle(targetShape.paperShape.bounds, BOUNDMARGIN)
 
         if (!bounds.contains(targetPos)) {
