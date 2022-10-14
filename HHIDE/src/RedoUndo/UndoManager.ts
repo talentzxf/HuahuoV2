@@ -1,11 +1,62 @@
-interface UndoableCommand {
-    GetType(): string
-    DoCommand()
-    UnDoCommand()
+import {huahuoEngine} from "hhenginejs";
+
+class ExecutionStackFrame{
+    private store
+    private layer
+    private frameId
+
+    constructor() {
+        this.store = huahuoEngine.GetCurrentStore()
+        this.layer = huahuoEngine.GetCurrentLayer()
+        this.frameId = this.layer.GetCurrentFrame()
+    }
+
+    restore(){
+        this.layer.SetCurrentFrame(this.frameId)
+        this.store.SetCurrentLayer(this.layer)
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.store.storeId)
+    }
+
+    equals(otherFrame: ExecutionStackFrame){
+        return this.store == otherFrame.store && this.frameId == otherFrame.frameId && this.store == otherFrame.store
+    }
 }
 
-interface MergableCommand extends UndoableCommand{
-    MergeCommand(anotherCommand:MergableCommand): boolean
+abstract class UndoableCommand {
+    abstract GetType(): string
+    abstract _DoCommand()
+    abstract _UnDoCommand()
+
+    private stackFrame: ExecutionStackFrame
+    constructor() {
+        this.stackFrame = new ExecutionStackFrame()
+    }
+
+    stackFrameEqual(anotherCommand: UndoableCommand):boolean{
+        return this.stackFrame.equals(anotherCommand.stackFrame)
+    }
+
+    private ExecuteCommand(func){
+        let stackFrame: ExecutionStackFrame = new ExecutionStackFrame()
+        try{
+            this.stackFrame.restore() // Return to the status when the command is created.
+            func()
+        }finally {
+            stackFrame.restore()
+        }
+    }
+
+    public DoCommand(){
+        this.ExecuteCommand(this._DoCommand.bind(this))
+    }
+
+    public UnDoCommand(){
+        this.ExecuteCommand(this._UnDoCommand.bind(this))
+    }
+}
+
+abstract class MergableCommand extends UndoableCommand{
+    abstract MergeCommand(anotherCommand:MergableCommand): boolean
 }
 
 function commandIsMergable(cmd:UndoableCommand){
@@ -74,4 +125,4 @@ class UndoManager {
 
 let undoManager = new UndoManager()
 
-export {UndoableCommand, MergableCommand, undoManager}
+export {UndoableCommand, MergableCommand, ExecutionStackFrame, undoManager}

@@ -3,23 +3,26 @@ import {BaseShapeJS} from "hhenginejs";
 
 let commandName = "MoveShape"
 
-class ShapeMoveCommand implements MergableCommand{
+class ShapeMoveCommand extends MergableCommand{
     targetShape:BaseShapeJS
     prevPos
     targetPos
+    layer
 
     constructor(shape:BaseShapeJS, currentPos, targetPos) {
+        super()
         this.targetShape = shape
+        this.layer = shape.getLayer()
         this.prevPos = currentPos
         this.targetPos = targetPos
     }
 
-    DoCommand() {
+    _DoCommand() {
         this.targetShape.position = this.targetPos
         this.targetShape.store()
     }
 
-    UnDoCommand() {
+    _UnDoCommand() {
         this.targetShape.position = this.prevPos
         this.targetShape.store()
     }
@@ -32,9 +35,13 @@ class ShapeMoveCommand implements MergableCommand{
         if(anotherCommand.GetType() == commandName){
             let moveCommand = anotherCommand as ShapeMoveCommand
             if(moveCommand){
-                if(moveCommand.targetShape == this.targetShape){ // This is the same shape, can merge the move command
-                    this.targetPos = moveCommand.targetPos
-                    return true
+                if(this.stackFrameEqual(anotherCommand)){
+                    // This is the same shape, in the same layer, in the same frameId, can merge the move command
+                    if(moveCommand.targetShape == this.targetShape &&
+                        this.layer == moveCommand.layer){
+                        this.targetPos = moveCommand.targetPos
+                        return true
+                    }
                 }
             }
         }
