@@ -17,7 +17,7 @@ class ExecutionStackFrame{
     restore(){
         this.layer.SetCurrentFrame(this.frameId)
         this.store.SetCurrentLayer(this.layer)
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.store.storeId)
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.store.GetStoreId())
 
         this.player.updateAllShapes()
     }
@@ -42,13 +42,15 @@ abstract class UndoableCommand {
     }
 
     private ExecuteCommand(func){
-        let stackFrame: ExecutionStackFrame = new ExecutionStackFrame()
-        try{
-            this.stackFrame.restore() // Return to the status when the command is created.
-            func()
-        }finally {
-            stackFrame.restore()
-        }
+        // let stackFrame: ExecutionStackFrame = new ExecutionStackFrame()
+        // try{
+        //     this.stackFrame.restore() // Return to the status when the command is created.
+        //     func()
+        // }finally {
+        //     stackFrame.restore()
+        // }
+
+        func()
     }
 
     public DoCommand(){

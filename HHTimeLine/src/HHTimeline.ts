@@ -170,6 +170,7 @@ class HHTimeline extends HTMLElement {
     }
 
     onCellClicked(track, cellId) {
+        let currentTime = this.elapsedTime
         let elapsedTime = (cellId + 0.5) / GlobalConfig.fps
         this.setTimeElapsed(elapsedTime)
 
@@ -177,6 +178,7 @@ class HHTimeline extends HTMLElement {
             detail: {
                 track: track,
                 cellId: cellId,
+                prevTime: currentTime,
                 elapsedTime: elapsedTime
             }
         })

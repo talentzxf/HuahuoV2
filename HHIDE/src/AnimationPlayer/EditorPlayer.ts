@@ -3,6 +3,8 @@ import {huahuoEngine, GlobalConfig} from "hhenginejs"
 import {Player} from "hhenginejs/src/Player/Player"; // Not sure what's the best way to import a class and extend it in another package....
 import {SceneView} from "../SceneView/SceneView";
 import {sceneViewManager} from "../SceneView/SceneViewManager";
+import {undoManager} from "../RedoUndo/UndoManager";
+import {SetFrameIdCommand} from "../RedoUndo/SetFrameIdCommand";
 
 declare var Module:any;
 
@@ -51,6 +53,10 @@ class EditorPlayer extends Player{
         let elapsedTime = e.detail.elapsedTime
         let frameId = Math.floor(elapsedTime * GlobalConfig.fps)
         this.setFrameId(frameId)
+
+        let prevTime = e.detail.prevTime
+        let prevFrameId = Math.floor(prevTime * GlobalConfig.fps)
+        undoManager.PushCommand( new SetFrameIdCommand(this.sceneView.animationPlayer, prevFrameId, frameId) )
     }
 
     setFrameId(playFrameId, force = false){
