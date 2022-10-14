@@ -1,7 +1,15 @@
 interface UndoableCommand {
+    GetType(): string
     DoCommand()
-
     UnDoCommand()
+}
+
+interface MergableCommand extends UndoableCommand{
+    MergeCommand(anotherCommand:MergableCommand): boolean
+}
+
+function commandIsMergable(cmd:UndoableCommand){
+    return (<MergableCommand>cmd).MergeCommand !== undefined
 }
 
 class UndoManager {
@@ -13,10 +21,30 @@ class UndoManager {
         return idx >= 0 && idx <= this.undoCommandStack.length - 1
     }
 
+    getUndoIndex(){
+        if(this.undoCommandStack.length == 0)
+            return -1
+        if(this.currentCmdIdx == this.undoCommandStack.length)
+            return this.currentCmdIdx
+
+        return this.currentCmdIdx
+    }
+
     PushCommand(cmd: UndoableCommand) {
         // Discard all commands behind current index
         while (this.currentCmdIdx != this.undoCommandStack.length - 1) {
             this.undoCommandStack.pop()
+        }
+
+        let undoCmdIdx = this.getUndoIndex()
+
+        if(this.isValidIndex(undoCmdIdx)){
+            let currentDoneCommand = this.undoCommandStack[undoCmdIdx]
+            if(commandIsMergable(currentDoneCommand) && commandIsMergable(cmd)){
+                if( (currentDoneCommand as MergableCommand).MergeCommand(cmd as MergableCommand) ){ // The new command is merged into previous command.
+                    return
+                }
+            }
         }
 
         this.undoCommandStack.push(cmd)
@@ -46,4 +74,4 @@ class UndoManager {
 
 let undoManager = new UndoManager()
 
-export {UndoableCommand, undoManager}
+export {UndoableCommand, MergableCommand, undoManager}

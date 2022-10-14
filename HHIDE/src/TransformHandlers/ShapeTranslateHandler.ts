@@ -1,5 +1,7 @@
 import {ShapeTranslateMorphBase} from "./ShapeTranslateMorphBase";
 import {Vector2} from "hhcommoncomponents"
+import {undoManager} from "../RedoUndo/UndoManager";
+import {ShapeMoveCommand} from "../RedoUndo/ShapeMoveCommand";
 
 class ShapeTranslateHandler extends ShapeTranslateMorphBase
 {
@@ -54,8 +56,9 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
                     proposedNewPosition = followingCurve.getGlobalNearestPoint(proposedNewPosition)
                 }
 
-                obj.position = proposedNewPosition
-                obj.store()
+                let command = new ShapeMoveCommand(obj, obj.position, proposedNewPosition)
+                undoManager.PushCommand(command)
+                command.DoCommand()
             }
         }
     }
