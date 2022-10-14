@@ -20,11 +20,16 @@ class UndoManager {
     }
 
     UnDo() {
+        this.currentCmdIdx = Math.max(this.currentCmdIdx - 1 , 0 )
 
+        let currentCommand = this.undoCommandStack[this.currentCmdIdx]
+        currentCommand.DoCommand()
     }
 
     ReDo() {
-
+        this.currentCmdIdx = Math.min(this.currentCmdIdx + 1 , this.undoCommandStack.length - 1)
+        let currentCommand = this.undoCommandStack[this.currentCmdIdx]
+        currentCommand.DoCommand()
     }
 }
 
