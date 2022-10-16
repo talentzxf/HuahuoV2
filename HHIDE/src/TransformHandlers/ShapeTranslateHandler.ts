@@ -2,12 +2,15 @@ import {ShapeTranslateMorphBase} from "./ShapeTranslateMorphBase";
 import {Vector2} from "hhcommoncomponents"
 import {undoManager} from "../RedoUndo/UndoManager";
 import {ShapeMoveCommand} from "../RedoUndo/ShapeMoveCommand";
+import {BaseShapeJS} from "hhenginejs"
 
 class ShapeTranslateHandler extends ShapeTranslateMorphBase
 {
     protected lastPos: Vector2 = null
 
     private pressingShift: boolean = false
+
+    private startPosMap: Map<BaseShapeJS, Vector2> = new Map
     constructor() {
         super();
         this.isDragging = false
@@ -31,6 +34,11 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
     beginMove(startPos) {
         super.beginMove(startPos);
         this.lastPos = startPos
+
+        this.startPosMap.clear()
+        for(let obj of this.curObjs){
+            this.startPosMap.set(obj, obj.position)
+        }
     }
 
     // The pos is already in world space.
@@ -56,10 +64,17 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
                     proposedNewPosition = followingCurve.getGlobalNearestPoint(proposedNewPosition)
                 }
 
-                let command = new ShapeMoveCommand(obj, obj.position, proposedNewPosition)
-                undoManager.PushCommand(command)
-                command.DoCommand()
+                obj.position = proposedNewPosition
+                obj.store()
             }
+        }
+    }
+
+    endMove() {
+        for(let obj of this.curObjs){
+            let prevPosition = this.startPosMap.get(obj)
+            let command = new ShapeMoveCommand(obj, prevPosition, obj.position)
+            undoManager.PushCommand(command)
         }
     }
 }

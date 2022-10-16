@@ -55,7 +55,7 @@ class SceneViewManager{
 
         sceneView.resetDefaultShapeDrawer()
 
-        if(pushCommand){
+        if(pushCommand && previousSceneView != null){
             undoManager.PushCommand(new FocusSceneViewCommand(previousSceneView, this.curFocusedSceneView))
         }
 
