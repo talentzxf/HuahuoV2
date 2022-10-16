@@ -8,6 +8,7 @@ import {undoManager} from "../RedoUndo/UndoManager";
 class HHEditorToolBar extends HTMLElement {
     undoButton: HTMLButtonElement
     redoButton: HTMLButtonElement
+    keyboardButton: HTMLButtonElement // Press to configure short cuts
 
     connectedCallback() {
         i18n.ExecuteAfterInited(function () {
@@ -24,8 +25,15 @@ class HHEditorToolBar extends HTMLElement {
             this.redoButton.title = i18n.t("hint.redo")
             this.redoButton.innerHTML = SVGFiles.undoBtn
 
+            this.keyboardButton = document.createElement("button")
+            this.keyboardButton.style.width = "30px"
+            this.keyboardButton.style.height = "30px"
+            this.keyboardButton.title = i18n.t("hint.shortcuts")
+            this.keyboardButton.innerHTML = SVGFiles.keyboardBtn
+
             this.undoButton.addEventListener("click", this.undo.bind(this))
             this.redoButton.addEventListener("click", this.redo.bind(this))
+            this.keyboardButton.addEventListener("click", this.configureShortcuts.bind(this))
             this.appendChild(this.undoButton)
             this.appendChild(this.redoButton)
         }.bind(this))
@@ -37,6 +45,10 @@ class HHEditorToolBar extends HTMLElement {
 
     redo() {
         undoManager.ReDo()
+    }
+
+    configureShortcuts(){
+
     }
 }
 

@@ -81,7 +81,8 @@
     "listProject": "List my projects",
     "uploadProject": "Upload project",
     "undo": "Undo",
-    "redo": "Redo"
+    "redo": "Redo",
+    "shortcuts": "Configure shortcuts"
   },
   "project": {
     "delete": "Delete Project",

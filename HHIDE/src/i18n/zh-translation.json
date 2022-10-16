@@ -81,7 +81,8 @@
     "listProject": "列出我的项目",
     "uploadProject": "上传项目",
     "undo": "撤销",
-    "redo": "重做"
+    "redo": "重做",
+    "shortcuts": "配置快捷键"
   },
   "project": {
     "delete": "删除项目",
