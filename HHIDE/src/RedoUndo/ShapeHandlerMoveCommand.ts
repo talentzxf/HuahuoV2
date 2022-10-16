@@ -4,16 +4,16 @@ let commandName = "ShapeHandlerMoveCommand"
 
 class ShapeHandlerMoveCommand extends MergableCommand {
     shape
-    segment
+    segmentIdx
     handleName
     prevPosition
     targetPosition
 
-    constructor(shape, segment, handleName, prevPosition, targetPosition) {
+    constructor(shape, segmentIdx, handleName, prevPosition, targetPosition) {
         super();
 
         this.shape = shape
-        this.segment = segment
+        this.segmentIdx = segmentIdx
         this.handleName = handleName
         this.prevPosition = prevPosition
         this.targetPosition = targetPosition
@@ -30,7 +30,7 @@ class ShapeHandlerMoveCommand extends MergableCommand {
                 if (this.stackFrameEqual(anotherCommand)) {
                     // This is the same shape, in the same layer, in the same frameId, can merge the move command
                     if (moveCommand.shape == this.shape
-                        && this.segment == moveCommand.segment
+                        && this.segmentIdx == moveCommand.segmentIdx
                         && this.prevPosition == moveCommand.prevPosition) {
                         this.targetPosition = moveCommand.targetPosition
                         return true
@@ -42,12 +42,12 @@ class ShapeHandlerMoveCommand extends MergableCommand {
     }
 
     _DoCommand() {
-        this.segment[this.handleName] = this.targetPosition
+        this.shape.getSegment(this.segmentIdx)[this.handleName] = this.targetPosition
         this.shape.store()
     }
 
     _UnDoCommand() {
-        this.segment[this.handleName] = this.prevPosition
+        this.shape.getSegment(this.segmentIdx)[this.handleName] = this.prevPosition
         this.shape.store()
     }
 

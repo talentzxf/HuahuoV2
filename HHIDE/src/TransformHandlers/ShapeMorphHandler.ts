@@ -225,7 +225,7 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
 
             let targetHandlePos = this.targetHandleStartPos.add(offset)
 
-            let shapeSegmentMoveCommand = new ShapeHandlerMoveCommand(this.targetShape, this.curSegment, this.targetHandleName, this.targetHandleStartPos, targetHandlePos)
+            let shapeSegmentMoveCommand = new ShapeHandlerMoveCommand(this.targetShape, this.curSegment.index, this.targetHandleName, this.targetHandleStartPos, targetHandlePos)
             shapeSegmentMoveCommand.DoCommand()
             undoManager.PushCommand(shapeSegmentMoveCommand)
 
