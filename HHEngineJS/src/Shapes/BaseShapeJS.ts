@@ -341,6 +341,10 @@ abstract class BaseShapeJS {
         return window.paper
     }
 
+    getSegment(idx){
+        return this.paperShape.segments[idx]
+    }
+
     storeSegments(segments, keyframeId = null) {
         let segmentBuffer = []
 

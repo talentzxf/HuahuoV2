@@ -4,6 +4,7 @@ import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {PropertySheet, PropertyType} from "hhcommoncomponents"
 import {ShapeHandlerMoveCommand} from "../RedoUndo/ShapeHandlerMoveCommand";
 import {undoManager} from "../RedoUndo/UndoManager";
+import {ShapeSegmentMoveCommand} from "../RedoUndo/ShapeSegmentMoveCommand";
 
 class ShapeMorphHandler extends ShapeTranslateMorphBase {
     curSegment: paper.Segment
@@ -178,10 +179,10 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
             }
 
             let proposedNewPosition = this.curSegmentStartPos.add(offset)
-            this.curSegment.point = proposedNewPosition;
 
-            // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
-            this.targetShape.store({position: true, segments: true})
+            let shapeSegmentMoveCommand = new ShapeSegmentMoveCommand(this.targetShape, this.curSegment.index, this.curSegmentStartPos, proposedNewPosition)
+            shapeSegmentMoveCommand.DoCommand()
+            undoManager.PushCommand(shapeSegmentMoveCommand)
 
             if(this.valueChangeHandlerMap.get("point")){
                 this.valueChangeHandlerMap.get("point")(this.curSegment.point)
