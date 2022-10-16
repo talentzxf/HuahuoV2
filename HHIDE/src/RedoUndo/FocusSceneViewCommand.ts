@@ -33,7 +33,8 @@ class FocusSceneViewCommand extends UndoableCommand{
     }
 
     _UnDoCommand() {
-        this.selectAndFocusSceneView(this.prevSceneView)
+        if(this.prevSceneView != null)
+            this.selectAndFocusSceneView(this.prevSceneView)
     }
 }
 

@@ -2,7 +2,7 @@ import {ShapeTranslateMorphBase} from "./ShapeTranslateMorphBase";
 import {paper, BaseShapeJS} from "hhenginejs";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {PropertySheet, PropertyType} from "hhcommoncomponents"
-import {ShapeSegmentMoveCommand} from "../RedoUndo/ShapeSegmentMoveCommand";
+import {ShapeHandlerMoveCommand} from "../RedoUndo/ShapeHandlerMoveCommand";
 import {undoManager} from "../RedoUndo/UndoManager";
 
 class ShapeMorphHandler extends ShapeTranslateMorphBase {
@@ -224,7 +224,7 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
 
             let targetHandlePos = this.targetHandleStartPos.add(offset)
 
-            let shapeSegmentMoveCommand = new ShapeSegmentMoveCommand(this.targetShape, this.curSegment, this.targetHandleName, this.targetHandleStartPos, targetHandlePos)
+            let shapeSegmentMoveCommand = new ShapeHandlerMoveCommand(this.targetShape, this.curSegment, this.targetHandleName, this.targetHandleStartPos, targetHandlePos)
             shapeSegmentMoveCommand.DoCommand()
             undoManager.PushCommand(shapeSegmentMoveCommand)
 
