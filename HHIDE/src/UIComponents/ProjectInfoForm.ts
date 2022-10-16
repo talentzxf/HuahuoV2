@@ -1,10 +1,10 @@
 import {CustomElement} from "hhcommoncomponents";
 import {renderEngine2D, Player, huahuoEngine} from "hhenginejs"
-import {CSSUtils} from "./CSSUtils";
-import {HHForm} from "./HHForm";
+import {CSSUtils} from "../Utilities/CSSUtils";
+import {HHForm} from "../Utilities/HHForm";
 import {projectInfo} from "../SceneView/ProjectInfo";
-import {SVGFiles} from "./Svgs";
-import {SnapshotUtils} from "./SnapshotUtils";
+import {SVGFiles} from "../Utilities/Svgs";
+import {SnapshotUtils} from "../Utilities/SnapshotUtils";
 import {api} from "../RESTApis/RestApi";
 
 @CustomElement({

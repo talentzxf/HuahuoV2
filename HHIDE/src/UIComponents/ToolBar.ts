@@ -5,9 +5,9 @@ import {projectUploader} from "../RESTApis/ProjectUploader";
 import huahuoProperties from "/dist/hhide.properties";
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 import {api} from "../RESTApis/RestApi"
-import {ProjectListForm} from "../Utilities/ProjectListForm";
+import {ProjectListForm} from "./ProjectListForm";
 import {formManager} from "../Utilities/FormManager";
-import {ProjectInfoForm} from "../Utilities/ProjectInfoForm";
+import {ProjectInfoForm} from "./ProjectInfoForm";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
 

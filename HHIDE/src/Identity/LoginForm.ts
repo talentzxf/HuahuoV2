@@ -132,8 +132,10 @@ class LoginForm extends HTMLElement implements HHForm {
                 if (this.afterLogin) {
                     this.afterLogin()
                 }
-            } else
-                Logger.error("User:" + userInfo.username + " login failed! Reason:" + loginResponse.failReason)
+            } else{
+                let reason = loginResponse?loginResponse.failReason:"Response is empty"
+                Logger.error("User:" + userInfo.username + " login failed! Reason:" + reason)
+            }
         } else {
             Logger.error("User name or pwd is null!")
         }

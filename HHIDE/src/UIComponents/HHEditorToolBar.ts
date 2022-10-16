@@ -36,6 +36,7 @@ class HHEditorToolBar extends HTMLElement {
             this.keyboardButton.addEventListener("click", this.configureShortcuts.bind(this))
             this.appendChild(this.undoButton)
             this.appendChild(this.redoButton)
+            this.appendChild(this.keyboardButton)
         }.bind(this))
     }
 

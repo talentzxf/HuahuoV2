@@ -1,12 +1,12 @@
 import {CustomElement, Logger} from "hhcommoncomponents";
-import {CSSUtils} from "./CSSUtils";
+import {CSSUtils} from "../Utilities/CSSUtils";
 import {HHForm} from "../Utilities/HHForm";
 import {api} from "../RESTApis/RestApi"
 import {huahuoEngine} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
 import {projectInfo} from "../SceneView/ProjectInfo";
-import {formManager} from "./FormManager";
+import {formManager} from "../Utilities/FormManager";
 
 @CustomElement({
     selector: "hh-project-list"
