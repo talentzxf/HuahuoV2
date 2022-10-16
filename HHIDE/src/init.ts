@@ -1,5 +1,6 @@
 import {huahuoEngine, renderEngine2D} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
+import {shortcutsManager} from "./Shortcuts/ShortcutsManager";
 
 function showMainDiv(){
     let loadingElement = document.querySelector("#loading") as HTMLDivElement
@@ -27,6 +28,8 @@ function init(){
             showMainDiv()
 
             document.body.addEventListener("mousemove", updateMousePos)
+
+            shortcutsManager.init()
         })
     })
 }
