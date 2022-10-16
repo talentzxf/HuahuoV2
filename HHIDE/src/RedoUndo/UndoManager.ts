@@ -90,7 +90,8 @@ class UndoManager {
 
     PushCommand(cmd: UndoableCommand) {
         // Discard all commands behind current index
-        while (this.currentCmdIdx != this.undoCommandStack.length - 1) {
+        while (this.currentCmdIdx != this.undoCommandStack.length - 1
+            &&this.undoCommandStack.length != 0) {
             this.undoCommandStack.pop()
         }
 

@@ -211,6 +211,8 @@ class ElementCreator {
             newElement.syncStoreLayerInfo() // Update the maxFrameId and keyFrameIds in the layer.
             newElement.update()
 
+            HHToast.info(i18n.t("toast.elementCreated", {elementName: newElement.name}))
+
             return newElement
         } finally {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStoreId)
