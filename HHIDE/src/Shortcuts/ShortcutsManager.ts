@@ -2,7 +2,8 @@ const SHORTKEYINTERVAL:number = 1 // Only within 1 seconds, count it as a valid 
 
 enum ShortcutEventNames{
     UNDO,
-    REDO
+    REDO,
+    CUSTOM = 1000
 }
 
 function isAlphaNum(keyCode){
@@ -20,23 +21,8 @@ class KeyCode{
 
     static fromConfig(obj){
         let retKeyCode = new KeyCode()
-        if(obj.ctrlKey){
-            retKeyCode.ctrlKey = true
-        }
-
-        if(obj.altKey){
-            retKeyCode.altKey = true
-        }
-
-        if(obj.shiftKey){
-            retKeyCode.shiftKey = true
-        }
-
-        // Have to press a "solid" key to make this keycode valid
-        if(obj.key && isAlphaNum(obj.key)){
-            retKeyCode.code = obj.key
-        }else{
-            return null
+        for(let property in obj){
+            retKeyCode[property] = obj[property]
         }
 
         return retKeyCode
@@ -45,27 +31,32 @@ class KeyCode{
     static fromKeyboardEvent(e:KeyboardEvent){
         return this.fromConfig(e)
     }
+
+    toString():string{
+        return JSON.stringify(this)
+    }
 }
 
 // TODO: Do prefix search here.
 class KeyCodeSeriesTree{
-    children: Map<KeyCode, KeyCodeSeriesTree> = new Map<KeyCode, KeyCodeSeriesTree>()
+    children: Map<string, KeyCodeSeriesTree> = new Map<string, KeyCodeSeriesTree>()
     action: Function // If it's a leaf, store it's action here
 
     registerKeyCodeSeries(keyCodeConfigs:KeyCode[], action: Function){
         if(keyCodeConfigs.length == 0){ // No more key code, this is leaf
             this.action = action
         }else{
-            let firstKeyCode = keyCodeConfigs[0]
+            let firstKeyCode:KeyCode = KeyCode.fromConfig(keyCodeConfigs[0])
             let newChild = new KeyCodeSeriesTree()
             newChild.registerKeyCodeSeries(keyCodeConfigs.slice(1), action)
-            this.children.set(firstKeyCode, newChild)
+            this.children.set(firstKeyCode.toString(), newChild)
         }
     }
 
     processKeyEvent(e: KeyCode): KeyCodeSeriesTree{
-        if(this.children.has(e)){
-            return this.children.get(e)
+        let keyCode = KeyCode.fromConfig(e)
+        if(this.children.has(keyCode.toString())){
+            return this.children.get(keyCode.toString())
         }
         return null
     }
@@ -82,19 +73,23 @@ class ShortcutsManager{
         document.addEventListener("keypress", this.onKeyPressed.bind(this))
 
         // Add default shortcuts
-        this.rootKeyCodeSeries.registerKeyCodeSeries([{
+        this.registerKeyCodeSeries([{
             ctrlKey: true,
             code:"z"
         }], this.triggerEventFunc(ShortcutEventNames.UNDO))
 
         // Add default shortcuts
-        this.rootKeyCodeSeries.registerKeyCodeSeries([{
+        this.registerKeyCodeSeries([{
             ctrlKey: true,
             altKey: true,
             code:"z"
         }], this.triggerEventFunc(ShortcutEventNames.REDO))
 
         this.inited = true
+    }
+
+    registerKeyCodeSeries(keyCodeConfigs:KeyCode[], action: Function){
+        this.rootKeyCodeSeries.registerKeyCodeSeries(keyCodeConfigs, action)
     }
 
     registerShortcutHandler(eventName:ShortcutEventNames, callback: Function){
