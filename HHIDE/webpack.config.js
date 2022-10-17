@@ -26,6 +26,11 @@ let moduleExports = (env)=> {
         module: {
             rules: [
                 {
+                    test: /\.ts$/,
+                    exclude: /node_modules/,
+                    loader: "babel-loader",
+                },
+                {
                     test: /\.tsx?$/,
                     use: 'ts-loader',
                     exclude: /node_modules/,

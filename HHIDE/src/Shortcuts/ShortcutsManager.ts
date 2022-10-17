@@ -72,11 +72,11 @@ class KeyCodeSeriesTree{
 }
 
 class ShortcutsManager{
-    rootKeyCodeSeries: KeyCodeSeriesTree = new KeyCodeSeriesTree()
-    currentKeyCodeSeries: KeyCodeSeriesTree = null
-    lastPressedTime: number = -1
-
-    registeredShortCutHandlers: Map<ShortcutEventNames, Array<Function>> = new Map();
+    private rootKeyCodeSeries: KeyCodeSeriesTree = new KeyCodeSeriesTree()
+    private currentKeyCodeSeries: KeyCodeSeriesTree = null
+    private lastPressedTime: number = -1
+    private registeredShortCutHandlers: Map<ShortcutEventNames, Array<Function>> = new Map();
+    private inited: boolean = false
 
     init(){
         document.addEventListener("keypress", this.onKeyPressed.bind(this))
@@ -93,6 +93,8 @@ class ShortcutsManager{
             altKey: true,
             code:"z"
         }], this.triggerEventFunc(ShortcutEventNames.REDO))
+
+        this.inited = true
     }
 
     registerShortcutHandler(eventName:ShortcutEventNames, callback: Function){
@@ -128,7 +130,7 @@ class ShortcutsManager{
         }
 
         this.currentKeyCodeSeries = this.currentKeyCodeSeries.processKeyEvent(this.keyEventToKeyCode(e))
-        if(this.currentKeyCodeSeries.action != null){
+        if(this.currentKeyCodeSeries != null && this.currentKeyCodeSeries.action != null){
             this.currentKeyCodeSeries.action()
             this.currentKeyCodeSeries = null
         }
