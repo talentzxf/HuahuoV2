@@ -5,6 +5,7 @@ class ShapeSegmentInsertCommand extends UndoableCommand{
     position
 
     segment = null
+    frameSegmentsBuffer = null
     constructor(shape, position) {
         super();
 
@@ -17,6 +18,9 @@ class ShapeSegmentInsertCommand extends UndoableCommand{
     }
 
     _DoCommand() {
+        // Store current segments buffer
+        this.frameSegmentsBuffer = this.shape.getFrameIdSegmentsBuffer()
+
         let localPos = this.shape.globalToLocal(this.position)
         let nearestPoint = this.shape.getNearestPoint(localPos)
         let offset = this.shape.getOffsetOf(nearestPoint)
@@ -25,7 +29,6 @@ class ShapeSegmentInsertCommand extends UndoableCommand{
         this.shape.insertSegment(localPos)
 
         this.segment = newSegment
-
         return newSegment
     }
 
@@ -34,6 +37,7 @@ class ShapeSegmentInsertCommand extends UndoableCommand{
             // Delete the segment
             this.shape.removeSegment(this.segment)
             this.segment = null
+            this.shape.restoreFrameSegmentsBuffer(this.frameSegmentsBuffer)
         }
     }
 

@@ -1,4 +1,5 @@
 import {huahuoEngine} from "../EngineAPI";
+import {Vector2} from "hhcommoncomponents";
 import {relaxRectangle, PropertySheet, PropertyType, Logger} from "hhcommoncomponents"
 import * as paper from "paper";
 import {ShapeCenterSelector} from "./ShapeCenterSelector";
@@ -345,17 +346,65 @@ abstract class BaseShapeJS {
         return this.paperShape.segments[idx]
     }
 
-    storeSegments(segments, keyframeId = null) {
-        let segmentBuffer = []
-
-        for (let id = 0; id < segments.length; id++) {
-            segmentBuffer[6 * id] = segments[id].point.x
-            segmentBuffer[6 * id + 1] = segments[id].point.y
-            segmentBuffer[6 * id + 2] = segments[id].handleIn.x
-            segmentBuffer[6 * id + 3] = segments[id].handleIn.y
-            segmentBuffer[6 * id + 4] = segments[id].handleOut.x
-            segmentBuffer[6 * id + 5] = segments[id].handleOut.y
+    restoreFrameSegmentsBuffer(frameSegmentsBuffer){
+        for(let keyframeObj of frameSegmentsBuffer){
+            let frameId = keyframeObj["frameId"]
+            let segments = keyframeObj["segments"]
+            for(let segmentIdx = 0; segmentIdx < segments.length; segmentIdx++){
+                this.storeSegments(segments, frameId)
+            }
         }
+
+        this.update()
+    }
+
+    getFrameIdSegmentsBuffer(){
+        let frameSegments = []
+        let keyFrameCount = this.rawObj.GetSegmentKeyFrameCount()
+
+        for (let keyFrameIdx = 0; keyFrameIdx < keyFrameCount; keyFrameIdx++) {
+            let segmentKeyFrame = this.rawObj.GetSegmentKeyFrameAtKeyFrameIndex(keyFrameIdx);
+            let segmentCount = segmentKeyFrame.GetTotalSegments()
+
+            let frameObj = {
+                frameId: segmentKeyFrame.GetFrameId(),
+                segments: []
+            }
+            for (let segmentIdx = 0; segmentIdx < segmentCount; segmentIdx++) {
+                let newSegmentBuffer = {
+                    point: Vector2.fromObj(segmentKeyFrame.GetPosition(segmentIdx)),
+                    handleIn: Vector2.fromObj(segmentKeyFrame.GetHandleIn(segmentIdx)),
+                    handleOut: Vector2.fromObj(segmentKeyFrame.GetHandleOut(segmentIdx))
+                }
+
+                frameObj.segments.push(newSegmentBuffer)
+            }
+
+            frameSegments.push(frameObj)
+        }
+
+        return frameSegments
+    }
+
+    getSegmentsBuffer(segments, keyFrameId = null){
+        let segmentBuffer = []
+        if(keyFrameId == null){
+            for (let id = 0; id < segments.length; id++) {
+                segmentBuffer[6 * id] = segments[id].point.x
+                segmentBuffer[6 * id + 1] = segments[id].point.y
+                segmentBuffer[6 * id + 2] = segments[id].handleIn.x
+                segmentBuffer[6 * id + 3] = segments[id].handleIn.y
+                segmentBuffer[6 * id + 4] = segments[id].handleOut.x
+                segmentBuffer[6 * id + 5] = segments[id].handleOut.y
+            }
+        }
+
+        return segmentBuffer
+    }
+
+    storeSegments(segments, keyframeId = null) {
+
+        let segmentBuffer = this.getSegmentsBuffer(segments)
 
         if (keyframeId == null) // Set the current frame.
             this.rawObj.SetSegments(segmentBuffer, segments.length)

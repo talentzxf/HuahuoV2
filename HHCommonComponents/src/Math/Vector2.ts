@@ -3,6 +3,10 @@ class Vector2{
     x: number
     y: number
 
+    static fromObj(obj){
+        return new Vector2(obj.x, obj.y)
+    }
+
     constructor(x = 0.0,y = 0.0) {
         this.x = x
         this.y = y
