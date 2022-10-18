@@ -21,12 +21,17 @@ class HHHistoryCommandList extends HTMLElement{
     refreshCommands(){
         this.commandListDiv.innerHTML = ""
         let commands = undoManager.getCommands()
+        let currentCommandIndex = undoManager.currentCmdIdx
+
         for(let cmdIdx in commands){
             let cmd = commands[cmdIdx]
             let commandDiv = document.createElement("div")
 
             let commandIdSpan = document.createElement("span")
-            commandIdSpan.innerText = cmdIdx.toString()
+
+            let indicatorStr = (currentCommandIndex == parseInt(cmdIdx))?"->":""
+
+            commandIdSpan.innerText = indicatorStr + cmdIdx.toString()
             commandIdSpan.style.paddingLeft = "30px"
             commandIdSpan.style.border = "1px solid black"
 
