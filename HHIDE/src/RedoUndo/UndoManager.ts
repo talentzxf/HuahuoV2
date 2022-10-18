@@ -1,5 +1,6 @@
 import {huahuoEngine} from "hhenginejs";
 import {sceneViewManager} from "../SceneView/SceneViewManager";
+import {ShortcutEventNames, shortcutsManager} from "../Shortcuts/ShortcutsManager";
 
 class ExecutionStackFrame{
     private store
@@ -74,6 +75,17 @@ class UndoManager {
     undoCommandStack: Array<UndoableCommand> = new Array<UndoableCommand>()
 
     currentCmdIdx: number = -1 // -1 means currently no command.
+
+    constructor() {
+        let _this = this
+        shortcutsManager.registerShortcutHandler(ShortcutEventNames.UNDO, function(){
+            _this.UnDo()
+        })
+
+        shortcutsManager.registerShortcutHandler(ShortcutEventNames.REDO, function(){
+            _this.ReDo()
+        })
+    }
 
     isValidIndex(idx):boolean{
         return idx >= 0 && idx <= this.undoCommandStack.length - 1

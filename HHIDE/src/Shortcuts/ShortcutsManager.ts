@@ -75,14 +75,14 @@ class ShortcutsManager{
         // Add default shortcuts
         this.registerKeyCodeSeries([{
             ctrlKey: true,
-            code:"z"
+            code:"KeyZ"
         }], this.triggerEventFunc(ShortcutEventNames.UNDO))
 
         // Add default shortcuts
         this.registerKeyCodeSeries([{
             ctrlKey: true,
-            altKey: true,
-            code:"z"
+            shiftKey: true,
+            code:"KeyZ"
         }], this.triggerEventFunc(ShortcutEventNames.REDO))
 
         this.inited = true
@@ -114,7 +114,7 @@ class ShortcutsManager{
             ctrlKey: e.ctrlKey,
             shiftKey: e.shiftKey,
             altKey: e.altKey,
-            code : e.key
+            code : e.code
         }
     }
 
