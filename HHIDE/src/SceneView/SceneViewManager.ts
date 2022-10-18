@@ -31,6 +31,10 @@ class SceneViewManager{
     }
 
     focusSceneView(sceneView:SceneView, pushCommand = true){
+        // Do nothing if the scene has already been focused.
+        if(sceneView == this.curFocusedSceneView)
+            return
+
         let previousSceneView = this.curFocusedSceneView
 
         // save the currently focused scene view frameId.
