@@ -20,13 +20,13 @@ class HHHistoryCommandList extends HTMLElement{
 
     refreshCommands(){
         this.commandListDiv.innerHTML = ""
-        let commands = undoManager.getCommands().reverse()
-        let index = commands.length
-        for(let cmd of commands){
+        let commands = undoManager.getCommands()
+        for(let cmdIdx in commands){
+            let cmd = commands[cmdIdx]
             let commandDiv = document.createElement("div")
 
             let commandIdSpan = document.createElement("span")
-            commandIdSpan.innerText = index.toString()
+            commandIdSpan.innerText = cmdIdx.toString()
             commandIdSpan.style.paddingLeft = "30px"
             commandIdSpan.style.border = "1px solid black"
 
@@ -37,9 +37,7 @@ class HHHistoryCommandList extends HTMLElement{
             commandDiv.appendChild(commandIdSpan)
             commandDiv.appendChild(commandContentSpan)
 
-            this.commandListDiv.appendChild(commandDiv)
-
-            index--
+            this.commandListDiv.prepend(commandDiv)
         }
     }
 
