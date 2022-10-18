@@ -5,6 +5,7 @@ import {PropertySheet, PropertyType} from "hhcommoncomponents"
 import {ShapeHandlerMoveCommand} from "../RedoUndo/ShapeHandlerMoveCommand";
 import {undoManager} from "../RedoUndo/UndoManager";
 import {ShapeSegmentMoveCommand} from "../RedoUndo/ShapeSegmentMoveCommand";
+import {ShapeSegmentInsertCommand} from "../RedoUndo/ShapeSegmentInsertCommand";
 
 class ShapeMorphHandler extends ShapeTranslateMorphBase {
     curSegment: paper.Segment
@@ -237,22 +238,17 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
 }
 
 class ShapeInsertSegmentHandler extends ShapeMorphHandler {
-    circle: paper.Path
-
     beginMove(startPos) {
         super.beginMove(startPos);
 
         if(!this.targetShape.isSegmentSeletable())
             return
 
-        let localPos = this.targetShape.globalToLocal(startPos)
-        let nearestPoint = this.targetShape.getNearestPoint(localPos)
-        let offset = this.targetShape.getOffsetOf(nearestPoint)
+        let shapeSegmentInsertCommand = new ShapeSegmentInsertCommand(this.targetShape, startPos)
+        shapeSegmentInsertCommand.DoCommand()
+        this.setSegment(shapeSegmentInsertCommand.segment)
 
-        let newSegment = this.targetShape.divideAt(offset)
-        this.setSegment(newSegment)
-
-        this.targetShape.insertSegment(localPos)
+        undoManager.PushCommand(shapeSegmentInsertCommand)
 
         this.showInspector()
     }

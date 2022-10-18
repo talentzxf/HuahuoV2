@@ -6,13 +6,6 @@ enum ShortcutEventNames{
     CUSTOM = 1000
 }
 
-function isAlphaNum(keyCode){
-    if(keyCode >= "0".charCodeAt(0) && keyCode <= "z".charCodeAt(0)){
-        return true
-    }
-    return false
-}
-
 class KeyCode{
     ctrlKey ?: boolean = false
     altKey ?: boolean = false
