@@ -1,6 +1,7 @@
 import {huahuoEngine} from "hhenginejs";
 import {sceneViewManager} from "../SceneView/SceneViewManager";
 import {ShortcutEventNames, shortcutsManager} from "../Shortcuts/ShortcutsManager";
+import {Func} from "mocha";
 
 class ExecutionStackFrame{
     private store
@@ -42,6 +43,10 @@ abstract class UndoableCommand {
         return this.stackFrame.equals(anotherCommand.stackFrame)
     }
 
+    toString(){
+        return this.GetType()
+    }
+
     private ExecuteCommand(func){
         // let stackFrame: ExecutionStackFrame = new ExecutionStackFrame()
         // try{
@@ -76,15 +81,25 @@ class UndoManager {
 
     currentCmdIdx: number = -1 // -1 means currently no command.
 
+    listeners: Array<Function> = new Array<Function>()
+
     constructor() {
         let _this = this
-        shortcutsManager.registerShortcutHandler(ShortcutEventNames.UNDO, function(){
+        shortcutsManager.registerShortcutHandler(ShortcutEventNames.UNDO, function () {
             _this.UnDo()
         })
 
-        shortcutsManager.registerShortcutHandler(ShortcutEventNames.REDO, function(){
+        shortcutsManager.registerShortcutHandler(ShortcutEventNames.REDO, function () {
             _this.ReDo()
         })
+    }
+
+    registerListener(listener){
+        this.listeners.push(listener)
+    }
+
+    getCommands(){
+        return this.undoCommandStack
     }
 
     isValidIndex(idx):boolean{
@@ -98,6 +113,12 @@ class UndoManager {
             return this.currentCmdIdx
 
         return this.currentCmdIdx
+    }
+
+    invokeListeners(){
+        for(let listener of this.listeners){
+            listener()
+        }
     }
 
     PushCommand(cmd: UndoableCommand) {
@@ -120,6 +141,8 @@ class UndoManager {
 
         this.undoCommandStack.push(cmd)
         this.currentCmdIdx = this.undoCommandStack.length - 1
+
+        this.invokeListeners()
     }
 
     UnDo() {
@@ -132,6 +155,8 @@ class UndoManager {
             currentCommand.UnDoCommand()
         }
         this.currentCmdIdx = Math.max(this.currentCmdIdx - 1 , -1 )
+
+        this.invokeListeners()
     }
 
     ReDo() {
@@ -140,6 +165,8 @@ class UndoManager {
             let currentCommand = this.undoCommandStack[this.currentCmdIdx]
             currentCommand.DoCommand()
         }
+
+        this.invokeListeners()
     }
 }
 
