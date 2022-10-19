@@ -14,7 +14,7 @@ class HHHistoryCommandList extends HTMLElement {
         let parentHeight = parentPanel ? parentPanel.clientHeight : 300;
 
         this.contentScrollerDiv = document.createElement("div")
-        this.contentScrollerDiv.style.width = "100%"
+        this.contentScrollerDiv.style.width = "200px"
         this.contentScrollerDiv.style.height = parentHeight + "px"
         this.contentScrollerDiv.style.overflowY = "auto"
         this.contentScrollerDiv.style.overflowX = "auto"
@@ -24,7 +24,7 @@ class HHHistoryCommandList extends HTMLElement {
 
         this.commandListDiv = document.createElement("div")
         this.commandListDiv.style.height = "100%"
-        this.commandListDiv.style.width = "200px"
+        this.commandListDiv.style.width = "100%"
         this.commandListDiv.style.border = "1px solid blue"
         this.commandListDiv.style.overflow = "auto"
         this.commandListDiv.style.position = "relative"

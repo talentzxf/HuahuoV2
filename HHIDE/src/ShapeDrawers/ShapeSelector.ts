@@ -366,7 +366,7 @@ class ShapeSelector extends BaseShapeDrawer {
     }
 
     itemSelectable(item) {
-        if (typeof item.data.meta == "undefined" || false == item.data.meta.isSelectable())
+        if (item.data.meta == null || typeof item.data.meta == "undefined" || false == item.data.meta.isSelectable())
             return false
         return true
     }

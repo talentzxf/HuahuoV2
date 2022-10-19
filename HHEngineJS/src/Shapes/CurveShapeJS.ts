@@ -1,7 +1,6 @@
 import {BaseSolidShape} from "./BaseSolidShape";
 import {PropertyType} from "hhcommoncomponents";
 import {shapeFactory} from "./BaseShapeJS";
-import {TextShapeJS} from "./TextShapeJS";
 
 let shapeName = "CurveShape"
 class CurveShapeJS extends BaseSolidShape{
@@ -45,6 +44,35 @@ class CurveShapeJS extends BaseSolidShape{
         this.paperShape.closed = true
     }
 
+    growth: number = 1.0
+
+    lastGrowthNumber: number = -1.0
+    getGrowth(){
+        return this.growth
+    }
+
+    setGrowth(val:number){
+        this.growth = val
+        this.callHandlers("growth", val)
+        this.update()
+    }
+
+    afterUpdate() {
+        if(this.growth >= 1.0)
+            super.afterUpdate();
+
+        if(this.growth < 1.0 && this.lastGrowthNumber != this.growth){
+            super.afterUpdate()
+
+            let path2 = this.paperShape.splitAt(this.paperShape.length * this.growth)
+            path2.visible = false
+            path2.selected = false
+
+            this.lastGrowthNumber = this.growth
+
+        }
+    }
+
     afterWASMReady() {
         super.afterWASMReady();
 
@@ -52,6 +80,15 @@ class CurveShapeJS extends BaseSolidShape{
             key: "inspector.enclose",
             type: PropertyType.BUTTON,
             action: this.encloseCurve.bind(this)
+        })
+
+        this.propertySheet.addProperty({
+            key:"inspector.growth",
+            type: PropertyType.FLOAT,
+            getter: this.getGrowth.bind(this),
+            setter: this.setGrowth.bind(this),
+            registerValueChangeFunc: this.registerValueChangeHandler("growth").bind(this),
+            unregisterValueChagneFunc: this.unregisterValueChangeHandler("growth").bind(this)
         })
     }
 }

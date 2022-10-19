@@ -56,7 +56,8 @@ class EditorPlayer extends Player{
 
         let prevTime = e.detail.prevTime
         let prevFrameId = Math.floor(prevTime * GlobalConfig.fps)
-        undoManager.PushCommand( new SetFrameIdCommand(this.sceneView.animationPlayer, prevFrameId, frameId) )
+        if(prevFrameId != frameId)
+            undoManager.PushCommand( new SetFrameIdCommand(this.sceneView.animationPlayer, prevFrameId, frameId) )
     }
 
     setFrameId(playFrameId, force = false){
