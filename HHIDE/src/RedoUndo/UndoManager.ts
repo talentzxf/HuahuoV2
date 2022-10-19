@@ -115,6 +115,15 @@ class UndoManager {
         return this.currentCmdIdx
     }
 
+    getDisplayIndex(){
+        if(this.currentCmdIdx == -1)
+            return 0
+        if(this.currentCmdIdx == this.undoCommandStack.length)
+            return this.undoCommandStack.length - 1
+
+        return this.currentCmdIdx
+    }
+
     invokeListeners(){
         for(let listener of this.listeners){
             listener()
@@ -123,7 +132,7 @@ class UndoManager {
 
     PushCommand(cmd: UndoableCommand) {
         // Discard all commands behind current index
-        while (this.currentCmdIdx != this.undoCommandStack.length - 1
+        while (this.currentCmdIdx < this.undoCommandStack.length - 1
             &&this.undoCommandStack.length != 0) {
             this.undoCommandStack.pop()
         }

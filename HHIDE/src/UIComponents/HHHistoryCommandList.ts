@@ -23,8 +23,8 @@ class HHHistoryCommandList extends HTMLElement {
 
 
         this.commandListDiv = document.createElement("div")
-        this.commandListDiv.style.height = parentHeight + "px"
-        this.commandListDiv.style.width = "100%"
+        this.commandListDiv.style.height = "100%"
+        this.commandListDiv.style.width = "200px"
         this.commandListDiv.style.border = "1px solid blue"
         this.commandListDiv.style.overflow = "auto"
         this.commandListDiv.style.position = "relative"
@@ -37,7 +37,7 @@ class HHHistoryCommandList extends HTMLElement {
     refreshCommands() {
         this.commandListDiv.innerHTML = ""
         let commands = undoManager.getCommands()
-        let currentCommandIndex = undoManager.currentCmdIdx
+        let currentCommandIndex = undoManager.getDisplayIndex()
 
         let currentSelecedCommandDiv: HTMLElement
 
