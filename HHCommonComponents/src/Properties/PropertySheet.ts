@@ -12,6 +12,9 @@ enum PropertyType{
 class Property{
     key: string
     type: PropertyType
+    elementType ?: string
+    min ?: number // Only number fields need this.
+    max ?: number
     setter?: Function
     getter?: Function
     registerValueChangeFunc?: Function

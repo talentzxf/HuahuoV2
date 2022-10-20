@@ -58,7 +58,10 @@
     "AtBegin": "置到开始位置",
     "AtEnd": "置到结束位置",
     "AtLength": "指定长度",
-    "Unfollow": "不贴边"
+    "Unfollow": "不贴边",
+    "curve": {
+      "growth": "生长系数"
+    }
   },
   "timeline": {
     "Frames": "帧",

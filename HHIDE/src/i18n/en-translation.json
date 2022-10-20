@@ -58,7 +58,10 @@
     "AtBegin": "Set At Begin",
     "AtEnd": "Set At End",
     "AtLength": "At Length",
-    "Unfollow": "UnFollow"
+    "Unfollow": "UnFollow",
+    "curve": {
+      "growth": "growth"
+    }
   },
   "timeline": {
     "Frames": "Frames",
