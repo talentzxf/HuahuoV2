@@ -31,6 +31,7 @@
   "ShapeSegmentInsertCommand": "插入控制点",
   "ShapeSegmentMoveCommand": "移动控制点",
   "ShapeHandlerMoveCommand": "移动控制点把手",
+  "CenterOf": "中心",
   "contextmenu": {
     "sendToBack": "放到下面",
     "bringToFront": "放到上面",

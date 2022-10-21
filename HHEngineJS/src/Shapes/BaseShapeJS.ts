@@ -3,6 +3,7 @@ import {Vector2} from "hhcommoncomponents";
 import {relaxRectangle, PropertySheet, PropertyType, Logger} from "hhcommoncomponents"
 import * as paper from "paper";
 import {ShapeCenterSelector} from "./ShapeCenterSelector";
+import {ValueChangeHandler} from "./ValueChangeHandler";
 
 declare function castObject(obj: any, clz: any): any;
 
@@ -25,13 +26,8 @@ abstract class BaseShapeJS {
 
     public isPermanent: boolean = false;
 
-    private handlerId: number = 0 // always increment
-
     // This is used for Editor only to set properties.
     protected propertySheet: PropertySheet
-
-    private valueChangeHandlersMap: Map<string, Map<number, Function>> = new Map()
-    private valueChangeHandlersPreProcessorMap: Map<number, Function> = new Map()
 
     private parent: BaseShapeJS = null
 
@@ -40,6 +36,8 @@ abstract class BaseShapeJS {
     private shapeCenterSelector: ShapeCenterSelector;
 
     private shapeFollowCurveFrameState: ShapeFollowCurveFrameState;
+
+    private valueChangeHandler:ValueChangeHandler = new ValueChangeHandler()
 
     get belongStoreId(): number{
         return this.rawObj.GetStoreId()
@@ -180,21 +178,6 @@ abstract class BaseShapeJS {
         return this.parent
     }
 
-    callHandlers(propertyName: string, val: any) {
-        if (this.valueChangeHandlersMap.has(propertyName)) {
-
-            let propertyMap = this.valueChangeHandlersMap.get(propertyName)
-            for (let [handlerId, handler] of propertyMap) {
-                let preprocessor = this.valueChangeHandlersPreProcessorMap.get(handlerId)
-
-                if(preprocessor)
-                    handler(preprocessor(val))
-                else
-                    handler(val)
-            }
-        }
-    }
-
     storeSameLayerShapeIndices() {
         let parent = this.paperItem.parent
         if (parent) {
@@ -220,13 +203,13 @@ abstract class BaseShapeJS {
     sendToBack() {
         this.paperItem.sendToBack()
         this.storeSameLayerShapeIndices()
-        this.callHandlers("index", this.paperItem.index)
+        this.valueChangeHandler.callHandlers("index", this.paperItem.index)
     }
 
     bringToFront() {
         this.paperItem.bringToFront()
         this.storeSameLayerShapeIndices()
-        this.callHandlers("index", this.paperItem.index)
+        this.valueChangeHandler.callHandlers("index", this.paperItem.index)
     }
 
     rotateAroundPivot(angle: number) {
@@ -236,7 +219,7 @@ abstract class BaseShapeJS {
         let newRotationDegree = this.rawObj.GetRotation() + angle
         this.rawObj.SetRotation(newRotationDegree)
 
-        this.callHandlers("rotation", newRotationDegree)
+        this.valueChangeHandler.callHandlers("rotation", newRotationDegree)
     }
 
     set position(val: paper.Point) {
@@ -263,19 +246,19 @@ abstract class BaseShapeJS {
             this.shapeFollowCurveFrameState.RecordLengthRatio(frameId, lengthPortion)
         }
 
-        this.callHandlers("position", val)
+        this.valueChangeHandler.callHandlers("position", val)
         this.paperItem.scaling = currentScaling
         this.update()
     }
 
     set scaling(val: paper.Point) {
         this.paperItem.scaling = val
-        this.callHandlers("scaling", val)
+        this.valueChangeHandler.callHandlers("scaling", val)
     }
 
     set rotation(val: number) {
         this.rawObj.SetRotation(val)
-        this.callHandlers("rotation", val)
+        this.valueChangeHandler.callHandlers("rotation", val)
     }
 
     get selected(): boolean {
@@ -286,6 +269,19 @@ abstract class BaseShapeJS {
         this.isSelected = val
 
         this.updateBoundingBox()
+    }
+
+    // Remove these functions later.
+    registerValueChangeHandler(valueName: string, preProcessor: Function = null){
+        return this.valueChangeHandler.registerValueChangeHandler(valueName, preProcessor)
+    }
+
+    unregisterValueChangeHandler(valueName: string) {
+        return this.valueChangeHandler.unregisterValueChangeHandler(valueName)
+    }
+
+    callHandlers(propertyName: string, val: any) {
+        this.valueChangeHandler.callHandlers(propertyName, val)
     }
 
     updateBoundingBox() {
@@ -606,8 +602,8 @@ abstract class BaseShapeJS {
                     type: PropertyType.VECTOR2,
                     getter: this.getPosition.bind(this),
                     setter: this.setPosition.bind(this),
-                    registerValueChangeFunc: this.registerValueChangeHandler("position").bind(this),
-                    unregisterValueChangeFunc: this.unregisterValueChangeHandler("position").bind(this)
+                    registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("position"),
+                    unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position")
                 },
                 {
                     key: "inspector.FollowPath",
@@ -639,8 +635,8 @@ abstract class BaseShapeJS {
                             type: PropertyType.FLOAT,
                             getter: this.getFollowCurveLength.bind(this),
                             setter: this.setFollowCurveLength.bind(this),
-                            registerValueChangeFunc: this.registerValueChangeHandler("position", this.getFollowCurveLengthPotion.bind(this)).bind(this),
-                            unregisterValueChangeFunc: this.unregisterValueChangeHandler("position").bind(this)
+                            registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("position", this.getFollowCurveLengthPotion.bind(this)),
+                            unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position")
                         }
                     ]
                 },
@@ -653,8 +649,8 @@ abstract class BaseShapeJS {
             type: PropertyType.VECTOR2,
             getter: this.getScaling.bind(this),
             setter: this.setScaling.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("scaling").bind(this),
-            unregisterValueChangeFunc: this.unregisterValueChangeHandler("scaling").bind(this)
+            registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("scaling"),
+            unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("scaling")
         })
 
         this.propertySheet.addProperty({
@@ -662,37 +658,9 @@ abstract class BaseShapeJS {
             type: PropertyType.FLOAT,
             getter: this.getRotation.bind(this),
             setter: this.setRotation.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("rotation").bind(this),
-            unregisterValueChangeFunc: this.unregisterValueChangeHandler("rotation").bind(this)
+            registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("rotation"),
+            unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("rotation")
         })
-    }
-
-    registerValueChangeHandler(valueName: string, preProcessor: Function = null) {
-        return function (valueChangedHandler: Function) {
-            if (!this.valueChangeHandlersMap.has(valueName)) {
-                this.valueChangeHandlersMap.set(valueName, new Map<Number, Map<number, Function>>())
-            }
-
-            let id = this.handlerId
-            this.valueChangeHandlersMap.get(valueName).set(id, valueChangedHandler)
-            if(preProcessor)
-                this.valueChangeHandlersPreProcessorMap.set(id, preProcessor)
-            this.handlerId++
-            return id;
-        }.bind(this)
-    }
-
-    unregisterValueChangeHandler(valueName: string) {
-        return function (handlerId: number) {
-            if (this.valueChangeHandlersMap.has(valueName)) {
-                let valueChangeHandlerMap = this.valueChangeHandlersMap.get(valueName)
-                valueChangeHandlerMap.delete(handlerId)
-
-                if(this.valueChangeHandlersPreProcessorMap.has(handlerId)){
-                    valueChangeHandlerMap.delete(handlerId)
-                }
-            }
-        }
     }
 
     getPropertySheet() {

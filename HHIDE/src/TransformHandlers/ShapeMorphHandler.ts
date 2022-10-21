@@ -106,8 +106,8 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
                 type: PropertyType.VECTOR2,
                 getter: this.getPropertyGetter("point").bind(this),
                 setter: this.getPropertySetter("point").bind(this),
-                registerValueChangeFunc: this.registerValueChangeHandler("point").bind(this),
-                unregisterValueChangeFunc: this.unregisterValueChangeHandler("point").bind(this)
+                registerValueChangeFunc: this.registerValueChangeHandler("point"),
+                unregisterValueChangeFunc: this.unregisterValueChangeHandler("point")
             })
 
         propertySheet.addProperty({
@@ -115,8 +115,8 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
             type: PropertyType.VECTOR2,
             getter: this.getPropertyGetter("handleIn").bind(this),
             setter: this.getPropertySetter("handleIn").bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("handleIn").bind(this),
-            unregisterValueChangeFunc: this.unregisterValueChangeHandler("handleIn").bind(this)
+            registerValueChangeFunc: this.registerValueChangeHandler("handleIn"),
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("handleIn")
         })
         propertySheet.addProperty(
             {
@@ -124,8 +124,8 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
                 type: PropertyType.VECTOR2,
                 getter: this.getPropertyGetter("handleOut").bind(this),
                 setter: this.getPropertySetter("handleOut").bind(this),
-                registerValueChangeFunc: this.registerValueChangeHandler("handleOut").bind(this),
-                unregisterValueChangeFunc: this.unregisterValueChangeHandler("handleOut").bind(this)
+                registerValueChangeFunc: this.registerValueChangeHandler("handleOut"),
+                unregisterValueChangeFunc: this.unregisterValueChangeHandler("handleOut")
             })
 
         propertySheet.addProperty({

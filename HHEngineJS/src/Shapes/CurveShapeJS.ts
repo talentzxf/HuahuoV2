@@ -90,8 +90,8 @@ class CurveShapeJS extends BaseSolidShape{
             max: 1.0,
             getter: this.getGrowth.bind(this),
             setter: this.setGrowth.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("growth").bind(this),
-            unregisterValueChagneFunc: this.unregisterValueChangeHandler("growth").bind(this)
+            registerValueChangeFunc: this.registerValueChangeHandler("growth"),
+            unregisterValueChagneFunc: this.unregisterValueChangeHandler("growth")
         })
     }
 }

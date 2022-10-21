@@ -70,8 +70,8 @@ abstract class BaseSolidShape extends BaseShapeJS {
             type: PropertyType.COLOR,
             getter: this.getFillColor.bind(this),
             setter: this.setFillColor.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("color").bind(this),
-            unregisterValueChangeFunc: this.unregisterValueChangeHandler("color").bind(this)
+            registerValueChangeFunc: this.registerValueChangeHandler("color"),
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("color")
         })
 
         this.propertySheet.addProperty({
@@ -79,8 +79,8 @@ abstract class BaseSolidShape extends BaseShapeJS {
             type: PropertyType.COLOR,
             getter: this.getStrokeColor.bind(this),
             setter: this.setStrokeColor.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("strokeColor").bind(this),
-            unregisterValueChangeFunc: this.unregisterValueChangeHandler("strokeColor").bind(this)
+            registerValueChangeFunc: this.registerValueChangeHandler("strokeColor"),
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("strokeColor")
         })
 
         this.propertySheet.addProperty({
@@ -88,8 +88,8 @@ abstract class BaseSolidShape extends BaseShapeJS {
             type: PropertyType.FLOAT,
             getter: this.getStrokeWidth.bind(this),
             setter: this.setStrokeWidth.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("strokeWidth").bind(this),
-            unregisterValueChangeFunc: this.unregisterValueChangeHandler("strokeWidth").bind(this)
+            registerValueChangeFunc: this.registerValueChangeHandler("strokeWidth"),
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("strokeWidth")
         })
     }
 

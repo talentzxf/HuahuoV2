@@ -1,53 +1,77 @@
 import {BaseShapeJS} from "./BaseShapeJS";
-import {PropertySheet} from "hhcommoncomponents";
+import {PropertySheet, PropertyType} from "hhcommoncomponents";
+import {ValueChangeHandler} from "./ValueChangeHandler";
 
-class ShapeCenterSelector{
+class ShapeCenterSelector {
     private _targetObj: BaseShapeJS;
-    private propertySheet: PropertySheet
+    private readonly propertySheet: PropertySheet
     private _isSelected: boolean = false;
 
     private circleShape: paper.Path
+
+    private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
+
     constructor(targetObj: BaseShapeJS) {
         this._targetObj = targetObj
 
         this.propertySheet = new PropertySheet();
 
-        this._targetObj.registerValueChangeHandler("position")(this.setPosition.bind(this))
+        this.propertySheet.addProperty({
+                key: "inspector.Type",
+                type: PropertyType.STRING,
+                getter: this.getTypeName.bind(this)
+            },
+            {
+                key: "inspector.FixedPosition",
+                type: PropertyType.VECTOR2,
+                getter: this.getPosition.bind(this),
+                setter: this.setPosition.bind(this),
+                registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("centerPosition").bind(this),
+                unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("centerPosition").bind(this)
+            })
     }
 
-    getTypeName(){
+    getTypeName() {
         return "CenterOf"
     }
 
-    get name(){
+    get name() {
         let retName = "[" + this._targetObj.getTypeName() + "]"
-        if(this._targetObj.name)
+        if (this._targetObj.name)
             retName += this._targetObj.name
         return retName
     }
 
-    getLayer(){
+    getLayer() {
         return this._targetObj.getLayer()
     }
 
-    get position(){
+    get position() {
         return this.paperShape.position
     }
 
-    set position(val:paper.Point){
+    set position(val: paper.Point) {
         this.paperShape.position = val
 
         this._targetObj.pivotPosition = val
+
+        this.valueChangeHandler.callHandlers("centerPosition", val)
     }
 
-    setPosition(val:paper.Point){
-        if(this._isSelected){
+    getPosition() {
+        return this.position
+    }
+
+    setPosition(val: paper.Point) {
+        if (this._isSelected) {
             this.position = this._targetObj.pivotPosition
+
+            this.valueChangeHandler.callHandlers("centerPosition", val)
         }
     }
 
-    get paperShape(){
-        if(!this.circleShape){
+    get paperShape() {
+        if (!this.circleShape) {
             let paperJs = this._targetObj.getPaperJs()
             this.circleShape = new paperJs.Path.Circle(this._targetObj.pivotPosition, 20)
             this.circleShape.fillColor = new paper.Color("red")
@@ -59,35 +83,35 @@ class ShapeCenterSelector{
         return true
     }
 
-    getParent(){
+    getParent() {
         return null
     }
 
-    set selected(val: boolean){
-        if(!val){
-            if(this.circleShape){
+    set selected(val: boolean) {
+        if (!val) {
+            if (this.circleShape) {
                 this.circleShape.remove()
                 this.circleShape = null
             }
-        }else{
+        } else {
             this.paperShape
         }
 
         this._isSelected = val
     }
 
-    update(){
+    update() {
     }
 
-    getPropertySheet(){
+    getPropertySheet() {
         return this.propertySheet
     }
 
-    store(){
+    store() {
 
     }
 
-    getBornStoreId(){
+    getBornStoreId() {
         return this._targetObj.getBornStoreId()
     }
 }

@@ -31,6 +31,7 @@
   "ShapeSegmentInsertCommand": "InsertSegment",
   "ShapeSegmentMoveCommand": "MoveSegment",
   "ShapeHandlerMoveCommand": "MoveHandler",
+  "CenterOf": "Center",
   "contextmenu": {
     "sendToBack": "Send To Back",
     "bringToFront": "Bring to Front",

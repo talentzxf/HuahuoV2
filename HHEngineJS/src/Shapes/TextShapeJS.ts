@@ -77,8 +77,8 @@ class TextShapeJS extends BaseSolidShape{
             type: PropertyType.STRING,
             getter: this.getText.bind(this),
             setter: this.setText.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("text").bind(this),
-            unregisterValueChangeFunc: this.unregisterValueChangeHandler("text").bind(this)
+            registerValueChangeFunc: this.registerValueChangeHandler("text"),
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("text")
         })
     }
 }
