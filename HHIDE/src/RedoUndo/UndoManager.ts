@@ -44,7 +44,7 @@ abstract class UndoableCommand {
     }
 
     toString(){
-        return this.GetType()
+        return i18n.t(this.GetType())
     }
 
     private ExecuteCommand(func){

@@ -19,7 +19,10 @@ class ShapeMoveCommand extends MergableCommand{
 
     toString(){
         let cmdString = super.toString()
-        cmdString += ":" + "[" + this.targetShape.getTypeName() + "]"
+
+        let translatedTypeName = i18n.t(this.targetShape.getTypeName())
+
+        cmdString += ":" + "[" + translatedTypeName + "]"
         if(this.targetShape.name)
             cmdString += this.targetShape.name
 

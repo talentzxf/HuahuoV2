@@ -26,6 +26,8 @@
   "TextShape": "文本",
   "CurveShape": "曲线",
   "LineShape": "直线",
+  "CreateShape": "创建",
+  "MoveShape": "移动",
   "contextmenu": {
     "sendToBack": "放到下面",
     "bringToFront": "放到上面",
