@@ -15,6 +15,10 @@ class ShapeCenterSelector{
         this._targetObj.registerValueChangeHandler("position")(this.setPosition.bind(this))
     }
 
+    getLayer(){
+        return this._targetObj.getLayer()
+    }
+
     get position(){
         return this.paperShape.position
     }
