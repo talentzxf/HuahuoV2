@@ -28,6 +28,9 @@
   "LineShape": "Line",
   "CreateShape": "Create",
   "MoveShape": "Move",
+  "ShapeSegmentInsertCommand": "InsertSegment",
+  "ShapeSegmentMoveCommand": "MoveSegment",
+  "ShapeHandlerMoveCommand": "MoveHandler",
   "contextmenu": {
     "sendToBack": "Send To Back",
     "bringToFront": "Bring to Front",
