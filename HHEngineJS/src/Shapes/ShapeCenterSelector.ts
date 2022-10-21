@@ -15,6 +15,17 @@ class ShapeCenterSelector{
         this._targetObj.registerValueChangeHandler("position")(this.setPosition.bind(this))
     }
 
+    getTypeName(){
+        return "CenterOf"
+    }
+
+    get name(){
+        let retName = "[" + this._targetObj.getTypeName() + "]"
+        if(this._targetObj.name)
+            retName += this._targetObj.name
+        return retName
+    }
+
     getLayer(){
         return this._targetObj.getLayer()
     }

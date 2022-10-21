@@ -17,6 +17,15 @@ class ShapeMoveCommand extends MergableCommand{
         this.targetPos = targetPos
     }
 
+    toString(){
+        let cmdString = super.toString()
+        cmdString += ":" + "[" + this.targetShape.getTypeName() + "]"
+        if(this.targetShape.name)
+            cmdString += this.targetShape.name
+
+        return cmdString
+    }
+
     _DoCommand() {
         this.targetShape.position = this.targetPos
         this.targetShape.store()
