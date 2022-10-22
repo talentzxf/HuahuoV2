@@ -15,6 +15,7 @@ class Property{
     elementType ?: string
     min ?: number // Only number fields need this.
     max ?: number
+    step ?: number
     setter?: Function
     getter?: Function
     registerValueChangeFunc?: Function

@@ -121,7 +121,7 @@ class ProjectListForm extends HTMLElement implements HHForm {
         }
     }
 
-    refreshList(pageNo = 0, pageSize = 10){
+    refreshList(pageNo = 0, pageSize = 20){
         let _this = this
         api.listProjects((listProjectResult)=>{
             let totalPage = listProjectResult.totalCount/pageSize

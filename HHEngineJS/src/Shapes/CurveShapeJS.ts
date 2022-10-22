@@ -88,6 +88,7 @@ class CurveShapeJS extends BaseSolidShape{
             elementType: "range",
             min: 0.0,
             max: 1.0,
+            step: 0.01,
             getter: this.getGrowth.bind(this),
             setter: this.setGrowth.bind(this),
             registerValueChangeFunc: this.registerValueChangeHandler("growth"),

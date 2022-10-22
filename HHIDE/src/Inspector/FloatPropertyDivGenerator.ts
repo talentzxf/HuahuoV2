@@ -39,6 +39,10 @@ class FloatPropertyDesc extends BasePropertyDesc{
             this.input.max = property.max
         }
 
+        if(property.step != null){
+            this.input.step = property.step
+        }
+
         this.contentDiv.appendChild(this.input)
     }
 
