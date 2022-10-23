@@ -73,6 +73,10 @@ class CurveShapeJS extends BaseSolidShape{
 
         if(this.growth < 1.0){
             this.clonedPaperShape = this.paperShape.clone()
+            this.clonedPaperShape.selected = false
+            this.clonedPaperShape.visible = false
+            this.clonedPaperShape.data = null
+
             console.log("HereHere3: Current segments:" + this.clonedPaperShape.segments.length)
             let path2 = this.paperShape.splitAt(this.paperShape.length * this.growth)
             if(path2){
