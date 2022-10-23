@@ -45,8 +45,9 @@ class CurveShapeJS extends BaseSolidShape{
     }
 
     growth: number = 1.0
-
     lastGrowthNumber: number = -1.0
+    clonedOriginalSegments
+
     getGrowth(){
         return this.growth
     }
@@ -57,12 +58,17 @@ class CurveShapeJS extends BaseSolidShape{
         this.update()
     }
 
+    // This might be overridden by CurveShape. Because we want to implement the growth factor.
+    getSegments(){
+        if(this.clonedOriginalSegments)
+            return this.paperShape.segments
+    }
+
     afterUpdate() {
-        if(this.growth >= 1.0)
-            super.afterUpdate();
+        super.afterUpdate()
 
         if(this.growth < 1.0 && this.lastGrowthNumber != this.growth){
-            super.afterUpdate()
+            this.clonedOriginalSegments = this.paperShape.segments
 
             let path2 = this.paperShape.splitAt(this.paperShape.length * this.growth)
             path2.visible = false

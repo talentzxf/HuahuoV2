@@ -408,9 +408,14 @@ abstract class BaseShapeJS {
             this.rawObj.SetSegmentsAtFrame(segmentBuffer, segments.length, keyframeId)
     }
 
+    // This might be overridden by CurveShape. Because we want to implement the growth factor.
+    getSegments(){
+        return this.paperShape.segments
+    }
+
     // TODO: Do we really need a store ????
     store() {
-        let segments = this.paperShape.segments
+        let segments = this.getSegments()
         if (segments) {
             this.storeSegments(segments)
         }

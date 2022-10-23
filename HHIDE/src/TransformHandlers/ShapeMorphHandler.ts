@@ -6,6 +6,7 @@ import {ShapeHandlerMoveCommand} from "../RedoUndo/ShapeHandlerMoveCommand";
 import {undoManager} from "../RedoUndo/UndoManager";
 import {ShapeSegmentMoveCommand} from "../RedoUndo/ShapeSegmentMoveCommand";
 import {ShapeSegmentInsertCommand} from "../RedoUndo/ShapeSegmentInsertCommand";
+import {ValueChangeHandler} from "hhenginejs";
 
 class ShapeMorphHandler extends ShapeTranslateMorphBase {
     curSegment: paper.Segment
@@ -13,9 +14,9 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
 
     targetShape: BaseShapeJS
 
-    valueChangeHandlerMap: Map<string, Function> = new Map<string, Function>()
-
     protected pressingShift: boolean = false
+
+    private valueChangeHandler:ValueChangeHandler = new ValueChangeHandler()
 
     constructor() {
         super();
@@ -80,7 +81,7 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         let _this = this
         return function(x,y){
             _this.curSegment[propertyName].x = x
-            _this.curSegment[propertyName].y = x
+            _this.curSegment[propertyName].y = y
 
             // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
             this.targetShape.store({position: true, segments: true})
@@ -88,15 +89,11 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
     }
 
     registerValueChangeHandler(propertyName:string){
-        return function(handler){
-            this.valueChangeHandlerMap.set(propertyName, handler)
-        }
+        return this.valueChangeHandler.registerValueChangeHandler(propertyName)
     }
 
     unregisterValueChangeHandler(propertyName: string){
-        return function(){
-            this.valueChangeHandlerMap.set(propertyName, null)
-        }
+        return this.valueChangeHandler.unregisterValueChangeHandler(propertyName)
     }
 
     protected setupPropertySheet(propertySheet: PropertySheet){
@@ -185,9 +182,7 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
             shapeSegmentMoveCommand.DoCommand()
             undoManager.PushCommand(shapeSegmentMoveCommand)
 
-            if(this.valueChangeHandlerMap.get("point")){
-                this.valueChangeHandlerMap.get("point")(this.curSegment.point)
-            }
+            this.valueChangeHandler.callHandlers("point", this.curSegment.point)
         }
     }
 }
