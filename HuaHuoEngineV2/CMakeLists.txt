@@ -134,6 +134,7 @@ list(APPEND CPPFILES  src/Shapes/CurveShape.cpp)
 list(APPEND CPPFILES  src/KeyFrames/ShapeStrokeColorFrameState.cpp)
 list(APPEND CPPFILES  src/KeyFrames/ShapeStrokeWidthFrameState.cpp)
 list(APPEND CPPFILES  src/KeyFrames/ShapeFollowCurveFrameState.cpp)
+list(APPEND CPPFILES src/KeyFrames/CustomFrameState.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)
