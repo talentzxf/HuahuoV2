@@ -8,6 +8,7 @@
 #include "TypeSystem/Object.h"
 #include "Math/Color.h"
 #include "Math/Vector3f.h"
+#include "BaseClasses/PPtr.h"
 
 extern const int MAX_FRAMES;
 
@@ -54,6 +55,8 @@ private:
     std::vector<T> m_KeyFrames;
 };
 
+class BaseShape;
+
 class AbstractFrameState : public Object {
 REGISTER_CLASS_TRAITS(kTypeIsAbstract);
 
@@ -80,8 +83,15 @@ public:
     virtual int GetMaxFrameId() = 0;
     virtual void AddAnimationOffset(int offset) = 0;
 
+
+    void SetBaseShape(BaseShape* pBaseShape);
+
+    template<class TransferFunction>
+    void Transfer(TransferFunction &transfer);
+
 protected:
     bool isValidFrame;
+    PPtr<BaseShape> baseShape;
 };
 
 template<class T>
@@ -116,6 +126,11 @@ public:
             keyFrameIds.push_back(itr->frameId);
         }
         return keyFrameIds;
+    }
+
+    template<class TransferFunction> void Transfer(TransferFunction &transfer){
+        Super::Transfer();
+        TRANSFER(GetKeyFrames());
     }
 
 private:

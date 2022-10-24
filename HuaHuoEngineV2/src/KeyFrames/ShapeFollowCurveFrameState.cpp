@@ -15,7 +15,6 @@ INSTANTIATE_TEMPLATE_TRANSFER(ShapeFollowCurveFrameState);
 template<class TransferFunction>
 void ShapeFollowCurveFrameState::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-    TRANSFER(GetKeyFrames());
 }
 
 ShapeFollowCurveData Lerp(ShapeFollowCurveData &k1, ShapeFollowCurveData &k2, float ratio) {

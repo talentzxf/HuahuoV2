@@ -13,7 +13,6 @@ INSTANTIATE_TEMPLATE_TRANSFER(CustomFrameState);
 template<class TransferFunction>
 void CustomFrameState::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-    TRANSFER(GetKeyFrames());
 
     TRANSFER(m_fieldNameFieldIndexMap);
     TRANSFER(m_fieldIndexFieldNameMap);

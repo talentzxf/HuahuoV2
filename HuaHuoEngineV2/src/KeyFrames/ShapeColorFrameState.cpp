@@ -14,7 +14,6 @@ INSTANTIATE_TEMPLATE_TRANSFER(ShapeColorFrameState);
 template<class TransferFunction>
 void ShapeColorFrameState::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-    TRANSFER(GetKeyFrames());
 }
 
 // TODO: Implement this

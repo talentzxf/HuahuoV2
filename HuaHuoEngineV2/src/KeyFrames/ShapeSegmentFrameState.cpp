@@ -53,7 +53,6 @@ std::vector<Vector3f> Lerp(std::vector<Vector3f> &k1, std::vector<Vector3f> &k2,
 template<class TransferFunction>
 void ShapeSegmentFrameState::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-    TRANSFER(GetKeyFrames());
 }
 
 bool ShapeSegmentFrameState::Apply(int frameId) {

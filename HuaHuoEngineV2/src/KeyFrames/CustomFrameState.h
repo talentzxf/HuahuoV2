@@ -10,6 +10,8 @@
 #include <string>
 #include "FrameState.h"
 
+class BaseShape;
+
 class CustomFloatKeyFrame{
 public:
     std::vector<float> frameValues;
@@ -20,7 +22,6 @@ public:
 
     CustomFloatKeyFrame():
         frameId(-1), inited(false){
-
     }
 };
 
@@ -53,6 +54,9 @@ public:
         return index;
     }
 
+    void SetValue(const char* fieldName, float value);
+
+private:
     void RecordFieldValue(int frameId, const char* fieldName, float value);
 
 private:

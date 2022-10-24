@@ -13,7 +13,6 @@ INSTANTIATE_TEMPLATE_TRANSFER(ShapeStrokeWidthFrameState);
 template <class TransferFunction>
 void ShapeStrokeWidthFrameState::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-    TRANSFER(GetKeyFrames());
 }
 
 bool ShapeStrokeWidthFrameState::Apply(int frameId) {

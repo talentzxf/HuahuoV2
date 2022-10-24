@@ -87,6 +87,7 @@ int BaseShape::GetStoreId() {
 
 AbstractFrameState *BaseShape::AddFrameState(AbstractFrameState *frameState) {
     Assert(frameState != NULL);
+    frameState->SetBaseShape(this);
     mFrameStates.push_back(FrameStatePair::FromState(frameState));
 
     return frameState;

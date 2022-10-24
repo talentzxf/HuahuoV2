@@ -14,7 +14,6 @@ INSTANTIATE_TEMPLATE_TRANSFER(ShapeTransformFrameState);
 template<class TransferFunction>
 void ShapeTransformFrameState::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-    TRANSFER(GetKeyFrames());
 }
 
 TransformData Lerp(TransformData &k1, TransformData &k2, float ratio) {
