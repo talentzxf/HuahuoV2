@@ -21,20 +21,21 @@ class CurveGrowthComponent extends AbstractComponent{
     override afterUpdate() {
         super.afterUpdate();
 
-        if(this["getGrowth"]() < 1.0){
+        let growth = this["getGrowth"]()
+        if( growth < 1.0){
             this.clonedPaperShape = this.paperShape.clone()
             this.clonedPaperShape.selected = false
             this.clonedPaperShape.visible = false
             this.clonedPaperShape.data = null
 
-            let path2 = this.paperShape.splitAt(this.paperShape.length * this.growth)
+            let path2 = this.paperShape.splitAt(this.paperShape.length * growth)
             if(path2){
                 path2.visible = false
                 path2.selected = false
                 path2.remove()
             }
 
-            this.lastGrowthNumber = this.growth
+            this.lastGrowthNumber = growth
         }
     }
 }
