@@ -72,7 +72,6 @@ private:
     std::vector<int> mKeyFrameCache;
 
 private:
-    AbstractFrameState* AddFrameStateInternal(AbstractFrameState* frameState);
     AbstractFrameState* ProduceFrameStateByType(const HuaHuo::Type* type);
     template<class TransferFunction> void TransferFrameStates(TransferFunction& transfer);
 public:
@@ -90,6 +89,8 @@ public:
         AddFrameStateByName("ShapeStrokeWidthFrameState");
         AddFrameStateByName("ShapeFollowCurveFrameState");
     }
+
+    AbstractFrameState* AddFrameState(AbstractFrameState* frameState);
 
     /// Get and set the name
     virtual const char* GetName() const override{

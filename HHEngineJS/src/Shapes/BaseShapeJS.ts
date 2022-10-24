@@ -4,6 +4,7 @@ import {relaxRectangle, PropertySheet, PropertyType, Logger} from "hhcommoncompo
 import * as paper from "paper";
 import {ShapeCenterSelector} from "./ShapeCenterSelector";
 import {ValueChangeHandler} from "./ValueChangeHandler";
+import {AbstractComponent} from "../Components/AbstractComponent";
 
 declare function castObject(obj: any, clz: any): any;
 
@@ -72,6 +73,10 @@ abstract class BaseShapeJS {
         this.rawObj.SetLocalPivotPosition(localCenterPos.x, localCenterPos.y, 0.0)
 
         this.paperItem.scaling = currentScaling
+    }
+
+    addComponent(component: AbstractComponent){
+        this.rawObj.AddComponent(component.rawObj)
     }
 
     public getPointAt(offset): paper.Point {

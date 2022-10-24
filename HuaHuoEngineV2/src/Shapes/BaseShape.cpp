@@ -85,7 +85,7 @@ int BaseShape::GetStoreId() {
     return this->mLayer->GetObjectStore()->GetStoreId();
 }
 
-AbstractFrameState *BaseShape::AddFrameStateInternal(AbstractFrameState *frameState) {
+AbstractFrameState *BaseShape::AddFrameState(AbstractFrameState *frameState) {
     Assert(frameState != NULL);
     mFrameStates.push_back(FrameStatePair::FromState(frameState));
 
@@ -221,7 +221,7 @@ AbstractFrameState *BaseShape::AddFrameStateByName(const char *frameStateName) {
     const HuaHuo::Type *componentType = HuaHuo::Type::FindTypeByName(frameStateName);
     if (componentType != NULL && componentType->IsDerivedFrom<AbstractFrameState>()) {
         AbstractFrameState *newFrameState = ProduceFrameStateByType(componentType);
-        return AddFrameStateInternal(newFrameState);
+        return AddFrameState(newFrameState);
     }
 
     return NULL;

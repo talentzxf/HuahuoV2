@@ -6,8 +6,6 @@ import {HHToast} from "hhcommoncomponents";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
 
-declare var Module: any;
-
 class ProjectUploader {
     private get fileName():string{
         return projectInfo.name

@@ -131,6 +131,12 @@ interface AbstractFrameState{
 };
 
 [NoDelete]
+interface CustomFrameState{
+    long RegisterFloatValue([Const] DOMString fieldName, float initValue);
+    void RecordFieldValue(long frameId, [Const] DOMString fieldName, float value);
+};
+
+[NoDelete]
 interface ShapeFollowCurveFrameState{
     void RecordTargetShape(long frameId, BaseShape targetCurve);
     void RecordLengthRatio(long frameId, float lengthRatio);
@@ -150,6 +156,8 @@ interface BaseShape{
     void SetName(DOMString name);
 
     long GetStoreId();
+
+    void AddFrameState(AbstractFrameState frameState);
 
     void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
