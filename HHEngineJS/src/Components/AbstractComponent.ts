@@ -1,29 +1,45 @@
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
+import "reflect-metadata"
 
+const metaDataKey = Symbol("interpolateValues")
 declare var Module: any;
 
-function interpolateValue(){
-    return function(target: AbstractComponent, propertyKey: string){
-        target.registerField(propertyKey)
+function interpolateValue(initValue: number) {
+    return function (target: object, propertyKey: string) {
+        let properties: object[] = Reflect.getMetadata(metaDataKey, target)
+
+        if (properties) {
+            let propertyEntry = {
+                key: propertyKey,
+                initValue: initValue
+            }
+            properties.push(propertyEntry)
+        } else {
+            properties = [{key: propertyKey, initValue: initValue}]
+            Reflect.defineMetadata(metaDataKey, properties, target)
+        }
     }
 }
 
 class AbstractComponent {
-    rawObj: any = new Module["CustomFrameState"]()
+    rawObj: any = Module["CustomFrameState"].prototype.CreateFrameState()
     baseShape: BaseShapeJS;
 
     constructor() {
+        const properties: string[] = Reflect.getMetadata(metaDataKey, this)
+
+        let _this = this
+        properties.forEach(propertyEntry => {
+            _this.rawObj.RegisterFloatValue(propertyEntry["key"], propertyEntry["initValue"])
+        })
     }
 
-    registerField(fieldName: string){
-        this.rawObj.RegisterFloatValue( fieldName, this.rawObj[fieldName] )
-    }
-
-    setBaseShape(baseShape: BaseShapeJS){
+    setBaseShape(baseShape: BaseShapeJS) {
         this.baseShape = baseShape
     }
 
-    afterUpdate(){}
+    afterUpdate() {
+    }
 }
 
 export {AbstractComponent, interpolateValue}

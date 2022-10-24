@@ -127,11 +127,11 @@ interface SegmentKeyFrame{
 
 [NoDelete]
 interface AbstractFrameState{
-
 };
 
 [NoDelete]
 interface CustomFrameState{
+    static CustomFrameState CreateFrameState();
     long RegisterFloatValue([Const] DOMString fieldName, float initValue);
     void SetValue([Const] DOMString fieldName, float value);
 };

@@ -11,14 +11,15 @@
   "license": "ISC",
   "devDependencies": {
     "gifuct-js": "^2.1.2",
+    "hhcommoncomponents": "file:../HHCommonComponents",
     "paper": "^0.12.15",
+    "reflect-metadata": "^0.1.13",
     "ts-loader": "^9.3.0",
     "typescript": "^4.7.2",
     "typescript-declaration-webpack-plugin": "^0.2.2",
     "uuid": "^8.3.2",
     "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2",
-    "hhcommoncomponents": "file:../HHCommonComponents"
+    "webpack-cli": "^4.9.2"
   },
   "peerDependencies": {
     "hhcommoncomponents": "file:../HHCommonComponents"

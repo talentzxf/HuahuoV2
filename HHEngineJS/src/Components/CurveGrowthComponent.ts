@@ -1,7 +1,7 @@
 import {AbstractComponent, interpolateValue} from "./AbstractComponent";
 
 class CurveGrowthComponent extends AbstractComponent{
-    @interpolateValue()
+    @interpolateValue(1.0)
     growth: number;
 
     lastGrowthNumber: number = -1.0

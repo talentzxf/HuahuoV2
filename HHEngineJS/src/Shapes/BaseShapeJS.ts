@@ -78,7 +78,7 @@ abstract class BaseShapeJS {
     }
 
     addComponent(component: AbstractComponent){
-        this.rawObj.AddComponent(component.rawObj)
+        this.rawObj.AddFrameState(component.rawObj)
         component.setBaseShape(this)
         this.customComponents.push(component)
     }
