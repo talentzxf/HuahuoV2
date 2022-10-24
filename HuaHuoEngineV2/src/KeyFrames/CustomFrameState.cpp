@@ -3,6 +3,7 @@
 //
 
 #include "CustomFrameState.h"
+#include "Layer.h"
 
 IMPLEMENT_REGISTER_CLASS(CustomFrameState, 10021);
 
@@ -58,6 +59,13 @@ bool CustomFrameState::Apply(int frameId) {
     }
 
     return false;
+}
+
+void CustomFrameState::SetValue(const char *fieldName, float value) {
+    Layer *shapeLayer = baseShape->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+    this->RecordFieldValue(currentFrameId, fieldName, value);
+    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 }
 
 void CustomFrameState::RecordFieldValue(int frameId, const char* fieldName, float value) {

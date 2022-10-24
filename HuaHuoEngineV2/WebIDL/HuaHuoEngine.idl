@@ -130,10 +130,9 @@ interface AbstractFrameState{
 
 };
 
-[NoDelete]
 interface CustomFrameState{
     long RegisterFloatValue([Const] DOMString fieldName, float initValue);
-    void RecordFieldValue(long frameId, [Const] DOMString fieldName, float value);
+    void SetValue([Const] DOMString fieldName, float value);
 };
 
 [NoDelete]

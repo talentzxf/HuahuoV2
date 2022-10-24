@@ -40,6 +40,8 @@ abstract class BaseShapeJS {
 
     private valueChangeHandler:ValueChangeHandler = new ValueChangeHandler()
 
+    private customComponents:Array<AbstractComponent> = new Array<AbstractComponent>()
+
     get belongStoreId(): number{
         return this.rawObj.GetStoreId()
     }
@@ -77,6 +79,8 @@ abstract class BaseShapeJS {
 
     addComponent(component: AbstractComponent){
         this.rawObj.AddComponent(component.rawObj)
+        component.setBaseShape(this)
+        this.customComponents.push(component)
     }
 
     public getPointAt(offset): paper.Point {
@@ -851,6 +855,11 @@ abstract class BaseShapeJS {
             if (parent) {
                 parent.insertChild(this.rawObj.GetIndex(), this.paperItem)
             }
+        }
+
+        // Execute after update of all components
+        for(let component of this.customComponents){
+            component.afterUpdate()
         }
     }
 

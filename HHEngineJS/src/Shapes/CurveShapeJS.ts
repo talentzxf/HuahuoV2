@@ -1,11 +1,18 @@
 import {BaseSolidShape} from "./BaseSolidShape";
 import {PropertyType} from "hhcommoncomponents";
 import {shapeFactory} from "./BaseShapeJS";
+import {CurveGrowthComponent} from "../Components/CurveGrowthComponent";
 
 let shapeName = "CurveShape"
 class CurveShapeJS extends BaseSolidShape{
     static createCurveShape(rawObj){
         return new CurveShapeJS(rawObj)
+    }
+
+    curveGrowthComponent: CurveGrowthComponent = new CurveGrowthComponent()
+
+    initComponents(){
+        this.addComponent(this.curveGrowthComponent)
     }
 
     getShapeName(): string {
@@ -44,9 +51,13 @@ class CurveShapeJS extends BaseSolidShape{
         this.paperShape.closed = true
     }
 
-    growth: number = 1.0
-    lastGrowthNumber: number = -1.0
-    clonedPaperShape
+    get growth(){
+        return this.curveGrowthComponent.growth
+    }
+
+    set growth(val:number){
+        this.curveGrowthComponent.setGrowth(val)
+    }
 
     getGrowth(){
         return this.growth
@@ -60,30 +71,11 @@ class CurveShapeJS extends BaseSolidShape{
 
     // This might be overridden by CurveShape. Because we want to implement the growth factor.
     getSegments(){
-        if(!this.clonedPaperShape){
-            return this.paperShape.segments
-        }
-        return this.clonedPaperShape.segments
+        return this.curveGrowthComponent.getSegments()
     }
 
     afterUpdate() {
         super.afterUpdate()
-
-        if(this.growth < 1.0){
-            this.clonedPaperShape = this.paperShape.clone()
-            this.clonedPaperShape.selected = false
-            this.clonedPaperShape.visible = false
-            this.clonedPaperShape.data = null
-
-            let path2 = this.paperShape.splitAt(this.paperShape.length * this.growth)
-            if(path2){
-                path2.visible = false
-                path2.selected = false
-                path2.remove()
-            }
-
-            this.lastGrowthNumber = this.growth
-        }
     }
 
     afterWASMReady() {

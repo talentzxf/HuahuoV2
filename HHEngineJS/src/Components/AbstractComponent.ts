@@ -1,3 +1,5 @@
+import {BaseShapeJS} from "../Shapes/BaseShapeJS";
+
 declare var Module: any;
 
 function interpolateValue(){
@@ -8,9 +10,7 @@ function interpolateValue(){
 
 class AbstractComponent {
     rawObj: any = new Module["CustomFrameState"]()
-
-    fieldNameIdMap: Map<string, number> = new Map()
-    fieldIdNameMap: Map<number, string> = new Map()
+    baseShape: BaseShapeJS;
 
     constructor() {
     }
@@ -18,6 +18,12 @@ class AbstractComponent {
     registerField(fieldName: string){
         this.rawObj.RegisterFloatValue( fieldName, this.rawObj[fieldName] )
     }
+
+    setBaseShape(baseShape: BaseShapeJS){
+        this.baseShape = baseShape
+    }
+
+    afterUpdate(){}
 }
 
 export {AbstractComponent, interpolateValue}
