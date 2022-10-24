@@ -18,14 +18,10 @@ class CurveGrowthComponent extends AbstractComponent{
         return this.clonedPaperShape.segments
     }
 
-    setGrowth(growth: number){
-        this.rawObj.SetValue("growth", growth)
-    }
-
     override afterUpdate() {
         super.afterUpdate();
 
-        if(this.growth < 1.0){
+        if(this["getGrowth"]() < 1.0){
             this.clonedPaperShape = this.paperShape.clone()
             this.clonedPaperShape.selected = false
             this.clonedPaperShape.visible = false

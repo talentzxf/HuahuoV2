@@ -56,6 +56,8 @@ public:
 
     void SetValue(const char* fieldName, float value);
 
+    float GetValue(const char* fieldName);
+
     static CustomFrameState* CreateFrameState(){
         return Object::Produce<CustomFrameState>();
     }

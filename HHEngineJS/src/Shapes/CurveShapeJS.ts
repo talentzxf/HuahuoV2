@@ -56,7 +56,7 @@ class CurveShapeJS extends BaseSolidShape{
     }
 
     set growth(val:number){
-        this.curveGrowthComponent.setGrowth(val)
+        this.curveGrowthComponent["setGrowth"](val)
     }
 
     getGrowth(){

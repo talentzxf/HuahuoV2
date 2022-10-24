@@ -68,6 +68,11 @@ void CustomFrameState::SetValue(const char *fieldName, float value) {
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 }
 
+float CustomFrameState::GetValue(const char* fieldName){
+    int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
+    return m_CurrentcustomFloatKeyFrame.frameValues[fieldIdx];
+}
+
 void CustomFrameState::RecordFieldValue(int frameId, const char* fieldName, float value) {
     CustomFloatKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
     if(!pKeyFrame->inited){

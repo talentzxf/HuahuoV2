@@ -134,6 +134,7 @@ interface CustomFrameState{
     static CustomFrameState CreateFrameState();
     long RegisterFloatValue([Const] DOMString fieldName, float initValue);
     void SetValue([Const] DOMString fieldName, float value);
+    float GetValue([Const] DOMString fieldName);
 };
 
 [NoDelete]

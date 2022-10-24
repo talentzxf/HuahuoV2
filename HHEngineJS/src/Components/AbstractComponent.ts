@@ -21,9 +21,18 @@ function interpolateValue(initValue: number) {
     }
 }
 
+function capitalizeFirstLetter(str){
+    if(str.length == 0)
+        return ""
+
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 class AbstractComponent {
     rawObj: any = Module["CustomFrameState"].prototype.CreateFrameState()
     baseShape: BaseShapeJS;
+
+
 
     constructor() {
         const properties: string[] = Reflect.getMetadata(metaDataKey, this)
@@ -31,6 +40,19 @@ class AbstractComponent {
         let _this = this
         properties.forEach(propertyEntry => {
             _this.rawObj.RegisterFloatValue(propertyEntry["key"], propertyEntry["initValue"])
+
+            let fieldName = propertyEntry["key"]
+            // Generate setter and getter
+            let getterName = "get" + capitalizeFirstLetter(fieldName)
+            let setterName = "set" + capitalizeFirstLetter(fieldName)
+
+            _this[setterName] = function(val: number){
+                _this.rawObj.SetValue(fieldName, val)
+            }
+
+            _this[getterName] = function(){
+                return _this.rawObj.GetValue(fieldName)
+            }
         })
     }
 
