@@ -10,8 +10,3 @@ IMPLEMENT_REGISTER_CLASS(AbstractFrameState, 10007);
 void AbstractFrameState::SetBaseShape(BaseShape *pBaseShape) {
     baseShape = pBaseShape;
 }
-
-template<class TransferFunction> void AbstractFrameState::Transfer(TransferFunction &transfer){
-    Super::Transfer(transfer);
-    TRANSFER(baseShape);
-}

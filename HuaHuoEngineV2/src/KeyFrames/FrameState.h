@@ -86,8 +86,10 @@ public:
 
     void SetBaseShape(BaseShape* pBaseShape);
 
-    template<class TransferFunction>
-    void Transfer(TransferFunction &transfer);
+    template<class TransferFunction> void Transfer(TransferFunction &transfer){
+        Super::Transfer(transfer);
+        TRANSFER(baseShape);
+    }
 
 protected:
     bool isValidFrame;
