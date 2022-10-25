@@ -1,10 +1,16 @@
 import {AbstractComponent, interpolateValue} from "./AbstractComponent";
+import {CurveShapeJS} from "../Shapes/CurveShapeJS";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
+let componentName = "CurveGrowthComponent"
 class CurveGrowthComponent extends AbstractComponent{
+    static createComponent(rawObj){
+        new CurveGrowthComponent(rawObj)
+    }
+
     @interpolateValue(1.0)
     growth: number;
 
-    lastGrowthNumber: number = -1.0
     clonedPaperShape
 
     get paperShape(){
@@ -34,10 +40,10 @@ class CurveGrowthComponent extends AbstractComponent{
                 path2.selected = false
                 path2.remove()
             }
-
-            this.lastGrowthNumber = growth
         }
     }
 }
+
+clzObjectFactory.RegisterClass(componentName, CurveGrowthComponent.createComponent)
 
 export {CurveGrowthComponent}

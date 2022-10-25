@@ -1,8 +1,9 @@
-import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
+import {BaseShapeJS} from "./BaseShapeJS";
 import {PropertyType, getMimeTypeFromDataURI, dataURItoBlob} from "hhcommoncomponents"
 import {parseGIF, decompressFrames, ParsedFrame} from "gifuct-js";
 import {GlobalConfig} from "../GlobalConfig"
 import {AbstractMediaShapeJS} from "./AbstractMediaShapeJS";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
 let shapeName = "ImageShape"
 class ImageShapeJS extends AbstractMediaShapeJS{
@@ -148,6 +149,6 @@ class ImageShapeJS extends AbstractMediaShapeJS{
     }
 }
 
-shapeFactory.RegisterClass(shapeName, ImageShapeJS.createImageShape)
+clzObjectFactory.RegisterClass(shapeName, ImageShapeJS.createImageShape)
 
 export {ImageShapeJS}

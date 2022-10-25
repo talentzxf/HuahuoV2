@@ -1,6 +1,7 @@
-import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
+import {BaseShapeJS} from "./BaseShapeJS";
 import {Vector2} from "hhcommoncomponents"
 import {BaseSolidShape} from "./BaseSolidShape";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
 let shapeName = "RectangleShape"
 class RectangleJS extends BaseSolidShape{
@@ -49,6 +50,6 @@ class RectangleJS extends BaseSolidShape{
     }
 }
 
-shapeFactory.RegisterClass(shapeName, RectangleJS.createRectangle)
+clzObjectFactory.RegisterClass(shapeName, RectangleJS.createRectangle)
 
 export {RectangleJS}

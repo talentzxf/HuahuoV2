@@ -1,7 +1,8 @@
-import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
+import {BaseShapeJS} from "./BaseShapeJS";
 import {huahuoEngine} from "../EngineAPI";
 import {GlobalConfig} from "../GlobalConfig";
 import {LayerShapesManager} from "../Player/LayerShapesManager";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
 let shapeName = "ElementShape"
 
@@ -183,5 +184,5 @@ class ElementShapeJS extends BaseShapeJS {
     }
 }
 
-shapeFactory.RegisterClass(shapeName, ElementShapeJS.createElement)
+clzObjectFactory.RegisterClass(shapeName, ElementShapeJS.createElement)
 export {ElementShapeJS}

@@ -1,7 +1,8 @@
 import {Vector2} from "hhcommoncomponents"
-import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
+import {BaseShapeJS} from "./BaseShapeJS";
 import {PropertyType} from "hhcommoncomponents";
 import {BaseSolidShape} from "./BaseSolidShape";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
 let shapeName = "TextShape"
 class TextShapeJS extends BaseSolidShape{
@@ -83,6 +84,6 @@ class TextShapeJS extends BaseSolidShape{
     }
 }
 
-shapeFactory.RegisterClass(shapeName, TextShapeJS.createTextShape)
+clzObjectFactory.RegisterClass(shapeName, TextShapeJS.createTextShape)
 
 export {TextShapeJS}

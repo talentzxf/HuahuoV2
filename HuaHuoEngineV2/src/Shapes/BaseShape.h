@@ -44,7 +44,7 @@ public:
         FrameStatePair() {}
 
         static FrameStatePair FromState(AbstractFrameState* component);
-        DECLARE_SERIALIZE(ComponentPair);
+        DECLARE_SERIALIZE(FrameStatePair);
 
         inline RuntimeTypeIndex const GetTypeIndex() const { return typeIndex; }
         inline ImmediatePtr<AbstractFrameState> const& GetComponentPtr() const { return component; }
@@ -60,7 +60,6 @@ public:
 
     Container& GetFrameStateContainerInternal() { return mFrameStates; }
 private:
-
 
     Container   mFrameStates;
 

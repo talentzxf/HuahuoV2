@@ -1,7 +1,7 @@
 import {BaseSolidShape} from "./BaseSolidShape";
 import {PropertyType} from "hhcommoncomponents";
-import {shapeFactory} from "./BaseShapeJS";
 import {CurveGrowthComponent} from "../Components/CurveGrowthComponent";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
 let shapeName = "CurveShape"
 class CurveShapeJS extends BaseSolidShape{
@@ -10,10 +10,6 @@ class CurveShapeJS extends BaseSolidShape{
     }
 
     curveGrowthComponent: CurveGrowthComponent = new CurveGrowthComponent()
-
-    initComponents(){
-        this.addComponent(this.curveGrowthComponent)
-    }
 
     getShapeName(): string {
         return shapeName
@@ -102,5 +98,5 @@ class CurveShapeJS extends BaseSolidShape{
     }
 }
 
-shapeFactory.RegisterClass(shapeName, CurveShapeJS.createCurveShape)
+clzObjectFactory.RegisterClass(shapeName, CurveShapeJS.createCurveShape)
 export {CurveShapeJS}

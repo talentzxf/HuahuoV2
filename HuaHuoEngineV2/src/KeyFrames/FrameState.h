@@ -89,9 +89,23 @@ public:
     template<class TransferFunction> void Transfer(TransferFunction &transfer){
         Super::Transfer(transfer);
         TRANSFER(baseShape);
+        TRANSFER(typeName);
+    }
+
+    void SetTypeName(const char* typeName){
+        this->typeName = typeName;
+    }
+
+    const char* GetTypeName(){
+        if(typeName.length() == 0){
+            typeName = GetType()->GetName();
+        }
+
+        return typeName.c_str();
     }
 
 protected:
+    std::string typeName;
     bool isValidFrame;
     PPtr<BaseShape> baseShape;
 };

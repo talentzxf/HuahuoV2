@@ -1,6 +1,6 @@
-import {shapeFactory} from "./BaseShapeJS";
 import * as paper from "paper";
 import {BaseSolidShape} from "./BaseSolidShape";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
 let shapeName = "CircleShape"
 class CircleShapeJS extends BaseSolidShape{
@@ -50,7 +50,5 @@ class CircleShapeJS extends BaseSolidShape{
     }
 }
 
-shapeFactory.RegisterClass(shapeName, CircleShapeJS.createCircle)
-
-
+clzObjectFactory.RegisterClass(shapeName, CircleShapeJS.createCircle)
 export {CircleShapeJS}

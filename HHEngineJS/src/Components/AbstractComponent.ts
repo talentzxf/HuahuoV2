@@ -29,12 +29,16 @@ function capitalizeFirstLetter(str){
 }
 
 class AbstractComponent {
-    rawObj: any = Module["CustomFrameState"].prototype.CreateFrameState()
+    rawObj: any;
     baseShape: BaseShapeJS;
 
+    constructor(rawObj?) {
+        if(rawObj){
+            this.rawObj = rawObj
+        }else{
+            this.rawObj = Module["CustomFrameState"].prototype.CreateFrameState()
+        }
 
-
-    constructor() {
         const properties: string[] = Reflect.getMetadata(metaDataKey, this)
 
         let _this = this

@@ -1,7 +1,8 @@
-import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
+import {BaseShapeJS} from "./BaseShapeJS";
 import {Property, PropertyType, getMimeTypeFromDataURI, dataURItoBlob} from "hhcommoncomponents"
 import {GlobalConfig} from "../GlobalConfig";
 import {AbstractMediaShapeJS} from "./AbstractMediaShapeJS";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
 let shapeName = "AudioShape"
 class AudioShapeJS extends AbstractMediaShapeJS {
@@ -106,5 +107,5 @@ class AudioShapeJS extends AbstractMediaShapeJS {
     }
 }
 
-shapeFactory.RegisterClass(shapeName, AudioShapeJS.createAudioShape)
+clzObjectFactory.RegisterClass(shapeName, AudioShapeJS.createAudioShape)
 export {AudioShapeJS}

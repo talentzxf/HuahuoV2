@@ -5,6 +5,7 @@ import * as paper from "paper";
 import {ShapeCenterSelector} from "./ShapeCenterSelector";
 import {ValueChangeHandler} from "./ValueChangeHandler";
 import {AbstractComponent} from "../Components/AbstractComponent";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
 declare function castObject(obj: any, clz: any): any;
 
@@ -909,24 +910,6 @@ abstract class BaseShapeJS {
     }
 }
 
-class ShapeFactory {
-    shapeNameClzMap: Map<string, Function> = new Map<string, Function>();
-
-    RegisterClass(shapeName: string, shapeConstructor: Function) {
-        this.shapeNameClzMap.set(shapeName, shapeConstructor)
-    }
-
-    GetShapeConstructor(shapeName: string) {
-        return this.shapeNameClzMap.get(shapeName)
-    }
-}
-
-let shapeFactory = window["shapeFactory"]
-if (!shapeFactory) {
-    shapeFactory = new ShapeFactory()
-    window["shapeFactory"] = shapeFactory
-}
-
 huahuoEngine.ExecuteAfterInited(() => {
     let eventName = "OnShapeLoaded"
     if (huahuoEngine.GetInstance().IsEventRegistered(eventName))
@@ -956,16 +939,19 @@ huahuoEngine.ExecuteAfterInited(() => {
         // Convention: Cpp class name is the JS class name.
         // TODO: Create a map of the shapename->JS class name mapping.
 
-        let shapeConstructor = shapeFactory.GetShapeConstructor(baseShape.GetTypeName())
+        let shapeConstructor = clzObjectFactory.GetClassConstructor(baseShape.GetTypeName())
         let newBaseShape = shapeConstructor(arg.GetBaseShape())
 
         newBaseShape.awakeFromLoad()
 
         let layer = newBaseShape.getLayer()
         huahuoEngine.getActivePlayer().getLayerShapes(layer).set(newBaseShape.getRawShape().ptr, newBaseShape)
+
+        // Create all the component wrapper in the JS side.
+        
     }
 
     huahuoEngine.GetInstance().RegisterEvent(eventName, baseShapeOnLoadHandler)
 })
 
-export {BaseShapeJS, shapeFactory}
+export {BaseShapeJS}

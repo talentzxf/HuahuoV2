@@ -1,7 +1,8 @@
 import {Vector2, PropertyType} from "hhcommoncomponents"
 import * as paper from "paper";
-import {BaseShapeJS, shapeFactory} from "./BaseShapeJS";
+import {BaseShapeJS} from "./BaseShapeJS";
 import {BaseSolidShape} from "./BaseSolidShape";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
 let shapeName = "LineShape"
 
@@ -50,6 +51,6 @@ class LineShapeJS extends BaseSolidShape{
     }
 }
 
-shapeFactory.RegisterClass(shapeName, LineShapeJS.createLine)
+clzObjectFactory.RegisterClass(shapeName, LineShapeJS.createLine)
 
 export {LineShapeJS}
