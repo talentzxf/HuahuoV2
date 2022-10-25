@@ -20,10 +20,10 @@ void CustomFrameState::Transfer(TransferFunction &transfer) {
     TRANSFER(m_fieldInitValues);
 }
 
-CustomFloatKeyFrame Lerp(CustomFloatKeyFrame& k1, CustomFloatKeyFrame& k2, float ratio){
+CustomFloatKeyFrame Lerp(CustomFloatKeyFrame &k1, CustomFloatKeyFrame &k2, float ratio) {
     CustomFloatKeyFrame resultData;
 
-    if(k1.frameValues.size() != k2.frameValues.size()){
+    if (k1.frameValues.size() != k2.frameValues.size()) {
         Assert("value size mismatch!!!");
         return resultData;
     }
@@ -31,7 +31,7 @@ CustomFloatKeyFrame Lerp(CustomFloatKeyFrame& k1, CustomFloatKeyFrame& k2, float
     int valueSize = k1.frameValues.size();
     resultData.frameValues.reserve(valueSize);
 
-    for(int i = 0 ; i < valueSize; i++){
+    for (int i = 0; i < valueSize; i++) {
         resultData.frameValues[i] = Lerp(k1.frameValues[i], k2.frameValues[i], ratio);
     }
 
@@ -45,11 +45,10 @@ bool CustomFrameState::Apply(int frameId) {
         CustomFloatKeyFrame *k1 = resultKeyFrames.first;
         CustomFloatKeyFrame *k2 = resultKeyFrames.second;
 
-        if (k2 == NULL || k2->frameId == k1->frameId ) { // Avoid 0/0 during ratio calculation. Or beyond the last frame. k1 is the last frame.
+        if (k2 == NULL || k2->frameId ==
+                          k1->frameId) { // Avoid 0/0 during ratio calculation. Or beyond the last frame. k1 is the last frame.
             this->m_CurrentcustomFloatKeyFrame = *k1;
-        }
-        else
-        {
+        } else {
             float ratio = float(frameId - k1->frameId) / float(k2->frameId - k1->frameId);
 
             this->m_CurrentcustomFloatKeyFrame = Lerp(*k1, *k2, ratio);
@@ -68,17 +67,17 @@ void CustomFrameState::SetValue(const char *fieldName, float value) {
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 }
 
-float CustomFrameState::GetValue(const char* fieldName){
+float CustomFrameState::GetValue(const char *fieldName) {
     int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
     return m_CurrentcustomFloatKeyFrame.frameValues[fieldIdx];
 }
 
-void CustomFrameState::RecordFieldValue(int frameId, const char* fieldName, float value) {
+void CustomFrameState::RecordFieldValue(int frameId, const char *fieldName, float value) {
     CustomFloatKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
-    if(!pKeyFrame->inited){
+    if (!pKeyFrame->inited) {
         // Init it.
         pKeyFrame->frameValues.resize(m_fieldInitValues.size());
-        for(int fieldIdx = 0; fieldIdx < m_fieldInitValues.size(); fieldIdx++){
+        for (int fieldIdx = 0; fieldIdx < m_fieldInitValues.size(); fieldIdx++) {
             pKeyFrame->frameValues[fieldIdx] = m_fieldInitValues[fieldIdx];
         }
     }
@@ -87,4 +86,11 @@ void CustomFrameState::RecordFieldValue(int frameId, const char* fieldName, floa
     pKeyFrame->frameValues[idx] = value;
 
     Apply(frameId);
+}
+
+CustomFrameState* CustomFrameState::CreateFrameState() {
+    CustomFrameState *producedFrameState = Object::Produce<CustomFrameState>();
+    printf("Creating component at path:%s\n", StoreFilePath.c_str());
+    GetPersistentManagerPtr()->MakeObjectPersistent(producedFrameState->GetInstanceID(), StoreFilePath);
+    return producedFrameState;
 }

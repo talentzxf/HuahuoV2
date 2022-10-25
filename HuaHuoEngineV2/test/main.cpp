@@ -24,6 +24,7 @@
 #include "KeyFrames/ShapeFollowCurveFrameState.h"
 #include "Shapes/RectangleShape.h"
 #include "CloneObject.h"
+#include "KeyFrames/CustomFrameState.h"
 
 #define ASSERT assert
 
@@ -464,6 +465,9 @@ void testReadFromFile(){
     circleShape->SetRadius(10.0f);
     circleShape->SetCenter(0.0, 1.0, 2.0);
     circleShape->SetBornFrameId(10);
+
+    CustomFrameState* customFrameState = CustomFrameState::CreateFrameState();
+    circleShape->AddFrameState(customFrameState);
     GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->AddShapeInternal(circleShape);
 
     circleShape->GetMinFrameId();
