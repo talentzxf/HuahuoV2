@@ -942,8 +942,6 @@ huahuoEngine.ExecuteAfterInited(() => {
         let shapeConstructor = clzObjectFactory.GetClassConstructor(baseShape.GetTypeName())
         let newBaseShape = shapeConstructor(arg.GetBaseShape())
 
-        newBaseShape.awakeFromLoad()
-
         let layer = newBaseShape.getLayer()
         huahuoEngine.getActivePlayer().getLayerShapes(layer).set(newBaseShape.getRawShape().ptr, newBaseShape)
 
@@ -957,6 +955,8 @@ huahuoEngine.ExecuteAfterInited(() => {
                 newBaseShape.addComponent(component)
             }
         }
+
+        newBaseShape.awakeFromLoad()
     }
 
     huahuoEngine.GetInstance().RegisterEvent(eventName, baseShapeOnLoadHandler)

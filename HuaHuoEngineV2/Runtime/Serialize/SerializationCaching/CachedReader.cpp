@@ -79,19 +79,19 @@ void CachedReader::OutOfBoundsError(size_t position, size_t size)
 
     if (position + size > m_Cacher->GetFileLength())
     {
-        FatalErrorString("The file \'" + m_Cacher->GetPathName() + "\' is corrupted! Remove it and launch unity again!\n[Position out of bounds!]");
+        FatalErrorString("The file \'" + m_Cacher->GetPathName() + "\' is corrupted! Refresh page!\n[Position out of bounds!]");
         m_OutOfBoundsRead = true;
     }
 
     if (position + size > m_MaximumPosition)
     {
-        FatalErrorString("The file \'" + m_Cacher->GetPathName() + "\' is corrupted! Remove it and launch unity again!\n[Position out of bounds!]");
+        FatalErrorString("The file \'" + m_Cacher->GetPathName() + "\' is corrupted! Refresh page!\n[Position out of bounds!]");
         m_OutOfBoundsRead = true;
     }
 
     if (position < m_MinimumPosition)
     {
-        FatalErrorString("The file \'" + m_Cacher->GetPathName() + "\' is corrupted! Remove it and launch unity again!\n[Position out of bounds!]");
+        FatalErrorString("The file \'" + m_Cacher->GetPathName() + "\' is corrupted! Refresh page!\n[Position out of bounds!]");
         m_OutOfBoundsRead = true;
     }
 }

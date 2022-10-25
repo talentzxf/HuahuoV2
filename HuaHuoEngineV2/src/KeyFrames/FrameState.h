@@ -145,7 +145,7 @@ public:
     }
 
     template<class TransferFunction> void Transfer(TransferFunction &transfer){
-        Super::Transfer(transfer);
+        AbstractFrameState::Transfer(transfer);
         TRANSFER(GetKeyFrames());
     }
 

@@ -467,12 +467,20 @@ void testReadFromFile(){
     circleShape->SetBornFrameId(10);
 
     CustomFrameState* customFrameState = CustomFrameState::CreateFrameState();
+    customFrameState->RegisterFloatValue("growth", 1.0f);
+
     circleShape->AddFrameState(customFrameState);
     GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->AddShapeInternal(circleShape);
 
     circleShape->GetMinFrameId();
 
     GetPersistentManager().WriteFile(StoreFilePath);
+
+    customFrameState->SetValue("growth", 0.5f);
+    CustomFrameState* clonedFrameState = (CustomFrameState*) CloneObject(*customFrameState);
+    clonedFrameState->Apply(0);
+
+    printf("GetValue:%f\n", clonedFrameState->GetValue("growth"));
 }
 
 int main() {

@@ -5,7 +5,7 @@ import {clzObjectFactory} from "../CppClassObjectFactory";
 let componentName = "CurveGrowthComponent"
 class CurveGrowthComponent extends AbstractComponent{
     static createComponent(rawObj){
-        new CurveGrowthComponent(rawObj)
+        return new CurveGrowthComponent(rawObj)
     }
 
     constructor(rawObj?) {

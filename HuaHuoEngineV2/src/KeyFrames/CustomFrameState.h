@@ -18,7 +18,7 @@ public:
     int frameId;
     bool inited;
 
-    DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(CustomFloatKeyFrame)
+    DECLARE_SERIALIZE(CustomFloatKeyFrame)
 
     CustomFloatKeyFrame():
         frameId(-1), inited(false){
