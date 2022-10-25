@@ -12,7 +12,7 @@ INSTANTIATE_TEMPLATE_TRANSFER(ShapeStrokeWidthFrameState);
 
 template <class TransferFunction>
 void ShapeStrokeWidthFrameState::Transfer(TransferFunction &transfer) {
-    Super::Transfer(transfer);
+    AbstractFrameStateWithKeyType::Transfer(transfer); // Can't user super, because AbstractFrameStateWithKeyType is a template class and can't be chained in the RTTI.
 }
 
 bool ShapeStrokeWidthFrameState::Apply(int frameId) {

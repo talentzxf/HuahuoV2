@@ -13,7 +13,7 @@ INSTANTIATE_TEMPLATE_TRANSFER(ShapeTransformFrameState);
 
 template<class TransferFunction>
 void ShapeTransformFrameState::Transfer(TransferFunction &transfer) {
-    Super::Transfer(transfer);
+    AbstractFrameStateWithKeyType::Transfer(transfer); // Can't user super, because AbstractFrameStateWithKeyType is a template class and can't be chained in the RTTI.
 }
 
 TransformData Lerp(TransformData &k1, TransformData &k2, float ratio) {

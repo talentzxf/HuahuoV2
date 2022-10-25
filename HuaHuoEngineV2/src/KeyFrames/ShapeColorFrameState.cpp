@@ -13,7 +13,7 @@ INSTANTIATE_TEMPLATE_TRANSFER(ShapeColorFrameState);
 
 template<class TransferFunction>
 void ShapeColorFrameState::Transfer(TransferFunction &transfer) {
-    Super::Transfer(transfer);
+    AbstractFrameStateWithKeyType::Transfer(transfer); // Can't user super, because AbstractFrameStateWithKeyType is a template class and can't be chained in the RTTI.
 }
 
 // TODO: Implement this

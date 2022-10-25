@@ -52,7 +52,7 @@ std::vector<Vector3f> Lerp(std::vector<Vector3f> &k1, std::vector<Vector3f> &k2,
 
 template<class TransferFunction>
 void ShapeSegmentFrameState::Transfer(TransferFunction &transfer) {
-    Super::Transfer(transfer);
+    AbstractFrameStateWithKeyType::Transfer(transfer); // Can't user super, because AbstractFrameStateWithKeyType is a template class and can't be chained in the RTTI.
 }
 
 bool ShapeSegmentFrameState::Apply(int frameId) {

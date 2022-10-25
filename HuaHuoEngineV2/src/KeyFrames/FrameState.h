@@ -145,8 +145,6 @@ private:
 template<class T>
 bool
 FindKeyFramePair(int frameId, std::vector<T> &keyFrames, std::pair<T *, T *> &result) {
-    int status = 0;
-
     T *t_prev = NULL;
     T *t_next = NULL;
 

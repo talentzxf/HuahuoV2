@@ -14,7 +14,7 @@ INSTANTIATE_TEMPLATE_TRANSFER(ShapeFollowCurveFrameState);
 
 template<class TransferFunction>
 void ShapeFollowCurveFrameState::Transfer(TransferFunction &transfer) {
-    Super::Transfer(transfer);
+    AbstractFrameStateWithKeyType::Transfer(transfer); // Can't user super, because AbstractFrameStateWithKeyType is a template class and can't be chained in the RTTI.
 }
 
 ShapeFollowCurveData Lerp(ShapeFollowCurveData &k1, ShapeFollowCurveData &k2, float ratio) {
