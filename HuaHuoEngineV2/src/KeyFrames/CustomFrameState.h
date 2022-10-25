@@ -46,12 +46,16 @@ public:
 
 public:
     int RegisterFloatValue(const char* fieldName, float initValue){
-        int index = m_fieldInitValues.size();
-        m_fieldNameFieldIndexMap[fieldName] = index;
-        m_fieldIndexFieldNameMap[index] = fieldName;
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)){
+            int index = m_fieldInitValues.size();
+            m_fieldNameFieldIndexMap[fieldName] = index;
+            m_fieldIndexFieldNameMap[index] = fieldName;
 
-        m_fieldInitValues.push_back(initValue);
-        return index;
+            m_fieldInitValues.push_back(initValue);
+            return index;
+        }
+
+        return m_fieldNameFieldIndexMap[fieldName];
     }
 
     void SetValue(const char* fieldName, float value);

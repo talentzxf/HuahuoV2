@@ -28,13 +28,15 @@ function capitalizeFirstLetter(str){
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+declare function castObject(obj: any, clz: any): any;
+
 class AbstractComponent {
     rawObj: any;
     baseShape: BaseShapeJS;
 
     constructor(rawObj?) {
         if(rawObj){
-            this.rawObj = rawObj
+            this.rawObj = castObject( rawObj, Module["CustomFrameState"])
         }else{
             this.rawObj = Module["CustomFrameState"].prototype.CreateFrameState()
         }
