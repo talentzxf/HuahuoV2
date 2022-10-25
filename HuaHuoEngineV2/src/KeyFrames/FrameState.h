@@ -131,7 +131,7 @@ public:
     }
 
     template<class TransferFunction> void Transfer(TransferFunction &transfer){
-        Super::Transfer();
+        Super::Transfer(transfer);
         TRANSFER(GetKeyFrames());
     }
 
