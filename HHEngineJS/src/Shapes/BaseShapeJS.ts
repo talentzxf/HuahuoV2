@@ -348,8 +348,8 @@ abstract class BaseShapeJS {
         return window.paper
     }
 
-    getSegment(idx){
-        return this.getSegments()[idx]
+    setSegmentProperty(idx, property, value){
+        this.paperShape.segments[idx][property] = value
     }
 
     restoreFrameSegmentsBuffer(frameSegmentsBuffer){

@@ -23,6 +23,10 @@ class CurveGrowthComponent extends AbstractComponent{
         return this.baseShape.paperShape
     }
 
+    setSegmentProperty(idx, property, value){
+        this.clonedPaperShape.segments[idx][property] = value
+    }
+
     getSegments(){
         if(!this.clonedPaperShape){
             return this.paperShape.segments

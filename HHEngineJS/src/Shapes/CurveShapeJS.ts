@@ -83,6 +83,12 @@ class CurveShapeJS extends BaseSolidShape{
         return this.curveGrowthComponent.getSegments()
     }
 
+    override setSegmentProperty(idx, property, value) {
+        super.setSegmentProperty(idx, property, value);
+
+        this.curveGrowthComponent.setSegmentProperty(idx, property, value)
+    }
+
     afterUpdate() {
         super.afterUpdate()
     }
