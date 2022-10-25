@@ -8,6 +8,12 @@ class CurveGrowthComponent extends AbstractComponent{
         new CurveGrowthComponent(rawObj)
     }
 
+    constructor(rawObj?) {
+        super(rawObj);
+
+        this.rawObj.SetTypeName(componentName)
+    }
+
     @interpolateValue(1.0)
     growth: number;
 

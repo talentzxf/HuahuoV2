@@ -59,6 +59,14 @@ public:
     typedef std::vector<FrameStatePair>    Container;
 
     Container& GetFrameStateContainerInternal() { return mFrameStates; }
+
+    int GetFrameStateCount(){
+        return mFrameStates.size();
+    }
+
+    AbstractFrameState* GetFrameState(int idx){
+        return mFrameStates[idx].GetComponentPtr();
+    }
 private:
 
     Container   mFrameStates;

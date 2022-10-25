@@ -948,7 +948,15 @@ huahuoEngine.ExecuteAfterInited(() => {
         huahuoEngine.getActivePlayer().getLayerShapes(layer).set(newBaseShape.getRawShape().ptr, newBaseShape)
 
         // Create all the component wrapper in the JS side.
-        
+        let componentCount = baseShape.GetFrameStateCount()
+        for(let idx = 0; idx < componentCount; idx++){
+            let componentRawObj = baseShape.GetFrameState(idx)
+            let componentConstructor = clzObjectFactory.GetClassConstructor(componentRawObj.GetTypeName())
+            if(componentConstructor){
+                let component = componentConstructor(componentRawObj)
+                newBaseShape.addComponent(component)
+            }
+        }
     }
 
     huahuoEngine.GetInstance().RegisterEvent(eventName, baseShapeOnLoadHandler)

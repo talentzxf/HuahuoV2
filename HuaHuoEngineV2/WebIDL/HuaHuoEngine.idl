@@ -139,6 +139,8 @@ interface CustomFrameState{
     float GetValue([Const] DOMString fieldName);
 };
 
+CustomFrameState implements AbstractFrameState;
+
 [NoDelete]
 interface ShapeFollowCurveFrameState{
     void RecordTargetShape(long frameId, BaseShape targetCurve);
@@ -166,6 +168,9 @@ interface BaseShape{
     void SetGlobalPivotPosition(float x, float y, float z);
     Vector3f GetGlobalPivotPosition();
     Vector3f GetLocalPivotPosition();
+
+    long GetFrameStateCount();
+    AbstractFrameState GetFrameState(long idx);
 
     AbstractFrameState GetFrameStateByName([Const] DOMString frameStateName);
 

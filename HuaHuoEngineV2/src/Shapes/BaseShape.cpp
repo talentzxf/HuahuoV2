@@ -44,6 +44,8 @@ void BaseShape::TransferFrameStates(TransferFunction &transfer) {
         return;
     }
 
+    printf("Saving Total frameStates: %d\n", mFrameStates.size());
+
     transfer.Transfer(mFrameStates, "mFrameStates",
                       kHideInEditorMask | kStrongPPtrMask | kDisallowSerializedPropertyModification);
 }

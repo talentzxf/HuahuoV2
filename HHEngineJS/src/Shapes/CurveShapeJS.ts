@@ -9,6 +9,19 @@ class CurveShapeJS extends BaseSolidShape{
         return new CurveShapeJS(rawObj)
     }
 
+    constructor(rawObj?) {
+        let needInitComponents = false
+        if(!rawObj){
+            needInitComponents = true
+        }
+
+        super(rawObj);
+
+        if(needInitComponents){
+            this.addComponent(this.curveGrowthComponent)
+        }
+    }
+
     curveGrowthComponent: CurveGrowthComponent = new CurveGrowthComponent()
 
     getShapeName(): string {

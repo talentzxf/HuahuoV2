@@ -13,8 +13,6 @@ class CurveDrawer extends BaseShapeDrawer {
 
         this.curvePath = new CurveShapeJS()
 
-        this.curvePath.initComponents()
-
         let point = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.curvePath.addPoint(point)
 
