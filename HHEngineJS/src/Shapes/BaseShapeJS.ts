@@ -349,7 +349,7 @@ abstract class BaseShapeJS {
     }
 
     getSegment(idx){
-        return this.paperShape.segments[idx]
+        return this.getSegments()[idx]
     }
 
     restoreFrameSegmentsBuffer(frameSegmentsBuffer){
