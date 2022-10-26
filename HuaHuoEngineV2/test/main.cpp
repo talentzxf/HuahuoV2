@@ -468,10 +468,14 @@ void testReadFromFile(){
 
     CustomFrameState* customFrameState = CustomFrameState::CreateFrameState();
     customFrameState->RegisterFloatValue("growth", 1.0f);
+    printf("GetValue:%f\n", customFrameState->GetValue("growth"));
 
     circleShape->AddFrameState(customFrameState);
     GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->AddShapeInternal(circleShape);
 
+    customFrameState->SetValue("growth", 1.0f);
+
+    customFrameState->Apply(0);
     circleShape->GetMinFrameId();
 
     GetPersistentManager().WriteFile(StoreFilePath);

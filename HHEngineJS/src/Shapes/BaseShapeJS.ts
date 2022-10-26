@@ -722,7 +722,6 @@ abstract class BaseShapeJS {
 
             this.rawObj.SetGlobalPivotPosition(paperPos.x, paperPos.y, 0.0);
             this.rawObj.SetLocalPivotPosition(localPos.x, localPos.y, 0.0);
-
         }
     }
 

@@ -69,7 +69,12 @@ void CustomFrameState::SetValue(const char *fieldName, float value) {
 
 float CustomFrameState::GetValue(const char *fieldName) {
     int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
-    return m_CurrentcustomFloatKeyFrame.frameValues[fieldIdx];
+
+    if(isValidFrame){
+        return m_CurrentcustomFloatKeyFrame.frameValues[fieldIdx];
+    }
+
+    return this->m_fieldInitValues[fieldIdx];
 }
 
 void CustomFrameState::RecordFieldValue(int frameId, const char *fieldName, float value) {

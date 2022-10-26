@@ -26,7 +26,7 @@ class CurveGrowthComponent extends AbstractComponent{
     setSegmentProperty(idx, property, value){
         if(this.clonedPaperShape){
             let updatedLength = this.paperShape.length / this.clonedPaperShape.length
-            this["setGrowth"](updatedLength)
+            this.growth = updatedLength
             this.clonedPaperShape.segments[idx].point = this.baseShape.paperShape.segments[idx].point
             this.clonedPaperShape.segments[idx].handleIn = this.baseShape.paperShape.segments[idx].handleIn
             this.clonedPaperShape.segments[idx].handleOut = this.baseShape.paperShape.segments[idx].handleOut
@@ -55,7 +55,7 @@ class CurveGrowthComponent extends AbstractComponent{
     override afterUpdate() {
         super.afterUpdate();
 
-        let growth = this["getGrowth"]()
+        let growth = this.growth
         if( growth < 1.0){
             this.clonedPaperShape = this.paperShape.clone()
             this.clonedPaperShape.selected = false

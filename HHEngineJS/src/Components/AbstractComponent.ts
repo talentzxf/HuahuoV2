@@ -59,6 +59,19 @@ class AbstractComponent {
             _this[getterName] = function(){
                 return _this.rawObj.GetValue(fieldName)
             }
+
+            // Remove the property and add setter/getter
+            delete _this[propertyEntry["key"]]
+
+            // Add getter and setter
+            Object.defineProperty(_this, propertyEntry["key"], {
+                get: function(){
+                    return _this[getterName]()
+                },
+                set: function(val){
+                    _this[setterName](val)
+                }
+            })
         })
     }
 
@@ -71,6 +84,10 @@ class AbstractComponent {
 
     getTypeName(){
         return this.rawObj.GetTypeName()
+    }
+
+    store(){
+
     }
 }
 
