@@ -43,6 +43,9 @@ class FloatPropertyDesc extends BasePropertyDesc{
             this.input.step = property.step
         }
 
+        // update the current value again.
+        this.input.value = currentValue
+
         this.contentDiv.appendChild(this.input)
     }
 

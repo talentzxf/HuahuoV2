@@ -128,7 +128,7 @@ class CurveShapeJS extends BaseSolidShape{
         this.propertySheet.addProperty({
             key:"inspector.curve.growth",
             type: PropertyType.FLOAT,
-            // elementType: "range",
+            elementType: "range",
             min: 0.0,
             max: 1.0,
             step: 0.01,
