@@ -136,6 +136,7 @@ class PlayerView extends HTMLElement {
             let resizeObserver = new ResizeObserver(this.OnResize.bind(this))
             resizeObserver.observe(this.canvasContainer)
             this.animationPlayer = new Player();
+            this.animationPlayer.storeId = 1
 
             this.style.width = "100%"
             this.style.height = "100%"
