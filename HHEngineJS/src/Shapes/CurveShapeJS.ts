@@ -88,7 +88,13 @@ class CurveShapeJS extends BaseSolidShape{
 
         this.curveGrowthComponent.setSegmentProperty(idx, property, value)
     }
-    
+
+    override insertSegment(localPos: paper.Point) {
+        super.insertSegment(localPos);
+
+        this.curveGrowthComponent.insertSegment(localPos)
+    }
+
     afterUpdate() {
         super.afterUpdate()
     }
