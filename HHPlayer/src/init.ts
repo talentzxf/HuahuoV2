@@ -1,5 +1,4 @@
 import {huahuoEngine} from "hhenginejs";
-import {HHToast} from "hhcommoncomponents";
 
 function showMainDiv(){
     let loadingElement = document.querySelector("#loading") as HTMLDivElement

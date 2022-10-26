@@ -1,3 +1,6 @@
+import {HHToast} from "hhcommoncomponents";
+import {PlayerView} from "./PlayerView/PlayerView";
+
 import {huahuoEngine} from "hhenginejs";
 import {animationLoader} from "./PlayerView/AnimationLoader";
 import {init} from "./init";
