@@ -68,6 +68,10 @@ class AbstractComponent {
 
     afterUpdate() {
     }
+
+    getTypeName(){
+        return this.rawObj.GetTypeName()
+    }
 }
 
 export {AbstractComponent, interpolateValue}

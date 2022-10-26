@@ -2,6 +2,7 @@ import {BaseSolidShape} from "./BaseSolidShape";
 import {PropertyType} from "hhcommoncomponents";
 import {CurveGrowthComponent} from "../Components/CurveGrowthComponent";
 import {clzObjectFactory} from "../CppClassObjectFactory";
+import Curve = paper.Curve;
 
 let shapeName = "CurveShape"
 class CurveShapeJS extends BaseSolidShape{
@@ -18,11 +19,20 @@ class CurveShapeJS extends BaseSolidShape{
         super(rawObj);
 
         if(needInitComponents){
+            this.curveGrowthComponent = new CurveGrowthComponent()
             this.addComponent(this.curveGrowthComponent)
         }
     }
 
-    curveGrowthComponent: CurveGrowthComponent = new CurveGrowthComponent()
+    override awakeFromLoad() {
+        super.awakeFromLoad();
+
+        if(this.curveGrowthComponent){
+            this.curveGrowthComponent = this.getComponentByTypeName("CurveGrowthComponent") as CurveGrowthComponent
+        }
+    }
+
+    curveGrowthComponent: CurveGrowthComponent
 
     getShapeName(): string {
         return shapeName
@@ -61,11 +71,14 @@ class CurveShapeJS extends BaseSolidShape{
     }
 
     get growth(){
-        return this.curveGrowthComponent.growth
+        if(this.curveGrowthComponent)
+            return this.curveGrowthComponent.growth
+        return 1.0
     }
 
     set growth(val:number){
-        this.curveGrowthComponent["setGrowth"](val)
+        if(this.curveGrowthComponent)
+            this.curveGrowthComponent["setGrowth"](val)
     }
 
     getGrowth(){
@@ -80,19 +93,23 @@ class CurveShapeJS extends BaseSolidShape{
 
     // This might be overridden by CurveShape. Because we want to implement the growth factor.
     getSegments(){
-        return this.curveGrowthComponent.getSegments()
+        if(this.curveGrowthComponent)
+            return this.curveGrowthComponent.getSegments()
+        return this.paperShape.segments
     }
 
     override setSegmentProperty(idx, property, value) {
         super.setSegmentProperty(idx, property, value);
 
-        this.curveGrowthComponent.setSegmentProperty(idx, property, value)
+        if(this.curveGrowthComponent)
+            this.curveGrowthComponent.setSegmentProperty(idx, property, value)
     }
 
     override insertSegment(localPos: paper.Point) {
         super.insertSegment(localPos);
 
-        this.curveGrowthComponent.insertSegment(localPos)
+        if(this.curveGrowthComponent)
+            this.curveGrowthComponent.insertSegment(localPos)
     }
 
     afterUpdate() {

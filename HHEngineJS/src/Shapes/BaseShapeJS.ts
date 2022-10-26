@@ -84,6 +84,15 @@ abstract class BaseShapeJS {
         this.customComponents.push(component)
     }
 
+    getComponentByTypeName(typeName){
+        for(let component of this.customComponents){
+            if(component.getTypeName() == typeName){
+                return component
+            }
+        }
+        return null
+    }
+
     public getPointAt(offset): paper.Point {
         return this.paperShape.getPointAt(offset)
     }
