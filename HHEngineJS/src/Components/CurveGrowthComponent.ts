@@ -1,5 +1,4 @@
-import {AbstractComponent, interpolateValue} from "./AbstractComponent";
-import {CurveShapeJS} from "../Shapes/CurveShapeJS";
+import {AbstractComponent, interpolateProperty} from "./AbstractComponent";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 
 let componentName = "CurveGrowthComponent"
@@ -14,7 +13,7 @@ class CurveGrowthComponent extends AbstractComponent{
         this.rawObj.SetTypeName(componentName)
     }
 
-    @interpolateValue(1.0)
+    @interpolateProperty(1.0)
     growth: number;
 
     clonedPaperShape

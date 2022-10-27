@@ -1,23 +1,51 @@
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import "reflect-metadata"
 
-const metaDataKey = Symbol("interpolateValues")
+const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
 
-function interpolateValue(initValue: number) {
-    return function (target: object, propertyKey: string) {
-        let properties: object[] = Reflect.getMetadata(metaDataKey, target)
+enum PropertyType{
+    interpolate,
+    static
+}
 
-        if (properties) {
-            let propertyEntry = {
-                key: propertyKey,
-                initValue: initValue
-            }
-            properties.push(propertyEntry)
-        } else {
-            properties = [{key: propertyKey, initValue: initValue}]
-            Reflect.defineMetadata(metaDataKey, properties, target)
+class PropertyDef{
+    key: string
+    initValue: object|number
+    type: PropertyType
+}
+
+function getProperties(target):object[]{
+    let properties: object[] = Reflect.getMetadata(metaDataKey, target)
+    if (!properties) {
+        properties = new Array<PropertyDef>()
+        Reflect.defineMetadata(metaDataKey, properties, target)
+    }
+
+    return properties
+}
+
+function interpolateProperty(initValue: number) {
+    return function (target: object, propertyKey: string) {
+        let properties = getProperties(target)
+        let propertyEntry:PropertyDef = {
+            key: propertyKey,
+            initValue: initValue,
+            type: PropertyType.interpolate
         }
+        properties.push(propertyEntry)
+    }
+}
+
+function staticProperty(initValue?: object){
+    return function (target: object, propertyKey: string) {
+        let properties = getProperties(target)
+        let propertyEntry:PropertyDef = {
+            key: propertyKey,
+            initValue: initValue,
+            type: PropertyType.static
+        }
+        properties.push(propertyEntry)
     }
 }
 
@@ -91,4 +119,4 @@ class AbstractComponent {
     }
 }
 
-export {AbstractComponent, interpolateValue}
+export {AbstractComponent, interpolateProperty, staticProperty}
