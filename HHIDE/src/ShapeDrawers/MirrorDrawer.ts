@@ -1,8 +1,54 @@
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
+import {SVGFiles} from "../Utilities/Svgs";
+import {Vector2} from "hhcommoncomponents";
+import {MirrorShapeJS, huahuoEngine} from "hhenginejs";
+import {EventBus, EventNames} from "../Events/GlobalEvents";
 
+// Maybe we should just add a mirror component in the lineshape ???
 class MirrorDrawer extends BaseShapeDrawer {
     name = "Mirror"
-    imgCss = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='iso-8859-1'%3F%3E%3C!-- Generator: Adobe Illustrator 21.0.2  SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' id='Layer_1' x='0px' y='0px' viewBox='0 0 40 40' style='enable-background:new 0 0 40 40%3B' xml:space='preserve'%3E%3Cg%3E%3Crect x='5' y='12' style='fill:%234788C7%3B' width='30' height='1'/%3E%3C/g%3E%3Cg%3E%3Crect x='19' y='28' style='fill:%234788C7%3B' width='2' height='9'/%3E%3C/g%3E%3Cg%3E%3Cpath style='fill:%2398CCFD%3B' d='M20 24.5c-6.341 0-11.5-5.159-11.5-11.5S13.659 1.5 20 1.5S31.5 6.659 31.5 13S26.341 24.5 20 24.5z '/%3E%3Cg%3E%3Cpath style='fill:%234788C7%3B' d='M20 2c6.065 0 11 4.935 11 11c0 6.065-4.935 11-11 11S9 19.065 9 13C9 6.935 13.935 2 20 2 M20 1 C13.383 1 8 6.383 8 13c0 6.617 5.383 12 12 12s12-5.383 12-12S26.617 1 20 1L20 1z'/%3E%3C/g%3E%3C/g%3E%3Cpath style='fill:none%3Bstroke:%234788C7%3Bstroke-miterlimit:10%3B' d='M4.5 13c0 8.546 6.954 15.5 15.5 15.5S35.5 21.546 35.5 13'/%3E%3Cg%3E%3Ccircle style='fill:%2398CCFD%3B' cx='35.5' cy='12.5' r='1'/%3E%3Cpath style='fill:%234788C7%3B' d='M35.5 12c0.276 0 0.5 0.224 0.5 0.5S35.776 13 35.5 13S35 12.776 35 12.5S35.224 12 35.5 12 M35.5 11c-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5s1.5-0.672 1.5-1.5S36.328 11 35.5 11L35.5 11z'/%3E%3C/g%3E%3Cg%3E%3Ccircle style='fill:%2398CCFD%3B' cx='4.5' cy='12.5' r='1'/%3E%3Cpath style='fill:%234788C7%3B' d='M4.5 12C4.776 12 5 12.224 5 12.5S4.776 13 4.5 13S4 12.776 4 12.5S4.224 12 4.5 12 M4.5 11 C3.672 11 3 11.672 3 12.5S3.672 14 4.5 14S6 13.328 6 12.5S5.328 11 4.5 11L4.5 11z'/%3E%3C/g%3E%3Ccircle style='fill:%23B6DCFE%3B' cx='20' cy='13' r='9'/%3E%3Cg%3E%3Cpath style='fill:%23DFF0FE%3B' d='M20 4c-4.971 0-9 4.029-9 9c0 0.509 0.052 1.005 0.134 1.492L22.195 4.281 C21.491 4.104 20.759 4 20 4z'/%3E%3Cpath style='fill:%23DFF0FE%3B' d='M13.797 19.429L26.946 7.277c-0.586-0.71-1.283-1.324-2.058-1.827L12.083 17.284 c0.378 0.698 0.852 1.334 1.394 1.905C13.587 19.266 13.683 19.354 13.797 19.429z'/%3E%3C/g%3E%3Cg%3E%3Cpath style='fill:%2398CCFD%3B' d='M13.5 38.5V36c0-0.276 0.224-0.5 0.5-0.5h12c0.276 0 0.5 0.224 0.5 0.5v2.5H13.5z'/%3E%3Cpath style='fill:%234788C7%3B' d='M26 36v2H14v-2H26 M26 35H14c-0.552 0-1 0.448-1 1v3h14v-3C27 35.448 26.552 35 26 35L26 35z'/%3E%3C/g%3E%3C/svg%3E"
+    imgCss = SVGFiles.mirrorImg
+
+    tempShape
+    startPosition = new Vector2()
+
+    onBeginToDrawShape(canvas: HTMLCanvasElement) {
+        super.onBeginToDrawShape(canvas);
+        canvas.style.cursor = "crosshair"
+    }
+
+    onMouseDown(evt: MouseEvent) {
+        super.onMouseDown(evt);
+
+        this.startPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+        this.isDrawing = true
+
+        this.tempShape = new MirrorShapeJS()
+        this.tempShape.setStartPoint(this.startPosition)
+        this.tempShape.setEndPoint(this.startPosition)
+    }
+
+    onMouseMove(evt: MouseEvent) {
+        super.onMouseMove(evt);
+        if(this.isDrawing){
+            let currentPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+
+            this.tempShape.setEndPoint(currentPos)
+            this.tempShape.update()
+        }
+    }
+
+    onMouseUp(evt: MouseEvent) {
+        super.onMouseUp(evt);
+
+        let _this = this
+        huahuoEngine.ExecuteAfterInited(()=>{
+            _this.isDrawing = false
+            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
+
+            _this.addShapeToCurrentLayer(_this.tempShape)
+        })
+    }
 }
 
 export {MirrorDrawer}

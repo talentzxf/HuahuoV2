@@ -14,6 +14,7 @@
 #include "Shapes/CurveShape.h"
 #include "KeyFrames/ShapeFollowCurveFrameState.h"
 #include "KeyFrames/CustomFrameState.h"
+#include "Shapes/MirrorShape.h"
 
 #ifdef HUAHUO_EDITOR
 #include "Editor/SceneInspector.h"

@@ -705,6 +705,10 @@ abstract class BaseShapeJS {
         }
     }
 
+    hitTypeSelectable(hitType){
+        return true;
+    }
+
     createShape() {
         this.bornStoreId = huahuoEngine.GetCurrentStoreId()
 

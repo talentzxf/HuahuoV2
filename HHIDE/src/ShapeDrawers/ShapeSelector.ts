@@ -8,7 +8,6 @@ import {TransformHandlerMap} from "../TransformHandlers/TransformHandlerMap";
 import {shapeRotateHandler} from "../TransformHandlers/ShapeRotateHandler";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {elementCreator} from "../SceneView/ElementCreator";
-import {huahuoEngine} from "hhenginejs";
 import {HHContent} from "hhpanel"
 import {findParentContent} from "hhpanel";
 import {objectDeleter} from "./ObjectDeleter";
@@ -208,29 +207,34 @@ class ShapeSelector extends BaseShapeDrawer {
     hitSomething(scrX, scrY, clearSelection: boolean = false): boolean {
         let hitPoint = BaseShapeDrawer.getWorldPosFromView(scrX, scrY)
         // Single click, perform hit test.
-        let hitResult = paper.project.hitTest(hitPoint, this.hitOptions)
-        if (hitResult) {
-            let hitItem = hitResult.item;
-            if (this.itemSelectable(hitResult.item)) {
-                console.log("HitType:" + hitResult.type)
+        let hitResultArray = paper.project.hitTestAll(hitPoint, this.hitOptions)
 
-                if (!hitItem.data.meta.selected) { // If the object has not been selected, select it.
-                    if (clearSelection) {
-                        this.clearSelection()
+        for(let hitResult of hitResultArray){
+            if (hitResult) {
+                let hitItem = hitResult.item;
+                if (this.itemSelectable(hitResult.item)) {
+                    console.log("HitType:" + hitResult.type)
+
+                    if (!hitItem.data.meta.selected) { // If the object has not been selected, select it.
+                        if (clearSelection) {
+                            this.clearSelection()
+                        }
+
+                        this.selectObject(this.findParentOf(hitItem.data.meta))
+                        this.setTransformHandler(this.selectedShapes, hitPoint)
+                    } else { // If the object has already been selected, we might need to do something based on the hittype.
+
+                        let hitType = hitResult.type
+                        if(this.hitTypeSeletable(hitResult.item, hitType)){
+                            this.transformHandler = this.transformHandlerMap.getHandler(hitType)
+
+                            if (this.transformHandler)
+                                this.setTransformHandler(this.selectedShapes, hitPoint, this.transformHandler, hitResult)
+                        }
                     }
 
-                    this.selectObject(this.findParentOf(hitItem.data.meta))
-                    this.setTransformHandler(this.selectedShapes, hitPoint)
-                } else { // If the object has already been selected, we might need to do something based on the hittype.
-
-                    let hitType = hitResult.type
-                    this.transformHandler = this.transformHandlerMap.getHandler(hitType)
-
-                    if (this.transformHandler)
-                        this.setTransformHandler(this.selectedShapes, hitPoint, this.transformHandler, hitResult)
+                    return true
                 }
-
-                return true
             }
         }
 
@@ -369,6 +373,13 @@ class ShapeSelector extends BaseShapeDrawer {
         if (item.data.meta == null || typeof item.data.meta == "undefined" || false == item.data.meta.isSelectable())
             return false
         return true
+    }
+
+    hitTypeSeletable(item, type){
+        if(!this.itemSelectable(item)) // Defensive coding, check whether the item is hitable again
+            return false
+
+        return item.data.meta.hitTypeSelectable(type)
     }
 
     setTransformHandler(targetObjs: Set<BaseShapeJS>, pos: Vector2, handler: ShapeTranslateMorphBase = TransformHandlerMap.defaultTransformHandler, hitResult = null) {

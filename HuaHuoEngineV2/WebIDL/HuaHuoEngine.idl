@@ -220,6 +220,16 @@ interface LineShape{
 LineShape implements BaseShape;
 
 [NoDelete]
+interface MirrorShape{
+    void SetStartPoint(float x, float y, float z);
+    void SetEndPoint(float x, float y, float z);
+    Vector3f GetStartPoint();
+    Vector3f GetEndPoint();
+};
+
+MirrorShape implements BaseShape;
+
+[NoDelete]
 interface TextShape{
     void SetText(DOMString inText);
     DOMString GetText();

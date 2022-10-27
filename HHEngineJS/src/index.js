@@ -12,6 +12,7 @@ import {BaseShapeJS} from "./Shapes/BaseShapeJS";
 import {TextShapeJS} from "./Shapes/TextShapeJS";
 import {CurveShapeJS} from "./Shapes/CurveShapeJS"
 import {SVGShapeJS} from "./Shapes/SVGShapeJS";
+import {MirrorShapeJS} from "./Shapes/MirrorShapeJS";
 
 import {ValueChangeHandler} from "./Shapes/ValueChangeHandler";
 import * as paper from "paper"
@@ -31,4 +32,4 @@ if(Module.IsWASMInited && Module.IsWASMInited()){
 
 window.enginejsInited = true
 export {renderEngine2D, ValueChangeHandler, LineShapeJS, CircleShapeJS,RectangleJS, ImageShapeJS, TextShapeJS,
-    AudioShapeJS, ElementShapeJS, huahuoEngine, paper, GlobalConfig, Player, BaseShapeJS, CurveShapeJS, SVGShapeJS}
+    AudioShapeJS, ElementShapeJS, huahuoEngine, paper, GlobalConfig, Player, BaseShapeJS, CurveShapeJS, SVGShapeJS, MirrorShapeJS}
