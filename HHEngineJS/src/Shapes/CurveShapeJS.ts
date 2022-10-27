@@ -70,27 +70,6 @@ class CurveShapeJS extends BaseSolidShape{
         this.paperShape.closed = true
     }
 
-    get growth(){
-        if(this.curveGrowthComponent)
-            return this.curveGrowthComponent.growth
-        return 1.0
-    }
-
-    set growth(val:number){
-        if(this.curveGrowthComponent)
-            this.curveGrowthComponent.growth = val
-    }
-
-    getGrowth(){
-        return this.growth
-    }
-
-    setGrowth(val:number){
-        this.growth = val
-        this.callHandlers("growth", val)
-        this.update()
-    }
-
     // This might be overridden by CurveShape. Because we want to implement the growth factor.
     getSegments(){
         if(this.curveGrowthComponent)
@@ -123,19 +102,6 @@ class CurveShapeJS extends BaseSolidShape{
             key: "inspector.enclose",
             type: PropertyType.BUTTON,
             action: this.encloseCurve.bind(this)
-        })
-
-        this.propertySheet.addProperty({
-            key:"inspector.curve.growth",
-            type: PropertyType.FLOAT,
-            elementType: "range",
-            min: 0.0,
-            max: 1.0,
-            step: 0.01,
-            getter: this.getGrowth.bind(this),
-            setter: this.setGrowth.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("growth"),
-            unregisterValueChagneFunc: this.unregisterValueChangeHandler("growth")
         })
     }
 }

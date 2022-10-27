@@ -13,7 +13,7 @@ class CurveGrowthComponent extends AbstractComponent{
         this.rawObj.SetTypeName(componentName)
     }
 
-    @interpolateProperty(1.0)
+    @interpolateProperty(1.0, 0.0, 1.0, 0.01)
     growth: number;
 
     clonedPaperShape

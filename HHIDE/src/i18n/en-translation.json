@@ -65,7 +65,7 @@
     "AtEnd": "Set At End",
     "AtLength": "At Length",
     "Unfollow": "UnFollow",
-    "curve": {
+    "property": {
       "growth": "growth"
     }
   },

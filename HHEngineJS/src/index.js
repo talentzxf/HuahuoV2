@@ -14,6 +14,8 @@ import {CurveShapeJS} from "./Shapes/CurveShapeJS"
 import {SVGShapeJS} from "./Shapes/SVGShapeJS";
 import {MirrorShapeJS} from "./Shapes/MirrorShapeJS";
 
+import "./Shapes/LoadShape"
+
 import {ValueChangeHandler} from "./Shapes/ValueChangeHandler";
 import * as paper from "paper"
 
