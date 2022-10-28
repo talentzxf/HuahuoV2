@@ -17,28 +17,14 @@ function getProperties(target):object[]{
     return properties
 }
 
-function interpolateProperty(initValue: number, minValue: number, maxValue: number, step: number) {
+function propertyValue(category:PropertyCategory, initValue = null, config?: object) {
     return function (target: object, propertyKey: string) {
         let properties = getProperties(target)
         let propertyEntry:PropertyDef = {
             key: propertyKey,
+            type: category,
             initValue: initValue,
-            type: PropertyCategory.interpolate,
-            minValue: minValue,
-            maxValue: maxValue,
-            step: step
-        }
-        properties.push(propertyEntry)
-    }
-}
-
-function staticProperty(initValue?: object){
-    return function (target: object, propertyKey: string) {
-        let properties = getProperties(target)
-        let propertyEntry:PropertyDef = {
-            key: propertyKey,
-            initValue: initValue,
-            type: PropertyCategory.static
+            config: config
         }
         properties.push(propertyEntry)
     }
@@ -131,4 +117,4 @@ class AbstractComponent {
     }
 }
 
-export {AbstractComponent, interpolateProperty, staticProperty}
+export {AbstractComponent, propertyValue}

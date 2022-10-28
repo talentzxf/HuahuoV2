@@ -1,16 +1,16 @@
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
 import {InterpolatePropertyBuilder, PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
-import {StaticPropertySheetBuilder} from "./StaticPropertyBuilder";
+import {ShapeArrayPropertySheetBuilder} from "./ShapeArrayPropertySheetBuilder";
 
 class PropertySheetFactory{
     interpolatePropertySheetBuilder = new InterpolatePropertyBuilder()
-    staticPropertySheetBuilder = new StaticPropertySheetBuilder()
+    shapeArrayPropertySheetBuilder = new ShapeArrayPropertySheetBuilder()
     getBuilder(category){
         switch (category){
             case PropertyCategory.interpolate:
                 return this.interpolatePropertySheetBuilder
-            case PropertyCategory.static:
-                return this.staticPropertySheetBuilder
+            case PropertyCategory.shapeArray:
+                return this.shapeArrayPropertySheetBuilder
         }
     }
 

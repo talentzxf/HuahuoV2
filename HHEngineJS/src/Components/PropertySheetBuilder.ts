@@ -5,16 +5,18 @@ const propertyPrefix = "inspector.property."
 
 enum PropertyCategory{
     interpolate,
-    static
+    shapeArray,
 }
 
 class PropertyDef{
     key: string
-    initValue: object|number
     type: PropertyCategory
-    minValue?: number = 0.0
-    maxValue?: number = 1.0
-    step?: number = 0.01
+    config: object
+    initValue: object|number
+
+    // minValue?: number = 0.0
+    // maxValue?: number = 1.0
+    // step?: number = 0.01
 }
 
 function capitalizeFirstLetter(str){
@@ -49,9 +51,9 @@ class InterpolatePropertyBuilder extends PropertySheetBuilder{
 
         propertyDef["type"] = PropertyType.FLOAT
         propertyDef["elementType"] = "range"
-        propertyDef["min"] = propertyMeta.minValue
-        propertyDef["max"] = propertyMeta.maxValue
-        propertyDef["step"] = propertyMeta.step
+        propertyDef["min"] = propertyMeta.config.minValue
+        propertyDef["max"] = propertyMeta.config.maxValue
+        propertyDef["step"] = propertyMeta.config.step
 
         return propertyDef
     }

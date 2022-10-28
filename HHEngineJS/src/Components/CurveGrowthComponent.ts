@@ -1,9 +1,11 @@
-import {AbstractComponent, interpolateProperty} from "./AbstractComponent";
+import {AbstractComponent, propertyValue} from "./AbstractComponent";
 import {clzObjectFactory} from "../CppClassObjectFactory";
+import {PropertyCategory} from "./PropertySheetBuilder";
 
 let componentName = "CurveGrowthComponent"
-class CurveGrowthComponent extends AbstractComponent{
-    static createComponent(rawObj){
+
+class CurveGrowthComponent extends AbstractComponent {
+    static createComponent(rawObj) {
         return new CurveGrowthComponent(rawObj)
     }
 
@@ -13,17 +15,17 @@ class CurveGrowthComponent extends AbstractComponent{
         this.rawObj.SetTypeName(componentName)
     }
 
-    @interpolateProperty(1.0, 0.0, 1.0, 0.01)
+    @propertyValue(PropertyCategory.interpolate, 1.0, {minValue: 0.0, maxValue: 1.0, step: 0.01})
     growth: number;
 
     clonedPaperShape
 
-    get paperShape(){
+    get paperShape() {
         return this.baseShape.paperShape
     }
 
-    setSegmentProperty(idx, property, value){
-        if(this.clonedPaperShape){
+    setSegmentProperty(idx, property, value) {
+        if (this.clonedPaperShape) {
             this.clonedPaperShape.segments[idx].point = this.baseShape.paperShape.segments[idx].point
             this.clonedPaperShape.segments[idx].handleIn = this.baseShape.paperShape.segments[idx].handleIn
             this.clonedPaperShape.segments[idx].handleOut = this.baseShape.paperShape.segments[idx].handleOut
@@ -34,16 +36,16 @@ class CurveGrowthComponent extends AbstractComponent{
         }
     }
 
-    getSegments(){
-        if(!this.clonedPaperShape){
+    getSegments() {
+        if (!this.clonedPaperShape) {
             return this.paperShape.segments
         }
         return this.clonedPaperShape.segments
     }
 
     // TODO, avoid duplication. This logic is the same as what we have in the BaseShapeJS.insertSegment.
-    insertSegment(localPos){
-        if(this.clonedPaperShape){
+    insertSegment(localPos) {
+        if (this.clonedPaperShape) {
             let nearestPoint = this.clonedPaperShape.getNearestPoint(localPos)
             let offset = this.clonedPaperShape.getOffsetOf(nearestPoint)
 
@@ -57,14 +59,14 @@ class CurveGrowthComponent extends AbstractComponent{
         super.afterUpdate();
 
         let growth = this.growth
-        if( growth < 1.0){
+        if (growth < 1.0) {
             this.clonedPaperShape = this.paperShape.clone()
             this.clonedPaperShape.selected = false
             this.clonedPaperShape.visible = false
             this.clonedPaperShape.data = null
 
             let path2 = this.paperShape.splitAt(this.paperShape.length * growth)
-            if(path2){
+            if (path2) {
                 path2.visible = false
                 path2.selected = false
                 path2.remove()

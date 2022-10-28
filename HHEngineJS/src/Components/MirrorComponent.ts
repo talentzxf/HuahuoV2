@@ -1,7 +1,10 @@
-import {AbstractComponent, staticProperty} from "./AbstractComponent";
+import {AbstractComponent, propertyValue} from "./AbstractComponent";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
+import {PropertyCategory} from "./PropertySheetBuilder";
 
 class MirrorComponent extends AbstractComponent{
-    @staticProperty()
+    @propertyValue(PropertyCategory.shapeArray)
     targetShapeArray: Array<BaseShapeJS>
 }
+
+export {MirrorComponent}

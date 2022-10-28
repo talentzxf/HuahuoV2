@@ -1,6 +1,8 @@
 import {BaseShapeJS} from "./BaseShapeJS";
 import * as paper from "paper";
 import {Vector2} from "hhcommoncomponents"
+import {CurveGrowthComponent} from "../Components/CurveGrowthComponent";
+import {MirrorComponent} from "../Components/MirrorComponent";
 
 let shapeName = "MirrorShape"
 class MirrorShapeJS extends BaseShapeJS{
@@ -9,6 +11,22 @@ class MirrorShapeJS extends BaseShapeJS{
     }
 
     randomStrokeColor: paper.Color
+
+    mirrorComponent: MirrorComponent
+
+    constructor(rawObj) {
+        let needInitComponents = false
+        if(!rawObj){
+            needInitComponents = true
+        }
+
+        super(rawObj);
+
+        if(needInitComponents){
+            this.mirrorComponent = new MirrorComponent()
+            this.addComponent(this.mirrorComponent)
+        }
+    }
 
     getShapeName(): string {
         return shapeName
