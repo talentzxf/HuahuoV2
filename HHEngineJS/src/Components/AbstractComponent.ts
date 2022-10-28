@@ -1,25 +1,11 @@
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import "reflect-metadata"
-import {PropertyType} from "hhcommoncomponents";
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
+import {PropertyCategory, PropertyDef, capitalizeFirstLetter} from "./PropertySheetBuilder";
+import {propertySheetFactory} from "./PropertySheetBuilderFactory"
 
 const metaDataKey = Symbol("objectProperties")
-const propertyPrefix = "inspector.property."
 declare var Module: any;
-
-enum PropertyCategory{
-    interpolate,
-    static
-}
-
-class PropertyDef{
-    key: string
-    initValue: object|number
-    type: PropertyCategory
-    minValue?: number = 0.0
-    maxValue?: number = 1.0
-    step?: number = 0.01
-}
 
 function getProperties(target):object[]{
     let properties: object[] = Reflect.getMetadata(metaDataKey, target)
@@ -58,13 +44,6 @@ function staticProperty(initValue?: object){
     }
 }
 
-function capitalizeFirstLetter(str){
-    if(str.length == 0)
-        return ""
-
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
 declare function castObject(obj: any, clz: any): any;
 
 class AbstractComponent {
@@ -73,15 +52,6 @@ class AbstractComponent {
     propertySheetInited: boolean = false;
 
     private valueChangeHandler:ValueChangeHandler = new ValueChangeHandler()
-
-    // Remove these functions later.
-    registerValueChangeHandler(valueName: string, preProcessor: Function = null){
-        return this.valueChangeHandler.registerValueChangeHandler(valueName, preProcessor)
-    }
-
-    unregisterValueChangeHandler(valueName: string) {
-        return this.valueChangeHandler.unregisterValueChangeHandler(valueName)
-    }
 
     callHandlers(propertyName: string, val: any) {
         this.valueChangeHandler.callHandlers(propertyName, val)
@@ -153,29 +123,9 @@ class AbstractComponent {
             const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
 
             for(let propertyMeta of properties){
-
-                let fieldName = propertyMeta["key"]
-                // Generate setter and getter
-                let getterName = "get" + capitalizeFirstLetter(fieldName)
-                let setterName = "set" + capitalizeFirstLetter(fieldName)
-
-                let propertyDef = {
-                    key: propertyPrefix + propertyMeta["key"],
-                    getter: this[getterName].bind(this),
-                    setter: this[setterName].bind(this),
-                    registerValueChangeFunc: this.registerValueChangeHandler(fieldName),
-                    unregisterValueChagneFunc: this.unregisterValueChangeHandler(fieldName)
-                }
-
-                if(propertyMeta.type == PropertyCategory.interpolate){
-                    propertyDef["type"] = PropertyType.FLOAT
-                    propertyDef["elementType"] = "range"
-                    propertyDef["min"] = propertyMeta.minValue
-                    propertyDef["max"] = propertyMeta.maxValue
-                    propertyDef["step"] = propertyMeta.step
-                }
-
-                propertySheet.addProperty(propertyDef)
+                let propertySheetEntry = propertySheetFactory.createEntry(this, propertyMeta, this.valueChangeHandler)
+                if(propertySheetEntry != null)
+                    propertySheet.addProperty(propertySheetEntry)
             }
         }
     }
