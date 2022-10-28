@@ -85,6 +85,7 @@ void CustomFrameState::RecordFieldValue(int frameId, const char *fieldName, floa
         for (int fieldIdx = 0; fieldIdx < m_fieldInitValues.size(); fieldIdx++) {
             pKeyFrame->frameValues[fieldIdx] = m_fieldInitValues[fieldIdx];
         }
+        pKeyFrame->inited = true;
     }
 
     int idx = m_fieldNameFieldIndexMap[fieldName];
