@@ -37,14 +37,18 @@ class AudioShapeJS extends AbstractMediaShapeJS {
         this.propertySheet.addProperty({
             key:"Start",
             type: PropertyType.BUTTON,
-            action: this.startAudio.bind(this)
+            config:{
+                action: this.startAudio.bind(this)
+            }
         })
 
         this.propertySheet.addProperty(
         {
             key:"Pause",
             type: PropertyType.BUTTON,
-            action: this.stopAudio.bind(this)
+            config:{
+                action: this.stopAudio.bind(this)
+            }
         })
     }
 

@@ -34,7 +34,8 @@ class PropertySheetBuilder{
             getter: component[getterName].bind(component),
             setter: component[setterName].bind(component),
             registerValueChangeFunc: valueChangeHandler.registerValueChangeHandler(fieldName),
-            unregisterValueChagneFunc: valueChangeHandler.unregisterValueChangeHandler(fieldName)
+            unregisterValueChagneFunc: valueChangeHandler.unregisterValueChangeHandler(fieldName),
+            config: propertyMeta.config
         }
 
         return propertyDef
@@ -47,9 +48,6 @@ class InterpolatePropertyBuilder extends PropertySheetBuilder{
 
         propertyDef["type"] = PropertyType.FLOAT
         propertyDef["elementType"] = "range"
-        propertyDef["min"] = propertyMeta.config.minValue
-        propertyDef["max"] = propertyMeta.config.maxValue
-        propertyDef["step"] = propertyMeta.config.step
 
         return propertyDef
     }

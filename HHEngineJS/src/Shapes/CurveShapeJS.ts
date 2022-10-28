@@ -101,7 +101,9 @@ class CurveShapeJS extends BaseSolidShape{
         this.propertySheet.addProperty({
             key: "inspector.enclose",
             type: PropertyType.BUTTON,
-            action: this.encloseCurve.bind(this)
+            config:{
+                action: this.encloseCurve.bind(this)
+            }
         })
     }
 }

@@ -3,6 +3,7 @@ import "reflect-metadata"
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
 import {capitalizeFirstLetter, PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
 import {propertySheetFactory} from "./PropertySheetBuilderFactory"
+import {PropertyConfig} from "hhcommoncomponents";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -17,7 +18,7 @@ function getProperties(target):object[]{
     return properties
 }
 
-function PropertyValue(category:PropertyCategory, initValue = null, config?: object) {
+function PropertyValue(category:PropertyCategory, initValue = null, config?: PropertyConfig) {
     return function (target: object, propertyKey: string) {
         let properties = getProperties(target)
         let propertyEntry:PropertyDef = {

@@ -622,52 +622,61 @@ abstract class BaseShapeJS {
         this.propertySheet.addProperty({
             key: "inspector.Position",
             type: PropertyType.GROUP,
-            children: [
-                {
-                    key: "inspector.FixedPosition",
-                    type: PropertyType.VECTOR2,
-                    getter: this.getPosition.bind(this),
-                    setter: this.setPosition.bind(this),
-                    registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("position"),
-                    unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position")
-                },
-                {
-                    key: "inspector.FollowPath",
-                    type: PropertyType.PANEL,
-                    children: [
-                        {
-                            key: "inspector.FollowTarget",
-                            type: PropertyType.REFERENCE,
-                            getter: this.getFollowCurve.bind(this),
-                            setter: this.setFollowCurve.bind(this)
-                        },
-                        {
-                            key:"inspector.Unfollow",
-                            type: PropertyType.BUTTON,
-                            action: this.unfollowCurve.bind(this)
-                        },
-                        {
-                            key: "inspector.AtBegin",
-                            type: PropertyType.BUTTON,
-                            action: this.atFollowCurveStart.bind(this)
-                        },
-                        {
-                            key: "inspector.AtEnd",
-                            type: PropertyType.BUTTON,
-                            action: this.atFollowCurveEnd.bind(this)
-                        },
-                        {
-                            key: "inspector.AtLength",
-                            type: PropertyType.FLOAT,
-                            getter: this.getFollowCurveLength.bind(this),
-                            setter: this.setFollowCurveLength.bind(this),
-                            registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("position", this.getFollowCurveLengthPotion.bind(this)),
-                            unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position")
+            config:{
+                children: [
+                    {
+                        key: "inspector.FixedPosition",
+                        type: PropertyType.VECTOR2,
+                        getter: this.getPosition.bind(this),
+                        setter: this.setPosition.bind(this),
+                        registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("position"),
+                        unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position")
+                    },
+                    {
+                        key: "inspector.FollowPath",
+                        type: PropertyType.PANEL,
+                        config:{
+                            children: [
+                                {
+                                    key: "inspector.FollowTarget",
+                                    type: PropertyType.REFERENCE,
+                                    getter: this.getFollowCurve.bind(this),
+                                    setter: this.setFollowCurve.bind(this)
+                                },
+                                {
+                                    key:"inspector.Unfollow",
+                                    type: PropertyType.BUTTON,
+                                    config:{
+                                        action: this.unfollowCurve.bind(this)
+                                    }
+                                },
+                                {
+                                    key: "inspector.AtBegin",
+                                    type: PropertyType.BUTTON,
+                                    config:{
+                                        action: this.atFollowCurveStart.bind(this)
+                                    }
+                                },
+                                {
+                                    key: "inspector.AtEnd",
+                                    type: PropertyType.BUTTON,
+                                    config:{
+                                        action: this.atFollowCurveEnd.bind(this)
+                                    }
+                                },
+                                {
+                                    key: "inspector.AtLength",
+                                    type: PropertyType.FLOAT,
+                                    getter: this.getFollowCurveLength.bind(this),
+                                    setter: this.setFollowCurveLength.bind(this),
+                                    registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("position", this.getFollowCurveLengthPotion.bind(this)),
+                                    unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position")
+                                }
+                            ]
                         }
-                    ]
-                },
-
-            ]
+                    },
+                ]
+            }
         });
 
         this.propertySheet.addProperty({

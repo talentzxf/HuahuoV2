@@ -15,7 +15,7 @@ class PanelPropertyDesc extends BasePropertyDesc{
         this.contentDiv.appendChild(panelPropertyDiv)
 
         // TODO: Avoid duplication with Inspector
-        for(let childProperty of property.children){
+        for(let childProperty of property.config.children){
             let divGenerator = GetPropertyDivGenerator(childProperty.type)
             let propertyDesc = divGenerator.generatePropertyDesc(childProperty)
 

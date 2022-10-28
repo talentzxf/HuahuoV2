@@ -26,21 +26,16 @@ class FloatPropertyDesc extends BasePropertyDesc{
         super(property)
         let currentValue = property.getter()
         let type = "number"
-        if(property.elementType){
-            type = property.elementType
+        if(property.config && property.config.elementType){
+            type = property.config.elementType
         }
 
         this.createInput(currentValue, type)
-        if(property.min != null){
-            this.input.min = property.min
-        }
 
-        if(property.max != null){
-            this.input.max = property.max
-        }
-
-        if(property.step != null){
-            this.input.step = property.step
+        if(property.config){
+            this.input.min = property.config.min
+            this.input.max = property.config.max
+            this.input.step = property.config.step
         }
 
         // update the current value again.

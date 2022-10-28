@@ -1,6 +1,7 @@
 import {AbstractComponent, PropertyValue} from "./AbstractComponent";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {PropertyCategory} from "./PropertySheetBuilder";
+import {FloatPropertyConfig} from "hhcommoncomponents";
 
 let componentName = "CurveGrowthComponent"
 
@@ -15,7 +16,7 @@ class CurveGrowthComponent extends AbstractComponent {
         this.rawObj.SetTypeName(componentName)
     }
 
-    @PropertyValue(PropertyCategory.interpolate, 1.0, {minValue: 0.0, maxValue: 1.0, step: 0.01})
+    @PropertyValue(PropertyCategory.interpolate, 1.0, {min: 0.0, max: 1.0, step: 0.01} as FloatPropertyConfig)
     growth: number;
 
     clonedPaperShape

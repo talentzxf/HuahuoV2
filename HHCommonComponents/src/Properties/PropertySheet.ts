@@ -1,3 +1,5 @@
+import {PropertyConfig} from "./PropertyConfig";
+
 enum PropertyType{
     GROUP,
     PANEL,
@@ -13,16 +15,11 @@ enum PropertyType{
 class Property{
     key: string
     type: PropertyType
-    elementType ?: string
-    min ?: number // Only number fields need this.
-    max ?: number
-    step ?: number
     setter?: Function
     getter?: Function
     registerValueChangeFunc?: Function
     unregisterValueChangeFunc?: Function
-    action?: Function // For Button property
-    children: Array<Property> // For Group property
+    config: PropertyConfig
 }
 
 class PropertySheet{

@@ -129,13 +129,17 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         propertySheet.addProperty({
             key: "Smooth",
             type: PropertyType.BUTTON,
-            action: this.smoothSegment.bind(this)
+            config:{
+                action: this.smoothSegment.bind(this)
+            }
         })
 
         propertySheet.addProperty({
             key: "Sharpen",
             type: PropertyType.BUTTON,
-            action: this.sharpenSegment.bind(this)
+            config:{
+                action: this.sharpenSegment.bind(this)
+            }
         })
     }
 
