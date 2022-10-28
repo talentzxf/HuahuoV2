@@ -106,7 +106,7 @@ class AbstractComponent {
             let setterName = "set" + capitalizeFirstLetter(fieldName)
 
             _this[setterName] = function(val: number){
-                _this.rawObj.SetValue(fieldName, val)
+                _this[fieldName] = val
                 _this.callHandlers(fieldName, val)
                 if(_this.baseShape)
                     _this.baseShape.update()
@@ -125,7 +125,7 @@ class AbstractComponent {
                     return _this[getterName]()
                 },
                 set: function(val){
-                    _this[setterName](val)
+                    _this.rawObj.SetValue(fieldName, val)
                 }
             })
         })
