@@ -359,6 +359,7 @@ abstract class BaseShapeJS {
     }
 
     setSegmentProperty(idx, property, value){
+        let segment = this.paperShape.segments[idx]
         this.paperShape.segments[idx][property] = value
     }
 

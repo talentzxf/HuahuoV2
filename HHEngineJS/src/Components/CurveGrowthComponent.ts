@@ -24,11 +24,13 @@ class CurveGrowthComponent extends AbstractComponent{
 
     setSegmentProperty(idx, property, value){
         if(this.clonedPaperShape){
-            let updatedLength = this.paperShape.length / this.clonedPaperShape.length
-            this.growth = updatedLength
             this.clonedPaperShape.segments[idx].point = this.baseShape.paperShape.segments[idx].point
             this.clonedPaperShape.segments[idx].handleIn = this.baseShape.paperShape.segments[idx].handleIn
             this.clonedPaperShape.segments[idx].handleOut = this.baseShape.paperShape.segments[idx].handleOut
+
+            let updatedLength = this.paperShape.length / this.clonedPaperShape.length
+
+            this.growth = updatedLength
         }
     }
 

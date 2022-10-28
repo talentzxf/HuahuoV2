@@ -107,6 +107,9 @@ class AbstractComponent {
 
             _this[setterName] = function(val: number){
                 _this.rawObj.SetValue(fieldName, val)
+                _this.callHandlers(fieldName, val)
+                if(_this.baseShape)
+                    _this.baseShape.update()
             }
 
             _this[getterName] = function(){
@@ -123,7 +126,6 @@ class AbstractComponent {
                 },
                 set: function(val){
                     _this[setterName](val)
-                    _this.callHandlers(fieldName, val)
                 }
             })
         })
@@ -152,14 +154,13 @@ class AbstractComponent {
 
             for(let propertyMeta of properties){
 
-                let fieldName = propertyPrefix + propertyMeta["key"]
+                let fieldName = propertyMeta["key"]
                 // Generate setter and getter
                 let getterName = "get" + capitalizeFirstLetter(fieldName)
                 let setterName = "set" + capitalizeFirstLetter(fieldName)
 
                 let propertyDef = {
-                    key: + propertyMeta["key"],
-                    elementType: "range",
+                    key: propertyPrefix + propertyMeta["key"],
                     getter: this[getterName].bind(this),
                     setter: this[setterName].bind(this),
                     registerValueChangeFunc: this.registerValueChangeHandler(fieldName),
@@ -168,6 +169,7 @@ class AbstractComponent {
 
                 if(propertyMeta.type == PropertyCategory.interpolate){
                     propertyDef["type"] = PropertyType.FLOAT
+                    propertyDef["elementType"] = "range"
                     propertyDef["min"] = propertyMeta.minValue
                     propertyDef["max"] = propertyMeta.maxValue
                     propertyDef["step"] = propertyMeta.step

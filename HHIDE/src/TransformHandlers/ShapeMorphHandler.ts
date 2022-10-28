@@ -50,6 +50,7 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         hitSegment.selected = true
         hitSegment.handleIn.selected = true
         hitSegment.handleOut.selected = true
+
     }
 
     beginMove(startPos, hitResult = null) {
