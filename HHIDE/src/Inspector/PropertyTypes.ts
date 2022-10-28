@@ -9,8 +9,6 @@ import {groupPropertyDivGenerator} from "./GroupPropertyDivGenerator";
 import {referencePropertyDivGenerator} from "./ReferencePropertyDivGenerator";
 import {panelPropertyDivGenerator} from "./PanelPropertyDivGenerator";
 import {arrayPropertyDivGenerator} from "./ArrayPropertyDivGenerator";
-import {Property} from "properties-file";
-
 
 // Avoid being imported twice.
 // TODO: Any less dirty approach ??

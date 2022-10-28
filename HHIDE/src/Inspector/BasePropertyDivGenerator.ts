@@ -18,8 +18,10 @@ abstract class BasePropertyDesc{
 
         this.contentDiv = document.createElement("div")
 
-        this.titleDiv = document.createElement("div")
-        this.titleDiv.innerText = (window as any).i18n.t(property.key)
+        if(this.property.key){
+            this.titleDiv = document.createElement("div")
+            this.titleDiv.innerText = (window as any).i18n.t(property.key)
+        }
     }
 
     clear(){
