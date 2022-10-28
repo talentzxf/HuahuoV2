@@ -4,6 +4,7 @@ import {PropertyType} from "hhcommoncomponents";
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
 
 const metaDataKey = Symbol("objectProperties")
+const propertyPrefix = "inspector.property."
 declare var Module: any;
 
 enum PropertyCategory{
@@ -151,13 +152,13 @@ class AbstractComponent {
 
             for(let propertyMeta of properties){
 
-                let fieldName = propertyMeta["key"]
+                let fieldName = propertyPrefix + propertyMeta["key"]
                 // Generate setter and getter
                 let getterName = "get" + capitalizeFirstLetter(fieldName)
                 let setterName = "set" + capitalizeFirstLetter(fieldName)
 
                 let propertyDef = {
-                    key:"inspector.property" + propertyMeta["key"],
+                    key: + propertyMeta["key"],
                     elementType: "range",
                     getter: this[getterName].bind(this),
                     setter: this[setterName].bind(this),
@@ -169,7 +170,7 @@ class AbstractComponent {
                     propertyDef["type"] = PropertyType.FLOAT
                     propertyDef["min"] = propertyMeta.minValue
                     propertyDef["max"] = propertyMeta.maxValue
-                    propertyDef["step"] = propertyMeta.maxValue
+                    propertyDef["step"] = propertyMeta.step
                 }
 
                 propertySheet.addProperty(propertyDef)
