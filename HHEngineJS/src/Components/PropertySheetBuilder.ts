@@ -13,10 +13,6 @@ class PropertyDef{
     type: PropertyCategory
     config: object
     initValue: object|number
-
-    // minValue?: number = 0.0
-    // maxValue?: number = 1.0
-    // step?: number = 0.01
 }
 
 function capitalizeFirstLetter(str){

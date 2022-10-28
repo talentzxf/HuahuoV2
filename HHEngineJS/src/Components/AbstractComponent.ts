@@ -17,7 +17,7 @@ function getProperties(target):object[]{
     return properties
 }
 
-function propertyValue(category:PropertyCategory, initValue = null, config?: object) {
+function PropertyValue(category:PropertyCategory, initValue = null, config?: object) {
     return function (target: object, propertyKey: string) {
         let properties = getProperties(target)
         let propertyEntry:PropertyDef = {
@@ -117,4 +117,4 @@ class AbstractComponent {
     }
 }
 
-export {AbstractComponent, propertyValue}
+export {AbstractComponent, PropertyValue}

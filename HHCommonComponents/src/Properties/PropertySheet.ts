@@ -6,7 +6,8 @@ enum PropertyType{
     FLOAT,
     COLOR,
     BUTTON,
-    REFERENCE
+    REFERENCE,
+    ARRAY
 }
 
 class Property{

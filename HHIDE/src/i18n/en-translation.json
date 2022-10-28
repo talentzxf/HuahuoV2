@@ -66,7 +66,8 @@
     "AtLength": "At Length",
     "Unfollow": "UnFollow",
     "property": {
-      "growth": "growth"
+      "growth": "growth",
+      "targetShapeArray": "Target Shapes"
     }
   },
   "timeline": {

@@ -1,4 +1,4 @@
-import {AbstractComponent, propertyValue} from "./AbstractComponent";
+import {AbstractComponent, PropertyValue} from "./AbstractComponent";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {PropertyCategory} from "./PropertySheetBuilder";
 
@@ -15,7 +15,7 @@ class CurveGrowthComponent extends AbstractComponent {
         this.rawObj.SetTypeName(componentName)
     }
 
-    @propertyValue(PropertyCategory.interpolate, 1.0, {minValue: 0.0, maxValue: 1.0, step: 0.01})
+    @PropertyValue(PropertyCategory.interpolate, 1.0, {minValue: 0.0, maxValue: 1.0, step: 0.01})
     growth: number;
 
     clonedPaperShape
