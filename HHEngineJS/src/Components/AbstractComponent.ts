@@ -81,14 +81,39 @@ class AbstractComponent {
         let fieldName = propertyEntry["key"]
         // Generate setter and getter
         let getterName = "get" + capitalizeFirstLetter(fieldName)
+        let setName = "set" + capitalizeFirstLetter(fieldName)
         let inserterName = "insert" + capitalizeFirstLetter(fieldName)
-        let deleteName = "delete" + capitalizeFirstLetter(fieldName)
+        let deleterName = "delete" + capitalizeFirstLetter(fieldName)
 
-        let internalFieldName = "_internal" + capitalizeFirstLetter(fieldName)
+        let internalFieldName = "_internal" + capitalizeFirstLetter(fieldName) // This is temporary, we should save it into Cpp side later.
         this[internalFieldName] = new Array()
         this[getterName] = function(){
-            return this.rawObj.GetValue(fieldName)
-        }
+            return internalFieldName
+        }.bind(this)
+
+        // This is just alias of the insert funtion.
+        this[setName] = function(val){
+            this[inserterName](val)
+        }.bind(this)
+
+        this[inserterName] = function (val){
+            if(this[internalFieldName] == null){
+                this[internalFieldName] = []
+            }
+
+            this[internalFieldName].push(val)
+            this.callHandlers(fieldName, this[internalFieldName])
+        }.bind(this)
+
+        this[deleterName] = function(val){
+            if(this[internalFieldName] == null)
+                return
+            this[internalFieldName] = this[internalFieldName].filter((v)=>{
+                return v!= val
+            })
+
+            this.callHandlers(fieldName, this[internalFieldName])
+        }.bind(this)
     }
 
     constructor(rawObj?) {
