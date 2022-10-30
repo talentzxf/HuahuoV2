@@ -47,11 +47,7 @@ class ReferencePropertyDesc extends BasePropertyDesc{
     }
 
     onShapePicked(selectedShape:BaseShapeJS){
-        let typeName = selectedShape.typename
-        let name = selectedShape.name
-
-        this.shapeNameSpan.innerText = this.formatShapeName(typeName, name)
-
+        this.onValueChanged(selectedShape)
         this.property.setter(selectedShape)
 
         let currentFocusedSceneView = sceneViewManager.getFocusedSceneView()
@@ -60,6 +56,10 @@ class ReferencePropertyDesc extends BasePropertyDesc{
     }
 
     onValueChanged(val) {
+        let typeName = val.typename
+        let name = val.name
+
+        this.shapeNameSpan.innerText = this.formatShapeName(typeName, name)
     }
 
     beginToPickupShape(){

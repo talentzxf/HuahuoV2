@@ -30,7 +30,7 @@ class ArrayPropertyDesc extends BasePropertyDesc{
         let currentArray = property.getter()
         for(let entry of currentArray){
             let desc = this.addEntry()
-            desc["onShapePicked"](entry)
+            desc["onValueChanged"](entry)
         }
     }
 
@@ -44,7 +44,9 @@ class ArrayPropertyDesc extends BasePropertyDesc{
         let generatedDiv = GenerateDiv(propertyDivGenerator, propertyDesc)
 
         this.arrayEntryDivs.appendChild(generatedDiv)
-        
+
+        return propertyDesc
+
     }
 
     onValueChanged(val) {
