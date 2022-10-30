@@ -198,6 +198,10 @@ abstract class BaseShapeJS {
         return this.parent
     }
 
+    setSelectedMeta(baseShape){
+        this.paperItem.data.selectedMeta = baseShape
+    }
+
     storeSameLayerShapeIndices() {
         let parent = this.paperItem.parent
         if (parent) {
