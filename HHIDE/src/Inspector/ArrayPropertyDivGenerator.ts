@@ -26,6 +26,12 @@ class ArrayPropertyDesc extends BasePropertyDesc{
         this.contentDiv.appendChild(this.arrayEntryDivs)
 
         this.elementType = property.elementType
+
+        let currentArray = property.getter()
+        for(let entry of currentArray){
+            let desc = this.addEntry()
+            desc["onShapePicked"](entry)
+        }
     }
 
     addEntry(){
@@ -36,7 +42,9 @@ class ArrayPropertyDesc extends BasePropertyDesc{
         })
 
         let generatedDiv = GenerateDiv(propertyDivGenerator, propertyDesc)
+
         this.arrayEntryDivs.appendChild(generatedDiv)
+        
     }
 
     onValueChanged(val) {
