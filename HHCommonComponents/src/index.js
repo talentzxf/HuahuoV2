@@ -8,6 +8,7 @@ import {I18nHandler} from "./translation/I18nHandler";
 import "./i18ninitializer"
 import {HHToast} from "./Toast/Toast";
 import {eventBus} from "./EventBus/EventBus";
+import {mirrorPoint} from "./Math/MathFunctions";
 
 if(!window.i18n){
     window.i18n = new I18nHandler()
@@ -17,5 +18,5 @@ let i18n = window.i18n
 
 export {i18n, ContextMenu, CustomElement, Logger, Vector2, pointsNear,
     relaxRectangle, PropertySheet, Property, PropertyType, getMimeTypeFromDataURI,
-    dataURItoBlob, HHToast, getFileNameFromGZip, eventBus}
+    dataURItoBlob, HHToast, getFileNameFromGZip, eventBus, mirrorPoint}
 

@@ -88,7 +88,7 @@ class AbstractComponent {
         let internalFieldName = "_internal" + capitalizeFirstLetter(fieldName) // This is temporary, we should save it into Cpp side later.
         this[internalFieldName] = new Array()
         this[getterName] = function(){
-            return internalFieldName
+            return this[internalFieldName]
         }.bind(this)
 
         // This is just alias of the insert funtion.
@@ -114,6 +114,13 @@ class AbstractComponent {
 
             this.callHandlers(fieldName, this[internalFieldName])
         }.bind(this)
+
+        // Add getter and setter
+        Object.defineProperty(this, propertyEntry["key"], {
+            get: function(){
+                return this[getterName]()
+            }
+        })
     }
 
     constructor(rawObj?) {

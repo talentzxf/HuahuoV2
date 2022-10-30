@@ -51,6 +51,8 @@ class MirrorShapeJS extends BaseShapeJS{
 
     setStartPoint(startPoint: Vector2){
         this.rawObj.SetStartPoint(startPoint.x, startPoint.y, 0);
+
+        this.mirrorComponent.setStartPoint(startPoint)
     }
 
     setEndPoint(endPoint: Vector2){
@@ -64,6 +66,8 @@ class MirrorShapeJS extends BaseShapeJS{
 
         this.createShape()
         this.store()
+
+        this.mirrorComponent.setEndPoint(endPoint)
     }
 
     override hitTypeSelectable(hitType): boolean {
