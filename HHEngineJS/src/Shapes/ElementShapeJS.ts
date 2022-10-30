@@ -1,6 +1,5 @@
 import {BaseShapeJS} from "./BaseShapeJS";
 import {huahuoEngine} from "../EngineAPI";
-import {GlobalConfig} from "../GlobalConfig";
 import {LayerShapesManager} from "../Player/LayerShapesManager";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 
