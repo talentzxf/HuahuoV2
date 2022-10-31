@@ -10,7 +10,14 @@ class ShapeTranslateMorphBase{
     }
 
     setTarget(objs:Set<BaseShapeJS>){
-        this.curObjs = objs
+        // Filter out movable objects
+        this.curObjs = new Set<BaseShapeJS>()
+        // Filter out all the non-movable objects.
+        for(let shape of objs){
+            if(shape.isMovable()){
+                this.curObjs.add(shape)
+            }
+        }
     }
 
     beginMove(startPos: Vector2, hitResult = null){

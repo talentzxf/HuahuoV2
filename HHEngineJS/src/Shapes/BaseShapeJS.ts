@@ -198,8 +198,19 @@ abstract class BaseShapeJS {
         return this.parent
     }
 
+    movable: boolean = true
+    selectedMeta: BaseShapeJS = null
+
+    isMovable(){
+        return this.movable
+    }
+
+    setIsMovable(val: boolean){
+        this.movable = val
+    }
+
     setSelectedMeta(baseShape){
-        this.paperItem.data.selectedMeta = baseShape
+        this.selectedMeta = baseShape
     }
 
     storeSameLayerShapeIndices() {
@@ -703,6 +714,10 @@ abstract class BaseShapeJS {
     }
 
     getPropertySheet() {
+        if(this.selectedMeta){
+            return this.selectedMeta.propertySheet
+        }
+
         return this.propertySheet
     }
 

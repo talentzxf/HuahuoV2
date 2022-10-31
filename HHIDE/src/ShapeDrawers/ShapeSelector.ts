@@ -384,6 +384,7 @@ class ShapeSelector extends BaseShapeDrawer {
 
     setTransformHandler(targetObjs: Set<BaseShapeJS>, pos: Vector2, handler: ShapeTranslateMorphBase = TransformHandlerMap.defaultTransformHandler, hitResult = null) {
         this.transformHandler = handler
+
         this.transformHandler.setTarget(targetObjs)
         this.transformHandler.beginMove(pos, hitResult)
     }

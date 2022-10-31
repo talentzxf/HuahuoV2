@@ -43,6 +43,7 @@ class MirrorComponent extends AbstractComponent{
                         this.p1, this.p2)
 
                     duplicatedShape.setSelectedMeta(this.baseShape)
+                    duplicatedShape.setIsMovable(false)
 
                     this.targetShapeMirroredShapeMap.set(targetShape, duplicatedShape)
                 }
