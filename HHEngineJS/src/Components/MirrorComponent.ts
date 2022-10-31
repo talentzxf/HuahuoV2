@@ -22,12 +22,12 @@ class MirrorComponent extends AbstractComponent {
         this.paperShapeGroup.applyMatrix = false
         this.paperShapeGroup.data.meta = this.baseShape
 
-        let line1 = new paper.Path.Line(new paper.Point(0, 0), new paper.Point(0, 1000))
-        let line2 = new paper.Path.Line(new paper.Point(0, 0), new paper.Point(1000, 0))
+        let line1 = new paper.Path.Line(new paper.Point(0, 0), new paper.Point(1000, 0)) // X Axis
+        let line2 = new paper.Path.Line(new paper.Point(0, 0), new paper.Point(0, 1000)) // Y Axis
 
-        line1.strokeColor = new paper.Color("green")
+        line1.strokeColor = new paper.Color("red")
         line1.strokeWidth = 1
-        line2.strokeColor = new paper.Color("red")
+        line2.strokeColor = new paper.Color("green")
         line2.strokeWidth = 1
 
         this.paperShapeGroup.addChild(line1)
@@ -75,16 +75,28 @@ class MirrorComponent extends AbstractComponent {
             return;
         }
 
+        // Rotate the coordinate
+        let mirroredX = mirrorPoint(new paper.Point(1,0), this.p1, this.p2)
+        let mirroredZero = mirrorPoint(new paper.Point(0,0), this.p1, this.p2)
+
+        let radian = Math.atan2(mirroredX.y - mirroredZero.y, mirroredX.x - mirroredZero.x)
+
+        this.paperShapeGroup.scaling.y = -1
+        
+        // Convert to angle
+        this.paperShapeGroup.rotation = - radian/ Math.PI * 180
+
         // Update p1 and p2 according to the updated position.
         this.p1 = this.baseShape.localToGlobal( segments[0].point )
         this.p2 = this.baseShape.localToGlobal( segments[1].point )
 
         // Get the current offset of the group shape.
         let offset = this.paperShapeGroup.position.subtract(this.paperShapeGroup.localToGlobal(new paper.Point(0,0)))
-        let mirroredZero = mirrorPoint(new paper.Point(0,0), this.p1, this.p2)
 
         let newPosition = mirroredZero.add(offset)
         this.paperShapeGroup.position = newPosition
+
+        // this.paperShapeGroup.scaling = new paper.Point(0.0, -1.0)
 
         if (this.targetShapeArray) {
             // Check if all target shapes are mirrored
