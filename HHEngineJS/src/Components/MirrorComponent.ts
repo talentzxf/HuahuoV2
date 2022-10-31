@@ -3,8 +3,9 @@ import {PropertyCategory} from "./PropertySheetBuilder";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {mirrorPoint} from "hhcommoncomponents";
 import * as paper from "paper"
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
-class MirrorComponent extends AbstractComponent{
+class MirrorComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.shapeArray)
     targetShapeArray
 
@@ -13,40 +14,77 @@ class MirrorComponent extends AbstractComponent{
     paperShapeGroup: paper.Group
     p1: paper.Point
     p2: paper.Point
+
     constructor(rawObj?) {
         super(rawObj)
 
         this.paperShapeGroup = new paper.Group()
         this.paperShapeGroup.applyMatrix = false
         this.paperShapeGroup.data.meta = this.baseShape
+
+        let line1 = new paper.Path.Line(new paper.Point(0, 0), new paper.Point(0, 1000))
+        let line2 = new paper.Path.Line(new paper.Point(0, 0), new paper.Point(1000, 0))
+
+        line1.strokeColor = new paper.Color("green")
+        line1.strokeWidth = 1
+        line2.strokeColor = new paper.Color("red")
+        line2.strokeWidth = 1
+
+        this.paperShapeGroup.addChild(line1)
+        this.paperShapeGroup.addChild(line2)
     }
 
-    setStartPoint(p1){
+    setStartPoint(p1) {
         this.p1 = p1
     }
 
-    setEndPoint(p2){
+    setEndPoint(p2) {
         this.p2 = p2
+    }
+
+    createDuplication(shape){
+        /*
+        let duplicatedShape = targetShape.duplicate()
+        // Move the position to the target position.
+        duplicatedShape.position = mirrorPoint(duplicatedShape.position,
+            this.p1, this.p2)
+
+        duplicatedShape.setSelectedMeta(this.baseShape)
+        duplicatedShape.setIsMovable(false)
+        return duplicatedShape
+         */
+
+        let rawObj = shape.rawObj
+        let shapeConstructor = clzObjectFactory.GetClassConstructor(rawObj.GetTypeName())
+        let duplicatedShape = shapeConstructor(rawObj)
+
+        duplicatedShape.update()
+
+        this.paperShapeGroup.addChild(duplicatedShape.paperItem)
+
+        return duplicatedShape
     }
 
     afterUpdate() {
         super.afterUpdate();
 
-        if(this.targetShapeArray){
+        let mirroredZero = mirrorPoint(new paper.Point(0,0), this.p1, this.p2)
+
+        this.paperShapeGroup.position = mirroredZero
+
+        if (this.targetShapeArray) {
             // Check if all target shapes are mirrored
-            for(let targetShape of this.targetShapeArray){
-                if(!this.targetShapeMirroredShapeMap.has(targetShape)){
-                    let duplicatedShape = targetShape.duplicate()
-
-                    // Move the position to the target position.
-                    duplicatedShape.position = mirrorPoint(duplicatedShape.position,
-                        this.p1, this.p2)
-
-                    duplicatedShape.setSelectedMeta(this.baseShape)
-                    duplicatedShape.setIsMovable(false)
+            for (let targetShape of this.targetShapeArray) {
+                if (!this.targetShapeMirroredShapeMap.has(targetShape)) {
+                    let duplicatedShape = this.createDuplication(targetShape)
 
                     this.targetShapeMirroredShapeMap.set(targetShape, duplicatedShape)
+
+                    this.paperShapeGroup.addChild(duplicatedShape.paperItem)
                 }
+
+                let duplicatedShape = this.targetShapeMirroredShapeMap.get(targetShape)
+                duplicatedShape.update()
             }
         }
     }
