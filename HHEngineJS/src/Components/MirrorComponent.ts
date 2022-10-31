@@ -79,12 +79,13 @@ class MirrorComponent extends AbstractComponent {
         let mirroredX = mirrorPoint(new paper.Point(1,0), this.p1, this.p2)
         let mirroredZero = mirrorPoint(new paper.Point(0,0), this.p1, this.p2)
 
-        let radian = Math.atan2(mirroredX.y - mirroredZero.y, mirroredX.x - mirroredZero.x)
+        let radian = -Math.atan2(mirroredX.y - mirroredZero.y, mirroredX.x - mirroredZero.x)
 
+        // this.paperShapeGroup.scaling.x = -1
         this.paperShapeGroup.scaling.y = -1
-        
+
         // Convert to angle
-        this.paperShapeGroup.rotation = - radian/ Math.PI * 180
+        this.paperShapeGroup.rotation = -radian/ Math.PI * 180
 
         // Update p1 and p2 according to the updated position.
         this.p1 = this.baseShape.localToGlobal( segments[0].point )
