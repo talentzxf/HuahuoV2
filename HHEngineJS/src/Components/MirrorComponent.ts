@@ -79,9 +79,12 @@ class MirrorComponent extends AbstractComponent {
         this.p1 = this.baseShape.localToGlobal( segments[0].point )
         this.p2 = this.baseShape.localToGlobal( segments[1].point )
 
+        // Get the current offset of the group shape.
+        let offset = this.paperShapeGroup.position.subtract(this.paperShapeGroup.localToGlobal(new paper.Point(0,0)))
         let mirroredZero = mirrorPoint(new paper.Point(0,0), this.p1, this.p2)
 
-        this.paperShapeGroup.position = mirroredZero
+        let newPosition = mirroredZero.add(offset)
+        this.paperShapeGroup.position = newPosition
 
         if (this.targetShapeArray) {
             // Check if all target shapes are mirrored
