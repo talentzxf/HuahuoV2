@@ -32,11 +32,15 @@ class ShapeMoveCommand extends MergableCommand{
     _DoCommand() {
         this.targetShape.position = this.targetPos
         this.targetShape.store()
+
+        this.targetShape.update()
     }
 
     _UnDoCommand() {
         this.targetShape.position = this.prevPos
         this.targetShape.store()
+
+        this.targetShape.update()
     }
 
     GetType(): string {
