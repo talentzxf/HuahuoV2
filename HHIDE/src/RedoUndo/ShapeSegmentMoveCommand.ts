@@ -44,12 +44,16 @@ class ShapeSegmentMoveCommand extends MergableCommand{
         this.shape.setSegmentProperty(this.segmentIdx, "point", this.targetPosition);
         // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
         this.shape.store()
+
+        this.shape.update()
     }
 
     _UnDoCommand() {
         this.shape.setSegmentProperty(this.segmentIdx, "point", this.prevPosition);
         // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
         this.shape.store()
+
+        this.shape.update()
     }
 
 }

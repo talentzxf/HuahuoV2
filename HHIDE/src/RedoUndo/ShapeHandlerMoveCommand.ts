@@ -44,11 +44,13 @@ class ShapeHandlerMoveCommand extends MergableCommand {
     _DoCommand() {
         this.shape.setSegmentProperty(this.segmentIdx, this.handleName, this.targetPosition);
         this.shape.store()
+        this.shape.update()
     }
 
     _UnDoCommand() {
         this.shape.setSegmentProperty(this.segmentIdx, this.handleName, this.prevPosition);
         this.shape.store()
+        this.shape.update()
     }
 
 }

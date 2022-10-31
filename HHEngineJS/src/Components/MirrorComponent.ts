@@ -1,7 +1,7 @@
 import {AbstractComponent, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
-import {mirrorPoint} from "hhcommoncomponents";
+import {mirrorPoint, Logger} from "hhcommoncomponents";
 import * as paper from "paper"
 import {clzObjectFactory} from "../CppClassObjectFactory";
 
@@ -67,6 +67,17 @@ class MirrorComponent extends AbstractComponent {
 
     afterUpdate() {
         super.afterUpdate();
+
+        let segments = this.baseShape.getSegments()
+
+        if(segments.length != 2){
+            Logger.error("Why a mirror don't have two segments??")
+            return;
+        }
+
+        // Update p1 and p2 according to the updated position.
+        this.p1 = this.baseShape.localToGlobal( segments[0].point )
+        this.p2 = this.baseShape.localToGlobal( segments[1].point )
 
         let mirroredZero = mirrorPoint(new paper.Point(0,0), this.p1, this.p2)
 
