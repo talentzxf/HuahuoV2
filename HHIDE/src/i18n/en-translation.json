@@ -28,6 +28,7 @@
   "LineShape": "Line",
   "CreateShape": "Create",
   "MoveShape": "Move",
+  "RotateShape": "Rotate",
   "ShapeSegmentInsertCommand": "InsertSegment",
   "ShapeSegmentMoveCommand": "MoveSegment",
   "ShapeHandlerMoveCommand": "MoveHandler",

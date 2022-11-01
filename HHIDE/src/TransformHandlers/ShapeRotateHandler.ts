@@ -1,5 +1,8 @@
 import {ShapeTranslateMorphBase} from "./ShapeTranslateMorphBase";
 import {paper, BaseShapeJS} from "hhenginejs"
+import {ShapeMoveCommand} from "../RedoUndo/ShapeMoveCommand";
+import {undoManager} from "../RedoUndo/UndoManager";
+import {ShapeRotateCommand} from "../RedoUndo/ShapeRotateCommand";
 
 class ShapeRotateHandler extends ShapeTranslateMorphBase {
     protected targetShape: BaseShapeJS
@@ -104,7 +107,7 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase {
             this.targetShape.rotateAroundPivot(theta)
             this.lastPos = new paper.Point(pos.x, pos.y)
             this.targetShape.store()
-            this.targetShape.updateBoundingBox()
+            this.targetShape.update()
 
             this.drawRotationIndicator(this.targetShape.pivotPosition, this.rotationDegree)
         }
@@ -112,6 +115,9 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase {
 
     endMove() {
         this.clearRotationIndicator()
+
+        let command = new ShapeRotateCommand(this.targetShape, this.rotationDegree)
+        undoManager.PushCommand(command)
     }
 }
 
