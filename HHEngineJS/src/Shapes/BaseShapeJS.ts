@@ -17,6 +17,7 @@ declare class ShapeFollowCurveFrameState{
 }
 
 const BOUNDMARGIN: number = 10
+const eps:number = 0.001
 
 abstract class BaseShapeJS {
     protected rawObj: any = null;
@@ -855,6 +856,7 @@ abstract class BaseShapeJS {
     }
 
     backCalculateZeroPoint(localPos: paper.Point, globalPos: paper.Point, radian: number) {
+        /*
         let OB = localPos.x + localPos.y * Math.tan(radian)
         let OC = OB * Math.cos(radian)
         let zx = globalPos.x - OC
@@ -863,6 +865,14 @@ abstract class BaseShapeJS {
         let CB = OB * Math.sin(radian)
         let PC = PB - CB
 
+        let zy = globalPos.y - PC
+         */
+
+        // Eliminate all the divides to avoid divide zero situation
+        let OC = localPos.x * Math.cos(radian) + localPos.y * Math.sin(radian)
+        let zx = globalPos.x - OC
+
+        let PC = localPos.y * Math.cos(radian) - localPos.x * Math.sin(radian)
         let zy = globalPos.y - PC
 
         return new paper.Point(zx, zy)

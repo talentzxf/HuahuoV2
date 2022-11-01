@@ -8,12 +8,29 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase {
     protected targetShape: BaseShapeJS
     protected lastPos: paper.Point = null
 
+    private lastRotationDegree: number = 0.0
     private rotationDegree: number = 0.0;
 
     private rotationIndicator: Array<paper.Path> = new Array<paper.Path>()
 
+    protected pressingShift: boolean = false
+    private gapDegree = 10
+
     constructor() {
         super();
+
+        document.body.addEventListener("keydown", this.onKeyDown.bind(this))
+        document.body.addEventListener("keyup", this.onKeyUp.bind(this))
+    }
+
+    onKeyDown(e:KeyboardEvent){
+        if(e.shiftKey)
+            this.pressingShift = true
+    }
+
+    onKeyUp(e:KeyboardEvent){
+        if(!e.shiftKey)
+            this.pressingShift = false
     }
 
     beginMove(startPos) {
@@ -22,6 +39,7 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase {
         this.targetShape = this.curObjs.values().next().value // There's only one object in the set, get it.
 
         this.rotationDegree = 0.0;
+        this.lastRotationDegree = 0.0
     }
 
     clearRotationIndicator() {
@@ -101,15 +119,27 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase {
             let vec2 = pos.subtract(this.targetShape.pivotPosition)
 
             let theta = vec1.getDirectedAngle(vec2)
-
             this.rotationDegree += theta
 
+            if(this.pressingShift){
+                console.log("Last rotation degree:" + this.lastRotationDegree)
+                console.log("Original theta:" + theta)
+                console.log("Rotation degree:" + this.rotationDegree)
+                let targetRotationDegree = Math.floor( this.rotationDegree / this.gapDegree ) * this.gapDegree
+                console.log("Target rotation degree:" + targetRotationDegree)
+
+                theta = targetRotationDegree - this.lastRotationDegree
+                console.log("Theta:" + theta)
+            }
+
             this.targetShape.rotateAroundPivot(theta)
+            this.lastRotationDegree += theta
+
             this.lastPos = new paper.Point(pos.x, pos.y)
             this.targetShape.store()
             this.targetShape.update()
 
-            this.drawRotationIndicator(this.targetShape.pivotPosition, this.rotationDegree)
+            this.drawRotationIndicator(this.targetShape.pivotPosition, this.lastRotationDegree)
         }
     }
 
