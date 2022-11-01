@@ -3,6 +3,7 @@ import {paper, BaseShapeJS} from "hhenginejs"
 import {ShapeMoveCommand} from "../RedoUndo/ShapeMoveCommand";
 import {undoManager} from "../RedoUndo/UndoManager";
 import {ShapeRotateCommand} from "../RedoUndo/ShapeRotateCommand";
+import {setPrompt} from "../init";
 
 class ShapeRotateHandler extends ShapeTranslateMorphBase {
     protected targetShape: BaseShapeJS
@@ -40,6 +41,8 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase {
 
         this.rotationDegree = 0.0;
         this.lastRotationDegree = 0.0
+
+        setPrompt(i18n.t("statusbar.rotateShape"))
     }
 
     clearRotationIndicator() {
@@ -122,14 +125,8 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase {
             this.rotationDegree += theta
 
             if(this.pressingShift){
-                console.log("Last rotation degree:" + this.lastRotationDegree)
-                console.log("Original theta:" + theta)
-                console.log("Rotation degree:" + this.rotationDegree)
                 let targetRotationDegree = Math.floor( this.rotationDegree / this.gapDegree ) * this.gapDegree
-                console.log("Target rotation degree:" + targetRotationDegree)
-
                 theta = targetRotationDegree - this.lastRotationDegree
-                console.log("Theta:" + theta)
             }
 
             this.targetShape.rotateAroundPivot(theta)

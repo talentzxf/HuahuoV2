@@ -48,7 +48,8 @@
   "statusbar": {
     "mousePosition": "Mouse position:{{mouseX}},{{mouseY}}",
     "selectShape": "Selected Shape:{{shapeType}}. Totally selected:{{selectedShapeCount}} shapes",
-    "selectedSegment": "Selected a segment, press Shift to move it vertically/horizontally"
+    "selectedSegment": "Selected a segment, press Shift to move it vertically/horizontally",
+    "rotateShape": "Rotating a shape, press Shift to gap rotate by 10"
   },
   "inspector": {
     "Type": "Type",
