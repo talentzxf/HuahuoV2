@@ -45,6 +45,9 @@
     "groupAsElement": "转换为组件",
     "markAsAnimationEnd": "设为动画结束帧"
   },
+  "span": {
+    "mousePosition": "鼠标位置:{{mouseX}},{{mouseY}}"
+  },
   "inspector": {
     "Type": "类型",
     "Name": "名字",

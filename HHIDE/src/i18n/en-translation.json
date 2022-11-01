@@ -45,6 +45,9 @@
     "groupAsElement": "Convert to Element",
     "markAsAnimationEnd": "Mark as Animation End"
   },
+  "span": {
+    "mousePosition": "Mouse position:{{mouseX}},{{mouseY}}"
+  },
   "inspector": {
     "Type": "Type",
     "Name": "Name",

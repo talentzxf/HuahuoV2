@@ -18,7 +18,7 @@ function updateMousePos(evt:MouseEvent){
     let globalPosition = renderEngine2D.getGlobalPosition(posX, posY)
 
     let statusBarSpan = document.querySelector("#statusBarSpan")
-    statusBarSpan.innerHTML = "MousePosition:" + Math.round(globalPosition.x) + "," + Math.round(globalPosition.y)
+    statusBarSpan.innerHTML = i18n.t("span.mousePosition", {mouseX: Math.round(globalPosition.x) , mouseY: Math.round(globalPosition.y)})
 }
 
 function init(){
