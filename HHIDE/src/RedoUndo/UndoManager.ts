@@ -72,6 +72,36 @@ abstract class MergableCommand extends UndoableCommand{
     abstract MergeCommand(anotherCommand:MergableCommand): boolean
 }
 
+abstract class TransformCommand extends MergableCommand{
+    targetShape
+
+    toString(){
+        let cmdString = super.toString()
+
+        let translatedTypeName = i18n.t(this.targetShape.getTypeName())
+
+        cmdString += ":" + "[" + translatedTypeName + "]"
+        if(this.targetShape.name)
+            cmdString += this.targetShape.name
+
+        return cmdString
+    }
+
+    DoCommand() {
+        super.DoCommand();
+
+        this.targetShape.store()
+        this.targetShape.update()
+    }
+
+    UnDoCommand() {
+        super.UnDoCommand();
+
+        this.targetShape.store()
+        this.targetShape.update()
+    }
+}
+
 function commandIsMergable(cmd:UndoableCommand){
     return (<MergableCommand>cmd).MergeCommand !== undefined
 }
@@ -181,4 +211,4 @@ class UndoManager {
 
 let undoManager = new UndoManager()
 
-export {UndoableCommand, MergableCommand, ExecutionStackFrame, undoManager}
+export {UndoableCommand, MergableCommand, ExecutionStackFrame, undoManager, TransformCommand}

@@ -29,6 +29,7 @@
   "CreateShape": "创建",
   "MoveShape": "移动",
   "RotateShape": "旋转",
+  "ScaleShape": "缩放",
   "ShapeSegmentInsertCommand": "插入控制点",
   "ShapeSegmentMoveCommand": "移动控制点",
   "ShapeHandlerMoveCommand": "移动控制点把手",

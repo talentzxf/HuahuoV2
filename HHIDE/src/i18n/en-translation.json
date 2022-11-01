@@ -29,6 +29,7 @@
   "CreateShape": "Create",
   "MoveShape": "Move",
   "RotateShape": "Rotate",
+  "ScaleShape": "Scale",
   "ShapeSegmentInsertCommand": "InsertSegment",
   "ShapeSegmentMoveCommand": "MoveSegment",
   "ShapeHandlerMoveCommand": "MoveHandler",

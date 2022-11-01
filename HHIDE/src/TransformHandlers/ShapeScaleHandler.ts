@@ -1,6 +1,8 @@
 import {ShapeTranslateMorphBase} from "./ShapeTranslateMorphBase";
 import {Vector2} from "hhcommoncomponents"
 import {BaseShapeJS, paper} from "hhenginejs"
+import {ShapeScaleCommand} from "../RedoUndo/ShapeScaleCommand";
+import {undoManager} from "../RedoUndo/UndoManager";
 
 class ShapeScaleHandler extends ShapeTranslateMorphBase{
 
@@ -38,6 +40,15 @@ class ShapeScaleHandler extends ShapeTranslateMorphBase{
             }
 
             this.lastPos = newPos
+        }
+    }
+
+    endMove() {
+        super.endMove();
+
+        for(let obj of this.curObjs){
+            let command = new ShapeScaleCommand(obj, this.originalScaleMap.get(obj), obj.scaling)
+            undoManager.PushCommand(command)
         }
     }
 }

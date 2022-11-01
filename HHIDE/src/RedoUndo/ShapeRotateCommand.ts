@@ -1,9 +1,9 @@
-import {MergableCommand, UndoableCommand} from "./UndoManager";
+import {MergableCommand, UndoableCommand, TransformCommand} from "./UndoManager";
 import {BaseShapeJS} from "hhenginejs";
 
 let commandName = "RotateShape"
 
-class ShapeRotateCommand extends MergableCommand{
+class ShapeRotateCommand extends TransformCommand{
     targetShape:BaseShapeJS
     layer
     rotateDegree
@@ -15,30 +15,12 @@ class ShapeRotateCommand extends MergableCommand{
         this.rotateDegree = rotateDegree
     }
 
-    toString(){
-        let cmdString = super.toString()
-
-        let translatedTypeName = i18n.t(this.targetShape.getTypeName())
-
-        cmdString += ":" + "[" + translatedTypeName + "]"
-        if(this.targetShape.name)
-            cmdString += this.targetShape.name
-
-        return cmdString
-    }
-
     _DoCommand() {
         this.targetShape.rotateAroundPivot(this.rotateDegree)
-        this.targetShape.store()
-
-        this.targetShape.update()
     }
 
     _UnDoCommand() {
         this.targetShape.rotateAroundPivot(-this.rotateDegree)
-        this.targetShape.store()
-
-        this.targetShape.update()
     }
 
     GetType(): string {
