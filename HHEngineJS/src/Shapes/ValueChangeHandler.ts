@@ -1,4 +1,6 @@
 class ValueChangeHandler{
+    public static wildCard = "*"
+
     private valueChangeHandlersMap: Map<string, Map<number, Function>> = new Map()
     private valueChangeHandlersPreProcessorMap: Map<number, Function> = new Map()
 
@@ -8,7 +10,11 @@ class ValueChangeHandler{
         if (this.valueChangeHandlersMap.has(propertyName)) {
 
             let propertyMap = this.valueChangeHandlersMap.get(propertyName)
-            for (let [handlerId, handler] of propertyMap) {
+            let wildCardHandlerMap = this.valueChangeHandlersMap.get(ValueChangeHandler.wildCard)
+
+            let mergedHandlerMap = new Map([...propertyMap.entries(), ...wildCardHandlerMap.entries()])
+
+            for (let [handlerId, handler] of mergedHandlerMap) {
                 let preprocessor = this.valueChangeHandlersPreProcessorMap.get(handlerId)
 
                 if(preprocessor)
