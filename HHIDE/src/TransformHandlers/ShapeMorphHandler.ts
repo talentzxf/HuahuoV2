@@ -7,6 +7,7 @@ import {undoManager} from "../RedoUndo/UndoManager";
 import {ShapeSegmentMoveCommand} from "../RedoUndo/ShapeSegmentMoveCommand";
 import {ShapeSegmentInsertCommand} from "../RedoUndo/ShapeSegmentInsertCommand";
 import {ValueChangeHandler} from "hhenginejs";
+import {setPrompt} from "../init";
 
 class ShapeMorphHandler extends ShapeTranslateMorphBase {
     curSegment: paper.Segment
@@ -69,6 +70,8 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
             this.setSegment(hitResult.segment)
             this.showInspector()
         }
+
+        setPrompt(i18n.t("statusbar.selectedSegment"))
     }
 
     getPropertyGetter(propertyName:string){

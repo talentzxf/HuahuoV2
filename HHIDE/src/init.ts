@@ -18,7 +18,17 @@ function updateMousePos(evt:MouseEvent){
     let globalPosition = renderEngine2D.getGlobalPosition(posX, posY)
 
     let statusBarSpan = document.querySelector("#statusBarSpan")
-    statusBarSpan.innerHTML = i18n.t("span.mousePosition", {mouseX: Math.round(globalPosition.x) , mouseY: Math.round(globalPosition.y)})
+    statusBarSpan.innerHTML = i18n.t("statusBar.mousePosition", {mouseX: Math.round(globalPosition.x) , mouseY: Math.round(globalPosition.y)})
+}
+
+function setPrompt(promptMsg: string){
+    let promptBarSpan = document.querySelector("#promptBarSpan")
+
+    promptBarSpan.innerHTML = promptMsg
+}
+
+function clearPrompt(){
+    setPrompt("  ")
 }
 
 function init(){
@@ -34,4 +44,4 @@ function init(){
     })
 }
 
-export {init}
+export {init, setPrompt, clearPrompt}

@@ -11,6 +11,7 @@ import {elementCreator} from "../SceneView/ElementCreator";
 import {HHContent} from "hhpanel"
 import {findParentContent} from "hhpanel";
 import {objectDeleter} from "./ObjectDeleter";
+import {clearPrompt, setPrompt} from "../init";
 
 
 const BOUNDMARGIN: number = 10
@@ -249,6 +250,8 @@ class ShapeSelector extends BaseShapeDrawer {
         this.selectedShapes.add(shape)
 
         EventBus.getInstance().emit(EventNames.OBJECTSELECTED, selectedObj.getPropertySheet(), selectedObj)
+
+        setPrompt(i18n.t("statusbar.selectShape", {shapeType: shape.getTypeName(), selectedShapeCount: this.selectedShapes.size}))
     }
 
     clearSelection(updateSelectedShapes: boolean = true) {
@@ -264,6 +267,8 @@ class ShapeSelector extends BaseShapeDrawer {
         this.selectedSegment = null
         this.transformHandler = null
         this.canvas.style.cursor = "default"
+
+        clearPrompt()
     }
 
     onMouseDown(evt: MouseEvent) {

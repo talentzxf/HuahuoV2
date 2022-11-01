@@ -45,8 +45,10 @@
     "groupAsElement": "Convert to Element",
     "markAsAnimationEnd": "Mark as Animation End"
   },
-  "span": {
-    "mousePosition": "Mouse position:{{mouseX}},{{mouseY}}"
+  "statusbar": {
+    "mousePosition": "Mouse position:{{mouseX}},{{mouseY}}",
+    "selectShape": "Selected Shape:{{shapeType}}. Totally selected:{{selectedShapeCount}} shapes",
+    "selectedSegment": "Selected a segment, press Shift to move it vertically/horizontally"
   },
   "inspector": {
     "Type": "Type",

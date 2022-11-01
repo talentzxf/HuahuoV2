@@ -45,8 +45,10 @@
     "groupAsElement": "转换为组件",
     "markAsAnimationEnd": "设为动画结束帧"
   },
-  "span": {
-    "mousePosition": "鼠标位置:{{mouseX}},{{mouseY}}"
+  "statusbar": {
+    "mousePosition": "鼠标位置:{{mouseX}},{{mouseY}}",
+    "selectShape": "选择了:{{shapeType}}. 目前总共选中{{selectedShapeCount}}个图形",
+    "selectedSegment": "选中了一个顶点，请按Shift键进行水平/垂直移动"
   },
   "inspector": {
     "Type": "类型",
