@@ -48,7 +48,6 @@ class MirrorShapeJS extends BaseShapeJS{
         super.afterCreateShape()
     }
 
-
     setStartPoint(startPoint: Vector2){
         this.rawObj.SetStartPoint(startPoint.x, startPoint.y, 0);
 

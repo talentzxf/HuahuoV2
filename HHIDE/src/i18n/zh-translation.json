@@ -49,7 +49,9 @@
     "mousePosition": "鼠标位置:{{mouseX}},{{mouseY}}",
     "selectShape": "选择了:{{shapeType}}. 目前总共选中{{selectedShapeCount}}个图形",
     "selectedSegment": "选中了一个顶点，请按Shift键进行水平/垂直移动",
-    "rotateShape": "正在旋转图形, 请按Shift键进行整10度的转动"
+    "rotateShape": "正在旋转图形, 请按Shift键进行整10度的转动",
+    "drawLine": "绘制直线，请按Shift键绘制水平/垂直直线",
+    "drawMirror": "绘制镜面反射器，请按Shift键绘制水平/垂直镜面"
   },
   "inspector": {
     "Type": "类型",

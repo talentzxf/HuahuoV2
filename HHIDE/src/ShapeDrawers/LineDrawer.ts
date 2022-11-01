@@ -3,6 +3,7 @@ import {Vector2} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {LineShapeJS} from "hhenginejs"
 import {huahuoEngine} from "hhenginejs"
+import {setPrompt} from "../init";
 
 class LineDrawer extends BaseShapeDrawer {
     name = 'Line'
@@ -10,13 +11,36 @@ class LineDrawer extends BaseShapeDrawer {
 
     tempShape
 
+    pressingShift: boolean = false
+
     startPosition = new Vector2()
+
+    constructor() {
+        super();
+        document.body.addEventListener("keydown", this.onKeyDown.bind(this))
+        document.body.addEventListener("keyup", this.onKeyUp.bind(this))
+    }
+
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
         super.onBeginToDrawShape(canvas);
         canvas.style.cursor = "crosshair"
+
+        setPrompt(i18n.t("statusbar.drawLine"))
     }
 
-    onMouseDown(evt:MouseEvent) {
+    onKeyDown(e: KeyboardEvent) {
+        if (e.shiftKey) {
+            this.pressingShift = true
+        }
+    }
+
+    onKeyUp(e: KeyboardEvent) {
+        if (!e.shiftKey) {
+            this.pressingShift = false
+        }
+    }
+
+    onMouseDown(evt: MouseEvent) {
         super.onMouseDown(evt);
         this.startPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.isDrawing = true
@@ -28,8 +52,17 @@ class LineDrawer extends BaseShapeDrawer {
 
     onMouseMove(evt: MouseEvent) {
         super.onMouseMove(evt);
-        if(this.isDrawing){
+        if (this.isDrawing) {
             let currentPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+
+            if (this.pressingShift) {
+                let offset = currentPos.subtract(this.startPosition)
+                if (Math.abs(offset.x) > Math.abs(offset.y)) {
+                    currentPos.y = this.startPosition.y
+                } else {
+                    currentPos.x = this.startPosition.x
+                }
+            }
 
             this.tempShape.setEndPoint(currentPos)
             this.tempShape.update()
@@ -40,7 +73,7 @@ class LineDrawer extends BaseShapeDrawer {
         super.onMouseUp(evt);
 
         let _this = this
-        huahuoEngine.ExecuteAfterInited(()=>{
+        huahuoEngine.ExecuteAfterInited(() => {
             _this.isDrawing = false
             EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
 
