@@ -60,7 +60,7 @@ class AbstractComponent {
         }
 
         this[getterName] = function(){
-            return this.rawObj.GetValue(fieldName)
+            return this.rawObj.GetFloatValue(fieldName)
         }
 
         // Remove the property and add setter/getter
@@ -72,7 +72,7 @@ class AbstractComponent {
                 return this[getterName]()
             },
             set: function(val){
-                this.rawObj.SetValue(fieldName, val)
+                this.rawObj.SetFloatValue(fieldName, val)
             }
         })
     }

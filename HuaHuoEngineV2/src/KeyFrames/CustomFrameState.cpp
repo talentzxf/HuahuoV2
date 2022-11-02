@@ -4,6 +4,7 @@
 
 #include "CustomFrameState.h"
 #include "Layer.h"
+#include <type_traits>
 
 IMPLEMENT_REGISTER_CLASS(CustomFrameState, 10021);
 
@@ -28,6 +29,7 @@ CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ra
         return resultData;
     }
 
+    // Interpolate float values.
     for (auto itr = k1.floatFrameValues.begin(); itr != k1.floatFrameValues.end(); itr++) {
         int fieldIdx = itr->first;
         if (!k2.floatFrameValues.contains(fieldIdx)) {
@@ -37,6 +39,9 @@ CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ra
                                                          ratio);
         }
     }
+
+    // Copy other fields.
+    resultData.shapeArrayValues = k1.shapeArrayValues;
 
     return resultData;
 }
@@ -63,14 +68,14 @@ bool CustomFrameState::Apply(int frameId) {
     return false;
 }
 
-void CustomFrameState::SetValue(const char *fieldName, float value) {
+void CustomFrameState::SetFloatValue(const char *fieldName, float value) {
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     this->RecordFieldValue(currentFrameId, fieldName, value);
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 }
 
-float CustomFrameState::GetValue(const char *fieldName) {
+float CustomFrameState::GetFloatValue(const char *fieldName) {
     int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
 
     if (isValidFrame) {
@@ -80,7 +85,25 @@ float CustomFrameState::GetValue(const char *fieldName) {
     return this->m_fieldInitValues[fieldIdx];
 }
 
-void CustomFrameState::RecordFieldValue(int frameId, const char *fieldName, float value) {
+void CustomFrameState::SetShapeArrayValue(const char* fieldName, ShapeArray* value){
+    Layer *shapeLayer = baseShape->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+    this->RecordFieldValue(currentFrameId, fieldName, value);
+    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+}
+
+FieldShapeArray* CustomFrameState::GetShapeArrayValue(const char* fieldName){
+    int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
+
+    if (isValidFrame) {
+        return &m_CurrentcustomFloatKeyFrame.shapeArrayValues[fieldIdx];
+    }
+
+    return NULL;
+}
+
+template <typename T>
+void CustomFrameState::RecordFieldValue(int frameId, const char *fieldName, T value) {
     CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
     if (!pKeyFrame->inited) {
         // Init it.
@@ -91,7 +114,12 @@ void CustomFrameState::RecordFieldValue(int frameId, const char *fieldName, floa
     }
 
     int idx = m_fieldNameFieldIndexMap[fieldName];
-    pKeyFrame->floatFrameValues[idx] = value;
+
+    if constexpr(std::is_floating_point<T>()) {
+        pKeyFrame->floatFrameValues[idx] = value;
+    } else if constexpr(std::is_same<T, ShapeArray>()){
+        pKeyFrame->shapeArrayValues[idx] = value;
+    }
 
     Apply(frameId);
 }

@@ -468,23 +468,23 @@ void testReadFromFile(){
 
     CustomFrameState* customFrameState = CustomFrameState::CreateFrameState();
     customFrameState->RegisterFloatValue("growth", 1.0f);
-    printf("GetValue:%f\n", customFrameState->GetValue("growth"));
+    printf("GetValue:%f\n", customFrameState->GetFloatValue("growth"));
 
     circleShape->AddFrameState(customFrameState);
     GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->AddShapeInternal(circleShape);
 
-    customFrameState->SetValue("growth", 1.0f);
+    customFrameState->SetFloatValue("growth", 1.0f);
 
     customFrameState->Apply(0);
     circleShape->GetMinFrameId();
 
     GetPersistentManager().WriteFile(StoreFilePath);
 
-    customFrameState->SetValue("growth", 0.5f);
+    customFrameState->SetFloatValue("growth", 0.5f);
     CustomFrameState* clonedFrameState = (CustomFrameState*) CloneObject(*customFrameState);
     clonedFrameState->Apply(0);
 
-    printf("GetValue:%f\n", clonedFrameState->GetValue("growth"));
+    printf("GetValue:%f\n", clonedFrameState->GetFloatValue("growth"));
 }
 
 int main() {

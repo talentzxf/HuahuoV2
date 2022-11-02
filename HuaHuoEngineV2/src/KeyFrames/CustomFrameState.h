@@ -9,12 +9,22 @@
 #include <vector>
 #include <string>
 #include "FrameState.h"
+#include "FieldShapeArray.h"
 
 class BaseShape;
+
+enum FIELDTYPE{
+    FLOAT,
+    SHAPEARRAY
+};
+
+
 
 class CustomDataKeyFrame{
 public:
     std::map<int, float> floatFrameValues; // Map from fieldId->float value.
+
+    std::map<int, FieldShapeArray> shapeArrayValues;
     int frameId;
     bool inited;
 
@@ -44,28 +54,41 @@ public:
 
     virtual bool Apply(int frameId) override;
 
-public:
-    int RegisterFloatValue(const char* fieldName, float initValue){
+private:
+    int RegisterField(const char* fieldName){
         if(!m_fieldNameFieldIndexMap.contains(fieldName)){
             int index = m_fieldInitValues.size();
             m_fieldNameFieldIndexMap[fieldName] = index;
             m_fieldIndexFieldNameMap[index] = fieldName;
-
-            m_fieldInitValues[index] = initValue;
             return index;
         }
 
         return m_fieldNameFieldIndexMap[fieldName];
     }
 
-    void SetValue(const char* fieldName, float value);
+public:
+    int RegisterFloatValue(const char* fieldName, float initValue){
+        int fieldIdx = this->RegisterField(fieldName);
+        m_fieldInitValues[fieldIdx] = initValue;
 
-    float GetValue(const char* fieldName);
+        return fieldIdx;
+    }
+
+    int RegisterShapeArrayValue(const char* fieldName){
+        return this->RegisterField(fieldName);
+    }
+
+    void SetFloatValue(const char* fieldName, float value);
+
+    float GetFloatValue(const char* fieldName);
+
+    void SetShapeArrayValue(const char* fieldName, ShapeArray* value);
+    FieldShapeArray* GetShapeArrayValue(const char* fieldName);
 
     static CustomFrameState* CreateFrameState();
 
 private:
-    void RecordFieldValue(int frameId, const char* fieldName, float value);
+    template <typename T> void RecordFieldValue(int frameId, const char* fieldName, T value);
 
 private:
     std::map<string, int> m_fieldNameFieldIndexMap;

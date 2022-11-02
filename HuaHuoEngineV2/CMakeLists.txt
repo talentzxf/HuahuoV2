@@ -193,7 +193,7 @@ if(JNI_FOUND)
     include_directories("jni")
     include_directories(${JNI_INCLUDE_DIRS})
     # build the lib for backend
-    add_library(HuahuoEngineLib SHARED online_huahuo_backend_hhenginejni_HuahuoEngineJNIInterface.h  ${CPPFILES} ${JNI_LIBRARIES} jni/jniimpl.cpp)
+    add_library(HuahuoEngineLib SHARED online_huahuo_backend_hhenginejni_HuahuoEngineJNIInterface.h  ${CPPFILES} ${JNI_LIBRARIES} jni/jniimpl.cpp src/KeyFrames/FieldShapeArray.cpp src/KeyFrames/FieldShapeArray.h)
 endif()
 
 target_include_directories(${TARGETNAME} PUBLIC "${PROJECT_BINARY_DIR}" ${EXTRA_INCLUDE_DIR})
