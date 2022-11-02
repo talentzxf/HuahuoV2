@@ -78,6 +78,8 @@ class AbstractComponent {
     }
 
     handleShapeArrayEntry(propertyEntry){
+        this.rawObj.RegisterShapeArrayValue(propertyEntry["key"])
+
         let fieldName = propertyEntry["key"]
         // Generate setter and getter
         let getterName = "get" + capitalizeFirstLetter(fieldName)
@@ -85,10 +87,8 @@ class AbstractComponent {
         let inserterName = "insert" + capitalizeFirstLetter(fieldName)
         let deleterName = "delete" + capitalizeFirstLetter(fieldName)
 
-        let internalFieldName = "_internal" + capitalizeFirstLetter(fieldName) // This is temporary, we should save it into Cpp side later.
-        this[internalFieldName] = new Array()
         this[getterName] = function(){
-            return this[internalFieldName]
+            return this.rawObj.GetShapeArrayValue(fieldName)
         }.bind(this)
 
         // This is just alias of the insert funtion.
@@ -96,23 +96,14 @@ class AbstractComponent {
             this[inserterName](val)
         }.bind(this)
 
-        this[inserterName] = function (val){
-            if(this[internalFieldName] == null){
-                this[internalFieldName] = []
-            }
-
-            this[internalFieldName].push(val)
-            this.callHandlers(fieldName, this[internalFieldName])
+        this[inserterName] = function (val:BaseShapeJS){
+            this.rawObj.GetShapeArrayValue(fieldName).InsertShape(val.getRawShape())
+            this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
         }.bind(this)
 
         this[deleterName] = function(val){
-            if(this[internalFieldName] == null)
-                return
-            this[internalFieldName] = this[internalFieldName].filter((v)=>{
-                return v!= val
-            })
-
-            this.callHandlers(fieldName, this[internalFieldName])
+            this.rawObj.GetShapeArrayValue(fieldName).DeleteShape(val)
+            this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
         }.bind(this)
 
         // Add getter and setter
