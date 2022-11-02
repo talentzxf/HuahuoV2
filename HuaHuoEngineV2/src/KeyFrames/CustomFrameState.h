@@ -82,7 +82,7 @@ public:
 
     float GetFloatValue(const char* fieldName);
 
-    void SetShapeArrayValue(const char* fieldName, FieldShapeArray* value);
+    void CreateShapeArrayValue(const char* fieldName);
     FieldShapeArray* GetShapeArrayValue(const char* fieldName);
 
     static CustomFrameState* CreateFrameState();

@@ -4,9 +4,34 @@ import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
 import {capitalizeFirstLetter, PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
 import {propertySheetFactory} from "./PropertySheetBuilderFactory"
 import {PropertyConfig} from "hhcommoncomponents";
+import {IsValidWrappedObject} from "hhcommoncomponents";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
+
+class FieldShapeArrayIterable{
+    fieldShapeArray // Store the cpp side array.
+    constructor(fieldShapeArray) {
+        this.fieldShapeArray = fieldShapeArray
+    }
+
+    [Symbol.iterator](){
+        let curIdx = 0
+        let _this = this
+        const iterator = {
+            next(){
+                curIdx++;
+                if(curIdx < _this.fieldShapeArray.GetShapeCount()){
+                    return {value: _this.fieldShapeArray.GetShape(curIdx), done: false}
+                }
+
+                return {value: null, done: true}
+            }
+        }
+
+        return iterator
+    }
+}
 
 function getProperties(target):object[]{
     let properties: object[] = Reflect.getMetadata(metaDataKey, target)
@@ -88,7 +113,7 @@ class AbstractComponent {
         let deleterName = "delete" + capitalizeFirstLetter(fieldName)
 
         this[getterName] = function(){
-            return this.rawObj.GetShapeArrayValue(fieldName)
+            return new FieldShapeArrayIterable(this.rawObj.GetShapeArrayValue(fieldName))
         }.bind(this)
 
         // This is just alias of the insert funtion.
@@ -97,6 +122,10 @@ class AbstractComponent {
         }.bind(this)
 
         this[inserterName] = function (val:BaseShapeJS){
+            if(!IsValidWrappedObject(this.rawObj.GetShapeArrayValue(fieldName))){
+                this.rawObj.CreateShapeArrayValue(fieldName)
+            }
+
             this.rawObj.GetShapeArrayValue(fieldName).InsertShape(val.getRawShape())
             this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
         }.bind(this)

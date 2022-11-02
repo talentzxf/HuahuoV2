@@ -101,12 +101,8 @@ class MirrorComponent extends AbstractComponent {
         // this.paperShapeGroup.scaling = new paper.Point(0.0, -1.0)
 
         if (this.targetShapeArray) {
-            let totalShapeCount = this.targetShapeArray.GetShapeCount()
-
             // Check if all target shapes are mirrored
-            for (let targetShapeIdx = 0 ; targetShapeIdx < totalShapeCount; targetShapeIdx++) {
-                let targetShapeRawObj = this.targetShapeArray.GetShape(targetShapeIdx)
-
+            for (let targetShapeRawObj of this.targetShapeArray) {
                 let targetShape = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(targetShapeRawObj)
 
                 if (!this.targetShapeMirroredShapeMap.has(targetShape)) {

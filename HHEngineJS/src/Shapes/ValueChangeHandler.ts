@@ -12,7 +12,11 @@ class ValueChangeHandler{
             let propertyMap = this.valueChangeHandlersMap.get(propertyName)
             let wildCardHandlerMap = this.valueChangeHandlersMap.get(ValueChangeHandler.wildCard)
 
-            let mergedHandlerMap = new Map([...propertyMap.entries(), ...wildCardHandlerMap.entries()])
+            let mergedHandlerMap = propertyMap
+
+            if(wildCardHandlerMap){
+                mergedHandlerMap = new Map([...propertyMap.entries(), ...wildCardHandlerMap.entries()])
+            }
 
             for (let [handlerId, handler] of mergedHandlerMap) {
                 let preprocessor = this.valueChangeHandlersPreProcessorMap.get(handlerId)

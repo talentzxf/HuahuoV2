@@ -144,8 +144,8 @@ interface CustomFrameState{
     static CustomFrameState CreateFrameState();
     long RegisterFloatValue([Const] DOMString fieldName, float initValue);
     long RegisterShapeArrayValue([Const] DOMString fieldName);
+    void CreateShapeArrayValue([Const] DOMString fieldName);
 
-    void SetShapeArrayValue([Const] DOMString fieldName, FieldShapeArray value);
     FieldShapeArray GetShapeArrayValue([Const] DOMString fieldName);
 
     void SetFloatValue([Const] DOMString fieldName, float value);
