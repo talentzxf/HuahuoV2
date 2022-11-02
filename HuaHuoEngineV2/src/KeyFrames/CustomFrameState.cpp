@@ -85,7 +85,7 @@ float CustomFrameState::GetFloatValue(const char *fieldName) {
     return this->m_fieldInitValues[fieldIdx];
 }
 
-void CustomFrameState::SetShapeArrayValue(const char* fieldName, ShapeArray* value){
+void CustomFrameState::SetShapeArrayValue(const char* fieldName, FieldShapeArray* value){
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     this->RecordFieldValue(currentFrameId, fieldName, value);

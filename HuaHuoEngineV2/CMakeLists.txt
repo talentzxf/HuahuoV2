@@ -136,6 +136,7 @@ list(APPEND CPPFILES  src/KeyFrames/ShapeStrokeWidthFrameState.cpp)
 list(APPEND CPPFILES  src/KeyFrames/ShapeFollowCurveFrameState.cpp)
 list(APPEND CPPFILES src/KeyFrames/CustomFrameState.cpp)
 list(APPEND CPPFILES src/Shapes/MirrorShape.cpp)
+list(APPEND CPPFILES src/KeyFrames/FieldShapeArray.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)
@@ -182,18 +183,18 @@ include_directories("src")
 include_directories("Runtime")
 include_directories (${CMAKE_BINARY_DIR})
 
-find_package(JNI)
-if(JNI_FOUND)
-    set(JAVA_FILE "../../HuahuoBackend/app/src/main/java/online/huahuo/backend/hhenginejni/HuahuoEngineJNIInterface.java")
-    # Generate java header file
-    add_custom_command(OUTPUT online_huahuo_backend_hhenginejni_HuahuoEngineJNIInterface.h
-        COMMAND javac -h . ${JAVA_FILE}
-        VERBATIM )
-
-    include_directories("jni")
-    include_directories(${JNI_INCLUDE_DIRS})
-    # build the lib for backend
-    add_library(HuahuoEngineLib SHARED online_huahuo_backend_hhenginejni_HuahuoEngineJNIInterface.h  ${CPPFILES} ${JNI_LIBRARIES} jni/jniimpl.cpp src/KeyFrames/FieldShapeArray.cpp src/KeyFrames/FieldShapeArray.h)
-endif()
+#find_package(JNI)
+#if(JNI_FOUND)
+#    set(JAVA_FILE "../../HuahuoBackend/app/src/main/java/online/huahuo/backend/hhenginejni/HuahuoEngineJNIInterface.java")
+#    # Generate java header file
+#    add_custom_command(OUTPUT online_huahuo_backend_hhenginejni_HuahuoEngineJNIInterface.h
+#        COMMAND javac -h . ${JAVA_FILE}
+#        VERBATIM )
+#
+#    include_directories("jni")
+#    include_directories(${JNI_INCLUDE_DIRS})
+#    # build the lib for backend
+#    add_library(HuahuoEngineLib SHARED online_huahuo_backend_hhenginejni_HuahuoEngineJNIInterface.h  ${CPPFILES} ${JNI_LIBRARIES} jni/jniimpl.cpp)
+#endif()
 
 target_include_directories(${TARGETNAME} PUBLIC "${PROJECT_BINARY_DIR}" ${EXTRA_INCLUDE_DIR})

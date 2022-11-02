@@ -132,11 +132,24 @@ interface AbstractFrameState{
 };
 
 [NoDelete]
+interface FieldShapeArray{
+    long GetShapeCount();
+    BaseShape GetShape(long idx);
+    void InsertShape(BaseShape shape);
+    void DeleteShape(BaseShape shapePtr);
+};
+
+[NoDelete]
 interface CustomFrameState{
     static CustomFrameState CreateFrameState();
     long RegisterFloatValue([Const] DOMString fieldName, float initValue);
-    void SetValue([Const] DOMString fieldName, float value);
-    float GetValue([Const] DOMString fieldName);
+    long RegisterShapeArrayValue([Const] DOMString fieldName);
+
+    void SetShapeArrayValue([Const] DOMString fieldName, FieldShapeArray value);
+    FieldShapeArray GetShapeArrayValue([Const] DOMString fieldName);
+
+    void SetFloatValue([Const] DOMString fieldName, float value);
+    float GetFloatValue([Const] DOMString fieldName);
 };
 
 CustomFrameState implements AbstractFrameState;
