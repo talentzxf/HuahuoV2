@@ -12,33 +12,33 @@
 
 class BaseShape;
 
-class CustomFloatKeyFrame{
+class CustomDataKeyFrame{
 public:
-    std::vector<float> frameValues;
+    std::map<int, float> floatFrameValues; // Map from fieldId->float value.
     int frameId;
     bool inited;
 
-    DECLARE_SERIALIZE(CustomFloatKeyFrame)
+    DECLARE_SERIALIZE(CustomDataKeyFrame)
 
-    CustomFloatKeyFrame():
+    CustomDataKeyFrame():
         frameId(-1), inited(false){
     }
 };
 
-template <class TransferFunction> void CustomFloatKeyFrame::Transfer(TransferFunction &transfer) {
+template <class TransferFunction> void CustomDataKeyFrame::Transfer(TransferFunction &transfer) {
     TRANSFER(frameId);
-    TRANSFER(frameValues);
+    TRANSFER(floatFrameValues);
     TRANSFER(inited);
 }
 
-CustomFloatKeyFrame Lerp(CustomFloatKeyFrame& k1, CustomFloatKeyFrame& k2, float ratio);
+CustomDataKeyFrame Lerp(CustomDataKeyFrame& k1, CustomDataKeyFrame& k2, float ratio);
 
-class CustomFrameState: public AbstractFrameStateWithKeyType<CustomFloatKeyFrame>{
+class CustomFrameState: public AbstractFrameStateWithKeyType<CustomDataKeyFrame>{
     REGISTER_CLASS(CustomFrameState);
     DECLARE_OBJECT_SERIALIZE()
 public:
     CustomFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
-    : AbstractFrameStateWithKeyType<CustomFloatKeyFrame>(memLabelId, creationMode){
+    : AbstractFrameStateWithKeyType<CustomDataKeyFrame>(memLabelId, creationMode){
 
     }
 
@@ -51,7 +51,7 @@ public:
             m_fieldNameFieldIndexMap[fieldName] = index;
             m_fieldIndexFieldNameMap[index] = fieldName;
 
-            m_fieldInitValues.push_back(initValue);
+            m_fieldInitValues[index] = initValue;
             return index;
         }
 
@@ -70,9 +70,9 @@ private:
 private:
     std::map<string, int> m_fieldNameFieldIndexMap;
     std::map<int, string> m_fieldIndexFieldNameMap;
-    std::vector<float> m_fieldInitValues;
+    std::map<int, float> m_fieldInitValues;
 
-    CustomFloatKeyFrame m_CurrentcustomFloatKeyFrame;
+    CustomDataKeyFrame m_CurrentcustomFloatKeyFrame;
 };
 
 
