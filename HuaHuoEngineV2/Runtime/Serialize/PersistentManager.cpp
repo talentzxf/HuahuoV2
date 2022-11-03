@@ -389,6 +389,9 @@ int PersistentManager::LoadFileCompletely(std::string& pathName)
     int result = LoadFileCompletelyThreaded(pathName, NULL, NULL, -1, PersistentManager::kLoadFlagNone/*, tempProgress*/);
     IntegrateAllThreadedObjects();
 
+    // Trigger event to notify JS side.
+    GetScriptEventManager()->TriggerEvent("OnProjectCompletelyLoaded", NULL);
+
     return result;
 }
 

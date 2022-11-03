@@ -3,6 +3,20 @@ import {clzObjectFactory} from "../CppClassObjectFactory";
 
 declare var Module: any;
 
+huahuoEngine.ExecuteAfterInited(()=>{
+    let eventName = "OnProjectCompletelyLoaded"
+    if(huahuoEngine.GetInstance().IsEventRegistered(eventName)){
+        return;
+    }
+
+    let projectCompletedLoadedHandler = new Module.ScriptEventHandlerImpl()
+    projectCompletedLoadedHandler.handleEvent = function (){
+        huahuoEngine.getActivePlayer().updateAllShapes()
+    }
+
+    huahuoEngine.GetInstance().RegisterEvent(eventName, projectCompletedLoadedHandler)
+})
+
 huahuoEngine.ExecuteAfterInited(() => {
     let eventName = "OnShapeLoaded"
     if (huahuoEngine.GetInstance().IsEventRegistered(eventName))
