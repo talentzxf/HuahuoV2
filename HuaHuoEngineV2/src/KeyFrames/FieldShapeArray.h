@@ -33,9 +33,15 @@ public:
         shapeArray.erase(std::remove(shapeArray.begin(), shapeArray.end(), shapePtr), shapeArray.end());
     }
 
+    DECLARE_SERIALIZE(FieldShapeArray)
+
 private:
     ShapeArray shapeArray;
 };
+
+template <class TransferFunction> void FieldShapeArray::Transfer(TransferFunction &transfer) {
+    TRANSFER(shapeArray);
+}
 
 
 #endif //HUAHUOENGINEV2_FIELDSHAPEARRAY_H

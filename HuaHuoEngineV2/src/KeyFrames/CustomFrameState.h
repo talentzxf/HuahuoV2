@@ -38,6 +38,7 @@ public:
 template <class TransferFunction> void CustomDataKeyFrame::Transfer(TransferFunction &transfer) {
     TRANSFER(frameId);
     TRANSFER(floatFrameValues);
+    TRANSFER(shapeArrayValues);
     TRANSFER(inited);
 }
 
