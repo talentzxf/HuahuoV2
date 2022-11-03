@@ -20,9 +20,8 @@ class FieldShapeArrayIterable{
         let _this = this
         const iterator = {
             next(){
-                curIdx++;
                 if(curIdx < _this.fieldShapeArray.GetShapeCount()){
-                    return {value: _this.fieldShapeArray.GetShape(curIdx), done: false}
+                    return {value: _this.fieldShapeArray.GetShape(curIdx++), done: false}
                 }
 
                 return {value: null, done: true}
@@ -108,7 +107,7 @@ class AbstractComponent {
         let fieldName = propertyEntry["key"]
         // Generate setter and getter
         let getterName = "get" + capitalizeFirstLetter(fieldName)
-        let setName = "set" + capitalizeFirstLetter(fieldName)
+        let setterName = "set" + capitalizeFirstLetter(fieldName)
         let inserterName = "insert" + capitalizeFirstLetter(fieldName)
         let deleterName = "delete" + capitalizeFirstLetter(fieldName)
 
@@ -117,7 +116,7 @@ class AbstractComponent {
         }.bind(this)
 
         // This is just alias of the insert funtion.
-        this[setName] = function(val){
+        this[setterName] = function(val){
             this[inserterName](val)
         }.bind(this)
 
@@ -127,11 +126,17 @@ class AbstractComponent {
             }
 
             this.rawObj.GetShapeArrayValue(fieldName).InsertShape(val.getRawShape())
+
+            if(this.baseShape)
+                this.baseShape.update()
             this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
         }.bind(this)
 
         this[deleterName] = function(val){
             this.rawObj.GetShapeArrayValue(fieldName).DeleteShape(val)
+            if(this.baseShape)
+                this.baseShape.update()
+
             this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
         }.bind(this)
 
