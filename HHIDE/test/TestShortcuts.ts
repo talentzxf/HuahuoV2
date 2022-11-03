@@ -14,7 +14,7 @@ describe('TestShortcuts manager', ()=> {
 
         let kbEvent = new KeyboardEvent("keydown", {
             ctrlKey: true,
-            key: "z"
+            code: "KeyZ"
         })
         shortcutsManager.onKeyPressed(kbEvent)
 
@@ -24,8 +24,8 @@ describe('TestShortcuts manager', ()=> {
         let hasDone = false
         let kbEvent2 = new KeyboardEvent("keydown", {
             ctrlKey: true,
-            altKey: true,
-            key: "z"
+            shiftKey: true,
+            code: "KeyZ"
         })
         shortcutsManager.registerShortcutHandler(ShortcutEventNames.REDO, ()=>{
             hasDone = true
@@ -38,21 +38,21 @@ describe('TestShortcuts manager', ()=> {
         shortcutsManager.init()
 
         let executed = false
-        shortcutsManager.registerKeyCodeSeries([{code:"a"}, {code:"b"}, {code:"c"},{code:"d"}], ()=>{
+        shortcutsManager.registerKeyCodeSeries([{code:"KeyA"}, {code:"KeyB"}, {code:"KeyC"},{code:"KeyD"}], ()=>{
             executed = true
         })
 
         let kbEvent1 = new KeyboardEvent("keydown", {
-            key: "a"
+            code: "KeyA"
         })
         let kbEvent2 = new KeyboardEvent("keydown", {
-            key: "b"
+            code: "KeyB"
         })
         let kbEvent3 = new KeyboardEvent("keydown", {
-            key: "c"
+            code: "KeyC"
         })
         let kbEvent4 = new KeyboardEvent("keydown", {
-            key: "d"
+            code: "KeyD"
         })
 
         shortcutsManager.onKeyPressed(kbEvent1)
