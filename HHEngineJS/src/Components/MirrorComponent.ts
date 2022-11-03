@@ -113,17 +113,18 @@ class MirrorComponent extends AbstractComponent {
         if (this.targetShapeArray) {
             // Check if all target shapes are mirrored
             for (let targetShape of this.targetShapeArray) {
+                if(targetShape != null){ // Target shape might be null if the target shape has not been loaded yet.
+                    if (!this.targetShapeMirroredShapeMap.has(targetShape)) {
+                        let duplicatedShape = this.createDuplication(targetShape)
 
-                if (!this.targetShapeMirroredShapeMap.has(targetShape)) {
-                    let duplicatedShape = this.createDuplication(targetShape)
+                        this.targetShapeMirroredShapeMap.set(targetShape, duplicatedShape)
 
-                    this.targetShapeMirroredShapeMap.set(targetShape, duplicatedShape)
+                        this.paperShapeGroup.addChild(duplicatedShape.paperItem)
+                    }
 
-                    this.paperShapeGroup.addChild(duplicatedShape.paperItem)
+                    let duplicatedShape = this.targetShapeMirroredShapeMap.get(targetShape)
+                    duplicatedShape.update()
                 }
-
-                let duplicatedShape = this.targetShapeMirroredShapeMap.get(targetShape)
-                duplicatedShape.update()
             }
         }
     }
