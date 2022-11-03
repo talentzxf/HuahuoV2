@@ -4,9 +4,15 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {mirrorPoint, Logger} from "hhcommoncomponents";
 import * as paper from "paper"
 import {clzObjectFactory} from "../CppClassObjectFactory";
-import {huahuoEngine} from "../EngineAPI";
+import {CurveGrowthComponent} from "./CurveGrowthComponent";
 
+let componentName = "MirrorComponent"
 class MirrorComponent extends AbstractComponent {
+
+    static createComponent(rawObj) {
+        return new MirrorComponent(rawObj)
+    }
+
     @PropertyValue(PropertyCategory.shapeArray)
     targetShapeArray
 
@@ -18,6 +24,8 @@ class MirrorComponent extends AbstractComponent {
 
     constructor(rawObj?) {
         super(rawObj)
+
+        this.rawObj.SetTypeName(componentName)
 
         this.paperShapeGroup = new paper.Group()
         this.paperShapeGroup.applyMatrix = false
@@ -33,6 +41,17 @@ class MirrorComponent extends AbstractComponent {
         //
         // this.paperShapeGroup.addChild(line1)
         // this.paperShapeGroup.addChild(line2)
+    }
+
+
+    setBaseShape(baseShape: BaseShapeJS) {
+        super.setBaseShape(baseShape);
+
+        let baseShapeSegments = this.baseShape.getSegments()
+        if(baseShapeSegments != null && baseShapeSegments.length == 2) {
+            this.p1 = this.baseShape.getSegments()[0].point
+            this.p2 = this.baseShape.getSegments()[1].point
+        }
     }
 
     setStartPoint(p1) {
@@ -71,10 +90,13 @@ class MirrorComponent extends AbstractComponent {
 
         let segments = this.baseShape.getSegments()
 
-        if(segments.length != 2){
-            Logger.error("Why a mirror don't have two segments??")
+        if(segments == null || segments.length != 2){ // The base shape is not ready!
             return;
         }
+
+        // Update p1 and p2 according to the updated position.
+        this.p1 = this.baseShape.localToGlobal( segments[0].point )
+        this.p2 = this.baseShape.localToGlobal( segments[1].point )
 
         // Rotate the coordinate
         let mirroredX = mirrorPoint(new paper.Point(1,0), this.p1, this.p2)
@@ -87,10 +109,6 @@ class MirrorComponent extends AbstractComponent {
 
         // Convert to angle
         this.paperShapeGroup.rotation = -radian/ Math.PI * 180
-
-        // Update p1 and p2 according to the updated position.
-        this.p1 = this.baseShape.localToGlobal( segments[0].point )
-        this.p2 = this.baseShape.localToGlobal( segments[1].point )
 
         // Get the current offset of the group shape.
         let offset = this.paperShapeGroup.position.subtract(this.paperShapeGroup.localToGlobal(new paper.Point(0,0)))
@@ -119,5 +137,6 @@ class MirrorComponent extends AbstractComponent {
     }
 
 }
+clzObjectFactory.RegisterClass(componentName, MirrorComponent.createComponent)
 
 export {MirrorComponent}

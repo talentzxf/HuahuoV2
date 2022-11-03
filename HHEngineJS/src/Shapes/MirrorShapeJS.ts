@@ -1,11 +1,11 @@
-import {BaseShapeJS} from "./BaseShapeJS";
 import * as paper from "paper";
 import {Vector2} from "hhcommoncomponents"
-import {CurveGrowthComponent} from "../Components/CurveGrowthComponent";
 import {MirrorComponent} from "../Components/MirrorComponent";
+import {clzObjectFactory} from "../CppClassObjectFactory";
+import {BaseSolidShape} from "./BaseSolidShape";
 
 let shapeName = "MirrorShape"
-class MirrorShapeJS extends BaseShapeJS{
+class MirrorShapeJS extends BaseSolidShape{
     static createMirror(rawObj){
         return new MirrorShapeJS(rawObj)
     }
@@ -75,5 +75,7 @@ class MirrorShapeJS extends BaseShapeJS{
         return true
     }
 }
+
+clzObjectFactory.RegisterClass(shapeName, MirrorShapeJS.createMirror)
 
 export {MirrorShapeJS}

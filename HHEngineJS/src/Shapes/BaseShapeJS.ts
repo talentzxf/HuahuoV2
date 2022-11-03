@@ -447,6 +447,9 @@ abstract class BaseShapeJS {
 
     // This might be overridden by CurveShape. Because we want to implement the growth factor.
     getSegments(){
+        if(!this.paperShape)
+            return null;
+
         return this.paperShape.segments
     }
 

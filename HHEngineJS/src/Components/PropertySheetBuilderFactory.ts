@@ -7,7 +7,7 @@ class PropertySheetFactory{
     shapeArrayPropertySheetBuilder = new ShapeArrayPropertySheetBuilder()
     getBuilder(category){
         switch (category){
-            case PropertyCategory.interpolate:
+            case PropertyCategory.interpolateFloat:
                 return this.interpolatePropertySheetBuilder
             case PropertyCategory.shapeArray:
                 return this.shapeArrayPropertySheetBuilder

@@ -4,8 +4,9 @@ import {PropertyType} from "hhcommoncomponents";
 const propertyPrefix = "inspector.property."
 
 enum PropertyCategory{
-    interpolate,
+    interpolateFloat,
     shapeArray,
+    interpolateVector2
 }
 
 class PropertyDef{

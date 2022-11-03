@@ -161,7 +161,7 @@ class AbstractComponent {
 
         let _this = this
         properties.forEach(propertyEntry => {
-            if(propertyEntry.type == PropertyCategory.interpolate){
+            if(propertyEntry.type == PropertyCategory.interpolateFloat){
                 _this.handleFloatEntry(propertyEntry)
             } else if(propertyEntry.type == PropertyCategory.shapeArray){
                 _this.handleShapeArrayEntry(propertyEntry)
