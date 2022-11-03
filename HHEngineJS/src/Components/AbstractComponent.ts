@@ -127,7 +127,7 @@ class AbstractComponent {
                 this.rawObj.CreateShapeArrayValue(fieldName)
             }
 
-            this.rawObj.GetShapeArrayValue(fieldName).InsertShape(val.getRawShape())
+            this.rawObj.GetShapeArrayValueForWrite(fieldName).InsertShape(val.getRawShape())
 
             if(this.baseShape)
                 this.baseShape.update()

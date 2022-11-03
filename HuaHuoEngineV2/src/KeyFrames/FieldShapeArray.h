@@ -8,6 +8,8 @@
 #include "Shapes/BaseShape.h"
 #include <vector>
 
+class CustomFrameState;
+
 typedef vector<PPtr<BaseShape>> ShapeArray;
 
 bool operator==(BaseShape* p1, PPtr<BaseShape> p2);
@@ -25,18 +27,18 @@ public:
         return shapeArray[idx];
     }
 
-    void InsertShape(BaseShape* shapePtr){
-        shapeArray.push_back(shapePtr);
+    void InsertShape(BaseShape* shapePtr);
+
+    void DeleteShape(BaseShape* shapePtr);
+
+    DECLARE_SERIALIZE(FieldShapeArray);
+
+    void SetFrameState(CustomFrameState* frameState){
+        this->frameState = frameState;
     }
-
-    void DeleteShape(BaseShape* shapePtr){
-        shapeArray.erase(std::remove(shapeArray.begin(), shapeArray.end(), shapePtr), shapeArray.end());
-    }
-
-    DECLARE_SERIALIZE(FieldShapeArray)
-
 private:
     ShapeArray shapeArray;
+    CustomFrameState* frameState;
 };
 
 template <class TransferFunction> void FieldShapeArray::Transfer(TransferFunction &transfer) {

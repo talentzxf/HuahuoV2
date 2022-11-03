@@ -481,6 +481,11 @@ void testReadFromFile(){
     GetPersistentManager().WriteFile(StoreFilePath);
 
     customFrameState->SetFloatValue("growth", 0.5f);
+    customFrameState->RegisterShapeArrayValue("targetShapeArray");
+    customFrameState->CreateShapeArrayValue("targetShapeArray");
+    FieldShapeArray* fieldShapeArray = customFrameState->GetShapeArrayValue("targetShapeArray");
+    fieldShapeArray->InsertShape(circleShape);
+
     CustomFrameState* clonedFrameState = (CustomFrameState*) CloneObject(*customFrameState);
     clonedFrameState->Apply(0);
 

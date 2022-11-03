@@ -53,6 +53,7 @@ public:
 
     }
 
+    virtual bool Apply();
     virtual bool Apply(int frameId) override;
 
 private:
@@ -84,7 +85,8 @@ public:
     float GetFloatValue(const char* fieldName);
 
     void CreateShapeArrayValue(const char* fieldName);
-    FieldShapeArray* GetShapeArrayValue(const char* fieldName);
+    FieldShapeArray* GetShapeArrayValueForWrite(const char* fieldName);
+    FieldShapeArray* GetShapeArrayValue(const char* fieldName); // Don't insert into this fieldShapeArray, it will have no effect.
 
     static CustomFrameState* CreateFrameState();
 
@@ -96,7 +98,7 @@ private:
     std::map<int, string> m_fieldIndexFieldNameMap;
     std::map<int, float> m_fieldInitValues;
 
-    CustomDataKeyFrame m_CurrentcustomFloatKeyFrame;
+    CustomDataKeyFrame m_CurrentKeyFrame;
 };
 
 

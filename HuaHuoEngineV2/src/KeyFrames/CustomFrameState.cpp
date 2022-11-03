@@ -55,11 +55,11 @@ bool CustomFrameState::Apply(int frameId) {
 
         if (k2 == NULL || k2->frameId ==
                           k1->frameId) { // Avoid 0/0 during ratio calculation. Or beyond the last frame. k1 is the last frame.
-            this->m_CurrentcustomFloatKeyFrame = *k1;
+            this->m_CurrentKeyFrame = *k1;
         } else {
             float ratio = float(frameId - k1->frameId) / float(k2->frameId - k1->frameId);
 
-            this->m_CurrentcustomFloatKeyFrame = Lerp(*k1, *k2, ratio);
+            this->m_CurrentKeyFrame = Lerp(*k1, *k2, ratio);
         }
 
         return true;
@@ -79,7 +79,7 @@ float CustomFrameState::GetFloatValue(const char *fieldName) {
     int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
 
     if (isValidFrame) {
-        return m_CurrentcustomFloatKeyFrame.floatFrameValues[fieldIdx];
+        return m_CurrentKeyFrame.floatFrameValues[fieldIdx];
     }
 
     return this->m_fieldInitValues[fieldIdx];
@@ -93,14 +93,32 @@ void CustomFrameState::CreateShapeArrayValue(const char *fieldName){
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 }
 
+FieldShapeArray* CustomFrameState::GetShapeArrayValueForWrite(const char* fieldName){
+    Layer *shapeLayer = baseShape->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames());
+
+    int fieldId = m_fieldNameFieldIndexMap[fieldName];
+    FieldShapeArray* pShapeArray = &pKeyFrame->shapeArrayValues[fieldId];
+    pShapeArray->SetFrameState(this);
+
+    return pShapeArray;
+}
+
 FieldShapeArray* CustomFrameState::GetShapeArrayValue(const char* fieldName){
     int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
 
     if (isValidFrame) {
-        return &m_CurrentcustomFloatKeyFrame.shapeArrayValues[fieldIdx];
+        return &m_CurrentKeyFrame.shapeArrayValues[fieldIdx];
     }
 
     return NULL;
+}
+
+bool CustomFrameState::Apply() {
+    Layer *shapeLayer = baseShape->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+    return this->Apply(currentFrameId);
 }
 
 template <typename T>
@@ -118,7 +136,7 @@ void CustomFrameState::RecordFieldValue(int frameId, const char *fieldName, T va
 
     if constexpr(std::is_floating_point<T>()) {
         pKeyFrame->floatFrameValues[idx] = value;
-    } else if constexpr(std::is_same<T, ShapeArray>()){
+    } else if constexpr(std::is_same<T, FieldShapeArray>()){
         pKeyFrame->shapeArrayValues[idx] = value;
     }
 
