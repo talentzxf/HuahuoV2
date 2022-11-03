@@ -111,6 +111,10 @@ class ShapeCenterSelector {
 
     }
 
+    isMovable(){
+        return true
+    }
+
     getBornStoreId() {
         return this._targetObj.getBornStoreId()
     }

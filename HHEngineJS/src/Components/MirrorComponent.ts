@@ -102,8 +102,7 @@ class MirrorComponent extends AbstractComponent {
 
         if (this.targetShapeArray) {
             // Check if all target shapes are mirrored
-            for (let targetShapeRawObj of this.targetShapeArray) {
-                let targetShape = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(targetShapeRawObj)
+            for (let targetShape of this.targetShapeArray) {
 
                 if (!this.targetShapeMirroredShapeMap.has(targetShape)) {
                     let duplicatedShape = this.createDuplication(targetShape)

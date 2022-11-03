@@ -5,6 +5,7 @@ import {capitalizeFirstLetter, PropertyCategory, PropertyDef} from "./PropertySh
 import {propertySheetFactory} from "./PropertySheetBuilderFactory"
 import {PropertyConfig} from "hhcommoncomponents";
 import {IsValidWrappedObject} from "hhcommoncomponents";
+import {huahuoEngine} from "../EngineAPI";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -21,7 +22,8 @@ class FieldShapeArrayIterable{
         const iterator = {
             next(){
                 if(curIdx < _this.fieldShapeArray.GetShapeCount()){
-                    return {value: _this.fieldShapeArray.GetShape(curIdx++), done: false}
+                    let targetShape = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(_this.fieldShapeArray.GetShape(curIdx++))
+                    return {value: targetShape, done: false}
                 }
 
                 return {value: null, done: true}
