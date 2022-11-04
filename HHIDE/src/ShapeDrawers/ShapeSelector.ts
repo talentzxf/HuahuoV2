@@ -136,11 +136,24 @@ class ShapeSelector extends BaseShapeDrawer {
     }
 
     groupAsElement(){
+        // Calculate the center of all the selected elements.
+        let newCenterPosition = new paper.Point(0,0)
+        for(let shape of this.selectedShapes){
+            let shapeCenter = shape.shapePosition
+            newCenterPosition.x += shapeCenter.x
+            newCenterPosition.y += shapeCenter.y
+        }
+
+        newCenterPosition.x /= this.selectedShapes.size
+        newCenterPosition.y /= this.selectedShapes.size
+
         let element = elementCreator.createElement(this.selectedShapes)
 
         this.selectedShapes.clear()
         if(element)
             this.selectedShapes.add(element) // Only select this element
+
+        element.pivotPosition = newCenterPosition
     }
 
     onShapeSelected(property, targetObj: any) {

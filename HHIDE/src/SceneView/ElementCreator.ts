@@ -161,7 +161,7 @@ class ElementCreator {
         return newElementShape
     }
 
-    createElement(shapes: Set<BaseShapeJS>): boolean {
+    createElement(shapes: Set<BaseShapeJS>): ElementShapeJS {
         let prevStoreId = huahuoEngine.GetCurrentStoreId()
 
         try {
