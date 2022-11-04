@@ -75,7 +75,7 @@ abstract class MergableCommand extends UndoableCommand{
 abstract class TransformCommand extends MergableCommand{
     targetShape
 
-    toString(){
+    override toString(){
         let cmdString = super.toString()
 
         let translatedTypeName = i18n.t(this.targetShape.getTypeName())
@@ -83,7 +83,7 @@ abstract class TransformCommand extends MergableCommand{
         cmdString += ":" + "[" + translatedTypeName + "]"
         if(this.targetShape.name)
             cmdString += this.targetShape.name
-
+        
         return cmdString
     }
 

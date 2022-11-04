@@ -1,9 +1,9 @@
-import {MergableCommand, UndoableCommand} from "./UndoManager";
+import {MergableCommand, TransformCommand} from "./UndoManager";
 import {BaseShapeJS} from "hhenginejs";
 
 let commandName = "MoveShape"
 
-class ShapeMoveCommand extends MergableCommand{
+class ShapeMoveCommand extends TransformCommand{
     targetShape:BaseShapeJS
     prevPos
     targetPos
