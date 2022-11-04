@@ -59,7 +59,8 @@ huahuoEngine.ExecuteAfterInited(() => {
             let componentConstructor = clzObjectFactory.GetClassConstructor(componentRawObj.GetTypeName())
             if(componentConstructor){
                 let component = componentConstructor(componentRawObj)
-                newBaseShape.addComponent(component)
+                // The component has already been persistented, no need to persistent again.
+                newBaseShape.addComponent(component, false)
             }
         }
 

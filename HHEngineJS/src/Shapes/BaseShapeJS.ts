@@ -78,8 +78,9 @@ abstract class BaseShapeJS {
         this.paperItem.scaling = currentScaling
     }
 
-    addComponent(component: AbstractComponent){
-        this.rawObj.AddFrameState(component.rawObj)
+    addComponent(component: AbstractComponent, persistentTheComponent: boolean = true){
+        if(persistentTheComponent)
+            this.rawObj.AddFrameState(component.rawObj)
         component.setBaseShape(this)
         this.customComponents.push(component)
 
