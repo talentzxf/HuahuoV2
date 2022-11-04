@@ -197,6 +197,10 @@ class AbstractComponent {
             }
         }
     }
+
+    cleanUp(){
+
+    }
 }
 
 export {AbstractComponent, PropertyValue}

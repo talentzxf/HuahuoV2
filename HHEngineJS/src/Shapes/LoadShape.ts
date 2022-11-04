@@ -1,7 +1,36 @@
 import {huahuoEngine} from "../EngineAPI";
 import {clzObjectFactory} from "../CppClassObjectFactory";
+import {BaseShapeJS} from "./BaseShapeJS";
 
 declare var Module: any;
+
+function LoadComponentForShape(shape:BaseShapeJS){
+    let baseShape = shape.getRawShape()
+
+    // Create all the component wrapper in the JS side.
+    let componentCount = baseShape.GetFrameStateCount()
+    for(let idx = 0; idx < componentCount; idx++){
+        let componentRawObj = baseShape.GetFrameState(idx)
+        let componentConstructor = clzObjectFactory.GetClassConstructor(componentRawObj.GetTypeName())
+        if(componentConstructor){
+            let component = componentConstructor(componentRawObj)
+            // The component has already been persistented, no need to persistent again.
+            shape.addComponent(component, false)
+        }
+    }
+}
+
+function LoadShapeFromCppShape(rawShapeObj){
+    let shapeConstructor = clzObjectFactory.GetClassConstructor(rawShapeObj.GetTypeName())
+    let jsShape = shapeConstructor(rawShapeObj)
+
+    // Create all the component wrapper in the JS side.
+    LoadComponentForShape(jsShape)
+
+    jsShape.awakeFromLoad()
+
+    return jsShape
+}
 
 huahuoEngine.ExecuteAfterInited(()=>{
     let eventName = "OnProjectCompletelyLoaded"
@@ -45,27 +74,12 @@ huahuoEngine.ExecuteAfterInited(() => {
 
         // Convention: Cpp class name is the JS class name.
         // TODO: Create a map of the shapename->JS class name mapping.
-
-        let shapeConstructor = clzObjectFactory.GetClassConstructor(baseShape.GetTypeName())
-        let newBaseShape = shapeConstructor(arg.GetBaseShape())
-
-        let layer = newBaseShape.getLayer()
-        huahuoEngine.getActivePlayer().getLayerShapes(layer).set(newBaseShape.getRawShape().ptr, newBaseShape)
-
-        // Create all the component wrapper in the JS side.
-        let componentCount = baseShape.GetFrameStateCount()
-        for(let idx = 0; idx < componentCount; idx++){
-            let componentRawObj = baseShape.GetFrameState(idx)
-            let componentConstructor = clzObjectFactory.GetClassConstructor(componentRawObj.GetTypeName())
-            if(componentConstructor){
-                let component = componentConstructor(componentRawObj)
-                // The component has already been persistented, no need to persistent again.
-                newBaseShape.addComponent(component, false)
-            }
-        }
-
-        newBaseShape.awakeFromLoad()
+        let jsShape = LoadShapeFromCppShape(baseShape)
+        let layer = jsShape.getLayer()
+        huahuoEngine.getActivePlayer().getLayerShapes(layer).set(jsShape.getRawShape().ptr, jsShape)
     }
 
     huahuoEngine.GetInstance().RegisterEvent(eventName, baseShapeOnLoadHandler)
 })
+
+export {LoadShapeFromCppShape}

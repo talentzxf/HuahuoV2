@@ -1,7 +1,7 @@
 import {huahuoEngine} from "../EngineAPI";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {Logger} from "hhcommoncomponents"
-import {clzObjectFactory} from "../CppClassObjectFactory";
+import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 
 class LayerShapesManager {
     layerShapes = new Map();
@@ -99,14 +99,12 @@ class LayerShapesManager {
                 layerShapeCount++
                 let baseShape = layer.GetShapeAtIndex(shapeId)
                 let shape = null
-                if (!shapes.has(baseShape.ptr)) {
-                    let shapeConstructor = clzObjectFactory.GetClassConstructor(baseShape.GetTypeName())
-                    let newBaseShape = shapeConstructor(baseShape)
-                    newBaseShape.awakeFromLoad()
-                    shapes.set(baseShape.ptr, newBaseShape)
+                if (!shapes.has(baseShape.ptr)) { // TODO: This is duplicated with LoadShape.ts.
+                    let jsShape = LoadShapeFromCppShape(baseShape)
+                    shapes.set(baseShape.ptr, jsShape)
                     if (parent)
-                        newBaseShape.setParent(parent)
-                    shape = newBaseShape
+                        jsShape.setParent(parent)
+                    shape = jsShape
                 }
             }
         }

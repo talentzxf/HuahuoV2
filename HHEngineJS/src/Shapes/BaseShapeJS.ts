@@ -967,6 +967,10 @@ abstract class BaseShapeJS {
 
         this.paperItem = null
         this.shapeCenterSelector.selected = false
+
+        for(let component of this.customComponents){
+            component.cleanUp()
+        }
     }
 
     detachFromCurrentLayer(){
