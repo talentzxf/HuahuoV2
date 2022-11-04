@@ -815,6 +815,8 @@ abstract class BaseShapeJS {
         }
 
         newObj.remove()
+
+        this.callHandlers("segment", null)
     }
 
     removeSegment(segment) {
@@ -824,6 +826,8 @@ abstract class BaseShapeJS {
         segment.remove()
 
         this.updateBoundingBox()
+
+        this.callHandlers("segment", null)
     }
 
     applySegments() {
@@ -924,6 +928,8 @@ abstract class BaseShapeJS {
         this.paperItem.visible = false
         this.selected = false
         this.updateBoundingBox()
+
+        this.callHandlers("shapeHidden", null)
     }
 
     update() {
@@ -949,6 +955,8 @@ abstract class BaseShapeJS {
         // TODO: TODO
         huahuoEngine.DestroyShape(this.rawObj)
         this.removePaperObj()
+
+        this.callHandlers("shapeRemoved", null)
     }
 
     removePaperObj(){

@@ -6,26 +6,36 @@ class ValueChangeHandler{
 
     private handlerId: number = 0 // always increment
 
+    mergeMap(map1, map2): Map<number, Function>{
+        if(map1 == null || map1.entries == null)
+            return map2
+        if(map2 == null || map2.entries == null)
+            return map1
+
+        return new Map([...map1.entries(), ...map2.entries()])
+    }
+
     callHandlers(propertyName: string, val: any) {
-        if (this.valueChangeHandlersMap.has(propertyName)) {
+
+        let mergedHandlerMap = this.mergeMap(this.valueChangeHandlersMap.get(propertyName), this.valueChangeHandlersMap.get(ValueChangeHandler.wildCard))
+        if (mergedHandlerMap != null && mergedHandlerMap.size > 0) {
 
             let propertyMap = this.valueChangeHandlersMap.get(propertyName)
             let wildCardHandlerMap = this.valueChangeHandlersMap.get(ValueChangeHandler.wildCard)
 
-            let mergedHandlerMap = propertyMap
+            let mergedHandlerMap = this.mergeMap(propertyMap, wildCardHandlerMap)
 
-            if(wildCardHandlerMap){
-                mergedHandlerMap = new Map([...propertyMap.entries(), ...wildCardHandlerMap.entries()])
+            if(mergedHandlerMap){
+                for (let [handlerId, handler] of mergedHandlerMap) {
+                    let preprocessor = this.valueChangeHandlersPreProcessorMap.get(handlerId)
+
+                    if(preprocessor)
+                        handler(preprocessor(val))
+                    else
+                        handler(val)
+                }
             }
 
-            for (let [handlerId, handler] of mergedHandlerMap) {
-                let preprocessor = this.valueChangeHandlersPreProcessorMap.get(handlerId)
-
-                if(preprocessor)
-                    handler(preprocessor(val))
-                else
-                    handler(val)
-            }
         }
     }
 
