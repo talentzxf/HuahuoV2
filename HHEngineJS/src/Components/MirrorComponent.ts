@@ -120,6 +120,10 @@ class MirrorComponent extends AbstractComponent {
                         this.targetShapeMirroredShapeMap.set(targetShape, duplicatedShape)
 
                         this.paperShapeGroup.addChild(duplicatedShape.paperItem)
+
+                        targetShape.registerValueChangeHandler("*")(()=>{
+                            duplicatedShape.update()
+                        })
                     }
 
                     let duplicatedShape = this.targetShapeMirroredShapeMap.get(targetShape)
