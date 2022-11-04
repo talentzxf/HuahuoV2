@@ -83,7 +83,7 @@ abstract class TransformCommand extends MergableCommand{
         cmdString += ":" + "[" + translatedTypeName + "]"
         if(this.targetShape.name)
             cmdString += this.targetShape.name
-        
+
         return cmdString
     }
 
