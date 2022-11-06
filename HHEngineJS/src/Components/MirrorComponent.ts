@@ -142,7 +142,7 @@ class MirrorComponent extends AbstractComponent {
 
                     let duplicatedShape = this.targetShapeMirroredShapeMap.get(targetShape)
                     if(duplicatedShape.getBornStoreId() != this.baseShape.getBornStoreId()){
-                        duplicatedShape.remove()
+                        duplicatedShape.removePaperObj()
                         duplicatedShape = this.createDuplication(targetShape)
                     }
 
