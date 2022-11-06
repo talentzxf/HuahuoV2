@@ -188,7 +188,7 @@ class ElementCreator {
 
             // StoreId of all the underlying elements should be set to the new element
             for (let shape of shapes) {
-                shape.bornStoreId = newElement.storeId
+                shape.setBornStoreId(newElement.storeId)
             }
 
             // BornFrame of the element is the min of all underlying shapes.

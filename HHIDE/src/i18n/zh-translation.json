@@ -26,6 +26,7 @@
   "TextShape": "文本",
   "CurveShape": "曲线",
   "LineShape": "直线",
+  "MirrorShape": "镜面",
   "CreateShape": "创建",
   "MoveShape": "移动",
   "RotateShape": "旋转",

@@ -64,12 +64,11 @@ class LayerShapesManager {
         })
     }
 
-    getJSShapeFromRawShape(rawObj):BaseShapeJS{
+    getJSShapeFromRawShape(rawObj, recursive: boolean = false):BaseShapeJS{
         let store = huahuoEngine.GetStoreById(this.storeId)
 
         let layerCount = store.GetLayerCount();
 
-        let retShape:BaseShapeJS = null;
         for (let i = 0; i < layerCount; i++) {
             let layer = store.GetLayer(i)
             let shapes = this.getLayerShapes(layer)
@@ -77,9 +76,19 @@ class LayerShapesManager {
             if(shapes.has(rawObj.ptr)){
                 return shapes.get(rawObj.ptr)
             }
+
+            if(recursive){ // Shape might be an element, need to look for the shape recursively.
+                for(let [shapePtr, shape] of shapes){//
+                    if(shape.layerShapesManager){ // The shape has layerShapes manager, look for the target.
+                        let targetShape = shape.layerShapesManager.getJSShapeFromRawShape(rawObj, true)
+                        if(targetShape != null)
+                            return targetShape
+                    }
+                }
+            }
         }
 
-        return retShape
+        return null
     }
 
     loadShapesFromStore(parent: BaseShapeJS): number {

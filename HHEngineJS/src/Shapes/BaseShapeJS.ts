@@ -104,6 +104,10 @@ abstract class BaseShapeJS {
         return this.bornStoreId
     }
 
+    public setBornStoreId(val: number){
+        this.bornStoreId = val
+    }
+
     protected isUpdateStrokeColor() {
         return true;
     }

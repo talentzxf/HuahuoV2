@@ -22,7 +22,7 @@ class FieldShapeArrayIterable{
         const iterator = {
             next(){
                 if(curIdx < _this.fieldShapeArray.GetShapeCount()){
-                    let targetShape = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(_this.fieldShapeArray.GetShape(curIdx++))
+                    let targetShape = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(_this.fieldShapeArray.GetShape(curIdx++), true)
                     return {value: targetShape, done: false}
                 }
 

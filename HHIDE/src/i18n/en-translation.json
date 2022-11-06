@@ -26,6 +26,7 @@
   "TextShape": "Text",
   "CurveShape": "Curve",
   "LineShape": "Line",
+  "MirrorShape": "Mirror",
   "CreateShape": "Create",
   "MoveShape": "Move",
   "RotateShape": "Rotate",

@@ -38,8 +38,8 @@ class Player{
         this.layerShapesManager.updateAllShapes()
     }
 
-    getJSShapeFromRawShape(rawObj){
-        return this.layerShapesManager.getJSShapeFromRawShape(rawObj)
+    getJSShapeFromRawShape(rawObj, recursive: boolean = false){
+        return this.layerShapesManager.getJSShapeFromRawShape(rawObj, recursive)
     }
 
     animationFrameStep(timeStamp){
