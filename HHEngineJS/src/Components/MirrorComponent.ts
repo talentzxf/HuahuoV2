@@ -4,7 +4,6 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {mirrorPoint, Logger} from "hhcommoncomponents";
 import * as paper from "paper"
 import {clzObjectFactory} from "../CppClassObjectFactory";
-import {CurveGrowthComponent} from "./CurveGrowthComponent";
 
 let componentName = "MirrorComponent"
 class MirrorComponent extends AbstractComponent {
@@ -99,6 +98,10 @@ class MirrorComponent extends AbstractComponent {
     afterUpdate() {
         super.afterUpdate();
 
+        let baseShapeParent = this.baseShape.paperShape.parent
+        if(baseShapeParent != null && this.paperShapeGroup.parent != baseShapeParent)
+            baseShapeParent.addChild(this.paperShapeGroup)
+
         let segments = this.baseShape.getSegments()
 
         if(segments == null || segments.length != 2){ // The base shape is not ready!
@@ -106,8 +109,8 @@ class MirrorComponent extends AbstractComponent {
         }
 
         // Update p1 and p2 according to the updated position.
-        this.p1 = this.baseShape.localToGlobal( segments[0].point )
-        this.p2 = this.baseShape.localToGlobal( segments[1].point )
+        this.p1 = this.baseShape.localToParent( segments[0].point )
+        this.p2 = this.baseShape.localToParent( segments[1].point )
 
         // Rotate the coordinate
         let mirroredX = mirrorPoint(new paper.Point(1,0), this.p1, this.p2)
@@ -122,7 +125,7 @@ class MirrorComponent extends AbstractComponent {
         this.paperShapeGroup.rotation = -radian/ Math.PI * 180
 
         // Get the current offset of the group shape.
-        let offset = this.paperShapeGroup.position.subtract(this.paperShapeGroup.localToGlobal(new paper.Point(0,0)))
+        let offset = this.paperShapeGroup.position.subtract(this.paperShapeGroup.localToParent(new paper.Point(0,0)))
 
         let newPosition = mirroredZero.add(offset)
         this.paperShapeGroup.position = newPosition
@@ -148,7 +151,6 @@ class MirrorComponent extends AbstractComponent {
             }
         }
     }
-
 }
 clzObjectFactory.RegisterClass(componentName, MirrorComponent.createComponent)
 

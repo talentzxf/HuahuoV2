@@ -128,6 +128,10 @@ abstract class BaseShapeJS {
         return this.paperShape.localToGlobal(localPoint)
     }
 
+    localToParent(localPoint: paper.Point): paper.Point{
+        return this.paperShape.localToParent(localPoint)
+    }
+
     getNearestPoint(localPos: paper.Point) {
         if (this.paperShape.getNearestPoint) {
             return this.paperShape.getNearestPoint(localPos)
