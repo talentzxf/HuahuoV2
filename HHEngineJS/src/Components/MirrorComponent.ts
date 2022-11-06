@@ -15,7 +15,7 @@ class MirrorComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.shapeArray)
     targetShapeArray
 
-    targetShapeMirroredShapeMap: Map<BaseShapeJS, BaseShapeJS> = new Map<BaseShapeJS, BaseShapeJS>()
+    targetShapeMirroredShapeMap: Map<number, BaseShapeJS> = new Map<number, BaseShapeJS>()
 
     paperShapeGroup: paper.Group
     p1: paper.Point
@@ -79,7 +79,7 @@ class MirrorComponent extends AbstractComponent {
 
     createDuplication(shape){
         let duplicatedShape = this._createDuplication(shape)
-        this.targetShapeMirroredShapeMap.set(shape, duplicatedShape)
+        this.targetShapeMirroredShapeMap.set(shape.rawObj.ptr, duplicatedShape)
 
         this.paperShapeGroup.addChild(duplicatedShape.paperItem)
 
@@ -90,11 +90,11 @@ class MirrorComponent extends AbstractComponent {
     }
 
     cleanUp(){
-        for(let [targetShape, mirroredShape] of this.targetShapeMirroredShapeMap){
+        for(let [targetShapePtr, mirroredShape] of this.targetShapeMirroredShapeMap){
             mirroredShape.removePaperObj()
         }
 
-        this.targetShapeMirroredShapeMap = new Map<BaseShapeJS, BaseShapeJS>()
+        this.targetShapeMirroredShapeMap = new Map<number, BaseShapeJS>()
     }
 
     afterUpdate() {
@@ -138,11 +138,11 @@ class MirrorComponent extends AbstractComponent {
             // Check if all target shapes are mirrored
             for (let targetShape of this.targetShapeArray) {
                 if(targetShape != null){ // Target shape might be null if the target shape has not been loaded yet.
-                    if (!this.targetShapeMirroredShapeMap.has(targetShape)) {
+                    if (!this.targetShapeMirroredShapeMap.has(targetShape.rawObj.ptr)) {
                         this.createDuplication(targetShape)
                     }
 
-                    let duplicatedShape = this.targetShapeMirroredShapeMap.get(targetShape)
+                    let duplicatedShape = this.targetShapeMirroredShapeMap.get(targetShape.rawObj.ptr)
                     if(duplicatedShape.getBornStoreId() != this.baseShape.getBornStoreId()){
                         duplicatedShape.removePaperObj()
                         duplicatedShape = this.createDuplication(targetShape)
