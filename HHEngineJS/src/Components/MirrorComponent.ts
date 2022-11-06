@@ -68,6 +68,8 @@ class MirrorComponent extends AbstractComponent {
         let rawObj = shape.rawObj
         let shapeConstructor = clzObjectFactory.GetClassConstructor(rawObj.GetTypeName())
         let duplicatedShape = shapeConstructor(rawObj)
+        duplicatedShape.setSelectedMeta(this.baseShape)
+        duplicatedShape.setIsMovable(false)
 
         duplicatedShape.awakeFromLoad() // Awake it, ensure it didn't overridden positions.
         this.paperShapeGroup.addChild(duplicatedShape.paperItem)
