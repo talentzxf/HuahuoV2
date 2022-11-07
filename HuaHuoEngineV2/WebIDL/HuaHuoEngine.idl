@@ -153,7 +153,7 @@ interface CustomFrameState{
     void SetFloatValue([Const] DOMString fieldName, float value);
     float GetFloatValue([Const] DOMString fieldName);
 
-    void SetColorValue([Const] DOMString fieldName, ColorRGBAf value);
+    void SetColorValue([Const] DOMString fieldName, float r, float g, float b, float a);
     ColorRGBAf GetColorValue([Const] DOMString fieldName);
 };
 

@@ -97,10 +97,12 @@ float CustomFrameState::GetFloatValue(const char *fieldName) {
     return this->m_floatFieldInitValues[fieldIdx];
 }
 
-void CustomFrameState::SetColorValue(const char* fieldName, ColorRGBAf* color){
+void CustomFrameState::SetColorValue(const char* fieldName, float r, float g, float b, float a){
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    this->RecordFieldValue(currentFrameId, fieldName, *color);
+
+    ColorRGBAf colorRgbAf(r, g, b, a);
+    this->RecordFieldValue(currentFrameId, fieldName, colorRgbAf);
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 }
 

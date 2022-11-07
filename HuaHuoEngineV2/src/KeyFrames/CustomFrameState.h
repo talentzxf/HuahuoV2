@@ -88,7 +88,7 @@ public:
 
     float GetFloatValue(const char* fieldName);
 
-    void SetColorValue(const char* fieldName, ColorRGBAf* color);
+    void SetColorValue(const char* fieldName, float r, float g, float b, float a);
     ColorRGBAf* GetColorValue(const char* fieldName);
 
     void CreateShapeArrayValue(const char* fieldName);
