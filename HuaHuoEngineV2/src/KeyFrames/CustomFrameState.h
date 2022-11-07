@@ -73,9 +73,10 @@ public:
         return fieldIdx;
     }
 
-    int RegisterColorValue(const char* fieldName, ColorRGBAf* initColor){
+    int RegisterColorValue(const char* fieldName, float r, float g, float b, float a){
         int fieldIdx = this->RegisterField(fieldName);
-        m_colorFieldInitValues[fieldIdx] = *initColor;
+        ColorRGBAf initColor(r, g, b, a);
+        m_colorFieldInitValues[fieldIdx] = initColor;
 
         return fieldIdx;
     }

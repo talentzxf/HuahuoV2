@@ -8,6 +8,7 @@ class PropertySheetFactory{
     getBuilder(category){
         switch (category){
             case PropertyCategory.interpolateFloat:
+            case PropertyCategory.interpolateColor:
                 return this.interpolatePropertySheetBuilder
             case PropertyCategory.shapeArray:
                 return this.shapeArrayPropertySheetBuilder

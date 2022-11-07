@@ -23,11 +23,11 @@ abstract class InterpolateOperator{
 
 class InterpolateFloatOperator extends InterpolateOperator{
     getField(fieldName) {
-        return this.rawObj["GetFloatValue"]()
+        return this.rawObj["GetFloatValue"](fieldName)
     }
 
     registerField(fieldName, initValue) {
-        this.rawObj["RegisterFloatValue"](fieldName)
+        this.rawObj["RegisterFloatValue"](fieldName, initValue)
     }
 
     setField(fieldName: string, val) {
@@ -37,11 +37,12 @@ class InterpolateFloatOperator extends InterpolateOperator{
 
 class InterpolateColorOperator extends InterpolateOperator{
     getField(fieldName) {
-        return this.rawObj["GetColorValue"]()
+        let cppColor = this.rawObj["GetColorValue"](fieldName)
+        return new paper.Color(cppColor.r, cppColor.g, cppColor.b, cppColor.a)
     }
 
     registerField(fieldName, initValue) {
-        this.rawObj["RegisterColorValue"](fieldName)
+        this.rawObj["RegisterColorValue"](fieldName, initValue.r, initValue.g, initValue.b, initValue.a)
     }
 
     setField(fieldName: string, val) {
@@ -98,8 +99,12 @@ class InterpolatePropertyBuilder extends PropertySheetBuilder{
     override build(component, propertyMeta, valueChangeHandler: ValueChangeHandler) {
         let propertyDef = super.build(component, propertyMeta, valueChangeHandler);
 
-        propertyDef["type"] = PropertyType.FLOAT
-        propertyDef["elementType"] = "range"
+        if(propertyMeta.type == PropertyCategory.interpolateFloat) {
+            propertyDef["type"] = PropertyType.FLOAT
+            propertyDef["elementType"] = "range"
+        }
+        else if(propertyMeta.type == PropertyCategory.interpolateColor)
+            propertyDef["type"] = PropertyType.COLOR
 
         return propertyDef
     }

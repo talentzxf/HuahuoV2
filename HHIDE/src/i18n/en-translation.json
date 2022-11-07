@@ -61,7 +61,6 @@
     "Scaling": "Scaling",
     "Rotation": "Rotation",
     "FillColor": "FillColor",
-    "StrokeColor": "StrokeColor",
     "enclose": "EnClose",
     "image": {
       "Frames": "Frames"
@@ -78,7 +77,8 @@
     "property": {
       "growth": "growth",
       "targetShapeArray": "Target Shapes",
-      "strokeWidth": "StrokeWidth"
+      "strokeWidth": "StrokeWidth",
+      "strokeColor": "StrokeColor"
     }
   },
   "timeline": {

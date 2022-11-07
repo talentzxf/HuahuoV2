@@ -18,7 +18,7 @@ class StrokeComponent extends AbstractComponent{
     @PropertyValue(PropertyCategory.interpolateFloat, 1, {min: 0.0} as FloatPropertyConfig)
     strokeWidth
 
-    @PropertyValue(PropertyCategory.interpolateColor, )
+    @PropertyValue(PropertyCategory.interpolateColor, {r:0, g:0, b:0, a:1})
     strokeColor
 
     override afterUpdate() {
