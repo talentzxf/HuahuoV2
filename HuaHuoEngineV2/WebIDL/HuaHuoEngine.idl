@@ -213,8 +213,6 @@ interface BaseShape{
 
     long GetIndex();
     void SetIndex(long index);
-    void SetStrokeWidth(float strokeWidth);
-    float GetStrokeWidth();
     long GetBornFrameId();
 
     void RefreshKeyFrameCache();

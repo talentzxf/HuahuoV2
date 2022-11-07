@@ -1,9 +1,21 @@
 import {BaseShapeJS} from "./BaseShapeJS";
 import {PropertyType} from "hhcommoncomponents"
-
-const eps:number = 0.001
+import {StrokeComponent} from "../Components/StrokeComponent";
 
 abstract class BaseSolidShape extends BaseShapeJS {
+    constructor(rawObj?) {
+        let needInitComponents = false
+        if(!rawObj){
+            needInitComponents = true
+        }
+
+        super(rawObj);
+
+        if(needInitComponents){
+            this.addComponent(new StrokeComponent())
+        }
+    }
+
     get color(): paper.Color{
         return this.paperItem.fillColor
     }
@@ -28,18 +40,6 @@ abstract class BaseSolidShape extends BaseShapeJS {
         this.callHandlers("strokeColor", val)
     }
 
-    get strokeWidth(): number{
-        return this.paperItem.strokeWidth
-    }
-
-    set strokeWidth(val: number){
-        if(Math.abs(val - this.paperItem.strokeWidth) < eps)
-            return
-
-        this.paperItem.strokeWidth = val
-        this.callHandlers("strokeWidth", val)
-    }
-
     private setFillColor(val: paper.Color) {
         if (this.paperItem.fillColor != val) {
             this.paperItem.fillColor = val
@@ -62,17 +62,6 @@ abstract class BaseSolidShape extends BaseShapeJS {
         return this.paperItem.strokeColor
     }
 
-    private setStrokeWidth(val: number) {
-        if (this.paperItem.strokeWidth != val) {
-            this.paperItem.strokeWidth = val
-            this.store()
-        }
-    }
-
-    private getStrokeWidth(): number {
-        return this.paperItem.strokeWidth
-    }
-
     afterWASMReady() {
         super.afterWASMReady();
 
@@ -93,15 +82,6 @@ abstract class BaseSolidShape extends BaseShapeJS {
             registerValueChangeFunc: this.registerValueChangeHandler("strokeColor"),
             unregisterValueChangeFunc: this.unregisterValueChangeHandler("strokeColor")
         })
-
-        this.propertySheet.addProperty({
-            key:"inspector.StrokeWidth",
-            type: PropertyType.FLOAT,
-            getter: this.getStrokeWidth.bind(this),
-            setter: this.setStrokeWidth.bind(this),
-            registerValueChangeFunc: this.registerValueChangeHandler("strokeWidth"),
-            unregisterValueChangeFunc: this.unregisterValueChangeHandler("strokeWidth")
-        })
     }
 
     store() {
@@ -116,9 +96,6 @@ abstract class BaseSolidShape extends BaseShapeJS {
         let strokeColor = this.paperItem.strokeColor
         if(strokeColor)
             this.rawObj.SetStrokeColor(strokeColor.red, strokeColor.green, strokeColor.blue, strokeColor.alpha)
-
-        let strokeWidth = this.paperItem.strokeWidth
-        this.rawObj.SetStrokeWidth(strokeWidth)
     }
 
     afterUpdate() {
@@ -129,9 +106,6 @@ abstract class BaseSolidShape extends BaseShapeJS {
 
         let strokeColor = this.rawObj.GetStrokeColor()
         this.strokeColor = new paper.Color(strokeColor.r, strokeColor.g, strokeColor.b, strokeColor.a)
-
-        let strokeWidth = this.rawObj.GetStrokeWidth()
-        this.strokeWidth = strokeWidth
     }
 }
 

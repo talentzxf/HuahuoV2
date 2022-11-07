@@ -62,7 +62,6 @@
     "Rotation": "旋转",
     "FillColor": "填充颜色",
     "StrokeColor": "描边颜色",
-    "StrokeWidth": "描边宽度",
     "enclose": "封闭",
     "image": {
       "Frames": "帧数"
@@ -78,7 +77,8 @@
     "Unfollow": "不贴边",
     "property": {
       "growth": "生长系数",
-      "targetShapeArray": "目标形状"
+      "targetShapeArray": "目标形状",
+      "strokeWidth": "描边宽度"
     }
   },
   "timeline": {

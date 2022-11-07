@@ -62,7 +62,6 @@
     "Rotation": "Rotation",
     "FillColor": "FillColor",
     "StrokeColor": "StrokeColor",
-    "StrokeWidth": "StrokeWidth",
     "enclose": "EnClose",
     "image": {
       "Frames": "Frames"
@@ -78,7 +77,8 @@
     "Unfollow": "UnFollow",
     "property": {
       "growth": "growth",
-      "targetShapeArray": "Target Shapes"
+      "targetShapeArray": "Target Shapes",
+      "strokeWidth": "StrokeWidth"
     }
   },
   "timeline": {

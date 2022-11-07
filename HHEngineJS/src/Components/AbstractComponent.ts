@@ -11,6 +11,7 @@ import {PropertyType} from "hhcommoncomponents";
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
 
+const eps:number = 0.001;
 class FieldShapeArrayIterable{
     fieldShapeArray // Store the cpp side array.
     constructor(fieldShapeArray) {
@@ -80,6 +81,11 @@ class AbstractComponent {
         let setterName = "set" + capitalizeFirstLetter(fieldName)
 
         this[setterName] = function(val: number){
+            let currentValue = this[fieldName]
+            if(Math.abs(currentValue - val) < eps){
+                return
+            }
+
             this[fieldName] = val
             this.callHandlers(fieldName, val)
             if(this.baseShape)

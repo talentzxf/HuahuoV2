@@ -122,7 +122,6 @@ void testShapeStore() {
 
     HuaHuoEngine::GetInstance()->DuplicateShape(rectangleShape);
 
-    rectangleShape->SetStrokeWidth(10.0);
     currentLayer->AddShapeInternal(rectangleShape);
 
     RectangleShape* clonedRectangleShape = (RectangleShape*) CloneObject(*rectangleShape);

@@ -81,7 +81,6 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<ShapeSegmentFrameState>("ObjectStore");
     RegisterHuaHuoClass<CurveShape>("ObjectStore");
     RegisterHuaHuoClass<ShapeStrokeColorFrameState>("ObjectStore");
-    RegisterHuaHuoClass<ShapeStrokeWidthFrameState>("ObjectStore");
     RegisterHuaHuoClass<ShapeFollowCurveFrameState>("ObjectStore");
     RegisterHuaHuoClass<CustomFrameState>("ObjectStore");
 }
