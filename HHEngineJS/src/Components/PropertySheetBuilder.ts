@@ -10,44 +10,55 @@ enum PropertyCategory{
     shapeArray
 }
 
-interface InterpolateOperator{
-    getCppRegisterFunctionName()
-    getCppSetterName()
-    getCppGetterName()
+abstract class InterpolateOperator{
+    rawObj
+    constructor(rawObj) {
+        this.rawObj = rawObj
+    }
+
+    abstract registerField(fieldName: string, initValue)
+    abstract getField(fieldName: string)
+    abstract setField(fieldName: string, val)
 }
 
-class InterpolateFloatOperator implements InterpolateOperator{
-    getCppGetterName() {
-        return "GetFloatValue"
+class InterpolateFloatOperator extends InterpolateOperator{
+    getField(fieldName) {
+        return this.rawObj["GetFloatValue"]()
     }
 
-    getCppRegisterFunctionName() {
-        return "RegisterFloatValue"
+    registerField(fieldName, initValue) {
+        this.rawObj["RegisterFloatValue"](fieldName)
     }
 
-    getCppSetterName() {
-        return "SetFloatValue"
-    }
-}
-
-class InterpolateColorOperator implements InterpolateOperator{
-    getCppGetterName() {
-        return "GetColorValue"
-    }
-
-    getCppRegisterFunctionName() {
-        return "RegisterColorValue"
-    }
-
-    getCppSetterName() {
-        return "SetColorValue"
+    setField(fieldName: string, val) {
+        this.rawObj["SetFloatValue"](fieldName, val)
     }
 }
 
-let InterpolateOperatorMap = new Map<PropertyCategory, InterpolateColorOperator>()
+class InterpolateColorOperator extends InterpolateOperator{
+    getField(fieldName) {
+        return this.rawObj["GetColorValue"]()
+    }
 
-InterpolateOperatorMap.set(PropertyCategory.interpolateFloat, new InterpolateFloatOperator())
-InterpolateOperatorMap.set(PropertyCategory.interpolateColor, new InterpolateColorOperator())
+    registerField(fieldName, initValue) {
+        this.rawObj["RegisterColorValue"](fieldName)
+    }
+
+    setField(fieldName: string, val) {
+        this.rawObj["SetColorValue"](fieldName, val.r, val.g, val.b, val.a)
+    }
+}
+
+function buildOperator(type, rawObj): InterpolateOperator{
+    switch(type){ // TODO: Get rid of switch-case
+        case PropertyCategory.interpolateFloat:
+            return new InterpolateFloatOperator(rawObj)
+        case PropertyCategory.interpolateColor:
+            return new InterpolateColorOperator(rawObj)
+    }
+
+    return null
+}
 
 class PropertyDef{
     key: string
@@ -94,5 +105,5 @@ class InterpolatePropertyBuilder extends PropertySheetBuilder{
     }
 }
 
-export {PropertyCategory, PropertyDef, capitalizeFirstLetter, PropertySheetBuilder, InterpolatePropertyBuilder, InterpolateOperatorMap}
+export {PropertyCategory, PropertyDef, capitalizeFirstLetter, PropertySheetBuilder, InterpolatePropertyBuilder, buildOperator}
 

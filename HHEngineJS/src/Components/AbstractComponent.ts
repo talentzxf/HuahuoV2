@@ -1,7 +1,12 @@
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import "reflect-metadata"
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
-import {capitalizeFirstLetter, InterpolateOperatorMap, PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
+import {
+    buildOperator,
+    capitalizeFirstLetter,
+    PropertyCategory,
+    PropertyDef
+} from "./PropertySheetBuilder";
 import {propertySheetFactory} from "./PropertySheetBuilderFactory"
 import {IsValidWrappedObject, PropertyConfig, PropertyType} from "hhcommoncomponents";
 import {huahuoEngine} from "../EngineAPI";
@@ -71,9 +76,9 @@ class AbstractComponent {
     }
 
     handleInterpolateEntry(propertyEntry){
-        let operator = InterpolateOperatorMap.get(propertyEntry.type)
+        let operator = buildOperator(propertyEntry.type, this.rawObj)
 
-        this.rawObj[operator.getCppRegisterFunctionName()](propertyEntry["key"], propertyEntry["initValue"])
+        operator.registerField(propertyEntry["key"], propertyEntry["initValue"])
 
         let fieldName = propertyEntry["key"]
         // Generate setter and getter
@@ -96,7 +101,7 @@ class AbstractComponent {
         }
 
         this[getterName] = function(){
-            return this.rawObj[operator.getCppGetterName()](fieldName)
+            return operator.getField(fieldName)
         }
 
         // Remove the property and add setter/getter
@@ -108,7 +113,7 @@ class AbstractComponent {
                 return this[getterName]()
             },
             set: function(val){
-                this.rawObj[operator.getCppSetterName()](fieldName, val)
+                operator.setField(fieldName, val)
             }
         })
     }
