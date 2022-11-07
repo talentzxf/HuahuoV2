@@ -193,8 +193,7 @@ class AbstractComponent {
 
             let componentConfigSheet = {
                 key: this.getTypeName(),
-                type: PropertyType.GROUP,
-                elementType: "component",
+                type: PropertyType.COMPONENT,
                 config: {
                     children: []
                 }

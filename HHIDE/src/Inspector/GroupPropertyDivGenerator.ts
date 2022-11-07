@@ -87,12 +87,7 @@ class GroupPropertyDesc extends BasePropertyDesc{
         groupPropertyDiv.style.borderWidth = "1px"
         groupPropertyDiv.style.borderColor = "blue"
 
-        if(property.elementType == "tab"){
-            this.createTabs(groupPropertyDiv, property)
-        } else if(property.elementType == "component"){
-            this.createComponentProperty(groupPropertyDiv, property)
-        }
-
+        this.createTabs(groupPropertyDiv, property)
         this.contentDiv.appendChild(groupPropertyDiv)
     }
 

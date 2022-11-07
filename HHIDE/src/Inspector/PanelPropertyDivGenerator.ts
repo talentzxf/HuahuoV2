@@ -34,5 +34,16 @@ class PanelPropertyDivGenerator extends BasePropertyDivGenerator{
     }
 }
 
+class ComponentPropertyDivGenerator extends BasePropertyDivGenerator{
+    generatePropertyDesc(property): BasePropertyDesc {
+        return new PanelPropertyDesc(property);
+    }
+
+    flexDirection(): string {
+        return "column"
+    }
+}
+
 let panelPropertyDivGenerator = new PanelPropertyDivGenerator()
-export {panelPropertyDivGenerator}
+let componentPropertyDivGenerator = new ComponentPropertyDivGenerator()
+export {panelPropertyDivGenerator, componentPropertyDivGenerator}

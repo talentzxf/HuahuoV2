@@ -7,7 +7,7 @@ import {stringPropertyDivGenerator} from "./StringPropertyDivGenerator";
 import {buttonPropertyDivGenerator} from "./ButtonPropertyDivGenerator";
 import {groupPropertyDivGenerator} from "./GroupPropertyDivGenerator";
 import {referencePropertyDivGenerator} from "./ReferencePropertyDivGenerator";
-import {panelPropertyDivGenerator} from "./PanelPropertyDivGenerator";
+import {componentPropertyDivGenerator, panelPropertyDivGenerator} from "./PanelPropertyDivGenerator";
 import {arrayPropertyDivGenerator} from "./ArrayPropertyDivGenerator";
 
 // Avoid being imported twice.
@@ -22,5 +22,6 @@ if(!window["IsTypesRegistered"]){
     RegisterDivGenerator(PropertyType.REFERENCE, referencePropertyDivGenerator)
     RegisterDivGenerator(PropertyType.PANEL, panelPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.ARRAY, arrayPropertyDivGenerator)
+    RegisterDivGenerator(PropertyType.COMPONENT, componentPropertyDivGenerator)
     window["IsTypeRegistered"] = true
 }
