@@ -3,7 +3,6 @@ import {Vector2} from "hhcommoncomponents"
 import {MirrorComponent} from "../Components/MirrorComponent";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {BaseSolidShape} from "./BaseSolidShape";
-import {BaseShapeJS} from "./BaseShapeJS";
 
 let shapeName = "MirrorShape"
 class MirrorShapeJS extends BaseSolidShape{
