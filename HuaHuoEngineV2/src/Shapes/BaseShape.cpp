@@ -144,14 +144,6 @@ void BaseShape::SetColor(float r, float g, float b, float a) {
     shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
-void BaseShape::SetStrokeColor(float r, float g, float b, float a) {
-    Layer *shapeLayer = GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
-    GetFrameState<ShapeStrokeColorFrameState>().RecordColor(currentFrameId, r, g, b, a);
-
-    shapeLayer->AddKeyFrame(currentFrameId, this);
-}
-
 bool BaseShape::IsVisibleInFrame(SInt32 frameId) {
     if (this->mBornFrameId < 0)
         return false;

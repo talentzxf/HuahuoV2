@@ -5,9 +5,49 @@ const propertyPrefix = "inspector.property."
 
 enum PropertyCategory{
     interpolateFloat,
-    shapeArray,
-    interpolateVector2
+    interpolateColor,
+    interpolateVector2,
+    shapeArray
 }
+
+interface InterpolateOperator{
+    getCppRegisterFunctionName()
+    getCppSetterName()
+    getCppGetterName()
+}
+
+class InterpolateFloatOperator implements InterpolateOperator{
+    getCppGetterName() {
+        return "GetFloatValue"
+    }
+
+    getCppRegisterFunctionName() {
+        return "RegisterFloatValue"
+    }
+
+    getCppSetterName() {
+        return "SetFloatValue"
+    }
+}
+
+class InterpolateColorOperator implements InterpolateOperator{
+    getCppGetterName() {
+        return "GetColorValue"
+    }
+
+    getCppRegisterFunctionName() {
+        return "RegisterColorValue"
+    }
+
+    getCppSetterName() {
+        return "SetColorValue"
+    }
+}
+
+let InterpolateOperatorMap = new Map<PropertyCategory, InterpolateColorOperator>()
+
+InterpolateOperatorMap.set(PropertyCategory.interpolateFloat, new InterpolateFloatOperator())
+InterpolateOperatorMap.set(PropertyCategory.interpolateColor, new InterpolateColorOperator())
 
 class PropertyDef{
     key: string
@@ -54,5 +94,5 @@ class InterpolatePropertyBuilder extends PropertySheetBuilder{
     }
 }
 
-export {PropertyCategory, PropertyDef, capitalizeFirstLetter, PropertySheetBuilder, InterpolatePropertyBuilder}
+export {PropertyCategory, PropertyDef, capitalizeFirstLetter, PropertySheetBuilder, InterpolatePropertyBuilder, InterpolateOperatorMap}
 

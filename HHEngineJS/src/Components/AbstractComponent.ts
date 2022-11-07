@@ -1,12 +1,10 @@
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import "reflect-metadata"
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
-import {capitalizeFirstLetter, PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
+import {capitalizeFirstLetter, InterpolateOperatorMap, PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
 import {propertySheetFactory} from "./PropertySheetBuilderFactory"
-import {PropertyConfig} from "hhcommoncomponents";
-import {IsValidWrappedObject} from "hhcommoncomponents";
+import {IsValidWrappedObject, PropertyConfig, PropertyType} from "hhcommoncomponents";
 import {huahuoEngine} from "../EngineAPI";
-import {PropertyType} from "hhcommoncomponents";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -72,8 +70,10 @@ class AbstractComponent {
         this.valueChangeHandler.callHandlers(propertyName, val)
     }
 
-    handleFloatEntry(propertyEntry){
-        this.rawObj.RegisterFloatValue(propertyEntry["key"], propertyEntry["initValue"])
+    handleInterpolateEntry(propertyEntry){
+        let operator = InterpolateOperatorMap.get(propertyEntry.type)
+
+        this.rawObj[operator.getCppRegisterFunctionName()](propertyEntry["key"], propertyEntry["initValue"])
 
         let fieldName = propertyEntry["key"]
         // Generate setter and getter
@@ -96,7 +96,7 @@ class AbstractComponent {
         }
 
         this[getterName] = function(){
-            return this.rawObj.GetFloatValue(fieldName)
+            return this.rawObj[operator.getCppGetterName()](fieldName)
         }
 
         // Remove the property and add setter/getter
@@ -108,7 +108,7 @@ class AbstractComponent {
                 return this[getterName]()
             },
             set: function(val){
-                this.rawObj.SetFloatValue(fieldName, val)
+                this.rawObj[operator.getCppSetterName()](fieldName, val)
             }
         })
     }
@@ -171,8 +171,8 @@ class AbstractComponent {
 
         let _this = this
         properties.forEach(propertyEntry => {
-            if(propertyEntry.type == PropertyCategory.interpolateFloat){
-                _this.handleFloatEntry(propertyEntry)
+            if(propertyEntry.type == PropertyCategory.interpolateFloat || propertyEntry.type == PropertyCategory.interpolateColor){
+                _this.handleInterpolateEntry(propertyEntry)
             } else if(propertyEntry.type == PropertyCategory.shapeArray){
                 _this.handleShapeArrayEntry(propertyEntry)
             }

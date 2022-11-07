@@ -18,7 +18,7 @@ void CustomFrameState::Transfer(TransferFunction &transfer) {
 
     TRANSFER(m_fieldNameFieldIndexMap);
     TRANSFER(m_fieldIndexFieldNameMap);
-    TRANSFER(m_fieldInitValues);
+    TRANSFER(m_floatFieldInitValues);
 }
 
 CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ratio) {
@@ -29,6 +29,7 @@ CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ra
         return resultData;
     }
 
+    // TODO: Merge these two similar code block.
     // Interpolate float values.
     for (auto itr = k1.floatFrameValues.begin(); itr != k1.floatFrameValues.end(); itr++) {
         int fieldIdx = itr->first;
@@ -36,6 +37,17 @@ CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ra
             resultData.floatFrameValues[fieldIdx] = k1.floatFrameValues[fieldIdx];
         } else {
             resultData.floatFrameValues[fieldIdx] = Lerp(k1.floatFrameValues[fieldIdx], k2.floatFrameValues[fieldIdx],
+                                                         ratio);
+        }
+    }
+
+    // Interpolate color values.
+    for (auto itr = k1.colorFrameValues.begin(); itr != k1.colorFrameValues.end(); itr++) {
+        int fieldIdx = itr->first;
+        if (!k2.colorFrameValues.contains(fieldIdx)) {
+            resultData.colorFrameValues[fieldIdx] = k1.colorFrameValues[fieldIdx];
+        } else {
+            resultData.colorFrameValues[fieldIdx] = Lerp(k1.colorFrameValues[fieldIdx], k2.colorFrameValues[fieldIdx],
                                                          ratio);
         }
     }
@@ -82,7 +94,24 @@ float CustomFrameState::GetFloatValue(const char *fieldName) {
         return m_CurrentKeyFrame.floatFrameValues[fieldIdx];
     }
 
-    return this->m_fieldInitValues[fieldIdx];
+    return this->m_floatFieldInitValues[fieldIdx];
+}
+
+void CustomFrameState::SetColorValue(const char* fieldName, ColorRGBAf* color){
+    Layer *shapeLayer = baseShape->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+    this->RecordFieldValue(currentFrameId, fieldName, *color);
+    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+}
+
+ColorRGBAf* CustomFrameState::GetColorValue(const char* fieldName){
+    int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
+
+    if (isValidFrame) {
+        return &m_CurrentKeyFrame.colorFrameValues[fieldIdx];
+    }
+
+    return &(m_colorFieldInitValues[fieldIdx]);
 }
 
 void CustomFrameState::CreateShapeArrayValue(const char *fieldName){
@@ -126,8 +155,8 @@ void CustomFrameState::RecordFieldValue(int frameId, const char *fieldName, T va
     CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
     if (!pKeyFrame->inited) {
         // Init it.
-        for (int fieldIdx = 0; fieldIdx < m_fieldInitValues.size(); fieldIdx++) {
-            pKeyFrame->floatFrameValues[fieldIdx] = m_fieldInitValues[fieldIdx];
+        for (int fieldIdx = 0; fieldIdx < m_floatFieldInitValues.size(); fieldIdx++) {
+            pKeyFrame->floatFrameValues[fieldIdx] = m_floatFieldInitValues[fieldIdx];
         }
         pKeyFrame->inited = true;
     }

@@ -13,18 +13,14 @@
 
 class BaseShape;
 
-enum FIELDTYPE{
-    FLOAT,
-    SHAPEARRAY
-};
-
-
-
 class CustomDataKeyFrame{
 public:
     std::map<int, float> floatFrameValues; // Map from fieldId->float value.
 
-    std::map<int, FieldShapeArray> shapeArrayValues;
+    std::map<int, FieldShapeArray> shapeArrayValues; // Map from fieldId-> shapeArray.
+
+    std::map<int, ColorRGBAf> colorFrameValues;
+
     int frameId;
     bool inited;
 
@@ -39,6 +35,7 @@ template <class TransferFunction> void CustomDataKeyFrame::Transfer(TransferFunc
     TRANSFER(frameId);
     TRANSFER(floatFrameValues);
     TRANSFER(shapeArrayValues);
+    TRANSFER(colorFrameValues);
     TRANSFER(inited);
 }
 
@@ -59,7 +56,7 @@ public:
 private:
     int RegisterField(const char* fieldName){
         if(!m_fieldNameFieldIndexMap.contains(fieldName)){
-            int index = m_fieldInitValues.size();
+            int index = m_floatFieldInitValues.size();
             m_fieldNameFieldIndexMap[fieldName] = index;
             m_fieldIndexFieldNameMap[index] = fieldName;
             return index;
@@ -71,7 +68,14 @@ private:
 public:
     int RegisterFloatValue(const char* fieldName, float initValue){
         int fieldIdx = this->RegisterField(fieldName);
-        m_fieldInitValues[fieldIdx] = initValue;
+        m_floatFieldInitValues[fieldIdx] = initValue;
+
+        return fieldIdx;
+    }
+
+    int RegisterColorValue(const char* fieldName, ColorRGBAf* initColor){
+        int fieldIdx = this->RegisterField(fieldName);
+        m_colorFieldInitValues[fieldIdx] = *initColor;
 
         return fieldIdx;
     }
@@ -83,6 +87,9 @@ public:
     void SetFloatValue(const char* fieldName, float value);
 
     float GetFloatValue(const char* fieldName);
+
+    void SetColorValue(const char* fieldName, ColorRGBAf* color);
+    ColorRGBAf* GetColorValue(const char* fieldName);
 
     void CreateShapeArrayValue(const char* fieldName);
     FieldShapeArray* GetShapeArrayValueForWrite(const char* fieldName);
@@ -96,7 +103,8 @@ private:
 private:
     std::map<string, int> m_fieldNameFieldIndexMap;
     std::map<int, string> m_fieldIndexFieldNameMap;
-    std::map<int, float> m_fieldInitValues;
+    std::map<int, float> m_floatFieldInitValues;
+    std::map<int, ColorRGBAf> m_colorFieldInitValues;
 
     CustomDataKeyFrame m_CurrentKeyFrame;
 };

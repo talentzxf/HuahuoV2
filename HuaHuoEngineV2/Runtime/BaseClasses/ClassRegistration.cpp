@@ -14,7 +14,6 @@
 #include "KeyFrames/FrameState.h"
 #include "KeyFrames/ShapeTransformFrameState.h"
 #include "KeyFrames/ShapeColorFrameState.h"
-#include "KeyFrames/ShapeStrokeColorFrameState.h"
 #include "KeyFrames/ShapeFollowCurveFrameState.h"
 #include "Shapes/RectangleShape.h"
 #include "Shapes/ImageShape.h"
@@ -80,7 +79,6 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<ShapeColorFrameState>("ObjectStore");
     RegisterHuaHuoClass<ShapeSegmentFrameState>("ObjectStore");
     RegisterHuaHuoClass<CurveShape>("ObjectStore");
-    RegisterHuaHuoClass<ShapeStrokeColorFrameState>("ObjectStore");
     RegisterHuaHuoClass<ShapeFollowCurveFrameState>("ObjectStore");
     RegisterHuaHuoClass<CustomFrameState>("ObjectStore");
 }

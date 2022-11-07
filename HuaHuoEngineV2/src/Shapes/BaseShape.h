@@ -14,7 +14,6 @@
 #include "Serialize/PersistentManager.h"
 #include "KeyFrames/ShapeSegmentFrameState.h"
 #include "BaseClasses/ImmediatePtr.h"
-#include "KeyFrames/ShapeStrokeColorFrameState.h"
 
 extern const int MAX_FRAMES;
 
@@ -91,7 +90,6 @@ public:
         AddFrameStateByName("ShapeTransformFrameState");
         AddFrameStateByName("ShapeSegmentFrameState");
         AddFrameStateByName("ShapeColorFrameState");
-        AddFrameStateByName("ShapeStrokeColorFrameState");
         AddFrameStateByName("ShapeFollowCurveFrameState");
     }
 
@@ -191,8 +189,6 @@ public:
 
     void SetColor(float r, float g, float b, float a);
 
-    void SetStrokeColor(float r, float g, float b, float a);
-
     void SetRotation(float rotation);
 
     void SetSegments(float segmentBuffer[], int size);
@@ -235,10 +231,6 @@ public:
 
     ColorRGBAf* GetColor(){
         return GetFrameState<ShapeColorFrameState>().GetColor();
-    }
-
-    ColorRGBAf* GetStrokeColor(){
-        return GetFrameState<ShapeStrokeColorFrameState>().GetColor();
     }
 
     void SetIndex(SInt32 index){
