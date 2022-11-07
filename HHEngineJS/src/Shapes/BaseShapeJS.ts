@@ -400,6 +400,8 @@ abstract class BaseShapeJS {
         if(Math.abs(currentValue - value) < eps)
             return
         this.paperShape.segments[idx][property] = value
+        this.store()
+
         this.callHandlers("segments", {idx: idx, property: property, value:value})
     }
 
@@ -413,6 +415,8 @@ abstract class BaseShapeJS {
         }
 
         this.update()
+
+        this.callHandlers("segments", null)
     }
 
     getFrameIdSegmentsBuffer(){
