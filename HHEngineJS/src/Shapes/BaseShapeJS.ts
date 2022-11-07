@@ -279,6 +279,10 @@ abstract class BaseShapeJS {
         let offset = val.subtract(new paper.Point(curGlobalPivot.x, curGlobalPivot.y))
         let nextShapePosition = curShapePosition.add(offset)
 
+        if(this.paperShape.position.getDistance(nextShapePosition) <= eps){
+            return
+        }
+
         this.paperShape.position = nextShapePosition
         this.rawObj.SetGlobalPivotPosition(val.x, val.y, 0.0)
 
@@ -297,11 +301,17 @@ abstract class BaseShapeJS {
     }
 
     set scaling(val: paper.Point) {
+        if(this.paperItem.scaling.getDistance(val) < eps)
+            return
+
         this.paperItem.scaling = val
         this.valueChangeHandler.callHandlers("scaling", val)
     }
 
     set rotation(val: number) {
+        if(Math.abs(this.rawObj.GetRotation() - val) < eps)
+            return
+
         this.rawObj.SetRotation(val)
         this.valueChangeHandler.callHandlers("rotation", val)
     }

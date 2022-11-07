@@ -1,12 +1,17 @@
 import {BaseShapeJS} from "./BaseShapeJS";
 import {PropertyType} from "hhcommoncomponents"
 
+const eps:number = 0.001
+
 abstract class BaseSolidShape extends BaseShapeJS {
     get color(): paper.Color{
         return this.paperItem.fillColor
     }
 
     set color(val: paper.Color) {
+        if(val.equals(this.paperItem.fillColor))
+            return
+
         this.paperItem.fillColor = val
         this.callHandlers("color", val)
     }
@@ -16,6 +21,9 @@ abstract class BaseSolidShape extends BaseShapeJS {
     }
 
     set strokeColor(val: paper.Color) {
+        if(val.equals(this.paperItem.strokeColor))
+            return
+
         this.paperItem.strokeColor = val
         this.callHandlers("strokeColor", val)
     }
@@ -25,6 +33,9 @@ abstract class BaseSolidShape extends BaseShapeJS {
     }
 
     set strokeWidth(val: number){
+        if(Math.abs(val - this.paperItem.strokeWidth) < eps)
+            return
+
         this.paperItem.strokeWidth = val
         this.callHandlers("strokeWidth", val)
     }
