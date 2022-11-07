@@ -5,23 +5,14 @@ class GroupPropertyDesc extends BasePropertyDesc{
 
     private titleTabs:Array<HTMLSpanElement> = new Array<HTMLSpanElement>()
     private contentDivs:Array<HTMLDivElement> = new Array<HTMLDivElement>()
-
-    constructor(property: Property) {
-        super(property);
-
-        let groupPropertyDiv = document.createElement("div")
-
-        groupPropertyDiv.style.borderStyle = "solid"
-        groupPropertyDiv.style.borderWidth = "1px"
-        groupPropertyDiv.style.borderColor = "blue"
-
+    createTabs(parentDiv: HTMLDivElement, property: Property){
         let titleDivs = document.createElement("div")
         titleDivs.style.display = "flex"
         titleDivs.style.flexDirection = "row"
-        groupPropertyDiv.appendChild(titleDivs)
+        parentDiv.appendChild(titleDivs)
 
         let contentDivs = document.createElement("div")
-        groupPropertyDiv.appendChild(contentDivs)
+        parentDiv.appendChild(contentDivs)
 
         let firstProperty = true
 
@@ -65,6 +56,20 @@ class GroupPropertyDesc extends BasePropertyDesc{
             })
 
             firstProperty = false
+        }
+    }
+
+    constructor(property: Property) {
+        super(property);
+
+        let groupPropertyDiv = document.createElement("div")
+
+        groupPropertyDiv.style.borderStyle = "solid"
+        groupPropertyDiv.style.borderWidth = "1px"
+        groupPropertyDiv.style.borderColor = "blue"
+
+        if(property.elementType == "tab"){
+            this.createTabs(groupPropertyDiv, property)
         }
 
         this.contentDiv.appendChild(groupPropertyDiv)

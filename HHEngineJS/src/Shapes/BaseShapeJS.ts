@@ -673,6 +673,7 @@ abstract class BaseShapeJS {
         this.propertySheet.addProperty({
             key: "inspector.Position",
             type: PropertyType.GROUP,
+            elementType: "tab",
             config:{
                 children: [
                     {
