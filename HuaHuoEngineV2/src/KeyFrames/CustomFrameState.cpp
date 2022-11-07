@@ -155,13 +155,6 @@ bool CustomFrameState::Apply() {
 template <typename T>
 void CustomFrameState::RecordFieldValue(int frameId, const char *fieldName, T value) {
     CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
-    if (!pKeyFrame->inited) {
-        // Init it.
-        for (int fieldIdx = 0; fieldIdx < m_floatFieldInitValues.size(); fieldIdx++) {
-            pKeyFrame->floatFrameValues[fieldIdx] = m_floatFieldInitValues[fieldIdx];
-        }
-        pKeyFrame->inited = true;
-    }
 
     int idx = m_fieldNameFieldIndexMap[fieldName];
 
@@ -169,6 +162,8 @@ void CustomFrameState::RecordFieldValue(int frameId, const char *fieldName, T va
         pKeyFrame->floatFrameValues[idx] = value;
     } else if constexpr(std::is_same<T, FieldShapeArray>()){
         pKeyFrame->shapeArrayValues[idx] = value;
+    } else if constexpr(std::is_same<T, ColorRGBAf>()){
+        pKeyFrame->colorFrameValues[idx] = value;
     }
 
     Apply(frameId);

@@ -467,12 +467,14 @@ void testReadFromFile(){
 
     CustomFrameState* customFrameState = CustomFrameState::CreateFrameState();
     customFrameState->RegisterFloatValue("growth", 1.0f);
+    customFrameState->RegisterColorValue("strokeColor", 1.0, 0.0, 0.0, 1.0);
     printf("GetValue:%f\n", customFrameState->GetFloatValue("growth"));
 
     circleShape->AddFrameState(customFrameState);
     GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->AddShapeInternal(circleShape);
 
     customFrameState->SetFloatValue("growth", 1.0f);
+    customFrameState->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
 
     customFrameState->Apply(0);
     circleShape->GetMinFrameId();
@@ -489,6 +491,9 @@ void testReadFromFile(){
     clonedFrameState->Apply(0);
 
     printf("GetValue:%f\n", clonedFrameState->GetFloatValue("growth"));
+
+    ColorRGBAf* color = customFrameState->GetColorValue("strokeColor");
+    printf("GetColor:%f,%f,%f,%f\n",color->r, color->g, color->b, color->a);
 }
 
 int main() {

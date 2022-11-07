@@ -22,12 +22,11 @@ public:
     std::map<int, ColorRGBAf> colorFrameValues;
 
     int frameId;
-    bool inited;
 
     DECLARE_SERIALIZE(CustomDataKeyFrame)
 
     CustomDataKeyFrame():
-        frameId(-1), inited(false){
+        frameId(-1){
     }
 };
 
@@ -36,7 +35,6 @@ template <class TransferFunction> void CustomDataKeyFrame::Transfer(TransferFunc
     TRANSFER(floatFrameValues);
     TRANSFER(shapeArrayValues);
     TRANSFER(colorFrameValues);
-    TRANSFER(inited);
 }
 
 CustomDataKeyFrame Lerp(CustomDataKeyFrame& k1, CustomDataKeyFrame& k2, float ratio);
