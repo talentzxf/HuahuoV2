@@ -88,8 +88,11 @@ class AbstractComponent {
 
             this[fieldName] = val
             this.callHandlers(fieldName, val)
-            if(this.baseShape)
+            if(this.baseShape){
                 this.baseShape.update()
+
+                this.baseShape.callHandlers(fieldName, val)
+            }
         }
 
         this[getterName] = function(){

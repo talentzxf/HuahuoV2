@@ -4,6 +4,7 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {mirrorPoint} from "hhcommoncomponents";
 import * as paper from "paper"
 import {clzObjectFactory} from "../CppClassObjectFactory";
+import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 
 let componentName = "MirrorComponent"
 class MirrorComponent extends AbstractComponent {
@@ -66,16 +67,14 @@ class MirrorComponent extends AbstractComponent {
          */
 
         let rawObj = shape.rawObj
-        let shapeConstructor = clzObjectFactory.GetClassConstructor(rawObj.GetTypeName())
-        let duplicatedShape = shapeConstructor(rawObj)
+
+        let duplicatedShape = LoadShapeFromCppShape(rawObj)
         duplicatedShape.setSelectedMeta(this.baseShape)
-        // duplicatedShape.setIsMovable(false)
 
         duplicatedShape.registerValueChangeHandler("*")(()=>{
             shape.update() // update the original shape.
         })
 
-        duplicatedShape.awakeFromLoad() // Awake it, ensure it didn't overridden positions.
         this.paperShapeGroup.addChild(duplicatedShape.paperItem)
 
         return duplicatedShape
