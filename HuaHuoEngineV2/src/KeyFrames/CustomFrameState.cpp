@@ -24,11 +24,6 @@ void CustomFrameState::Transfer(TransferFunction &transfer) {
 CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ratio) {
     CustomDataKeyFrame resultData;
 
-    if (k1.floatFrameValues.size() != k2.floatFrameValues.size()) {
-        Assert("value size mismatch!!!");
-        return resultData;
-    }
-
     // TODO: Merge these two similar code block.
     // Interpolate float values.
     for (auto itr = k1.floatFrameValues.begin(); itr != k1.floatFrameValues.end(); itr++) {

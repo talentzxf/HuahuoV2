@@ -479,13 +479,16 @@ void testReadFromFile(){
     customFrameState->Apply(0);
     circleShape->GetMinFrameId();
 
+    Layer *shapeLayer = circleShape->GetLayer();
+    shapeLayer->SetCurrentFrame(10);
+    customFrameState->SetColorValue("strokeColor", 0.0, 1.0, 0.0, 1.0);
+    float growthValue = customFrameState->GetFloatValue("growth");
+
     GetPersistentManager().WriteFile(StoreFilePath);
 
     customFrameState->SetFloatValue("growth", 0.5f);
     customFrameState->RegisterShapeArrayValue("targetShapeArray");
     customFrameState->CreateShapeArrayValue("targetShapeArray");
-    FieldShapeArray* fieldShapeArray = customFrameState->GetShapeArrayValue("targetShapeArray");
-    fieldShapeArray->InsertShape(circleShape);
 
     CustomFrameState* clonedFrameState = (CustomFrameState*) CloneObject(*customFrameState);
     clonedFrameState->Apply(0);
