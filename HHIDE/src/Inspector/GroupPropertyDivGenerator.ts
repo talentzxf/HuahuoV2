@@ -3,9 +3,10 @@ import {Property} from "hhcommoncomponents";
 
 class GroupPropertyDesc extends BasePropertyDesc{
 
-    private titleTabs:Array<HTMLSpanElement> = new Array<HTMLSpanElement>()
-    private contentDivs:Array<HTMLDivElement> = new Array<HTMLDivElement>()
     createTabs(parentDiv: HTMLDivElement, property: Property){
+        let titleTabElements = []
+        let contentDivElements = []
+
         let titleDivs = document.createElement("div")
         titleDivs.style.display = "flex"
         titleDivs.style.flexDirection = "row"
@@ -28,7 +29,7 @@ class GroupPropertyDesc extends BasePropertyDesc{
                 titleDiv.style.background = "lightgray"
 
             titleDivs.appendChild(titleDiv)
-            this.titleTabs.push(titleDiv)
+            titleTabElements.push(titleDiv)
 
             let contentDiv = propertyDesc.getContentDiv()
 
@@ -38,17 +39,17 @@ class GroupPropertyDesc extends BasePropertyDesc{
                 contentDiv.style.display = "none"
 
             contentDivs.appendChild(contentDiv)
-            this.contentDivs.push(contentDiv)
+            contentDivElements.push(contentDiv)
 
             let _this = this
             titleDiv.addEventListener("mousedown", function(){
-                for(let titleTab of _this.titleTabs){
+                for(let titleTab of titleTabElements){
                     titleTab.style.background = "lightgray"
                 }
 
                 titleDiv.style.background = "darkgray"
 
-                for(let candidateDiv of _this.contentDivs){
+                for(let candidateDiv of contentDivElements){
                     candidateDiv.style.display = "none"
                 }
 
@@ -56,6 +57,22 @@ class GroupPropertyDesc extends BasePropertyDesc{
             })
 
             firstProperty = false
+        }
+    }
+
+    createComponentProperty(parentDiv: HTMLDivElement, property: Property){
+
+        let contentDivs = document.createElement("div")
+        contentDivs.style.border = "2px solid blue"
+        parentDiv.appendChild(contentDivs)
++
+        for(let childProperty of property.config.children){
+
+            let divGenerator = GetPropertyDivGenerator(childProperty.type)
+            let propertyDesc = divGenerator.generatePropertyDesc(childProperty)
+            let contentDiv = propertyDesc.getContentDiv()
+
+            contentDivs.appendChild(contentDiv)
         }
     }
 
@@ -70,6 +87,8 @@ class GroupPropertyDesc extends BasePropertyDesc{
 
         if(property.elementType == "tab"){
             this.createTabs(groupPropertyDiv, property)
+        } else if(property.elementType == "component"){
+            this.createComponentProperty(groupPropertyDiv, property)
         }
 
         this.contentDiv.appendChild(groupPropertyDiv)

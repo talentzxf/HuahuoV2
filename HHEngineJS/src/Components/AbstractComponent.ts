@@ -6,6 +6,7 @@ import {propertySheetFactory} from "./PropertySheetBuilderFactory"
 import {PropertyConfig} from "hhcommoncomponents";
 import {IsValidWrappedObject} from "hhcommoncomponents";
 import {huahuoEngine} from "../EngineAPI";
+import {PropertyType} from "hhcommoncomponents";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -190,11 +191,23 @@ class AbstractComponent {
 
             const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
 
+            let componentConfigSheet = {
+                key: this.getTypeName(),
+                type: PropertyType.GROUP,
+                elementType: "component",
+                config: {
+                    children: []
+                }
+            }
+
             for(let propertyMeta of properties){
                 let propertySheetEntry = propertySheetFactory.createEntry(this, propertyMeta, this.valueChangeHandler)
-                if(propertySheetEntry != null)
-                    propertySheet.addProperty(propertySheetEntry)
+                if(propertySheetEntry != null){
+                    componentConfigSheet.config.children.push(propertySheetEntry)
+                }
             }
+
+            propertySheet.addProperty(componentConfigSheet)
         }
     }
 
