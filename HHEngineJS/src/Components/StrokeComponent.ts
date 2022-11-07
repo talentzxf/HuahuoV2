@@ -24,6 +24,7 @@ class StrokeComponent extends AbstractComponent{
     override afterUpdate() {
         super.afterUpdate();
 
+        this.baseShape.paperShape.strokeColor = this.strokeColor
         this.baseShape.paperShape.strokeWidth = this.strokeWidth
     }
 }

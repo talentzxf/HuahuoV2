@@ -2,6 +2,7 @@ import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
 import {PropertyType} from "hhcommoncomponents";
 
 const propertyPrefix = "inspector.property."
+const eps:number = 0.001;
 
 enum PropertyCategory{
     interpolateFloat,
@@ -19,6 +20,7 @@ abstract class InterpolateOperator{
     abstract registerField(fieldName: string, initValue)
     abstract getField(fieldName: string)
     abstract setField(fieldName: string, val)
+    abstract isEqual(v1, v2)
 }
 
 class InterpolateFloatOperator extends InterpolateOperator{
@@ -33,6 +35,10 @@ class InterpolateFloatOperator extends InterpolateOperator{
     setField(fieldName: string, val) {
         this.rawObj["SetFloatValue"](fieldName, val)
     }
+
+    isEqual(val1, val2){
+        return Math.abs(val1 - val2) < eps
+    }
 }
 
 class InterpolateColorOperator extends InterpolateOperator{
@@ -46,7 +52,15 @@ class InterpolateColorOperator extends InterpolateOperator{
     }
 
     setField(fieldName: string, val) {
-        this.rawObj["SetColorValue"](fieldName, val.r, val.g, val.b, val.a)
+        this.rawObj["SetColorValue"](fieldName, val.red, val.green, val.blue, val.alpha)
+    }
+
+    isEqual(v1, v2) {
+        let differenceSquare:number = (v1.red - v2.red)**2 + (v1.green - v2.green)**2 +
+            (v1.blue - v2.blue)**2 + (v1.alpha - v2.alpha)**2
+        if(Math.abs(differenceSquare) < eps**2)
+            return true
+        return false
     }
 }
 
