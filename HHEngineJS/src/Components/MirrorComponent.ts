@@ -92,6 +92,19 @@ class MirrorComponent extends AbstractComponent {
             return _this.baseShape.getParent()
         }
 
+        Object.defineProperty(duplicatedShape, "position", {
+            get: function (){
+                let position = new paper.Point(duplicatedShape.pivotPosition.x, duplicatedShape.pivotPosition.y)
+
+                return _this.paperShapeGroup.localToGlobal(position)
+            },
+            set: function (val){
+                let newPosition = _this.paperShapeGroup.globalToLocal(val)
+                duplicatedShape.setParentLocalPosition(newPosition)
+            }
+        })
+
+
         shape.registerValueChangeHandler("*")(()=>{
             duplicatedShape.update()
         })

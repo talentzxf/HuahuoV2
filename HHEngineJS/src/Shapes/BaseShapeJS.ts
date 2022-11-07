@@ -171,6 +171,7 @@ abstract class BaseShapeJS {
         return this.paperItem.bounds
     }
 
+    // The position is still in the parent's local coordinate.
     get position(): paper.Point {
         return new paper.Point(this.pivotPosition.x, this.pivotPosition.y)
     }
@@ -267,8 +268,7 @@ abstract class BaseShapeJS {
         this.valueChangeHandler.callHandlers("rotation", newRotationDegree)
     }
 
-    set position(val: paper.Point) {
-
+    setParentLocalPosition(val: paper.Point){
         let currentScaling = this.paperItem.scaling
 
         this.paperItem.scaling = new paper.Point(1.0, 1.0)
@@ -298,6 +298,10 @@ abstract class BaseShapeJS {
         this.valueChangeHandler.callHandlers("position", val)
         this.paperItem.scaling = currentScaling
         this.update()
+    }
+
+    set position(val: paper.Point) {
+        this.setParentLocalPosition(val)
     }
 
     set scaling(val: paper.Point) {
