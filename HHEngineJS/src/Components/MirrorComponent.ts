@@ -1,7 +1,7 @@
 import {AbstractComponent, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
-import {mirrorPoint, Logger} from "hhcommoncomponents";
+import {mirrorPoint} from "hhcommoncomponents";
 import * as paper from "paper"
 import {clzObjectFactory} from "../CppClassObjectFactory";
 

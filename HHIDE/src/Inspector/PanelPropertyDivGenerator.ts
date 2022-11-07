@@ -34,9 +34,43 @@ class PanelPropertyDivGenerator extends BasePropertyDivGenerator{
     }
 }
 
+function makeDivUnselectable(div: HTMLElement){
+    div.style["-webkit-touch-callout"] = "none"
+    div.style["-webkit-user-select"] = "none";
+    div.style["-khtml-user-select"] = "none";
+    div.style["-moz-user-select"] = "none";
+    div.style["-ms-user-select"] = "none";
+    div.style["user-select"] = "none";
+}
+
+let visibleColor = "yellow"
+let invisibleColor = "gray"
 class ComponentPropertyDivGenerator extends BasePropertyDivGenerator{
     generatePropertyDesc(property): BasePropertyDesc {
-        return new PanelPropertyDesc(property);
+        let propertyDesc = new PanelPropertyDesc(property);
+
+        let titleDiv = propertyDesc.getTitleDiv()
+        titleDiv.style.background = visibleColor
+
+        makeDivUnselectable(titleDiv)
+
+        let contentDiv = propertyDesc.getContentDiv()
+
+        let contentVisible = false
+        titleDiv.addEventListener("click", function(){
+            contentVisible = !contentVisible
+            if(contentVisible){
+                titleDiv.style.background = invisibleColor
+                contentDiv.style.display = "none"
+            }
+            else{
+                titleDiv.style.background = visibleColor
+                contentDiv.style.display = "block"
+            }
+
+        })
+
+        return propertyDesc
     }
 
     flexDirection(): string {
