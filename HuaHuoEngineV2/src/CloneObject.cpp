@@ -53,26 +53,27 @@ static Object& ProduceClone(Object& object, TempRemapTable& remappedPtrs)
     Object* clone = Object::Produce(object.GetType(), InstanceID_None, kMemBaseObject, kCreateObjectDefaultNoLock);
 
     if(clone->GetType()->IsDerivedFrom<CustomComponent>()){
-        Container& baseShapeContainer = ((CustomComponent*)(&object))->GetChildComponents();
-        Container& clonedContainer = ((CustomComponent*)(&clone))->GetChildComponents();
+        CustomComponent* originalComponent = (CustomComponent*)(&object);
+        CustomComponent* clonedComponent = (CustomComponent*)(clone);
+        Container& baseShapeContainer = originalComponent->GetChildComponents();
+        Container& clonedContainer = clonedComponent->GetChildComponents();
 
         clonedContainer.resize(baseShapeContainer.size());
         for (size_t i = 0; i < baseShapeContainer.size(); i++)
         {
             AbstractFrameState& frameState = *baseShapeContainer[i].GetComponentPtr();
-            AbstractFrameState& clone = static_cast<AbstractFrameState&>(ProduceClone(frameState, remappedPtrs));
+            AbstractFrameState& clonedFrameState = static_cast<AbstractFrameState&>(ProduceClone(frameState, remappedPtrs));
 
-            GetPersistentManagerPtr()->MakeObjectPersistent(clone.GetInstanceID(), StoreFilePath);
+            GetPersistentManagerPtr()->MakeObjectPersistent(clonedFrameState.GetInstanceID(), StoreFilePath);
 
-            clonedContainer[i].SetComponentPtr(&clone);
-            // clone.SetGameObjectInternal(cloneGO);
+            clonedContainer[i].SetComponentPtr(&clonedFrameState);
+            // clonedFrameState.SetGameObjectInternal(cloneGO);
 
-            remappedPtrs.get_vector().push_back(std::make_pair(frameState.GetInstanceID(), clone.GetInstanceID()));
+            remappedPtrs.get_vector().push_back(std::make_pair(frameState.GetInstanceID(), clonedFrameState.GetInstanceID()));
         }
 
         // clone.SetGameObjectInternal(cloneGO);
 
-        return *clone;
     }
 
 //    const ManagedObjectHostAttribute* soAttribute = clone->GetType()->FindAttribute<ManagedObjectHostAttribute>();
