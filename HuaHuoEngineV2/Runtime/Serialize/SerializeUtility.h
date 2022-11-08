@@ -13,6 +13,11 @@
 #define TRANSFER_WITH_NAME(x, name) transfer.Transfer (x, name)
 #define TRANSFER(x) TRANSFER_WITH_NAME(x, #x)
 
+#define DEFINE_GET_TYPESTRING_IS_ANIMATION_CHANNEL(x)       \
+    inline static const char* GetTypeString ()  { return #x; } \
+    inline static bool MightContainPPtr ()  { return false; }\
+    inline static bool AllowTransferOptimization () { return true; }
+
 #define DECLARE_SERIALIZE(x) \
     inline static const char* GetTypeString ()  { return #x; }  \
     inline static bool MightContainPPtr ()  { return true; }\

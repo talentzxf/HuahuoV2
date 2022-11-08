@@ -15,7 +15,7 @@ class ColorRGBAf
 public:
     float   r, g, b, a;
 
-    // DEFINE_GET_TYPESTRING_IS_ANIMATION_CHANNEL(ColorRGBA)
+    DEFINE_GET_TYPESTRING_IS_ANIMATION_CHANNEL(ColorRGBA)
 
     ColorRGBAf() {}
 

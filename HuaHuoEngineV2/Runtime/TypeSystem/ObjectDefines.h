@@ -227,7 +227,7 @@ class MISSING_SEMICOLON_AFTER_IMPLEMENT_REGISTER_CLASS_MACRO
     /* template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(GenerateTypeTreeTransfer& transfer); */\
     template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(StreamedBinaryRead& transfer); \
     template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(StreamedBinaryWrite& transfer); \
-    /* template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(RemapPPtrTransfer& transfer); */ \
+    template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(RemapPPtrTransfer& transfer); \
     class MISSING_SEMICOLON_AFTER_INSTANTIATE_TEMPLATE_TRANSFER; /* semicolon will be removed in the near future */
 
 #define IMPLEMENT_OBJECT_SERIALIZE_WITH_DECL(PREFIX_, DECL_) \

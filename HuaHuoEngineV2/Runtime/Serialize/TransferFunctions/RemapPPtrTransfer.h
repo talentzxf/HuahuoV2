@@ -165,8 +165,8 @@ void RemapPPtrTransfer::Transfer(T& data, const char*, ::TransferMetaFlags metaF
                 Assert(oldInstanceID == newInstanceID);
             }
         }
-//        else
-//        {
+        else
+        {
 //            if (m_ReferencedObjectFunctor != NULL && RemapPPtrTraits<T>::IsManagedRefObj())
 //            {
 //                void* ptr = RemapPPtrTraits<T>::GetManagedReferenceObj(data);
@@ -177,8 +177,8 @@ void RemapPPtrTransfer::Transfer(T& data, const char*, ::TransferMetaFlags metaF
 //                        m_ReferencedObjectFunctor->ProcessReferencedObject(anInst, m_CachedMetaMaskStackTop);
 //                }
 //            }
-//            SerializeTraits<T>::Transfer(data, *this);
-//        }
+            SerializeTraits<T>::Transfer(data, *this);
+        }
 
 
         if (metaFlag != 0)

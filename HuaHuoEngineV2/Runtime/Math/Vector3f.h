@@ -6,6 +6,7 @@
 #define HUAHUOENGINE_VECTOR3F_H
 
 #include "Logging/LogAssert.h"
+#include "Serialize/SerializeUtility.h"
 #include "Serialize/SerializationMetaFlags.h"
 #include "FloatConversion.h"
 
@@ -13,6 +14,8 @@
 class Vector3f {
 public:
     float x, y, z;
+
+    DEFINE_GET_TYPESTRING_IS_ANIMATION_CHANNEL(Vector3f)
 
     template<class TransferFunction> void Transfer(TransferFunction& transfer);
 
@@ -51,7 +54,6 @@ public:
     EXPORT_COREMODULE static const Vector3f yAxis;
     EXPORT_COREMODULE static const Vector3f zAxis;
 
-    inline static bool AllowTransferOptimization () { return false; }
 };
 
 

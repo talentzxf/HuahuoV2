@@ -12,6 +12,22 @@ class TransferBase {
 public:
     void AddMetaFlag(int /*mask*/) {}
 
+
+    /// @}
+
+    /// @name Transfers
+    /// @{
+
+    /// Alignment in the serialization system is done manually.
+    /// The serialization system only ever cares about 4 byte alignment.
+    /// When writing data that has an alignment of less than 4 bytes, followed by data that has 4 byte alignment,
+    /// then Align must be called before the 4 byte aligned data.
+    /// TRANSFER (1byte);
+    /// TRANSFER (1byte);
+    /// transfer.Align ();
+    /// TRANSFER (4byte);
+    void Align() {}
+
     /// Internal function. Should only be called from SerializeTraits
     template<class T>
     void TransferBasicData(T&) {}

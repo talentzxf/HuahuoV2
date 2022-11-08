@@ -29,6 +29,8 @@ inline float Magnitude(const Quaternionf& q)
 class Quaternionf {
 public:
     float x, y, z, w;
+
+    DEFINE_GET_TYPESTRING_IS_ANIMATION_CHANNEL(Quaternionf)
     template<class TransferFunction> void Transfer(TransferFunction& transfer);
 
     Quaternionf() {}  // Default ctor is intentionally empty for performance reasons
