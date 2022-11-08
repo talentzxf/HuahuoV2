@@ -249,7 +249,7 @@ public:
 
     AbstractFrameState* AddFrameStateByName(const char* frameStateName);
 
-    AbstractFrameState* GetFrameStateByName(const char* frameStateName);
+    AbstractFrameState* GetFrameStateByTypeName(const char* frameStateName);
 
     void AddAnimationOffset(int offset);
 

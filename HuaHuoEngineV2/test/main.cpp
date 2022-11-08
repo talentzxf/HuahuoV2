@@ -131,7 +131,8 @@ void testShapeStore() {
     circleShape->SetCenter(1.0, 1.0, 1.0);
     circleShape->SetRadius(1.0);
 
-    ShapeFollowCurveFrameState* curveFrameState = (ShapeFollowCurveFrameState*)circleShape->GetFrameStateByName("ShapeFollowCurveFrameState");
+    ShapeFollowCurveFrameState* curveFrameState = (ShapeFollowCurveFrameState*) circleShape->GetFrameStateByTypeName(
+            "ShapeFollowCurveFrameState");
     curveFrameState->RecordTargetShape(10, rectangleShape);
     curveFrameState->RecordLengthRatio(10, 1.0f);
 
@@ -501,7 +502,7 @@ void testReadFromFile(){
 
     CircleShape* clonedCircleShape = (CircleShape*) CloneObject(*circleShape);
 
-    CustomComponent* clonedGrowthComponent = (CustomComponent*)clonedCircleShape->GetFrameStateByName("CurveGrowth");
+    CustomComponent* clonedGrowthComponent = (CustomComponent*)clonedCircleShape->GetFrameState("CurveGrowth");
     clonedGrowthComponent->SetFloatValue("growth", 100.0f);
 
     Assert(customComponent->GetFloatValue("growth") != clonedGrowthComponent->GetFloatValue("growth"));

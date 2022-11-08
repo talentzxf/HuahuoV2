@@ -221,7 +221,7 @@ AbstractFrameState *BaseShape::AddFrameStateByName(const char *frameStateName) {
     return NULL;
 }
 
-AbstractFrameState *BaseShape::GetFrameStateByName(const char *frameStateName) {
+AbstractFrameState *BaseShape::GetFrameStateByTypeName(const char *frameStateName) {
     const HuaHuo::Type *componentType = HuaHuo::Type::FindTypeByName(frameStateName);
     return QueryFrameStateByType(componentType);
 }

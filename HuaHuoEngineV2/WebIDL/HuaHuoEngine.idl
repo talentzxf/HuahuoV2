@@ -190,7 +190,7 @@ interface BaseShape{
     long GetFrameStateCount();
     AbstractFrameState GetFrameState(long idx);
 
-    AbstractFrameState GetFrameStateByName([Const] DOMString frameStateName);
+    AbstractFrameState GetFrameStateByTypeName([Const] DOMString frameStateName);
 
     float GetRotation();
     void SetRotation(float rotation);

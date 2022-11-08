@@ -647,7 +647,7 @@ abstract class BaseShapeJS {
     }
 
     afterWASMReady() {
-        this.shapeFollowCurveFrameState = castObject( this.rawObj.GetFrameStateByName("ShapeFollowCurveFrameState"), Module["ShapeFollowCurveFrameState"])
+        this.shapeFollowCurveFrameState = castObject( this.rawObj.GetFrameStateByTypeName("ShapeFollowCurveFrameState"), Module["ShapeFollowCurveFrameState"])
 
         this.rawObj = castObject(this.rawObj, Module[this.getShapeName()]);
 
