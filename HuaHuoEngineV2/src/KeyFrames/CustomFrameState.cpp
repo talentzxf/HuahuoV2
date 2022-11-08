@@ -153,17 +153,21 @@ void CustomFrameState::RecordFieldValue(int frameId, T value) {
 
     if constexpr(std::is_floating_point<T>()) {
         pKeyFrame->data.floatValue = value;
+        pKeyFrame->data.dataType = FLOAT;
     } else if constexpr(std::is_same<T, FieldShapeArray>()){
         pKeyFrame->data.shapeArrayValue = value;
+        pKeyFrame->data.dataType = SHAPEARRAY;
     } else if constexpr(std::is_same<T, ColorRGBAf>()){
         pKeyFrame->data.colorValue = value;
+        pKeyFrame->data.dataType = COLOR;
     }
 
     Apply(frameId);
 }
 
-CustomFrameState *CustomFrameState::CreateFrameState() {
+CustomFrameState *CustomFrameState::CreateFrameState(CustomDataType dataType) {
     CustomFrameState *producedFrameState = Object::Produce<CustomFrameState>();
+    producedFrameState->m_DataType = dataType;
     printf("Creating component at path:%s\n", StoreFilePath.c_str());
     GetPersistentManagerPtr()->MakeObjectPersistent(producedFrameState->GetInstanceID(), StoreFilePath);
     return producedFrameState;

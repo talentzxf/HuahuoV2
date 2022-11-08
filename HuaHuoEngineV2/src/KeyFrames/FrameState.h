@@ -83,7 +83,7 @@ public:
     virtual void AddAnimationOffset(int offset) = 0;
 
 
-    void SetBaseShape(BaseShape* pBaseShape);
+    virtual void SetBaseShape(BaseShape* pBaseShape);
 
     template<class TransferFunction> void Transfer(TransferFunction &transfer){
         Super::Transfer(transfer);

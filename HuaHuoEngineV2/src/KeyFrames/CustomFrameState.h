@@ -89,8 +89,11 @@ public:
     FieldShapeArray* GetShapeArrayValueForWrite();
     FieldShapeArray* GetShapeArrayValue(); // Don't insert into this fieldShapeArray, it will have no effect.
 
-    static CustomFrameState* CreateFrameState();
+    static CustomFrameState* CreateFrameState(CustomDataType dataType);
 
+    CustomData* GetDefaultValueData(){
+        return &m_defaultValue;
+    }
 private:
     template <typename T> void RecordFieldValue(int frameId, T value);
 

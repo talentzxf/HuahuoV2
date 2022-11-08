@@ -24,6 +24,7 @@
 #include "Shapes/CurveShape.h"
 #include "Shapes/MirrorShape.h"
 #include "KeyFrames/CustomFrameState.h"
+#include "KeyFrames/CustomComponent.h"
 
 void RegisterBuiltinTypes()
 {
@@ -81,4 +82,5 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<CurveShape>("ObjectStore");
     RegisterHuaHuoClass<ShapeFollowCurveFrameState>("ObjectStore");
     RegisterHuaHuoClass<CustomFrameState>("ObjectStore");
+    RegisterHuaHuoClass<CustomComponent>("ObjectStore");
 }

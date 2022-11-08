@@ -16,7 +16,6 @@ void CustomComponent::Transfer(TransferFunction &transfer) {
 
     TRANSFER(m_fieldNameFieldIndexMap);
     TRANSFER(m_fieldIndexFieldNameMap);
-    TRANSFER(m_fieldInitValueMap);
     TRANSFER(m_FrameStates);
 }
 
@@ -29,5 +28,15 @@ CustomComponent *CustomComponent::CreateComponent() {
 bool CustomComponent::Apply(int frameId) {
     for(auto frameState : m_FrameStates){
         frameState->Apply(frameId);
+    }
+
+    return true;
+}
+
+void CustomComponent::SetBaseShape(BaseShape *pBaseShape) {
+    AbstractFrameState::SetBaseShape(pBaseShape);
+
+    for(auto frameState : m_FrameStates){
+        frameState->SetBaseShape(pBaseShape);
     }
 }

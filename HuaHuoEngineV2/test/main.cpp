@@ -492,9 +492,6 @@ void testReadFromFile(){
     customComponent->RegisterShapeArrayValue("targetShapeArray");
     customComponent->CreateShapeArrayValue("targetShapeArray");
 
-    CustomFrameState* clonedFrameState = (CustomFrameState*) CloneObject(*customComponent);
-    clonedFrameState->Apply(0);
-
     printf("GetValue:%f\n", customComponent->GetFloatValue("growth"));
 
     ColorRGBAf* color = customComponent->GetColorValue("strokeColor");

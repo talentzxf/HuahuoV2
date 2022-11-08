@@ -84,14 +84,23 @@ public:
         return m_FrameStates[idx]->GetColorValue();
     }
 
+    void SetBaseShape(BaseShape *pBaseShape) override;
+
 private:
-    int RegisterField(const char* fieldName){
+    int RegisterField(const char* fieldName, CustomDataType dataType){
+        if(m_FrameStates.size() != m_fieldNameFieldIndexMap.size()){
+            Assert("Error, field dim mismatch!");
+            return -1;
+        }
+
         if(!m_fieldNameFieldIndexMap.contains(fieldName)){
             int index = m_fieldNameFieldIndexMap.size();
             m_fieldNameFieldIndexMap[fieldName] = index;
             m_fieldIndexFieldNameMap[index] = fieldName;
 
-            m_FrameStates[index] = CustomFrameState::CreateFrameState();
+            CustomFrameState* pFrameState = CustomFrameState::CreateFrameState(dataType);
+            pFrameState->SetBaseShape(this->baseShape);
+            m_FrameStates.push_back(pFrameState);
 
             return index;
         }
@@ -101,29 +110,27 @@ private:
 
 public:
     int RegisterFloatValue(const char* fieldName, float initValue){
-        int fieldIdx = this->RegisterField(fieldName);
-        m_fieldInitValueMap[fieldIdx].floatValue = initValue;
+        int fieldIdx = this->RegisterField(fieldName, FLOAT);
+        m_FrameStates[fieldIdx]->GetDefaultValueData()->floatValue = initValue;
         return fieldIdx;
     }
 
     int RegisterColorValue(const char* fieldName, float r, float g, float b, float a){
-        int fieldIdx = this->RegisterField(fieldName);
+        int fieldIdx = this->RegisterField(fieldName, COLOR);
         ColorRGBAf initColor(r, g, b, a);
-        m_fieldInitValueMap[fieldIdx].colorValue = initColor;
-
+        m_FrameStates[fieldIdx]->GetDefaultValueData()->colorValue = initColor;
         return fieldIdx;
     }
 
     int RegisterShapeArrayValue(const char* fieldName){
-        return this->RegisterField(fieldName);
+        return this->RegisterField(fieldName, SHAPEARRAY);
     }
 
     static CustomComponent* CreateComponent();
+
 private:
     std::map<string, int> m_fieldNameFieldIndexMap;
     std::map<int, string> m_fieldIndexFieldNameMap;
-
-    std::map<int, CustomData> m_fieldInitValueMap;
 
     vector<PPtr<CustomFrameState>> m_FrameStates; // All the frame states. Each field has one.
 };
