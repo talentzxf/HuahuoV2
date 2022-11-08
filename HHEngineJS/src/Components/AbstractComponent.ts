@@ -166,9 +166,9 @@ class AbstractComponent {
 
     constructor(rawObj?) {
         if(rawObj){
-            this.rawObj = castObject( rawObj, Module["CustomFrameState"])
+            this.rawObj = castObject( rawObj, Module["CustomComponent"])
         }else{
-            this.rawObj = Module["CustomFrameState"].prototype.CreateFrameState()
+            this.rawObj = Module["CustomComponent"].prototype.CreateComponent()
         }
 
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)

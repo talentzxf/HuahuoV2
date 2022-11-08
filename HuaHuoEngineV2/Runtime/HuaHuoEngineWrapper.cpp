@@ -13,7 +13,7 @@
 #include "Shapes/TextShape.h"
 #include "Shapes/CurveShape.h"
 #include "KeyFrames/ShapeFollowCurveFrameState.h"
-#include "KeyFrames/CustomFrameState.h"
+#include "KeyFrames/CustomComponent.h"
 #include "Shapes/MirrorShape.h"
 
 #ifdef HUAHUO_EDITOR
