@@ -27,7 +27,7 @@ CustomComponent *CustomComponent::CreateComponent() {
 
 bool CustomComponent::Apply(int frameId) {
     for(auto frameState : m_FrameStates){
-        frameState->Apply(frameId);
+        frameState.GetComponentPtr()->Apply(frameId);
     }
 
     return true;
@@ -37,6 +37,6 @@ void CustomComponent::SetBaseShape(BaseShape *pBaseShape) {
     AbstractFrameState::SetBaseShape(pBaseShape);
 
     for(auto frameState : m_FrameStates){
-        frameState->SetBaseShape(pBaseShape);
+        frameState.GetComponentPtr()->SetBaseShape(pBaseShape);
     }
 }

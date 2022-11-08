@@ -89,6 +89,7 @@ public:
         Super::Transfer(transfer);
         TRANSFER(baseShape);
         TRANSFER(typeName);
+        TRANSFER(frameStateName);
     }
 
     void SetTypeName(const char* typeName){
@@ -103,10 +104,19 @@ public:
         return typeName.c_str();
     }
 
+    void SetFrameStateName(const char* frameStateName){
+        this->frameStateName = frameStateName;
+    }
+
+    std::string GetFrameStateName(){
+        return this->frameStateName;
+    }
+
 protected:
     std::string typeName;
     bool isValidFrame;
     PPtr<BaseShape> baseShape;
+    std::string frameStateName;
 };
 
 template<class T>

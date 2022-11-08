@@ -32,29 +32,30 @@ private:
     BaseShape* m_BaseShape;
 };
 
+struct FrameStatePair
+{
+    FrameStatePair() {}
+
+    static FrameStatePair FromState(AbstractFrameState* component);
+    DECLARE_SERIALIZE(FrameStatePair);
+
+    inline RuntimeTypeIndex const GetTypeIndex() const { return typeIndex; }
+    inline ImmediatePtr<AbstractFrameState> const& GetComponentPtr() const { return component; }
+
+    void SetComponentPtr(AbstractFrameState* const ptr);
+
+private:
+    RuntimeTypeIndex typeIndex;
+    ImmediatePtr<AbstractFrameState> component;
+};
+
+typedef std::vector<FrameStatePair>    Container;
+
 class Layer;
 class BaseShape : public Object{
     REGISTER_CLASS(BaseShape);
     DECLARE_OBJECT_SERIALIZE();
 public:
-    struct FrameStatePair
-    {
-        FrameStatePair() {}
-
-        static FrameStatePair FromState(AbstractFrameState* component);
-        DECLARE_SERIALIZE(FrameStatePair);
-
-        inline RuntimeTypeIndex const GetTypeIndex() const { return typeIndex; }
-        inline ImmediatePtr<AbstractFrameState> const& GetComponentPtr() const { return component; }
-
-        void SetComponentPtr(AbstractFrameState* const ptr);
-
-    private:
-        RuntimeTypeIndex typeIndex;
-        ImmediatePtr<AbstractFrameState> component;
-    };
-
-    typedef std::vector<FrameStatePair>    Container;
 
     Container& GetFrameStateContainerInternal() { return mFrameStates; }
 
@@ -94,6 +95,8 @@ public:
     }
 
     AbstractFrameState* AddFrameState(AbstractFrameState* frameState);
+
+    AbstractFrameState* GetFrameState(const char* name);
 
     /// Get and set the name
     virtual const char* GetName() const override{
@@ -292,7 +295,7 @@ T* BaseShape::QueryFrameState() const
     return static_cast<T*>(QueryFrameStateByType(TypeOf<T>()));
 }
 
-inline BaseShape::FrameStatePair BaseShape::FrameStatePair::FromState(AbstractFrameState* frameState)
+inline FrameStatePair FrameStatePair::FromState(AbstractFrameState* frameState)
 {
     FrameStatePair ret;
     ret.typeIndex = frameState->GetType()->GetRuntimeTypeIndex();

@@ -23,7 +23,7 @@ public:
     const vector<int> GetKeyFrameIds(){
         vector<int> keyFrames;
         for(auto frameState: m_FrameStates){
-            auto frameStateKeyFrames = frameState->GetKeyFrameIds();
+            auto frameStateKeyFrames = frameState.GetComponentPtr()->GetKeyFrameIds();
             keyFrames.insert(keyFrames.end(), frameStateKeyFrames.begin(), frameStateKeyFrames.end());
         }
 
@@ -33,7 +33,7 @@ public:
     virtual int GetMinFrameId(){
         int minFrameId = MAX_FRAMES;
         for(auto frameState: m_FrameStates){
-            minFrameId = min( minFrameId, frameState->GetMinFrameId());
+            minFrameId = min( minFrameId, frameState.GetComponentPtr()->GetMinFrameId());
         }
         return minFrameId;
     }
@@ -41,14 +41,14 @@ public:
     virtual int GetMaxFrameId(){
         int maxFrameId = -1;
         for(auto frameState: m_FrameStates){
-            maxFrameId = max( maxFrameId, frameState->GetMaxFrameId());
+            maxFrameId = max( maxFrameId, frameState.GetComponentPtr()->GetMaxFrameId());
         }
         return maxFrameId;
     }
 
     virtual void AddAnimationOffset(int offset){
         for(auto frameState: m_FrameStates){
-            frameState->AddAnimationOffset(offset);
+            frameState.GetComponentPtr()->AddAnimationOffset(offset);
         }
     }
 
@@ -56,37 +56,44 @@ public:
 
     void SetFloatValue(const char* fieldName, float value){
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        m_FrameStates[idx]->SetFloatValue(value);
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        pComponent->SetFloatValue(value);
     }
 
     void SetColorValue(const char* fieldName, float r, float g, float b, float a){
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        m_FrameStates[idx]->SetColorValue(r, g, b, a);
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        pComponent->SetColorValue(r, g, b, a);
     }
 
     void CreateShapeArrayValue(const char* fieldName){
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        m_FrameStates[idx]->CreateShapeArrayValue();
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        pComponent->CreateShapeArrayValue();
     }
 
     FieldShapeArray* GetShapeArrayValueForWrite(const char* fieldName){
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        return m_FrameStates[idx]->GetShapeArrayValueForWrite();
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        return pComponent->GetShapeArrayValueForWrite();
     }
 
     float GetFloatValue(const char* fieldName){
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        return m_FrameStates[idx]->GetFloatValue();
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        return pComponent->GetFloatValue();
     }
 
     FieldShapeArray* GetShapeArrayValue(const char* fieldName){
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        return m_FrameStates[idx]->GetShapeArrayValue();
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        return pComponent->GetShapeArrayValue();
     }
 
     ColorRGBAf* GetColorValue(const char* fieldName){
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        return m_FrameStates[idx]->GetColorValue();
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        return pComponent->GetColorValue();
     }
 
     void SetBaseShape(BaseShape *pBaseShape) override;
@@ -105,7 +112,7 @@ private:
 
             CustomFrameState* pFrameState = CustomFrameState::CreateFrameState(dataType);
             pFrameState->SetBaseShape(this->baseShape);
-            m_FrameStates.push_back(pFrameState);
+            m_FrameStates.push_back(FrameStatePair::FromState(pFrameState));
 
             return index;
         }
@@ -116,14 +123,16 @@ private:
 public:
     int RegisterFloatValue(const char* fieldName, float initValue){
         int fieldIdx = this->RegisterField(fieldName, FLOAT);
-        m_FrameStates[fieldIdx]->GetDefaultValueData()->floatValue = initValue;
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        pComponent->GetDefaultValueData()->floatValue = initValue;
         return fieldIdx;
     }
 
     int RegisterColorValue(const char* fieldName, float r, float g, float b, float a){
-        int fieldIdx = this->RegisterField(fieldName, COLOR);
+        int fieldIdx = this->RegisterField(fieldName, FLOAT);
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
         ColorRGBAf initColor(r, g, b, a);
-        m_FrameStates[fieldIdx]->GetDefaultValueData()->colorValue = initColor;
+        pComponent->GetDefaultValueData()->colorValue = initColor;
         return fieldIdx;
     }
 
@@ -137,7 +146,7 @@ private:
     std::map<string, int> m_fieldNameFieldIndexMap;
     std::map<int, string> m_fieldIndexFieldNameMap;
 
-    vector<PPtr<CustomFrameState>> m_FrameStates; // All the frame states. Each field has one.
+    Container m_FrameStates; // All the frame states. Each field has one.
 };
 
 

@@ -84,8 +84,8 @@ static BaseShape& CollectAndProduceBaseShape(BaseShape& baseShape, TempRemapTabl
 
     // baseShape.CopyProperties(*cloneBaseShape);
 
-    BaseShape::Container& baseShapeContainer = baseShape.GetFrameStateContainerInternal();
-    BaseShape::Container& clonedContainer = cloneBaseShape->GetFrameStateContainerInternal();
+    Container& baseShapeContainer = baseShape.GetFrameStateContainerInternal();
+    Container& clonedContainer = cloneBaseShape->GetFrameStateContainerInternal();
 
     clonedContainer.resize(baseShapeContainer.size());
     for (size_t i = 0; i < baseShapeContainer.size(); i++)

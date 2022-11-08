@@ -92,6 +92,15 @@ AbstractFrameState *BaseShape::AddFrameState(AbstractFrameState *frameState) {
     return frameState;
 }
 
+AbstractFrameState* BaseShape::GetFrameState(const char* name){
+    for(auto frameState : mFrameStates){
+        if(frameState.GetComponentPtr()->GetName() == name){
+            return frameState.GetComponentPtr();
+        }
+    }
+    return NULL;
+}
+
 void BaseShape::SetLocalPivotPosition(float x, float y, float z) {
 
     Layer *shapeLayer = GetLayer();
@@ -218,7 +227,7 @@ AbstractFrameState *BaseShape::GetFrameStateByName(const char *frameStateName) {
 }
 
 template<class TransferFunction>
-void BaseShape::FrameStatePair::Transfer(TransferFunction &transfer) {
+void FrameStatePair::Transfer(TransferFunction &transfer) {
     transfer.Transfer(component, "component");
     if (transfer.IsReadingPPtr()) {
         typeIndex = component ? component->GetType()->GetRuntimeTypeIndex() : 0;
@@ -237,7 +246,7 @@ AbstractFrameState *BaseShape::QueryFrameStateByType(const HuaHuo::Type *type) c
     return NULL;
 }
 
-void BaseShape::FrameStatePair::SetComponentPtr(AbstractFrameState *const ptr) {
+void FrameStatePair::SetComponentPtr(AbstractFrameState *const ptr) {
     if (ptr != NULL) {
         component = ptr;
         typeIndex = ptr->GetType()->GetRuntimeTypeIndex();

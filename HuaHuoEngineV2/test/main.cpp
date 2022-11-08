@@ -467,6 +467,7 @@ void testReadFromFile(){
     circleShape->SetBornFrameId(10);
 
     CustomComponent* customComponent = CustomComponent::CreateComponent();
+    customComponent->SetName("CurveGrowth");
 
     customComponent->RegisterFloatValue("growth", 1.0f);
     customComponent->RegisterColorValue("strokeColor", 1.0, 0.0, 0.0, 1.0);
@@ -496,6 +497,14 @@ void testReadFromFile(){
 
     ColorRGBAf* color = customComponent->GetColorValue("strokeColor");
     printf("GetColor:%f,%f,%f,%f\n",color->r, color->g, color->b, color->a);
+
+
+    CircleShape* clonedCircleShape = (CircleShape*) CloneObject(*circleShape);
+
+    CustomComponent* clonedGrowthComponent = (CustomComponent*)clonedCircleShape->GetFrameStateByName("CurveGrowth");
+    clonedGrowthComponent->SetFloatValue("growth", 100.0f);
+
+    Assert(customComponent->GetFloatValue("growth") != clonedGrowthComponent->GetFloatValue("growth"));
 }
 
 int main() {
