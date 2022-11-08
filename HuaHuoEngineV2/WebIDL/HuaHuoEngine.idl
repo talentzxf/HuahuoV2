@@ -140,8 +140,8 @@ interface FieldShapeArray{
 };
 
 [NoDelete]
-interface CustomFrameState{
-    static CustomFrameState CreateFrameState();
+interface CustomComponent{
+    static CustomComponent CreateComponent();
     long RegisterFloatValue([Const] DOMString fieldName, float initValue);
     long RegisterShapeArrayValue([Const] DOMString fieldName);
     long RegisterColorValue([Const] DOMString fieldName, float r, float g, float b, float a);
@@ -157,7 +157,7 @@ interface CustomFrameState{
     ColorRGBAf GetColorValue([Const] DOMString fieldName);
 };
 
-CustomFrameState implements AbstractFrameState;
+CustomComponent implements AbstractFrameState;
 
 [NoDelete]
 interface ShapeFollowCurveFrameState{

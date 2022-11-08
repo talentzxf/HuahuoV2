@@ -69,6 +69,11 @@ public:
         m_FrameStates[idx]->CreateShapeArrayValue();
     }
 
+    FieldShapeArray* GetShapeArrayValueForWrite(const char* fieldName){
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        return m_FrameStates[idx]->GetShapeArrayValueForWrite();
+    }
+
     float GetFloatValue(const char* fieldName){
         int idx = m_fieldNameFieldIndexMap[fieldName];
         return m_FrameStates[idx]->GetFloatValue();
