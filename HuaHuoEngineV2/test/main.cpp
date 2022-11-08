@@ -25,6 +25,7 @@
 #include "Shapes/RectangleShape.h"
 #include "CloneObject.h"
 #include "KeyFrames/CustomFrameState.h"
+#include "KeyFrames/CustomComponent.h"
 
 #define ASSERT assert
 
@@ -465,37 +466,38 @@ void testReadFromFile(){
     circleShape->SetCenter(0.0, 1.0, 2.0);
     circleShape->SetBornFrameId(10);
 
-    CustomFrameState* customFrameState = CustomFrameState::CreateFrameState();
-    customFrameState->RegisterFloatValue("growth", 1.0f);
-    customFrameState->RegisterColorValue("strokeColor", 1.0, 0.0, 0.0, 1.0);
-    printf("GetValue:%f\n", customFrameState->GetFloatValue("growth"));
+    CustomComponent* customComponent = CustomComponent::CreateComponent();
 
-    circleShape->AddFrameState(customFrameState);
+    customComponent->RegisterFloatValue("growth", 1.0f);
+    customComponent->RegisterColorValue("strokeColor", 1.0, 0.0, 0.0, 1.0);
+    printf("GetValue:%f\n", customComponent->GetFloatValue("growth"));
+
+    circleShape->AddFrameState(customComponent);
     GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->AddShapeInternal(circleShape);
 
-    customFrameState->SetFloatValue("growth", 1.0f);
-    customFrameState->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
+    customComponent->SetFloatValue("growth", 1.0f);
+    customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
 
-    customFrameState->Apply(0);
+    customComponent->Apply(0);
     circleShape->GetMinFrameId();
 
     Layer *shapeLayer = circleShape->GetLayer();
     shapeLayer->SetCurrentFrame(10);
-    customFrameState->SetColorValue("strokeColor", 0.0, 1.0, 0.0, 1.0);
-    float growthValue = customFrameState->GetFloatValue("growth");
+    customComponent->SetColorValue("strokeColor", 0.0, 1.0, 0.0, 1.0);
+    float growthValue = customComponent->GetFloatValue("growth");
 
     GetPersistentManager().WriteFile(StoreFilePath);
 
-    customFrameState->SetFloatValue("growth", 0.5f);
-    customFrameState->RegisterShapeArrayValue("targetShapeArray");
-    customFrameState->CreateShapeArrayValue("targetShapeArray");
+    customComponent->SetFloatValue("growth", 0.5f);
+    customComponent->RegisterShapeArrayValue("targetShapeArray");
+    customComponent->CreateShapeArrayValue("targetShapeArray");
 
-    CustomFrameState* clonedFrameState = (CustomFrameState*) CloneObject(*customFrameState);
+    CustomFrameState* clonedFrameState = (CustomFrameState*) CloneObject(*customComponent);
     clonedFrameState->Apply(0);
 
-    printf("GetValue:%f\n", clonedFrameState->GetFloatValue("growth"));
+    printf("GetValue:%f\n", customComponent->GetFloatValue("growth"));
 
-    ColorRGBAf* color = customFrameState->GetColorValue("strokeColor");
+    ColorRGBAf* color = customComponent->GetColorValue("strokeColor");
     printf("GetColor:%f,%f,%f,%f\n",color->r, color->g, color->b, color->a);
 }
 

@@ -13,17 +13,45 @@
 
 class BaseShape;
 
+enum CustomDataType{
+    FLOAT,
+    COLOR,
+    SHAPEARRAY
+};
+
+// Use union to save space.
+struct CustomData{
+    float floatValue;
+    FieldShapeArray shapeArrayValue;
+    ColorRGBAf colorValue;
+    CustomDataType dataType;
+
+    DECLARE_SERIALIZE(CustomData);
+};
+
+template<class TransferFunction> void CustomData::Transfer(TransferFunction &transfer) {
+    TRANSFER_ENUM(dataType);
+
+    switch (dataType) {
+        case FLOAT:
+            TRANSFER(floatValue);
+            break;
+        case COLOR:
+            TRANSFER(colorValue);
+            break;
+        case SHAPEARRAY:
+            TRANSFER(shapeArrayValue);
+            break;
+    }
+}
+
+
 class CustomDataKeyFrame{
 public:
-    std::map<int, float> floatFrameValues; // Map from fieldId->float value.
-
-    std::map<int, FieldShapeArray> shapeArrayValues; // Map from fieldId-> shapeArray.
-
-    std::map<int, ColorRGBAf> colorFrameValues;
-
+    CustomData data;
     int frameId;
 
-    DECLARE_SERIALIZE(CustomDataKeyFrame)
+    DECLARE_SERIALIZE(CustomDataKeyFrame);
 
     CustomDataKeyFrame():
         frameId(-1){
@@ -32,9 +60,7 @@ public:
 
 template <class TransferFunction> void CustomDataKeyFrame::Transfer(TransferFunction &transfer) {
     TRANSFER(frameId);
-    TRANSFER(floatFrameValues);
-    TRANSFER(shapeArrayValues);
-    TRANSFER(colorFrameValues);
+    TRANSFER(data);
 }
 
 CustomDataKeyFrame Lerp(CustomDataKeyFrame& k1, CustomDataKeyFrame& k2, float ratio);
@@ -51,60 +77,26 @@ public:
     virtual bool Apply();
     virtual bool Apply(int frameId) override;
 
-private:
-    int RegisterField(const char* fieldName){
-        if(!m_fieldNameFieldIndexMap.contains(fieldName)){
-            int index = m_floatFieldInitValues.size();
-            m_fieldNameFieldIndexMap[fieldName] = index;
-            m_fieldIndexFieldNameMap[index] = fieldName;
-            return index;
-        }
-
-        return m_fieldNameFieldIndexMap[fieldName];
-    }
-
 public:
-    int RegisterFloatValue(const char* fieldName, float initValue){
-        int fieldIdx = this->RegisterField(fieldName);
-        m_floatFieldInitValues[fieldIdx] = initValue;
+    void SetFloatValue(float value);
 
-        return fieldIdx;
-    }
+    float GetFloatValue();
 
-    int RegisterColorValue(const char* fieldName, float r, float g, float b, float a){
-        int fieldIdx = this->RegisterField(fieldName);
-        ColorRGBAf initColor(r, g, b, a);
-        m_colorFieldInitValues[fieldIdx] = initColor;
+    void SetColorValue(float r, float g, float b, float a);
+    ColorRGBAf* GetColorValue();
 
-        return fieldIdx;
-    }
-
-    int RegisterShapeArrayValue(const char* fieldName){
-        return this->RegisterField(fieldName);
-    }
-
-    void SetFloatValue(const char* fieldName, float value);
-
-    float GetFloatValue(const char* fieldName);
-
-    void SetColorValue(const char* fieldName, float r, float g, float b, float a);
-    ColorRGBAf* GetColorValue(const char* fieldName);
-
-    void CreateShapeArrayValue(const char* fieldName);
-    FieldShapeArray* GetShapeArrayValueForWrite(const char* fieldName);
-    FieldShapeArray* GetShapeArrayValue(const char* fieldName); // Don't insert into this fieldShapeArray, it will have no effect.
+    void CreateShapeArrayValue();
+    FieldShapeArray* GetShapeArrayValueForWrite();
+    FieldShapeArray* GetShapeArrayValue(); // Don't insert into this fieldShapeArray, it will have no effect.
 
     static CustomFrameState* CreateFrameState();
 
 private:
-    template <typename T> void RecordFieldValue(int frameId, const char* fieldName, T value);
+    template <typename T> void RecordFieldValue(int frameId, T value);
 
 private:
-    std::map<string, int> m_fieldNameFieldIndexMap;
-    std::map<int, string> m_fieldIndexFieldNameMap;
-    std::map<int, float> m_floatFieldInitValues;
-    std::map<int, ColorRGBAf> m_colorFieldInitValues;
-
+    CustomDataType m_DataType;
+    CustomData m_defaultValue;
     CustomDataKeyFrame m_CurrentKeyFrame;
 };
 

@@ -15,41 +15,31 @@ INSTANTIATE_TEMPLATE_TRANSFER(CustomFrameState);
 template<class TransferFunction>
 void CustomFrameState::Transfer(TransferFunction &transfer) {
     AbstractFrameStateWithKeyType::Transfer(transfer);
-
-    TRANSFER(m_fieldNameFieldIndexMap);
-    TRANSFER(m_fieldIndexFieldNameMap);
-    TRANSFER(m_floatFieldInitValues);
+    TRANSFER_ENUM(m_DataType);
+    TRANSFER(m_defaultValue);
 }
 
 CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ratio) {
     CustomDataKeyFrame resultData;
 
-    // TODO: Merge these two similar code block.
-    // Interpolate float values.
-    for (auto itr = k1.floatFrameValues.begin(); itr != k1.floatFrameValues.end(); itr++) {
-        int fieldIdx = itr->first;
-        if (!k2.floatFrameValues.contains(fieldIdx)) {
-            resultData.floatFrameValues[fieldIdx] = k1.floatFrameValues[fieldIdx];
-        } else {
-            resultData.floatFrameValues[fieldIdx] = Lerp(k1.floatFrameValues[fieldIdx], k2.floatFrameValues[fieldIdx],
-                                                         ratio);
-        }
+    if(k1.data.dataType != k2.data.dataType){
+        Assert("Data Type of k1 and k2 mismatch!");
+        return resultData;
     }
 
-    // Interpolate color values.
-    for (auto itr = k1.colorFrameValues.begin(); itr != k1.colorFrameValues.end(); itr++) {
-        int fieldIdx = itr->first;
-        if (!k2.colorFrameValues.contains(fieldIdx)) {
-            resultData.colorFrameValues[fieldIdx] = k1.colorFrameValues[fieldIdx];
-        } else {
-            resultData.colorFrameValues[fieldIdx] = Lerp(k1.colorFrameValues[fieldIdx], k2.colorFrameValues[fieldIdx],
-                                                         ratio);
-        }
+    switch(k1.data.dataType){
+        case FLOAT:
+            resultData.data.floatValue = Lerp(k1.data.floatValue, k2.data.floatValue, ratio);
+            break;
+        case COLOR:
+            resultData.data.colorValue = Lerp(k1.data.colorValue, k2.data.colorValue, ratio);
+            break;
+        case SHAPEARRAY:
+            resultData.data.shapeArrayValue = k1.data.shapeArrayValue;
+            break;
     }
 
-    // Copy other fields.
-    resultData.shapeArrayValues = k1.shapeArrayValues;
-
+    resultData.data.dataType = k1.data.dataType;
     return resultData;
 }
 
@@ -75,67 +65,77 @@ bool CustomFrameState::Apply(int frameId) {
     return false;
 }
 
-void CustomFrameState::SetFloatValue(const char *fieldName, float value) {
-    Layer *shapeLayer = baseShape->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
-    this->RecordFieldValue(currentFrameId, fieldName, value);
-    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
-}
-
-float CustomFrameState::GetFloatValue(const char *fieldName) {
-    int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
-
-    if (isValidFrame) {
-        return m_CurrentKeyFrame.floatFrameValues[fieldIdx];
+void CustomFrameState::SetFloatValue(float value) {
+    if(this->m_DataType != FLOAT)
+    {
+        Assert("Data Type mismatch!");
+        return;
     }
 
-    return this->m_floatFieldInitValues[fieldIdx];
-}
-
-void CustomFrameState::SetColorValue(const char* fieldName, float r, float g, float b, float a){
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-
-    ColorRGBAf colorRgbAf(r, g, b, a);
-    this->RecordFieldValue(currentFrameId, fieldName, colorRgbAf);
+    this->RecordFieldValue(currentFrameId, value);
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 }
 
-ColorRGBAf* CustomFrameState::GetColorValue(const char* fieldName){
-    int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
-
-    if (isValidFrame) {
-        return &m_CurrentKeyFrame.colorFrameValues[fieldIdx];
+float CustomFrameState::GetFloatValue() {
+    if(this->m_DataType != FLOAT)
+    {
+        Assert("Data Type mismatch!");
+        return -1.0f;
     }
 
-    return &(m_colorFieldInitValues[fieldIdx]);
+    if (isValidFrame) {
+        return m_CurrentKeyFrame.data.floatValue;
+    }
+
+    return this->m_defaultValue.floatValue;
 }
 
-void CustomFrameState::CreateShapeArrayValue(const char *fieldName){
+void CustomFrameState::SetColorValue(float r, float g, float b, float a){
+    if(this->m_DataType != COLOR)
+    {
+        Assert("Data Type mismatch!");
+        return;
+    }
+
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-
-    this->RecordFieldValue(currentFrameId, fieldName, FieldShapeArray());
+    ColorRGBAf value(r,g,b,a);
+    this->RecordFieldValue(currentFrameId, value);
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 }
 
-FieldShapeArray* CustomFrameState::GetShapeArrayValueForWrite(const char* fieldName){
+ColorRGBAf* CustomFrameState::GetColorValue(){
+    if (isValidFrame) {
+        return &m_CurrentKeyFrame.data.colorValue;
+    }
+
+    return &(m_defaultValue.colorValue);
+}
+
+void CustomFrameState::CreateShapeArrayValue(){
+    Layer *shapeLayer = baseShape->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+
+    this->RecordFieldValue(currentFrameId, FieldShapeArray());
+    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+}
+
+FieldShapeArray* CustomFrameState::GetShapeArrayValueForWrite(){
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames());
 
-    int fieldId = m_fieldNameFieldIndexMap[fieldName];
-    FieldShapeArray* pShapeArray = &pKeyFrame->shapeArrayValues[fieldId];
+    FieldShapeArray* pShapeArray = &pKeyFrame->data.shapeArrayValue;
     pShapeArray->SetFrameState(this);
 
     return pShapeArray;
 }
 
-FieldShapeArray* CustomFrameState::GetShapeArrayValue(const char* fieldName){
-    int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
-
+FieldShapeArray* CustomFrameState::GetShapeArrayValue(){
     if (isValidFrame) {
-        return &m_CurrentKeyFrame.shapeArrayValues[fieldIdx];
+        return &m_CurrentKeyFrame.data.shapeArrayValue;
     }
 
     return NULL;
@@ -148,17 +148,15 @@ bool CustomFrameState::Apply() {
 }
 
 template <typename T>
-void CustomFrameState::RecordFieldValue(int frameId, const char *fieldName, T value) {
+void CustomFrameState::RecordFieldValue(int frameId, T value) {
     CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
 
-    int idx = m_fieldNameFieldIndexMap[fieldName];
-
     if constexpr(std::is_floating_point<T>()) {
-        pKeyFrame->floatFrameValues[idx] = value;
+        pKeyFrame->data.floatValue = value;
     } else if constexpr(std::is_same<T, FieldShapeArray>()){
-        pKeyFrame->shapeArrayValues[idx] = value;
+        pKeyFrame->data.shapeArrayValue = value;
     } else if constexpr(std::is_same<T, ColorRGBAf>()){
-        pKeyFrame->colorFrameValues[idx] = value;
+        pKeyFrame->data.colorValue = value;
     }
 
     Apply(frameId);

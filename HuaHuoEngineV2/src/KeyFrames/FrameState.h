@@ -58,9 +58,8 @@ private:
 class BaseShape;
 
 class AbstractFrameState : public Object {
-REGISTER_CLASS_TRAITS(kTypeIsAbstract);
-
-REGISTER_CLASS(AbstractFrameState);
+    REGISTER_CLASS_TRAITS(kTypeIsAbstract);
+    REGISTER_CLASS(AbstractFrameState);
 
 public:
     AbstractFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
