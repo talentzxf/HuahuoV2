@@ -20,6 +20,10 @@ public:
 
     }
 
+    Container& GetChildComponents(){
+        return m_FrameStates;
+    }
+
     const vector<int> GetKeyFrameIds(){
         vector<int> keyFrames;
         for(auto frameState: m_FrameStates){

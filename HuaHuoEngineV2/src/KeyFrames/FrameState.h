@@ -92,6 +92,10 @@ public:
         TRANSFER(frameStateName);
     }
 
+    const char *GetName() const override;
+
+    void SetName(const char *name) override;
+
     void SetTypeName(const char* typeName){
         this->typeName = typeName;
     }
@@ -102,14 +106,6 @@ public:
         }
 
         return typeName.c_str();
-    }
-
-    void SetFrameStateName(const char* frameStateName){
-        this->frameStateName = frameStateName;
-    }
-
-    std::string GetFrameStateName(){
-        return this->frameStateName;
     }
 
 protected:

@@ -11,6 +11,7 @@
 #include "Serialize/AwakeFromLoadQueue.h"
 #include "Shapes/BaseShape.h"
 #include <cstring>
+#include "KeyFrames/CustomComponent.h"
 
 inline GameObject* GetGameObjectPtr(Object& o)
 {
@@ -47,9 +48,32 @@ public:
     }
 };
 
-static Object& ProduceClone(Object& object)
+static Object& ProduceClone(Object& object, TempRemapTable& remappedPtrs)
 {
     Object* clone = Object::Produce(object.GetType(), InstanceID_None, kMemBaseObject, kCreateObjectDefaultNoLock);
+
+    if(clone->GetType()->IsDerivedFrom<CustomComponent>()){
+        Container& baseShapeContainer = ((CustomComponent*)(&object))->GetChildComponents();
+        Container& clonedContainer = ((CustomComponent*)(&clone))->GetChildComponents();
+
+        clonedContainer.resize(baseShapeContainer.size());
+        for (size_t i = 0; i < baseShapeContainer.size(); i++)
+        {
+            AbstractFrameState& frameState = *baseShapeContainer[i].GetComponentPtr();
+            AbstractFrameState& clone = static_cast<AbstractFrameState&>(ProduceClone(frameState, remappedPtrs));
+
+            GetPersistentManagerPtr()->MakeObjectPersistent(clone.GetInstanceID(), StoreFilePath);
+
+            clonedContainer[i].SetComponentPtr(&clone);
+            // clone.SetGameObjectInternal(cloneGO);
+
+            remappedPtrs.get_vector().push_back(std::make_pair(frameState.GetInstanceID(), clone.GetInstanceID()));
+        }
+
+        // clone.SetGameObjectInternal(cloneGO);
+
+        return *clone;
+    }
 
 //    const ManagedObjectHostAttribute* soAttribute = clone->GetType()->FindAttribute<ManagedObjectHostAttribute>();
 //    if (soAttribute != NULL)
@@ -64,7 +88,7 @@ static Object& ProduceClone(Object& object)
 
 static void CollectAndProduceSingleObject(Object& singleObject, TempRemapTable& remappedPtrs)
 {
-    Object& clone = ProduceClone(singleObject);
+    Object& clone = ProduceClone(singleObject, remappedPtrs);
 
     remappedPtrs.get_vector().push_back(std::make_pair(singleObject.GetInstanceID(), clone.GetInstanceID()));
 }
@@ -91,7 +115,7 @@ static BaseShape& CollectAndProduceBaseShape(BaseShape& baseShape, TempRemapTabl
     for (size_t i = 0; i < baseShapeContainer.size(); i++)
     {
         AbstractFrameState& frameState = *baseShapeContainer[i].GetComponentPtr();
-        AbstractFrameState& clone = static_cast<AbstractFrameState&>(ProduceClone(frameState));
+        AbstractFrameState& clone = static_cast<AbstractFrameState&>(ProduceClone(frameState, remappedPtrs));
 
         GetPersistentManagerPtr()->MakeObjectPersistent(clone.GetInstanceID(), StoreFilePath);
 

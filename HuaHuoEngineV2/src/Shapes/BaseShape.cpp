@@ -94,7 +94,7 @@ AbstractFrameState *BaseShape::AddFrameState(AbstractFrameState *frameState) {
 
 AbstractFrameState* BaseShape::GetFrameState(const char* name){
     for(auto frameState : mFrameStates){
-        if(frameState.GetComponentPtr()->GetName() == name){
+        if(strcmp( frameState.GetComponentPtr()->GetName(), name) == 0){
             return frameState.GetComponentPtr();
         }
     }
