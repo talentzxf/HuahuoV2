@@ -63,6 +63,13 @@ class CurveShapeJS extends BaseSolidShape{
         this.paperShape.simplify(10)
         super.afterCreateShape()
 
+        let fillComponent = this.getComponentByTypeName("FillColorComponent")
+        if(fillComponent){
+            let color = fillComponent["fillColor"]
+            color.alpha = 0.0
+            fillComponent["fillColor"] = color
+        }
+
         this.store()
     }
 

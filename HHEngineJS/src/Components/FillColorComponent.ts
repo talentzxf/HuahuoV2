@@ -1,7 +1,6 @@
 import {AbstractComponent, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {clzObjectFactory} from "../CppClassObjectFactory";
-import {StrokeComponent} from "./StrokeComponent";
 
 let componentName = "FillColorComponent"
 
