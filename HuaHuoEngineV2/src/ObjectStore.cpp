@@ -66,12 +66,8 @@ template<class TransferFunction>
 void ObjectStore::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
 
-    printf("Writing layermap:%d\n", layerMap.size());
     TRANSFER(layerMap);
-
     TRANSFER(layers);
-
-    printf("Writing currentlayer\n");
     TRANSFER(currentLayer);
     TRANSFER(maxFrameId);
     TRANSFER(mStoreId);

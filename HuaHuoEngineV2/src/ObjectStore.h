@@ -139,7 +139,7 @@ public:
         GetPersistentManager().MakeObjectPersistent(currentStore.GetInstanceID(), StoreFilePath);
         allStores.push_back(currentStore);
 
-        printf("CurrentStore instance id:%d at file:%d\n", currentStore.GetInstanceID(), StoreFilePath.c_str());
+        printf("CurrentStore instance id:%d at file:%s\n", currentStore.GetInstanceID(), StoreFilePath.c_str());
         return currentStore;
     }
 

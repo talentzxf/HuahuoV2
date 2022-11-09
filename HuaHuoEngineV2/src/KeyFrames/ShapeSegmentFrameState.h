@@ -94,7 +94,7 @@ public:
 
     SegmentKeyFrame *GetSegmentKeyFrameAtFrameIndex(int keyFrameIndex) {
         if (keyFrameIndex >= GetKeyFrames().size()) {
-            printf("Error, totally %d keyframes, but want to get the %dth keyframe.\n", GetKeyFrames().size(),
+            printf("Error, totally %ld keyframes, but want to get the %dth keyframe.\n", GetKeyFrames().size(),
                    keyFrameIndex);
             return NULL;
         }

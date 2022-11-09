@@ -18,7 +18,7 @@ public:
     {
     }
 
-    virtual const char* GetTypeName(){
+    virtual const char* GetTypeName() override{
         return "CurveShape";
     }
 

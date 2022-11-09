@@ -145,14 +145,6 @@ Vector3f *BaseShape::GetScale() {
     return GetFrameState<ShapeTransformFrameState>().GetScale();
 }
 
-void BaseShape::SetColor(float r, float g, float b, float a) {
-    Layer *shapeLayer = GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
-    GetFrameState<ShapeColorFrameState>().RecordColor(currentFrameId, r, g, b, a);
-
-    shapeLayer->AddKeyFrame(currentFrameId, this);
-}
-
 bool BaseShape::IsVisibleInFrame(SInt32 frameId) {
     if (this->mBornFrameId < 0)
         return false;

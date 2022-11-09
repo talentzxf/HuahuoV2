@@ -24,7 +24,7 @@ public:
         return m_FrameStates;
     }
 
-    const vector<int> GetKeyFrameIds(){
+    const vector<int> GetKeyFrameIds() override{
         vector<int> keyFrames;
         for(auto frameState: m_FrameStates){
             auto frameStateKeyFrames = frameState.GetComponentPtr()->GetKeyFrameIds();
@@ -34,7 +34,7 @@ public:
         return keyFrames;
     }
 
-    virtual int GetMinFrameId(){
+    virtual int GetMinFrameId() override{
         int minFrameId = MAX_FRAMES;
         for(auto frameState: m_FrameStates){
             minFrameId = min( minFrameId, frameState.GetComponentPtr()->GetMinFrameId());
@@ -42,7 +42,7 @@ public:
         return minFrameId;
     }
 
-    virtual int GetMaxFrameId(){
+    virtual int GetMaxFrameId() override{
         int maxFrameId = -1;
         for(auto frameState: m_FrameStates){
             maxFrameId = max( maxFrameId, frameState.GetComponentPtr()->GetMaxFrameId());
@@ -50,7 +50,7 @@ public:
         return maxFrameId;
     }
 
-    virtual void AddAnimationOffset(int offset){
+    virtual void AddAnimationOffset(int offset) override{
         for(auto frameState: m_FrameStates){
             frameState.GetComponentPtr()->AddAnimationOffset(offset);
         }

@@ -231,10 +231,6 @@ public:
         return GetFrameState<ShapeSegmentFrameState>().GetSegmentKeyFrameAtFrameIndex(keyFrameIndex);
     }
 
-    ColorRGBAf* GetColor(){
-        return GetFrameState<ShapeColorFrameState>().GetColor();
-    }
-
     void SetIndex(SInt32 index){
         this->mIndex = index;
     }
