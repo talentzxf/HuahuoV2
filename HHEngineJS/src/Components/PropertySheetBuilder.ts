@@ -48,7 +48,15 @@ class InterpolateColorOperator extends InterpolateOperator{
     }
 
     registerField(fieldName, initValue) {
-        this.rawObj["RegisterColorValue"](fieldName, initValue.r, initValue.g, initValue.b, initValue.a)
+        if(initValue["random"] == null || initValue["random"] == "false"){
+            this.rawObj["RegisterColorValue"](fieldName, initValue.r, initValue.g, initValue.b, initValue.a)
+        }else{
+            let r = Math.random()
+            let g = Math.random()
+            let b = Math.random()
+            this.rawObj["RegisterColorValue"](fieldName, r, g, b, 1.0)
+        }
+
     }
 
     setField(fieldName: string, val) {

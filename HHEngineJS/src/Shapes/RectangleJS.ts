@@ -9,9 +9,6 @@ class RectangleJS extends BaseSolidShape{
         return new RectangleJS(rawObj)
     }
 
-    // This is only used in editor
-    randomFillColor: paper.Color
-
     getShapeName(): string {
         return shapeName
     }
@@ -26,7 +23,6 @@ class RectangleJS extends BaseSolidShape{
         this.paperShape = new paperjs.Path.Rectangle(p1, p2)
         this.paperShape.applyMatrix = false;
         this.paperShape.strokeColor = new paperjs.Color("black");
-        this.paperShape.fillColor = this.randomFillColor
         this.paperShape.data.meta = this
 
         super.afterCreateShape()
@@ -39,9 +35,7 @@ class RectangleJS extends BaseSolidShape{
     setEndPoint(endPoint: Vector2){
         this.rawObj.SetEndPoint(endPoint.x, endPoint.y, 0);
 
-        if(this.paperShape == null){
-            this.randomFillColor = paper.Color.random()
-        }else{
+        if(this.paperShape != null){
             this.paperShape.remove()
         }
 

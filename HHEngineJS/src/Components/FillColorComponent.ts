@@ -15,7 +15,7 @@ class FillColorComponent extends AbstractComponent{
         this.rawObj.SetTypeName(componentName)
     }
 
-    @PropertyValue(PropertyCategory.interpolateColor, {r:0, g:0, b:0, a:1})
+    @PropertyValue(PropertyCategory.interpolateColor, {random: true})
     fillColor
 
     override afterUpdate() {

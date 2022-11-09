@@ -9,8 +9,6 @@ class CircleShapeJS extends BaseSolidShape{
         return new CircleShapeJS(rawObj);
     }
 
-    randomColor: paper.Color
-
     getShapeName(){
         return shapeName
     }
@@ -28,8 +26,6 @@ class CircleShapeJS extends BaseSolidShape{
         let paperjs = this.getPaperJs()
         this.paperShape = new paperjs.Path.Circle(circleCenter, radius);
         this.paperShape.applyMatrix = false;
-        this.paperShape.strokeColor = new paper.Color("black")
-        this.paperShape.fillColor = this.randomColor
         this.paperShape.data.meta = this
 
         super.afterCreateShape()
@@ -38,9 +34,7 @@ class CircleShapeJS extends BaseSolidShape{
     setRadius(radius){
         this.rawObj.SetRadius(radius)
 
-        if(this.paperShape == null){
-            this.randomColor = paper.Color.random()
-        } else {
+        if(this.paperShape != null){
             this.paperShape.remove()
         }
 
