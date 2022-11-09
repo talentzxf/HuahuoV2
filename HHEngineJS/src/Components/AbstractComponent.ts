@@ -62,9 +62,11 @@ function PropertyValue(category:PropertyCategory, initValue = null, config?: Pro
     }
 }
 
-function Component(){
+function Component(componentConfig?){
     return function(ctor){
         clzObjectFactory.RegisterClass(ctor.name, ctor)
+
+        clzObjectFactory.AddToComponentList(ctor.name, componentConfig)
     }
 }
 

@@ -1,6 +1,9 @@
+import {ComponentConfig} from "./Components/ComponentConfig";
+
 class CppClassObjectFactory{
     clzNameConstructorMap: Map<string, Function> = new Map<string, Function>();
 
+    componentNameComponentPropertyMap: Map<string, ComponentConfig> = new Map<string, ComponentConfig>()
     RegisterClass(clzName: string, constructor: Function) {
         this.clzNameConstructorMap.set(clzName, constructor)
     }
@@ -13,6 +16,10 @@ class CppClassObjectFactory{
         this.clzNameConstructorMap.forEach((clzName, constructor)=>{
 
         })
+    }
+
+    RegisterComponent(componentName, config){
+        this.componentNameComponentPropertyMap.set(componentName, config)
     }
 }
 

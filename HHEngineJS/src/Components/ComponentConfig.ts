@@ -1,0 +1,5 @@
+class ComponentConfig{
+
+}
+
+export {ComponentConfig}
