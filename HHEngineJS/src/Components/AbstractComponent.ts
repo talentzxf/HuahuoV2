@@ -115,6 +115,9 @@ class AbstractComponent {
                 operator.setField(fieldName, val)
             }
         })
+
+        // Store in cpp side on creation. Or else the information of the first frame might be lost.
+        this[fieldName] = this[fieldName]
     }
 
     handleShapeArrayEntry(propertyEntry){

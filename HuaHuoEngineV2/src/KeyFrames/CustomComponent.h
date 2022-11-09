@@ -133,7 +133,7 @@ public:
     }
 
     int RegisterColorValue(const char* fieldName, float r, float g, float b, float a){
-        int fieldIdx = this->RegisterField(fieldName, FLOAT);
+        int fieldIdx = this->RegisterField(fieldName, COLOR);
         CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
         ColorRGBAf initColor(r, g, b, a);
         pComponent->GetDefaultValueData()->colorValue = initColor;

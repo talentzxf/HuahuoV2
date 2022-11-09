@@ -480,6 +480,8 @@ void testReadFromFile(){
     customComponent->SetFloatValue("growth", 1.0f);
     customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
 
+    ColorRGBAf* color = customComponent->GetColorValue("strokeColor");
+
     customComponent->Apply(0);
     circleShape->GetMinFrameId();
 
@@ -496,7 +498,7 @@ void testReadFromFile(){
 
     printf("GetValue:%f\n", customComponent->GetFloatValue("growth"));
 
-    ColorRGBAf* color = customComponent->GetColorValue("strokeColor");
+    color = customComponent->GetColorValue("strokeColor");
     printf("GetColor:%f,%f,%f,%f\n",color->r, color->g, color->b, color->a);
 
 
