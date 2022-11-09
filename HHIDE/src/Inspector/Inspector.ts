@@ -34,6 +34,52 @@ class Inspector extends HTMLElement{
         findParentSideBar(this).hide()
     }
 
+    createOpenCollapseButton(allComponentTitleDivs: Array<HTMLElement>){
+
+        let collapseAllButton = document.createElement("button")
+        collapseAllButton.innerText = i18n.t("inspector.CollapseAll")
+
+        let isCollapseAll = true
+        collapseAllButton.onclick = function(){
+            for(let componentTitleDiv of allComponentTitleDivs){
+
+                let currentlyCollapsed = false
+
+                if(componentTitleDiv.getAttribute("isCollapsed") == "true"){
+                    currentlyCollapsed = true
+                }
+
+                if(isCollapseAll){
+                    if(!currentlyCollapsed)
+                        componentTitleDiv.click() // Mimic the click operation.
+                }else{
+                    if(currentlyCollapsed)
+                        componentTitleDiv.click()
+                }
+            }
+
+            if(isCollapseAll)
+                collapseAllButton.innerText = i18n.t("inspector.OpenAll")
+            else
+                collapseAllButton.innerText = i18n.t("inspector.CollapseAll")
+
+            isCollapseAll = !isCollapseAll
+        }
+
+        return collapseAllButton
+    }
+
+    createMountComponentButton(targetObj){
+        let addComponentBtn = document.createElement("button")
+        addComponentBtn.innerText = "+"
+
+        addComponentBtn.onclick = function(){
+
+        }
+
+        return addComponentBtn
+    }
+
     onItemSelected(propertySheet: PropertySheet, targetObj: any){
 
         findParentSideBar(this).show()
@@ -59,38 +105,6 @@ class Inspector extends HTMLElement{
 
             let allComponentTitleDivs:Array<HTMLElement> = new Array<HTMLElement>()
             // Add collapse-all button.
-
-            let collapseAllButton = document.createElement("button")
-            collapseAllButton.innerText = i18n.t("inspector.CollapseAll")
-
-            let isCollapseAll = true
-            collapseAllButton.onclick = function(){
-                for(let componentTitleDiv of allComponentTitleDivs){
-
-                    let currentlyCollapsed = false
-
-                    if(componentTitleDiv.getAttribute("isCollapsed") == "true"){
-                        currentlyCollapsed = true
-                    }
-
-                    if(isCollapseAll){
-                        if(!currentlyCollapsed)
-                            componentTitleDiv.click() // Mimic the click operation.
-                    }else{
-                        if(currentlyCollapsed)
-                            componentTitleDiv.click()
-                    }
-                }
-
-                if(isCollapseAll)
-                    collapseAllButton.innerText = i18n.t("inspector.OpenAll")
-                else
-                    collapseAllButton.innerText = i18n.t("inspector.CollapseAll")
-                
-                isCollapseAll = !isCollapseAll
-            }
-            contentDiv.appendChild(collapseAllButton)
-
             let properties = propertySheet.getProperties()
             for(let property of properties){
                 let divGenerator = GetPropertyDivGenerator(property.type)
@@ -102,6 +116,14 @@ class Inspector extends HTMLElement{
                 if(property.type == PropertyType.COMPONENT){
                     allComponentTitleDivs.push(propertyDesc.getTitleDiv())
                 }
+            }
+
+            if(allComponentTitleDivs.length >= 2){
+                contentDiv.insertBefore(this.createOpenCollapseButton(allComponentTitleDivs), contentDiv.firstChild)
+            }
+
+            if(targetObj["addComponent"]){
+                contentDiv.appendChild(this.createMountComponentButton(targetObj))
             }
 
             this.shapePropertyDivMapping.set(targetObj, contentDiv)
