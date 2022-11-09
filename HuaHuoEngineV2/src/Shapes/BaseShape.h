@@ -10,7 +10,6 @@
 #include "Export/Events/ScriptEventManager.h"
 #include "KeyFrames/ShapeTransformFrameState.h"
 #include "BaseClasses/PPtr.h"
-#include "KeyFrames/ShapeColorFrameState.h"
 #include "Serialize/PersistentManager.h"
 #include "KeyFrames/ShapeSegmentFrameState.h"
 #include "BaseClasses/ImmediatePtr.h"
