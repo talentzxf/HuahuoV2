@@ -9,8 +9,7 @@ import {findParentSideBar, findParentPanel} from "hhpanel";
 })
 class Inspector extends HTMLElement{
     contentScrollerDiv:HTMLDivElement;
-    contentDiv:HTMLElement;
-    propertyDescArray: Array<BasePropertyDesc> = new Array<BasePropertyDesc>()
+    shapePropertyDivMapping: Map<any, HTMLElement> = new Map()
 
     connectedCallback() {
         let parentPanel = findParentPanel(this)
@@ -24,10 +23,6 @@ class Inspector extends HTMLElement{
         this.contentScrollerDiv.style.resize = "both"
         this.appendChild(this.contentScrollerDiv )
 
-        this.contentDiv = document.createElement("div")
-        this.contentDiv.style.width="100%"
-        this.contentScrollerDiv.appendChild(this.contentDiv)
-
         EventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
         EventBus.getInstance().on(EventNames.UNSELECTOBJECTS, this.unselectObjects.bind(this))
 
@@ -38,17 +33,7 @@ class Inspector extends HTMLElement{
         findParentSideBar(this).hide()
     }
 
-    clearCurrentProperties(){
-        this.contentDiv.innerHTML = ""
-
-        for(let propertyDesc of this.propertyDescArray){
-            propertyDesc.clear()
-        }
-
-        this.propertyDescArray = new Array<BasePropertyDesc>()
-    }
-
-    onItemSelected(propertySheet: PropertySheet){
+    onItemSelected(propertySheet: PropertySheet, targetObj: any){
 
         findParentSideBar(this).show()
 
@@ -57,18 +42,30 @@ class Inspector extends HTMLElement{
         let parentHeight = parentContainer.clientHeight - titleBarHeight;
         this.contentScrollerDiv.style.height = (parentHeight) + "px"
 
-        Logger.info("Selected something")
-        this.clearCurrentProperties()
+        while(this.contentScrollerDiv.firstChild){
+            this.contentScrollerDiv.removeChild(this.contentScrollerDiv.firstChild)
+        }
 
-        let properties = propertySheet.getProperties()
-        for(let property of properties){
-            let divGenerator = GetPropertyDivGenerator(property.type)
-            let propertyDesc = divGenerator.generatePropertyDesc(property)
+        if(this.shapePropertyDivMapping.has(targetObj)){
+            let contentDiv = this.shapePropertyDivMapping.get(targetObj)
+            this.contentScrollerDiv.appendChild(contentDiv)
+        }else{
+            Logger.info("Selected something")
 
-            let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
-            this.contentDiv.appendChild(propertyDiv)
+            let contentDiv = document.createElement("div")
+            contentDiv.style.width="100%"
+            this.contentScrollerDiv.appendChild(contentDiv)
 
-            this.propertyDescArray.push(propertyDesc)
+            let properties = propertySheet.getProperties()
+            for(let property of properties){
+                let divGenerator = GetPropertyDivGenerator(property.type)
+                let propertyDesc = divGenerator.generatePropertyDesc(property)
+
+                let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
+                contentDiv.appendChild(propertyDiv)
+            }
+
+            this.shapePropertyDivMapping.set(targetObj, contentDiv)
         }
     }
 }
