@@ -1,8 +1,9 @@
 import {CustomElement, Logger, PropertySheet} from "hhcommoncomponents"
 import {EventBus, EventNames} from "../Events/GlobalEvents";
-import {BasePropertyDesc, GenerateDiv, GetPropertyDivGenerator} from "./BasePropertyDivGenerator"
+import {GenerateDiv, GetPropertyDivGenerator} from "./BasePropertyDivGenerator"
 import "./PropertyTypes"
 import {findParentSideBar, findParentPanel} from "hhpanel";
+import {PropertyType} from "hhcommoncomponents";
 
 @CustomElement({
     selector: "hh-inspector"
@@ -56,6 +57,40 @@ class Inspector extends HTMLElement{
             contentDiv.style.width="100%"
             this.contentScrollerDiv.appendChild(contentDiv)
 
+            let allComponentTitleDivs:Array<HTMLElement> = new Array<HTMLElement>()
+            // Add collapse-all button.
+
+            let collapseAllButton = document.createElement("button")
+            collapseAllButton.innerText = i18n.t("inspector.CollapseAll")
+
+            let isCollapseAll = true
+            collapseAllButton.onclick = function(){
+                for(let componentTitleDiv of allComponentTitleDivs){
+
+                    let currentlyCollapsed = false
+
+                    if(componentTitleDiv.getAttribute("isCollapsed") == "true"){
+                        currentlyCollapsed = true
+                    }
+
+                    if(isCollapseAll){
+                        if(!currentlyCollapsed)
+                            componentTitleDiv.click() // Mimic the click operation.
+                    }else{
+                        if(currentlyCollapsed)
+                            componentTitleDiv.click()
+                    }
+                }
+
+                if(isCollapseAll)
+                    collapseAllButton.innerText = i18n.t("inspector.OpenAll")
+                else
+                    collapseAllButton.innerText = i18n.t("inspector.CollapseAll")
+                
+                isCollapseAll = !isCollapseAll
+            }
+            contentDiv.appendChild(collapseAllButton)
+
             let properties = propertySheet.getProperties()
             for(let property of properties){
                 let divGenerator = GetPropertyDivGenerator(property.type)
@@ -63,6 +98,10 @@ class Inspector extends HTMLElement{
 
                 let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
                 contentDiv.appendChild(propertyDiv)
+
+                if(property.type == PropertyType.COMPONENT){
+                    allComponentTitleDivs.push(propertyDesc.getTitleDiv())
+                }
             }
 
             this.shapePropertyDivMapping.set(targetObj, contentDiv)

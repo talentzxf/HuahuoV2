@@ -57,17 +57,22 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator{
         let contentDiv = propertyDesc.getContentDiv()
 
         let contentVisible = false
+
+        titleDiv.setAttribute("isCollapsed", "false")
         titleDiv.addEventListener("click", function(){
             contentVisible = !contentVisible
             if(contentVisible){
                 titleDiv.style.background = invisibleColor
                 contentDiv.style.display = "none"
+
+                titleDiv.setAttribute("isCollapsed", "true")
             }
             else{
                 titleDiv.style.background = visibleColor
                 contentDiv.style.display = "block"
-            }
 
+                titleDiv.setAttribute("isCollapsed", "false")
+            }
         })
 
         return propertyDesc

@@ -60,24 +60,6 @@ class GroupPropertyDesc extends BasePropertyDesc{
         }
     }
 
-    createComponentProperty(parentDiv: HTMLDivElement, property: Property){
-
-        let contentDivs = document.createElement("div")
-        contentDivs.style.border = "2px solid blue"
-        parentDiv.appendChild(contentDivs)
-
-        for(let childProperty of property.config.children){
-
-            let divGenerator = GetPropertyDivGenerator(childProperty.type)
-            let propertyDesc = divGenerator.generatePropertyDesc(childProperty)
-            let titleDiv = propertyDesc.getTitleDiv()
-            let contentDiv = propertyDesc.getContentDiv()
-
-            contentDiv.appendChild(titleDiv)
-            contentDivs.appendChild(contentDiv)
-        }
-    }
-
     constructor(property: Property) {
         super(property);
 

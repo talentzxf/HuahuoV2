@@ -56,6 +56,8 @@
   },
   "inspector": {
     "BaseProperties": "Base Properties",
+    "CollapseAll": "Collapse All",
+    "OpenAll": "Open All",
     "Type": "Type",
     "Name": "Name",
     "Position": "Position",
