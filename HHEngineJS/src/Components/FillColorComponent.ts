@@ -1,5 +1,7 @@
 import {AbstractComponent, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
+import {clzObjectFactory} from "../CppClassObjectFactory";
+import {StrokeComponent} from "./StrokeComponent";
 
 let componentName = "FillColorComponent"
 
@@ -22,5 +24,7 @@ class FillColorComponent extends AbstractComponent{
         this.baseShape.paperShape.fillColor = this.fillColor
     }
 }
+
+clzObjectFactory.RegisterClass(componentName, FillColorComponent.createComponent)
 
 export {FillColorComponent}
