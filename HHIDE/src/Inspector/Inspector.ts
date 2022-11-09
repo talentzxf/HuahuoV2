@@ -4,6 +4,9 @@ import {GenerateDiv, GetPropertyDivGenerator} from "./BasePropertyDivGenerator"
 import "./PropertyTypes"
 import {findParentSideBar, findParentPanel} from "hhpanel";
 import {PropertyType} from "hhcommoncomponents";
+import {formManager} from "../Utilities/FormManager";
+import {ComponentListForm} from "../UIComponents/ComponentListForm";
+import {huahuoEngine} from "hhenginejs";
 
 @CustomElement({
     selector: "hh-inspector"
@@ -71,10 +74,13 @@ class Inspector extends HTMLElement{
 
     createMountComponentButton(targetObj){
         let addComponentBtn = document.createElement("button")
-        addComponentBtn.innerText = "+"
+        addComponentBtn.innerText = i18n.t("inspector.AddComponent")
 
         addComponentBtn.onclick = function(){
+            let componentForm = formManager.openForm(ComponentListForm)
 
+            let componentConstructors = huahuoEngine.getAllCompatibleComponents(targetObj)
+            componentForm.updateComponentList(componentConstructors)
         }
 
         return addComponentBtn

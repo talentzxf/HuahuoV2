@@ -10,6 +10,7 @@ import {
 import {propertySheetFactory} from "./PropertySheetBuilderFactory"
 import {IsValidWrappedObject, PropertyConfig, PropertyType} from "hhcommoncomponents";
 import {huahuoEngine} from "../EngineAPI";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -58,6 +59,12 @@ function PropertyValue(category:PropertyCategory, initValue = null, config?: Pro
             config: config
         }
         properties.push(propertyEntry)
+    }
+}
+
+function Component(){
+    return function(ctor){
+        clzObjectFactory.RegisterClass(ctor.name, ctor)
     }
 }
 
@@ -184,6 +191,8 @@ class AbstractComponent {
                 _this.handleShapeArrayEntry(propertyEntry)
             }
         })
+
+        this.rawObj.SetTypeName(this.constructor.name)
     }
 
     setBaseShape(baseShape: BaseShapeJS) {
@@ -231,4 +240,4 @@ class AbstractComponent {
     }
 }
 
-export {AbstractComponent, PropertyValue}
+export {AbstractComponent, PropertyValue, Component}

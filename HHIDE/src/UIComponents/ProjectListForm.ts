@@ -6,7 +6,6 @@ import {huahuoEngine} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
 import {projectInfo} from "../SceneView/ProjectInfo";
-import {formManager} from "../Utilities/FormManager";
 
 @CustomElement({
     selector: "hh-project-list"

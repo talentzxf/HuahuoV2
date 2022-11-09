@@ -58,6 +58,7 @@
     "BaseProperties": "基础属性",
     "CollapseAll": "折叠所有配置",
     "OpenAll": "打开所有配置",
+    "AddComponent": "添加组件",
     "Type": "类型",
     "Name": "名字",
     "Position": "位置",

@@ -1,5 +1,6 @@
 import {Logger} from "hhcommoncomponents"
 import {engineEventManager} from "./EngineEvents/EngineEventManager";
+import {clzObjectFactory} from "./CppClassObjectFactory";
 
 class EngineAPI{
     inited = false
@@ -149,6 +150,10 @@ class EngineAPI{
 
     setProjectWidthHeight(width, height){
         this.GetDefaultObjectStoreManager().SetCanvasWH(width, height)
+    }
+
+    getAllCompatibleComponents(targetObj){
+        clzObjectFactory.getAllCompatibleComponents(targetObj)
     }
 }
 

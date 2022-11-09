@@ -1,20 +1,9 @@
-import {AbstractComponent, PropertyValue} from "./AbstractComponent";
-import {clzObjectFactory} from "../CppClassObjectFactory";
+import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {FloatPropertyConfig} from "hhcommoncomponents";
 
-let componentName = "CurveGrowthComponent"
-
+@Component()
 class CurveGrowthComponent extends AbstractComponent {
-    static createComponent(rawObj) {
-        return new CurveGrowthComponent(rawObj)
-    }
-
-    constructor(rawObj?) {
-        super(rawObj);
-
-        this.rawObj.SetTypeName(componentName)
-    }
 
     @PropertyValue(PropertyCategory.interpolateFloat, 1.0, {min: 0.0, max: 1.0, step: 0.01} as FloatPropertyConfig)
     growth: number;
@@ -75,7 +64,5 @@ class CurveGrowthComponent extends AbstractComponent {
         }
     }
 }
-
-clzObjectFactory.RegisterClass(componentName, CurveGrowthComponent.createComponent)
 
 export {CurveGrowthComponent}

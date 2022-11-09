@@ -8,8 +8,13 @@ class CppClassObjectFactory{
     GetClassConstructor(clzName: string) {
         return this.clzNameConstructorMap.get(clzName)
     }
-}
 
+    getAllCompatibleComponents(targetObj){
+        this.clzNameConstructorMap.forEach((clzName, constructor)=>{
+
+        })
+    }
+}
 
 let clzObjectFactory = window["clzObjectFactory"]
 if (!clzObjectFactory) {
