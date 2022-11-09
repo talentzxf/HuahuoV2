@@ -1,19 +1,8 @@
-import {AbstractComponent, PropertyValue} from "./AbstractComponent";
+import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
-import {clzObjectFactory} from "../CppClassObjectFactory";
 
-let componentName = "FillColorComponent"
-
+@Component()
 class FillColorComponent extends AbstractComponent{
-    static createComponent(rawObj){
-        return new FillColorComponent(rawObj)
-    }
-
-    constructor(rawObj?) {
-        super(rawObj);
-        this.rawObj.SetTypeName(componentName)
-    }
-
     @PropertyValue(PropertyCategory.interpolateColor, {random: true})
     fillColor
 
@@ -23,7 +12,5 @@ class FillColorComponent extends AbstractComponent{
         this.baseShape.paperShape.fillColor = this.fillColor
     }
 }
-
-clzObjectFactory.RegisterClass(componentName, FillColorComponent.createComponent)
 
 export {FillColorComponent}

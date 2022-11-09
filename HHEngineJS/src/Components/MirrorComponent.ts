@@ -1,17 +1,12 @@
-import {AbstractComponent, PropertyValue} from "./AbstractComponent";
+import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {mirrorPoint} from "hhcommoncomponents";
 import * as paper from "paper"
-import {clzObjectFactory} from "../CppClassObjectFactory";
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 
-let componentName = "MirrorComponent"
+@Component()
 class MirrorComponent extends AbstractComponent {
-
-    static createComponent(rawObj) {
-        return new MirrorComponent(rawObj)
-    }
 
     @PropertyValue(PropertyCategory.shapeArray)
     targetShapeArray
@@ -24,8 +19,6 @@ class MirrorComponent extends AbstractComponent {
 
     constructor(rawObj?) {
         super(rawObj)
-
-        this.rawObj.SetTypeName(componentName)
 
         this.paperShapeGroup = new paper.Group()
         this.paperShapeGroup.applyMatrix = false
@@ -175,6 +168,5 @@ class MirrorComponent extends AbstractComponent {
         }
     }
 }
-clzObjectFactory.RegisterClass(componentName, MirrorComponent.createComponent)
 
 export {MirrorComponent}

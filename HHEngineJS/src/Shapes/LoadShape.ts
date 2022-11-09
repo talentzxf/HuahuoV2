@@ -13,7 +13,7 @@ function LoadComponentForShape(shape:BaseShapeJS){
         let componentRawObj = baseShape.GetFrameState(idx)
         let componentConstructor = clzObjectFactory.GetClassConstructor(componentRawObj.GetTypeName())
         if(componentConstructor){
-            let component = componentConstructor(componentRawObj)
+            let component = new componentConstructor(componentRawObj)
             // The component has already been persistented, no need to persistent again.
             shape.addComponent(component, false)
         }
