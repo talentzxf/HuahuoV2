@@ -55,6 +55,7 @@
     "drawMirror": "Drawing mirror, press Shift to draw vertical/horizontal mirror"
   },
   "inspector": {
+    "BaseProperties": "Base Properties",
     "Type": "Type",
     "Name": "Name",
     "Position": "Position",

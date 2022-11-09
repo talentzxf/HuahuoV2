@@ -656,13 +656,21 @@ abstract class BaseShapeJS {
         // TODO: Should move property related code to IDE, but how???
         this.propertySheet = new PropertySheet();
 
-        this.propertySheet.addProperty({
+        let componentConfigSheet = {
+            key: "inspector.BaseProperties",
+            type: PropertyType.COMPONENT,
+            config: {
+                children: []
+            }
+        }
+
+        componentConfigSheet.config.children.push({
             key: "inspector.Type",
             type: PropertyType.STRING,
             getter: this.getTypeName.bind(this)
         })
 
-        this.propertySheet.addProperty({
+        componentConfigSheet.config.children.push({
             key: "inspector.Name",
             type: PropertyType.STRING,
             getter: this.getName.bind(this),
@@ -670,7 +678,7 @@ abstract class BaseShapeJS {
         })
 
         // Position
-        this.propertySheet.addProperty({
+        componentConfigSheet.config.children.push({
             key: "inspector.Position",
             type: PropertyType.GROUP,
             config:{
@@ -730,7 +738,7 @@ abstract class BaseShapeJS {
             }
         });
 
-        this.propertySheet.addProperty({
+        componentConfigSheet.config.children.push({
             key: "inspector.Scaling",
             type: PropertyType.VECTOR2,
             getter: this.getScaling.bind(this),
@@ -739,7 +747,7 @@ abstract class BaseShapeJS {
             unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("scaling")
         })
 
-        this.propertySheet.addProperty({
+        componentConfigSheet.config.children.push({
             key: "inspector.Rotation",
             type: PropertyType.FLOAT,
             getter: this.getRotation.bind(this),
@@ -747,6 +755,8 @@ abstract class BaseShapeJS {
             registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("rotation"),
             unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("rotation")
         })
+
+        this.propertySheet.addProperty(componentConfigSheet)
     }
 
     getPropertySheet() {
