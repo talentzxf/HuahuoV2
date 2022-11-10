@@ -26,7 +26,7 @@ class CppClassObjectFactory{
 
     getAllCompatibleComponents(targetObj){
         let returnComponentNames = []
-        this.componentNameComponentPropertyMap.forEach((componentConfig, componentName)=>{
+        this.componentNameComponentPropertyMap.forEach((componentConfig, componentTypeName)=>{
             let isCompatible = true
             if(componentConfig){
                 let isCompatibleWithShape = false
@@ -38,11 +38,19 @@ class CppClassObjectFactory{
                         }
                     }
                 }
-                isCompatible = isCompatibleWithShape
+
+                let matchesComponentCount = false
+                if(isCompatibleWithShape){
+                    let currentComponentCount = targetObj.getComponentCountByTypeName(componentTypeName)
+                    if(currentComponentCount + 1 < componentConfig.maxCount)
+                        matchesComponentCount = true
+                }
+
+                isCompatible = isCompatibleWithShape && matchesComponentCount
             }
 
             if(isCompatible){
-                returnComponentNames.push(componentName)
+                returnComponentNames.push(componentTypeName)
             }
         })
 

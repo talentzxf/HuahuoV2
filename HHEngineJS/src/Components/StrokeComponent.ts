@@ -2,7 +2,7 @@ import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {FloatPropertyConfig} from "hhcommoncomponents";
 
-@Component()
+@Component({maxCount:1})
 class StrokeComponent extends AbstractComponent{
 
     @PropertyValue(PropertyCategory.interpolateFloat, 1, {min: 0.0} as FloatPropertyConfig)

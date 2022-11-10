@@ -1,7 +1,7 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 
-@Component()
+@Component({maxCount:1})
 class FillColorComponent extends AbstractComponent{
     @PropertyValue(PropertyCategory.interpolateColor, {random: true})
     fillColor

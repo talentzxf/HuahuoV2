@@ -101,13 +101,22 @@ class Inspector extends HTMLElement{
 
         if(this.shapePropertyDivMapping.has(targetObj)){
             let contentDiv = this.shapePropertyDivMapping.get(targetObj)
-            this.contentScrollerDiv.appendChild(contentDiv)
+            try{
+                this.contentScrollerDiv.appendChild(contentDiv)
+            }catch (e){ // DOMException also can't be caught here ....
+                Logger.error("Not sure why, but vanilla hex-input might throw exception, but seems every thing is fine regardless of this exception.")
+            }
+
         }else{
             Logger.info("Selected something")
 
             let contentDiv = document.createElement("div")
             contentDiv.style.width="100%"
             this.contentScrollerDiv.appendChild(contentDiv)
+
+            if(targetObj["addComponent"]){
+                contentDiv.appendChild(this.createMountComponentButton(targetObj))
+            }
 
             let allComponentTitleDivs:Array<HTMLElement> = new Array<HTMLElement>()
             // Add collapse-all button.
@@ -126,10 +135,6 @@ class Inspector extends HTMLElement{
 
             if(allComponentTitleDivs.length >= 2){
                 contentDiv.insertBefore(this.createOpenCollapseButton(allComponentTitleDivs), contentDiv.firstChild)
-            }
-
-            if(targetObj["addComponent"]){
-                contentDiv.appendChild(this.createMountComponentButton(targetObj))
             }
 
             this.shapePropertyDivMapping.set(targetObj, contentDiv)

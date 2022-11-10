@@ -5,7 +5,7 @@ import {mirrorPoint} from "hhcommoncomponents";
 import * as paper from "paper"
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 
-@Component({compatibleShapes:["MirrorShapeJS"]})
+@Component({compatibleShapes:["MirrorShapeJS"], maxCount:1})
 class MirrorComponent extends AbstractComponent {
 
     @PropertyValue(PropertyCategory.shapeArray)

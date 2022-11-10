@@ -87,6 +87,16 @@ abstract class BaseShapeJS {
         component.initPropertySheet(this.propertySheet)
     }
 
+    getComponentCountByTypeName(typeName){
+        let returnCount = 0
+        for(let component of this.customComponents){
+            if(component.getTypeName() == typeName){
+                returnCount++
+            }
+        }
+        return returnCount
+    }
+
     getComponentByTypeName(typeName){
         for(let component of this.customComponents){
             if(component.getTypeName() == typeName){

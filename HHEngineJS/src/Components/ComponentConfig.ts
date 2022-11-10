@@ -1,5 +1,6 @@
 class ComponentConfig{
-    compatibleShapes = []
+    compatibleShapes ?= ["BaseShapeJS"]
+    maxCount ?= 1
 }
 
 export {ComponentConfig}
