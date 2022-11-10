@@ -86,8 +86,8 @@ class ComponentListForm extends HTMLElement implements HHForm{
                 componentAddBtn.onclick = function(e){
                     e.preventDefault()
 
-                    let componentConstructor = huahuoEngine.produceObject(componentName)
-                    targetObj.addComponent(componentConstructor)
+                    let newComponent = huahuoEngine.produceObject(componentName)
+                    targetObj.addComponent(newComponent)
 
                     EventBus.getInstance().emit(EventNames.COMPONENTADDED, targetObj)
                     _this.closeForm()

@@ -213,28 +213,31 @@ class AbstractComponent {
 
     }
 
+    getPropertySheet(){
+        const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
+
+        let componentConfigSheet = {
+            key: this.getTypeName(),
+            type: PropertyType.COMPONENT,
+            config: {
+                children: []
+            }
+        }
+
+        for(let propertyMeta of properties){
+            let propertySheetEntry = propertySheetFactory.createEntry(this, propertyMeta, this.valueChangeHandler)
+            if(propertySheetEntry != null){
+                componentConfigSheet.config.children.push(propertySheetEntry)
+            }
+        }
+
+        return componentConfigSheet
+    }
+
     initPropertySheet(propertySheet){
         if(!this.propertySheetInited){
             this.propertySheetInited = true
-
-            const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
-
-            let componentConfigSheet = {
-                key: this.getTypeName(),
-                type: PropertyType.COMPONENT,
-                config: {
-                    children: []
-                }
-            }
-
-            for(let propertyMeta of properties){
-                let propertySheetEntry = propertySheetFactory.createEntry(this, propertyMeta, this.valueChangeHandler)
-                if(propertySheetEntry != null){
-                    componentConfigSheet.config.children.push(propertySheetEntry)
-                }
-            }
-
-            propertySheet.addProperty(componentConfigSheet)
+            propertySheet.addProperty(this.getPropertySheet())
         }
     }
 
