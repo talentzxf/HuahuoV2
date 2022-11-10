@@ -12,10 +12,41 @@ class CppClassObjectFactory{
         return this.clzNameConstructorMap.get(clzName)
     }
 
-    getAllCompatibleComponents(targetObj){
-        this.clzNameConstructorMap.forEach((clzName, constructor)=>{
+    isInheritedFromClzName(obj, clzName): boolean{
+        let curProto = obj
+        while(curProto != null){
+            if(curProto.constructor.name == clzName)
+                return true
 
+            curProto = curProto.prototype
+        }
+
+        return false;
+    }
+
+    getAllCompatibleComponents(targetObj){
+        let returnComponentNames = []
+        this.componentNameComponentPropertyMap.forEach((componentConfig, componentName)=>{
+            let isCompatible = true
+            if(componentConfig){
+                let isCompatibleWithShape = false
+                if(componentConfig.compatibleShapes && componentConfig.compatibleShapes.length > 0){
+                    for(let shapeName of componentConfig.compatibleShapes){
+                        if(this.isInheritedFromClzName(targetObj, shapeName)){
+                            isCompatibleWithShape = true
+                            break;
+                        }
+                    }
+                }
+                isCompatible = isCompatibleWithShape
+            }
+
+            if(isCompatible){
+                returnComponentNames.push(componentName)
+            }
         })
+
+        return returnComponentNames
     }
 
     RegisterComponent(componentName, config){

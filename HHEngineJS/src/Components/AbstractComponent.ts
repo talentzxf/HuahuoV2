@@ -11,6 +11,7 @@ import {propertySheetFactory} from "./PropertySheetBuilderFactory"
 import {IsValidWrappedObject, PropertyConfig, PropertyType} from "hhcommoncomponents";
 import {huahuoEngine} from "../EngineAPI";
 import {clzObjectFactory} from "../CppClassObjectFactory";
+import {ComponentConfig} from "./ComponentConfig";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -62,11 +63,11 @@ function PropertyValue(category:PropertyCategory, initValue = null, config?: Pro
     }
 }
 
-function Component(componentConfig?){
+function Component(componentConfig?: ComponentConfig){
     return function(ctor){
         clzObjectFactory.RegisterClass(ctor.name, ctor)
 
-        clzObjectFactory.AddToComponentList(ctor.name, componentConfig)
+        clzObjectFactory.RegisterComponent(ctor.name, componentConfig)
     }
 }
 

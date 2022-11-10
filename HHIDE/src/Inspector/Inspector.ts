@@ -79,8 +79,8 @@ class Inspector extends HTMLElement{
         addComponentBtn.onclick = function(){
             let componentForm = formManager.openForm(ComponentListForm)
 
-            let componentConstructors = huahuoEngine.getAllCompatibleComponents(targetObj)
-            componentForm.updateComponentList(componentConstructors)
+            let componentNames = huahuoEngine.getAllCompatibleComponents(targetObj)
+            componentForm.updateComponentList(componentNames)
         }
 
         return addComponentBtn

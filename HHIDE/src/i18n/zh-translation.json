@@ -113,5 +113,8 @@
     "delete": "删除项目",
     "deleted": "项目:{{projectName}} 已被删除",
     "nothing": "您目前在花火服务器上并无任何项目"
+  },
+  "component": {
+    "nothing": "未找到适配的组件!"
   }
 }

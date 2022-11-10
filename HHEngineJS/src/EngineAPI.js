@@ -153,7 +153,7 @@ class EngineAPI{
     }
 
     getAllCompatibleComponents(targetObj){
-        clzObjectFactory.getAllCompatibleComponents(targetObj)
+        return clzObjectFactory.getAllCompatibleComponents(targetObj)
     }
 }
 

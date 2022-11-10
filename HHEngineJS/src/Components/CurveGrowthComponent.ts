@@ -1,8 +1,9 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {FloatPropertyConfig} from "hhcommoncomponents";
+import {CurveShapeJS} from "../Shapes/CurveShapeJS";
 
-@Component()
+@Component({compatibleShapes: ["CurveShapeJS"]})
 class CurveGrowthComponent extends AbstractComponent {
 
     @PropertyValue(PropertyCategory.interpolateFloat, 1.0, {min: 0.0, max: 1.0, step: 0.01} as FloatPropertyConfig)

@@ -59,8 +59,19 @@ class ComponentListForm extends HTMLElement implements HHForm{
         this.style.display = "none"
     }
 
-    updateComponentList(componentConstructors){
+    updateComponentList(componentNames){
+        this.componentListUL.innerHTML = i18n.t("component.nothing")
+        let ulInnterHTML = ""
+        let componentDivPrefix = "component_"
+        for(let componentName of componentNames){
+            ulInnterHTML += "<li>"
+            ulInnterHTML += " <span>" + componentName + "</span>"
+            ulInnterHTML += "</li>"
+        }
 
+        if(componentNames.length > 0){
+            this.componentListUL.innerHTML = ulInnterHTML
+        }
     }
 }
 
