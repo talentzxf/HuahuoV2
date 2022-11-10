@@ -24,7 +24,6 @@ class GeneratorComponent extends AbstractComponent{
 
         for(let targetShape of this.targetShapeArray){
             let baseShapeJS = this.baseShape.paperShape
-            let targetPaperShape = (targetShape as BaseShapeJS).paperShape
             if(!this.targetShapeGeneratedShapeArrayMap.has(targetShape)){
                 let newGeneratedShapeArray = new Array<any>()
                 this.targetShapeGeneratedShapeArrayMap.set(targetShape, newGeneratedShapeArray)
