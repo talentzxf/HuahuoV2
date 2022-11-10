@@ -1,6 +1,8 @@
 import {CustomElement} from "hhcommoncomponents";
 import {HHForm} from "../Utilities/HHForm";
 import {CSSUtils} from "../Utilities/CSSUtils";
+import {huahuoEngine} from "hhenginejs";
+import {EventBus, EventNames} from "../Events/GlobalEvents";
 
 @CustomElement({
     selector:"hh-component-list"
@@ -59,18 +61,38 @@ class ComponentListForm extends HTMLElement implements HHForm{
         this.style.display = "none"
     }
 
-    updateComponentList(componentNames){
+    updateComponentList(componentNames, targetObj){
         this.componentListUL.innerHTML = i18n.t("component.nothing")
-        let ulInnterHTML = ""
+        let ulInnterHTML = "<ul>"
         let componentDivPrefix = "component_"
         for(let componentName of componentNames){
             ulInnterHTML += "<li>"
             ulInnterHTML += " <span>" + componentName + "</span>"
+            ulInnterHTML += " <button id='" + componentDivPrefix + componentName + "'>OK</button>"
             ulInnterHTML += "</li>"
         }
+        ulInnterHTML += "</ul>"
+
+        let _this = this
 
         if(componentNames.length > 0){
             this.componentListUL.innerHTML = ulInnterHTML
+
+            let componentAddBtns = this.componentListUL.querySelectorAll("button")
+            for(let componentAddBtn of componentAddBtns){
+                componentAddBtn.style.width = "30px"
+                componentAddBtn.style.padding = "10px"
+                let componentName = componentAddBtn.id.split("_")[1]
+                componentAddBtn.onclick = function(e){
+                    e.preventDefault()
+
+                    let componentConstructor = huahuoEngine.produceObject(componentName)
+                    targetObj.addComponent(componentConstructor)
+
+                    EventBus.getInstance().emit(EventNames.COMPONENTADDED, targetObj)
+                    _this.closeForm()
+                }
+            }
         }
     }
 }

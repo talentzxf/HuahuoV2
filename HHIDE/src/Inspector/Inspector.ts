@@ -30,11 +30,21 @@ class Inspector extends HTMLElement{
         EventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
         EventBus.getInstance().on(EventNames.UNSELECTOBJECTS, this.unselectObjects.bind(this))
 
+        EventBus.getInstance().on(EventNames.COMPONENTADDED, this.componentAdded.bind(this))
+
         findParentSideBar(this).hide()
     }
 
     unselectObjects(){
         findParentSideBar(this).hide()
+    }
+
+    componentAdded(targetObj: any){
+        if(this.shapePropertyDivMapping.has(targetObj)){
+            this.shapePropertyDivMapping.delete(targetObj)
+        }
+
+        this.onItemSelected(targetObj.getPropertySheet(), targetObj)
     }
 
     createOpenCollapseButton(allComponentTitleDivs: Array<HTMLElement>){
@@ -80,7 +90,7 @@ class Inspector extends HTMLElement{
             let componentForm = formManager.openForm(ComponentListForm)
 
             let componentNames = huahuoEngine.getAllCompatibleComponents(targetObj)
-            componentForm.updateComponentList(componentNames)
+            componentForm.updateComponentList(componentNames, targetObj)
         }
 
         return addComponentBtn

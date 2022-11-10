@@ -14,6 +14,9 @@ import {CurveShapeJS} from "./Shapes/CurveShapeJS"
 import {SVGShapeJS} from "./Shapes/SVGShapeJS";
 import {MirrorShapeJS} from "./Shapes/MirrorShapeJS";
 
+// All non-default components
+import {GeneratorComponent} from "./Components/GeneratorComponent";
+
 import "./Shapes/LoadShape"
 
 import {ValueChangeHandler} from "./Shapes/ValueChangeHandler";

@@ -155,6 +155,12 @@ class EngineAPI{
     getAllCompatibleComponents(targetObj){
         return clzObjectFactory.getAllCompatibleComponents(targetObj)
     }
+
+    produceObject(componentName){
+        let constructor = clzObjectFactory.GetClassConstructor(componentName)
+        let retObj = new constructor()
+        return retObj
+    }
 }
 
 let huahuoEngine = window.huahuoEngine
