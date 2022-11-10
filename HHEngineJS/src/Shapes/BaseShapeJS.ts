@@ -43,6 +43,12 @@ abstract class BaseShapeJS {
 
     private customComponents:Array<AbstractComponent> = new Array<AbstractComponent>()
 
+    private isMirage: boolean = false
+
+    setIsMirage(isMirage: boolean){
+        this.isMirage = isMirage
+    }
+
     get belongStoreId(): number{
         return this.rawObj.GetStoreId()
     }
@@ -311,7 +317,11 @@ abstract class BaseShapeJS {
     }
 
     set position(val: paper.Point) {
-        this.setParentLocalPosition(val)
+        if(!this.isMirage)
+            this.setParentLocalPosition(val)
+        else{
+            this.paperShape.position = val
+        }
     }
 
     set scaling(val: paper.Point) {
@@ -940,23 +950,26 @@ abstract class BaseShapeJS {
     afterUpdate() {
         this.applySegments()
 
-        this.paperItem.scaling = new paper.Point(1.0, 1.0)
-
-        this.paperItem.position = new paper.Point(0.0, 0.0)
         // Reset the rotation.
         this.paperItem.rotation = this.rawObj.GetRotation();
-        // The coordinate should have been aligned now.
-        let globalPivotPosition = this.pivotPosition
-        let localPivotPosition = this.rawObj.GetLocalPivotPosition()
 
-        let radian = this.rawObj.GetRotation() / 180 * Math.PI
+        if(!this.isMirage) {
+            this.paperItem.scaling = new paper.Point(1.0, 1.0)
 
-        let shapeZero = this.backCalculateZeroPoint(localPivotPosition, globalPivotPosition, -radian)
+            this.paperItem.position = new paper.Point(0.0, 0.0)
+            // The coordinate should have been aligned now.
+            let globalPivotPosition = this.pivotPosition
+            let localPivotPosition = this.rawObj.GetLocalPivotPosition()
 
-        let offset = this.paperShape.localToParent(new paper.Point(0, 0)) // As position is already (0,0). The global position of (0,0) indicates the center of the bounding rect.
+            let radian = this.rawObj.GetRotation() / 180 * Math.PI
 
-        let newPosition = shapeZero.subtract(offset)
-        this.paperItem.position = newPosition
+            let shapeZero = this.backCalculateZeroPoint(localPivotPosition, globalPivotPosition, -radian)
+
+            let offset = this.paperShape.localToParent(new paper.Point(0, 0)) // As position is already (0,0). The global position of (0,0) indicates the center of the bounding rect.
+
+            let newPosition = shapeZero.subtract(offset)
+            this.paperItem.position = newPosition
+        }
 
         let scaling = this.rawObj.GetScale()
         this.paperItem.scaling = new paper.Point(scaling.x, scaling.y)

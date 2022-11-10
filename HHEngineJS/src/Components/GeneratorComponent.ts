@@ -6,11 +6,11 @@ import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 
 //TODO: Move all these non default components into another sub-project
 @Component()
-class GeneratorComponent extends AbstractComponent{
+class GeneratorComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.shapeArray)
     targetShapeArray
 
-    @PropertyValue(PropertyCategory.interpolateFloat, 0.1, {min:0.01, max:1.0, step: 0.01} as FloatPropertyConfig)
+    @PropertyValue(PropertyCategory.interpolateFloat, 0.1, {min: 0.01, max: 1.0, step: 0.01} as FloatPropertyConfig)
     generateInterval
 
     targetShapeGeneratedShapeArrayMap: Map<BaseShapeJS, Array<any>> = new Map<BaseShapeJS, Array<any>>()
@@ -22,23 +22,34 @@ class GeneratorComponent extends AbstractComponent{
     afterUpdate() {
         super.afterUpdate();
 
-        for(let targetShape of this.targetShapeArray){
+        for (let targetShape of this.targetShapeArray) {
+
+            let mirageShapeArray = this.targetShapeGeneratedShapeArrayMap.get(targetShape)
+            if (mirageShapeArray == null) {
+                mirageShapeArray = new Array<any>()
+                this.targetShapeGeneratedShapeArrayMap.set(targetShape, mirageShapeArray)
+            }
+
             let baseShapeJS = this.baseShape.paperShape
-            if(!this.targetShapeGeneratedShapeArrayMap.has(targetShape)){
-                let newGeneratedShapeArray = new Array<any>()
-                this.targetShapeGeneratedShapeArrayMap.set(targetShape, newGeneratedShapeArray)
-
-                // Duplicate shapes along the edge.
-                for(let currentLengthRatio = 0.0; currentLengthRatio < 1.0; currentLengthRatio += this.generateInterval){
-                    let currentLength = baseShapeJS.length * currentLengthRatio
+            let index = 0
+            // Duplicate shapes along the edge.
+            for (let currentLengthRatio = 0.0; currentLengthRatio < 1.0; currentLengthRatio += this.generateInterval) {
+                let duplicatedShape = null
+                if(mirageShapeArray.length <= index){
                     let rawObj = targetShape.rawObj
-                    let duplicatedShape = LoadShapeFromCppShape(rawObj)
+                    duplicatedShape = LoadShapeFromCppShape(rawObj)
                     duplicatedShape.setSelectedMeta(null)
-
-                    let position = baseShapeJS.localToGlobal(baseShapeJS.getPointAt(currentLength))
-
-                    duplicatedShape.position = position
+                    duplicatedShape.setIsMirage(true)
+                    mirageShapeArray.push(duplicatedShape)
+                }else{
+                    duplicatedShape = mirageShapeArray[index]
+                    duplicatedShape.update()
                 }
+
+                let currentLength = baseShapeJS.length * currentLengthRatio
+                let position = baseShapeJS.localToGlobal(baseShapeJS.getPointAt(currentLength))
+                duplicatedShape.position = position
+                index++
             }
         }
     }
