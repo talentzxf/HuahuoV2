@@ -38,9 +38,14 @@ class GeneratorComponent extends AbstractComponent {
                 if(mirageShapeArray.length <= index){
                     let rawObj = targetShape.rawObj
                     duplicatedShape = LoadShapeFromCppShape(rawObj)
+                    duplicatedShape.paperShape.data.meta = null
                     duplicatedShape.setSelectedMeta(null)
                     duplicatedShape.setIsMirage(true)
                     mirageShapeArray.push(duplicatedShape)
+
+                    targetShape.registerValueChangeHandler("*")(()=>{
+                        duplicatedShape.update()
+                    })
                 }else{
                     duplicatedShape = mirageShapeArray[index]
                     duplicatedShape.update()
@@ -50,6 +55,12 @@ class GeneratorComponent extends AbstractComponent {
                 let position = baseShapeJS.localToGlobal(baseShapeJS.getPointAt(currentLength))
                 duplicatedShape.position = position
                 index++
+            }
+
+            // Remove all other shapes.
+            while(mirageShapeArray.length > index){
+                let tobeDeletedShape = mirageShapeArray.pop()
+                tobeDeletedShape.removePaperObj()
             }
         }
     }
