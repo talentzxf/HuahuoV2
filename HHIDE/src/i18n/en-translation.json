@@ -82,7 +82,8 @@
       "targetShapeArray": "Target Shapes",
       "strokeWidth": "StrokeWidth",
       "strokeColor": "StrokeColor",
-      "fillColor": "FillColor"
+      "fillColor": "FillColor",
+      "generateInterval": "Generate Interval"
     }
   },
   "timeline": {

@@ -82,7 +82,8 @@
       "targetShapeArray": "目标形状",
       "strokeWidth": "描边宽度",
       "strokeColor": "描边颜色",
-      "fillColor": "填充颜色"
+      "fillColor": "填充颜色",
+      "generateInterval": "生成间隔"
     }
   },
   "timeline": {
