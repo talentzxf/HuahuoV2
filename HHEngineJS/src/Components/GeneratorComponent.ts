@@ -38,7 +38,7 @@ class GeneratorComponent extends AbstractComponent {
                 if(mirageShapeArray.length <= index){
                     let rawObj = targetShape.rawObj
                     duplicatedShape = LoadShapeFromCppShape(rawObj)
-                    duplicatedShape.paperShape.data.meta = null
+                    duplicatedShape.isSelectable(false)
                     duplicatedShape.setSelectedMeta(null)
                     duplicatedShape.setIsMirage(true)
                     mirageShapeArray.push(duplicatedShape)
