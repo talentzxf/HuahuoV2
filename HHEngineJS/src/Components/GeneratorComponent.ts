@@ -38,7 +38,10 @@ class GeneratorComponent extends AbstractComponent {
                 if(mirageShapeArray.length <= index){
                     let rawObj = targetShape.rawObj
                     duplicatedShape = LoadShapeFromCppShape(rawObj)
-                    duplicatedShape.isSelectable = false
+                    duplicatedShape.isSelectable = function(){
+                        return false
+                    }
+
                     duplicatedShape.setSelectedMeta(null)
                     duplicatedShape.setIsMirage(true)
                     mirageShapeArray.push(duplicatedShape)
@@ -63,6 +66,19 @@ class GeneratorComponent extends AbstractComponent {
                 tobeDeletedShape.removePaperObj()
             }
         }
+    }
+
+
+    cleanUp() {
+        super.cleanUp();
+
+        for(let [targetShape, shapeArray] of this.targetShapeGeneratedShapeArrayMap){
+            for(let mirageShape of shapeArray){
+                mirageShape.removePaperObj()
+            }
+        }
+
+        this.targetShapeGeneratedShapeArrayMap = new Map<BaseShapeJS, Array<any>>()
     }
 }
 
