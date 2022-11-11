@@ -1,6 +1,7 @@
 import {GlobalConfig} from "../GlobalConfig";
 import {huahuoEngine} from "../EngineAPI";
 import {LayerShapesManager} from "./LayerShapesManager";
+import {IsValidWrappedObject} from "hhcommoncomponents";
 
 class Player{
     animationFrame = -1
@@ -39,6 +40,9 @@ class Player{
     }
 
     getJSShapeFromRawShape(rawObj, recursive: boolean = false){
+        if(!IsValidWrappedObject(rawObj))
+            return null
+
         return this.layerShapesManager.getJSShapeFromRawShape(rawObj, recursive)
     }
 
