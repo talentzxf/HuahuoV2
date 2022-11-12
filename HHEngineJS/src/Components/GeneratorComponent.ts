@@ -23,6 +23,8 @@ class GeneratorComponent extends AbstractComponent {
         super.afterUpdate();
 
         for (let targetShape of this.targetShapeArray) {
+            if(targetShape == null) // The shape might not be loaded yet. But in next cycle, it should have been loaded.
+                continue
 
             let mirageShapeArray = this.targetShapeGeneratedShapeArrayMap.get(targetShape)
             if (mirageShapeArray == null) {

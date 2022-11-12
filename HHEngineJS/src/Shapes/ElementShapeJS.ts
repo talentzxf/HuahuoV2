@@ -2,6 +2,7 @@ import {BaseShapeJS} from "./BaseShapeJS";
 import {huahuoEngine} from "../EngineAPI";
 import {LayerShapesManager} from "../Player/LayerShapesManager";
 import {clzObjectFactory} from "../CppClassObjectFactory";
+import {PropertyType, EventBus} from "hhcommoncomponents";
 
 let shapeName = "ElementShape"
 
@@ -180,6 +181,21 @@ class ElementShapeJS extends BaseShapeJS {
 
     syncStoreLayerInfo(){
         huahuoEngine.GetDefaultObjectStoreManager().GetStoreById(this.storeId).SyncLayersInfo()
+    }
+
+    onEditElement(){
+        huahuoEngine.dispatchEvent("onEditElement", this)
+    }
+
+    afterWASMReady() {
+        super.afterWASMReady();
+        this.propertySheet.addProperty({
+            key: "inspector.editElement",
+            type: PropertyType.BUTTON,
+            config:{
+                action: this.onEditElement.bind(this)
+            }
+        })
     }
 }
 
