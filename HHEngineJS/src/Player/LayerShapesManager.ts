@@ -5,22 +5,22 @@ import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 
 class LayerShapesManager {
     layerShapes = new Map();
-    storeId:number = -1;
+    storeId: number = -1;
 
     constructor(storeId) {
         this.storeId = storeId
     }
 
-    removeShape(layer, obj){
-        if(!this.layerShapes.has(layer)){
+    removeShape(layer, obj) {
+        if (!this.layerShapes.has(layer)) {
             Logger.error("Can't find layer!");
-        }else{
+        } else {
             let shapesMap = this.layerShapes.get(layer)
             shapesMap.delete(obj.ptr)
         }
     }
 
-    getLayerShapes(layer):Map<number, any> {
+    getLayerShapes(layer): Map<number, any> {
 
         if (!this.layerShapes.has(layer)) {
             this.layerShapes.set(layer, new Map<number, any>())
@@ -35,7 +35,7 @@ class LayerShapesManager {
         })
     }
 
-    hideLayerShapes(layer){
+    hideLayerShapes(layer) {
         this.forEachShapeInLayer(layer, (shape) => {
             shape.hide()
         })
@@ -64,8 +64,9 @@ class LayerShapesManager {
         })
     }
 
-    getJSShapeFromRawShape(rawObj, recursive: boolean = false):BaseShapeJS{
-        let store = huahuoEngine.GetStoreById(this.storeId)
+    getJSShapeFromRawShape(rawObj, recursive: boolean = false): BaseShapeJS {
+        // let store = huahuoEngine.GetStoreById(this.storeId)
+        let store = huahuoEngine.GetStoreById(rawObj.GetStoreId())
 
         let layerCount = store.GetLayerCount();
 
@@ -73,15 +74,15 @@ class LayerShapesManager {
             let layer = store.GetLayer(i)
             let shapes = this.getLayerShapes(layer)
 
-            if(shapes.has(rawObj.ptr)){
+            if (shapes.has(rawObj.ptr)) {
                 return shapes.get(rawObj.ptr)
             }
 
-            if(recursive){ // Shape might be an element, need to look for the shape recursively.
-                for(let [shapePtr, shape] of shapes){//
-                    if(shape.layerShapesManager){ // The shape has layerShapes manager, look for the target.
+            if (recursive) { // Shape might be an element, need to look for the shape recursively.
+                for (let [shapePtr, shape] of shapes) {//
+                    if (shape.layerShapesManager) { // The shape has layerShapes manager, look for the target.
                         let targetShape = shape.layerShapesManager.getJSShapeFromRawShape(rawObj, true)
-                        if(targetShape != null)
+                        if (targetShape != null)
                             return targetShape
                     }
                 }
@@ -117,20 +118,20 @@ class LayerShapesManager {
                 }
             }
 
-            for(let [shapePtr, shape] of this.getLayerShapes(layer)){
+            for (let [shapePtr, shape] of this.getLayerShapes(layer)) {
                 shape.update()
             }
         }
 
         // Remove all layers and shapes that are not belong to me. This might happen when a shape is removed from an element
-        for(let layer of this.layerShapes.keys()){
-            if(layer.GetObjectStore().GetStoreId() != this.storeId){
+        for (let layer of this.layerShapes.keys()) {
+            if (layer.GetObjectStore().GetStoreId() != this.storeId) {
                 this.layerShapes.delete(layer)
-            } else{
+            } else {
                 let shapes = this.layerShapes.get(layer)
-                for(let shapePtr of shapes.keys()){
+                for (let shapePtr of shapes.keys()) {
                     let shape = shapes.get(shapePtr)
-                    if(shape.belongStoreId != this.storeId){
+                    if (shape.belongStoreId != this.storeId) {
                         shape.removePaperObj()
                         shapes.delete(shapePtr)
                     }
@@ -146,7 +147,7 @@ class LayerShapesManager {
         this.forEachLayerInStore(store, this.updateLayerShapes.bind(this))
     }
 
-    hideAllShapes(){
+    hideAllShapes() {
         let store = huahuoEngine.GetStoreById(this.storeId)
         this.forEachLayerInStore(store, this.hideLayerShapes.bind(this))
     }

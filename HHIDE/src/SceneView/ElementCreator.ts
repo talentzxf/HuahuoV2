@@ -6,6 +6,7 @@ import {huahuoEngine, ElementShapeJS, paper} from "hhenginejs"
 import {HHContent, PanelEventNames} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
 import {BaseShapeJS} from "hhenginejs";
+import {formManager} from "../Utilities/FormManager";
 
 class ElementCreator {
     sceneView: SceneView
@@ -169,6 +170,24 @@ class ElementCreator {
 
     createElement(shapes: Set<BaseShapeJS>): ElementShapeJS {
         let prevStoreId = huahuoEngine.GetCurrentStoreId()
+
+        let allRelatedShapes = new Set<BaseShapeJS>()
+
+        for(let shape of shapes){
+            allRelatedShapes.add(shape)
+
+            let referencedShapes = shape.getReferencedShapes()
+            for(let referencedShape of referencedShapes){
+                allRelatedShapes.add(referencedShape)
+            }
+        }
+
+        if(allRelatedShapes.size > shapes.size){
+            if(!window.confirm("Some shapes are referenced, do you want to move them all to the element?")){
+                return
+            }
+
+        }
 
         try {
             // 0. Ensure all shapes are in the same layer.

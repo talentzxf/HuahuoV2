@@ -1040,6 +1040,17 @@ abstract class BaseShapeJS {
     detachFromCurrentLayer(){
         this.getLayer().RemoveShape(this.rawObj)
     }
+
+    // Pass in a set to avoid creation of the set multiple times.
+    getReferencedShapes(set: Set<BaseShapeJS>){
+        // Get all shapes from follow curve component
+        set.add(this.followCurve)
+
+        // Get all referenced shapes
+        for(let component of this.customComponents){
+            component.getReferencedShapes(set)
+        }
+    }
 }
 
 export {BaseShapeJS}

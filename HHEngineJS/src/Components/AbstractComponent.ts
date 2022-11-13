@@ -78,6 +78,8 @@ class AbstractComponent {
     baseShape: BaseShapeJS;
     propertySheetInited: boolean = false;
 
+    shapeArrayFieldNames: Set<string> = new Set<string>()
+
     private valueChangeHandler:ValueChangeHandler = new ValueChangeHandler()
 
     callHandlers(propertyName: string, val: any) {
@@ -131,9 +133,10 @@ class AbstractComponent {
     }
 
     handleShapeArrayEntry(propertyEntry){
-        this.rawObj.RegisterShapeArrayValue(propertyEntry["key"])
-
         let fieldName = propertyEntry["key"]
+        this.shapeArrayFieldNames.add(fieldName)
+        this.rawObj.RegisterShapeArrayValue(fieldName)
+
         // Generate setter and getter
         let getterName = "get" + capitalizeFirstLetter(fieldName)
         let setterName = "set" + capitalizeFirstLetter(fieldName)
@@ -243,6 +246,17 @@ class AbstractComponent {
 
     cleanUp(){
 
+    }
+
+    // Pass in a set to avoid creation of the set multiple times.
+    getReferencedShapes(set: Set<BaseShapeJS>){
+
+        // Put all shapeArray values in the set.
+        for( let fieldName of this.shapeArrayFieldNames){
+            for(let shape of this[fieldName]){
+                set.add(shape)
+            }
+        }
     }
 }
 
