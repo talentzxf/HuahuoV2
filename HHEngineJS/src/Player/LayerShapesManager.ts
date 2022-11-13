@@ -65,9 +65,7 @@ class LayerShapesManager {
     }
 
     getJSShapeFromRawShape(rawObj, recursive: boolean = false): BaseShapeJS {
-        // let store = huahuoEngine.GetStoreById(this.storeId)
-        let store = huahuoEngine.GetStoreById(rawObj.GetStoreId())
-
+        let store = huahuoEngine.GetStoreById(this.storeId)
         let layerCount = store.GetLayerCount();
 
         for (let i = 0; i < layerCount; i++) {

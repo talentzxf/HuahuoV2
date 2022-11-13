@@ -13,7 +13,8 @@ class GeneratorComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateFloat, 0.1, {min: 0.01, max: 1.0, step: 0.01} as FloatPropertyConfig)
     generateInterval
 
-    targetShapeGeneratedShapeArrayMap: Map<BaseShapeJS, Array<any>> = new Map<BaseShapeJS, Array<any>>()
+    // BaseShape.rawObj.ptr -> Mirages array.
+    targetShapeGeneratedShapeArrayMap: Map<number, Array<any>> = new Map<number, Array<any>>()
 
     constructor(rawObj?) {
         super(rawObj);
@@ -26,10 +27,10 @@ class GeneratorComponent extends AbstractComponent {
             if(targetShape == null) // The shape might not be loaded yet. But in next cycle, it should have been loaded.
                 continue
 
-            let mirageShapeArray = this.targetShapeGeneratedShapeArrayMap.get(targetShape)
+            let mirageShapeArray = this.targetShapeGeneratedShapeArrayMap.get(targetShape.rawObj.ptr)
             if (mirageShapeArray == null) {
                 mirageShapeArray = new Array<any>()
-                this.targetShapeGeneratedShapeArrayMap.set(targetShape, mirageShapeArray)
+                this.targetShapeGeneratedShapeArrayMap.set(targetShape.rawObj.ptr, mirageShapeArray)
             }
 
             let baseShapeJS = this.baseShape.paperShape
@@ -80,7 +81,7 @@ class GeneratorComponent extends AbstractComponent {
             }
         }
 
-        this.targetShapeGeneratedShapeArrayMap = new Map<BaseShapeJS, Array<any>>()
+        this.targetShapeGeneratedShapeArrayMap = new Map<number, Array<any>>()
     }
 }
 

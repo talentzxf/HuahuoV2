@@ -2,7 +2,7 @@ import {BaseShapeJS} from "./BaseShapeJS";
 import {huahuoEngine} from "../EngineAPI";
 import {LayerShapesManager} from "../Player/LayerShapesManager";
 import {clzObjectFactory} from "../CppClassObjectFactory";
-import {PropertyType, EventBus} from "hhcommoncomponents";
+import {PropertyType} from "hhcommoncomponents";
 
 let shapeName = "ElementShape"
 
