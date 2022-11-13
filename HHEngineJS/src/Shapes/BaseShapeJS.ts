@@ -201,7 +201,8 @@ abstract class BaseShapeJS {
     }
 
     get scaling(): paper.Point {
-        return this.paperItem.scaling
+        let scaling = this.rawObj.GetScale()
+        return new paper.Point(scaling.x, scaling.y)
     }
 
     get bornFrameId(){
@@ -285,35 +286,38 @@ abstract class BaseShapeJS {
     }
 
     setParentLocalPosition(val: paper.Point){
-        let currentScaling = this.paperItem.scaling
+        let currentScaling = this.scaling
 
-        this.paperItem.scaling = new paper.Point(1.0, 1.0)
+        try {
+            this.paperItem.scaling = new paper.Point(1.0, 1.0)
 
-        let curGlobalPivot = this.rawObj.GetGlobalPivotPosition()
-        let curShapePosition = this.paperShape.position
+            let curGlobalPivot = this.rawObj.GetGlobalPivotPosition()
+            let curShapePosition = this.paperShape.position
 
-        let offset = val.subtract(new paper.Point(curGlobalPivot.x, curGlobalPivot.y))
-        let nextShapePosition = curShapePosition.add(offset)
+            let offset = val.subtract(new paper.Point(curGlobalPivot.x, curGlobalPivot.y))
+            let nextShapePosition = curShapePosition.add(offset)
 
-        if(this.paperShape.position.getDistance(nextShapePosition) <= eps){
-            return
+            if (this.paperShape.position.getDistance(nextShapePosition) <= eps) {
+                return
+            }
+
+            this.paperShape.position = nextShapePosition
+            this.rawObj.SetGlobalPivotPosition(val.x, val.y, 0.0)
+
+            if (this.followCurve) {
+                let followCurveShape = this.followCurve
+                let length = followCurveShape.getGlobalOffsetOf(val)
+                let lengthPortion = length / followCurveShape.length()
+
+                let frameId = this.getLayer().GetCurrentFrame()
+                this.shapeFollowCurveFrameState.RecordLengthRatio(frameId, lengthPortion)
+            }
+
+            this.valueChangeHandler.callHandlers("position", val)
+        }finally {
+            this.paperItem.scaling = currentScaling
+            this.update()
         }
-
-        this.paperShape.position = nextShapePosition
-        this.rawObj.SetGlobalPivotPosition(val.x, val.y, 0.0)
-
-        if(this.followCurve){
-            let followCurveShape = this.followCurve
-            let length = followCurveShape.getGlobalOffsetOf(val)
-            let lengthPortion = length / followCurveShape.length()
-
-            let frameId = this.getLayer().GetCurrentFrame()
-            this.shapeFollowCurveFrameState.RecordLengthRatio(frameId, lengthPortion)
-        }
-
-        this.valueChangeHandler.callHandlers("position", val)
-        this.paperItem.scaling = currentScaling
-        this.update()
     }
 
     set position(val: paper.Point) {
@@ -328,8 +332,11 @@ abstract class BaseShapeJS {
         if(this.paperItem.scaling.getDistance(val) < eps)
             return
 
-        this.paperItem.scaling = val
+        console.log("Save scale:" + val.x + "," + val.y)
+        this.rawObj.SetScale(val.x, val.y, 0)
         this.valueChangeHandler.callHandlers("scaling", val)
+
+        this.update()
     }
 
     set rotation(val: number) {
@@ -512,9 +519,6 @@ abstract class BaseShapeJS {
             this.storeSegments(segments)
         }
 
-        let scaling = this.paperItem.scaling
-        this.rawObj.SetScale(scaling.x, scaling.y, 0)
-
         // Store index
         let index = this.paperItem.index
         if(index != this.rawObj.GetIndex()){ // If index changed, all the shapes in the same layer might also be changed.
@@ -557,8 +561,7 @@ abstract class BaseShapeJS {
     }
 
     private setPosition(x: number, y: number) {
-        this.paperItem.position = new paper.Point(x, y)
-        this.store()
+        this.position = new paper.Point(x,y)
     }
 
     private getScaling() {
@@ -566,8 +569,7 @@ abstract class BaseShapeJS {
     }
 
     private setScaling(x: number, y: number) {
-        this.paperItem.scaling = new paper.Point(x, y)
-        this.store()
+        this.scaling = new paper.Point(x,y)
     }
 
     private getRotation(): number {
@@ -973,6 +975,8 @@ abstract class BaseShapeJS {
 
         let scaling = this.rawObj.GetScale()
         this.paperItem.scaling = new paper.Point(scaling.x, scaling.y)
+
+        console.log("PaperJS scaling:" + scaling.x + "," + scaling.y)
 
         // Adjust index
         if (this.paperItem.index != this.rawObj.GetIndex() && this.paperItem.index > 0) {
