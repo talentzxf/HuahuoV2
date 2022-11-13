@@ -175,10 +175,11 @@ class ElementCreator {
 
         for(let shape of shapes){
             allRelatedShapes.add(shape)
-
-            let referencedShapes = shape.getReferencedShapes()
+            let referencedShapes = new Set()
+            shape.getReferencedShapes(referencedShapes)
             for(let referencedShape of referencedShapes){
-                allRelatedShapes.add(referencedShape)
+                if(referencedShape != null)
+                    allRelatedShapes.add(referencedShape)
             }
         }
 
@@ -187,6 +188,7 @@ class ElementCreator {
                 return
             }
 
+            shapes = allRelatedShapes
         }
 
         try {

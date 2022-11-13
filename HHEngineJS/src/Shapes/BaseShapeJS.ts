@@ -1043,8 +1043,10 @@ abstract class BaseShapeJS {
 
     // Pass in a set to avoid creation of the set multiple times.
     getReferencedShapes(set: Set<BaseShapeJS>){
-        // Get all shapes from follow curve component
-        set.add(this.followCurve)
+
+        if(this.followCurve){
+            set.add(this.followCurve)
+        }
 
         // Get all referenced shapes
         for(let component of this.customComponents){
