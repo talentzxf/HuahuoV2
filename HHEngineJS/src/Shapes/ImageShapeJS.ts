@@ -110,11 +110,11 @@ class ImageShapeJS extends AbstractMediaShapeJS{
         }
     }
 
-    beforeUpdate() {
+    beforeUpdate(): boolean {
         super.beforeUpdate();
 
         if(!this.loaded){
-            return;
+            return false;
         }
 
         if(this.rawObj.IsVisible() && this.isAnimation){
@@ -137,6 +137,8 @@ class ImageShapeJS extends AbstractMediaShapeJS{
                 this.lastAnimationFrame = playingAnimationFrameId
             }
         }
+
+        return true
     }
 
     store() {

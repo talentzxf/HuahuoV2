@@ -19,6 +19,8 @@ declare class ShapeFollowCurveFrameState{
 const BOUNDMARGIN: number = 10
 const eps:number = 0.001
 
+let totallyUpdated: number = 0
+
 abstract class BaseShapeJS {
     protected rawObj: any = null;
     protected paperItem: paper.Item
@@ -44,6 +46,8 @@ abstract class BaseShapeJS {
     private customComponents:Array<AbstractComponent> = new Array<AbstractComponent>()
 
     private isMirage: boolean = false
+
+    private lastRenderFrame: number = -1
 
     setIsMirage(isMirage: boolean){
         this.isMirage = isMirage
@@ -316,7 +320,7 @@ abstract class BaseShapeJS {
             this.valueChangeHandler.callHandlers("position", val)
         }finally {
             this.paperItem.scaling = currentScaling
-            this.update()
+            this.update(true)
         }
     }
 
@@ -332,11 +336,10 @@ abstract class BaseShapeJS {
         if(this.paperItem.scaling.getDistance(val) < eps)
             return
 
-        console.log("Save scale:" + val.x + "," + val.y)
         this.rawObj.SetScale(val.x, val.y, 0)
         this.valueChangeHandler.callHandlers("scaling", val)
 
-        this.update()
+        this.update(true)
     }
 
     set rotation(val: number) {
@@ -411,7 +414,7 @@ abstract class BaseShapeJS {
 
     awakeFromLoad() {
         this.isPermanent = true
-        this.update();
+        this.update(true);
     }
 
     getShapeName() {
@@ -445,7 +448,7 @@ abstract class BaseShapeJS {
             }
         }
 
-        this.update()
+        this.update(true)
 
         this.callHandlers("segments", null)
     }
@@ -645,7 +648,7 @@ abstract class BaseShapeJS {
             let frameId = this.getLayer().GetCurrentFrame()
             this.shapeFollowCurveFrameState.RecordLengthRatio(frameId, portion)
 
-            this.update()
+            this.update(true)
         }
     }
 
@@ -797,10 +800,12 @@ abstract class BaseShapeJS {
         return this.rawObj.IsVisible();
     }
 
-    beforeUpdate() {
+    beforeUpdate(): boolean {
         if (this.isPermanent && !this.rawObj.IsVisible()) {
             this.selected = false
         }
+
+        return true
     }
 
     hitTypeSelectable(hitType){
@@ -827,10 +832,12 @@ abstract class BaseShapeJS {
         }
     }
 
-    duringUpdate() {
+    duringUpdate(): boolean {
         if (!this.paperItem) {
             this.createShape()
         }
+
+        return true
     }
 
     getTypeName() {
@@ -949,7 +956,7 @@ abstract class BaseShapeJS {
         return new paper.Point(zx, zy)
     }
 
-    afterUpdate() {
+    afterUpdate(): boolean {
         this.applySegments()
 
         // Reset the rotation.
@@ -986,10 +993,14 @@ abstract class BaseShapeJS {
             }
         }
 
+        let retResult = true
         // Execute after update of all components
         for(let component of this.customComponents){
-            component.afterUpdate()
+            if(!component.afterUpdate())
+                retResult = false
         }
+
+        return retResult
     }
 
     hide(){
@@ -1000,19 +1011,31 @@ abstract class BaseShapeJS {
         this.callHandlers("shapeHidden", null)
     }
 
-    update() {
-        this.beforeUpdate()
-        this.duringUpdate()
+    update(force:boolean = false) {
+        let currentFrame = this.getLayer().GetCurrentFrame()
 
-        if (this.isPermanent == true && !this.rawObj.IsVisible()) {
-            this.paperItem.visible = false
-            this.selected = false
-        } else {
-            this.paperItem.visible = true
-            this.afterUpdate()
+        if(force || this.lastRenderFrame != currentFrame){
+            totallyUpdated++
+            console.log("Totally updated:" + totallyUpdated)
+
+            let successfullyRendered = true
+
+            successfullyRendered = successfullyRendered && this.beforeUpdate()
+            successfullyRendered = successfullyRendered && this.duringUpdate()
+
+            if (this.isPermanent == true && !this.rawObj.IsVisible()) {
+                this.paperItem.visible = false
+                this.selected = false
+            } else {
+                this.paperItem.visible = true
+                successfullyRendered = successfullyRendered && this.afterUpdate()
+            }
+
+            this.updateBoundingBox()
+
+            if(successfullyRendered)
+                this.lastRenderFrame = currentFrame
         }
-
-        this.updateBoundingBox()
     }
 
     getPaperPoint(engineV3Point) {

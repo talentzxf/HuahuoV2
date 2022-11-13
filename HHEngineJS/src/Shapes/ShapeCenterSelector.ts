@@ -100,7 +100,7 @@ class ShapeCenterSelector {
         this._isSelected = val
     }
 
-    update() {
+    update(force: boolean = false) {
     }
 
     getPropertySheet() {

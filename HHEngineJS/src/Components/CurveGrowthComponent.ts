@@ -63,6 +63,7 @@ class CurveGrowthComponent extends AbstractComponent {
                 path2.remove()
             }
         }
+        return true
     }
 }
 

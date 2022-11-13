@@ -69,9 +69,9 @@
 //         return createShapePromise
 //     }
 //
-//     update() {
+//     update(force: boolean = false) {
 //         if (this.paperShape) {
-//             super.update()
+//             super.update(force)
 //         }
 //     }
 // }

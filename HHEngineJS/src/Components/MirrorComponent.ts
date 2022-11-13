@@ -114,6 +114,8 @@ class MirrorComponent extends AbstractComponent {
     afterUpdate() {
         super.afterUpdate();
 
+        let retValue = true
+
         let baseShapeParent = this.baseShape.paperShape.parent
         if(baseShapeParent != null && this.paperShapeGroup.parent != baseShapeParent)
             baseShapeParent.addChild(this.paperShapeGroup)
@@ -163,9 +165,13 @@ class MirrorComponent extends AbstractComponent {
                     }
 
                     duplicatedShape.update()
+                }else{
+                    retValue = false
                 }
             }
         }
+
+        return retValue
     }
 }
 

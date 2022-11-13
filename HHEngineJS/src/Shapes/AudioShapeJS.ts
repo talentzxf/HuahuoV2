@@ -76,7 +76,7 @@ class AudioShapeJS extends AbstractMediaShapeJS {
         return shapeName
     }
 
-    override update(){
+    override update(force:boolean = false){
         if(!this.loaded)
             return
 
@@ -104,7 +104,7 @@ class AudioShapeJS extends AbstractMediaShapeJS {
                 this.audioElement.currentTime = 0.0
             }
         }
-        super.update()
+        super.update(force)
     }
 
     onDataLoaded() {

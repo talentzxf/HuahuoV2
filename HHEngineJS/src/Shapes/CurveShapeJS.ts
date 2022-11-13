@@ -99,7 +99,7 @@ class CurveShapeJS extends BaseSolidShape{
     }
 
     afterUpdate() {
-        super.afterUpdate()
+        return super.afterUpdate()
     }
 
     afterWASMReady() {

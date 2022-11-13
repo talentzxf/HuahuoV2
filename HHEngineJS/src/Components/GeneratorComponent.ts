@@ -23,9 +23,14 @@ class GeneratorComponent extends AbstractComponent {
     afterUpdate() {
         super.afterUpdate();
 
+        let retValue = true
         for (let targetShape of this.targetShapeArray) {
             if(targetShape == null) // The shape might not be loaded yet. But in next cycle, it should have been loaded.
+            {
+                retValue = false
                 continue
+            }
+
 
             let mirageShapeArray = this.targetShapeGeneratedShapeArrayMap.get(targetShape.rawObj.ptr)
             if (mirageShapeArray == null) {
@@ -69,6 +74,8 @@ class GeneratorComponent extends AbstractComponent {
                 tobeDeletedShape.removePaperObj()
             }
         }
+
+        return retValue
     }
 
 

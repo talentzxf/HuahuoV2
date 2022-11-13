@@ -10,6 +10,8 @@ class FillColorComponent extends AbstractComponent{
         super.afterUpdate();
 
         this.baseShape.paperShape.fillColor = this.fillColor
+
+        return true
     }
 }
 

@@ -16,6 +16,8 @@ class StrokeComponent extends AbstractComponent{
 
         this.baseShape.paperShape.strokeColor = this.strokeColor
         this.baseShape.paperShape.strokeWidth = this.strokeWidth
+
+        return true
     }
 }
 
