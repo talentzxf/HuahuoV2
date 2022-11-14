@@ -22,7 +22,7 @@ abstract class BaseSolidShape extends BaseShapeJS {
     override update(force:boolean = false) {
         let currentFrame = this.getLayer().GetCurrentFrame()
         if(force || currentFrame != this.lastRenderFrame){
-            super.update(force);
+            super.update(true);
 
             this.lastRenderFrame = currentFrame
         }
