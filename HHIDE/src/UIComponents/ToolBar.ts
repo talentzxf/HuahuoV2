@@ -35,7 +35,7 @@ class HHToolBar extends HTMLElement{
             this.loadButton = document.createElement("button")
             this.loadButton.style.width = "30px"
             this.loadButton.style.height = "30px"
-            this.loadButton.title = i18n.t("hint.localLocal")
+            this.loadButton.title = i18n.t("hint.loadLocal")
             this.loadButton.innerHTML = SVGFiles.loadBtn
 
             this.loadButton.addEventListener("click", this.onFileSelected.bind(this))

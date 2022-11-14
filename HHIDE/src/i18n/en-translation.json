@@ -103,7 +103,7 @@
   },
   "hint": {
     "saveLocal": "Save project to local",
-    "localLocal": "Load project from local",
+    "loadLocal": "Load project from local",
     "preview": "Upload and preview animation",
     "listProject": "List my projects",
     "uploadProject": "Upload project",

@@ -35,8 +35,8 @@ class Player{
         return this.layerShapesManager.loadShapesFromStore(null)
     }
 
-    updateAllShapes(){
-        this.layerShapesManager.updateAllShapes()
+    updateAllShapes(force: boolean = false){
+        this.layerShapesManager.updateAllShapes(force)
     }
 
     getJSShapeFromRawShape(rawObj, recursive: boolean = false){

@@ -126,7 +126,7 @@ class ElementCreator {
             elementSceneView.storeId = element.storeId
 
             elementSceneView.animationPlayer.loadShapesFromStore()
-            elementSceneView.animationPlayer.updateAllShapes()
+            elementSceneView.animationPlayer.updateAllShapes(true)
         } else { // Switch to the SceneView
             let panel: HHPanel = findParentPanel(eleSceneView)
             let hhcontent: HHContent = findParentContent(eleSceneView)
@@ -238,6 +238,8 @@ class ElementCreator {
             newElement.update()
 
             HHToast.info(i18n.t("toast.elementCreated", {elementName: newElement.name}))
+
+            huahuoEngine.getActivePlayer().updateAllShapes(true)
 
             return newElement
         } finally {

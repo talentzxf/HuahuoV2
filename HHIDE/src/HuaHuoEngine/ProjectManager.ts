@@ -53,6 +53,8 @@ class ProjectManager {
         } else {
             HHToast.error(i18n.t("toast.openProjectFailed"))
         }
+
+        huahuoEngine.getActivePlayer().updateAllShapes(true)
     }
 
     getProjectData(){
