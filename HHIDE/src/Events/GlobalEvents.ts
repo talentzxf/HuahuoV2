@@ -11,7 +11,8 @@ enum EventNames{
     DRAWSHAPEENDS = "drawShapeEnds",
     OBJECTSELECTED = "objectSelected",
     UNSELECTOBJECTS = "unselectObjects",
-    COMPONENTADDED = "componentAdded"
+    COMPONENTADDED = "componentAdded",
+    CELLCLICKED = "cellClicked"
 }
 
 class EventBus{

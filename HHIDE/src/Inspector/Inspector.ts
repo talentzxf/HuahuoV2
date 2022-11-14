@@ -33,7 +33,16 @@ class Inspector extends HTMLElement{
 
         EventBus.getInstance().on(EventNames.COMPONENTADDED, this.componentAdded.bind(this))
 
+        EventBus.getInstance().on(EventNames.CELLCLICKED, this.timelineCellClicked.bind(this))
+
         findParentSideBar(this).hide()
+    }
+
+    timelineCellClicked(){
+        let refreshableDiv = this.querySelector("hh-refreshable-div") as HHRefreshableDiv
+        if(refreshableDiv){
+            refreshableDiv.refresh()
+        }
     }
 
     unselectObjects(){

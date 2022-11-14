@@ -5,6 +5,7 @@ import {SceneView} from "../SceneView/SceneView";
 import {sceneViewManager} from "../SceneView/SceneViewManager";
 import {undoManager} from "../RedoUndo/UndoManager";
 import {SetFrameIdCommand} from "../RedoUndo/SetFrameIdCommand";
+import {EventBus, EventNames} from "../Events/GlobalEvents";
 
 declare var Module:any;
 
@@ -68,6 +69,8 @@ class EditorPlayer extends Player{
 
             playFrameId += 0.5  // Force to start at 1 for better visualization
             this.timeline.setTimeElapsed(playFrameId / GlobalConfig.fps)
+
+            EventBus.getInstance().emit(EventNames.CELLCLICKED, playFrameId)
         }
     }
 
