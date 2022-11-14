@@ -29,9 +29,9 @@ class LayerShapesManager {
         return this.layerShapes.get(layer)
     }
 
-    updateLayerShapes(layer) {
+    updateLayerShapes(layer, force:boolean = false) {
         this.forEachShapeInLayer(layer, (shape) => {
-            shape.update()
+            shape.update(force)
         })
     }
 
@@ -41,13 +41,13 @@ class LayerShapesManager {
         })
     }
 
-    forEachLayerInStore(store, func: (layer) => void) {
+    forEachLayerInStore(store, func: (layer, param?) => void, param?) {
         let layerCount = store.GetLayerCount();
 
         for (let i = 0; i < layerCount; i++) {
             let layer = store.GetLayer(i)
 
-            func(layer)
+            func(layer, param)
         }
     }
 
@@ -136,9 +136,9 @@ class LayerShapesManager {
         return layerShapeCount
     }
 
-    updateAllShapes() {
+    updateAllShapes(force: boolean = false) {
         let store = huahuoEngine.GetStoreById(this.storeId)
-        this.forEachLayerInStore(store, this.updateLayerShapes.bind(this))
+        this.forEachLayerInStore(store, this.updateLayerShapes.bind(this), force)
     }
 
     hideAllShapes() {

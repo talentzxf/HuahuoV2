@@ -45,7 +45,7 @@ class ShapeSegmentMoveCommand extends MergableCommand{
         // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
         this.shape.store()
 
-        this.shape.update()
+        this.shape.update(true)
     }
 
     _UnDoCommand() {
@@ -53,7 +53,7 @@ class ShapeSegmentMoveCommand extends MergableCommand{
         // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
         this.shape.store()
 
-        this.shape.update()
+        this.shape.update(true)
     }
 
 }

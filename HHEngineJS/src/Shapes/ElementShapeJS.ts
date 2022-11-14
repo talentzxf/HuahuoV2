@@ -108,8 +108,8 @@ class ElementShapeJS extends BaseShapeJS {
         }
     }
 
-    override duringUpdate() {
-        super.duringUpdate()
+    override duringUpdate(force: boolean = false) {
+        super.duringUpdate(force)
 
         let defaultStoreManager = huahuoEngine.GetDefaultObjectStoreManager()
         let previousStoreIdx = defaultStoreManager.GetCurrentStore().GetStoreId();
@@ -147,7 +147,7 @@ class ElementShapeJS extends BaseShapeJS {
                 this.selected = false
 
             if (this.isVisible()) {
-                this.layerShapesManager.updateAllShapes()
+                this.layerShapesManager.updateAllShapes(force)
             } else {
                 this.layerShapesManager.hideAllShapes() // This element is invisible, hide all it's containing shapes.
             }
@@ -159,7 +159,7 @@ class ElementShapeJS extends BaseShapeJS {
 
     update(force: boolean = false) {
         if (this.storeId > 0) { // If the storeId is less than 0, the shape has not been inited.
-            super.update()
+            super.update(force)
             elementUpdated++
         }
     }

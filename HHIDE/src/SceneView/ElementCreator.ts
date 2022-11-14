@@ -161,7 +161,7 @@ class ElementCreator {
         console.log("Created new store, store id:" + newElementShape.storeId)
 
         this.registerElementChangeEvent(newElementShape.storeId, function () {
-            newElementShape.update()
+            newElementShape.update(true)
         })
 
         return newElementShape

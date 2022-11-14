@@ -799,7 +799,7 @@ abstract class BaseShapeJS {
         return this.rawObj.IsVisible();
     }
 
-    beforeUpdate() {
+    beforeUpdate(force: boolean = false) {
         if (this.isPermanent && !this.rawObj.IsVisible()) {
             this.selected = false
         }
@@ -829,7 +829,7 @@ abstract class BaseShapeJS {
         }
     }
 
-    duringUpdate() {
+    duringUpdate(force: boolean = false) {
         if (!this.paperItem) {
             this.createShape()
         }
@@ -951,7 +951,7 @@ abstract class BaseShapeJS {
         return new paper.Point(zx, zy)
     }
 
-    afterUpdate() {
+    afterUpdate(force: boolean = false) {
         this.applySegments()
 
         // Reset the rotation.
@@ -1004,15 +1004,15 @@ abstract class BaseShapeJS {
         totallyUpdated++
         // console.log("Totally updated:" + totallyUpdated)
 
-        this.beforeUpdate()
-        this.duringUpdate()
+        this.beforeUpdate(force)
+        this.duringUpdate(force)
 
         if (this.isPermanent == true && !this.rawObj.IsVisible()) {
             this.paperItem.visible = false
             this.selected = false
         } else {
             this.paperItem.visible = true
-            this.afterUpdate()
+            this.afterUpdate(force)
         }
 
         this.updateBoundingBox()

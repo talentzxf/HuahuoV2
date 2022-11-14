@@ -98,10 +98,6 @@ class CurveShapeJS extends BaseSolidShape{
             this.curveGrowthComponent.insertSegment(localPos)
     }
 
-    afterUpdate() {
-        super.afterUpdate()
-    }
-
     afterWASMReady() {
         super.afterWASMReady();
 
