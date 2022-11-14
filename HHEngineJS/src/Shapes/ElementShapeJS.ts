@@ -6,6 +6,9 @@ import {PropertyType} from "hhcommoncomponents";
 
 let shapeName = "ElementShape"
 
+let elementCreated: number = 0
+let elementUpdated: number = 0
+
 class ElementShapeJS extends BaseShapeJS {
     static createElement(rawObj) {
         return new ElementShapeJS(rawObj)
@@ -23,6 +26,10 @@ class ElementShapeJS extends BaseShapeJS {
         super(rawObj);
 
         this.size = new paper.Point(100, 100)
+
+        elementCreated++
+
+        console.log("ELement created count:" + elementCreated)
     }
 
     protected isUpdateStrokeColor(): boolean {
@@ -51,7 +58,7 @@ class ElementShapeJS extends BaseShapeJS {
         boundingBox.strokeColor = new paper.Color("black")
         boundingBox.data.meta = this
 
-        let pointText = new paper.PointText(new paper.Point(0,0))
+        let pointText = new paper.PointText(new paper.Point(0, 0))
         pointText.content = this.name
 
         this.emptyPlaceHolder = new paper.Group()
@@ -73,15 +80,15 @@ class ElementShapeJS extends BaseShapeJS {
     }
 
     // Not sure why, but if we don't write this getter/setter, it will fail??
-    get bornFrameId(){
+    get bornFrameId() {
         return this.rawObj.GetBornFrameId()
     }
 
-    set bornFrameId(val:number){
+    set bornFrameId(val: number) {
         this.rawObj.SetBornFrameId(val)
     }
 
-    calculateLocalFrame(){
+    calculateLocalFrame() {
         let currentFrame = this.getLayer().GetCurrentFrame()
         let bornFrame = this.bornFrameId
         let maxFrames = huahuoEngine.getStoreMaxFrames(this.storeId)
@@ -89,13 +96,13 @@ class ElementShapeJS extends BaseShapeJS {
         return (currentFrame - bornFrame) % maxFrames
     }
 
-    saveLayerFrame(layer, frame){
+    saveLayerFrame(layer, frame) {
         this.layerFrameMap.set(layer, frame)
     }
 
-    restoreLayerFrameIds(){
+    restoreLayerFrameIds() {
         let layers = this.layerFrameMap.keys()
-        for(let layer of layers){
+        for (let layer of layers) {
             let previousFrame = this.layerFrameMap.get(layer)
             layer.SetCurrentFrame(previousFrame)
         }
@@ -107,19 +114,19 @@ class ElementShapeJS extends BaseShapeJS {
         let defaultStoreManager = huahuoEngine.GetDefaultObjectStoreManager()
         let previousStoreIdx = defaultStoreManager.GetCurrentStore().GetStoreId();
 
-        try{
+        try {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId);
 
             let store = defaultStoreManager.GetCurrentStore()
 
-            if(this.layerShapesManager == null){
+            if (this.layerShapesManager == null) {
                 this.layerShapesManager = new LayerShapesManager(this.storeId)
             }
 
             let currentLocalFrame = this.calculateLocalFrame()
             this.layerShapesManager.loadShapesFromStore(this)
 
-            this.layerShapesManager.forEachLayerInStore(store, (layer)=>{
+            this.layerShapesManager.forEachLayerInStore(store, (layer) => {
                 this.saveLayerFrame(layer, layer.GetCurrentFrame())
 
                 layer.SetCurrentFrame(currentLocalFrame)
@@ -127,32 +134,33 @@ class ElementShapeJS extends BaseShapeJS {
 
             let somethingIsVisible = false
             let _this = this
-            this.layerShapesManager.forEachShapeInStore(store, (shape)=>{
-                if(shape){
+            this.layerShapesManager.forEachShapeInStore(store, (shape) => {
+                if (shape) {
                     _this.emptyPlaceHolder.remove()
-                    if(shape.isVisible()){
+                    if (shape.isVisible()) {
                         somethingIsVisible = true
                     }
                 }
             })
 
-            if(!somethingIsVisible)
+            if (!somethingIsVisible)
                 this.selected = false
 
-            if(this.isVisible()){
+            if (this.isVisible()) {
                 this.layerShapesManager.updateAllShapes()
-            } else{
+            } else {
                 this.layerShapesManager.hideAllShapes() // This element is invisible, hide all it's containing shapes.
             }
-        }finally {
+        } finally {
             this.restoreLayerFrameIds();
             defaultStoreManager.SetDefaultStoreByIndex(previousStoreIdx)
         }
     }
 
-    update(force:boolean = false) {
+    update(force: boolean = false) {
         if (this.storeId > 0) { // If the storeId is less than 0, the shape has not been inited.
             super.update()
+            elementUpdated++
         }
     }
 
@@ -161,11 +169,11 @@ class ElementShapeJS extends BaseShapeJS {
         huahuoEngine.RegisterElementShape(this.storeId, this);
     }
 
-    addShape(shape: BaseShapeJS){
+    addShape(shape: BaseShapeJS) {
         let prevStoreId = huahuoEngine.GetCurrentStoreId()
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId)
 
-        try{
+        try {
             // 1. Remove the shape from current layer (both cpp and js side)
             shape.detachFromCurrentLayer();
 
@@ -174,16 +182,16 @@ class ElementShapeJS extends BaseShapeJS {
 
             // 2. Add the shape into current layer of this store. And it will be loaded by the element.
             huahuoEngine.GetCurrentLayer().AddShapeInternal(shape.getRawShape())
-        }finally {
+        } finally {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStoreId)
         }
     }
 
-    syncStoreLayerInfo(){
+    syncStoreLayerInfo() {
         huahuoEngine.GetDefaultObjectStoreManager().GetStoreById(this.storeId).SyncLayersInfo()
     }
 
-    onEditElement(){
+    onEditElement() {
         huahuoEngine.dispatchEvent("onEditElement", this)
     }
 
@@ -192,7 +200,7 @@ class ElementShapeJS extends BaseShapeJS {
         this.propertySheet.addProperty({
             key: "inspector.editElement",
             type: PropertyType.BUTTON,
-            config:{
+            config: {
                 action: this.onEditElement.bind(this)
             }
         })

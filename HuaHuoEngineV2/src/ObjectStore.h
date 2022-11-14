@@ -158,7 +158,7 @@ public:
             return false;
         }
 
-        printf("Setting default store:%d\n", index);
+//        printf("Setting default store:%d\n", index);
         currentStore = allStores[index - 1];
 
         return true;

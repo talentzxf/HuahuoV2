@@ -115,10 +115,6 @@ class LayerShapesManager {
                     shape = jsShape
                 }
             }
-
-            for (let [shapePtr, shape] of this.getLayerShapes(layer)) {
-                shape.update()
-            }
         }
 
         // Remove all layers and shapes that are not belong to me. This might happen when a shape is removed from an element

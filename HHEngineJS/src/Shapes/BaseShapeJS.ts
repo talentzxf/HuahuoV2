@@ -1002,7 +1002,7 @@ abstract class BaseShapeJS {
 
     update(force: boolean = false) {
         totallyUpdated++
-        console.log("Totally updated:" + totallyUpdated)
+        // console.log("Totally updated:" + totallyUpdated)
 
         this.beforeUpdate()
         this.duringUpdate()
