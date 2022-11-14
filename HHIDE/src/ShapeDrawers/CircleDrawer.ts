@@ -34,7 +34,7 @@ class CircleDrawer extends BaseShapeDrawer {
 
             let radius = endPosition.distance(this.startPosition)
             this.tempShape.setRadius(radius)
-            this.tempShape.update()
+            this.tempShape.update(true)
         }
     }
 

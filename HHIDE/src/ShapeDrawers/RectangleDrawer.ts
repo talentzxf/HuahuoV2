@@ -34,7 +34,7 @@ class RectangleDrawer extends BaseShapeDrawer{
             let currentPos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
 
             this.tempShape.setEndPoint(currentPos)
-            this.tempShape.update()
+            this.tempShape.update(true)
         }
     }
 

@@ -259,7 +259,7 @@ class ShapeSelector extends BaseShapeDrawer {
     selectObject(shape: BaseShapeJS) {
         let selectedObj = shape
         selectedObj.selected = true
-        selectedObj.update();
+        selectedObj.update(true);
         this.selectedShapes.add(shape)
 
         EventBus.getInstance().emit(EventNames.OBJECTSELECTED, selectedObj.getPropertySheet(), selectedObj)
@@ -272,7 +272,7 @@ class ShapeSelector extends BaseShapeDrawer {
             // 1. Clear current selections. TODO: How about multiple selection ???
             for (let shape of this.selectedShapes) {
                 shape.selected = false
-                shape.update()
+                shape.update(true)
             }
         }
 

@@ -68,7 +68,6 @@ class ProjectManager {
             let CompressedFileContent = gzipSync(Uint8Array, {filename: storeFileName});
             return new Blob([CompressedFileContent], {type: "application/octet-stream"})
         } finally {
-            console.log("Setting default store Id 4:" + oldStoreId)
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(oldStoreId)
         }
     }

@@ -150,7 +150,7 @@ class ElementShapeJS extends BaseShapeJS {
         }
     }
 
-    update() {
+    update(force:boolean = false) {
         if (this.storeId > 0) { // If the storeId is less than 0, the shape has not been inited.
             super.update()
         }

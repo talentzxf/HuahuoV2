@@ -65,7 +65,7 @@ class MirrorDrawer extends BaseShapeDrawer {
                 }
             }
             this.tempShape.setEndPoint(currentPos)
-            this.tempShape.update()
+            this.tempShape.update(true)
         }
     }
 

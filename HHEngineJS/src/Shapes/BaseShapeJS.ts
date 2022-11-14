@@ -19,6 +19,8 @@ declare class ShapeFollowCurveFrameState{
 const BOUNDMARGIN: number = 10
 const eps:number = 0.001
 
+let totallyUpdated: number = 0
+
 abstract class BaseShapeJS {
     protected rawObj: any = null;
     protected paperItem: paper.Item
@@ -316,7 +318,7 @@ abstract class BaseShapeJS {
             this.valueChangeHandler.callHandlers("position", val)
         }finally {
             this.paperItem.scaling = currentScaling
-            this.update()
+            this.update(true)
         }
     }
 
@@ -336,7 +338,7 @@ abstract class BaseShapeJS {
         this.rawObj.SetScale(val.x, val.y, 0)
         this.valueChangeHandler.callHandlers("scaling", val)
 
-        this.update()
+        this.update(true)
     }
 
     set rotation(val: number) {
@@ -411,7 +413,7 @@ abstract class BaseShapeJS {
 
     awakeFromLoad() {
         this.isPermanent = true
-        this.update();
+        this.update(true);
     }
 
     getShapeName() {
@@ -445,7 +447,7 @@ abstract class BaseShapeJS {
             }
         }
 
-        this.update()
+        this.update(true)
 
         this.callHandlers("segments", null)
     }
@@ -645,7 +647,7 @@ abstract class BaseShapeJS {
             let frameId = this.getLayer().GetCurrentFrame()
             this.shapeFollowCurveFrameState.RecordLengthRatio(frameId, portion)
 
-            this.update()
+            this.update(true)
         }
     }
 
@@ -976,8 +978,6 @@ abstract class BaseShapeJS {
         let scaling = this.rawObj.GetScale()
         this.paperItem.scaling = new paper.Point(scaling.x, scaling.y)
 
-        console.log("PaperJS scaling:" + scaling.x + "," + scaling.y)
-
         // Adjust index
         if (this.paperItem.index != this.rawObj.GetIndex() && this.paperItem.index > 0) {
             let parent = this.paperItem.parent
@@ -1000,7 +1000,10 @@ abstract class BaseShapeJS {
         this.callHandlers("shapeHidden", null)
     }
 
-    update() {
+    update(force: boolean = false) {
+        totallyUpdated++
+        console.log("Totally updated:" + totallyUpdated)
+
         this.beforeUpdate()
         this.duringUpdate()
 
