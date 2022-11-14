@@ -10,29 +10,17 @@ class CurveShapeJS extends BaseSolidShape{
         return new CurveShapeJS(rawObj)
     }
 
-    constructor(rawObj?) {
-        let needInitComponents = false
-        if(!rawObj){
-            needInitComponents = true
-        }
+    _curveGrowthComponent: CurveGrowthComponent = null
 
-        super(rawObj);
-
-        if(needInitComponents){
-            this.curveGrowthComponent = new CurveGrowthComponent()
-            this.addComponent(this.curveGrowthComponent)
+    get curveGrowthComponent(){
+        if(this._curveGrowthComponent == null){
+            let component = this.getComponentByTypeName("CurveGrowthComponent") as CurveGrowthComponent
+            if(component != null){
+                this._curveGrowthComponent = component
+            }
         }
+        return this._curveGrowthComponent
     }
-
-    override awakeFromLoad() {
-        super.awakeFromLoad();
-
-        if(this.curveGrowthComponent){
-            this.curveGrowthComponent = this.getComponentByTypeName("CurveGrowthComponent") as CurveGrowthComponent
-        }
-    }
-
-    curveGrowthComponent: CurveGrowthComponent
 
     getShapeName(): string {
         return shapeName

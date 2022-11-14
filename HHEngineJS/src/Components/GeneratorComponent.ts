@@ -50,11 +50,10 @@ class GeneratorComponent extends AbstractComponent {
                     mirageShapeArray.push(duplicatedShape)
 
                     targetShape.registerValueChangeHandler("*")(()=>{
-                        duplicatedShape.update()
+                        duplicatedShape.update(true)
                     })
                 }else{
                     duplicatedShape = mirageShapeArray[index]
-                    duplicatedShape.update()
                 }
 
                 let currentLength = baseShapeJS.length * currentLengthRatio

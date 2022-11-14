@@ -42,6 +42,12 @@ class CppClassObjectFactory{
                 let matchesComponentCount = false
                 if(isCompatibleWithShape){
                     let currentComponentCount = targetObj.getComponentCountByTypeName(componentTypeName)
+
+                    if(componentConfig.maxCount == null || !Number.isInteger(componentConfig.maxCount))
+                    {
+                        matchesComponentCount = true
+                    }
+
                     if(currentComponentCount + 1 < componentConfig.maxCount)
                         matchesComponentCount = true
                 }
