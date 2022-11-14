@@ -20,8 +20,8 @@ class GeneratorComponent extends AbstractComponent {
         super(rawObj);
     }
 
-    afterUpdate() {
-        super.afterUpdate();
+    override afterUpdate(force: boolean = false) {
+        super.afterUpdate(force);
 
         for (let targetShape of this.targetShapeArray) {
             if(targetShape == null) // The shape might not be loaded yet. But in next cycle, it should have been loaded.
@@ -54,6 +54,10 @@ class GeneratorComponent extends AbstractComponent {
                     })
                 }else{
                     duplicatedShape = mirageShapeArray[index]
+
+                    if(force){
+                        duplicatedShape.update(force)
+                    }
                 }
 
                 let currentLength = baseShapeJS.length * currentLengthRatio

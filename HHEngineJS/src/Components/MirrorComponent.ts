@@ -111,8 +111,8 @@ class MirrorComponent extends AbstractComponent {
         this.targetShapeMirroredShapeMap = new Map<number, BaseShapeJS>()
     }
 
-    afterUpdate() {
-        super.afterUpdate();
+    override afterUpdate(force: boolean = false) {
+        super.afterUpdate(force);
 
         let baseShapeParent = this.baseShape.paperShape.parent
         if(baseShapeParent != null && this.paperShapeGroup.parent != baseShapeParent)
@@ -162,7 +162,9 @@ class MirrorComponent extends AbstractComponent {
                         duplicatedShape = this.createDuplication(targetShape)
                     }
 
-                    duplicatedShape.update()
+                    if(force){
+                        duplicatedShape.update(force)
+                    }
                 }
             }
         }

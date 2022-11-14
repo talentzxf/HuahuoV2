@@ -205,7 +205,7 @@ class AbstractComponent {
         this.baseShape = baseShape
     }
 
-    afterUpdate() {
+    afterUpdate(force:boolean = false) {
     }
 
     getTypeName(){

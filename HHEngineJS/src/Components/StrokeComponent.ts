@@ -11,8 +11,8 @@ class StrokeComponent extends AbstractComponent{
     @PropertyValue(PropertyCategory.interpolateColor, {r:0, g:0, b:0, a:1})
     strokeColor
 
-    override afterUpdate() {
-        super.afterUpdate();
+    override afterUpdate(force: boolean = false) {
+        super.afterUpdate(force);
 
         this.baseShape.paperShape.strokeColor = this.strokeColor
         this.baseShape.paperShape.strokeWidth = this.strokeWidth
