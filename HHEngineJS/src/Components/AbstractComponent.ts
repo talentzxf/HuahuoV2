@@ -105,7 +105,7 @@ class AbstractComponent {
             this[fieldName] = val
             this.callHandlers(fieldName, val)
             if(this.baseShape){
-                this.baseShape.update()
+                this.baseShape.update(true)
 
                 this.baseShape.callHandlers(fieldName, val)
             }
@@ -160,14 +160,14 @@ class AbstractComponent {
             this.rawObj.GetShapeArrayValueForWrite(fieldName).InsertShape(val.getRawShape())
 
             if(this.baseShape)
-                this.baseShape.update()
+                this.baseShape.update(true)
             this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
         }.bind(this)
 
         this[deleterName] = function(val){
             this.rawObj.GetShapeArrayValue(fieldName).DeleteShape(val)
             if(this.baseShape)
-                this.baseShape.update()
+                this.baseShape.update(true)
 
             this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
         }.bind(this)

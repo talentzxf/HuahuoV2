@@ -3,6 +3,7 @@ interface CustomElementConfig {
     template?: string;
     style?: string;
     useShadow?: boolean;
+    extends?: string;
 }
 const validateSelector = (selector: string) => {
     if (selector.indexOf('-') <= 0) {
@@ -58,7 +59,11 @@ const CustomElement = (config: CustomElementConfig) => (cls:any) => {
         }
     };
 
-    window.customElements.define(config.selector, cls);
+    if(config.extends){
+        window.customElements.define(config.selector, cls, {extends: config.extends });
+    }else{
+        window.customElements.define(config.selector, cls);
+    }
 };
 
 export {CustomElement}

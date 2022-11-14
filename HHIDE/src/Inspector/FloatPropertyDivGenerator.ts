@@ -1,11 +1,12 @@
 import {BasePropertyDesc, BasePropertyDivGenerator} from "./BasePropertyDivGenerator";
 import {Property} from "hhcommoncomponents"
+import {HHFloatInput} from "./InputComponents/HHFloatInput";
 
 class FloatPropertyDesc extends BasePropertyDesc{
-    input : HTMLInputElement
+    input : HHFloatInput
 
-    createInput(val, type):HTMLInputElement{
-        this.input = document.createElement("input")
+    createInput(val, type):HHFloatInput{
+        this.input = new HHFloatInput()
         this.input.style.width = "50px"
         this.input.value = val
         this.input.type = type

@@ -18,6 +18,9 @@ import {ProjectInfoForm} from "./UIComponents/ProjectInfoForm";
 import {HHEditorToolBar} from "./UIComponents/HHEditorToolBar";
 import {HHHistoryCommandList} from "./UIComponents/HHHistoryCommandList"
 
+// Input components
+import {HHFloatInput} from "./Inspector/InputComponents/HHFloatInput";
+
 import "vanilla-colorful"
 
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
