@@ -11,6 +11,7 @@ class FloatPropertyDesc extends BasePropertyDesc{
         this.input.value = val
         this.input.type = type
         this.input.addEventListener("change", this.inputValueChanged.bind(this))
+
         return this.input
     }
 
@@ -32,6 +33,8 @@ class FloatPropertyDesc extends BasePropertyDesc{
         }
 
         this.createInput(currentValue, type)
+
+        this.input.getter = property.getter
 
         if(property.config){
             if(property.config.min != null)

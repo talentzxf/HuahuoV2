@@ -7,13 +7,14 @@ import {PropertyType} from "hhcommoncomponents";
 import {formManager} from "../Utilities/FormManager";
 import {ComponentListForm} from "../UIComponents/ComponentListForm";
 import {huahuoEngine} from "hhenginejs";
+import {HHRefreshableDiv} from "./InputComponents/HHRefreshableDiv";
 
 @CustomElement({
     selector: "hh-inspector"
 })
 class Inspector extends HTMLElement{
     contentScrollerDiv:HTMLDivElement;
-    shapePropertyDivMapping: Map<any, HTMLElement> = new Map()
+    shapePropertyDivMapping: Map<any, HHRefreshableDiv> = new Map()
 
     connectedCallback() {
         let parentPanel = findParentPanel(this)
@@ -113,6 +114,7 @@ class Inspector extends HTMLElement{
             let contentDiv = this.shapePropertyDivMapping.get(targetObj)
             try{
                 this.contentScrollerDiv.appendChild(contentDiv)
+                contentDiv.refresh()
             }catch (e){ // DOMException also can't be caught here ....
                 Logger.error("Not sure why, but vanilla hex-input might throw exception, but seems every thing is fine regardless of this exception.")
             }
@@ -120,7 +122,7 @@ class Inspector extends HTMLElement{
         }else{
             Logger.info("Selected something")
 
-            let contentDiv = document.createElement("div")
+            let contentDiv = new HHRefreshableDiv()
             contentDiv.style.width="100%"
             this.contentScrollerDiv.appendChild(contentDiv)
 

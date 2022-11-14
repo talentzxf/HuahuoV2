@@ -20,6 +20,7 @@ import {HHHistoryCommandList} from "./UIComponents/HHHistoryCommandList"
 
 // Input components
 import {HHFloatInput} from "./Inspector/InputComponents/HHFloatInput";
+import {HHRefreshableDiv} from "./Inspector/InputComponents/HHRefreshableDiv";
 
 import "vanilla-colorful"
 
