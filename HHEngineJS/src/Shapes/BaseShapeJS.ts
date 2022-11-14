@@ -47,6 +47,8 @@ abstract class BaseShapeJS {
 
     private isMirage: boolean = false
 
+    private lastRenderFrame = -1
+
     setIsMirage(isMirage: boolean){
         this.isMirage = isMirage
     }
@@ -1001,21 +1003,26 @@ abstract class BaseShapeJS {
     }
 
     update(force: boolean = false) {
-        totallyUpdated++
-        // console.log("Totally updated:" + totallyUpdated)
+        let currentFrame = this.getLayer().GetCurrentFrame()
+        if(force || currentFrame != this.lastRenderFrame) {
+            totallyUpdated++
+            console.log("Totally updated:" + totallyUpdated)
 
-        this.beforeUpdate(force)
-        this.duringUpdate(force)
+            this.beforeUpdate(true)
+            this.duringUpdate(true)
 
-        if (this.isPermanent == true && !this.rawObj.IsVisible()) {
-            this.paperItem.visible = false
-            this.selected = false
-        } else {
-            this.paperItem.visible = true
-            this.afterUpdate(force)
+            if (this.isPermanent == true && !this.rawObj.IsVisible()) {
+                this.paperItem.visible = false
+                this.selected = false
+            } else {
+                this.paperItem.visible = true
+                this.afterUpdate(true)
+            }
+
+            this.updateBoundingBox()
+
+            this.lastRenderFrame = currentFrame
         }
-
-        this.updateBoundingBox()
     }
 
     getPaperPoint(engineV3Point) {

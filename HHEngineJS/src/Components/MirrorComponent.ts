@@ -65,7 +65,7 @@ class MirrorComponent extends AbstractComponent {
         duplicatedShape.setSelectedMeta(this.baseShape)
 
         duplicatedShape.registerValueChangeHandler("*")(()=>{
-            shape.update() // update the original shape.
+            shape.update(true) // update the original shape.
         })
 
         this.paperShapeGroup.addChild(duplicatedShape.paperItem)
@@ -98,7 +98,7 @@ class MirrorComponent extends AbstractComponent {
 
 
         shape.registerValueChangeHandler("*")(()=>{
-            duplicatedShape.update()
+            duplicatedShape.update(true)
         })
         return duplicatedShape
     }
