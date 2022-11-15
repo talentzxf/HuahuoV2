@@ -28,6 +28,9 @@ class GeneratorComponent extends AbstractComponent {
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
+        this.paperShapeGroup.rotation = this.baseShape.rotation
+        this.paperShapeGroup.scaling = this.baseShape.scaling
+
         for (let targetShape of this.targetShapeArray) {
             if(targetShape == null) // The shape might not be loaded yet. But in next cycle, it should have been loaded.
                 continue
@@ -58,7 +61,7 @@ class GeneratorComponent extends AbstractComponent {
                         duplicatedShape.update(true)
                     })
 
-                    this.paperShapeGroup.addChild(duplicatedShape)
+                    this.paperShapeGroup.addChild(duplicatedShape.paperShape)
                 }else{
                     duplicatedShape = mirageShapeArray[index]
 
