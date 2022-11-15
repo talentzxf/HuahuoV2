@@ -35,7 +35,7 @@ ColorStopArray Lerp(ColorStopArray &k0, ColorStopArray &k1, float t) {
 ColorStopEntry& Lerp(ColorStopEntry& k1, ColorStopEntry&k2, float ratio){
     ColorStopEntry resultEntry;
     resultEntry.SetValue(Lerp(k1.GetValue(), k2.GetValue(), ratio));
-    resultEntry.SetColor(Lerp(k1.GetColor(), k2.GetColor(), ratio));
+    resultEntry.SetColor(Lerp(*k1.GetColor(), *k2.GetColor(), ratio));
 
     return resultEntry;
 }
