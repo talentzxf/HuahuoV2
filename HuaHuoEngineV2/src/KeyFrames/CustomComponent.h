@@ -75,7 +75,21 @@ public:
 
         ColorStopEntry colorStopEntry(value, r, g, b,a);
         CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
-        pComponent->AddColorStop(fieldName, value, r, g, b, a);
+        pComponent->AddColorStop(value, r, g, b, a);
+    }
+
+    void UpdateColorStop(const char* fieldName, int colorStopIndex, float value, float r, float g, float b, float a){
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+
+        ColorStopEntry colorStopEntry(value, r, g, b,a);
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        pComponent->UpdateColorStop(value, colorStopIndex, r, g, b, a);
+    }
+
+    void DeleteColorStop(const char* fieldName, int colorStopIndex){
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        pComponent->DeleteColorStop(colorStopIndex);
     }
 
     void CreateShapeArrayValue(const char* fieldName){
