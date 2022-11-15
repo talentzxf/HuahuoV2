@@ -12,13 +12,17 @@ class GeneratorComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateFloat, 0.1, {min: 0.01, max: 1.0, step: 0.01} as FloatPropertyConfig)
     generateInterval
 
-    useOriginalCurveLength: boolean = true
-
     // BaseShape.rawObj.ptr -> Mirages array.
     targetShapeGeneratedShapeArrayMap: Map<number, Array<any>> = new Map<number, Array<any>>()
 
+    paperShapeGroup: paper.Group
+
     constructor(rawObj?) {
         super(rawObj);
+
+        this.paperShapeGroup = new paper.Group()
+        this.paperShapeGroup.applyMatrix = false
+        this.paperShapeGroup.data.meta = this.baseShape
     }
 
     override afterUpdate(force: boolean = false) {
@@ -37,7 +41,7 @@ class GeneratorComponent extends AbstractComponent {
             let baseShapeJS = this.baseShape.paperShape
             let index = 0
             // Duplicate shapes along the edge.
-            for (let currentLengthRatio = 0.0; currentLengthRatio < this.baseShape.getMaxLengthRatio(); currentLengthRatio += this.generateInterval) {
+            for (let currentLengthRatio = 0.0; currentLengthRatio <= this.baseShape.getMaxLengthRatio(); currentLengthRatio += this.generateInterval) {
                 let duplicatedShape = null
                 if(mirageShapeArray.length <= index){
                     let rawObj = targetShape.rawObj
@@ -53,6 +57,8 @@ class GeneratorComponent extends AbstractComponent {
                     targetShape.registerValueChangeHandler("*")(()=>{
                         duplicatedShape.update(true)
                     })
+
+                    this.paperShapeGroup.addChild(duplicatedShape)
                 }else{
                     duplicatedShape = mirageShapeArray[index]
 
@@ -62,7 +68,7 @@ class GeneratorComponent extends AbstractComponent {
                 }
 
                 let currentLength = this.baseShape.getCurveLength() * currentLengthRatio
-                let position = baseShapeJS.localToGlobal(baseShapeJS.getPointAt(currentLength))
+                let position = this.paperShapeGroup.globalToLocal(baseShapeJS.localToGlobal(baseShapeJS.getPointAt(currentLength)))
                 duplicatedShape.position = position
                 index++
             }
