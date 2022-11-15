@@ -3,56 +3,35 @@ import {Property} from "hhcommoncomponents"
 import {HHFloatInput} from "./InputComponents/HHFloatInput";
 
 class FloatPropertyDesc extends BasePropertyDesc{
-    input : HHFloatInput
-
-    createInput(val, type):HHFloatInput{
-        this.input = new HHFloatInput()
-        this.input.style.width = "50px"
-        this.input.value = val
-        this.input.type = type
-        this.input.addEventListener("change", this.inputValueChanged.bind(this))
-
-        return this.input
-    }
-
-    inputValueChanged(){
-        if(this.setter)
-            this.setter(Number(this.input.value))
-    }
-
-    onValueChanged(pos){
-        this.input.value = pos
-    }
+    hhFloatInput: HHFloatInput
 
     constructor(property: Property) {
         super(property)
-        let currentValue = property.getter()
+
         let type = "number"
         if(property.config && property.config.elementType){
             type = property.config.elementType
         }
 
-        this.createInput(currentValue, type)
-
-        this.input.getter = property.getter
+        this.hhFloatInput = new HHFloatInput(property.getter, property.setter, type)
 
         if(property.config){
             if(property.config.min != null)
-                this.input.min = property.config.min
+                this.hhFloatInput.min = property.config.min
 
             if(property.config.max != null)
-                this.input.max = property.config.max
+                this.hhFloatInput.max = property.config.max
 
             if(property.config.step != null)
-                this.input.step = property.config.step
+                this.hhFloatInput.step = property.config.step
         }
 
-        // update the current value again.
-        this.input.value = currentValue
-
-        this.contentDiv.appendChild(this.input)
+        this.contentDiv.appendChild(this.hhFloatInput)
     }
 
+    onValueChanged(val) {
+        this.hhFloatInput.value = val
+    }
 }
 
 class FloatPropertyDivGenerator extends BasePropertyDivGenerator{

@@ -1,44 +1,19 @@
-import {BasePropertyDesc, BasePropertyDivGenerator, RegisterDivGenerator} from "./BasePropertyDivGenerator";
-import {PropertyType, Property, Vector2} from "hhcommoncomponents"
+import {BasePropertyDesc, BasePropertyDivGenerator} from "./BasePropertyDivGenerator";
+import {Property, Vector2} from "hhcommoncomponents"
+import {HHVector2Input} from "./InputComponents/HHVector2Input";
 
 class Vector2PropertyDesc extends BasePropertyDesc{
-    inputX : HTMLInputElement
-    inputY : HTMLInputElement
+    vector2Input: HHVector2Input
 
-    createInput(val):HTMLInputElement{
-        let input = document.createElement("input")
-        input.style.width = "50px"
-        input.value = val
-        input.type = "number"
-        input.addEventListener("change", this.inputValueChanged.bind(this))
-        return input
-    }
-
-    createVector2Divs(x,y){
-        this.inputX = this.createInput(x)
-        this.inputY = this.createInput(y)
-
-        this.contentDiv.appendChild(this.inputX)
-        this.contentDiv.appendChild(this.inputY)
-    }
-
-    inputValueChanged(){
-        if(this.setter)
-            this.setter(Number(this.inputX.value), Number(this.inputY.value))
-    }
-
-    onValueChanged(pos){
-        this.inputX.value = pos.x
-        this.inputY.value = pos.y
+    onValueChanged(val){
+        this.vector2Input.value = val
     }
 
     constructor(property: Property) {
         super(property)
-
-        let currentValue:Vector2 = property.getter()
-        this.createVector2Divs(currentValue.x, currentValue.y)
+        this.vector2Input = new HHVector2Input(property.getter, property.setter)
+        this.contentDiv.appendChild(this.vector2Input)
     }
-
 }
 
 class Vector2PropertyDivGenerator extends BasePropertyDivGenerator{
