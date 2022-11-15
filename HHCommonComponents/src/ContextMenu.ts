@@ -46,6 +46,8 @@ class ContextMenu
             document.body.addEventListener("mouseup", ()=>{
                 this.menuDiv.style.display = "none"
             })
+
+            this.menuDiv.style.zIndex = "1000"
         }
     }
 
