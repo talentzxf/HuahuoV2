@@ -154,7 +154,7 @@ public:
         TRANSFER(GetKeyFrames());
     }
 
-private:
+protected:
     KeyFrameManager<T> m_KeyFrames;
 };
 

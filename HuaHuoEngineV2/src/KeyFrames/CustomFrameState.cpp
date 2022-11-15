@@ -92,18 +92,65 @@ float CustomFrameState::GetFloatValue() {
     return this->m_defaultValue.floatValue;
 }
 
-void CustomFrameState::SetColorValue(float r, float g, float b, float a){
-    if(this->m_DataType != COLOR)
-    {
+void CustomFrameState::SetColorValue(float r, float g, float b, float a) {
+    if (this->m_DataType != COLOR) {
         Assert("Data Type mismatch!");
         return;
     }
 
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    ColorRGBAf value(r,g,b,a);
+    ColorRGBAf value(r, g, b, a);
     this->RecordFieldValue(currentFrameId, value);
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+}
+
+void CustomFrameState::AddColorStop(float value, float r, float g, float b, float a) {
+    if(this->m_DataType != COLORSTOPARRAY){
+        Assert("Data Type mismatch!");
+    }
+
+    Layer *shapeLayer = baseShape->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+
+    ColorStopEntry colorStopEntry(value, r, g, b, a);
+    this->RecordFieldValue(currentFrameId, colorStopEntry); // Insert or update the frame first.
+
+    // Add the interpolated value to all other keyframes;
+    for(auto keyFrame : m_KeyFrames.GetKeyFrames()){
+        keyFrame.data.colorStopArray.AddEntry(colorStopEntry);
+    }
+
+    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+}
+
+void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, float b, float a) {
+    if(this->m_DataType != COLORSTOPARRAY){
+        Assert("Data Type mismatch!");
+    }
+
+    Layer *shapeLayer = baseShape->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+
+    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames());
+    pKeyFrame->data.colorStopArray.UpdateAtIndex(idx, value, r, g, b, a);
+    Apply(currentFrameId);
+}
+
+void CustomFrameState::DeleteColorStop(int idx) {
+    if(this->m_DataType != COLORSTOPARRAY){
+        Assert("Data Type mismatch!");
+    }
+
+    Layer *shapeLayer = baseShape->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+
+    // Delete the color stop from all key frames.
+    for(auto keyFrame : m_KeyFrames.GetKeyFrames()){
+        keyFrame.data.colorStopArray.DeleteEntry(idx);
+    }
+
+    Apply(currentFrameId);
 }
 
 ColorRGBAf* CustomFrameState::GetColorValue(){
@@ -112,6 +159,14 @@ ColorRGBAf* CustomFrameState::GetColorValue(){
     }
 
     return &(m_defaultValue.colorValue);
+}
+
+ColorStopArray* CustomFrameState::GetColorStopArray() {
+    if(isValidFrame){
+        return &m_CurrentKeyFrame.data.colorStopArray;
+    }
+
+    return NULL;
 }
 
 void CustomFrameState::CreateShapeArrayValue(){
@@ -160,6 +215,9 @@ void CustomFrameState::RecordFieldValue(int frameId, T value) {
     } else if constexpr(std::is_same<T, ColorRGBAf>()){
         pKeyFrame->data.colorValue = value;
         pKeyFrame->data.dataType = COLOR;
+    } else if constexpr(std::is_same<T, ColorStopEntry>()){
+        pKeyFrame->data.colorStopArray.AddEntry(value);
+        pKeyFrame->data.dataType = COLORSTOPARRAY;
     }
 
     Apply(frameId);

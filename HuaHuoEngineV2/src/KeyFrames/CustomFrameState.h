@@ -10,13 +10,15 @@
 #include <string>
 #include "FrameState.h"
 #include "FieldShapeArray.h"
+#include "ColorStop.h"
 
 class BaseShape;
 
 enum CustomDataType{
     FLOAT,
     COLOR,
-    SHAPEARRAY
+    SHAPEARRAY,
+    COLORSTOPARRAY,
 };
 
 // Use union to save space.
@@ -24,6 +26,7 @@ struct CustomData{
     float floatValue;
     FieldShapeArray shapeArrayValue;
     ColorRGBAf colorValue;
+    ColorStopArray colorStopArray;
     CustomDataType dataType;
 
     DECLARE_SERIALIZE(CustomData);
@@ -41,6 +44,9 @@ template<class TransferFunction> void CustomData::Transfer(TransferFunction &tra
             break;
         case SHAPEARRAY:
             TRANSFER(shapeArrayValue);
+            break;
+        case COLORSTOPARRAY:
+            TRANSFER(colorStopArray);
             break;
     }
 }
@@ -83,6 +89,10 @@ public:
     float GetFloatValue();
 
     void SetColorValue(float r, float g, float b, float a);
+    void AddColorStop(float value, float r, float g, float b, float a);
+    void UpdateColorStop(int idx, float value, float r, float g, float b, float a);
+    void DeleteColorStop(int idx);
+
     ColorRGBAf* GetColorValue();
 
     void CreateShapeArrayValue();
@@ -90,6 +100,8 @@ public:
     FieldShapeArray* GetShapeArrayValue(); // Don't insert into this fieldShapeArray, it will have no effect.
 
     static CustomFrameState* CreateFrameState(CustomDataType dataType);
+
+    ColorStopArray* GetColorStopArray();
 
     CustomData* GetDefaultValueData(){
         return &m_defaultValue;

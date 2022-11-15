@@ -1,12 +1,7 @@
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import "reflect-metadata"
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
-import {
-    buildOperator,
-    capitalizeFirstLetter,
-    PropertyCategory,
-    PropertyDef
-} from "./PropertySheetBuilder";
+import {buildOperator, capitalizeFirstLetter, PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
 import {propertySheetFactory} from "./PropertySheetBuilderFactory"
 import {IsValidWrappedObject, PropertyConfig, PropertyType} from "hhcommoncomponents";
 import {huahuoEngine} from "../EngineAPI";
@@ -179,6 +174,53 @@ class AbstractComponent {
             }
         })
     }
+    //
+    // handleColorStopArrayEntry(propertyEntry){
+    //     let fieldName = propertyEntry["key"]
+    //     this.rawObj.RegisterColorStopArrayValue(fieldName)
+    //
+    //     // Generate setter and getter
+    //     let getterName = "get" + capitalizeFirstLetter(fieldName)
+    //     let setterName = "set" + capitalizeFirstLetter(fieldName)
+    //     let inserterName = "insert" + capitalizeFirstLetter(fieldName)
+    //     let deleterName = "delete" + capitalizeFirstLetter(fieldName)
+    //
+    //     this[getterName] = function(){
+    //         return new ColorStopArrayIterable(this.rawObj.GetColorStopArrayValue(fieldName))
+    //     }.bind(this)
+    //
+    //     // This is just alias of the insert funtion.
+    //     this[setterName] = function(val){
+    //         this[inserterName](val)
+    //     }.bind(this)
+    //
+    //     this[inserterName] = function (val:BaseShapeJS){
+    //         if(!IsValidWrappedObject(this.rawObj.GetColorStopArrayValue(fieldName))){
+    //             this.rawObj.CreateShapeArrayValue(fieldName)
+    //         }
+    //
+    //         this.rawObj.GetShapeArrayValueForWrite(fieldName).InsertShape(val.getRawShape())
+    //
+    //         if(this.baseShape)
+    //             this.baseShape.update(true)
+    //         this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
+    //     }.bind(this)
+    //
+    //     this[deleterName] = function(val){
+    //         this.rawObj.GetShapeArrayValue(fieldName).DeleteShape(val)
+    //         if(this.baseShape)
+    //             this.baseShape.update(true)
+    //
+    //         this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
+    //     }.bind(this)
+    //
+    //     // Add getter and setter
+    //     Object.defineProperty(this, propertyEntry["key"], {
+    //         get: function(){
+    //             return this[getterName]()
+    //         }
+    //     })
+    // }
 
     constructor(rawObj?) {
         if(rawObj){
@@ -195,6 +237,8 @@ class AbstractComponent {
                 _this.handleInterpolateEntry(propertyEntry)
             } else if(propertyEntry.type == PropertyCategory.shapeArray){
                 _this.handleShapeArrayEntry(propertyEntry)
+            } else if(propertyEntry.type == PropertyCategory.colorStopArray){
+                _this.handleColorStopArrayEntry(propertyEntry)
             }
         })
 

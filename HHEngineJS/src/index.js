@@ -17,6 +17,7 @@ import {MirrorShapeJS} from "./Shapes/MirrorShapeJS";
 // All non-default components
 import {GeneratorComponent} from "./Components/GeneratorComponent";
 import {CurveGrowthComponent} from "./Components/CurveGrowthComponent";
+import {RadialGradientComponent} from "./Components/RadialGradientComponent";
 
 import "./Shapes/LoadShape"
 

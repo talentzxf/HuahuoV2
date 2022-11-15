@@ -70,6 +70,14 @@ public:
         pComponent->SetColorValue(r, g, b, a);
     }
 
+    void AddColorStop(const char* fieldName, float value, float r, float g, float b, float a){
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+
+        ColorStopEntry colorStopEntry(value, r, g, b,a);
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        pComponent->AddColorStop(fieldName, value, r, g, b, a);
+    }
+
     void CreateShapeArrayValue(const char* fieldName){
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
@@ -98,6 +106,12 @@ public:
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetColorValue();
+    }
+
+    ColorStopArray* GetColorStopArray(const char* fieldName){
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        return pComponent->GetColorStopArray();
     }
 
     void SetBaseShape(BaseShape *pBaseShape) override;
@@ -138,6 +152,10 @@ public:
         ColorRGBAf initColor(r, g, b, a);
         pComponent->GetDefaultValueData()->colorValue = initColor;
         return fieldIdx;
+    }
+
+    int RegisterColorStopArrayValue(const char* fieldName){
+        return this->RegisterField(fieldName, COLORSTOPARRAY);
     }
 
     int RegisterShapeArrayValue(const char* fieldName){
