@@ -37,6 +37,9 @@ CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ra
         case SHAPEARRAY:
             resultData.data.shapeArrayValue = k1.data.shapeArrayValue;
             break;
+        case COLORSTOPARRAY:
+            resultData.data.colorStopArray = Lerp(k1.data.colorStopArray, k2.data.colorStopArray, ratio);
+            break;
     }
 
     resultData.data.dataType = k1.data.dataType;

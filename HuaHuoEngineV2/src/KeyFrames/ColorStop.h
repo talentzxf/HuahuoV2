@@ -8,6 +8,10 @@
 
 class ColorStopEntry {
 public:
+    ColorStopEntry(): value(-1.0f){
+
+    }
+
     ColorStopEntry(float value, float r, float g, float b, float a){
         this->value = value;
         color.r = r;
@@ -37,7 +41,7 @@ template <class TransferFunction> void ColorStopEntry::Transfer(TransferFunction
 
 class ColorStopArray{
 public:
-    int GetColorStopCount(){
+    const int GetColorStopCount(){
         return m_ColorStops.size();
     }
 
@@ -63,6 +67,8 @@ public:
         m_ColorStops[idx].SetColor(&rgbAf);
     }
 
+    void Lerp(ColorStopArray& c0, ColorStopArray& c1, float t);
+
     DECLARE_SERIALIZE(ColorStopArray);
 private:
     std::vector<ColorStopEntry> m_ColorStops;
@@ -71,5 +77,7 @@ private:
 template <class TransferFunction> void ColorStopArray::Transfer(TransferFunction &transfer) {
     TRANSFER(m_ColorStops);
 }
+
+ColorStopArray Lerp(ColorStopArray& c0, ColorStopArray& c1, float t);
 
 #endif //HUAHUOENGINEV2_COLORSTOP_H
