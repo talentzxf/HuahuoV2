@@ -189,8 +189,6 @@ public:
     void SetLocalPivotPosition(float x, float y, float z);
     void SetGlobalPivotPosition(float x, float y, float z);
 
-    void SetColor(float r, float g, float b, float a);
-
     void SetRotation(float rotation);
 
     void SetSegments(float segmentBuffer[], int size);

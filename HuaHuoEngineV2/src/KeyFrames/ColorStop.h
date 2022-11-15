@@ -26,7 +26,7 @@ public:
 
     const ColorRGBAf* GetColor() const;
 
-    void SetColor(const ColorRGBAf* color);
+    void SetColor(ColorRGBAf* color);
 
     DECLARE_SERIALIZE(ColorStopEntry);
 private:

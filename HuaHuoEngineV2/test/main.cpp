@@ -117,9 +117,6 @@ void testShapeStore() {
     RectangleShape *rectangleShape = (RectangleShape *) BaseShape::CreateShape("RectangleShape");
     rectangleShape->SetStartPoint(2, 2, 2);
     rectangleShape->SetEndPoint(3, 3, 3);
-    rectangleShape->SetColor(1.0, 0.0, 1.0, 1.0);
-    ColorRGBAf* pColor = rectangleShape->GetColor();
-    printf("r:%f,g:%f,b:%f,a:%f\n", pColor->r, pColor->g, pColor->b, pColor->a );
 
     HuaHuoEngine::GetInstance()->DuplicateShape(rectangleShape);
 
@@ -363,7 +360,6 @@ void testCloneObject() {
     RectangleShape *rectangleShape = (RectangleShape *) BaseShape::CreateShape("RectangleShape");
     rectangleShape->SetStartPoint(2, 2, 2);
     rectangleShape->SetEndPoint(3, 3, 3);
-    rectangleShape->SetColor(1.0, 0.0, 1.0, 1.0);
 
     rectangleShape->SetGlobalPivotPosition(10, 10, 10);
 

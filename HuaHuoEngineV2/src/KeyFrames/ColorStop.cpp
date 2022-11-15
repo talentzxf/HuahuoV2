@@ -16,7 +16,7 @@ const ColorRGBAf *ColorStopEntry::GetColor() const {
     return &color;
 }
 
-void ColorStopEntry::SetColor(const ColorRGBAf *color) {
+void ColorStopEntry::SetColor(ColorRGBAf *color) {
     ColorStopEntry::color = *color;
 }
 
@@ -32,10 +32,13 @@ ColorStopArray Lerp(ColorStopArray &k0, ColorStopArray &k1, float t) {
     return resultStopArray;
 }
 
-ColorStopEntry& Lerp(ColorStopEntry& k1, ColorStopEntry&k2, float ratio){
+ColorStopEntry LerpColorEntry(ColorStopEntry k1, ColorStopEntry k2, float ratio){
     ColorStopEntry resultEntry;
     resultEntry.SetValue(Lerp(k1.GetValue(), k2.GetValue(), ratio));
-    resultEntry.SetColor(Lerp(*k1.GetColor(), *k2.GetColor(), ratio));
+    ColorRGBAf k1Color = *k1.GetColor();
+    ColorRGBAf k2Color = *k2.GetColor();
+    ColorRGBAf resultColor = Lerp(k1Color, k2Color, ratio);
+    resultEntry.SetColor(&resultColor);
 
     return resultEntry;
 }
@@ -44,7 +47,10 @@ void ColorStopArray::Lerp(ColorStopArray &k0, ColorStopArray &k1, float ratio) {
     this->m_ColorStops.resize(k0.m_ColorStops.size());
 
     for(int colorStopIndex = 0 ; colorStopIndex < k0.GetColorStopCount(); colorStopIndex++){
-        ColorStopEntry entry = Lerp( *k0.GetColorStop(colorStopIndex),*k1.GetColorStop(colorStopIndex), ratio);
+        ColorStopEntry k0ColorStop = *k0.GetColorStop(colorStopIndex);
+        ColorStopEntry k1ColorStop = *k1.GetColorStop(colorStopIndex);
+
+        ColorStopEntry entry = LerpColorEntry( k0ColorStop, k1ColorStop, ratio);
         m_ColorStops[colorStopIndex] = entry;
     }
 }
