@@ -23,7 +23,7 @@ class HHVector2Input extends HTMLElement implements RefreshableComponent{
                 return _this.getter().x
             },
             (xVal)=>{
-                _this.setter(xVal, _this.inputY.value)
+                _this.setter(xVal, Number(_this.inputY.value))
             })
 
         this.inputY = new HHFloatInput(
@@ -31,7 +31,7 @@ class HHVector2Input extends HTMLElement implements RefreshableComponent{
                 return _this.getter().y
             },
             (yVal)=>{
-                _this.setter(_this.inputX.value, yVal)
+                _this.setter(Number(_this.inputX.value), yVal)
             })
 
         this.appendChild(this.inputX)
