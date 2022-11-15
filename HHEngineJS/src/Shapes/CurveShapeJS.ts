@@ -22,6 +22,13 @@ class CurveShapeJS extends BaseSolidShape{
         return this._curveGrowthComponent
     }
 
+    getMaxLengthRatio(): number {
+        if(null != this._curveGrowthComponent)
+            return this._curveGrowthComponent.growth
+
+        return super.getMaxLengthRatio()
+    }
+
     getShapeName(): string {
         return shapeName
     }

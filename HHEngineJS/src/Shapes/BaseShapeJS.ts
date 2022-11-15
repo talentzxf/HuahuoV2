@@ -793,6 +793,14 @@ abstract class BaseShapeJS {
         return this.propertySheet
     }
 
+    getMaxLengthRatio(){
+        return 1.0
+    }
+
+    getCurveLength(){
+        return this.paperShape.length
+    }
+
     getRawShape() {
         return this.rawObj
     }

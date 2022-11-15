@@ -1,6 +1,5 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
-import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {FloatPropertyConfig} from "hhcommoncomponents";
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 
@@ -12,6 +11,8 @@ class GeneratorComponent extends AbstractComponent {
 
     @PropertyValue(PropertyCategory.interpolateFloat, 0.1, {min: 0.01, max: 1.0, step: 0.01} as FloatPropertyConfig)
     generateInterval
+
+    useOriginalCurveLength: boolean = true
 
     // BaseShape.rawObj.ptr -> Mirages array.
     targetShapeGeneratedShapeArrayMap: Map<number, Array<any>> = new Map<number, Array<any>>()
@@ -36,7 +37,7 @@ class GeneratorComponent extends AbstractComponent {
             let baseShapeJS = this.baseShape.paperShape
             let index = 0
             // Duplicate shapes along the edge.
-            for (let currentLengthRatio = 0.0; currentLengthRatio < 1.0; currentLengthRatio += this.generateInterval) {
+            for (let currentLengthRatio = 0.0; currentLengthRatio < this.baseShape.getMaxLengthRatio(); currentLengthRatio += this.generateInterval) {
                 let duplicatedShape = null
                 if(mirageShapeArray.length <= index){
                     let rawObj = targetShape.rawObj
@@ -60,7 +61,7 @@ class GeneratorComponent extends AbstractComponent {
                     }
                 }
 
-                let currentLength = baseShapeJS.length * currentLengthRatio
+                let currentLength = this.baseShape.getCurveLength() * currentLengthRatio
                 let position = baseShapeJS.localToGlobal(baseShapeJS.getPointAt(currentLength))
                 duplicatedShape.position = position
                 index++
@@ -73,7 +74,6 @@ class GeneratorComponent extends AbstractComponent {
             }
         }
     }
-
 
     cleanUp() {
         super.cleanUp();

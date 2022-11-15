@@ -48,7 +48,7 @@ class CppClassObjectFactory{
                         matchesComponentCount = true
                     }
 
-                    if(currentComponentCount + 1 < componentConfig.maxCount)
+                    if(currentComponentCount + 1 <= componentConfig.maxCount)
                         matchesComponentCount = true
                 }
 
