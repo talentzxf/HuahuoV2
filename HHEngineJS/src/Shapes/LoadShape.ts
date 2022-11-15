@@ -20,7 +20,7 @@ function LoadComponentForShape(shape:BaseShapeJS){
     }
 }
 
-function LoadShapeFromCppShape(rawShapeObj){
+function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true){
     let shapeConstructor = clzObjectFactory.GetClassConstructor(rawShapeObj.GetTypeName())
     let jsShape = shapeConstructor(rawShapeObj)
 
@@ -28,7 +28,6 @@ function LoadShapeFromCppShape(rawShapeObj){
     LoadComponentForShape(jsShape)
 
     jsShape.awakeFromLoad()
-
     return jsShape
 }
 
