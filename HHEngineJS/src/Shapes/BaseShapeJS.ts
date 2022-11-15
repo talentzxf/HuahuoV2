@@ -348,6 +348,7 @@ abstract class BaseShapeJS {
             return
 
         this.rawObj.SetRotation(val)
+        this.update(true)
         this.valueChangeHandler.callHandlers("rotation", val)
     }
 
@@ -583,6 +584,8 @@ abstract class BaseShapeJS {
     private setRotation(val: number) {
         this.rawObj.SetRotation(val)
         this.store()
+
+        this.update(true)
     }
 
     get followCurve():BaseShapeJS{
