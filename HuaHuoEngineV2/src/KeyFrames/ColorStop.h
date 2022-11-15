@@ -5,6 +5,7 @@
 #ifndef HUAHUOENGINEV2_COLORSTOP_H
 #define HUAHUOENGINEV2_COLORSTOP_H
 #include "Math/Color.h"
+#include <vector>
 
 class ColorStopEntry {
 public:

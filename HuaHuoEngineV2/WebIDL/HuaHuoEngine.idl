@@ -169,9 +169,9 @@ interface CustomComponent{
     void SetColorValue([Const] DOMString fieldName, float r, float g, float b, float a);
     ColorRGBAf GetColorValue([Const] DOMString fieldName);
 
-    ColorStopArray GetColorStopArray(const char* fieldName);
+    ColorStopArray GetColorStopArray([Const] DOMString fieldName);
     void AddColorStop([Const] DOMString fieldName, float value, float r, float g, float b, float a);
-    void UpdateColorStop([Const] DOMString fieldName, int colorStopIndex, float value, float r, float g, float b, float a);
+    void UpdateColorStop([Const] DOMString fieldName, long colorStopIndex, float value, float r, float g, float b, float a);
     void DeleteColorStop([Const] DOMString fieldName, long colorStopIndex);
 };
 
