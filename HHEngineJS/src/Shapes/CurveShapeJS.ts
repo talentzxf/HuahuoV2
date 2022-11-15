@@ -23,8 +23,8 @@ class CurveShapeJS extends BaseSolidShape{
     }
 
     getMaxLengthRatio(): number {
-        if(null != this._curveGrowthComponent)
-            return this._curveGrowthComponent.growth
+        if(null != this.curveGrowthComponent)
+            return this.curveGrowthComponent.growth
 
         return super.getMaxLengthRatio()
     }
