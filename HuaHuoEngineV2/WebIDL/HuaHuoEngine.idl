@@ -140,11 +140,24 @@ interface FieldShapeArray{
 };
 
 [NoDelete]
+interface ColorStopEntry{
+    float GetValue();
+    [Const] ColorRGBAf GetColor();
+};
+
+[NoDelete]
+interface ColorStopArray{
+    [Const] long GetColorStopCount();
+    ColorStopEntry GetColorStop(long idx);
+};
+
+[NoDelete]
 interface CustomComponent{
     static CustomComponent CreateComponent();
     long RegisterFloatValue([Const] DOMString fieldName, float initValue);
     long RegisterShapeArrayValue([Const] DOMString fieldName);
     long RegisterColorValue([Const] DOMString fieldName, float r, float g, float b, float a);
+    long RegisterColorStopArrayValue([Const] DOMString fieldName);
 
     void CreateShapeArrayValue([Const] DOMString fieldName);
     FieldShapeArray GetShapeArrayValueForWrite([Const] DOMString fieldName);
@@ -155,6 +168,11 @@ interface CustomComponent{
 
     void SetColorValue([Const] DOMString fieldName, float r, float g, float b, float a);
     ColorRGBAf GetColorValue([Const] DOMString fieldName);
+
+    ColorStopArray GetColorStopArray(const char* fieldName);
+    void AddColorStop([Const] DOMString fieldName, float value, float r, float g, float b, float a);
+    void UpdateColorStop([Const] DOMString fieldName, int colorStopIndex, float value, float r, float g, float b, float a);
+    void DeleteColorStop([Const] DOMString fieldName, long colorStopIndex);
 };
 
 CustomComponent implements AbstractFrameState;
