@@ -193,6 +193,9 @@ class AbstractComponent {
             this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
         }.bind(this)
 
+        // Remove the property and add setter/getter
+        delete this[propertyEntry["key"]]
+
         // Add getter and setter
         Object.defineProperty(this, propertyEntry["key"], {
             get: function () {
@@ -212,8 +215,21 @@ class AbstractComponent {
         let deleterName = "delete" + capitalizeFirstLetter(fieldName)
         let updateName = "update" + capitalizeFirstLetter(fieldName)
 
+        let _this = this
+
         this[getterName] = function () {
-            return new ColorStopArrayIterable(this.rawObj.GetColorStopArray(fieldName))
+
+            let colorStopArray = this.rawObj.GetColorStopArray(fieldName)
+
+            if(colorStopArray.GetColorStopCount() < 2){ // Need at lease two counts.
+                let currentColor = _this.baseShape.paperShape.fillColor
+                this.rawObj.AddColorStop(0.0, currentColor.red, currentColor.green, currentColor.blue, currentColor.alpha)
+                this.rawObj.AddColorStop(1.0, currentColor.red, currentColor.green, currentColor.blue, currentColor.alpha)
+
+                colorStopArray = this.rawObj.GetColorStopArray(fieldName)
+            }
+
+            return new ColorStopArrayIterable(colorStopArray)
         }.bind(this)
 
         // This is just alias of the insert funtion.
@@ -236,6 +252,9 @@ class AbstractComponent {
 
             this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
         }.bind(this)
+
+        // Remove the property and add setter/getter
+        delete this[propertyEntry["key"]]
 
         // Add getter and setter
         Object.defineProperty(this, propertyEntry["key"], {
