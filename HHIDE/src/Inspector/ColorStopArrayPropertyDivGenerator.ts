@@ -19,6 +19,11 @@ class ColorStopArrayPropertyDivGenerator extends BasePropertyDivGenerator{
     generatePropertyDesc(property): BasePropertyDesc {
         return new ColorStopArrayPropertyDiv(property)
     }
+
+
+    flexDirection(): string {
+        return "column"
+    }
 }
 
 let colorStopArrayPropertyDivGenerator = new ColorStopArrayPropertyDivGenerator()
