@@ -13,12 +13,12 @@ class CppClassObjectFactory{
     }
 
     isInheritedFromClzName(obj, clzName): boolean{
-        let curProto = obj
+        let curProto = obj.__proto__
         while(curProto != null){
             if(curProto.constructor.name == clzName)
                 return true
 
-            curProto = curProto.prototype
+            curProto = curProto.__proto__
         }
 
         return false;

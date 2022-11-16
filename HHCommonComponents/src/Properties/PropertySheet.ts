@@ -10,7 +10,8 @@ enum PropertyType{
     BUTTON,
     REFERENCE,
     ARRAY,
-    COMPONENT
+    COMPONENT,
+    COLORSTOP
 }
 
 class Property{

@@ -1,7 +1,6 @@
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
 import {PropertyType} from "hhcommoncomponents";
 
-const propertyPrefix = "inspector.property."
 const eps:number = 0.001;
 
 enum PropertyCategory{
@@ -98,40 +97,5 @@ function capitalizeFirstLetter(str){
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-class PropertySheetBuilder{
-    build(component, propertyMeta, valueChangeHandler: ValueChangeHandler){
-        let fieldName = propertyMeta["key"]
-        // Generate setter and getter
-        let getterName = "get" + capitalizeFirstLetter(fieldName)
-        let setterName = "set" + capitalizeFirstLetter(fieldName)
-
-        let propertyDef = {
-            key: propertyPrefix + propertyMeta["key"],
-            getter: component[getterName].bind(component),
-            setter: component[setterName].bind(component),
-            registerValueChangeFunc: valueChangeHandler.registerValueChangeHandler(fieldName),
-            unregisterValueChagneFunc: valueChangeHandler.unregisterValueChangeHandler(fieldName),
-            config: propertyMeta.config
-        }
-
-        return propertyDef
-    }
-}
-
-class InterpolatePropertyBuilder extends PropertySheetBuilder{
-    override build(component, propertyMeta, valueChangeHandler: ValueChangeHandler) {
-        let propertyDef = super.build(component, propertyMeta, valueChangeHandler);
-
-        if(propertyMeta.type == PropertyCategory.interpolateFloat) {
-            propertyDef["type"] = PropertyType.FLOAT
-            propertyDef["elementType"] = "range"
-        }
-        else if(propertyMeta.type == PropertyCategory.interpolateColor)
-            propertyDef["type"] = PropertyType.COLOR
-
-        return propertyDef
-    }
-}
-
-export {PropertyCategory, PropertyDef, capitalizeFirstLetter, PropertySheetBuilder, InterpolatePropertyBuilder, buildOperator}
+export {PropertyCategory, PropertyDef, capitalizeFirstLetter, buildOperator}
 
