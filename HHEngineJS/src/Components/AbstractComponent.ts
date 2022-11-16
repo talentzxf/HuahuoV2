@@ -7,22 +7,23 @@ import {IsValidWrappedObject, PropertyConfig, PropertyType} from "hhcommoncompon
 import {huahuoEngine} from "../EngineAPI";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {ComponentConfig} from "./ComponentConfig";
+import {ColorStop} from "./ColorStop";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
 
-class FieldShapeArrayIterable{
+class FieldShapeArrayIterable {
     fieldShapeArray // Store the cpp side array.
     constructor(fieldShapeArray) {
         this.fieldShapeArray = fieldShapeArray
     }
 
-    [Symbol.iterator](){
+    [Symbol.iterator]() {
         let curIdx = 0
         let _this = this
         const iterator = {
-            next(){
-                if(curIdx < _this.fieldShapeArray.GetShapeCount()){
+            next() {
+                if (curIdx < _this.fieldShapeArray.GetShapeCount()) {
                     let targetShape = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(_this.fieldShapeArray.GetShape(curIdx++), true)
                     return {value: targetShape, done: false}
                 }
@@ -35,7 +36,32 @@ class FieldShapeArrayIterable{
     }
 }
 
-function getProperties(target):object[]{
+class ColorStopArrayIterable {
+    colorStopArray
+
+    constructor(colorStopArray) {
+        this.colorStopArray = colorStopArray
+    }
+
+    [Symbol.iterator]() {
+        let curIdx = 0
+        let _this = this
+        const iterator = {
+            next() {
+                if (curIdx < _this.colorStopArray.GetColorStopCount()) {
+                    let colorStop = new ColorStop(_this.colorStopArray.GetColorStop(curIdx++))
+                    return {value: colorStop, done: false}
+                }
+
+                return {value: null, done: true}
+            }
+        }
+
+        return iterator
+    }
+}
+
+function getProperties(target): object[] {
     let properties: object[] = Reflect.getMetadata(metaDataKey, target)
     if (!properties) {
         properties = new Array<PropertyDef>()
@@ -45,10 +71,10 @@ function getProperties(target):object[]{
     return properties
 }
 
-function PropertyValue(category:PropertyCategory, initValue = null, config?: PropertyConfig) {
+function PropertyValue(category: PropertyCategory, initValue = null, config?: PropertyConfig) {
     return function (target: object, propertyKey: string) {
         let properties = getProperties(target)
-        let propertyEntry:PropertyDef = {
+        let propertyEntry: PropertyDef = {
             key: propertyKey,
             type: category,
             initValue: initValue,
@@ -58,8 +84,8 @@ function PropertyValue(category:PropertyCategory, initValue = null, config?: Pro
     }
 }
 
-function Component(componentConfig?: ComponentConfig){
-    return function(ctor){
+function Component(componentConfig?: ComponentConfig) {
+    return function (ctor) {
         clzObjectFactory.RegisterClass(ctor.name, ctor)
 
         clzObjectFactory.RegisterComponent(ctor.name, componentConfig)
@@ -75,13 +101,13 @@ class AbstractComponent {
 
     shapeArrayFieldNames: Set<string> = new Set<string>()
 
-    private valueChangeHandler:ValueChangeHandler = new ValueChangeHandler()
+    private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
     callHandlers(propertyName: string, val: any) {
         this.valueChangeHandler.callHandlers(propertyName, val)
     }
 
-    handleInterpolateEntry(propertyEntry){
+    handleInterpolateEntry(propertyEntry) {
         let operator = buildOperator(propertyEntry.type, this.rawObj)
 
         operator.registerField(propertyEntry["key"], propertyEntry["initValue"])
@@ -91,22 +117,22 @@ class AbstractComponent {
         let getterName = "get" + capitalizeFirstLetter(fieldName)
         let setterName = "set" + capitalizeFirstLetter(fieldName)
 
-        this[setterName] = function(val: number){
+        this[setterName] = function (val: number) {
             let currentValue = this[fieldName]
-            if(operator.isEqual(currentValue, val)){
+            if (operator.isEqual(currentValue, val)) {
                 return
             }
 
             this[fieldName] = val
             this.callHandlers(fieldName, val)
-            if(this.baseShape){
+            if (this.baseShape) {
                 this.baseShape.update(true)
 
                 this.baseShape.callHandlers(fieldName, val)
             }
         }
 
-        this[getterName] = function(){
+        this[getterName] = function () {
             return operator.getField(fieldName)
         }
 
@@ -115,10 +141,10 @@ class AbstractComponent {
 
         // Add getter and setter
         Object.defineProperty(this, propertyEntry["key"], {
-            get: function(){
+            get: function () {
                 return this[getterName]()
             },
-            set: function(val){
+            set: function (val) {
                 operator.setField(fieldName, val)
             }
         })
@@ -127,41 +153,41 @@ class AbstractComponent {
         this[fieldName] = this[fieldName]
     }
 
-    handleShapeArrayEntry(propertyEntry){
+    handleShapeArrayEntry(propertyEntry) {
         let fieldName = propertyEntry["key"]
         this.shapeArrayFieldNames.add(fieldName)
         this.rawObj.RegisterShapeArrayValue(fieldName)
 
         // Generate setter and getter
         let getterName = "get" + capitalizeFirstLetter(fieldName)
-        let setterName = "set" + capitalizeFirstLetter(fieldName)
+        let setterName = "set" + capitalizeFirstLetter(fieldName) // Set is actually insert.
         let inserterName = "insert" + capitalizeFirstLetter(fieldName)
         let deleterName = "delete" + capitalizeFirstLetter(fieldName)
 
-        this[getterName] = function(){
+        this[getterName] = function () {
             return new FieldShapeArrayIterable(this.rawObj.GetShapeArrayValue(fieldName))
         }.bind(this)
 
         // This is just alias of the insert funtion.
-        this[setterName] = function(val){
+        this[setterName] = function (val) {
             this[inserterName](val)
         }.bind(this)
 
-        this[inserterName] = function (val:BaseShapeJS){
-            if(!IsValidWrappedObject(this.rawObj.GetShapeArrayValue(fieldName))){
+        this[inserterName] = function (val: BaseShapeJS) {
+            if (!IsValidWrappedObject(this.rawObj.GetShapeArrayValue(fieldName))) {
                 this.rawObj.CreateShapeArrayValue(fieldName)
             }
 
             this.rawObj.GetShapeArrayValueForWrite(fieldName).InsertShape(val.getRawShape())
 
-            if(this.baseShape)
+            if (this.baseShape)
                 this.baseShape.update(true)
             this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
         }.bind(this)
 
-        this[deleterName] = function(val){
+        this[deleterName] = function (val) {
             this.rawObj.GetShapeArrayValue(fieldName).DeleteShape(val)
-            if(this.baseShape)
+            if (this.baseShape)
                 this.baseShape.update(true)
 
             this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
@@ -169,63 +195,60 @@ class AbstractComponent {
 
         // Add getter and setter
         Object.defineProperty(this, propertyEntry["key"], {
-            get: function(){
+            get: function () {
                 return this[getterName]()
             }
         })
     }
-    //
-    // handleColorStopArrayEntry(propertyEntry){
-    //     let fieldName = propertyEntry["key"]
-    //     this.rawObj.RegisterColorStopArrayValue(fieldName)
-    //
-    //     // Generate setter and getter
-    //     let getterName = "get" + capitalizeFirstLetter(fieldName)
-    //     let setterName = "set" + capitalizeFirstLetter(fieldName)
-    //     let inserterName = "insert" + capitalizeFirstLetter(fieldName)
-    //     let deleterName = "delete" + capitalizeFirstLetter(fieldName)
-    //
-    //     this[getterName] = function(){
-    //         return new ColorStopArrayIterable(this.rawObj.GetColorStopArrayValue(fieldName))
-    //     }.bind(this)
-    //
-    //     // This is just alias of the insert funtion.
-    //     this[setterName] = function(val){
-    //         this[inserterName](val)
-    //     }.bind(this)
-    //
-    //     this[inserterName] = function (val:BaseShapeJS){
-    //         if(!IsValidWrappedObject(this.rawObj.GetColorStopArrayValue(fieldName))){
-    //             this.rawObj.CreateShapeArrayValue(fieldName)
-    //         }
-    //
-    //         this.rawObj.GetShapeArrayValueForWrite(fieldName).InsertShape(val.getRawShape())
-    //
-    //         if(this.baseShape)
-    //             this.baseShape.update(true)
-    //         this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
-    //     }.bind(this)
-    //
-    //     this[deleterName] = function(val){
-    //         this.rawObj.GetShapeArrayValue(fieldName).DeleteShape(val)
-    //         if(this.baseShape)
-    //             this.baseShape.update(true)
-    //
-    //         this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
-    //     }.bind(this)
-    //
-    //     // Add getter and setter
-    //     Object.defineProperty(this, propertyEntry["key"], {
-    //         get: function(){
-    //             return this[getterName]()
-    //         }
-    //     })
-    // }
+
+    handleColorStopArrayEntry(propertyEntry) {
+        let fieldName = propertyEntry["key"]
+        this.rawObj.RegisterColorStopArrayValue(fieldName)
+
+        // Generate setter and getter
+        let getterName = "get" + capitalizeFirstLetter(fieldName)
+        let setterName = "set" + capitalizeFirstLetter(fieldName) // Set is actually insert.
+        let inserterName = "insert" + capitalizeFirstLetter(fieldName)
+        let deleterName = "delete" + capitalizeFirstLetter(fieldName)
+        let updateName = "update" + capitalizeFirstLetter(fieldName)
+
+        this[getterName] = function () {
+            return new ColorStopArrayIterable(this.rawObj.GetColorStopArray(fieldName))
+        }.bind(this)
+
+        // This is just alias of the insert funtion.
+        this[setterName] = function (val) {
+            this[inserterName](val)
+        }.bind(this)
+
+        this[inserterName] = function (val: ColorStop) {
+            this.rawObj.AddColorStop(fieldName, val.value, val.r, val.g, val.b, val.a)
+
+            if (this.baseShape)
+                this.baseShape.update(true)
+            this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
+        }.bind(this)
+
+        this[deleterName] = function (val) {
+            this.rawObj.DeleteColorStop(val.index)
+            if (this.baseShape)
+                this.baseShape.update(true)
+
+            this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
+        }.bind(this)
+
+        // Add getter and setter
+        Object.defineProperty(this, propertyEntry["key"], {
+            get: function () {
+                return this[getterName]()
+            }
+        })
+    }
 
     constructor(rawObj?) {
-        if(rawObj){
-            this.rawObj = castObject( rawObj, Module["CustomComponent"])
-        }else{
+        if (rawObj) {
+            this.rawObj = castObject(rawObj, Module["CustomComponent"])
+        } else {
             this.rawObj = Module["CustomComponent"].prototype.CreateComponent()
         }
 
@@ -233,11 +256,11 @@ class AbstractComponent {
 
         let _this = this
         properties.forEach(propertyEntry => {
-            if(propertyEntry.type == PropertyCategory.interpolateFloat || propertyEntry.type == PropertyCategory.interpolateColor){
+            if (propertyEntry.type == PropertyCategory.interpolateFloat || propertyEntry.type == PropertyCategory.interpolateColor) {
                 _this.handleInterpolateEntry(propertyEntry)
-            } else if(propertyEntry.type == PropertyCategory.shapeArray){
+            } else if (propertyEntry.type == PropertyCategory.shapeArray) {
                 _this.handleShapeArrayEntry(propertyEntry)
-            } else if(propertyEntry.type == PropertyCategory.colorStopArray){
+            } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
                 _this.handleColorStopArrayEntry(propertyEntry)
             }
         })
@@ -249,18 +272,18 @@ class AbstractComponent {
         this.baseShape = baseShape
     }
 
-    afterUpdate(force:boolean = false) {
+    afterUpdate(force: boolean = false) {
     }
 
-    getTypeName(){
+    getTypeName() {
         return this.rawObj.GetTypeName()
     }
 
-    store(){
+    store() {
 
     }
 
-    getPropertySheet(){
+    getPropertySheet() {
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
 
         let componentConfigSheet = {
@@ -271,9 +294,9 @@ class AbstractComponent {
             }
         }
 
-        for(let propertyMeta of properties){
+        for (let propertyMeta of properties) {
             let propertySheetEntry = propertySheetFactory.createEntry(this, propertyMeta, this.valueChangeHandler)
-            if(propertySheetEntry != null){
+            if (propertySheetEntry != null) {
                 componentConfigSheet.config.children.push(propertySheetEntry)
             }
         }
@@ -281,23 +304,23 @@ class AbstractComponent {
         return componentConfigSheet
     }
 
-    initPropertySheet(propertySheet){
-        if(!this.propertySheetInited){
+    initPropertySheet(propertySheet) {
+        if (!this.propertySheetInited) {
             this.propertySheetInited = true
             propertySheet.addProperty(this.getPropertySheet())
         }
     }
 
-    cleanUp(){
+    cleanUp() {
 
     }
 
     // Pass in a set to avoid creation of the set multiple times.
-    getReferencedShapes(set: Set<BaseShapeJS>){
+    getReferencedShapes(set: Set<BaseShapeJS>) {
 
         // Put all shapeArray values in the set.
-        for( let fieldName of this.shapeArrayFieldNames){
-            for(let shape of this[fieldName]){
+        for (let fieldName of this.shapeArrayFieldNames) {
+            for (let shape of this[fieldName]) {
                 set.add(shape)
             }
         }

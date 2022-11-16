@@ -72,8 +72,6 @@ public:
 
     void AddColorStop(const char* fieldName, float value, float r, float g, float b, float a){
         int idx = m_fieldNameFieldIndexMap[fieldName];
-
-        ColorStopEntry colorStopEntry(value, r, g, b,a);
         CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->AddColorStop(value, r, g, b, a);
     }
@@ -81,9 +79,8 @@ public:
     void UpdateColorStop(const char* fieldName, int colorStopIndex, float value, float r, float g, float b, float a){
         int idx = m_fieldNameFieldIndexMap[fieldName];
 
-        ColorStopEntry colorStopEntry(value, r, g, b,a);
         CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
-        pComponent->UpdateColorStop(value, colorStopIndex, r, g, b, a);
+        pComponent->UpdateColorStop(colorStopIndex, value, r, g, b, a);
     }
 
     void DeleteColorStop(const char* fieldName, int colorStopIndex){

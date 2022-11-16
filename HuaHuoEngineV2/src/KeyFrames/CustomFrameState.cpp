@@ -116,8 +116,8 @@ void CustomFrameState::AddColorStop(float value, float r, float g, float b, floa
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
 
-    ColorStopEntry colorStopEntry(value, r, g, b, a);
-    this->RecordFieldValue(currentFrameId, colorStopEntry); // Insert or update the frame first.
+    ColorStopEntry colorStopEntry(-1, value, r, g, b, a);
+    this->RecordFieldValue(currentFrameId, colorStopEntry);
 
     // Add the interpolated value to all other keyframes;
     for(auto keyFrame : m_KeyFrames.GetKeyFrames()){

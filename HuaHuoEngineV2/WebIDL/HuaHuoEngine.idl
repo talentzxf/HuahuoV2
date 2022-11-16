@@ -141,6 +141,7 @@ interface FieldShapeArray{
 
 [NoDelete]
 interface ColorStopEntry{
+    long GetIndex();
     float GetValue();
     [Const] ColorRGBAf GetColor();
 };
