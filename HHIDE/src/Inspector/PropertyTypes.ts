@@ -9,6 +9,7 @@ import {groupPropertyDivGenerator} from "./GroupPropertyDivGenerator";
 import {referencePropertyDivGenerator} from "./ReferencePropertyDivGenerator";
 import {componentPropertyDivGenerator, panelPropertyDivGenerator} from "./PanelPropertyDivGenerator";
 import {arrayPropertyDivGenerator} from "./ArrayPropertyDivGenerator";
+import {colorStopArrayPropertyDivGenerator} from "./ColorStopArrayPropertyDivGenerator";
 
 // Avoid being imported twice.
 // TODO: Any less dirty approach ??
@@ -23,5 +24,6 @@ if(!window["IsTypesRegistered"]){
     RegisterDivGenerator(PropertyType.PANEL, panelPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.ARRAY, arrayPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.COMPONENT, componentPropertyDivGenerator)
+    RegisterDivGenerator(PropertyType.COLORSTOPARRAY, colorStopArrayPropertyDivGenerator)
     window["IsTypeRegistered"] = true
 }

@@ -17,7 +17,7 @@ class PropertySheetFactory{
         this.categoryTypeMap.set(PropertyCategory.shapeArray, PropertyType.ARRAY)
         this.categoryElementTypeMap.set(PropertyCategory.shapeArray, PropertyType.REFERENCE)
 
-        this.categoryTypeMap.set(PropertyCategory.colorStopArray, PropertyType.COLORSTOP)
+        this.categoryTypeMap.set(PropertyCategory.colorStopArray, PropertyType.COLORSTOPARRAY)
     }
 
     createEntry(component, propertyMeta:PropertyDef, valueChangeHandler: ValueChangeHandler){

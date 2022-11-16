@@ -84,7 +84,8 @@
       "strokeWidth": "StrokeWidth",
       "strokeColor": "StrokeColor",
       "fillColor": "FillColor",
-      "generateInterval": "Generate Interval"
+      "generateInterval": "Generate Interval",
+      "gradientColorArray": "Gradient Color Array"
     }
   },
   "timeline": {
