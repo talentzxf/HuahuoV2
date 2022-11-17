@@ -18,7 +18,7 @@ class Inspector extends HTMLElement{
 
     connectedCallback() {
         let parentPanel = findParentPanel(this)
-        let parentHeight = parentPanel?parentPanel.clientHeight: 300;
+        let parentHeight = parentPanel?parentPanel.clientHeight: 500;
 
         this.contentScrollerDiv = document.createElement("div")
         this.contentScrollerDiv .style.width = "100%"

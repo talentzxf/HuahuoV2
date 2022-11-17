@@ -60,7 +60,7 @@ class ShapeSelector extends BaseShapeDrawer {
         }
     }
 
-    bringToFrond() {
+    bringToFront() {
         for (let shape of this.selectedShapes) {
             shape.bringToFront()
         }
@@ -105,7 +105,7 @@ class ShapeSelector extends BaseShapeDrawer {
                     },
                     {
                         itemName: i18n.t("contextmenu.bringToFront"),
-                        onclick: _this.bringToFrond.bind(_this)
+                        onclick: _this.bringToFront.bind(_this)
                     },
                     {
                         itemName: i18n.t("contextmenu.duplicate"),

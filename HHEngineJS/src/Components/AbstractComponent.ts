@@ -223,8 +223,8 @@ class AbstractComponent {
 
             if(colorStopArray.GetColorStopCount() < 2){ // Need at lease two counts.
                 let currentColor = _this.baseShape.paperShape.fillColor
-                this.rawObj.AddColorStop(0.0, currentColor.red, currentColor.green, currentColor.blue, currentColor.alpha)
-                this.rawObj.AddColorStop(1.0, currentColor.red, currentColor.green, currentColor.blue, currentColor.alpha)
+                this.rawObj.AddColorStop(fieldName, 0.0, currentColor.red, currentColor.green, currentColor.blue, currentColor.alpha)
+                this.rawObj.AddColorStop(fieldName, 1.0, currentColor.red, currentColor.green, currentColor.blue, currentColor.alpha)
 
                 colorStopArray = this.rawObj.GetColorStopArray(fieldName)
             }
