@@ -22,41 +22,49 @@ const getMethodsAndVariables = (obj: any) => {
 
 class Pen {
     paperGroup: paper.Group
+    penCap: paper.Path
+    penBody: paper.Path
 
     constructor() {
         let penGroup = new paper.Group()
-        let penBody = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(penWidth, penHeight))
+        this.penBody = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(penWidth, penHeight))
 
-        let penCapSegments = [new paper.Point(0,0), new paper.Point(penWidth/2, -penCapHeight), new paper.Point(penWidth, 0)]
-        penBody.fillColor = new paper.Color("red")
-        penBody.strokeColor = new paper.Color("blue")
-        penGroup.addChild(penBody)
+        let penCapSegments = [new paper.Point(0, 0), new paper.Point(penWidth / 2, -penCapHeight), new paper.Point(penWidth, 0)]
+        this.penBody.fillColor = new paper.Color("red")
+        this.penBody.strokeColor = new paper.Color("black")
+        this.penBody.strokeWidth = 2
+        penGroup.addChild(this.penBody)
 
-        let penCap = new paper.Path(penCapSegments)
-        penCap.fillColor = new paper.Color("red")
-        penCap.strokeColor = new paper.Color("blue")
-        penGroup.addChild(penCap)
+        this.penCap = new paper.Path(penCapSegments)
+        this.penCap.fillColor = new paper.Color("lightgray")
+        this.penCap.strokeColor = new paper.Color("black")
+        this.penCap.strokeWidth = 2
+        penGroup.addChild(this.penCap)
 
         this.paperGroup = penGroup
 
         // Proxy all paperGroup functions/methods.
         let _this = this
         getMethodsAndVariables(this.paperGroup).forEach(key => {
-            if(key == "constructor")
+            if (key == "constructor")
                 return
             const originalProp = this.paperGroup[key]
 
-            if("function" === typeof originalProp){
+            if ("function" === typeof originalProp) {
                 _this[key] = (...args) => {
                     return Reflect.apply(originalProp, _this.paperGroup, args)
                 }
-            }else{
+            } else {
                 Object.defineProperty(_this, key, {
-                    get: function(){
+                    get: function () {
                         return _this.paperGroup[key]
                     },
-                    set: function(val){
-                        _this.paperGroup[key] = val
+                    set: function (val) {
+                        if(key == "fillColor"){
+                            _this.penBody.fillColor = val
+                        }else{
+                            _this.paperGroup[key] = val
+                        }
                     }
                 })
             }
@@ -130,8 +138,8 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
             }
 
             pen.bringToFront()
-            pen.position = new paper.Point( colorStop.value * rectangleWidth, rectangleHeight/2)
-            pen.fillColor = new paper.Color( colorStop.r, colorStop.g, colorStop.b, colorStop.a)
+            pen.position = new paper.Point(colorStop.value * rectangleWidth, rectangleHeight / 2)
+            pen.fillColor = new paper.Color(colorStop.r, colorStop.g, colorStop.b, colorStop.a)
             penIndex++
         }
 
