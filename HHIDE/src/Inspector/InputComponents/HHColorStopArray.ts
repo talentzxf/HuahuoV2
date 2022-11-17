@@ -1,9 +1,68 @@
 import {CustomElement} from "hhcommoncomponents";
 import {paper} from "hhenginejs"
-import {ColorStop} from "hhenginejs/dist/src/Components/ColorStop";
 
-const canvasWidth = 150
+const rectangleOffset = 10
+const canvasWidth = 200
 const canvasHeight = 20
+
+const rectangleWidth = 150
+const rectangleHeight = 20
+const penWidth = 10
+const penHeight = 10
+const penCapHeight = 10
+
+const getMethodsAndVariables = (obj: any) => {
+    let properties = new Set<any>()
+    let currentObj = obj
+    do {
+        Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
+    } while ((currentObj = Object.getPrototypeOf(currentObj)))
+    return [...properties.keys()]
+}
+
+class Pen {
+    paperGroup: paper.Group
+
+    constructor() {
+        let penGroup = new paper.Group()
+        let penBody = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(penWidth, penHeight))
+
+        let penCapSegments = [new paper.Point(0,0), new paper.Point(penWidth/2, -penCapHeight), new paper.Point(penWidth, 0)]
+        penBody.fillColor = new paper.Color("red")
+        penBody.strokeColor = new paper.Color("blue")
+        penGroup.addChild(penBody)
+
+        let penCap = new paper.Path(penCapSegments)
+        penCap.fillColor = new paper.Color("red")
+        penCap.strokeColor = new paper.Color("blue")
+        penGroup.addChild(penCap)
+
+        this.paperGroup = penGroup
+
+        // Proxy all paperGroup functions/methods.
+        let _this = this
+        getMethodsAndVariables(this.paperGroup).forEach(key => {
+            if(key == "constructor")
+                return
+            const originalProp = this.paperGroup[key]
+
+            if("function" === typeof originalProp){
+                _this[key] = (...args) => {
+                    return Reflect.apply(originalProp, _this.paperGroup, args)
+                }
+            }else{
+                Object.defineProperty(_this, key, {
+                    get: function(){
+                        return _this.paperGroup[key]
+                    },
+                    set: function(val){
+                        _this.paperGroup[key] = val
+                    }
+                })
+            }
+        })
+    }
+}
 
 @CustomElement({
     selector: "hh-color-stop-array-input"
@@ -33,8 +92,9 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         let previousPaperProject = paper.project
         paper.setup(this.canvas)
         this.projectId = paper.project.index
+        paper.project.view.translate(new paper.Point(rectangleOffset, 0))
 
-        this.rectangle = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(canvasWidth, canvasHeight))
+        this.rectangle = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(rectangleWidth, rectangleHeight))
         this.refresh()
 
         this.appendChild(this.canvas)
@@ -65,24 +125,13 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
             if (penIndex < this.pens.length) { // Reuse previously created pens
                 pen = this.pens[penIndex]
             } else { // Create new pen.
-                // let penGroup = new paper.Group()
-                let penBody = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(10, 10))
-                penBody.fillColor = new paper.Color("red")
-                penBody.strokeColor = new paper.Color("blue")
-                // penGroup.addChild(penBody)
-
-                pen = penBody
-
-                this.pens.push(penBody)
+                pen = new Pen()
+                this.pens.push(pen)
             }
 
             pen.bringToFront()
-            // let newPen = new paper.Group()
-            // let penBody = new paper.Path.Rectangle(new paper.Point(0,0), new paper.Point(10, canvasHeight/2))
-            // penBody.fillColor = "red"
-            //
-            // newPen.addChild(penBody)
-
+            pen.position = new paper.Point( colorStop.value * rectangleWidth, rectangleHeight/2)
+            pen.fillColor = new paper.Color( colorStop.r, colorStop.g, colorStop.b, colorStop.a)
             penIndex++
         }
 
