@@ -25,6 +25,8 @@ class PropertySheetFactory{
         // Generate setter and getter
         let getterName = "get" + capitalizeFirstLetter(fieldName)
         let setterName = "set" + capitalizeFirstLetter(fieldName)
+        let deleterName = "delete" + capitalizeFirstLetter(fieldName) // TODO: Code duplication with AbstractComponent
+        let updateName = "update" + capitalizeFirstLetter(fieldName)
 
         let propertyDef = {
             key: propertyPrefix + propertyMeta["key"],
@@ -33,6 +35,11 @@ class PropertySheetFactory{
             registerValueChangeFunc: valueChangeHandler.registerValueChangeHandler(fieldName),
             unregisterValueChagneFunc: valueChangeHandler.unregisterValueChangeHandler(fieldName),
             config: propertyMeta.config
+        }
+
+        if(component[updateName]){
+            propertyDef["updater"] = component[updateName].bind(component)
+            propertyDef["deleter"] = component[deleterName].bind(component)
         }
 
         let propertyType = this.categoryTypeMap.get(propertyMeta.type)

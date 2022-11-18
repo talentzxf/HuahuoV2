@@ -96,6 +96,7 @@ class HHColorInput extends HTMLElement implements RefreshableComponent{
     set value(val: any){
         this.silentColorChangeEvent = true
         this.colorPicker.color = val.toCSS()
+        this.colorInput.color = val.toCSS()
         this.silentColorChangeEvent = false
     }
 
@@ -117,9 +118,11 @@ class HHColorInput extends HTMLElement implements RefreshableComponent{
         })
 
         setTimeout( ()=>{
-            let input = _this.colorInput.shadowRoot.querySelector("input")
-            if(input)
-                input.style.width = "60px"
+            if(_this.colorInput.shadowRoot){
+                let input = _this.colorInput.shadowRoot.querySelector("input")
+                if(input)
+                    input.style.width = "60px"
+            }
         },0)
 
         this.showMoreButton = document.createElement("button")

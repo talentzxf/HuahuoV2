@@ -213,7 +213,7 @@ class AbstractComponent {
         let setterName = "set" + capitalizeFirstLetter(fieldName) // Set is actually insert.
         let inserterName = "insert" + capitalizeFirstLetter(fieldName)
         let deleterName = "delete" + capitalizeFirstLetter(fieldName)
-        let updateName = "update" + capitalizeFirstLetter(fieldName)
+        let updaterName = "update" + capitalizeFirstLetter(fieldName)
 
         let _this = this
 
@@ -242,16 +242,24 @@ class AbstractComponent {
 
             if (this.baseShape)
                 this.baseShape.update(true)
-            this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
+            this.callHandlers(fieldName, val)
         }.bind(this)
 
-        this[deleterName] = function (val) {
-            this.rawObj.DeleteColorStop(val.index)
+        this[deleterName] = function (val: ColorStop) {
+            this.rawObj.DeleteColorStop(fieldName, val.index)
             if (this.baseShape)
                 this.baseShape.update(true)
 
-            this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
+            this.callHandlers(fieldName, val) // Is the val parameter really matters in this case?
         }.bind(this)
+
+        this[updaterName] = function(val: ColorStop){
+            this.rawObj.UpdateColorStop(fieldName, val.index, val.r, val.g, val.b, val.a)
+            if (this.baseShape)
+                this.baseShape.update(true)
+
+            this.callHandlers(fieldName, val)
+        }
 
         // Remove the property and add setter/getter
         delete this[propertyEntry["key"]]

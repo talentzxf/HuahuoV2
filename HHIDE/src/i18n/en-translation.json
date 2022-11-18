@@ -119,5 +119,10 @@
   },
   "component": {
     "nothing": "No suitable component found!"
+  },
+  "colorstops":{
+    "pen": {
+      "name": "Pen index: {{index}}"
+    }
   }
 }

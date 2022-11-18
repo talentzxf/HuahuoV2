@@ -119,5 +119,10 @@
   },
   "component": {
     "nothing": "未找到适配的组件!"
+  },
+  "colorstops":{
+    "pen": {
+      "name": "颜色点编号: {{index}}"
+    }
   }
 }

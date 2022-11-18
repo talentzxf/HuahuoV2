@@ -17,8 +17,11 @@ enum PropertyType{
 class Property{
     key: string
     type: PropertyType
-    setter?: Function
+    component: any
+    setter?: Function // Setter will be used as inserter if the property is an array.
     getter?: Function
+    updater?: Function // updater and deleter are used if the property is an array.
+    deleter?: Function
     registerValueChangeFunc?: Function
     unregisterValueChangeFunc?: Function
     config: PropertyConfig
