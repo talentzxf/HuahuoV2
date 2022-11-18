@@ -51,5 +51,8 @@ void ColorStopArray::Lerp(ColorStopArray &k0, ColorStopArray &k1, float ratio) {
 
         ColorStopEntry entry = LerpColorEntry( k0ColorStop, k1ColorStop, ratio);
         m_ColorStops[colorStopIndex] = entry;
+
+        m_usedIndexes.insert(colorStopIndex);
+        nextColorStopId = std::max(nextColorStopId, colorStopIndex + 1);
     }
 }

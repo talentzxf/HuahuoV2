@@ -468,10 +468,14 @@ void testReadFromFile(){
 
     customComponent->RegisterFloatValue("growth", 1.0f);
     customComponent->RegisterColorValue("strokeColor", 1.0, 0.0, 0.0, 1.0);
+    customComponent->RegisterColorStopArrayValue("gradientColor");
     printf("GetValue:%f\n", customComponent->GetFloatValue("growth"));
 
     circleShape->AddFrameState(customComponent);
     GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->AddShapeInternal(circleShape);
+
+    customComponent->AddColorStop("gradientColor", 0.0, 1.0, 0.0, 0.0, 1.0);
+    customComponent->AddColorStop("gradientColor", 1.0, 0.0, 0.0, 1.0, 1.0);
 
     customComponent->SetFloatValue("growth", 1.0f);
     customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
@@ -483,6 +487,11 @@ void testReadFromFile(){
 
     Layer *shapeLayer = circleShape->GetLayer();
     shapeLayer->SetCurrentFrame(10);
+
+    customComponent->UpdateColorStop("gradientColor", 0, 1.0, 1.0, 0.0, 0.0, 1.0);
+
+    ColorStopArray* pResult = customComponent->GetColorStopArray("gradientColor");
+
     customComponent->SetColorValue("strokeColor", 0.0, 1.0, 0.0, 1.0);
     float growthValue = customComponent->GetFloatValue("growth");
 

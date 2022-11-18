@@ -195,6 +195,19 @@ FindKeyFramePair(int frameId, std::vector<T> &keyFrames, std::pair<T *, T *> &re
 }
 
 template<typename T>
+typename std::vector<T>::iterator FindLastKeyFrame(int frameId, std::vector<T> &keyFrames) {
+    typename std::vector<T>::iterator itr = keyFrames.begin();
+    while (itr != keyFrames.end()) {
+        if (itr->frameId >= frameId) {
+            itr--;
+            return itr;
+        }
+        itr++;
+    }
+    return itr;
+}
+
+template<typename T>
 typename std::vector<T>::iterator FindInsertPosition(int frameId, std::vector<T> &keyFrames) {
     typename std::vector<T>::iterator itr = keyFrames.begin();
     while (itr != keyFrames.end()) {

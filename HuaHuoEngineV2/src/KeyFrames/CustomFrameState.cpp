@@ -130,12 +130,22 @@ void CustomFrameState::AddColorStop(float value, float r, float g, float b, floa
 void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, float b, float a) {
     if(this->m_DataType != COLORSTOPARRAY){
         Assert("Data Type mismatch!");
+        return;
     }
 
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
 
     CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames());
+
+    // Copy the whole array from the previous keyframe.
+    auto itr = FindLastKeyFrame(currentFrameId, GetKeyFrames());
+
+    pKeyFrame->data.dataType = COLORSTOPARRAY;
+    for(int colorStopIdx = 0; colorStopIdx < itr->data.colorStopArray.GetColorStopCount(); colorStopIdx++){
+        pKeyFrame->data.colorStopArray.AddEntry(*itr->data.colorStopArray.GetColorStop(colorStopIdx));
+    }
+
     pKeyFrame->data.colorStopArray.UpdateAtIndex(idx, value, r, g, b, a);
     Apply(currentFrameId);
 }
