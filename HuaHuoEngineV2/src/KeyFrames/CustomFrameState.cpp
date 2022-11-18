@@ -142,7 +142,7 @@ void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, f
     auto itr = FindLastKeyFrame(currentFrameId, GetKeyFrames());
 
     pKeyFrame->data.dataType = COLORSTOPARRAY;
-    for(int colorStopIdx = 0; colorStopIdx < itr->data.colorStopArray.GetColorStopCount(); colorStopIdx++){
+    for(int colorStopIdx = pKeyFrame->data.colorStopArray.GetColorStopCount(); colorStopIdx < itr->data.colorStopArray.GetColorStopCount(); colorStopIdx++){
         pKeyFrame->data.colorStopArray.AddEntry(*itr->data.colorStopArray.GetColorStop(colorStopIdx));
     }
 

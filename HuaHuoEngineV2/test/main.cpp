@@ -477,6 +477,8 @@ void testReadFromFile(){
     customComponent->AddColorStop("gradientColor", 0.0, 1.0, 0.0, 0.0, 1.0);
     customComponent->AddColorStop("gradientColor", 1.0, 0.0, 0.0, 1.0, 1.0);
 
+    customComponent->UpdateColorStop("gradientColor", 0, 1.0, 0.0, 1.0, 1.0, 1.0);
+
     customComponent->SetFloatValue("growth", 1.0f);
     customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
 
