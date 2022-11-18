@@ -196,15 +196,28 @@ FindKeyFramePair(int frameId, std::vector<T> &keyFrames, std::pair<T *, T *> &re
 
 template<typename T>
 typename std::vector<T>::iterator FindLastKeyFrame(int frameId, std::vector<T> &keyFrames) {
-    typename std::vector<T>::iterator itr = keyFrames.begin();
-    while (itr != keyFrames.end()) {
-        if (itr->frameId >= frameId) {
-            itr--;
-            return itr;
-        }
-        itr++;
+    if(keyFrames.size() == 0){
+        return keyFrames.end();
     }
-    return itr;
+
+    if(keyFrames.size() == 1){
+        if(frameId >= keyFrames[0].frameId)
+            return keyFrames.begin();
+        else
+            return keyFrames.end();
+    }
+
+    auto retItr = keyFrames.begin();
+    auto nextItr = keyFrames.begin() + 1;
+
+    while (nextItr != keyFrames.end()) {
+        if (nextItr->frameId > frameId) {
+            return retItr;
+        }
+        nextItr++;
+        retItr++;
+    }
+    return retItr;
 }
 
 template<typename T>
@@ -220,19 +233,30 @@ typename std::vector<T>::iterator FindInsertPosition(int frameId, std::vector<T>
 }
 
 template<typename T>
-T *InsertOrUpdateKeyFrame(int frameId, std::vector<T> &keyFrames) {
+T *InsertOrUpdateKeyFrame(int frameId, std::vector<T> &keyFrames, bool* isInsert = NULL) {
     auto itr = FindInsertPosition(frameId, keyFrames);
     T *pKeyFrame = NULL;
     if (itr == keyFrames.end()) {
         int currentFrameSize = keyFrames.size();
         keyFrames.resize(currentFrameSize + 1);
         pKeyFrame = &keyFrames[currentFrameSize];
+        if(isInsert){ // Inserted at last of the keyFrames.
+            *isInsert = true;
+        }
     } else if (itr->frameId == frameId) { // The frame exists, reassign value later
         pKeyFrame = &(*itr);
+
+        if(isInsert){
+            *isInsert = false; // Update the value
+        }
     } else {
         T transformKeyFrame;
         auto newFrameItr = keyFrames.insert(itr, transformKeyFrame);
         pKeyFrame = &(*newFrameItr);
+
+        if(isInsert){
+            *isInsert = true;
+        }
     }
     pKeyFrame->frameId = frameId;
     return pKeyFrame;

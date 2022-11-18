@@ -136,14 +136,33 @@ void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, f
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
 
-    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames());
+    bool isInsert;
+    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames(), &isInsert);
 
-    // Copy the whole array from the previous keyframe.
-    auto itr = FindLastKeyFrame(currentFrameId, GetKeyFrames());
+    if(isInsert){
+        // Copy the whole array from the previous keyframe.
+        auto itr = FindLastKeyFrame(currentFrameId - 1, GetKeyFrames());
 
-    pKeyFrame->data.dataType = COLORSTOPARRAY;
-    for(int colorStopIdx = pKeyFrame->data.colorStopArray.GetColorStopCount(); colorStopIdx < itr->data.colorStopArray.GetColorStopCount(); colorStopIdx++){
-        pKeyFrame->data.colorStopArray.AddEntry(*itr->data.colorStopArray.GetColorStop(colorStopIdx));
+        printf("Total frames:%d\n", GetKeyFrames().size());
+        if(itr == GetKeyFrames().begin()){
+            printf("Is begin\n");
+        }
+
+        if(itr == GetKeyFrames().end()){
+            printf("Is End\n");
+        }
+
+        printf("frameId:%d itr colorstop count:%d, keyframe colorstop count:%d\n", itr->frameId,
+               itr->data.colorStopArray.GetColorStopCount(), pKeyFrame->data.colorStopArray.GetColorStopCount());
+
+        pKeyFrame->data.dataType = COLORSTOPARRAY;
+        for(int colorStopIdx = pKeyFrame->data.colorStopArray.GetColorStopCount(); colorStopIdx < itr->data.colorStopArray.GetColorStopCount(); colorStopIdx++){
+            ColorStopEntry colorStopEntry = *itr->data.colorStopArray.GetColorStop(colorStopIdx);
+
+            printf("Color stop entry: index:%d value:%f r:%f g:%f b:%f a:%f\n", colorStopEntry.GetIndex(),
+                   colorStopEntry.GetValue(), colorStopEntry.GetColor()->r,colorStopEntry.GetColor()->g, colorStopEntry.GetColor()->b, colorStopEntry.GetColor()->a);
+            pKeyFrame->data.colorStopArray.AddEntry(colorStopEntry);
+        }
     }
 
     pKeyFrame->data.colorStopArray.UpdateAtIndex(idx, value, r, g, b, a);
