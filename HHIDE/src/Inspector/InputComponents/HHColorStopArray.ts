@@ -87,8 +87,6 @@ class Pen {
 
         this.interceptPaperFunctions()
 
-        this.paperGroup.onClick = this.onClick
-
         if (colorStop)
             this.setColorStop(colorStop)
     }
@@ -97,10 +95,6 @@ class Pen {
         this.colorStop = colorStop
         this.penBody.fillColor = new paper.Color(colorStop.r, colorStop.g, colorStop.b, colorStop.a)
         this.paperGroup.position = new paper.Point(colorStop.value * rectangleWidth, rectangleHeight / 2)
-    }
-
-    onClick(e: MouseEvent) {
-
     }
 
     interceptPaperFunctions() {
@@ -199,6 +193,8 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         if (this.selectedPen && this.selectedPen.penBody) {
             this.selectedPen.fillColor = val
             this.updater(this.selectedPen.colorStop)
+
+            this.refresh()
         }
     }
 
@@ -216,6 +212,10 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
                 pen.selected = false
             }
         })
+    }
+
+    onPenClicked(evt:MouseEvent){
+
     }
 
     refresh() {
@@ -242,6 +242,8 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
                 pen = this.pens[penIndex]
             } else { // Create new pen.
                 pen = new Pen(colorStop)
+
+                pen.paperGroup.onClick = this.onPenClicked
                 this.pens.push(pen)
             }
 

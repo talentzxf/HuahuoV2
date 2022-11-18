@@ -254,7 +254,7 @@ class AbstractComponent {
         }.bind(this)
 
         this[updaterName] = function(val: ColorStop){
-            this.rawObj.UpdateColorStop(fieldName, val.index, val.r, val.g, val.b, val.a)
+            this.rawObj.UpdateColorStop(fieldName, val.index, val.value, val.r, val.g, val.b, val.a)
             if (this.baseShape)
                 this.baseShape.update(true)
 
