@@ -56,7 +56,9 @@ void ColorStopEntry::Transfer(TransferFunction &transfer) {
 
 class ColorStopArray {
 public:
-    ColorStopArray() : nextColorStopId(0) {
+    ColorStopArray() :
+        nextColorStopId(0)
+    {
 
     }
 
@@ -77,25 +79,50 @@ public:
         colorStopEntry.SetIndex(nextColorStopId++);
         m_ColorStops.insert( std::pair<int, ColorStopEntry>(colorStopEntry.GetIndex(),  colorStopEntry));
         m_usedIndexes.insert(colorStopEntry.GetIndex());
+
+        m_valueIndexPairs.push_back(ValueIndexPair(colorStopEntry.GetValue(), colorStopEntry.GetIndex()));
+
+        SortValueIndexPair();
     }
 
     void DeleteEntry(int idx) {
         m_ColorStops.erase(idx);
         m_usedIndexes.erase(idx);
+
+        std::erase_if(m_valueIndexPairs, [idx](ValueIndexPair pair){
+            if(pair.second == idx)
+                return true;
+            return false;
+        });
     }
 
     void UpdateAtIndex(int idx, float value, float r, float g, float b, float a) {
         m_ColorStops[idx].SetValue(value);
         ColorRGBAf rgbAf(r, g, b, a);
         m_ColorStops[idx].SetColor(&rgbAf);
+
+        SortValueIndexPair();
     }
 
     void Lerp(ColorStopArray &c0, ColorStopArray &c1, float t);
 
+    ColorRGBAf LerpColor(float value);
+
     DECLARE_SERIALIZE(ColorStopArray);
 private:
+        void SortValueIndexPair(){
+            std::sort(m_valueIndexPairs.begin(), m_valueIndexPairs.end(), [](ValueIndexPair x1, ValueIndexPair x2){
+                return x1.first > x2.first;
+            });
+        }
+private:
+    typedef std::pair<float, int> ValueIndexPair;
+
     std::map<int, ColorStopEntry> m_ColorStops;
     std::set<int> m_usedIndexes;
+
+    // Always keep this from min->max based on value;
+    std::vector<ValueIndexPair> m_valueIndexPairs;
     int nextColorStopId;
 };
 
@@ -104,6 +131,7 @@ void ColorStopArray::Transfer(TransferFunction &transfer) {
     TRANSFER(m_ColorStops);
     TRANSFER(nextColorStopId);
     TRANSFER(m_usedIndexes);
+    TRANSFER(m_valueIndexPairs);
 }
 
 ColorStopArray Lerp(ColorStopArray &c0, ColorStopArray &c1, float t);

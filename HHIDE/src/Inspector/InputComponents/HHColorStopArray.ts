@@ -131,7 +131,7 @@ class Pen {
 })
 class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent {
     getter: Function
-    setter: Function
+    setter: Function // This is actually inserter
     deleter: Function
     updater: Function
 
@@ -166,6 +166,7 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         paper.project.view.translate(new paper.Point(rectangleOffset, 0))
 
         this.rectangle = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(rectangleWidth, rectangleHeight))
+        this.rectangle.onClick = this.onRectangeClicked.bind(this)
         this.refresh()
 
         this.appendChild(this.canvas)
@@ -214,6 +215,18 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
                 pen.selected = false
             }
         })
+    }
+
+    onRectangeClicked(evt:MouseEvent){
+        console.log(evt)
+
+        let clickPoint = evt["point"]
+        let value = clickPoint.x / rectangleWidth
+
+        let currentColorArray = this.getter()
+        this.setter(value)
+
+        this.refresh()
     }
 
     onPenClicked(evt:MouseEvent){

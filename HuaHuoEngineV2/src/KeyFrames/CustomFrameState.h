@@ -89,6 +89,7 @@ public:
     float GetFloatValue();
 
     void SetColorValue(float r, float g, float b, float a);
+    void AddColorStop(float value);
     void AddColorStop(float value, float r, float g, float b, float a);
     void UpdateColorStop(int idx, float value, float r, float g, float b, float a);
     void DeleteColorStop(int idx);

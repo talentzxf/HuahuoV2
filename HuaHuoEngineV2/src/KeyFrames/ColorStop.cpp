@@ -3,6 +3,7 @@
 //
 
 #include "ColorStop.h"
+#include "Math/Color.h"
 
 float ColorStopEntry::GetValue() const {
     return value;
@@ -55,4 +56,55 @@ void ColorStopArray::Lerp(ColorStopArray &k0, ColorStopArray &k1, float ratio) {
         m_usedIndexes.insert(colorStopIndex);
         nextColorStopId = std::max(nextColorStopId, colorStopIndex + 1);
     }
+}
+
+ColorRGBAf ColorStopArray::LerpColor(float value) {
+    if (GetColorStopCount() == 0) { // Currently no color stop, return black.
+        return ColorRGBAf(0.0f, 0.0f, 0.0f, 1.0f);
+    }
+
+    if (GetColorStopCount() == 1) { // Currently only one color stop, return the color of this color stop.
+        return *GetColorStop(0)->GetColor();
+    }
+
+    // If the value is leq than the first value. Return the first color.
+    if(value <= m_valueIndexPairs.begin()->first){
+        int beginColorStopIndex = m_valueIndexPairs.begin()->second;
+        return *m_ColorStops[beginColorStopIndex].GetColor();
+    }
+
+    // If the value is leq than the last value. Return the last color.
+    auto lastValueIndexPair = m_valueIndexPairs[m_valueIndexPairs.size() - 1];
+    if(value >= lastValueIndexPair.first) {
+        int lastColorStopIndex = lastValueIndexPair.second;
+        return *m_ColorStops[lastColorStopIndex].GetColor();
+    }
+
+    // TODO: Change to binary search.
+    auto prevPair = m_valueIndexPairs.begin();
+    auto curPair = m_valueIndexPairs.end();
+
+    while(curPair != m_valueIndexPairs.end()){
+        // if value is between the prevPair and the curPair, we found it.
+        if(prevPair->first < value && curPair->first >= value){
+            break;
+        }
+
+        curPair++;
+        prevPair++;
+    }
+
+    float prevValue = m_ColorStops[prevPair->second].GetValue();
+    float curValue = m_ColorStops[curPair->second].GetValue();
+
+    const ColorRGBAf& prevColor = *m_ColorStops[prevPair->second].GetColor();
+    const ColorRGBAf& curColor = *m_ColorStops[curPair->second].GetColor();
+
+    if(prevValue == curValue){ // TODO: Is it possible?
+        return prevColor;
+    }
+
+    float ratio = (value - prevValue) / (curValue - prevValue);
+
+    return ::Lerp(prevColor, curColor, ratio);
 }
