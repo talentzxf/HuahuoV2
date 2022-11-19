@@ -172,6 +172,7 @@ interface CustomComponent{
 
     ColorStopArray GetColorStopArray([Const] DOMString fieldName);
     void AddColorStop([Const] DOMString fieldName, float value, float r, float g, float b, float a);
+    void AddColorStop([Const] DOMString fieldName, float value);
     void UpdateColorStop([Const] DOMString fieldName, long colorStopIndex, float value, float r, float g, float b, float a);
     void DeleteColorStop([Const] DOMString fieldName, long colorStopIndex);
 };

@@ -8,6 +8,7 @@ import {huahuoEngine} from "../EngineAPI";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {ComponentConfig} from "./ComponentConfig";
 import {ColorStop} from "./ColorStop";
+import {Logger} from "hhcommoncomponents";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -237,8 +238,17 @@ class AbstractComponent {
             this[inserterName](val)
         }.bind(this)
 
-        this[inserterName] = function (val: ColorStop) {
-            this.rawObj.AddColorStop(fieldName, val.value, val.r, val.g, val.b, val.a)
+        this[inserterName] = function (val) {
+            if(val instanceof ColorStop)
+                this.rawObj.AddColorStop(fieldName, val.value, val.r, val.g, val.b, val.a)
+            else if(typeof(val) === "number")
+                this.rawObj.AddColorStop(fieldName, val)
+            else
+            {
+                Logger.error("Why the val is not a ColorStop nor a number? It's actually:" + typeof(val))
+                return
+            }
+
 
             if (this.baseShape)
                 this.baseShape.update(true)

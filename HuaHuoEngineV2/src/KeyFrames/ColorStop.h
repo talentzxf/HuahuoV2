@@ -8,6 +8,8 @@
 #include "Math/Color.h"
 #include <map>
 #include <set>
+#include <vector>
+#include <utility>
 
 class ColorStopEntry {
 public:
