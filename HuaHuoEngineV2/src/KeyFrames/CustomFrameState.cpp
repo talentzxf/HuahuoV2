@@ -106,43 +106,7 @@ void CustomFrameState::SetColorValue(float r, float g, float b, float a) {
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 }
 
-// If color is not specified, lerp the color than add to the array.
-void CustomFrameState::AddColorStop(float value) {
-    auto currentColorStopArray = m_CurrentKeyFrame.data.colorStopArray;
-
-    ColorRGBAf resultColor = currentColorStopArray.LerpColor(value);
-
-    AddColorStop(value, resultColor.r, resultColor.g, resultColor.b, resultColor.a);
-}
-
-void CustomFrameState::AddColorStop(float value, float r, float g, float b, float a) {
-    if (this->m_DataType != COLORSTOPARRAY) {
-        Assert("Data Type mismatch!");
-    }
-
-    Layer *shapeLayer = baseShape->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
-
-    ColorStopEntry colorStopEntry(-1, value, r, g, b, a);
-    this->RecordFieldValue(currentFrameId, colorStopEntry);
-
-    // Add the interpolated value to all other keyframes;
-    for (auto keyFrame: m_KeyFrames.GetKeyFrames()) {
-        keyFrame.data.colorStopArray.AddEntry(colorStopEntry);
-    }
-
-    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
-}
-
-void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, float b, float a) {
-    if (this->m_DataType != COLORSTOPARRAY) {
-        Assert("Data Type mismatch!");
-        return;
-    }
-
-    Layer *shapeLayer = baseShape->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
-
+CustomDataKeyFrame* CustomFrameState::GetColorStopArrayKeyFrame(int currentFrameId) {
     bool isInsert;
     CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames(), &isInsert);
 
@@ -173,6 +137,52 @@ void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, f
             pKeyFrame->data.colorStopArray.AddEntry(colorStopEntry);
         }
     }
+
+    return pKeyFrame;
+}
+
+// If color is not specified, lerp the color than add to the array.
+void CustomFrameState::AddColorStop(float value) {
+    auto currentColorStopArray = m_CurrentKeyFrame.data.colorStopArray;
+
+    ColorRGBAf resultColor = currentColorStopArray.LerpColor(value);
+
+    AddColorStop(value, resultColor.r, resultColor.g, resultColor.b, resultColor.a);
+}
+
+void CustomFrameState::AddColorStop(float value, float r, float g, float b, float a) {
+    if (this->m_DataType != COLORSTOPARRAY) {
+        Assert("Data Type mismatch!");
+    }
+
+    Layer *shapeLayer = baseShape->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+
+    ColorStopEntry colorStopEntry(-1, value, r, g, b, a);
+    CustomDataKeyFrame* pKeyFrame = GetColorStopArrayKeyFrame(currentFrameId);
+    pKeyFrame->data.colorStopArray.AddEntry(colorStopEntry);
+
+    // Add the interpolated value to all other keyframes;
+    for (auto keyFrame: m_KeyFrames.GetKeyFrames()) {
+        if(keyFrame.frameId == pKeyFrame->frameId)
+            continue;
+        
+        keyFrame.data.colorStopArray.AddEntry(colorStopEntry);
+    }
+
+    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+}
+
+void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, float b, float a) {
+    if (this->m_DataType != COLORSTOPARRAY) {
+        Assert("Data Type mismatch!");
+        return;
+    }
+
+    Layer *shapeLayer = baseShape->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+
+    CustomDataKeyFrame* pKeyFrame = GetColorStopArrayKeyFrame(currentFrameId);
 
     pKeyFrame->data.colorStopArray.UpdateAtIndex(idx, value, r, g, b, a);
     Apply(currentFrameId);

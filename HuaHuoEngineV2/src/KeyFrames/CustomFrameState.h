@@ -110,6 +110,8 @@ public:
 private:
     template <typename T> void RecordFieldValue(int frameId, T value);
 
+    CustomDataKeyFrame* GetColorStopArrayKeyFrame(int currentFrameId);
+
 private:
     CustomDataType m_DataType;
     CustomData m_defaultValue;
