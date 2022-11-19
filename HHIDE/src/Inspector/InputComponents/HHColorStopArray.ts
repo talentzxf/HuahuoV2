@@ -89,6 +89,8 @@ class Pen {
 
         if (colorStop)
             this.setColorStop(colorStop)
+
+        penGroup.data.meta = this
     }
 
     setColorStop(colorStop) {
@@ -215,7 +217,13 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
     }
 
     onPenClicked(evt:MouseEvent){
+        console.log(evt)
+        if(!evt.target["data"] || !evt.target["data"]["meta"]){
+            return
+        }
 
+        let pen = evt.target["data"]["meta"] as Pen
+        this.selectPen(pen)
     }
 
     refresh() {
@@ -243,7 +251,7 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
             } else { // Create new pen.
                 pen = new Pen(colorStop)
 
-                pen.paperGroup.onClick = this.onPenClicked
+                pen.paperGroup.onClick = this.onPenClicked.bind(this)
                 this.pens.push(pen)
             }
 

@@ -167,6 +167,8 @@ void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, f
 
     pKeyFrame->data.colorStopArray.UpdateAtIndex(idx, value, r, g, b, a);
     Apply(currentFrameId);
+
+    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 }
 
 void CustomFrameState::DeleteColorStop(int idx) {
@@ -183,6 +185,8 @@ void CustomFrameState::DeleteColorStop(int idx) {
     }
 
     Apply(currentFrameId);
+
+    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 }
 
 ColorRGBAf* CustomFrameState::GetColorValue(){
