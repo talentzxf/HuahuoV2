@@ -163,11 +163,11 @@ void CustomFrameState::AddColorStop(float value, float r, float g, float b, floa
     pKeyFrame->data.colorStopArray.AddEntry(colorStopEntry);
 
     // Add the interpolated value to all other keyframes;
-    for (auto keyFrame: m_KeyFrames.GetKeyFrames()) {
-        if(keyFrame.frameId == pKeyFrame->frameId)
+    for (auto frameId = 0 ; frameId < m_KeyFrames.GetKeyFrames().size(); frameId++) {
+        if(m_KeyFrames.GetKeyFrames()[frameId].frameId == pKeyFrame->frameId)
             continue;
 
-        keyFrame.data.colorStopArray.AddEntry(colorStopEntry);
+        m_KeyFrames.GetKeyFrames()[frameId].data.colorStopArray.AddEntry(colorStopEntry);
     }
 
     Apply(currentFrameId);
