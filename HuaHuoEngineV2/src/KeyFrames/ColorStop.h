@@ -100,6 +100,14 @@ public:
 
     void UpdateAtIndex(int idx, float value, float r, float g, float b, float a) {
         m_ColorStops[idx].SetValue(value);
+        for(int i = 0; i < this->m_valueIndexPairs.size(); i++){
+            auto pair = m_valueIndexPairs[i];
+            if(pair.second == idx){
+                m_valueIndexPairs[i].first = value;
+                break;
+            }
+        }
+
         ColorRGBAf rgbAf(r, g, b, a);
         m_ColorStops[idx].SetColor(&rgbAf);
 
@@ -114,7 +122,7 @@ public:
 private:
         void SortValueIndexPair(){
             std::sort(m_valueIndexPairs.begin(), m_valueIndexPairs.end(), [](ValueIndexPair x1, ValueIndexPair x2){
-                return x1.first > x2.first;
+                return x1.first < x2.first;
             });
         }
 private:

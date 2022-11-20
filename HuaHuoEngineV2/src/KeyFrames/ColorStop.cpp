@@ -82,7 +82,7 @@ ColorRGBAf ColorStopArray::LerpColor(float value) {
 
     // TODO: Change to binary search.
     auto prevPair = m_valueIndexPairs.begin();
-    auto curPair = m_valueIndexPairs.end();
+    auto curPair = m_valueIndexPairs.begin()+1;
 
     while(curPair != m_valueIndexPairs.end()){
         // if value is between the prevPair and the curPair, we found it.

@@ -477,7 +477,9 @@ void testReadFromFile(){
     customComponent->AddColorStop("gradientColor", 0.0, 1.0, 0.0, 0.0, 1.0);
     customComponent->AddColorStop("gradientColor", 1.0, 0.0, 0.0, 1.0, 1.0);
 
-    customComponent->UpdateColorStop("gradientColor", 0, 1.0, 0.0, 1.0, 1.0, 1.0);
+    customComponent->GetColorStopArray("gradientColor");
+
+    customComponent->UpdateColorStop("gradientColor", 0, 0.1, 0.0, 1.0, 1.0, 1.0);
 
     customComponent->SetFloatValue("growth", 1.0f);
     customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
@@ -489,6 +491,8 @@ void testReadFromFile(){
 
     Layer *shapeLayer = circleShape->GetLayer();
     shapeLayer->SetCurrentFrame(10);
+
+    customComponent->AddColorStop("gradientColor", 0.5);
 
     customComponent->UpdateColorStop("gradientColor", 0, 1.0, 1.0, 0.0, 0.0, 1.0);
 

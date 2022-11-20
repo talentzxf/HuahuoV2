@@ -166,10 +166,11 @@ void CustomFrameState::AddColorStop(float value, float r, float g, float b, floa
     for (auto keyFrame: m_KeyFrames.GetKeyFrames()) {
         if(keyFrame.frameId == pKeyFrame->frameId)
             continue;
-        
+
         keyFrame.data.colorStopArray.AddEntry(colorStopEntry);
     }
 
+    Apply(currentFrameId);
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 }
 
