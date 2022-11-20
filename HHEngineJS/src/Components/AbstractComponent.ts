@@ -234,25 +234,28 @@ class AbstractComponent {
         }.bind(this)
 
         // This is just alias of the insert funtion.
-        this[setterName] = function (val) {
-            this[inserterName](val)
+        this[setterName] = function (val) { // Return value is the index of the newly added colorStopEntry
+            return this[inserterName](val)
         }.bind(this)
 
         this[inserterName] = function (val) {
+
+            let retIndex = -1
             if(val instanceof ColorStop)
-                this.rawObj.AddColorStop(fieldName, val.value, val.r, val.g, val.b, val.a)
+                retIndex = this.rawObj.AddColorStop(fieldName, val.value, val.r, val.g, val.b, val.a)
             else if(typeof(val) === "number")
-                this.rawObj.AddColorStop(fieldName, val)
+                retIndex = this.rawObj.AddColorStop(fieldName, val)
             else
             {
                 Logger.error("Why the val is not a ColorStop nor a number? It's actually:" + typeof(val))
-                return
+                return -1
             }
-
 
             if (this.baseShape)
                 this.baseShape.update(true)
             this.callHandlers(fieldName, val)
+
+            return retIndex
         }.bind(this)
 
         this[deleterName] = function (val: ColorStop) {

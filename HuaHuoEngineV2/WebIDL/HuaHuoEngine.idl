@@ -171,8 +171,8 @@ interface CustomComponent{
     ColorRGBAf GetColorValue([Const] DOMString fieldName);
 
     ColorStopArray GetColorStopArray([Const] DOMString fieldName);
-    void AddColorStop([Const] DOMString fieldName, float value, float r, float g, float b, float a);
-    void AddColorStop([Const] DOMString fieldName, float value);
+    long AddColorStop([Const] DOMString fieldName, float value, float r, float g, float b, float a);
+    long AddColorStop([Const] DOMString fieldName, float value);
     void UpdateColorStop([Const] DOMString fieldName, long colorStopIndex, float value, float r, float g, float b, float a);
     void DeleteColorStop([Const] DOMString fieldName, long colorStopIndex);
 };

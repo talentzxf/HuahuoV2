@@ -142,15 +142,15 @@ CustomDataKeyFrame* CustomFrameState::GetColorStopArrayKeyFrame(int currentFrame
 }
 
 // If color is not specified, lerp the color than add to the array.
-void CustomFrameState::AddColorStop(float value) {
+int CustomFrameState::AddColorStop(float value) {
     auto currentColorStopArray = m_CurrentKeyFrame.data.colorStopArray;
 
     ColorRGBAf resultColor = currentColorStopArray.LerpColor(value);
 
-    AddColorStop(value, resultColor.r, resultColor.g, resultColor.b, resultColor.a);
+    return AddColorStop(value, resultColor.r, resultColor.g, resultColor.b, resultColor.a);
 }
 
-void CustomFrameState::AddColorStop(float value, float r, float g, float b, float a) {
+int CustomFrameState::AddColorStop(float value, float r, float g, float b, float a) {
     if (this->m_DataType != COLORSTOPARRAY) {
         Assert("Data Type mismatch!");
     }
@@ -172,6 +172,8 @@ void CustomFrameState::AddColorStop(float value, float r, float g, float b, floa
 
     Apply(currentFrameId);
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+
+    return colorStopEntry.GetIndex();
 }
 
 void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, float b, float a) {

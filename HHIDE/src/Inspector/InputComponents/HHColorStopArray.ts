@@ -223,10 +223,15 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         let clickPoint = evt["point"]
         let value = clickPoint.x / rectangleWidth
 
-        let currentColorArray = this.getter()
-        this.setter(value)
-
+        let insertedColorStopIndex = this.setter(value) // Setter is actually inserter.
         this.refresh()
+
+        for(let pen of this.pens){
+            if(pen.colorStop.index == insertedColorStopIndex){
+                this.selectPen(pen)
+                break;
+            }
+        }
     }
 
     onPenClicked(evt:MouseEvent){
