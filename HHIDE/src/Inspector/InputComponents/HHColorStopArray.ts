@@ -138,7 +138,7 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
     canvas: HTMLCanvasElement
     rectangle: paper.Path
 
-    pens: Array<paper.Group> = new Array<paper.Group>()
+    pens: Array<Pen> = new Array<Pen>()
     projectId: number = -1
 
     hhColorInput: HHColorInput
@@ -190,6 +190,8 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
 
         // Select the first pen
         this.selectPen(this.pens[0])
+
+        document.onkeyup = this.onKeyUp.bind(this)
     }
 
     colorStopColorChanged(val: paper.Color) {
@@ -215,6 +217,25 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
                 pen.selected = false
             }
         })
+    }
+
+    onKeyUp(evt: KeyboardEvent){
+        if(evt.code == "Delete"){
+            let pen = evt.target["data"]["meta"] as Pen
+
+            // If this is a selected pen, unselect it.
+            if(pen.colorStop.index == this.selectedPen.colorStop.index){
+                this.selectedPen = null
+            }
+
+            this.pens.filter( (penInArray)=>{
+                return penInArray.colorStop.index != pen.colorStop.index
+            })
+
+            this.deleter(pen.colorStop.index)
+
+            this.refresh()
+        }
     }
 
     onRectangeClicked(evt:MouseEvent){
@@ -250,9 +271,8 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         }
 
         let pen = evt.target["data"]["meta"] as Pen
-        // pen.colorStop.
-        //
-        // this.updater(this.selectedPen.colorStop)
+
+        this.selectedPen = pen
 
         let colorStop = pen.colorStop
         let deltaPortion = (evt["delta"].x / rectangleWidth)
