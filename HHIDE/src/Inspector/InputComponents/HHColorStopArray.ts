@@ -244,6 +244,28 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         this.selectPen(pen)
     }
 
+    onPenMouseDrag(evt: paper.MouseEvent){
+        if(!evt.target["data"] || !evt.target["data"]["meta"]){
+            return
+        }
+
+        let pen = evt.target["data"]["meta"] as Pen
+        // pen.colorStop.
+        //
+        // this.updater(this.selectedPen.colorStop)
+
+        let colorStop = pen.colorStop
+        let deltaPortion = (evt["delta"].x / rectangleWidth)
+        colorStop.value += deltaPortion
+
+        // Clamp between 0-1
+        colorStop.value = Math.min(colorStop.value, 1.0)
+        colorStop.value = Math.max(0.0, colorStop.value)
+
+        this.updater(colorStop)
+        this.refresh()
+    }
+
     refresh() {
         let oldProjectId = -1
         if (paper.project.index != this.projectId) {
@@ -270,6 +292,7 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
                 pen = new Pen(colorStop)
 
                 pen.paperGroup.onClick = this.onPenClicked.bind(this)
+                pen.paperGroup.onMouseDrag = this.onPenMouseDrag.bind(this)
                 this.pens.push(pen)
             }
 
