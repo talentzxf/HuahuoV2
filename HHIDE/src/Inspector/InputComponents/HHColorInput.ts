@@ -136,6 +136,11 @@ class HHColorInput extends HTMLElement implements RefreshableComponent{
         titleDiv.appendChild(this.showMoreButton)
     }
 
+    hideColorSelector(){
+        this.colorPicker.style.display = "none"
+        this.isExpanded = false
+    }
+
     showMoreButtonClicked(){
         if(this.isExpanded){ // Currently expanded, collapse
             this.colorPicker.style.display = "none"

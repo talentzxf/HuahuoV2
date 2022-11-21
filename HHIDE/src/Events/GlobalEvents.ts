@@ -12,7 +12,8 @@ enum EventNames{
     OBJECTSELECTED = "objectSelected",
     UNSELECTOBJECTS = "unselectObjects",
     COMPONENTADDED = "componentAdded",
-    CELLCLICKED = "cellClicked"
+    CELLCLICKED = "cellClicked",
+    OBJECTDELETED = "objectDeleted"
 }
 
 class EventBus{

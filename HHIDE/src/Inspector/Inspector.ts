@@ -16,6 +16,8 @@ class Inspector extends HTMLElement{
     contentScrollerDiv:HTMLDivElement;
     shapePropertyDivMapping: Map<any, HHRefreshableDiv> = new Map()
 
+    selectedObj: any = null
+
     connectedCallback() {
         let parentPanel = findParentPanel(this)
         let parentHeight = parentPanel?parentPanel.clientHeight: 500;
@@ -34,6 +36,8 @@ class Inspector extends HTMLElement{
         EventBus.getInstance().on(EventNames.COMPONENTADDED, this.componentAdded.bind(this))
 
         EventBus.getInstance().on(EventNames.CELLCLICKED, this.timelineCellClicked.bind(this))
+
+        EventBus.getInstance().on(EventNames.OBJECTDELETED, this.objectDeleted.bind(this))
 
         findParentSideBar(this).hide()
     }
@@ -106,10 +110,18 @@ class Inspector extends HTMLElement{
         return addComponentBtn
     }
 
+    objectDeleted(targetObj){
+        if(this.selectedObj == targetObj){
+            findParentSideBar(this).hide()
+
+            this.shapePropertyDivMapping.delete(targetObj)
+        }
+    }
+
     onItemSelected(propertySheet: PropertySheet, targetObj: any){
+        this.selectedObj = targetObj
 
         findParentSideBar(this).show()
-
         let parentContainer = findParentSideBar(this)
         let titleBarHeight = parentContainer.querySelector(".title_tabs").offsetHeight
         let parentHeight = parentContainer.clientHeight - titleBarHeight;

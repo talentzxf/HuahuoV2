@@ -178,6 +178,8 @@ class ShapeSelector extends BaseShapeDrawer {
         } else {
             for (let shape of this.selectedShapes) {
                 objectDeleter.deleteShape(shape)
+
+                EventBus.getInstance().emit(EventNames.OBJECTDELETED, shape)
             }
 
             this.clearSelection(false)

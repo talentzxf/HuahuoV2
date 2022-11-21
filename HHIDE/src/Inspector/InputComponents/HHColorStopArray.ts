@@ -195,7 +195,17 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         // Select the first pen
         this.selectPen(this.pens[0])
 
-        document.onkeyup = this.onKeyUp.bind(this)
+        let kbEventListener = this.onKeyUp.bind(this)
+
+        this.addEventListener("focusin", ()=>{
+            document.addEventListener("keyup", kbEventListener)
+        })
+
+        this.addEventListener("focusout", ()=>{
+            document.removeEventListener("keyup", kbEventListener)
+        })
+
+        this.tabIndex = 0;
     }
 
     colorStopColorChanged(val: paper.Color) {
@@ -231,15 +241,23 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
             }else{
                 let tobeDeletedPen = this.selectedPen
 
+                this.selectedPen = null
+
                 this.pens = this.pens.filter( (penInArray)=>{
                     return penInArray.colorStop.identifier != tobeDeletedPen.colorStop.identifier
                 })
+
+                // TODO: Do we really need to hide the color selector??
+                // this.hhColorInput.hideColorSelector()
+                this.colorTitleSpan.innerText = "unselected pen"
 
                 this.deleter(tobeDeletedPen.colorStop)
 
                 tobeDeletedPen.remove()
 
                 this.refresh()
+
+                evt.stopPropagation()
             }
         }
     }
