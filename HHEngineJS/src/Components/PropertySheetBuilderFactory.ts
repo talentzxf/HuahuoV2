@@ -18,6 +18,9 @@ class PropertySheetFactory{
         this.categoryElementTypeMap.set(PropertyCategory.shapeArray, PropertyType.REFERENCE)
 
         this.categoryTypeMap.set(PropertyCategory.colorStopArray, PropertyType.COLORSTOPARRAY)
+
+        this.categoryTypeMap.set(PropertyCategory.interpolateVector2, PropertyType.VECTOR2)
+        this.categoryTypeMap.set(PropertyCategory.interpolateVector3, PropertyType.VECTOR3)
     }
 
     createEntry(component, propertyMeta:PropertyDef, valueChangeHandler: ValueChangeHandler){

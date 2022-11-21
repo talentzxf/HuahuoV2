@@ -5,13 +5,14 @@ enum PropertyType{
     PANEL,
     STRING,
     VECTOR2,
+    VECTOR3,
     FLOAT,
     COLOR,
     BUTTON,
     REFERENCE,
     ARRAY,
     COMPONENT,
-    COLORSTOP
+    COLORSTOPARRAY
 }
 
 class Property{

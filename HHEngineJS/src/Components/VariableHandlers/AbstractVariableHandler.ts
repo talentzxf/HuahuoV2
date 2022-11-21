@@ -23,7 +23,7 @@ function internalProcessComponent(component: AbstractComponent, fieldName: strin
     if (config.setter) { // Call setter function will trigger events.
         component[setterName] = (val)=>{
             let currentValue = component[fieldName]
-            if (config.isVariableEqual(currentValue, val)) {
+            if (config.isVariableEqual && config.isVariableEqual(currentValue, val)) {
                 return
             }
 

@@ -82,7 +82,8 @@ class ColorStopArrayProcessor {
                         component.baseShape.update(true)
 
                     component.callHandlers(fieldName, val)
-                }
+                },
+                isVariableEqual: null // No need to check.
             }
         )
     }
