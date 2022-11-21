@@ -98,6 +98,10 @@ class Pen {
         this.paperGroup.position = new paper.Point(colorStop.value * rectangleWidth, rectangleHeight / 2)
     }
 
+    remove(){
+        this.paperGroup.remove()
+    }
+
     interceptPaperFunctions() {
         // Proxy all paperGroup functions/methods.
         let _this = this
@@ -226,7 +230,9 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
                 return penInArray.colorStop.identifier != tobeDeletedPen.colorStop.identifier
             })
 
-            this.deleter(tobeDeletedPen.colorStop.identifier)
+            this.deleter(tobeDeletedPen.colorStop)
+
+            tobeDeletedPen.remove()
 
             this.refresh()
         }

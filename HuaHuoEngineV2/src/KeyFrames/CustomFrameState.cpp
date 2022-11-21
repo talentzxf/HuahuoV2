@@ -199,8 +199,8 @@ void CustomFrameState::DeleteColorStop(int idx) {
     GetColorStopArrayKeyFrame(currentFrameId);
 
     // Delete the color stop from all key frames.
-    for (auto keyFrame: m_KeyFrames.GetKeyFrames()) {
-        keyFrame.data.colorStopArray.DeleteEntry(idx);
+    for(int keyFrameDataIndex = 0; keyFrameDataIndex < m_KeyFrames.GetKeyFrames().size(); keyFrameDataIndex++){
+        m_KeyFrames.GetKeyFrames()[keyFrameDataIndex].data.colorStopArray.DeleteEntry(idx);
     }
 
     m_CurrentKeyFrame.data.colorStopArray.DeleteEntry(idx);
