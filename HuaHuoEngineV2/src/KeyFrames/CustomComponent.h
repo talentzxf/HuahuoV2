@@ -58,6 +58,12 @@ public:
 
     bool Apply(int frameId) override;
 
+    void SetVector3Value(const char* fieldName, float x, float y, float z){
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        pComponent->SetVector3Value(x, y, z);
+    }
+
     void SetFloatValue(const char* fieldName, float value){
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
@@ -105,6 +111,12 @@ public:
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetShapeArrayValueForWrite();
+    }
+
+    Vector3f* GetVector3Value(const char* fieldName){
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        return pComponent->GetVector3Value();
     }
 
     float GetFloatValue(const char* fieldName){
@@ -160,6 +172,13 @@ public:
         int fieldIdx = this->RegisterField(fieldName, FLOAT);
         CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
         pComponent->GetDefaultValueData()->floatValue = initValue;
+        return fieldIdx;
+    }
+
+    int RegisterVector3Value(const char* fieldName, float x, float y, float z){
+        int fieldIdx = this->RegisterField(fieldName, VECTOR3);
+        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        pComponent->GetDefaultValueData()->vector3Value = Vector3f(x, y, z);
         return fieldIdx;
     }
 

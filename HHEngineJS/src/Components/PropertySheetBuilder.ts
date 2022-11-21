@@ -6,10 +6,10 @@ const eps:number = 0.001;
 enum PropertyCategory{
     interpolateFloat,
     interpolateColor,
-    interpolateVector2,
+    interpolateVector2,  // vector2 is just vector3 with z = 0
+    interpolateVector3,
     shapeArray,
     colorStopArray, // Every color stop is a float->Color mapping entry.
-    point
 }
 
 abstract class InterpolateOperator{
@@ -73,12 +73,69 @@ class InterpolateColorOperator extends InterpolateOperator{
     }
 }
 
+class InterpolateVector2Operator extends InterpolateOperator{
+    getField(fieldName: string) {
+        return this.rawObj["GetVector3Value"](fieldName)
+    }
+
+    isEqual(v1, v2) {
+        if(Math.abs(v1.x - v2.x) <= eps && Math.abs(v1.y - v2.y) <= eps)
+            return true
+        return false
+    }
+
+    registerField(fieldName: string, initValue) {
+        if(!initValue){
+            initValue = {
+                x: 0.0,
+                y: 0.0
+            }
+        }
+        this.rawObj["RegisterVector3Value"](fieldName, initValue.x, initValue.y, 0.0)
+    }
+
+    setField(fieldName: string, val) {
+        this.rawObj["SetVector3Value"](fieldName, val.x, val.y, 0.0)
+    }
+}
+
+class InterpolateVector3Operator extends InterpolateOperator{
+    getField(fieldName: string) {
+        return this.rawObj["GetVector3Value"](fieldName)
+    }
+
+    isEqual(v1, v2) {
+        if(Math.abs(v1.x - v2.x) <= eps && Math.abs(v1.y - v2.y) <= eps && Math.abs(v1.z - v2.z) <= eps)
+            return true
+        return false
+    }
+
+    registerField(fieldName: string, initValue) {
+        if(!initValue){
+            initValue = {
+                x: 0.0,
+                y: 0.0,
+                z: 0.0
+            }
+        }
+        this.rawObj["RegisterVector3Value"](fieldName, initValue.x, initValue.y, initValue.z)
+    }
+
+    setField(fieldName: string, val) {
+        this.rawObj["SetVector3Value"](fieldName, val.x, val.y, val.z)
+    }
+}
+
 function buildOperator(type, rawObj): InterpolateOperator{
     switch(type){ // TODO: Get rid of switch-case
         case PropertyCategory.interpolateFloat:
             return new InterpolateFloatOperator(rawObj)
         case PropertyCategory.interpolateColor:
             return new InterpolateColorOperator(rawObj)
+        case PropertyCategory.interpolateVector2:
+            return new InterpolateVector2Operator(rawObj)
+        case PropertyCategory.interpolateVector3:
+            return new InterpolateVector3Operator(rawObj)
     }
 
     return null

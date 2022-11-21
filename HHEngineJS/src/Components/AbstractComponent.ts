@@ -9,7 +9,6 @@ import {ComponentConfig} from "./ComponentConfig";
 import {interpolateVariableProcessor} from "./VariableHandlers/InterpolateVariableProcessor";
 import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
 import {colorStopArrayHandler} from "./VariableHandlers/ColorArrayProcessor";
-import {pointHandler} from "./VariableHandlers/PointHandler";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -69,16 +68,16 @@ class AbstractComponent {
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
 
         properties.forEach(propertyEntry => {
-            if (propertyEntry.type == PropertyCategory.interpolateFloat || propertyEntry.type == PropertyCategory.interpolateColor) {
+            if (propertyEntry.type == PropertyCategory.interpolateFloat
+                || propertyEntry.type == PropertyCategory.interpolateColor
+                || propertyEntry.type == PropertyCategory.interpolateVector2
+                || propertyEntry.type == PropertyCategory.interpolateVector3) {
                 interpolateVariableProcessor.handleEntry(this, propertyEntry)
             } else if (propertyEntry.type == PropertyCategory.shapeArray) {
                 shapeArrayHandler.handleEntry(this, propertyEntry)
             } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
-                colorStopArrayHandler.handleColorStopArrayEntry(this, propertyEntry)
+                colorStopArrayHandler.handleEntry(this, propertyEntry)
             }
-            // else if (propertyEntry.type == PropertyCategory.point){
-            //     pointHandler.handlePointEntry(this, propertyEntry)
-            // }
         })
 
         this.rawObj.SetTypeName(this.constructor.name)

@@ -3,7 +3,7 @@ import {capitalizeFirstLetter} from "../PropertySheetBuilder";
 
 class VariableHandlerConfig {
     setter?: Function
-    getter?: Function
+    getter: Function // Getter is a must!
     updater?: Function
     inserter?: Function
     deleter?: Function

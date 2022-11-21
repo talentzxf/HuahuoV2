@@ -156,6 +156,7 @@ interface ColorStopArray{
 interface CustomComponent{
     static CustomComponent CreateComponent();
     long RegisterFloatValue([Const] DOMString fieldName, float initValue);
+    long RegisterVector3Value([Const] DOMString fieldName, float x, float y, float z);
     long RegisterShapeArrayValue([Const] DOMString fieldName);
     long RegisterColorValue([Const] DOMString fieldName, float r, float g, float b, float a);
     long RegisterColorStopArrayValue([Const] DOMString fieldName);
@@ -163,6 +164,9 @@ interface CustomComponent{
     void CreateShapeArrayValue([Const] DOMString fieldName);
     FieldShapeArray GetShapeArrayValueForWrite([Const] DOMString fieldName);
     FieldShapeArray GetShapeArrayValue([Const] DOMString fieldName);
+
+    void SetVector3Value([Const] DOMString fieldName, float x, float y, float z);
+    Vector3f GetVector3Value([Const] DOMString fieldName);
 
     void SetFloatValue([Const] DOMString fieldName, float value);
     float GetFloatValue([Const] DOMString fieldName);

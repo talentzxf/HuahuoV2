@@ -1,6 +1,7 @@
 import {capitalizeFirstLetter} from "../PropertySheetBuilder";
 import {ColorStop} from "../ColorStop";
 import {Logger} from "hhcommoncomponents";
+import {internalProcessComponent} from "./AbstractVariableHandler";
 
 class ColorStopArrayIterable {
     colorStopArray
@@ -27,83 +28,63 @@ class ColorStopArrayIterable {
     }
 }
 
-class ColorStopArrayProcessor{
-    handleColorStopArrayEntry(component, propertyEntry) {
+class ColorStopArrayProcessor {
+    handleEntry(component, propertyEntry) {
         let fieldName = propertyEntry["key"]
         component.rawObj.RegisterColorStopArrayValue(fieldName)
 
-        // Generate setter and getter
-        let getterName = "get" + capitalizeFirstLetter(fieldName)
-        let setterName = "set" + capitalizeFirstLetter(fieldName) // Set is actually insert.
         let inserterName = "insert" + capitalizeFirstLetter(fieldName)
-        let deleterName = "delete" + capitalizeFirstLetter(fieldName)
-        let updaterName = "update" + capitalizeFirstLetter(fieldName)
 
-        this[getterName] = function () {
+        internalProcessComponent(component, fieldName, {
+                getter: function () {
+                    let colorStopArray = component.rawObj.GetColorStopArray(fieldName)
 
-            let colorStopArray = component.rawObj.GetColorStopArray(fieldName)
+                    if (colorStopArray.GetColorStopCount() < 2) { // Need at lease two counts.
+                        let currentColor = component.baseShape.paperShape.fillColor
+                        component.rawObj.AddColorStop(fieldName, 0.0, currentColor.red, currentColor.green, currentColor.blue, currentColor.alpha)
+                        component.rawObj.AddColorStop(fieldName, 1.0, currentColor.red, currentColor.green, currentColor.blue, currentColor.alpha)
 
-            if(colorStopArray.GetColorStopCount() < 2){ // Need at lease two counts.
-                let currentColor = component.baseShape.paperShape.fillColor
-                component.rawObj.AddColorStop(fieldName, 0.0, currentColor.red, currentColor.green, currentColor.blue, currentColor.alpha)
-                component.rawObj.AddColorStop(fieldName, 1.0, currentColor.red, currentColor.green, currentColor.blue, currentColor.alpha)
+                        colorStopArray = component.rawObj.GetColorStopArray(fieldName)
+                    }
 
-                colorStopArray = component.rawObj.GetColorStopArray(fieldName)
+                    return new ColorStopArrayIterable(colorStopArray)
+                },
+                inserter: function (val) { // Return value is the identifier of the newly added colorStopEntry
+                    let retIndex = -1
+                    if (val instanceof ColorStop)
+                        retIndex = component.rawObj.AddColorStop(fieldName, val.value, val.r, val.g, val.b, val.a)
+                    else if (typeof (val) === "number")
+                        retIndex = component.rawObj.AddColorStop(fieldName, val)
+                    else {
+                        Logger.error("Why the val is not a ColorStop nor a number? It's actually:" + typeof (val))
+                        return -1
+                    }
+
+                    if (component.baseShape)
+                        component.baseShape.update(true)
+                    component.callHandlers(fieldName, val)
+
+                    return retIndex
+                },
+                setter: function (val) {         // This is just alias of the insert funtion.
+                    return component[inserterName](val)
+                },
+                deleter: function (val: ColorStop) {
+                    component.rawObj.DeleteColorStop(fieldName, val.identifier)
+                    if (component.baseShape)
+                        component.baseShape.update(true)
+
+                    component.callHandlers(fieldName, val) // Is the val parameter really matters in this case?
+                },
+                updater: function (val: ColorStop) {
+                    component.rawObj.UpdateColorStop(fieldName, val.identifier, val.value, val.r, val.g, val.b, val.a)
+                    if (component.baseShape)
+                        component.baseShape.update(true)
+
+                    component.callHandlers(fieldName, val)
+                }
             }
-
-            return new ColorStopArrayIterable(colorStopArray)
-        }.bind(this)
-
-        // This is just alias of the insert funtion.
-        this[setterName] = function (val) { // Return value is the identifier of the newly added colorStopEntry
-            return this[inserterName](val)
-        }.bind(this)
-
-        this[inserterName] = function (val) {
-
-            let retIndex = -1
-            if(val instanceof ColorStop)
-                retIndex = component.rawObj.AddColorStop(fieldName, val.value, val.r, val.g, val.b, val.a)
-            else if(typeof(val) === "number")
-                retIndex = component.rawObj.AddColorStop(fieldName, val)
-            else
-            {
-                Logger.error("Why the val is not a ColorStop nor a number? It's actually:" + typeof(val))
-                return -1
-            }
-
-            if (component.baseShape)
-                component.baseShape.update(true)
-            component.callHandlers(fieldName, val)
-
-            return retIndex
-        }.bind(this)
-
-        this[deleterName] = function (val: ColorStop) {
-            component.rawObj.DeleteColorStop(fieldName, val.identifier)
-            if (component.baseShape)
-                component.baseShape.update(true)
-
-            component.callHandlers(fieldName, val) // Is the val parameter really matters in this case?
-        }.bind(this)
-
-        this[updaterName] = function(val: ColorStop){
-            component.rawObj.UpdateColorStop(fieldName, val.identifier, val.value, val.r, val.g, val.b, val.a)
-            if (component.baseShape)
-                component.baseShape.update(true)
-
-            component.callHandlers(fieldName, val)
-        }
-
-        // Remove the property and add setter/getter
-        delete this[propertyEntry["key"]]
-
-        // Add getter and setter
-        Object.defineProperty(this, propertyEntry["key"], {
-            get: function () {
-                return this[getterName]()
-            }
-        })
+        )
     }
 }
 

@@ -6,7 +6,7 @@ class RadialGradientComponent extends AbstractComponent{
     @PropertyValue(PropertyCategory.colorStopArray)
     gradientColorArray
 
-    @PropertyValue(PropertyCategory.point)
+    @PropertyValue(PropertyCategory.interpolateVector2)
     centerPosition
 
     afterUpdate(force: boolean = false) {

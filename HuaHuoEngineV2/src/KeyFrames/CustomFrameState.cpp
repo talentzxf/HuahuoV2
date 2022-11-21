@@ -40,6 +40,9 @@ CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ra
         case COLORSTOPARRAY:
             resultData.data.colorStopArray = Lerp(k1.data.colorStopArray, k2.data.colorStopArray, ratio);
             break;
+        case VECTOR3:
+            resultData.data.vector3Value = Lerp(k1.data.vector3Value, k2.data.vector3Value, ratio);
+            break;
     }
 
     resultData.data.dataType = k1.data.dataType;
@@ -80,6 +83,19 @@ void CustomFrameState::SetFloatValue(float value) {
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 }
 
+void CustomFrameState::SetVector3Value(float x, float y, float z) {
+    if (this->m_DataType != VECTOR3) {
+        Assert("Data Type mismatch!");
+        return;
+    }
+
+    Layer *shapeLayer = baseShape->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+    Vector3f value(x, y, z);
+    this->RecordFieldValue(currentFrameId, value);
+    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+}
+
 float CustomFrameState::GetFloatValue() {
     if (this->m_DataType != FLOAT) {
         Assert("Data Type mismatch!");
@@ -91,6 +107,19 @@ float CustomFrameState::GetFloatValue() {
     }
 
     return this->m_defaultValue.floatValue;
+}
+
+Vector3f* CustomFrameState::GetVector3Value(){
+    if (this->m_DataType != VECTOR3) {
+        Assert("Data Type mismatch!");
+        return NULL;
+    }
+
+    if (isValidFrame) {
+        return &m_CurrentKeyFrame.data.vector3Value;
+    }
+
+    return NULL;
 }
 
 void CustomFrameState::SetColorValue(float r, float g, float b, float a) {
@@ -275,6 +304,9 @@ void CustomFrameState::RecordFieldValue(int frameId, T value) {
     } else if constexpr(std::is_same<T, ColorStopEntry>()) {
         pKeyFrame->data.colorStopArray.AddEntry(value);
         pKeyFrame->data.dataType = COLORSTOPARRAY;
+    } else if constexpr(std::is_same<T, Vector3f>()){
+        pKeyFrame->data.vector3Value = value;
+        pKeyFrame->data.dataType = VECTOR3;
     }
 
     Apply(frameId);

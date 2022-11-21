@@ -19,11 +19,14 @@ enum CustomDataType{
     COLOR,
     SHAPEARRAY,
     COLORSTOPARRAY,
+    VECTOR3
 };
 
 // Use union to save space.
 struct CustomData{
     float floatValue;
+    Vector3f vector3Value;
+
     FieldShapeArray shapeArrayValue;
     ColorRGBAf colorValue;
     ColorStopArray colorStopArray;
@@ -47,6 +50,9 @@ template<class TransferFunction> void CustomData::Transfer(TransferFunction &tra
             break;
         case COLORSTOPARRAY:
             TRANSFER(colorStopArray);
+            break;
+        case VECTOR3:
+            TRANSFER(vector3Value);
             break;
     }
 }
@@ -85,8 +91,11 @@ public:
 
 public:
     void SetFloatValue(float value);
+    void SetVector3Value(float x, float y, float z);
+
 
     float GetFloatValue();
+    Vector3f* GetVector3Value();
 
     void SetColorValue(float r, float g, float b, float a);
     int AddColorStop(float value);
