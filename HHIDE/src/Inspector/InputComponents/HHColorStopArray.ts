@@ -2,6 +2,7 @@ import {CustomElement} from "hhcommoncomponents";
 import {paper} from "hhenginejs"
 import {HHColorInput} from "./HHColorInput";
 import {ColorStop} from "hhenginejs";
+import {HHToast} from "hhcommoncomponents";
 
 const rectangleOffset = 10
 const canvasWidth = 200
@@ -211,7 +212,7 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         this.pens.forEach((pen) => {
             if (pen == selectedPen) {
                 pen.selected = true
-                _this.colorTitleSpan.innerText = i18n.t("colorstops.pen.name", {index: pen.colorStop.index})
+                _this.colorTitleSpan.innerText = i18n.t("colorstops.pen.name", {index: pen.colorStop.identifier})
 
                 _this.hhColorInput.value = pen.fillColor
                 _this.selectedPen = pen
@@ -224,17 +225,22 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
 
     onKeyUp(evt: KeyboardEvent){
         if(evt.code == "Delete"){
-            let tobeDeletedPen = this.selectedPen
 
-            this.pens = this.pens.filter( (penInArray)=>{
-                return penInArray.colorStop.identifier != tobeDeletedPen.colorStop.identifier
-            })
+            if(this.pens.length <= 2){
+                HHToast.warn(i18n.t("toast.insufficientColorStop"))
+            }else{
+                let tobeDeletedPen = this.selectedPen
 
-            this.deleter(tobeDeletedPen.colorStop)
+                this.pens = this.pens.filter( (penInArray)=>{
+                    return penInArray.colorStop.identifier != tobeDeletedPen.colorStop.identifier
+                })
 
-            tobeDeletedPen.remove()
+                this.deleter(tobeDeletedPen.colorStop)
 
-            this.refresh()
+                tobeDeletedPen.remove()
+
+                this.refresh()
+            }
         }
     }
 
@@ -272,7 +278,7 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
 
         let pen = evt.target["data"]["meta"] as Pen
 
-        this.selectedPen = pen
+        this.selectPen(pen)
 
         let colorStop = pen.colorStop
         let deltaPortion = (evt["delta"].x / rectangleWidth)

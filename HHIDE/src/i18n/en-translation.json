@@ -100,7 +100,8 @@
     "userLoggedOut": "User has logged out!",
     "userLoginSuccess": "User {{userName}} just logged in!",
     "projectUploaded": "Project has been successfully uploaded",
-    "elementCreated": "Element {{elementName}} just created!"
+    "elementCreated": "Element {{elementName}} just created!",
+    "insufficientColorStop": "Can't delete the color stop. At least two color stops needed."
   },
   "hint": {
     "saveLocal": "Save project to local",
