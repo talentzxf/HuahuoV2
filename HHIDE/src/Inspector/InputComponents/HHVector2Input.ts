@@ -4,12 +4,12 @@ import {HHFloatInput} from "./HHFloatInput";
 @CustomElement({
     selector: "hh-vector2-inputs"
 })
-class HHVector2Input extends HTMLElement implements RefreshableComponent{
+class HHVector2Input extends HTMLElement implements RefreshableComponent {
     getter: Function
     setter: Function
 
-    inputX : HHFloatInput
-    inputY : HHFloatInput
+    inputX: HHFloatInput
+    inputY: HHFloatInput
 
     constructor(getter, setter) {
         super();
@@ -19,31 +19,37 @@ class HHVector2Input extends HTMLElement implements RefreshableComponent{
 
         let _this = this
         this.inputX = new HHFloatInput(
-            ()=>{
+            () => {
                 return _this.getter().x
             },
-            (xVal)=>{
-                _this.setter(xVal, Number(_this.inputY.value))
+            (xVal) => {
+                _this.setter({
+                    x: xVal,
+                    y: Number(_this.inputY.value)
+                })
             })
 
         this.inputY = new HHFloatInput(
-            ()=>{
+            () => {
                 return _this.getter().y
             },
-            (yVal)=>{
-                _this.setter(Number(_this.inputX.value), yVal)
+            (yVal) => {
+                _this.setter({
+                    x: Number(_this.inputX.value),
+                    y: yVal
+                })
             })
 
         this.appendChild(this.inputX)
         this.appendChild(this.inputY)
     }
 
-    set value(val){
+    set value(val) {
         this.inputX.value = val.x
         this.inputY.value = val.y
     }
 
-    refresh(){
+    refresh() {
         this.value = this.getter()
     }
 }

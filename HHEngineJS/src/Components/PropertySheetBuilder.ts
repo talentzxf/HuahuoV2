@@ -95,13 +95,14 @@ class InterpolateVector2Operator extends InterpolateOperator{
     }
 
     setField(fieldName: string, val) {
-        this.rawObj["SetVector3Value"](fieldName, val.x, val.y, 0.0)
+        this.rawObj["SetVector3Value"](fieldName, val.x, val.y,0.0)
     }
 }
 
 class InterpolateVector3Operator extends InterpolateOperator{
     getField(fieldName: string) {
-        return this.rawObj["GetVector3Value"](fieldName)
+        let vector3Value = this.rawObj["GetVector3Value"](fieldName)
+        return [vector3Value.x, vector3Value.y, vector3Value.z]
     }
 
     isEqual(v1, v2) {
@@ -121,8 +122,8 @@ class InterpolateVector3Operator extends InterpolateOperator{
         this.rawObj["RegisterVector3Value"](fieldName, initValue.x, initValue.y, initValue.z)
     }
 
-    setField(fieldName: string, val) {
-        this.rawObj["SetVector3Value"](fieldName, val.x, val.y, val.z)
+    setField(fieldName: string, vals) {
+        this.rawObj["SetVector3Value"](fieldName, vals.x, vals.y, vals.z)
     }
 }
 

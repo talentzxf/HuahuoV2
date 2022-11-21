@@ -27,7 +27,7 @@ class RadialGradientComponent extends AbstractComponent{
                 stops: stops,
                 radial: true
             },
-            origin: _this.baseShape.paperShape.position,
+            origin: _this.baseShape.paperShape.position.add(this.centerPosition),
             destination: _this.baseShape.bounds.rightCenter
         })
     }
