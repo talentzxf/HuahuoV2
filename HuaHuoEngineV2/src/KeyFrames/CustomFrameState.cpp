@@ -123,17 +123,11 @@ CustomDataKeyFrame* CustomFrameState::GetColorStopArrayKeyFrame(int currentFrame
             printf("Is End\n");
         }
 
-        printf("frameId:%d itr colorstop count:%d, keyframe colorstop count:%d\n", itr->frameId,
-               itr->data.colorStopArray.GetColorStopCount(), pKeyFrame->data.colorStopArray.GetColorStopCount());
-
         pKeyFrame->data.dataType = COLORSTOPARRAY;
         for (int colorStopIdx = pKeyFrame->data.colorStopArray.GetColorStopCount();
              colorStopIdx < itr->data.colorStopArray.GetColorStopCount(); colorStopIdx++) {
             ColorStopEntry colorStopEntry = *itr->data.colorStopArray.GetColorStop(colorStopIdx);
 
-            printf("Color stop entry: index:%d value:%f r:%f g:%f b:%f a:%f\n", colorStopEntry.GetIndex(),
-                   colorStopEntry.GetValue(), colorStopEntry.GetColor()->r, colorStopEntry.GetColor()->g,
-                   colorStopEntry.GetColor()->b, colorStopEntry.GetColor()->a);
             pKeyFrame->data.colorStopArray.AddEntry(colorStopEntry);
         }
     }
@@ -173,7 +167,7 @@ int CustomFrameState::AddColorStop(float value, float r, float g, float b, float
     Apply(currentFrameId);
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
 
-    return colorStopEntry.GetIndex();
+    return colorStopEntry.GetIdentifier();
 }
 
 void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, float b, float a) {

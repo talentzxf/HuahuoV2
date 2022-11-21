@@ -35,7 +35,7 @@ ColorStopArray Lerp(ColorStopArray &k0, ColorStopArray &k1, float t) {
 
 ColorStopEntry LerpColorEntry(ColorStopEntry k1, ColorStopEntry k2, float ratio){
     ColorStopEntry resultEntry;
-    resultEntry.SetIndex(k1.GetIndex());
+    resultEntry.SetIdentifier(k1.GetIdentifier());
     resultEntry.SetValue(Lerp(k1.GetValue(), k2.GetValue(), ratio));
     ColorRGBAf k1Color = *k1.GetColor();
     ColorRGBAf k2Color = *k2.GetColor();
