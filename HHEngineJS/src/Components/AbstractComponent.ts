@@ -9,6 +9,7 @@ import {clzObjectFactory} from "../CppClassObjectFactory";
 import {ComponentConfig} from "./ComponentConfig";
 import {ColorStop} from "./ColorStop";
 import {Logger} from "hhcommoncomponents";
+import {interpolateVariableHandler} from "./InterpolateVariableHandler";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -106,52 +107,6 @@ class AbstractComponent {
 
     callHandlers(propertyName: string, val: any) {
         this.valueChangeHandler.callHandlers(propertyName, val)
-    }
-
-    handleInterpolateEntry(propertyEntry) {
-        let operator = buildOperator(propertyEntry.type, this.rawObj)
-
-        operator.registerField(propertyEntry["key"], propertyEntry["initValue"])
-
-        let fieldName = propertyEntry["key"]
-        // Generate setter and getter
-        let getterName = "get" + capitalizeFirstLetter(fieldName)
-        let setterName = "set" + capitalizeFirstLetter(fieldName)
-
-        this[setterName] = function (val: number) {
-            let currentValue = this[fieldName]
-            if (operator.isEqual(currentValue, val)) {
-                return
-            }
-
-            this[fieldName] = val
-            this.callHandlers(fieldName, val)
-            if (this.baseShape) {
-                this.baseShape.update(true)
-
-                this.baseShape.callHandlers(fieldName, val)
-            }
-        }
-
-        this[getterName] = function () {
-            return operator.getField(fieldName)
-        }
-
-        // Remove the property and add setter/getter
-        delete this[propertyEntry["key"]]
-
-        // Add getter and setter
-        Object.defineProperty(this, propertyEntry["key"], {
-            get: function () {
-                return this[getterName]()
-            },
-            set: function (val) {
-                operator.setField(fieldName, val)
-            }
-        })
-
-        // Store in cpp side on creation. Or else the information of the first frame might be lost.
-        this[fieldName] = this[fieldName]
     }
 
     handleShapeArrayEntry(propertyEntry) {
@@ -297,7 +252,7 @@ class AbstractComponent {
         let _this = this
         properties.forEach(propertyEntry => {
             if (propertyEntry.type == PropertyCategory.interpolateFloat || propertyEntry.type == PropertyCategory.interpolateColor) {
-                _this.handleInterpolateEntry(propertyEntry)
+                interpolateVariableHandler.handleInterpolateEntry(this, propertyEntry)
             } else if (propertyEntry.type == PropertyCategory.shapeArray) {
                 _this.handleShapeArrayEntry(propertyEntry)
             } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
