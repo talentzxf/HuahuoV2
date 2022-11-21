@@ -85,7 +85,8 @@
       "strokeColor": "StrokeColor",
       "fillColor": "FillColor",
       "generateInterval": "Generate Interval",
-      "gradientColorArray": "Gradient Color Array"
+      "gradientColorArray": "Gradient Color Array",
+      "centerPosition": "Center Position"
     }
   },
   "timeline": {

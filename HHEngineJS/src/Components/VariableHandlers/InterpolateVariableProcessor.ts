@@ -19,6 +19,8 @@ class InterpolateVariableProcessor{
                 return operator.isEqual(val1, val2)
             }
         })
+
+        component[fieldName] = component[fieldName] // Get the variable and save to ensure first frame is recorded in Cpp side.
     }
 }
 

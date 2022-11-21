@@ -85,7 +85,8 @@
       "strokeColor": "描边颜色",
       "fillColor": "填充颜色",
       "generateInterval": "生成间隔",
-      "gradientColorArray": "径向渐变颜色"
+      "gradientColorArray": "径向渐变颜色",
+      "centerPosition": "中心位置"
     }
   },
   "timeline": {
