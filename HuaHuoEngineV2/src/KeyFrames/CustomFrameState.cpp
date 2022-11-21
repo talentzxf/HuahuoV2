@@ -159,6 +159,7 @@ CustomDataKeyFrame* CustomFrameState::GetColorStopArrayKeyFrame(int currentFrame
 
             pKeyFrame->data.colorStopArray.AddEntry(colorStopEntry);
         }
+
     }
 
     return pKeyFrame;

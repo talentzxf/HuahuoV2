@@ -78,7 +78,11 @@ public:
     }
 
     void AddEntry(ColorStopEntry& colorStopEntry) {
-        colorStopEntry.SetIdentifier(nextColorStopIdentifier++);
+        if(colorStopEntry.GetIdentifier() < 0)
+            colorStopEntry.SetIdentifier(nextColorStopIdentifier++);
+        else
+            nextColorStopIdentifier = colorStopEntry.GetIdentifier() + 1;
+
         m_ColorStops.insert( std::pair<int, ColorStopEntry>(colorStopEntry.GetIdentifier(),  colorStopEntry));
         m_usedIndentifiers.insert(colorStopEntry.GetIdentifier());
 
