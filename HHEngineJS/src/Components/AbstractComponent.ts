@@ -1,45 +1,17 @@
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import "reflect-metadata"
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
-import {capitalizeFirstLetter, PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
+import {PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
 import {propertySheetFactory} from "./PropertySheetBuilderFactory"
 import {PropertyConfig, PropertyType} from "hhcommoncomponents";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {ComponentConfig} from "./ComponentConfig";
-import {ColorStop} from "./ColorStop";
-import {Logger} from "hhcommoncomponents";
 import {interpolateVariableHandler} from "./VariableHandlers/InterpolateVariableHandler";
 import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
+import {colorStopArray} from "./VariableHandlers/ColorArrayHandler";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
-
-
-
-class ColorStopArrayIterable {
-    colorStopArray
-
-    constructor(colorStopArray) {
-        this.colorStopArray = colorStopArray
-    }
-
-    [Symbol.iterator]() {
-        let curIdx = 0
-        let _this = this
-        const iterator = {
-            next() {
-                if (curIdx < _this.colorStopArray.GetColorStopCount()) {
-                    let colorStop = new ColorStop(_this.colorStopArray.GetColorStop(curIdx++))
-                    return {value: colorStop, done: false}
-                }
-
-                return {value: null, done: true}
-            }
-        }
-
-        return iterator
-    }
-}
 
 function getProperties(target): object[] {
     let properties: object[] = Reflect.getMetadata(metaDataKey, target)
@@ -86,86 +58,6 @@ class AbstractComponent {
         this.valueChangeHandler.callHandlers(propertyName, val)
     }
 
-    handleColorStopArrayEntry(propertyEntry) {
-        let fieldName = propertyEntry["key"]
-        this.rawObj.RegisterColorStopArrayValue(fieldName)
-
-        // Generate setter and getter
-        let getterName = "get" + capitalizeFirstLetter(fieldName)
-        let setterName = "set" + capitalizeFirstLetter(fieldName) // Set is actually insert.
-        let inserterName = "insert" + capitalizeFirstLetter(fieldName)
-        let deleterName = "delete" + capitalizeFirstLetter(fieldName)
-        let updaterName = "update" + capitalizeFirstLetter(fieldName)
-
-        let _this = this
-
-        this[getterName] = function () {
-
-            let colorStopArray = this.rawObj.GetColorStopArray(fieldName)
-
-            if(colorStopArray.GetColorStopCount() < 2){ // Need at lease two counts.
-                let currentColor = _this.baseShape.paperShape.fillColor
-                this.rawObj.AddColorStop(fieldName, 0.0, currentColor.red, currentColor.green, currentColor.blue, currentColor.alpha)
-                this.rawObj.AddColorStop(fieldName, 1.0, currentColor.red, currentColor.green, currentColor.blue, currentColor.alpha)
-
-                colorStopArray = this.rawObj.GetColorStopArray(fieldName)
-            }
-
-            return new ColorStopArrayIterable(colorStopArray)
-        }.bind(this)
-
-        // This is just alias of the insert funtion.
-        this[setterName] = function (val) { // Return value is the identifier of the newly added colorStopEntry
-            return this[inserterName](val)
-        }.bind(this)
-
-        this[inserterName] = function (val) {
-
-            let retIndex = -1
-            if(val instanceof ColorStop)
-                retIndex = this.rawObj.AddColorStop(fieldName, val.value, val.r, val.g, val.b, val.a)
-            else if(typeof(val) === "number")
-                retIndex = this.rawObj.AddColorStop(fieldName, val)
-            else
-            {
-                Logger.error("Why the val is not a ColorStop nor a number? It's actually:" + typeof(val))
-                return -1
-            }
-
-            if (this.baseShape)
-                this.baseShape.update(true)
-            this.callHandlers(fieldName, val)
-
-            return retIndex
-        }.bind(this)
-
-        this[deleterName] = function (val: ColorStop) {
-            this.rawObj.DeleteColorStop(fieldName, val.identifier)
-            if (this.baseShape)
-                this.baseShape.update(true)
-
-            this.callHandlers(fieldName, val) // Is the val parameter really matters in this case?
-        }.bind(this)
-
-        this[updaterName] = function(val: ColorStop){
-            this.rawObj.UpdateColorStop(fieldName, val.identifier, val.value, val.r, val.g, val.b, val.a)
-            if (this.baseShape)
-                this.baseShape.update(true)
-
-            this.callHandlers(fieldName, val)
-        }
-
-        // Remove the property and add setter/getter
-        delete this[propertyEntry["key"]]
-
-        // Add getter and setter
-        Object.defineProperty(this, propertyEntry["key"], {
-            get: function () {
-                return this[getterName]()
-            }
-        })
-    }
-
     constructor(rawObj?) {
         if (rawObj) {
             this.rawObj = castObject(rawObj, Module["CustomComponent"])
@@ -182,7 +74,7 @@ class AbstractComponent {
             } else if (propertyEntry.type == PropertyCategory.shapeArray) {
                 shapeArrayHandler.handleShapeArrayEntry(this, propertyEntry)
             } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
-                _this.handleColorStopArrayEntry(propertyEntry)
+                colorStopArray.handleColorStopArrayEntry(this, propertyEntry)
             }
         })
 
