@@ -1,5 +1,5 @@
-import {buildOperator, capitalizeFirstLetter} from "./PropertySheetBuilder";
-import {AbstractComponent} from "./AbstractComponent";
+import {buildOperator, capitalizeFirstLetter} from "../PropertySheetBuilder";
+import {AbstractComponent} from "../AbstractComponent";
 
 class InterpolateVariableHandler{
     handleInterpolateEntry(component, propertyEntry) {

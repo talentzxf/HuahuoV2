@@ -1,42 +1,20 @@
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import "reflect-metadata"
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
-import {buildOperator, capitalizeFirstLetter, PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
+import {capitalizeFirstLetter, PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
 import {propertySheetFactory} from "./PropertySheetBuilderFactory"
-import {IsValidWrappedObject, PropertyConfig, PropertyType} from "hhcommoncomponents";
-import {huahuoEngine} from "../EngineAPI";
+import {PropertyConfig, PropertyType} from "hhcommoncomponents";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {ComponentConfig} from "./ComponentConfig";
 import {ColorStop} from "./ColorStop";
 import {Logger} from "hhcommoncomponents";
-import {interpolateVariableHandler} from "./InterpolateVariableHandler";
+import {interpolateVariableHandler} from "./VariableHandlers/InterpolateVariableHandler";
+import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
 
-class FieldShapeArrayIterable {
-    fieldShapeArray // Store the cpp side array.
-    constructor(fieldShapeArray) {
-        this.fieldShapeArray = fieldShapeArray
-    }
 
-    [Symbol.iterator]() {
-        let curIdx = 0
-        let _this = this
-        const iterator = {
-            next() {
-                if (curIdx < _this.fieldShapeArray.GetShapeCount()) {
-                    let targetShape = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(_this.fieldShapeArray.GetShape(curIdx++), true)
-                    return {value: targetShape, done: false}
-                }
-
-                return {value: null, done: true}
-            }
-        }
-
-        return iterator
-    }
-}
 
 class ColorStopArrayIterable {
     colorStopArray
@@ -100,64 +78,12 @@ class AbstractComponent {
     rawObj: any;
     baseShape: BaseShapeJS;
     propertySheetInited: boolean = false;
-
     shapeArrayFieldNames: Set<string> = new Set<string>()
 
     private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
     callHandlers(propertyName: string, val: any) {
         this.valueChangeHandler.callHandlers(propertyName, val)
-    }
-
-    handleShapeArrayEntry(propertyEntry) {
-        let fieldName = propertyEntry["key"]
-        this.shapeArrayFieldNames.add(fieldName)
-        this.rawObj.RegisterShapeArrayValue(fieldName)
-
-        // Generate setter and getter
-        let getterName = "get" + capitalizeFirstLetter(fieldName)
-        let setterName = "set" + capitalizeFirstLetter(fieldName) // Set is actually insert.
-        let inserterName = "insert" + capitalizeFirstLetter(fieldName)
-        let deleterName = "delete" + capitalizeFirstLetter(fieldName)
-
-        this[getterName] = function () {
-            return new FieldShapeArrayIterable(this.rawObj.GetShapeArrayValue(fieldName))
-        }.bind(this)
-
-        // This is just alias of the insert funtion.
-        this[setterName] = function (val) {
-            this[inserterName](val)
-        }.bind(this)
-
-        this[inserterName] = function (val: BaseShapeJS) {
-            if (!IsValidWrappedObject(this.rawObj.GetShapeArrayValue(fieldName))) {
-                this.rawObj.CreateShapeArrayValue(fieldName)
-            }
-
-            this.rawObj.GetShapeArrayValueForWrite(fieldName).InsertShape(val.getRawShape())
-
-            if (this.baseShape)
-                this.baseShape.update(true)
-            this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
-        }.bind(this)
-
-        this[deleterName] = function (val) {
-            this.rawObj.GetShapeArrayValue(fieldName).DeleteShape(val)
-            if (this.baseShape)
-                this.baseShape.update(true)
-
-            this.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
-        }.bind(this)
-
-        // Remove the property and add setter/getter
-        delete this[propertyEntry["key"]]
-
-        // Add getter and setter
-        Object.defineProperty(this, propertyEntry["key"], {
-            get: function () {
-                return this[getterName]()
-            }
-        })
     }
 
     handleColorStopArrayEntry(propertyEntry) {
@@ -254,7 +180,7 @@ class AbstractComponent {
             if (propertyEntry.type == PropertyCategory.interpolateFloat || propertyEntry.type == PropertyCategory.interpolateColor) {
                 interpolateVariableHandler.handleInterpolateEntry(this, propertyEntry)
             } else if (propertyEntry.type == PropertyCategory.shapeArray) {
-                _this.handleShapeArrayEntry(propertyEntry)
+                shapeArrayHandler.handleShapeArrayEntry(this, propertyEntry)
             } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
                 _this.handleColorStopArrayEntry(propertyEntry)
             }
