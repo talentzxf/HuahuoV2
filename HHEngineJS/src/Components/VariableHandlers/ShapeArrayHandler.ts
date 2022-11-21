@@ -1,8 +1,9 @@
-import {capitalizeFirstLetter} from "../PropertySheetBuilder";
 import {BaseShapeJS} from "../../Shapes/BaseShapeJS";
 import {huahuoEngine} from "../../EngineAPI";
 
 import {IsValidWrappedObject, PropertyConfig, PropertyType} from "hhcommoncomponents";
+import {internalProcessComponent} from "./AbstractVariableHandler";
+import {capitalizeFirstLetter} from "../PropertySheetBuilder";
 
 class FieldShapeArrayIterable {
     fieldShapeArray // Store the cpp side array.
@@ -28,55 +29,39 @@ class FieldShapeArrayIterable {
     }
 }
 
-class ShapeArrayHandler{
-    handleShapeArrayEntry(component, propertyEntry) {
+class ShapeArrayHandler {
+    handleEntry(component, propertyEntry) {
         let fieldName = propertyEntry["key"]
         component.shapeArrayFieldNames.add(fieldName)
         component.rawObj.RegisterShapeArrayValue(fieldName)
 
-        // Generate setter and getter
-        let getterName = "get" + capitalizeFirstLetter(fieldName)
-        let setterName = "set" + capitalizeFirstLetter(fieldName) // Set is actually insert.
         let inserterName = "insert" + capitalizeFirstLetter(fieldName)
-        let deleterName = "delete" + capitalizeFirstLetter(fieldName)
 
-        component[getterName] = function () {
-            return new FieldShapeArrayIterable(component.rawObj.GetShapeArrayValue(fieldName))
-        }.bind(component)
+        internalProcessComponent(component, fieldName, {
+            getter: () => {
+                return new FieldShapeArrayIterable(component.rawObj.GetShapeArrayValue(fieldName))
+            },
+            inserter: (val: BaseShapeJS) => {
+                if (!IsValidWrappedObject(component.rawObj.GetShapeArrayValue(fieldName))) {
+                    component.rawObj.CreateShapeArrayValue(fieldName)
+                }
 
-        // This is just alias of the insert funtion.
-        component[setterName] = function (val) {
-            component[inserterName](val)
-        }.bind(component)
+                component.rawObj.GetShapeArrayValueForWrite(fieldName).InsertShape(val.getRawShape())
 
-        component[inserterName] = function (val: BaseShapeJS) {
-            if (!IsValidWrappedObject(component.rawObj.GetShapeArrayValue(fieldName))) {
-                component.rawObj.CreateShapeArrayValue(fieldName)
-            }
+                if (component.baseShape)
+                    component.baseShape.update(true)
+                component.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
+            },
+            deleter: (val) => {
+                component.rawObj.GetShapeArrayValue(fieldName).DeleteShape(val)
+                if (component.baseShape)
+                    component.baseShape.update(true)
 
-            component.rawObj.GetShapeArrayValueForWrite(fieldName).InsertShape(val.getRawShape())
-
-            if (component.baseShape)
-                component.baseShape.update(true)
-            component.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
-        }.bind(component)
-
-        component[deleterName] = function (val) {
-            component.rawObj.GetShapeArrayValue(fieldName).DeleteShape(val)
-            if (component.baseShape)
-                component.baseShape.update(true)
-
-            component.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
-        }.bind(component)
-
-        // Remove the property and add setter/getter
-        delete component[propertyEntry["key"]]
-
-        // Add getter and setter
-        Object.defineProperty(component, propertyEntry["key"], {
-            get: function () {
-                return component[getterName]()
-            }
+                component.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
+            },
+            setter: (val) => {
+                component[inserterName](val)
+            } // Setter is just alias of inserter.
         })
     }
 }

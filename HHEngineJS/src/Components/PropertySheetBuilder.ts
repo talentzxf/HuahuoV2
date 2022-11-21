@@ -8,7 +8,8 @@ enum PropertyCategory{
     interpolateColor,
     interpolateVector2,
     shapeArray,
-    colorStopArray // Every color stop is a float->Color mapping entry.
+    colorStopArray, // Every color stop is a float->Color mapping entry.
+    point
 }
 
 abstract class InterpolateOperator{

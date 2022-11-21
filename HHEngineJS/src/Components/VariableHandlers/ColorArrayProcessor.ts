@@ -27,7 +27,7 @@ class ColorStopArrayIterable {
     }
 }
 
-class ColorStopArrayHandler{
+class ColorStopArrayProcessor{
     handleColorStopArrayEntry(component, propertyEntry) {
         let fieldName = propertyEntry["key"]
         component.rawObj.RegisterColorStopArrayValue(fieldName)
@@ -107,5 +107,5 @@ class ColorStopArrayHandler{
     }
 }
 
-let colorStopArray = new ColorStopArrayHandler()
-export {colorStopArray}
+let colorStopArrayHandler = new ColorStopArrayProcessor()
+export {colorStopArrayHandler}

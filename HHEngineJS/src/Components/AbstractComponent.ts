@@ -8,7 +8,8 @@ import {clzObjectFactory} from "../CppClassObjectFactory";
 import {ComponentConfig} from "./ComponentConfig";
 import {interpolateVariableHandler} from "./VariableHandlers/InterpolateVariableHandler";
 import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
-import {colorStopArray} from "./VariableHandlers/ColorArrayHandler";
+import {colorStopArrayHandler} from "./VariableHandlers/ColorArrayProcessor";
+import {pointHandler} from "./VariableHandlers/PointHandler";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -67,15 +68,17 @@ class AbstractComponent {
 
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
 
-        let _this = this
         properties.forEach(propertyEntry => {
             if (propertyEntry.type == PropertyCategory.interpolateFloat || propertyEntry.type == PropertyCategory.interpolateColor) {
                 interpolateVariableHandler.handleInterpolateEntry(this, propertyEntry)
             } else if (propertyEntry.type == PropertyCategory.shapeArray) {
-                shapeArrayHandler.handleShapeArrayEntry(this, propertyEntry)
+                shapeArrayHandler.handleEntry(this, propertyEntry)
             } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
-                colorStopArray.handleColorStopArrayEntry(this, propertyEntry)
+                colorStopArrayHandler.handleColorStopArrayEntry(this, propertyEntry)
             }
+            // else if (propertyEntry.type == PropertyCategory.point){
+            //     pointHandler.handlePointEntry(this, propertyEntry)
+            // }
         })
 
         this.rawObj.SetTypeName(this.constructor.name)
