@@ -6,7 +6,7 @@ import {propertySheetFactory} from "./PropertySheetBuilderFactory"
 import {PropertyConfig, PropertyType} from "hhcommoncomponents";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {ComponentConfig} from "./ComponentConfig";
-import {interpolateVariableHandler} from "./VariableHandlers/InterpolateVariableHandler";
+import {interpolateVariableProcessor} from "./VariableHandlers/InterpolateVariableProcessor";
 import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
 import {colorStopArrayHandler} from "./VariableHandlers/ColorArrayProcessor";
 import {pointHandler} from "./VariableHandlers/PointHandler";
@@ -70,7 +70,7 @@ class AbstractComponent {
 
         properties.forEach(propertyEntry => {
             if (propertyEntry.type == PropertyCategory.interpolateFloat || propertyEntry.type == PropertyCategory.interpolateColor) {
-                interpolateVariableHandler.handleInterpolateEntry(this, propertyEntry)
+                interpolateVariableProcessor.handleEntry(this, propertyEntry)
             } else if (propertyEntry.type == PropertyCategory.shapeArray) {
                 shapeArrayHandler.handleEntry(this, propertyEntry)
             } else if (propertyEntry.type == PropertyCategory.colorStopArray) {

@@ -1,7 +1,7 @@
 import {BaseShapeJS} from "../../Shapes/BaseShapeJS";
 import {huahuoEngine} from "../../EngineAPI";
 
-import {IsValidWrappedObject, PropertyConfig, PropertyType} from "hhcommoncomponents";
+import {IsValidWrappedObject} from "hhcommoncomponents";
 import {internalProcessComponent} from "./AbstractVariableHandler";
 import {capitalizeFirstLetter} from "../PropertySheetBuilder";
 

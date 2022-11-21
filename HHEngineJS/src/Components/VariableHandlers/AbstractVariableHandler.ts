@@ -7,6 +7,10 @@ class VariableHandlerConfig {
     updater?: Function
     inserter?: Function
     deleter?: Function
+
+    isVariableEqual?:Function = function(val1, val2){
+        return val1 == val2
+    }
 }
 
 function internalProcessComponent(component: AbstractComponent, fieldName: string, config: VariableHandlerConfig) {
@@ -16,8 +20,21 @@ function internalProcessComponent(component: AbstractComponent, fieldName: strin
     }
 
     let setterName = "set" + capitalizeFirstLetter(fieldName) // Set is actually insert.
-    if (config.setter) {
-        component[setterName] = config.setter.bind(component)
+    if (config.setter) { // Call setter function will trigger events.
+        component[setterName] = (val)=>{
+            let currentValue = component[fieldName]
+            if (config.isVariableEqual(currentValue, val)) {
+                return
+            }
+
+            config.setter(val)
+            component.callHandlers(fieldName, val)
+            if (component.baseShape) {
+                component.baseShape.update(true)
+
+                component.baseShape.callHandlers(fieldName, val)
+            }
+        }
     }
 
     if (config.deleter) {
@@ -43,16 +60,16 @@ function internalProcessComponent(component: AbstractComponent, fieldName: strin
         Object.defineProperty(component, fieldName, {
             get: function () {
                 return component[getterName]()
+            },
+            set: function (val) { // Direct set of the variable won't trigger events.
+                config.setter(val)
             }
         })
     } else if (config.getter) {
-        // Add getter and setter
+        // Add getter only
         Object.defineProperty(component, fieldName, {
             get: function () {
                 return component[getterName]()
-            },
-            set: function (val) {
-                component[setterName](val)
             }
         })
     }
