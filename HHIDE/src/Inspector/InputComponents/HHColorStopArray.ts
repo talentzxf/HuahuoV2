@@ -1,8 +1,7 @@
 import {CustomElement} from "hhcommoncomponents";
 import {paper} from "hhenginejs"
 import {HHColorInput} from "./HHColorInput";
-import {ColorStop} from "hhenginejs/dist/src/Components/ColorStop";
-import {AbstractComponent} from "hhenginejs/dist/src/Components/AbstractComponent";
+import {ColorStop} from "hhenginejs";
 
 const rectangleOffset = 10
 const canvasWidth = 200
@@ -221,18 +220,13 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
 
     onKeyUp(evt: KeyboardEvent){
         if(evt.code == "Delete"){
-            let pen = evt.target["data"]["meta"] as Pen
+            let tobeDeletedPen = this.selectedPen
 
-            // If this is a selected pen, unselect it.
-            if(pen.colorStop.index == this.selectedPen.colorStop.index){
-                this.selectedPen = null
-            }
-
-            this.pens.filter( (penInArray)=>{
-                return penInArray.colorStop.index != pen.colorStop.index
+            this.pens = this.pens.filter( (penInArray)=>{
+                return penInArray.colorStop.identifier != tobeDeletedPen.colorStop.identifier
             })
 
-            this.deleter(pen.colorStop.index)
+            this.deleter(tobeDeletedPen.colorStop.identifier)
 
             this.refresh()
         }
@@ -244,11 +238,11 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         let clickPoint = evt["point"]
         let value = clickPoint.x / rectangleWidth
 
-        let insertedColorStopIndex = this.setter(value) // Setter is actually inserter.
+        let insertedColorStopIdentifier = this.setter(value) // Setter is actually inserter.
         this.refresh()
 
         for(let pen of this.pens){
-            if(pen.colorStop.index == insertedColorStopIndex){
+            if(pen.colorStop.identifier == insertedColorStopIdentifier){
                 this.selectPen(pen)
                 break;
             }

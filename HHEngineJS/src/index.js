@@ -13,6 +13,7 @@ import {TextShapeJS} from "./Shapes/TextShapeJS";
 import {CurveShapeJS} from "./Shapes/CurveShapeJS"
 import {SVGShapeJS} from "./Shapes/SVGShapeJS";
 import {MirrorShapeJS} from "./Shapes/MirrorShapeJS";
+import {ColorStop} from "./Components/ColorStop";
 
 // All non-default components
 import {GeneratorComponent} from "./Components/GeneratorComponent";
@@ -39,4 +40,5 @@ if(Module.IsWASMInited && Module.IsWASMInited()){
 
 window.enginejsInited = true
 export {renderEngine2D, ValueChangeHandler, LineShapeJS, CircleShapeJS,RectangleJS, ImageShapeJS, TextShapeJS,
-    AudioShapeJS, ElementShapeJS, huahuoEngine, paper, GlobalConfig, Player, BaseShapeJS, CurveShapeJS, SVGShapeJS, MirrorShapeJS}
+    AudioShapeJS, ElementShapeJS, huahuoEngine, paper, GlobalConfig, Player, BaseShapeJS, CurveShapeJS, SVGShapeJS, MirrorShapeJS,
+    ColorStop}

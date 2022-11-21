@@ -187,7 +187,7 @@ void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, f
 
     CustomDataKeyFrame* pKeyFrame = GetColorStopArrayKeyFrame(currentFrameId);
 
-    pKeyFrame->data.colorStopArray.UpdateAtIndex(idx, value, r, g, b, a);
+    pKeyFrame->data.colorStopArray.UpdateAtIdentifier(idx, value, r, g, b, a);
     Apply(currentFrameId);
 
     shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
@@ -201,10 +201,15 @@ void CustomFrameState::DeleteColorStop(int idx) {
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
 
+    // If this frame is not keyframe, need to copy all color stops over first.
+    GetColorStopArrayKeyFrame(currentFrameId);
+
     // Delete the color stop from all key frames.
     for (auto keyFrame: m_KeyFrames.GetKeyFrames()) {
         keyFrame.data.colorStopArray.DeleteEntry(idx);
     }
+
+    m_CurrentKeyFrame.data.colorStopArray.DeleteEntry(idx);
 
     Apply(currentFrameId);
 

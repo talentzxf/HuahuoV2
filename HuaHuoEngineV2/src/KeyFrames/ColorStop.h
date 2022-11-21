@@ -13,12 +13,12 @@
 
 class ColorStopEntry {
 public:
-    ColorStopEntry() : index(-1), value(-1.0f) {
+    ColorStopEntry() : identifier(-1), value(-1.0f) {
 
     }
 
-    ColorStopEntry(int index, float value, float r, float g, float b, float a) {
-        this->index = index;
+    ColorStopEntry(int identifier, float value, float r, float g, float b, float a) {
+        this->identifier = identifier;
         this->value = value;
         color.r = r;
         color.g = g;
@@ -26,12 +26,12 @@ public:
         color.a = a;
     }
 
-    int GetIndex() {
-        return index;
+    int GetIdentifier() {
+        return identifier;
     }
 
-    void SetIndex(int index) {
-        this->index = index;
+    void SetIdentifier(int identifier) {
+        this->identifier = identifier;
     }
 
     float GetValue() const;
@@ -44,14 +44,14 @@ public:
 
     DECLARE_SERIALIZE(ColorStopEntry);
 private:
-    int index;
+    int identifier;
     float value;
     ColorRGBAf color;
 };
 
 template<class TransferFunction>
 void ColorStopEntry::Transfer(TransferFunction &transfer) {
-    TRANSFER(index);
+    TRANSFER(identifier);
     TRANSFER(value);
     TRANSFER(color);
 }
@@ -59,7 +59,7 @@ void ColorStopEntry::Transfer(TransferFunction &transfer) {
 class ColorStopArray {
 public:
     ColorStopArray() :
-        nextColorStopId(0)
+            nextColorStopIdentifier(0)
     {
 
     }
@@ -68,50 +68,50 @@ public:
         return m_ColorStops.size();
     }
 
-    ColorStopEntry *GetColorStop(int idx) { // This index might be different from what's recorded in the colorentry.
+    ColorStopEntry *GetColorStop(int idx) { // This is index. Not identifier of the color stop entry. Might be different from the identifier of the colorStopEntry.
         if (idx >= m_ColorStops.size()) {
             return NULL;
         }
 
-        int realIndex = *std::next(m_usedIndexes.begin(), idx);
-        return &m_ColorStops[realIndex];
+        int realIdentifier = *std::next(m_usedIndentifiers.begin(), idx);
+        return &m_ColorStops[realIdentifier];
     }
 
     void AddEntry(ColorStopEntry& colorStopEntry) {
-        colorStopEntry.SetIndex(nextColorStopId++);
-        m_ColorStops.insert( std::pair<int, ColorStopEntry>(colorStopEntry.GetIndex(),  colorStopEntry));
-        m_usedIndexes.insert(colorStopEntry.GetIndex());
+        colorStopEntry.SetIdentifier(nextColorStopIdentifier++);
+        m_ColorStops.insert( std::pair<int, ColorStopEntry>(colorStopEntry.GetIdentifier(),  colorStopEntry));
+        m_usedIndentifiers.insert(colorStopEntry.GetIdentifier());
 
-        m_valueIndexPairs.push_back(ValueIndexPair(colorStopEntry.GetValue(), colorStopEntry.GetIndex()));
+        m_valueIndentifierPairs.push_back(ValueIdentifierPair(colorStopEntry.GetValue(), colorStopEntry.GetIdentifier()));
 
-        SortValueIndexPair();
+        SortValueIdentifierPair();
     }
 
     void DeleteEntry(int idx) {
         m_ColorStops.erase(idx);
-        m_usedIndexes.erase(idx);
+        m_usedIndentifiers.erase(idx);
 
-        std::erase_if(m_valueIndexPairs, [idx](ValueIndexPair pair){
+        std::erase_if(m_valueIndentifierPairs, [idx](ValueIdentifierPair pair){
             if(pair.second == idx)
                 return true;
             return false;
         });
     }
 
-    void UpdateAtIndex(int idx, float value, float r, float g, float b, float a) {
-        m_ColorStops[idx].SetValue(value);
-        for(int i = 0; i < this->m_valueIndexPairs.size(); i++){
-            auto pair = m_valueIndexPairs[i];
-            if(pair.second == idx){
-                m_valueIndexPairs[i].first = value;
+    void UpdateAtIdentifier(int identifier, float value, float r, float g, float b, float a) {
+        m_ColorStops[identifier].SetValue(value);
+        for(int i = 0; i < this->m_valueIndentifierPairs.size(); i++){
+            auto pair = m_valueIndentifierPairs[i];
+            if(pair.second == identifier){
+                m_valueIndentifierPairs[i].first = value;
                 break;
             }
         }
 
         ColorRGBAf rgbAf(r, g, b, a);
-        m_ColorStops[idx].SetColor(&rgbAf);
+        m_ColorStops[identifier].SetColor(&rgbAf);
 
-        SortValueIndexPair();
+        SortValueIdentifierPair();
     }
 
     void Lerp(ColorStopArray &c0, ColorStopArray &c1, float t);
@@ -120,28 +120,28 @@ public:
 
     DECLARE_SERIALIZE(ColorStopArray);
 private:
-        void SortValueIndexPair(){
-            std::sort(m_valueIndexPairs.begin(), m_valueIndexPairs.end(), [](ValueIndexPair x1, ValueIndexPair x2){
+        void SortValueIdentifierPair(){
+            std::sort(m_valueIndentifierPairs.begin(), m_valueIndentifierPairs.end(), [](ValueIdentifierPair x1, ValueIdentifierPair x2){
                 return x1.first < x2.first;
             });
         }
 private:
-    typedef std::pair<float, int> ValueIndexPair;
+    typedef std::pair<float, int> ValueIdentifierPair;
 
-    std::map<int, ColorStopEntry> m_ColorStops;
-    std::set<int> m_usedIndexes;
+    std::map<int, ColorStopEntry> m_ColorStops; // From identifier->ColorStopEntry (not index!!!).
+    std::set<int> m_usedIndentifiers;
 
     // Always keep this from min->max based on value;
-    std::vector<ValueIndexPair> m_valueIndexPairs;
-    int nextColorStopId;
+    std::vector<ValueIdentifierPair> m_valueIndentifierPairs;
+    int nextColorStopIdentifier;
 };
 
 template<class TransferFunction>
 void ColorStopArray::Transfer(TransferFunction &transfer) {
     TRANSFER(m_ColorStops);
-    TRANSFER(nextColorStopId);
-    TRANSFER(m_usedIndexes);
-    TRANSFER(m_valueIndexPairs);
+    TRANSFER(nextColorStopIdentifier);
+    TRANSFER(m_usedIndentifiers);
+    TRANSFER(m_valueIndentifierPairs);
 }
 
 ColorStopArray Lerp(ColorStopArray &c0, ColorStopArray &c1, float t);

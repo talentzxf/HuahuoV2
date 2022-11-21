@@ -476,6 +476,11 @@ void testReadFromFile(){
 
     customComponent->AddColorStop("gradientColor", 0.0, 1.0, 0.0, 0.0, 1.0);
     customComponent->AddColorStop("gradientColor", 1.0, 0.0, 0.0, 1.0, 1.0);
+    customComponent->GetColorStopArray("gradientColor");
+
+    customComponent->DeleteColorStop("gradientColor", 1);
+    customComponent->GetColorStopArray("gradientColor");
+    customComponent->AddColorStop("gradientColor", 1.0, 0.0, 0.0, 1.0, 1.0);
 
     customComponent->GetColorStopArray("gradientColor");
 

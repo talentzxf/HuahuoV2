@@ -234,7 +234,7 @@ class AbstractComponent {
         }.bind(this)
 
         // This is just alias of the insert funtion.
-        this[setterName] = function (val) { // Return value is the index of the newly added colorStopEntry
+        this[setterName] = function (val) { // Return value is the identifier of the newly added colorStopEntry
             return this[inserterName](val)
         }.bind(this)
 
@@ -259,7 +259,7 @@ class AbstractComponent {
         }.bind(this)
 
         this[deleterName] = function (val: ColorStop) {
-            this.rawObj.DeleteColorStop(fieldName, val.index)
+            this.rawObj.DeleteColorStop(fieldName, val.identifier)
             if (this.baseShape)
                 this.baseShape.update(true)
 
@@ -267,7 +267,7 @@ class AbstractComponent {
         }.bind(this)
 
         this[updaterName] = function(val: ColorStop){
-            this.rawObj.UpdateColorStop(fieldName, val.index, val.value, val.r, val.g, val.b, val.a)
+            this.rawObj.UpdateColorStop(fieldName, val.identifier, val.value, val.r, val.g, val.b, val.a)
             if (this.baseShape)
                 this.baseShape.update(true)
 

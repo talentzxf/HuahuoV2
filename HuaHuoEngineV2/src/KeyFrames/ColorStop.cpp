@@ -53,8 +53,8 @@ void ColorStopArray::Lerp(ColorStopArray &k0, ColorStopArray &k1, float ratio) {
         ColorStopEntry entry = LerpColorEntry( k0ColorStop, k1ColorStop, ratio);
         m_ColorStops[colorStopIndex] = entry;
 
-        m_usedIndexes.insert(colorStopIndex);
-        nextColorStopId = std::max(nextColorStopId, colorStopIndex + 1);
+        m_usedIndentifiers.insert(colorStopIndex);
+        nextColorStopIdentifier = std::max(nextColorStopIdentifier, colorStopIndex + 1);
     }
 }
 
@@ -68,23 +68,23 @@ ColorRGBAf ColorStopArray::LerpColor(float value) {
     }
 
     // If the value is leq than the first value. Return the first color.
-    if(value <= m_valueIndexPairs.begin()->first){
-        int beginColorStopIndex = m_valueIndexPairs.begin()->second;
+    if(value <= m_valueIndentifierPairs.begin()->first){
+        int beginColorStopIndex = m_valueIndentifierPairs.begin()->second;
         return *m_ColorStops[beginColorStopIndex].GetColor();
     }
 
     // If the value is leq than the last value. Return the last color.
-    auto lastValueIndexPair = m_valueIndexPairs[m_valueIndexPairs.size() - 1];
+    auto lastValueIndexPair = m_valueIndentifierPairs[m_valueIndentifierPairs.size() - 1];
     if(value >= lastValueIndexPair.first) {
         int lastColorStopIndex = lastValueIndexPair.second;
         return *m_ColorStops[lastColorStopIndex].GetColor();
     }
 
     // TODO: Change to binary search.
-    auto prevPair = m_valueIndexPairs.begin();
-    auto curPair = m_valueIndexPairs.begin()+1;
+    auto prevPair = m_valueIndentifierPairs.begin();
+    auto curPair = m_valueIndentifierPairs.begin() + 1;
 
-    while(curPair != m_valueIndexPairs.end()){
+    while(curPair != m_valueIndentifierPairs.end()){
         // if value is between the prevPair and the curPair, we found it.
         if(prevPair->first < value && curPair->first >= value){
             break;

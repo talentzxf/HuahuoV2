@@ -1,5 +1,5 @@
 class ColorStop{
-    index
+    identifier
     value
     r
     g
@@ -7,7 +7,7 @@ class ColorStop{
     a
     constructor(rawObj?) {
         if(rawObj){
-            this.index = rawObj.GetIndex()
+            this.identifier = rawObj.GetIdentifier()
             this.value = rawObj.GetValue();
             let color = rawObj.GetColor();
             this.r = color.r;
