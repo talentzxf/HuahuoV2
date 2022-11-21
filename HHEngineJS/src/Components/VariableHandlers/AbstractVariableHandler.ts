@@ -27,13 +27,15 @@ function internalProcessComponent(component: AbstractComponent, fieldName: strin
                 return
             }
 
-            config.setter(val)
+            let retValue = config.setter(val)
             component.callHandlers(fieldName, val)
             if (component.baseShape) {
                 component.baseShape.update(true)
 
                 component.baseShape.callHandlers(fieldName, val)
             }
+
+            return retValue
         }
     }
 

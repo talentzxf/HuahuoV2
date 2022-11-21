@@ -119,7 +119,7 @@ Vector3f* CustomFrameState::GetVector3Value(){
         return &m_CurrentKeyFrame.data.vector3Value;
     }
 
-    return NULL;
+    return &m_defaultValue.vector3Value;
 }
 
 void CustomFrameState::SetColorValue(float r, float g, float b, float a) {
