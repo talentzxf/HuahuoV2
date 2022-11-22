@@ -1,5 +1,17 @@
 import {ComponentConfig} from "./Components/ComponentConfig";
 
+function isInheritedFromClzName(obj, clzName): boolean{
+    let curProto = obj.__proto__
+    while(curProto != null){
+        if(curProto.constructor.name == clzName)
+            return true
+
+        curProto = curProto.__proto__
+    }
+
+    return false;
+}
+
 class CppClassObjectFactory{
     clzNameConstructorMap: Map<string, Function> = new Map<string, Function>();
 
@@ -12,18 +24,6 @@ class CppClassObjectFactory{
         return this.clzNameConstructorMap.get(clzName)
     }
 
-    isInheritedFromClzName(obj, clzName): boolean{
-        let curProto = obj.__proto__
-        while(curProto != null){
-            if(curProto.constructor.name == clzName)
-                return true
-
-            curProto = curProto.__proto__
-        }
-
-        return false;
-    }
-
     getAllCompatibleComponents(targetObj){
         let returnComponentNames = []
         this.componentNameComponentPropertyMap.forEach((componentConfig, componentTypeName)=>{
@@ -32,7 +32,7 @@ class CppClassObjectFactory{
                 let isCompatibleWithShape = false
                 if(componentConfig.compatibleShapes && componentConfig.compatibleShapes.length > 0){
                     for(let shapeName of componentConfig.compatibleShapes){
-                        if(this.isInheritedFromClzName(targetObj, shapeName)){
+                        if(isInheritedFromClzName(targetObj, shapeName)){
                             isCompatibleWithShape = true
                             break;
                         }
@@ -73,4 +73,4 @@ if (!clzObjectFactory) {
     clzObjectFactory = new CppClassObjectFactory()
     window["clzObjectFactory"] = clzObjectFactory
 }
-export {clzObjectFactory}
+export {clzObjectFactory, isInheritedFromClzName}

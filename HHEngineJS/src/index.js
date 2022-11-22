@@ -14,11 +14,15 @@ import {CurveShapeJS} from "./Shapes/CurveShapeJS"
 import {SVGShapeJS} from "./Shapes/SVGShapeJS";
 import {MirrorShapeJS} from "./Shapes/MirrorShapeJS";
 import {ColorStop} from "./Components/ColorStop";
+import {getNailManager} from "./IK/NailManager";
+
+import {isInheritedFromClzName} from "./CppClassObjectFactory";
 
 // All non-default components
 import {GeneratorComponent} from "./Components/GeneratorComponent";
 import {CurveGrowthComponent} from "./Components/CurveGrowthComponent";
 import {RadialGradientComponent} from "./Components/RadialGradientComponent";
+import {NailComponent} from "./Components/NailComponent";
 
 import "./Shapes/LoadShape"
 
@@ -27,18 +31,38 @@ import * as paper from "paper"
 
 let renderEngine2D = new RenderEnginePaperJs()
 
-if(Module.IsWASMInited && Module.IsWASMInited()){
+if (Module.IsWASMInited && Module.IsWASMInited()) {
     console.log("Init right now")
     huahuoEngine.OnInit()
 } else {
     console.log("Init later")
-    Module.onRuntimeInitialized = ()=>{
+    Module.onRuntimeInitialized = () => {
         console.log("Init now!")
         huahuoEngine.OnInit()
     }
 }
 
 window.enginejsInited = true
-export {renderEngine2D, ValueChangeHandler, LineShapeJS, CircleShapeJS,RectangleJS, ImageShapeJS, TextShapeJS,
-    AudioShapeJS, ElementShapeJS, huahuoEngine, paper, GlobalConfig, Player, BaseShapeJS, CurveShapeJS, SVGShapeJS, MirrorShapeJS,
-    ColorStop}
+export {
+    renderEngine2D,
+    ValueChangeHandler,
+    LineShapeJS,
+    CircleShapeJS,
+    RectangleJS,
+    ImageShapeJS,
+    TextShapeJS,
+    AudioShapeJS,
+    ElementShapeJS,
+    huahuoEngine,
+    paper,
+    GlobalConfig,
+    Player,
+    BaseShapeJS,
+    CurveShapeJS,
+    SVGShapeJS,
+    MirrorShapeJS,
+    NailComponent,
+    ColorStop,
+    getNailManager,
+    isInheritedFromClzName
+}

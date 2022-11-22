@@ -8,6 +8,7 @@ import {TextDrawer} from "./TextDrawer";
 import {ImageSelector} from "./ImageSelector"
 import {MirrorDrawer} from "./MirrorDrawer";
 import {IconShapeDrawer} from "./IconShapeDrawer";
+import {NailDrawer} from "./NailDrawer";
 
 let shapes = [
     new ShapeSelector(),
@@ -19,7 +20,8 @@ let shapes = [
     new MirrorDrawer(),
     new AudioClipSelector(),
     new ImageSelector(),
-    new IconShapeDrawer()
+    new IconShapeDrawer(),
+    new NailDrawer()
 ]
 
 let defaultShapeDrawerArray = shapes.filter(drawer=>{

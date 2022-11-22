@@ -1,6 +1,7 @@
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {paper, BaseShapeJS} from "hhenginejs";
 import {relaxRectangle} from "hhcommoncomponents";
+import {itemSelectable} from "./ShapeSelector";
 
 const BOUNDMARGIN = 15
 
@@ -31,12 +32,6 @@ class ShapePicker extends BaseShapeDrawer{
         canvas.style.cursor = "pointer"
     }
 
-    itemSelectable(item) {
-        if (typeof item.data.meta == "undefined" || false == item.data.meta.isSelectable())
-            return false
-        return true
-    }
-
     // Find the outmost parent of the shape (Will change to find the correct hierarchy later
     findParentOf(shape: BaseShapeJS) {
         let parent = shape.getParent()
@@ -65,7 +60,7 @@ class ShapePicker extends BaseShapeDrawer{
         let hitResult = paper.project.hitTest(hitPoint, this.hitOptions)
         if(hitResult){
             let hitItem = hitResult.item
-            if(this.itemSelectable(hitResult.item)){
+            if(itemSelectable(hitResult.item)){
                 console.log("HitType:" + hitResult.type)
                 this.candidateShape = this.findParentOf( hitItem.data.meta )
 

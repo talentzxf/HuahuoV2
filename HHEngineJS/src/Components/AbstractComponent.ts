@@ -66,19 +66,20 @@ class AbstractComponent {
         }
 
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
-
-        properties.forEach(propertyEntry => {
-            if (propertyEntry.type == PropertyCategory.interpolateFloat
-                || propertyEntry.type == PropertyCategory.interpolateColor
-                || propertyEntry.type == PropertyCategory.interpolateVector2
-                || propertyEntry.type == PropertyCategory.interpolateVector3) {
-                interpolateVariableProcessor.handleEntry(this, propertyEntry)
-            } else if (propertyEntry.type == PropertyCategory.shapeArray) {
-                shapeArrayHandler.handleEntry(this, propertyEntry)
-            } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
-                colorStopArrayHandler.handleEntry(this, propertyEntry)
-            }
-        })
+        if(properties){
+            properties.forEach(propertyEntry => {
+                if (propertyEntry.type == PropertyCategory.interpolateFloat
+                    || propertyEntry.type == PropertyCategory.interpolateColor
+                    || propertyEntry.type == PropertyCategory.interpolateVector2
+                    || propertyEntry.type == PropertyCategory.interpolateVector3) {
+                    interpolateVariableProcessor.handleEntry(this, propertyEntry)
+                } else if (propertyEntry.type == PropertyCategory.shapeArray) {
+                    shapeArrayHandler.handleEntry(this, propertyEntry)
+                } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
+                    colorStopArrayHandler.handleEntry(this, propertyEntry)
+                }
+            })
+        }
 
         this.rawObj.SetTypeName(this.constructor.name)
     }
@@ -100,6 +101,8 @@ class AbstractComponent {
 
     getPropertySheet() {
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
+        if(properties == null)
+            return null;
 
         let componentConfigSheet = {
             key: this.getTypeName(),
@@ -122,7 +125,9 @@ class AbstractComponent {
     initPropertySheet(propertySheet) {
         if (!this.propertySheetInited) {
             this.propertySheetInited = true
-            propertySheet.addProperty(this.getPropertySheet())
+            let myPropertySheet = this.getPropertySheet()
+            if(myPropertySheet)
+                propertySheet.addProperty(myPropertySheet)
         }
     }
 

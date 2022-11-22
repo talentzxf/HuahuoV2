@@ -18,6 +18,12 @@ const BOUNDMARGIN: number = 10
 const VERYNEARMARGIN = 10
 const NEARBOUNDMARGIN = 25
 
+function itemSelectable(item) {
+    if (item.data.meta == null || typeof item.data.meta == "undefined" || false == item.data.meta.isSelectable())
+        return false
+    return true
+}
+
 class ShapeSelector extends BaseShapeDrawer {
     selectRectangle: paper.Path.Rectangle;
     imgClass = "fas fa-arrow-pointer"
@@ -228,7 +234,7 @@ class ShapeSelector extends BaseShapeDrawer {
         for(let hitResult of hitResultArray){
             if (hitResult) {
                 let hitItem = hitResult.item;
-                if (this.itemSelectable(hitResult.item)) {
+                if (itemSelectable(hitResult.item)) {
                     console.log("HitType:" + hitResult.type)
 
                     if (!hitItem.data.meta.selected) { // If the object has not been selected, select it.
@@ -389,14 +395,10 @@ class ShapeSelector extends BaseShapeDrawer {
         }
     }
 
-    itemSelectable(item) {
-        if (item.data.meta == null || typeof item.data.meta == "undefined" || false == item.data.meta.isSelectable())
-            return false
-        return true
-    }
+
 
     hitTypeSeletable(item, type){
-        if(!this.itemSelectable(item)) // Defensive coding, check whether the item is hitable again
+        if(!itemSelectable(item)) // Defensive coding, check whether the item is hitable again
             return false
 
         return item.data.meta.hitTypeSelectable(type)
@@ -429,7 +431,7 @@ class ShapeSelector extends BaseShapeDrawer {
                         let shapeBoundingBox = shape.getBounds()
                         let selectionRectBoundingBox = this.selectRectangle.getBounds()
                         if (shapeBoundingBox.intersects(selectionRectBoundingBox)) {
-                            if(this.itemSelectable(shape)){
+                            if(itemSelectable(shape)){
                                 this.selectObject(shape.data.meta)
                                 this.setTransformHandler(this.selectedShapes, pos)
                             }
@@ -454,4 +456,4 @@ class ShapeSelector extends BaseShapeDrawer {
     }
 }
 
-export {ShapeSelector}
+export {ShapeSelector, itemSelectable}
