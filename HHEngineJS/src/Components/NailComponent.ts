@@ -8,6 +8,8 @@ const eps:number = 0.001;
 class NailComponent extends AbstractComponent{
     nails: Array<Nail> = new Array<Nail>()
 
+    lastRotation: number = null
+
     // The coordinate of this hitPoint is in global world pos.
     addNail(nail: Nail){
         this.nails.push(nail)
@@ -18,6 +20,11 @@ class NailComponent extends AbstractComponent{
 
         let currentFrame = this.baseShape.getLayer().GetCurrentFrame()
         getNailManager().updateAllNails(currentFrame)
+
+        // After update, the shape has returned to it's original rotation. Need to rotate back.
+        if(this.lastRotation){
+            this.baseShape.paperShape.rotation = this.lastRotation
+        }
 
         // Adjust position and rotation to reflect the nail change.
         for(let nail of this.nails){
@@ -36,6 +43,8 @@ class NailComponent extends AbstractComponent{
             console.log("Angle:" + vector.angle)
             console.log("Directed Angle:" + prevNailGlobalPosition.getDirectedAngle(currentNailGlobalPosition))
             this.baseShape.paperShape.position = this.baseShape.paperShape.position.add(vector)
+
+            this.lastRotation = this.baseShape.paperShape.rotation
         }
     }
 }
