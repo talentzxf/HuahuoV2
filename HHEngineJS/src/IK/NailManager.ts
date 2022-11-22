@@ -1,56 +1,6 @@
 import {BaseSolidShape} from "../Shapes/BaseSolidShape";
-import {BaseShapeJS} from "../Shapes/BaseShapeJS";
+import {Nail} from "./Nail";
 
-class Nail {
-    nailManager: NailManager
-
-    shapeLocalPointMap: Map<BaseSolidShape, paper.Point> = new Map<BaseSolidShape, paper.Point>()
-
-    paperShape: paper.Path
-
-    position: paper.Point
-
-    constructor(nailManager: NailManager) {
-        this.nailManager = nailManager
-    }
-
-    containShape(shape){
-        return this.shapeLocalPointMap.has(shape)
-    }
-
-    // The point is in global world space.
-    addShape(targetShape: BaseSolidShape, point: paper.Point): Boolean {
-        for (let [shape, point] of this.shapeLocalPointMap) {
-            if (!this.nailManager.checkDuplication(shape, targetShape)) { // These two shapes has already been nailed together. Not a valid nail.
-                return false
-            }
-        }
-
-        this.position = point
-
-        let localPoint = targetShape.globalToLocal(point)
-        this.shapeLocalPointMap.set(targetShape, localPoint)
-
-        this.nailManager.setDirty(true)
-
-        this.nailManager.addNailShapeMapping(targetShape, this)
-        return true
-    }
-
-    update() {
-        if (this.position == null)
-            return;
-
-        if (this.paperShape == null) {
-            this.paperShape = new paper.Path.RegularPolygon(this.position, 6, 20)
-            this.paperShape.fillColor = new paper.Color(0.71, 0.25, 0.4, 1.0)
-            this.paperShape.strokeColor = new paper.Color("black")
-        }
-
-        this.paperShape.position = this.position
-        this.paperShape.bringToFront()
-    }
-}
 
 class NailManager {
     private nails: Set<Nail> = new Set<Nail>()
@@ -70,7 +20,7 @@ class NailManager {
      * @param shape2
      */
     checkDuplication(shape1: BaseSolidShape, shape2: BaseSolidShape) { // If two shapes has already been nailed together, the nail shouldn't be created.
-        if(!this.shapeNailMap.has(shape1) || this.shapeNailMap.has(shape2)){
+        if(!this.shapeNailMap.has(shape1) || !this.shapeNailMap.has(shape2)){
             return true
         }
 
@@ -91,6 +41,8 @@ class NailManager {
     }
 
     addNailShapeMapping(shape: BaseSolidShape, nail: Nail) {
+        this.dirty = true
+
         let nailSet = this.shapeNailMap.get(shape)
         if(nailSet == null){
             nailSet = new Set<Nail>()
@@ -98,6 +50,21 @@ class NailManager {
         }
 
         nailSet.add(nail)
+    }
+
+    removeNail(nail:Nail){
+        this.dirty = true
+
+        this.nails.delete(nail)
+
+        let involvedShapes = nail.getShapes()
+        for(let shape of involvedShapes){
+            if(this.shapeNailMap.has(shape)){
+                let nails = this.shapeNailMap.get(shape)
+                nails.delete(nail)
+                this.shapeNailMap.set(shape, nails)
+            }
+        }
     }
 
     updateAllNails(frameId) {
@@ -124,4 +91,4 @@ function getNailManager(): NailManager {
     return nailManager
 }
 
-export {getNailManager, Nail}
+export {getNailManager, NailManager}

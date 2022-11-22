@@ -2,8 +2,9 @@ import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {SVGFiles} from "../Utilities/Svgs";
 import {paper} from "hhenginejs"
 import {itemSelectable} from "./ShapeSelector";
-import {BaseSolidShape, NailComponent} from "hhenginejs";
+import {NailComponent} from "hhenginejs";
 import {getNailManager, isInheritedFromClzName} from "hhenginejs";
+import {HHToast} from "hhcommoncomponents";
 
 class NailDrawer extends BaseShapeDrawer{
     name = "Nail"
@@ -26,7 +27,6 @@ class NailDrawer extends BaseShapeDrawer{
         let hitShapes = []
         let hitResultArray = paper.project.hitTestAll(hitPoint, this.hitOptions)
 
-        let nail = null
         for(let hitResult of hitResultArray){
             if(hitResult){
                 let hitItem = hitResult.item
@@ -34,24 +34,38 @@ class NailDrawer extends BaseShapeDrawer{
                     let shape = hitItem.data.meta
                     if(isInheritedFromClzName(shape, "BaseSolidShape")){
                         hitShapes.push(shape)
-
-                        if(nail == null){
-                            nail = getNailManager().createNail()
-                        }
-
-                        nail.addShape(shape, hitPoint)
-
-                        let nailComponent = shape.getComponentByTypeName("nail")
-                        if(!nailComponent){
-                            nailComponent = new NailComponent()
-                            shape.addComponent(nailComponent)
-                        }
-
-                        nailComponent.addNail(nail)
-
-                        shape.update(true)
                     }
                 }
+            }
+        }
+
+        if(hitShapes.length <= 0)
+            return
+
+        for(let i = 0 ; i < hitShapes.length; i++){
+            for(let j = i + 1; j < hitShapes.length; j++){
+                if(!getNailManager().checkDuplication(hitShapes[i], hitShapes[j])){
+                    HHToast.warn(i18n.t("toast.nailDuplicated"))
+                    return
+                }
+            }
+        }
+
+        let nail = getNailManager().createNail()
+        for(let shape of hitShapes){
+            if(nail.addShape(shape, hitPoint)){
+                let nailComponent = shape.getComponentByTypeName("NailComponent")
+                if(nailComponent == null){
+                    nailComponent = new NailComponent()
+                    shape.addComponent(nailComponent)
+                }
+
+                nailComponent.addNail(nail)
+
+                shape.update(true)
+            }else{
+                getNailManager.removeNail(nail)
+                HHToast.warn(i18n.t("toast.nailDuplicated"))
             }
         }
     }
