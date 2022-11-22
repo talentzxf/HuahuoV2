@@ -23,13 +23,14 @@ class NailComponent extends AbstractComponent {
         getNailManager().updateAllNails(currentFrame)
 
         // After update, the shape has returned to it's original rotation. Need to rotate back.
+        if(this.lastPosition){
+            this.baseShape.paperShape.position = this.lastPosition
+        }
+
         if (this.lastRotation) {
             this.baseShape.paperShape.rotation = this.lastRotation
         }
 
-        if(this.lastPosition){
-            this.baseShape.paperShape.position = this.lastPosition
-        }
 
         // Adjust position and rotation to reflect the nail change.
         for (let nail of this.nails) {
@@ -40,11 +41,12 @@ class NailComponent extends AbstractComponent {
             let currentNailGlobalPosition = nail.position
 
             if (prevNailGlobalPosition.getDistance(currentNailGlobalPosition) <= eps) {
-                this.lastRotation = this.baseShape.paperShape.rotation
+                this.lastRotation = null
+                this.lastPosition = null
                 continue; // The position is not changed, no need to update my position
             }
 
-            let vector = currentNailGlobalPosition.subtract(this.baseShape.position)
+            let vector = currentNailGlobalPosition.subtract(this.baseShape.paperShape.position)
             this.baseShape.paperShape.rotation = vector.angle
 
             let nailOffset = currentNailGlobalPosition.subtract(prevNailGlobalPosition)
