@@ -32,6 +32,9 @@ class NailComponent extends AbstractComponent{
 
             let vector = currentNailGlobalPosition.subtract(prevNailGlobalPosition)
             this.baseShape.paperShape.rotation = vector.angle
+
+            console.log("Angle:" + vector.angle)
+            console.log("Directed Angle:" + prevNailGlobalPosition.getDirectedAngle(currentNailGlobalPosition))
             this.baseShape.paperShape.position = this.baseShape.paperShape.position.add(vector)
         }
     }
