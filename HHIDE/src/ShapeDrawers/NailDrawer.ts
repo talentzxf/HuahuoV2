@@ -49,7 +49,7 @@ class NailDrawer extends BaseShapeDrawer{
 
                         nailComponent.addNail(nail)
 
-                        shape.update()
+                        shape.update(true)
                     }
                 }
             }
@@ -59,7 +59,7 @@ class NailDrawer extends BaseShapeDrawer{
     onBeginToDrawShape(canvas: HTMLCanvasElement) {
         super.onBeginToDrawShape(canvas);
 
-        canvas.style.cursor = "url(\""+SVGFiles.hammerNailSvg+"\") 32 32, pointer"
+        canvas.style.cursor = "url(\""+SVGFiles.hammerNailSvg+"\") 0 32, pointer"
     }
 }
 
