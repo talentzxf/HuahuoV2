@@ -49,10 +49,14 @@ class NailComponent extends AbstractComponent {
             this.baseShape.setRotation(resultAngle, false, false)
             console.log("Result Angle:" + resultAngle)
 
+            this.baseShape.updatePositionAndRotation()
+
             let afterNailPosition = this.baseShape.localToGlobal(nailLocalPosition)
 
             let nailOffset = currentNailGlobalPosition.subtract(afterNailPosition)
             this.baseShape.setParentLocalPosition(this.baseShape.position.add(nailOffset), true, false)
+
+            this.baseShape.updatePositionAndRotation()
         }
 
         this.isUpdating = false
