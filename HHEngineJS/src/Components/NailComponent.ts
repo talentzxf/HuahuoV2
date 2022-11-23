@@ -8,12 +8,19 @@ const eps: number = 0.001;
 class NailComponent extends AbstractComponent {
     nails: Array<Nail> = new Array<Nail>()
 
+    isUpdating: boolean = false
+
     // The coordinate of this hitPoint is in global world pos.
     addNail(nail: Nail) {
         this.nails.push(nail)
     }
 
     afterUpdate(force: boolean = false) {
+        if(this.isUpdating)
+            return
+
+        this.isUpdating = true
+
         super.afterUpdate(force);
 
         let currentFrame = this.baseShape.getLayer().GetCurrentFrame()
@@ -45,6 +52,8 @@ class NailComponent extends AbstractComponent {
             let nailOffset = currentNailGlobalPosition.subtract(afterNailPosition)
             this.baseShape.setParentLocalPosition(this.baseShape.position.add(nailOffset), true, false)
         }
+
+        this.isUpdating = false
     }
 }
 
