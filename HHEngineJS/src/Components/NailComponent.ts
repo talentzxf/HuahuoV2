@@ -45,7 +45,9 @@ class NailComponent extends AbstractComponent {
             let nailTheta = nailVector.angle
 
             let vector = currentNailGlobalPosition.subtract(this.baseShape.position)
-            this.baseShape.setRotation(vector.angle - nailTheta, false, false)
+            let resultAngle = (vector.angle - nailTheta + 360)%360
+            this.baseShape.setRotation(resultAngle, false, false)
+            console.log("Result Angle:" + resultAngle)
 
             let afterNailPosition = this.baseShape.localToGlobal(nailLocalPosition)
 
