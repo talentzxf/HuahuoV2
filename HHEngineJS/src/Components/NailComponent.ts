@@ -44,7 +44,6 @@ class NailComponent extends AbstractComponent {
 
             let nailOffset = currentNailGlobalPosition.subtract(afterNailPosition)
             this.baseShape.setParentLocalPosition(this.baseShape.position.add(nailOffset), false, false)
-            // this.baseShape.updateRotationAndPosition()
         }
     }
 }
