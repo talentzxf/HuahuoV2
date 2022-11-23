@@ -74,6 +74,8 @@ class ShapeSelector extends BaseShapeDrawer {
 
     duplicateShape() {
         console.log("Trying to duplicate shape")
+
+        let duplicatedShapes = new Set<BaseShapeJS>()
         for (let shape of this.selectedShapes) {
             console.log("Duplicating shape")
             let duplicatedShape = shape.duplicate();
@@ -86,6 +88,13 @@ class ShapeSelector extends BaseShapeDrawer {
             duplicatedShape.position = position
 
             duplicatedShape.store()
+
+            duplicatedShapes.add(duplicatedShape)
+        }
+
+        this.clearSelection()
+        for(let shape of duplicatedShapes){
+            this.selectObject(shape)
         }
     }
 
