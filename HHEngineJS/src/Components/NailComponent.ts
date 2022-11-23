@@ -38,12 +38,9 @@ class NailComponent extends AbstractComponent {
         // Adjust position and rotation to reflect the nail change.
         for (let nail of this.nails) {
             let nailLocalPosition = nail.getNailLocalLocation(this.baseShape)
-            console.log("IK: nailLocalPosition:" + nailLocalPosition.x + "," + nailLocalPosition.y)
             let prevNailGlobalPosition = this.baseShape.localToGlobal(nailLocalPosition)
-            console.log("IK:prevNailGlobalPosition:" + prevNailGlobalPosition.x + "," + prevNailGlobalPosition.y)
-
             let currentNailGlobalPosition = nail.position
-            console.log("IK:currentNailGlobalPosition:" + currentNailGlobalPosition.x + "," + currentNailGlobalPosition.y)
+
             if(!this.prevNailShape){
                 this.prevNailShape = new paper.Path.Circle(prevNailGlobalPosition, 10)
                 this.prevNailShape.fillColor = new paper.Color("blue")
@@ -52,7 +49,6 @@ class NailComponent extends AbstractComponent {
             }
 
             if (prevNailGlobalPosition.getDistance(currentNailGlobalPosition) <= eps) {
-                console.log("IK:SKIPPED")
                 this.lastRotation = null
                 this.lastPosition = null
                 continue; // The position is not changed, no need to update my position
@@ -60,11 +56,15 @@ class NailComponent extends AbstractComponent {
 
             // The nail is in the center of the shape, don't know where to rotate in this case. So don't move
             if(currentNailGlobalPosition.getDistance(this.baseShape.position) <= eps){
-                console.log("IK:SKIPPED, nail in center")
                 this.lastRotation = null
                 this.lastPosition = null
                 continue; // The position is not changed, no need to update my position
             }
+
+
+            console.log("IK: nailLocalPosition:" + nailLocalPosition.x + "," + nailLocalPosition.y)
+            console.log("IK:prevNailGlobalPosition:" + prevNailGlobalPosition.x + "," + prevNailGlobalPosition.y)
+            console.log("IK:currentNailGlobalPosition:" + currentNailGlobalPosition.x + "," + currentNailGlobalPosition.y)
 
             console.log("IK: baseShape.rotation:" + this.baseShape.rotation)
             console.log("IK: baseShape.shapeRotation:" + this.baseShape.paperShape.rotation)
@@ -81,17 +81,18 @@ class NailComponent extends AbstractComponent {
             let vector = currentNailGlobalPosition.subtract(this.baseShape.position)
             console.log("IK:vector:" + vector + " angle:" + vector.angle)
             this.baseShape.setRotation(vector.angle - nailTheta, false, false)
-            console.log("IK:nailTheta:" + vector.angle +"," + nailTheta + " result:" + (vector.angle - nailTheta))
+            console.log("IK:vectorTheta:" + vector.angle +"," + nailTheta + " result:" + (vector.angle - nailTheta))
 
             let afterNailPosition = this.baseShape.localToGlobal(nailLocalPosition)
             console.log("IK:afterNailPosition:" + afterNailPosition)
-            console.log("IK:afterPosition:" + this.baseShape.position)
-            console.log("IK:afterShapePosition:" + this.baseShape.shapePosition)
 
-            let nailOffset = currentNailGlobalPosition.subtract(prevNailGlobalPosition)
+            let nailOffset = currentNailGlobalPosition.subtract(afterNailPosition)
             this.baseShape.setParentLocalPosition(this.baseShape.position.add(nailOffset), false, false)
 
-            this.baseShape.updatePosition()
+            this.baseShape.updateRotationAndPosition()
+
+            console.log("IK:afterPosition:" + this.baseShape.position)
+            console.log("IK:afterShapePosition:" + this.baseShape.shapePosition)
 
             if(!this.afterNailShape){
                 this.afterNailShape = new paper.Path.Circle(afterNailPosition, 10)

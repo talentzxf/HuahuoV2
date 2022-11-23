@@ -968,7 +968,10 @@ abstract class BaseShapeJS {
         return new paper.Point(zx, zy)
     }
 
-    updatePosition(){
+    updateRotationAndPosition(){
+        // Reset the rotation.
+        this.paperItem.rotation = this.rawObj.GetRotation();
+
         this.paperItem.scaling = new paper.Point(1.0, 1.0)
 
         this.paperItem.position = new paper.Point(0.0, 0.0)
@@ -993,7 +996,7 @@ abstract class BaseShapeJS {
         this.paperItem.rotation = this.rawObj.GetRotation();
 
         if(!this.isMirage) {
-            this.updatePosition()
+            this.updateRotationAndPosition()
         }
 
         let scaling = this.rawObj.GetScale()
