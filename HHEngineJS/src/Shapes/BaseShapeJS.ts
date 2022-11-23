@@ -192,6 +192,8 @@ abstract class BaseShapeJS {
     }
 
     // The position is still in the parent's local coordinate.
+    // The position might be different from papershape's position !!
+    // The position is fixed after the shape is created until explicitly change while the paper's position might change is the shape is morphed.
     get position(): paper.Point {
         return new paper.Point(this.pivotPosition.x, this.pivotPosition.y)
     }
@@ -289,7 +291,7 @@ abstract class BaseShapeJS {
         this.valueChangeHandler.callHandlers("rotation", newRotationDegree)
     }
 
-    setParentLocalPosition(val: paper.Point){
+    setParentLocalPosition(val: paper.Point, callHandlers: boolean = true, forceUpdate: boolean = true){
         let currentScaling = this.scaling
 
         try {
@@ -317,10 +319,11 @@ abstract class BaseShapeJS {
                 this.shapeFollowCurveFrameState.RecordLengthRatio(frameId, lengthPortion)
             }
 
-            this.valueChangeHandler.callHandlers("position", val)
+            if(callHandlers)
+                this.valueChangeHandler.callHandlers("position", val)
         }finally {
             this.paperItem.scaling = currentScaling
-            this.update(true)
+            this.update(forceUpdate)
         }
     }
 
@@ -344,12 +347,7 @@ abstract class BaseShapeJS {
     }
 
     set rotation(val: number) {
-        if(Math.abs(this.rawObj.GetRotation() - val) < eps)
-            return
-
-        this.rawObj.SetRotation(val)
-        this.update(true)
-        this.valueChangeHandler.callHandlers("rotation", val)
+        this.setRotation(val)
     }
 
     get selected(): boolean {
@@ -581,11 +579,17 @@ abstract class BaseShapeJS {
         return this.rotation
     }
 
-    private setRotation(val: number) {
-        this.rawObj.SetRotation(val)
-        this.store()
+    public setRotation(val: number, callHandlers: boolean = true, forceUpdate: boolean = true) {
 
-        this.update(true)
+        if(Math.abs(this.rawObj.GetRotation() - val) < eps)
+            return
+
+        this.rawObj.SetRotation(val)
+
+        this.paperShape.rotation = val
+        if(callHandlers)
+            this.valueChangeHandler.callHandlers("rotation", val)
+        this.update(forceUpdate)
     }
 
     get followCurve():BaseShapeJS{
@@ -964,6 +968,24 @@ abstract class BaseShapeJS {
         return new paper.Point(zx, zy)
     }
 
+    updatePosition(){
+        this.paperItem.scaling = new paper.Point(1.0, 1.0)
+
+        this.paperItem.position = new paper.Point(0.0, 0.0)
+        // The coordinate should have been aligned now.
+        let globalPivotPosition = this.pivotPosition
+        let localPivotPosition = this.rawObj.GetLocalPivotPosition()
+
+        let radian = this.rawObj.GetRotation() / 180 * Math.PI
+
+        let shapeZero = this.backCalculateZeroPoint(localPivotPosition, globalPivotPosition, -radian)
+
+        let offset = this.paperShape.localToParent(new paper.Point(0, 0)) // As position is already (0,0). The global position of (0,0) indicates the center of the bounding rect.
+
+        let newPosition = shapeZero.subtract(offset)
+        this.paperItem.position = newPosition
+    }
+
     afterUpdate(force: boolean = false) {
         this.applySegments()
 
@@ -971,21 +993,7 @@ abstract class BaseShapeJS {
         this.paperItem.rotation = this.rawObj.GetRotation();
 
         if(!this.isMirage) {
-            this.paperItem.scaling = new paper.Point(1.0, 1.0)
-
-            this.paperItem.position = new paper.Point(0.0, 0.0)
-            // The coordinate should have been aligned now.
-            let globalPivotPosition = this.pivotPosition
-            let localPivotPosition = this.rawObj.GetLocalPivotPosition()
-
-            let radian = this.rawObj.GetRotation() / 180 * Math.PI
-
-            let shapeZero = this.backCalculateZeroPoint(localPivotPosition, globalPivotPosition, -radian)
-
-            let offset = this.paperShape.localToParent(new paper.Point(0, 0)) // As position is already (0,0). The global position of (0,0) indicates the center of the bounding rect.
-
-            let newPosition = shapeZero.subtract(offset)
-            this.paperItem.position = newPosition
+            this.updatePosition()
         }
 
         let scaling = this.rawObj.GetScale()
