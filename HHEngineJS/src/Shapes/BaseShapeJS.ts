@@ -967,7 +967,7 @@ abstract class BaseShapeJS {
 
         return new paper.Point(zx, zy)
     }
-    
+
     afterUpdate(force: boolean = false) {
         this.applySegments()
 

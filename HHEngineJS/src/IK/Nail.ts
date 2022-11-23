@@ -15,11 +15,11 @@ class Nail {
         this.nailManager = nailManager
     }
 
-    getShapes(){
+    getShapes() {
         return this.shapeLocalPointMap.keys()
     }
 
-    containShape(shape){
+    containShape(shape) {
         return this.shapeLocalPointMap.has(shape)
     }
 
@@ -42,29 +42,32 @@ class Nail {
 
         let _this = this
         // Only register for affine transforms
-        targetShape.registerValueChangeHandler("position|scaling|rotation")(()=>{
+        targetShape.registerValueChangeHandler("position|scaling|rotation")(() => {
             _this.shapeMoved(targetShape)
+
+            for (let [shape, localPoint] of this.shapeLocalPointMap) {
+                if (shape != targetShape) // No need to update the same shape again.
+                {
+                    shape.update(true)
+                }
+            }
         })
 
         return true
     }
 
-    shapeMoved(shape: BaseSolidShape){
+    shapeMoved(shape: BaseSolidShape) {
         let localPoint = this.shapeLocalPointMap.get(shape)
-        if(localPoint == null){
+        if (localPoint == null) {
             Logger.error("Why local point is null???")
             return
         }
 
         this.position = shape.localToGlobal(localPoint)
-
-        for(let [shape, localPoint] of this.shapeLocalPointMap){
-            shape.update(true)
-        }
         this.update()
     }
 
-    getNailLocalLocation(shape: BaseSolidShape){
+    getNailLocalLocation(shape: BaseSolidShape) {
         return this.shapeLocalPointMap.get(shape)
     }
 
@@ -83,4 +86,4 @@ class Nail {
     }
 }
 
-export{Nail}
+export {Nail}

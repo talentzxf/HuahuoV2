@@ -53,7 +53,7 @@ class NailDrawer extends BaseShapeDrawer{
 
         let nail = getNailManager().createNail()
         for(let shape of hitShapes){
-            if(nail.addShape(shape, hitPoint)){
+            if(nail.addShape(shape, new paper.Point(hitPoint.x, hitPoint.y))){
                 let nailComponent = shape.getComponentByTypeName("NailComponent")
                 if(nailComponent == null){
                     nailComponent = new NailComponent()
