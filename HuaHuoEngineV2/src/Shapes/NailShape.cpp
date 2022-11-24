@@ -26,6 +26,7 @@ bool NailShape::AddShape(BaseShape *targetShape, float localX, float localY, flo
     }
 
     this->shapeLocalPointMap[targetShape].Set(localX, localY, localZ);
+    this->boundShapes.push_back(targetShape);
     GetNailManagerPtr()->AddNailShapeMapping(targetShape, this);
     return true;
 }
