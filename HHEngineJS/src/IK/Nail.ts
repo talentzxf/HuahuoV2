@@ -25,21 +25,12 @@ class Nail {
 
     // The point is in global world space.
     addShape(targetShape: BaseSolidShape, point: paper.Point): Boolean {
-        for (let [shape, point] of this.shapeLocalPointMap) {
-            if (!this.nailManager.checkDuplication(shape, targetShape)) { // These two shapes has already been nailed together. Not a valid nail.
-                return false
-            }
-        }
+        let localPoint = targetShape.globalToLocal(point)
+        this.rawObj.AddShape(targetShape, localPoint.x, localPoint.y, localPoint.z)
 
         this.position = point
-
-        let localPoint = targetShape.globalToLocal(point)
-        this.shapeLocalPointMap.set(targetShape, localPoint)
-
         this.nailManager.setDirty(true)
-
-        this.nailManager.addNailShapeMapping(targetShape, this)
-
+        
         let _this = this
         // Only register for affine transforms
         targetShape.registerValueChangeHandler("position|scaling|rotation")(() => {

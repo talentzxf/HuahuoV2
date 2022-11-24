@@ -1,4 +1,3 @@
-import {BaseShapeJS} from "./BaseShapeJS";
 import {Vector2} from "hhcommoncomponents"
 import {BaseSolidShape} from "./BaseSolidShape";
 import {clzObjectFactory} from "../CppClassObjectFactory";

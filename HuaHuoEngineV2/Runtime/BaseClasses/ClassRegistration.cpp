@@ -74,7 +74,9 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<AudioShape>("ObjectStore");
     RegisterHuaHuoClass<ElementShape>("ObjectStore");
     RegisterHuaHuoClass<NailShape>("ObjectStore");
+
     RegisterHuaHuoClass<TimeLineCellManager>("ObjectStore");
+    RegisterHuaHuoClass<NailManager>("ObjectStore");
 
     RegisterHuaHuoClass<AbstractFrameState>("ObjectStore");
     RegisterHuaHuoClass<ShapeTransformFrameState>("ObjectStore");
