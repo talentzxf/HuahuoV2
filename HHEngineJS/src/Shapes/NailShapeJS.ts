@@ -30,8 +30,6 @@ class NailShapeJS extends BaseShapeJS{
         //         }
         //     }
         // })
-
-        return true
     }
 
 
@@ -53,6 +51,7 @@ class NailShapeJS extends BaseShapeJS{
         this.paperShape.fillColor = new paper.Color(0.71, 0.25, 0.4, 1.0)
         this.paperShape.strokeColor = new paper.Color("black")
         this.paperShape.data.meta = this
+        this.paperShape.applyMatrix = false
         this.paperShape.bringToFront()
 
         super.afterCreateShape()
