@@ -55,14 +55,14 @@ class NailShapeJS extends BaseShapeJS{
 
     createShape() {
         super.createShape();
-        this.paperShape = new paper.Path.RegularPolygon(this.position, 6, 20);
+        this.paperShape = new paper.Path.RegularPolygon(new paper.Point(0,0), 6, 20);
         this.paperShape.fillColor = new paper.Color(0.71, 0.25, 0.4, 1.0)
         this.paperShape.strokeColor = new paper.Color("black")
         this.paperShape.data.meta = this
         this.paperShape.applyMatrix = false
         this.paperShape.bringToFront()
 
-        super.afterCreateShape()
+        super.afterCreateShape()    
     }
 
     getLocalPositionInShape(targetShape: BaseShapeJS): paper.Point{
