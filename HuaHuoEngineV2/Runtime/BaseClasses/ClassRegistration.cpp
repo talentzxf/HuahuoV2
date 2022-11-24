@@ -22,6 +22,7 @@
 #include "Shapes/TextShape.h"
 #include "Shapes/CurveShape.h"
 #include "Shapes/MirrorShape.h"
+#include "Shapes/NailShape.h"
 #include "KeyFrames/CustomFrameState.h"
 #include "KeyFrames/CustomComponent.h"
 
@@ -72,6 +73,7 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<MirrorShape>("ObjectStore");
     RegisterHuaHuoClass<AudioShape>("ObjectStore");
     RegisterHuaHuoClass<ElementShape>("ObjectStore");
+    RegisterHuaHuoClass<NailShape>("ObjectStore");
     RegisterHuaHuoClass<TimeLineCellManager>("ObjectStore");
 
     RegisterHuaHuoClass<AbstractFrameState>("ObjectStore");

@@ -136,6 +136,7 @@ list(APPEND CPPFILES src/Shapes/MirrorShape.cpp)
 list(APPEND CPPFILES src/KeyFrames/FieldShapeArray.cpp)
 list(APPEND CPPFILES src/KeyFrames/CustomComponent.cpp)
 list(APPEND CPPFILES src/KeyFrames/ColorStop.cpp)
+list(APPEND CPPFILES src/Shapes/NailShape.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)
