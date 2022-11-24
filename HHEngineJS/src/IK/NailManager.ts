@@ -2,6 +2,10 @@ import {huahuoEngine} from "../EngineAPI";
 declare var Module: any;
 import {getMethodsAndVariables} from "hhcommoncomponents"
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
+import {BaseSolidShape} from "../Shapes/BaseSolidShape";
+import {NailShapeJS} from "../Shapes/NailShapeJS";
+
+const eps: number = 0.001;
 
 class NailManager{
     cppNailManager
@@ -41,6 +45,65 @@ class NailManager{
 
     checkDuplication(shape1: BaseShapeJS, shape2: BaseShapeJS):boolean{
         return this.cppNailManager.CheckDuplication(shape1.getRawShape(), shape2.getRawShape())
+    }
+
+    shapeMoved(shape: BaseSolidShape){
+        return this._shapeMoved(shape, new Set<NailShapeJS>(), new Set<BaseSolidShape>())
+    }
+
+    nailMoved(nail: NailShapeJS){
+        return this._nailMoved(nail, new Set<NailShapeJS>(), new Set<BaseSolidShape>())
+    }
+
+    // TODO: Convert iterate to loop.
+    _shapeMoved(shape: BaseSolidShape, exceptNails: Set<NailShapeJS>, exceptShapes: Set<BaseSolidShape>) {
+        exceptShapes.add(shape)
+
+        // Shape moved, get all it's nails and update.
+        let nailComponent = shape.getComponentByTypeName("NailComponent")
+        let nails = nailComponent["getNails"]()
+
+        // Update all the nail position
+        for(let nail of nails){
+            if(exceptNails.has(nail)){
+                continue
+            }
+
+            // Move the nail to the destination position
+            let localPosition = nail.getLocalPositionInShape(shape)
+            let newGlobalPosition = shape.localToGlobal(localPosition)
+            if(nail.position.getDistance(newGlobalPosition) > eps){
+                nail.position = newGlobalPosition
+                this._nailMoved(nail, exceptNails, exceptShapes)
+            }
+        }
+    }
+
+    _nailMoved(nail: NailShapeJS, exceptNails: Set<NailShapeJS>, exceptShapes: Set<BaseSolidShape>){
+        exceptNails.add(nail)
+
+        let currentNailPosition = nail.position
+
+        for(let shape of nail.getShapes()){
+            if(exceptShapes.has(shape))
+                continue
+
+            // Move the nail to the destination position
+            let nailLocalPosition = nail.getLocalPositionInShape(shape)
+            let nailVector = nailLocalPosition.subtract(shape.localPivotPosition)
+            let nailTheta = nailVector.angle
+
+            let vector = currentNailPosition.subtract(shape.position)
+            shape.setRotation(vector.angle - nailTheta, false, false)
+            shape.updatePositionAndRotation()
+
+            let afterNailPosition = shape.localToGlobal(nailLocalPosition)
+            let nailOffset = currentNailPosition.subtract(afterNailPosition)
+            shape.setParentLocalPosition(shape.position.add(nailOffset), true, false)
+            shape.updatePositionAndRotation()
+
+            this._shapeMoved(shape, exceptNails, exceptShapes)
+        }
     }
 }
 

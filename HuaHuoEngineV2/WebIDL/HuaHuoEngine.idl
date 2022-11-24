@@ -338,6 +338,9 @@ ElementShape implements BaseShape;
 [NoDelete]
 interface NailShape{
     boolean AddShape(BaseShape targetShape, float localX, float localY, float localZ);
+    Vector3f GetLocalPositionInShape(BaseShape targetShape);
+    long GetShapeCount();
+    BaseShape GetShapeAtIndex(long index);
 };
 
 NailShape implements BaseShape;

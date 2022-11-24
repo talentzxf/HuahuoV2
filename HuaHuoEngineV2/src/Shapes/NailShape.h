@@ -28,12 +28,32 @@ public:
     bool AddShape(BaseShape* targetShape, float localX, float localY, float localZ);
 
     bool ContainShape(BaseShape* shape){
-        return boundShapes.contains(shape);
+        for(auto itr: boundShapes){
+            if(itr->GetInstanceID() == shape->GetInstanceID())
+                return true;
+        }
+        return false;
+    }
+
+    Vector3f* GetLocalPositionInShape(BaseShape* targetShape){
+        if(!shapeLocalPointMap.contains(targetShape)){
+            return NULL;
+        }
+
+        return &shapeLocalPointMap[targetShape];
+    }
+
+    int GetShapeCount(){
+        return boundShapes.size();
+    }
+
+    BaseShape* GetShapeAtIndex(int index){
+        return boundShapes[index];
     }
 
 private:
     std::map<PPtr<BaseShape>, Vector3f> shapeLocalPointMap;
-    std::set<PPtr<BaseShape>> boundShapes;
+    std::vector<PPtr<BaseShape>> boundShapes;
 };
 
 class NailManager: public Object{

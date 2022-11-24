@@ -1,6 +1,34 @@
 import {BaseShapeJS} from "./BaseShapeJS";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {BaseSolidShape} from "./BaseSolidShape";
+import {getNailManager} from "../IK/NailManager";
+import {huahuoEngine} from "../EngineAPI";
+
+class ShapeArrayIterable {
+    nailCppObject
+
+    constructor(nailCppObject) {
+        this.nailCppObject = nailCppObject
+    }
+
+    [Symbol.iterator]() {
+        let curIdx = 0
+        let _this = this
+        const iterator = {
+            next(){
+                if(curIdx < _this.nailCppObject.GetShapeCount()){
+                    let baseShapeRawObj = _this.nailCppObject.GetShapeAtIndex(curIdx++)
+                    let baseShapeJS = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(baseShapeRawObj)
+                    return {value: baseShapeJS, done: false}
+                }
+
+                return {value: null, done: true}
+            }
+        }
+
+        return iterator
+    }
+}
 
 let shapeName = "NailShape"
 class NailShapeJS extends BaseShapeJS{
@@ -18,32 +46,12 @@ class NailShapeJS extends BaseShapeJS{
         this.rawObj.AddShape(targetShape.getRawShape(), localPoint.x, localPoint.y, 0.0)
         this.rawObj.SetGlobalPivotPosition(globalPosition.x, globalPosition.y, 0.0)
 
-        // let _this = this
-        // // Only register for affine transforms
-        // targetShape.registerValueChangeHandler("position|scaling|rotation")(() => {
-        //     _this.shapeMoved(targetShape)
-        //
-        //     for (let [shape, localPoint] of this.shapeLocalPointMap) {
-        //         if (shape != targetShape) // No need to update the same shape again.
-        //         {
-        //             shape.update(true)
-        //         }
-        //     }
-        // })
+        let _this = this
+        // Only register for affine transforms
+        targetShape.registerValueChangeHandler("position|scaling|rotation")(() => {
+            getNailManager().shapeMoved(targetShape)
+        })
     }
-
-
-    // shapeMoved(shape: BaseSolidShape) {
-    //     let localPoint = this.shapeLocalPointMap.get(shape)
-    //     if (localPoint == null) {
-    //         Logger.error("Why local point is null???")
-    //         return
-    //     }
-    //
-    //     this.position = shape.localToGlobal(localPoint)
-    //     this.update()
-    // }
-
 
     createShape() {
         super.createShape();
@@ -55,6 +63,15 @@ class NailShapeJS extends BaseShapeJS{
         this.paperShape.bringToFront()
 
         super.afterCreateShape()
+    }
+
+    getLocalPositionInShape(targetShape: BaseShapeJS): paper.Point{
+        let pos = this.rawObj.GetLocalPositionInShape(targetShape.getRawShape())
+        return new paper.Point(pos.x, pos.y)
+    }
+
+    getShapes(){
+        return new ShapeArrayIterable(this.rawObj)
     }
 }
 

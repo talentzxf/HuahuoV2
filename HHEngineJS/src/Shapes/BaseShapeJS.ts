@@ -967,6 +967,10 @@ abstract class BaseShapeJS {
         return new paper.Point(zx, zy)
     }
 
+    get localPivotPosition(){
+        return this.rawObj.GetLocalPivotPosition()
+    }
+
     updatePositionAndRotation(){
         // Reset the rotation.
         this.paperItem.rotation = this.rawObj.GetRotation();
