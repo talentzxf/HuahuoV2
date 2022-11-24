@@ -2,7 +2,7 @@ import {CustomElement} from "hhcommoncomponents";
 import {paper} from "hhenginejs"
 import {HHColorInput} from "./HHColorInput";
 import {ColorStop} from "hhenginejs";
-import {HHToast} from "hhcommoncomponents";
+import {HHToast, getMethodsAndVariables} from "hhcommoncomponents";
 
 const rectangleOffset = 10
 const canvasWidth = 200
@@ -16,15 +16,6 @@ const penCapHeight = 10
 
 const unselectedPenCapColor = new paper.Color("lightgray")
 const selectedPenCapColor = new paper.Color("black")
-
-const getMethodsAndVariables = (obj: any) => {
-    let properties = new Set<any>()
-    let currentObj = obj
-    do {
-        Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
-    } while ((currentObj = Object.getPrototypeOf(currentObj)))
-    return [...properties.keys()]
-}
 
 class Pen {
     colorStop: ColorStop

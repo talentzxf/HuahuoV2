@@ -2,7 +2,7 @@ import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {SVGFiles} from "../Utilities/Svgs";
 import {paper} from "hhenginejs"
 import {itemSelectable} from "./ShapeSelector";
-import {NailComponent} from "hhenginejs";
+import {NailComponent, NailShapeJS} from "hhenginejs";
 import {getNailManager, isInheritedFromClzName} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
 
@@ -51,7 +51,7 @@ class NailDrawer extends BaseShapeDrawer{
             }
         }
 
-        let nail = getNailManager().createNail()
+        let nail = new NailShapeJS()
         for(let shape of hitShapes){
             if(nail.addShape(shape, new paper.Point(hitPoint.x, hitPoint.y))){
                 let nailComponent = shape.getComponentByTypeName("NailComponent")
@@ -61,13 +61,12 @@ class NailDrawer extends BaseShapeDrawer{
                 }
 
                 nailComponent.addNail(nail)
-
-                shape.update(true)
             }else{
-                getNailManager.removeNail(nail)
+                getNailManager().RemoveNail(nail)
                 HHToast.warn(i18n.t("toast.nailDuplicated"))
             }
         }
+        nail.update()
     }
 
     onBeginToDrawShape(canvas: HTMLCanvasElement) {

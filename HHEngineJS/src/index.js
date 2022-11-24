@@ -15,6 +15,7 @@ import {SVGShapeJS} from "./Shapes/SVGShapeJS";
 import {MirrorShapeJS} from "./Shapes/MirrorShapeJS";
 import {ColorStop} from "./Components/ColorStop";
 import {getNailManager} from "./IK/NailManager";
+import {NailShapeJS} from "./Shapes/NailShapeJS";
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 
@@ -61,6 +62,7 @@ export {
     CurveShapeJS,
     SVGShapeJS,
     MirrorShapeJS,
+    NailShapeJS,
     NailComponent,
     ColorStop,
     getNailManager,

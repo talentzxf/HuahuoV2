@@ -291,6 +291,7 @@ abstract class BaseShapeJS {
         this.valueChangeHandler.callHandlers("rotation", newRotationDegree)
     }
 
+    // The method can only be called after the shape has been created.
     setParentLocalPosition(val: paper.Point, callHandlers: boolean = true, forceUpdate: boolean = true){
         let currentScaling = this.scaling
 
@@ -967,8 +968,6 @@ abstract class BaseShapeJS {
     }
 
     updatePositionAndRotation(){
-        this.paperItem.rotation = this.rawObj.GetRotation();
-
         // Reset the rotation.
         this.paperItem.rotation = this.rawObj.GetRotation();
 

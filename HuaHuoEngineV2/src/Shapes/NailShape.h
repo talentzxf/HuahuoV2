@@ -19,7 +19,6 @@ public:
     NailShape(MemLabelId memLabelId, ObjectCreationMode mode)
     :Super(memLabelId, mode)
     {
-
     }
 
     virtual const char* GetTypeName() override{
@@ -35,7 +34,6 @@ public:
 private:
     std::map<PPtr<BaseShape>, Vector3f> shapeLocalPointMap;
     std::set<PPtr<BaseShape>> boundShapes;
-
 };
 
 class NailManager: public Object{
@@ -70,13 +68,8 @@ public:
         return true;
     }
 
-    NailShape* CreateNail(){
-        NailShape* newNail = Object::Produce<NailShape>();
-        GetPersistentManagerPtr()->MakeObjectPersistent(newNail->GetInstanceID(), StoreFilePath);
-        return newNail;
-    }
-
     void AddNailShapeMapping(BaseShape* shape, NailShape* nailShape){
+        nails.insert(nailShape);
         shapeNailMap[shape].insert(nailShape);
     }
 
@@ -87,12 +80,13 @@ public:
         }
     }
 
+    static NailManager* GetNailManager();
+
 private:
     typedef std::set<PPtr<NailShape>> NailShapeSet;
 
     std::set<PPtr<NailShape>> nails;
     std::map<PPtr<BaseShape>, NailShapeSet> shapeNailMap; // The map from baseShape->Array of nails.
 };
-
 
 #endif //HUAHUOENGINEV2_NAILSHAPE_H

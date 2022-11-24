@@ -61,3 +61,7 @@ void NailManager::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
     printf("gNailManager set.\n");
 }
 
+
+NailManager* NailManager::GetNailManager() {
+    return ::GetNailManagerPtr();
+}

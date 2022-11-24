@@ -64,4 +64,14 @@ function getFileNameFromGZip(d: Uint8Array){
 
     return fileName
 }
-export {pointsNear,relaxRectangle, getMimeTypeFromDataURI, dataURItoBlob, getFileNameFromGZip}
+
+const getMethodsAndVariables = (obj: any) => {
+    let properties = new Set<any>()
+    let currentObj = obj
+    do {
+        Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
+    } while ((currentObj = Object.getPrototypeOf(currentObj)))
+    return [...properties.keys()]
+}
+
+export {pointsNear,relaxRectangle, getMimeTypeFromDataURI, dataURItoBlob, getFileNameFromGZip, getMethodsAndVariables}

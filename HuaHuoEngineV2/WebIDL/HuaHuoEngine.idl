@@ -335,6 +335,20 @@ interface ElementShape{
 };
 ElementShape implements BaseShape;
 
+[NoDelete]
+interface NailShape{
+    boolean AddShape(BaseShape targetShape, float localX, float localY, float localZ);
+};
+
+NailShape implements BaseShape;
+
+[NoDelete]
+interface NailManager{
+    static NailManager GetNailManager();
+    boolean CheckDuplication(BaseShape shape1, BaseShape shape2);
+    void RemoveNail(NailShape nail);
+};
+
 interface HuaHuoEngine {
     static HuaHuoEngine GetInstance();
     static void InitEngine();
@@ -343,4 +357,5 @@ interface HuaHuoEngine {
     BaseShape CreateShape(DOMString shapeName);
     BaseShape DuplicateShape(BaseShape shape);
     void DestroyShape(BaseShape shape);
+
 };
