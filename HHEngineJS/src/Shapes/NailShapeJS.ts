@@ -73,6 +73,16 @@ class NailShapeJS extends BaseShapeJS{
     getShapes(){
         return new ShapeArrayIterable(this.rawObj)
     }
+
+    awakeFromLoad() {
+        super.awakeFromLoad();
+
+        for(let targetShape of this.getShapes()){
+            targetShape.registerValueChangeHandler("position|scaling|rotation")(() => {
+                getNailManager().shapeMoved(targetShape)
+            })
+        }
+    }
 }
 
 clzObjectFactory.RegisterClass(shapeName, NailShapeJS.createNail)
