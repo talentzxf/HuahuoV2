@@ -47,16 +47,23 @@ class NailManager{
         return this.cppNailManager.CheckDuplication(shape1.getRawShape(), shape2.getRawShape())
     }
 
-    shapeMoved(shape: BaseSolidShape){
-        return this._shapeMoved(shape, new Set<NailShapeJS>(), new Set<BaseSolidShape>())
+    shapeMoved(shape: BaseSolidShape, exceptShapes: Set<BaseShapeJS> = null){
+        if(exceptShapes == null){
+            exceptShapes = new Set<BaseShapeJS>()
+        }
+
+        return this._shapeMoved(shape, exceptShapes)
     }
 
-    nailMoved(nail: NailShapeJS){
-        return this._nailMoved(nail, new Set<NailShapeJS>(), new Set<BaseSolidShape>())
+    nailMoved(nail: NailShapeJS, exceptShapes:Set<BaseShapeJS> = null){
+        if(exceptShapes == null){
+            exceptShapes = new Set<BaseShapeJS>()
+        }
+        return this._nailMoved(nail, exceptShapes)
     }
 
     // TODO: Convert iterate to loop.
-    _shapeMoved(shape: BaseSolidShape, exceptNails: Set<NailShapeJS>, exceptShapes: Set<BaseSolidShape>) {
+    _shapeMoved(shape: BaseSolidShape, exceptShapes: Set<BaseSolidShape>) {
         exceptShapes.add(shape)
 
         shape.isTransformationPermanent = false
@@ -66,7 +73,8 @@ class NailManager{
 
         // Update all the nail position
         for(let nail of nails){
-            if(exceptNails.has(nail)){
+
+            if(exceptShapes.has(nail)){
                 continue
             }
 
@@ -74,24 +82,29 @@ class NailManager{
             let localPosition = nail.getLocalPositionInShape(shape)
             let newGlobalPosition = shape.localToGlobal(localPosition)
             if(nail.position.getDistance(newGlobalPosition) > eps){
-                nail.position = newGlobalPosition
-                this._nailMoved(nail, exceptNails, exceptShapes)
+                nail.isTransformationPermanent = false
+                // nail.position = newGlobalPosition
+                nail.setParentLocalPosition(newGlobalPosition, false, false)
+                this._nailMoved(nail, exceptShapes)
                 nail.update()
+                nail.isTransformationPermanent = true
             }
         }
         shape.isTransformationPermanent = true
     }
 
-    _nailMoved(nail: NailShapeJS, exceptNails: Set<NailShapeJS>, exceptShapes: Set<BaseSolidShape>){
-        exceptNails.add(nail)
+    _nailMoved(nail: NailShapeJS, exceptShapes: Set<BaseSolidShape>){
+        exceptShapes.add(nail)
         nail.isTransformationPermanent = false
 
         let currentNailPosition = nail.position
 
         for(let shape of nail.getShapes()){
+
             if(exceptShapes.has(shape))
                 continue
 
+            shape.isTransformationPermanent = false
             // Move the nail to the destination position
             let nailLocalPosition = nail.getLocalPositionInShape(shape)
             let nailVector = nailLocalPosition.subtract(shape.localPivotPosition)
@@ -103,10 +116,12 @@ class NailManager{
 
             let afterNailPosition = shape.localToGlobal(nailLocalPosition)
             let nailOffset = currentNailPosition.subtract(afterNailPosition)
-            shape.setParentLocalPosition(shape.position.add(nailOffset), true, false)
+            shape.setParentLocalPosition(shape.position.add(nailOffset), false, false)
             shape.updatePositionAndRotation()
 
-            this._shapeMoved(shape, exceptNails, exceptShapes)
+            this._shapeMoved(shape, exceptShapes)
+
+            shape.isTransformationPermanent = true
         }
 
         nail.isTransformationPermanent = true
