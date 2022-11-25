@@ -65,6 +65,14 @@ public:
     AbstractFrameState* GetFrameState(int idx){
         return mFrameStates[idx].GetComponentPtr();
     }
+
+    void SetRecordTransformationOfKeyFrame(bool isRecordPosition){
+        this->mRecordTransformationOfKeyFrame = isRecordPosition;
+    }
+
+    bool GetRecordTransformationOfKeyFrame(){
+        return this->mRecordTransformationOfKeyFrame;
+    }
 private:
 
     Container   mFrameStates;
@@ -76,16 +84,21 @@ private:
     std::string mShapeName;
     std::vector<int> mKeyFrameCache;
 
+    // The flag indicates whether we need to "really" update global position in key frames.
+    // In some cases, the position are just temporary, we don't need to update it permanently.
+    bool mRecordTransformationOfKeyFrame;
+
 private:
     AbstractFrameState* ProduceFrameStateByType(const HuaHuo::Type* type);
     template<class TransferFunction> void TransferFrameStates(TransferFunction& transfer);
 public:
     BaseShape(MemLabelId label, ObjectCreationMode mode)
-        :Super(label, mode)
-        ,mLayer(NULL)
-        ,mBornFrameId(-1)
-        ,mIndex(-1)
-        ,mIsVisible(true)
+        : Super(label, mode)
+        , mLayer(NULL)
+        , mBornFrameId(-1)
+        , mIndex(-1)
+        , mIsVisible(true)
+        , mRecordTransformationOfKeyFrame(true)
     {
         AddFrameStateByName("ShapeTransformFrameState");
         AddFrameStateByName("ShapeSegmentFrameState");

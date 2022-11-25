@@ -95,6 +95,16 @@ public:
     void RecordRotation(int frameId, float rotation);
     friend class BaseShape;
 
+    void UpdateTemporaryPosition(float x, float y, float z){
+        m_CurrentTransformData.globalPivotPosition.x = x;
+        m_CurrentTransformData.globalPivotPosition.y = y;
+        m_CurrentTransformData.globalPivotPosition.z = z;
+    }
+
+    void UpdateTemporaryRotation(float rotation){
+        m_CurrentTransformData.rotation = rotation;
+    }
+
 private:
     TransformData m_CurrentTransformData;
 };

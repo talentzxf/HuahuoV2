@@ -118,20 +118,28 @@ void BaseShape::SetBornFrameId(SInt32 bornFrameId) {
 }
 
 void BaseShape::SetGlobalPivotPosition(float x, float y, float z) {
-    Layer *shapeLayer = GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
-    GetFrameState<ShapeTransformFrameState>().RecordGlobalPivotPosition(currentFrameId, x, y, z);
-    shapeLayer->AddKeyFrame(currentFrameId, this);
+    if(this->mRecordTransformationOfKeyFrame){
+        Layer *shapeLayer = GetLayer();
+        int currentFrameId = shapeLayer->GetCurrentFrame();
+        GetFrameState<ShapeTransformFrameState>().RecordGlobalPivotPosition(currentFrameId, x, y, z);
+        shapeLayer->AddKeyFrame(currentFrameId, this);
+    }else{ // Just update it temporarily
+        GetFrameState<ShapeTransformFrameState>().UpdateTemporaryPosition(x, y, z);
+    }
 }
 
 void BaseShape::SetRotation(float rotation) {
 
-    Layer *shapeLayer = GetLayer();
+    if(this->mRecordTransformationOfKeyFrame){
+        Layer *shapeLayer = GetLayer();
 
-    int currentFrameId = shapeLayer->GetCurrentFrame();
-    GetFrameState<ShapeTransformFrameState>().RecordRotation(currentFrameId, rotation);
+        int currentFrameId = shapeLayer->GetCurrentFrame();
+        GetFrameState<ShapeTransformFrameState>().RecordRotation(currentFrameId, rotation);
 
-    shapeLayer->AddKeyFrame(currentFrameId, this);
+        shapeLayer->AddKeyFrame(currentFrameId, this);
+    }else{
+        GetFrameState<ShapeTransformFrameState>().UpdateTemporaryRotation(rotation);
+    }
 }
 
 void BaseShape::SetScale(float xScale, float yScale, float zScale) {

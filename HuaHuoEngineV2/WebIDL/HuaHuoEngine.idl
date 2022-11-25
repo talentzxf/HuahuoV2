@@ -242,6 +242,9 @@ interface BaseShape{
     void RefreshKeyFrameCache();
     long GetKeyFrameCount();
     long GetKeyFrameAtIdx(long idx);
+
+    void SetRecordTransformationOfKeyFrame(boolean isRecordPosition);
+    boolean GetRecordTransformationOfKeyFrame();
 };
 
 [NoDelete]

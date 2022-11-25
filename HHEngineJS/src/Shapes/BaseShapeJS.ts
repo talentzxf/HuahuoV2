@@ -28,7 +28,9 @@ abstract class BaseShapeJS {
 
     protected boundingBoxGroup = null;
 
-    public isPermanent: boolean = false;
+    // If this shape is not loaded from (i.e. generated on the fly), we might need to record some information during creation. like it's local pivot position.
+    // Or else, just read these information from the file.
+    private isLoadedFromFile: boolean = false;
 
     // This is used for Editor only to set properties.
     protected propertySheet: PropertySheet
@@ -49,6 +51,10 @@ abstract class BaseShapeJS {
     private _isUpdatePos: boolean = true
 
     private lastRenderFrame = -1
+
+    set isTransformationPermanent(isPermanent: boolean){
+        this.rawObj.SetRecordTransformationOfKeyFrame(isPermanent)
+    }
 
     set isUpdatePos(val: boolean){
         this._isUpdatePos = val
@@ -423,7 +429,7 @@ abstract class BaseShapeJS {
     }
 
     awakeFromLoad() {
-        this.isPermanent = true
+        this.isLoadedFromFile = true
         this.update(true);
     }
 
@@ -825,7 +831,7 @@ abstract class BaseShapeJS {
     }
 
     beforeUpdate(force: boolean = false) {
-        if (this.isPermanent && !this.rawObj.IsVisible()) {
+        if (this.isLoadedFromFile && !this.rawObj.IsVisible()) {
             this.selected = false
         }
     }
@@ -844,7 +850,7 @@ abstract class BaseShapeJS {
     }
 
     afterCreateShape() {
-        if (!this.isPermanent) {
+        if (!this.isLoadedFromFile) {
             let paperPos = this.paperShape.position
 
             let localPos = this.paperShape.globalToLocal(paperPos)
@@ -1045,7 +1051,7 @@ abstract class BaseShapeJS {
             this.beforeUpdate(true)
             this.duringUpdate(true)
 
-            if (this.isPermanent == true && !this.rawObj.IsVisible()) {
+            if (this.isLoadedFromFile == true && !this.rawObj.IsVisible()) {
                 this.paperItem.visible = false
                 this.selected = false
             } else {

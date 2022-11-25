@@ -59,6 +59,7 @@ class NailManager{
     _shapeMoved(shape: BaseSolidShape, exceptNails: Set<NailShapeJS>, exceptShapes: Set<BaseSolidShape>) {
         exceptShapes.add(shape)
 
+        shape.isTransformationPermanent = false
         // Shape moved, get all it's nails and update.
         let nailComponent = shape.getComponentByTypeName("NailComponent")
         let nails = nailComponent["getNails"]()
@@ -78,10 +79,12 @@ class NailManager{
                 nail.update()
             }
         }
+        shape.isTransformationPermanent = true
     }
 
     _nailMoved(nail: NailShapeJS, exceptNails: Set<NailShapeJS>, exceptShapes: Set<BaseSolidShape>){
         exceptNails.add(nail)
+        nail.isTransformationPermanent = false
 
         let currentNailPosition = nail.position
 
@@ -105,6 +108,8 @@ class NailManager{
 
             this._shapeMoved(shape, exceptNails, exceptShapes)
         }
+
+        nail.isTransformationPermanent = true
     }
 }
 
