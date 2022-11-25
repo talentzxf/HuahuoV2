@@ -103,7 +103,8 @@
     "projectUploaded": "项目已被成功上传",
     "elementCreated": "原件 {{elementName}} 创建成功!",
     "insufficientColorStop": "无法删除,至少需要有两个颜色点.",
-    "nailDuplicated": "无法添加钉子，这两个形状已经被其他钉子绑定了"
+    "nailDuplicated": "无法添加钉子，这两个形状已经被其他钉子绑定了",
+    "nailMirageError": "钉子无法绑定镜中幻象."
   },
   "hint": {
     "saveLocal": "将项目保存到本地",

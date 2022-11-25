@@ -2,7 +2,6 @@ import * as paper from "paper";
 import {Vector2} from "hhcommoncomponents"
 import {MirrorComponent} from "../Components/MirrorComponent";
 import {clzObjectFactory} from "../CppClassObjectFactory";
-import {BaseShapeJS} from "./BaseShapeJS";
 import {BaseSolidShape} from "./BaseSolidShape";
 
 let shapeName = "MirrorShape"

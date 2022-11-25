@@ -45,12 +45,21 @@ abstract class BaseShapeJS {
 
     private customComponents:Array<AbstractComponent> = new Array<AbstractComponent>()
 
-    private isMirage: boolean = false
+    private _isMirage: boolean = false
+    private _isUpdatePos: boolean = true
 
     private lastRenderFrame = -1
 
-    setIsMirage(isMirage: boolean){
-        this.isMirage = isMirage
+    set isUpdatePos(val: boolean){
+        this._isUpdatePos = val
+    }
+
+    set isMirage(val:boolean){
+        this._isMirage = val
+    }
+
+    get isMirage(){
+        return this._isMirage
     }
 
     get belongStoreId(): number{
@@ -329,7 +338,7 @@ abstract class BaseShapeJS {
     }
 
     set position(val: paper.Point) {
-        if(!this.isMirage)
+        if(!this._isMirage)
             this.setParentLocalPosition(val)
         else{
             this.paperShape.position = val
@@ -998,7 +1007,7 @@ abstract class BaseShapeJS {
         // Reset the rotation.
         this.paperItem.rotation = this.rawObj.GetRotation();
 
-        if(!this.isMirage) {
+        if(this._isUpdatePos) {
             this.updatePositionAndRotation()
         }
 

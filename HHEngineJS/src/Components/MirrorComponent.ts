@@ -64,6 +64,8 @@ class MirrorComponent extends AbstractComponent {
         let duplicatedShape = LoadShapeFromCppShape(rawObj)
         duplicatedShape.setSelectedMeta(this.baseShape)
 
+        duplicatedShape.isMirage = true
+
         duplicatedShape.registerValueChangeHandler("*")(()=>{
             shape.update(true) // update the original shape.
         })

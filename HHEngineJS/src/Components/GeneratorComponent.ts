@@ -54,7 +54,8 @@ class GeneratorComponent extends AbstractComponent {
                     }
 
                     duplicatedShape.setSelectedMeta(null)
-                    duplicatedShape.setIsMirage(true)
+                    duplicatedShape.isMirage = true
+                    duplicatedShape.isUpdatePos = false // Do not actively update the position, it will be updated in this component.
                     mirageShapeArray.push(duplicatedShape)
 
                     targetShape.registerValueChangeHandler("*")(()=>{
