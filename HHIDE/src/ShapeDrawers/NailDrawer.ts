@@ -66,7 +66,7 @@ class NailDrawer extends BaseShapeDrawer {
 
         if (nail) {
             this.addShapeToCurrentLayer(nail)
-            nail.update()
+            nail.update(true)
         }
     }
 

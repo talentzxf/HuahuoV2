@@ -4,6 +4,8 @@ import {BaseSolidShape} from "./BaseSolidShape";
 import {getNailManager} from "../IK/NailManager";
 import {huahuoEngine} from "../EngineAPI";
 
+let allAffineTransformEvents = "position|scaling|rotation"
+
 class ShapeArrayIterable {
     nailCppObject
 
@@ -62,7 +64,10 @@ class NailShapeJS extends BaseShapeJS{
         this.paperShape.applyMatrix = false
         this.paperShape.bringToFront()
 
-        super.afterCreateShape()    
+        // The position might be set before the createShape, so need to sync again here.
+        this.updatePositionAndRotation()
+
+        super.afterCreateShape()
     }
 
     getLocalPositionInShape(targetShape: BaseShapeJS): paper.Point{
@@ -74,11 +79,20 @@ class NailShapeJS extends BaseShapeJS{
         return new ShapeArrayIterable(this.rawObj)
     }
 
+    afterWASMReady() {
+        super.afterWASMReady();
+
+        let _this = this
+        this.registerValueChangeHandler(allAffineTransformEvents)(() => {
+            getNailManager().nailMoved(_this)
+        })
+    }
+
     awakeFromLoad() {
         super.awakeFromLoad();
 
         for(let targetShape of this.getShapes()){
-            targetShape.registerValueChangeHandler("position|scaling|rotation")(() => {
+            targetShape.registerValueChangeHandler(allAffineTransformEvents)(() => {
                 getNailManager().shapeMoved(targetShape)
             })
         }

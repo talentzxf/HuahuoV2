@@ -75,6 +75,7 @@ class NailManager{
             if(nail.position.getDistance(newGlobalPosition) > eps){
                 nail.position = newGlobalPosition
                 this._nailMoved(nail, exceptNails, exceptShapes)
+                nail.update()
             }
         }
     }
