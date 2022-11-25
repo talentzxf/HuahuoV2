@@ -5,6 +5,7 @@
 #ifndef HUAHUOENGINEV2_NAILSHAPE_H
 #define HUAHUOENGINEV2_NAILSHAPE_H
 #include "BaseShape.h"
+#include <algorithm>
 #include <set>
 
 class NailManager;
@@ -89,12 +90,20 @@ public:
     }
 
     void AddNailShapeMapping(BaseShape* shape, NailShape* nailShape){
-        nails.insert(nailShape);
+        if( std::find_if(nails.begin(), nails.end(), [nailShape](PPtr<NailShape> shape){
+            return shape.GetInstanceID() == nailShape->GetInstanceID();
+        }) == nails.end()){
+            nails.push_back(nailShape);
+        }
+
         shapeNailMap[shape].insert(nailShape);
     }
 
     void RemoveNail(NailShape* nailShape){
-        nails.erase(nailShape);
+        std::remove_if(nails.begin(), nails.end(), [nailShape](PPtr<NailShape> shape){
+            return nailShape->GetInstanceID() == shape.GetInstanceID();
+        });
+
         for(auto itr : shapeNailMap){
             itr.second.erase(nailShape);
         }
@@ -102,10 +111,21 @@ public:
 
     static NailManager* GetNailManager();
 
+    int GetNailCount(){
+        return nails.size();
+    }
+
+    NailShape* GetNail(int index){
+        if(index >= nails.size())
+            return NULL;
+
+        return nails[index];
+    }
+
 private:
     typedef std::set<PPtr<NailShape>> NailShapeSet;
 
-    std::set<PPtr<NailShape>> nails;
+    std::vector<PPtr<NailShape>> nails;
     std::map<PPtr<BaseShape>, NailShapeSet> shapeNailMap; // The map from baseShape->Array of nails.
 };
 

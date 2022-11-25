@@ -353,6 +353,9 @@ interface NailManager{
     static NailManager GetNailManager();
     boolean CheckDuplication(BaseShape shape1, BaseShape shape2);
     void RemoveNail(NailShape nail);
+
+    long GetNailCount();
+    NailShape GetNail(long index);
 };
 
 interface HuaHuoEngine {

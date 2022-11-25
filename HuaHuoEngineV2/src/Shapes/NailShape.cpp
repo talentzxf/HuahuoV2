@@ -26,7 +26,19 @@ bool NailShape::AddShape(BaseShape *targetShape, float localX, float localY, flo
     }
 
     this->shapeLocalPointMap[targetShape].Set(localX, localY, localZ);
-    this->boundShapes.push_back(targetShape);
+
+    bool hasInserted = false;
+    // Check duplication
+    for(auto shapeItr : this->boundShapes){
+        if(shapeItr->GetInstanceID() == targetShape->GetInstanceID()){
+            hasInserted = true;
+            break;
+        }
+    }
+
+    if(!hasInserted)
+        this->boundShapes.push_back(targetShape);
+
     GetNailManagerPtr()->AddNailShapeMapping(targetShape, this);
     return true;
 }

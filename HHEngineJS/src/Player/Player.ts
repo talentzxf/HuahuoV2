@@ -2,6 +2,7 @@ import {GlobalConfig} from "../GlobalConfig";
 import {huahuoEngine} from "../EngineAPI";
 import {LayerShapesManager} from "./LayerShapesManager";
 import {IsValidWrappedObject} from "hhcommoncomponents";
+import {getNailManager} from "../IK/NailManager";
 
 class Player{
     animationFrame = -1
@@ -83,6 +84,8 @@ class Player{
         }
 
         this.updateAllShapes()
+
+        getNailManager().update()
 
         this.currentlyPlayingFrameId = playFrameId
     }
