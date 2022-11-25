@@ -136,6 +136,7 @@ class NailManager {
                 let localNailPosition = nailShape.getLocalPositionInShape(shape)
                 let prevGlobalNailPosition = shape.localToGlobal(localNailPosition)
                 if(localNailPosition.getDistance(prevGlobalNailPosition) >= eps){
+                    this.nailMoved(nailShape) // TODO: Nail moved or shape moved??
                     this.shapeMoved(shape)
                 }
             }
