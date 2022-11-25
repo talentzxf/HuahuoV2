@@ -64,7 +64,7 @@ class NailShapeJS extends BaseShapeJS{
         let _this = this
         // Only register for affine transforms
         targetShape.registerValueChangeHandler("position|scaling|rotation")(() => {
-            getNailManager().shapeMoved(targetShape, null, true)
+            getNailManager().shapeMoved(targetShape, true)
         })
     }
 
@@ -97,7 +97,7 @@ class NailShapeJS extends BaseShapeJS{
 
         let _this = this
         this.registerValueChangeHandler(allAffineTransformEvents)(() => {
-            getNailManager().nailMoved(_this, null, true)
+            getNailManager().nailMoved(_this, true)
         })
 
         let nailConfig = {
@@ -115,7 +115,7 @@ class NailShapeJS extends BaseShapeJS{
 
         for(let targetShape of this.getBoundShapes()){
             targetShape.registerValueChangeHandler(allAffineTransformEvents)(() => {
-                getNailManager().shapeMoved(targetShape, null, true)
+                getNailManager().shapeMoved(targetShape, true)
             })
         }
     }

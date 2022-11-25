@@ -6,7 +6,7 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {BaseSolidShape} from "../Shapes/BaseSolidShape";
 import {NailShapeJS} from "../Shapes/NailShapeJS";
 
-const eps: number = 0.001;
+const eps: number = 0.1;
 
 /**
  * Use FABRIK to do the IK. http://andreasaristidou.com/FABRIK.html
@@ -52,30 +52,30 @@ class NailManager {
         return this.cppNailManager.CheckDuplication(shape1.getRawShape(), shape2.getRawShape())
     }
 
-    shapeMoved(shape: BaseSolidShape, exceptShapes: Set<BaseShapeJS> = null, isTransformationPermanent: boolean = false) {
-        if (exceptShapes == null) {
-            exceptShapes = new Set<BaseShapeJS>()
-        }
+    shapeMoved(shape: BaseSolidShape, isTransformationPermanent: boolean = false) {
+        let exceptShapes = new Set<BaseShapeJS>()
 
         this._shapeMoved(shape, exceptShapes, isTransformationPermanent)
     }
 
-    nailMoved(nail: NailShapeJS, exceptShapes: Set<BaseShapeJS> = null, isTransformationPermanent: boolean = false) {
-        if (exceptShapes == null) {
-            exceptShapes = new Set<BaseShapeJS>()
-        }
-
+    nailMoved(nail: NailShapeJS, isTransformationPermanent: boolean = false) {
         let targetPosition = nail.position
         let lastDifference = Number.NaN
         let difference = Number.NaN
 
         let firstRun = true
 
+        let totallyIterated = 0
+
         do{
+            let exceptShapes = new Set<BaseShapeJS>()
+
             if(!firstRun){
                 lastDifference = difference
             }
 
+            nail.isTransformationPermanent = isTransformationPermanent
+            nail.setParentLocalPosition(targetPosition, false, false)
             // Iterate until target difference doesn't change or within a margin.
             this._nailMoved(nail, exceptShapes, isTransformationPermanent)
             difference = targetPosition.getDistance(nail.position)
@@ -84,7 +84,10 @@ class NailManager {
             if(Math.abs(lastDifference - difference) <= eps){ // If the residue error doesn't change.
                 break;
             }
+            totallyIterated++
         }while(Math.abs(difference) > eps )
+
+        console.log("Totally iterated:" + totallyIterated + " times of IK.")
 
     }
 
