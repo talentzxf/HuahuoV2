@@ -8,6 +8,9 @@ import {NailShapeJS} from "../Shapes/NailShapeJS";
 
 const eps: number = 0.001;
 
+/**
+ * Use FABRIK to do the IK. http://andreasaristidou.com/FABRIK.html
+ */
 class NailManager {
     cppNailManager
 
@@ -54,14 +57,35 @@ class NailManager {
             exceptShapes = new Set<BaseShapeJS>()
         }
 
-        return this._shapeMoved(shape, exceptShapes, isTransformationPermanent)
+        this._shapeMoved(shape, exceptShapes, isTransformationPermanent)
     }
 
     nailMoved(nail: NailShapeJS, exceptShapes: Set<BaseShapeJS> = null, isTransformationPermanent: boolean = false) {
         if (exceptShapes == null) {
             exceptShapes = new Set<BaseShapeJS>()
         }
-        return this._nailMoved(nail, exceptShapes, isTransformationPermanent)
+
+        let targetPosition = nail.position
+        let lastDifference = Number.NaN
+        let difference = Number.NaN
+
+        let firstRun = true
+
+        do{
+            if(!firstRun){
+                lastDifference = difference
+            }
+
+            // Iterate until target difference doesn't change or within a margin.
+            this._nailMoved(nail, exceptShapes, isTransformationPermanent)
+            difference = targetPosition.getDistance(nail.position)
+            firstRun = false
+
+            if(Math.abs(lastDifference - difference) <= eps){ // If the residue error doesn't change.
+                break;
+            }
+        }while(Math.abs(difference) > eps )
+
     }
 
     // TODO: Convert iterate to loop.
@@ -82,11 +106,18 @@ class NailManager {
             // Move the nail to the destination position
             let localPosition = nail.getLocalPositionInShape(shape)
             let newGlobalPosition = shape.localToGlobal(localPosition)
-            if (nail.position.getDistance(newGlobalPosition) > eps) {
-                nail.isTransformationPermanent = isTransformationPermanent
-                // nail.position = newGlobalPosition
-                nail.setParentLocalPosition(newGlobalPosition, false, false)
-                this._nailMoved(nail, exceptShapes, isTransformationPermanent)
+            let prevNailPosition = nail.position
+            if (prevNailPosition.getDistance(newGlobalPosition) > eps) {
+                if(!nail.isStatic) { // The nail is actually static, set it's position back and back propograte.
+                    nail.isTransformationPermanent = isTransformationPermanent
+                    // nail.position = newGlobalPosition
+                    nail.setParentLocalPosition(newGlobalPosition, false, false)
+                    this._nailMoved(nail, exceptShapes, isTransformationPermanent)
+                }else{ // The nail is static, begin to back propagate.
+                    let bpExcludedShapes = new Set<BaseShapeJS>()
+                    this._nailMoved(nail, bpExcludedShapes, isTransformationPermanent)
+                }
+
                 nail.update()
                 nail.isTransformationPermanent = true
             }
