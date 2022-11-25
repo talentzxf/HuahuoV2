@@ -87,6 +87,9 @@
       "generateInterval": "Generate Interval",
       "gradientColorArray": "Gradient Color Array",
       "centerPosition": "Center Position"
+    },
+    "nail": {
+      "isStatic": "Is Static"
     }
   },
   "timeline": {

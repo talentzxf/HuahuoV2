@@ -3,6 +3,7 @@ import {PropertyConfig} from "./PropertyConfig";
 enum PropertyType{
     GROUP,
     PANEL,
+    BOOLEAN,
     STRING,
     VECTOR2,
     VECTOR3,

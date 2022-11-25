@@ -10,12 +10,14 @@ import {referencePropertyDivGenerator} from "./ReferencePropertyDivGenerator";
 import {componentPropertyDivGenerator, panelPropertyDivGenerator} from "./PanelPropertyDivGenerator";
 import {arrayPropertyDivGenerator} from "./ArrayPropertyDivGenerator";
 import {colorStopArrayPropertyDivGenerator} from "./ColorStopArrayPropertyDivGenerator";
+import {booleanPropertyDivGenerator} from "./BooleanPropertyDivGenerator";
 
 // Avoid being imported twice.
 // TODO: Any less dirty approach ??
 if(!window["IsTypesRegistered"]){
     RegisterDivGenerator(PropertyType.COLOR, colorPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.FLOAT, floatPropertyDivGenerator)
+    RegisterDivGenerator(PropertyType.BOOLEAN, booleanPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.VECTOR2, vector2PropertyGenerator)
     RegisterDivGenerator(PropertyType.STRING, stringPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.BUTTON, buttonPropertyDivGenerator)

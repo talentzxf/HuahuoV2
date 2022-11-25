@@ -3,6 +3,7 @@ import {clzObjectFactory} from "../CppClassObjectFactory";
 import {BaseSolidShape} from "./BaseSolidShape";
 import {getNailManager} from "../IK/NailManager";
 import {huahuoEngine} from "../EngineAPI";
+import {PropertyType} from "hhcommoncomponents";
 
 let allAffineTransformEvents = "position|scaling|rotation"
 
@@ -34,6 +35,18 @@ class ShapeArrayIterable {
 
 let shapeName = "NailShape"
 class NailShapeJS extends BaseShapeJS{
+
+    // TODO: Move this into cpp side.
+    isStatic: boolean
+
+    getIsStatic(){
+        return this.isStatic
+    }
+
+    setIsStatic(val: boolean){
+        this.isStatic = val
+    }
+
     static createNail(rawObj){
         return new NailShapeJS(rawObj)
     }
@@ -86,6 +99,15 @@ class NailShapeJS extends BaseShapeJS{
         this.registerValueChangeHandler(allAffineTransformEvents)(() => {
             getNailManager().nailMoved(_this, null, true)
         })
+
+        let nailConfig = {
+            key: "inspector.nail.isStatic",
+            type: PropertyType.BOOLEAN,
+            getter: this.getIsStatic.bind(this),
+            setter: this.setIsStatic.bind(this)
+        }
+
+        this.propertySheet.addProperty(nailConfig)
     }
 
     awakeFromLoad() {
