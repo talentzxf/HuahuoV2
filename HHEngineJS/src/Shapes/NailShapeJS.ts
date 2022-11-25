@@ -84,7 +84,7 @@ class NailShapeJS extends BaseShapeJS{
 
         let _this = this
         this.registerValueChangeHandler(allAffineTransformEvents)(() => {
-            getNailManager().nailMoved(_this)
+            getNailManager().nailMoved(_this, null, true)
         })
     }
 

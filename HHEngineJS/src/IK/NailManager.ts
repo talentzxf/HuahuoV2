@@ -86,7 +86,7 @@ class NailManager {
                 nail.isTransformationPermanent = isTransformationPermanent
                 // nail.position = newGlobalPosition
                 nail.setParentLocalPosition(newGlobalPosition, false, false)
-                this._nailMoved(nail, exceptShapes)
+                this._nailMoved(nail, exceptShapes, isTransformationPermanent)
                 nail.update()
                 nail.isTransformationPermanent = true
             }
@@ -122,14 +122,12 @@ class NailManager {
             shape.isTransformationPermanent = true
             shape.updatePositionAndRotation()
 
-            this._shapeMoved(shape, exceptShapes)
+            this._shapeMoved(shape, exceptShapes, isTransformationPermanent)
 
         }
     }
 
     update(){
-        let changedShapes = new Set<BaseShapeJS>()
-
         for(let index = 0; index < this.cppNailManager.GetNailCount(); index++){
             let nailRawObj = this.cppNailManager.GetNail(index)
             let nailShape: NailShapeJS = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(nailRawObj)
