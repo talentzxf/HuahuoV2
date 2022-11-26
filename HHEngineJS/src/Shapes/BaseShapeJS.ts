@@ -776,7 +776,10 @@ abstract class BaseShapeJS {
                                     getter: this.getFollowCurveLength.bind(this),
                                     setter: this.setFollowCurveLength.bind(this),
                                     registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("position", this.getFollowCurveLengthPotion.bind(this)),
-                                    unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position")
+                                    unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position"),
+                                    config:{
+                                        step: 0.01
+                                    }
                                 }
                             ]
                         }

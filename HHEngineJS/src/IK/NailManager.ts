@@ -14,6 +14,8 @@ const eps: number = 0.1;
 class NailManager {
     cppNailManager
 
+    nailShape: paper.Path
+
     constructor() {
         let _this = this
         huahuoEngine.ExecuteAfterInited(() => {
@@ -62,6 +64,14 @@ class NailManager {
     nailMoved(nail: NailShapeJS, isTransformationPermanent: boolean = false) {
 
         console.log("Nail Target:" + nail.position)
+        if(this.nailShape == null){
+            this.nailShape = new paper.Path.Circle(nail.position, 20)
+            this.nailShape.fillColor = new paper.Color("purple")
+            this.nailShape.bringToFront()
+        }else{
+            this.nailShape.bringToFront()
+            this.nailShape.position = nail.position
+        }
 
         let exceptShapes = new Set<BaseShapeJS>()
         let tracePath = new Array<BaseShapeJS>();
@@ -163,13 +173,13 @@ class NailManager {
         let exceptShapes = new Set<BaseShapeJS>()
 
         let currentIndex = path.length - 1
-        while(currentIndex >= 0){
+        while(currentIndex > 1){ // We need to decrease the index twice in the loop. So currentIndex need to be larger than 1 to enter the loop.
             let currentNail = path[currentIndex--] as NailShapeJS
             involvedNails.add(currentNail)
 
             let currentShape = path[currentIndex--]
             exceptShapes.add(currentShape)
-            let nextNail = path[currentIndex--] as NailShapeJS
+            let nextNail = path[currentIndex] as NailShapeJS // nextNail doesn't need to decrease index, cause it will be the next currentNail.
             if(nextNail){
                 exceptShapes.add(nextNail)
             }
