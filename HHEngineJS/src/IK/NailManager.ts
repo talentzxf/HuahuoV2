@@ -63,37 +63,11 @@ class NailManager {
 
         console.log("Nail Target:" + nail.position)
 
-        let targetPosition = nail.position
-        let lastDifference = Number.NaN
-        let difference = Number.NaN
+        let exceptShapes = new Set<BaseShapeJS>()
+        let tracePath = new Array<BaseShapeJS>();
 
-        let firstRun = true
-
-        let totallyIterated = 0
-
-        do{
-            let exceptShapes = new Set<BaseShapeJS>()
-            let tracePath = new Array<BaseShapeJS>();
-
-            if(!firstRun){
-                lastDifference = difference
-            }
-
-            nail.isTransformationPermanent = isTransformationPermanent
-            nail.setParentLocalPosition(targetPosition, false, false)
             // Iterate until target difference doesn't change or within a margin.
-            this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent)
-            difference = targetPosition.getDistance(nail.position)
-            firstRun = false
-
-            if(Math.abs(lastDifference - difference) <= eps){ // If the residue error doesn't change.
-                break;
-            }
-            totallyIterated++
-        }while(Math.abs(difference) > eps )
-
-        console.log("Totally iterated:" + totallyIterated + " times of IK.")
-
+        this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent)
     }
 
     // TODO: Convert iterate to loop.
@@ -124,6 +98,7 @@ class NailManager {
                     nail.setParentLocalPosition(newGlobalPosition, false, false)
                     this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent)
                 }else{ // The nail is static, begin to back propagate. This time perform a REAL FABRIK algorithm
+                    tracePath.push(nail) // Add the nail into path.
                     this.realFABRIK(tracePath, isTransformationPermanent)
                 }
 
@@ -148,21 +123,28 @@ class NailManager {
         }
     }
 
-    moveShapeBasedOnNailMovement(nail: NailShapeJS, shape: BaseShapeJS, targetNail:NailShapeJS, isTransformationPermanent: boolean){
+    moveShapeBasedOnNailMovement(nail: NailShapeJS, shape: BaseShapeJS, targetNail:NailShapeJS, isTransformationPermanent: boolean) {
         let currentNailPosition = nail.position
         let nailLocalPosition = nail.getLocalPositionInShape(shape)
-        let nailVector = nailLocalPosition.subtract(shape.localPivotPosition)
-        let nailTheta = nailVector.angle
 
         let vector = null
-        if(targetNail){ // The difference between a fake FABRIK and a real FABRIK
-            vector = currentNailPosition.subtract(targetNail.position)
-        }else{
+        if (targetNail) { // The difference between a fake FABRIK and a real FABRIK
+            vector = targetNail.position.subtract(currentNailPosition)
+        } else {
             vector = currentNailPosition.subtract(shape.position)
         }
 
         shape.isTransformationPermanent = isTransformationPermanent
-        shape.setRotation(vector.angle - nailTheta, false, false)
+
+        if (targetNail){ // Real FABRIK doesn't need to consider nailTheta
+            shape.setRotation(vector.angle, false, false)
+        }
+        else{
+            let nailVector = nailLocalPosition.subtract(shape.localPivotPosition)
+            let nailTheta = nailVector.angle
+            shape.setRotation(vector.angle - nailTheta, false, false)
+        }
+
         shape.updatePositionAndRotation()
 
         let afterNailPosition = shape.localToGlobal(nailLocalPosition)
@@ -182,7 +164,7 @@ class NailManager {
 
         let currentIndex = path.length - 1
         while(currentIndex >= 0){
-            let currentNail = path[currentIndex] as NailShapeJS
+            let currentNail = path[currentIndex--] as NailShapeJS
             involvedNails.add(currentNail)
 
             let currentShape = path[currentIndex--]
