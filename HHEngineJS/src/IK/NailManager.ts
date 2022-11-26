@@ -54,11 +54,15 @@ class NailManager {
 
     shapeMoved(shape: BaseSolidShape, isTransformationPermanent: boolean = false) {
         let exceptShapes = new Set<BaseShapeJS>()
+        let tracePath = new Array<BaseShapeJS>()
 
-        this._shapeMoved(shape, exceptShapes, isTransformationPermanent)
+        this._shapeMoved(shape, exceptShapes, tracePath, isTransformationPermanent)
     }
 
     nailMoved(nail: NailShapeJS, isTransformationPermanent: boolean = false) {
+
+        console.log("Nail Target:" + nail.position)
+
         let targetPosition = nail.position
         let lastDifference = Number.NaN
         let difference = Number.NaN
@@ -69,6 +73,7 @@ class NailManager {
 
         do{
             let exceptShapes = new Set<BaseShapeJS>()
+            let tracePath = new Array<BaseShapeJS>();
 
             if(!firstRun){
                 lastDifference = difference
@@ -77,7 +82,7 @@ class NailManager {
             nail.isTransformationPermanent = isTransformationPermanent
             nail.setParentLocalPosition(targetPosition, false, false)
             // Iterate until target difference doesn't change or within a margin.
-            this._nailMoved(nail, exceptShapes, isTransformationPermanent)
+            this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent)
             difference = targetPosition.getDistance(nail.position)
             firstRun = false
 
@@ -92,8 +97,10 @@ class NailManager {
     }
 
     // TODO: Convert iterate to loop.
-    _shapeMoved(shape: BaseSolidShape, exceptShapes: Set<BaseSolidShape>, isTransformationPermanent: boolean = false) {
+    _shapeMoved(shape: BaseSolidShape, exceptShapes: Set<BaseShapeJS>, tracePath: Array<BaseShapeJS>, isTransformationPermanent) {
         exceptShapes.add(shape)
+
+        tracePath.push(shape)
 
         // Shape moved, get all it's nails and update.
         let nailComponent = shape.getComponentByTypeName("NailComponent")
@@ -115,10 +122,9 @@ class NailManager {
                     nail.isTransformationPermanent = isTransformationPermanent
                     // nail.position = newGlobalPosition
                     nail.setParentLocalPosition(newGlobalPosition, false, false)
-                    this._nailMoved(nail, exceptShapes, isTransformationPermanent)
-                }else{ // The nail is static, begin to back propagate.
-                    let bpExcludedShapes = new Set<BaseShapeJS>()
-                    this._nailMoved(nail, bpExcludedShapes, isTransformationPermanent)
+                    this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent)
+                }else{ // The nail is static, begin to back propagate. This time perform a REAL FABRIK algorithm
+                    this.realFABRIK(tracePath, isTransformationPermanent)
                 }
 
                 nail.update()
@@ -127,37 +133,80 @@ class NailManager {
         }
     }
 
-    _nailMoved(nail: NailShapeJS, exceptShapes: Set<BaseSolidShape>, isTransformationPermanent: boolean = false) {
+    _nailMoved(nail: NailShapeJS, exceptShapes: Set<BaseShapeJS>, tracePath: Array<BaseShapeJS>, isTransformationPermanent) {
         exceptShapes.add(nail)
-
-        let currentNailPosition = nail.position
+        tracePath.push(nail)
 
         for (let shape of nail.getBoundShapes()) {
-
             if (exceptShapes.has(shape))
                 continue
 
-            // Move the nail to the destination position
-            let nailLocalPosition = nail.getLocalPositionInShape(shape)
-            let nailVector = nailLocalPosition.subtract(shape.localPivotPosition)
-            let nailTheta = nailVector.angle
+            this.moveShapeBasedOnNailMovement(nail, shape, null, isTransformationPermanent)
 
-            let vector = currentNailPosition.subtract(shape.position)
+            this._shapeMoved(shape, exceptShapes, tracePath, isTransformationPermanent)
 
-            shape.isTransformationPermanent = isTransformationPermanent
-            shape.setRotation(vector.angle - nailTheta, false, false)
-            shape.updatePositionAndRotation()
+        }
+    }
 
-            let afterNailPosition = shape.localToGlobal(nailLocalPosition)
-            let nailOffset = currentNailPosition.subtract(afterNailPosition)
+    moveShapeBasedOnNailMovement(nail: NailShapeJS, shape: BaseShapeJS, targetNail:NailShapeJS, isTransformationPermanent: boolean){
+        let currentNailPosition = nail.position
+        let nailLocalPosition = nail.getLocalPositionInShape(shape)
+        let nailVector = nailLocalPosition.subtract(shape.localPivotPosition)
+        let nailTheta = nailVector.angle
 
-            shape.isTransformationPermanent = isTransformationPermanent
-            shape.setParentLocalPosition(shape.position.add(nailOffset), false, false)
-            shape.isTransformationPermanent = true
-            shape.updatePositionAndRotation()
+        let vector = null
+        if(targetNail){ // The difference between a fake FABRIK and a real FABRIK
+            vector = currentNailPosition.subtract(targetNail.position)
+        }else{
+            vector = currentNailPosition.subtract(shape.position)
+        }
 
-            this._shapeMoved(shape, exceptShapes, isTransformationPermanent)
+        shape.isTransformationPermanent = isTransformationPermanent
+        shape.setRotation(vector.angle - nailTheta, false, false)
+        shape.updatePositionAndRotation()
 
+        let afterNailPosition = shape.localToGlobal(nailLocalPosition)
+        let nailOffset = currentNailPosition.subtract(afterNailPosition)
+
+        shape.isTransformationPermanent = isTransformationPermanent
+        shape.setParentLocalPosition(shape.position.add(nailOffset), false, false)
+        shape.isTransformationPermanent = true
+        shape.updatePositionAndRotation()
+    }
+
+    // TODO: What if there's a loop?? What if there are two nails fixed in the path?
+    realFABRIK(path: Array<BaseShapeJS>, isTransformPermanent: boolean){
+        // If we reached here. It means we hit a static nail.
+        let involvedNails = new Set<NailShapeJS>()
+        let exceptShapes = new Set<BaseShapeJS>()
+
+        let currentIndex = path.length - 1
+        while(currentIndex >= 0){
+            let currentNail = path[currentIndex] as NailShapeJS
+            involvedNails.add(currentNail)
+
+            let currentShape = path[currentIndex--]
+            exceptShapes.add(currentShape)
+            let nextNail = path[currentIndex--] as NailShapeJS
+            if(nextNail){
+                exceptShapes.add(nextNail)
+            }
+            this.moveShapeBasedOnNailMovement(currentNail, currentShape, nextNail, isTransformPermanent)
+
+            if(nextNail){
+                // Move the nail to the destination position
+                let localPosition = nextNail.getLocalPositionInShape(currentShape)
+                let newGlobalPosition = currentShape.localToGlobal(localPosition)
+                nextNail.isTransformationPermanent = isTransformPermanent
+                // nail.position = newGlobalPosition
+                nextNail.setParentLocalPosition(newGlobalPosition, false, false)
+            }
+        }
+
+        // Adjust all nails if they are involved.
+        for(let nail of involvedNails){
+            let newTracePath = new Array()
+            this._nailMoved(nail, exceptShapes, newTracePath, isTransformPermanent)
         }
     }
 
