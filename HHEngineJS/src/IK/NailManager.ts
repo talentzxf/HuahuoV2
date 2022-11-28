@@ -8,6 +8,8 @@ import {NailShapeJS} from "../Shapes/NailShapeJS";
 
 const eps: number = 0.1;
 
+const ITERATETHRESHOLD = 5;
+
 /**
  * Use FABRIK to do the IK. http://andreasaristidou.com/FABRIK.html
  */
@@ -58,7 +60,8 @@ class NailManager {
         let exceptShapes = new Set<BaseShapeJS>()
         let tracePath = new Array<BaseShapeJS>()
 
-        this._shapeMoved(shape, exceptShapes, tracePath, isTransformationPermanent)
+        let iteratedCount = new Map<NailShapeJS, number>()
+        this._shapeMoved(shape, exceptShapes, tracePath, isTransformationPermanent, iteratedCount)
     }
 
     nailMoved(nail: NailShapeJS, isTransformationPermanent: boolean = false) {
@@ -76,12 +79,15 @@ class NailManager {
         let exceptShapes = new Set<BaseShapeJS>()
         let tracePath = new Array<BaseShapeJS>();
 
+        let iteratedCount = new Map<NailShapeJS, number>()
+
             // Iterate until target difference doesn't change or within a margin.
-        this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent)
+        this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent, iteratedCount)
     }
 
     // TODO: Convert iterate to loop.
-    _shapeMoved(shape: BaseSolidShape, exceptShapes: Set<BaseShapeJS>, tracePath: Array<BaseShapeJS>, isTransformationPermanent) {
+    _shapeMoved(shape: BaseSolidShape, exceptShapes: Set<BaseShapeJS>, tracePath: Array<BaseShapeJS>,
+                isTransformationPermanent, staticNailIteratedCount: Map<NailShapeJS, number>) {
         exceptShapes.add(shape)
 
         tracePath.push(shape)
@@ -106,10 +112,10 @@ class NailManager {
                     nail.isTransformationPermanent = isTransformationPermanent
                     // nail.position = newGlobalPosition
                     nail.setParentLocalPosition(newGlobalPosition, false, false)
-                    this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent)
+                    this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent, staticNailIteratedCount)
                 }else{ // The nail is static, begin to back propagate. This time perform a REAL FABRIK algorithm
                     tracePath.push(nail) // Add the nail into path.
-                    this.realFABRIK(tracePath, isTransformationPermanent)
+                    this.realFABRIK(tracePath, isTransformationPermanent, staticNailIteratedCount)
                 }
 
                 nail.update()
@@ -120,7 +126,8 @@ class NailManager {
         tracePath.pop()
     }
 
-    _nailMoved(nail: NailShapeJS, exceptShapes: Set<BaseShapeJS>, tracePath: Array<BaseShapeJS>, isTransformationPermanent) {
+    _nailMoved(nail: NailShapeJS, exceptShapes: Set<BaseShapeJS>, tracePath: Array<BaseShapeJS>,
+               isTransformationPermanent, staticNailIteratedCount: Map<NailShapeJS, number>) {
         exceptShapes.add(nail)
         tracePath.push(nail)
 
@@ -129,7 +136,7 @@ class NailManager {
                 continue
 
             this.moveShapeBasedOnNailMovement(nail, shape, null, isTransformationPermanent)
-            this._shapeMoved(shape, exceptShapes, tracePath, isTransformationPermanent)
+            this._shapeMoved(shape, exceptShapes, tracePath, isTransformationPermanent, staticNailIteratedCount)
         }
 
         tracePath.pop()
@@ -164,7 +171,18 @@ class NailManager {
     }
 
     // TODO: What if there's a loop?? What if there are two nails fixed in the path?
-    realFABRIK(path: Array<BaseShapeJS>, isTransformPermanent: boolean){
+    realFABRIK(path: Array<BaseShapeJS>, isTransformPermanent: boolean, staticNailIteratedCount: Map<NailShapeJS, number>){
+        let staticNail = path[path.length - 1] as NailShapeJS
+        if(staticNailIteratedCount.has(staticNail)){
+            staticNailIteratedCount.set(staticNail, staticNailIteratedCount.get(staticNail) + 1)
+        }else{
+            staticNailIteratedCount.set(staticNail, 0)
+        }
+
+        if(staticNailIteratedCount.get(staticNail) > ITERATETHRESHOLD){
+            return
+        }
+
         // If we reached here. It means we hit a static nail.
         let involvedNails = new Set<NailShapeJS>()
         let involvedShapes = new Set<BaseShapeJS>()
@@ -217,7 +235,7 @@ class NailManager {
             if(stabledShapes.has(nail))
                 continue
             let newTracePath = new Array()
-            this._nailMoved(nail, exceptShapes, newTracePath, isTransformPermanent)
+            this._nailMoved(nail, exceptShapes, newTracePath, isTransformPermanent, staticNailIteratedCount)
         }
 
         for(let shape of involvedShapes){
@@ -225,7 +243,7 @@ class NailManager {
                 continue
 
             let newTracePath = new Array()
-            this._shapeMoved(shape, exceptShapes, newTracePath, isTransformPermanent)
+            this._shapeMoved(shape, exceptShapes, newTracePath, isTransformPermanent, staticNailIteratedCount)
         }
     }
 
