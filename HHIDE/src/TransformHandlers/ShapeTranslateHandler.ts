@@ -6,10 +6,11 @@ import {BaseShapeJS} from "hhenginejs"
 
 class ShapeTranslateHandler extends ShapeTranslateMorphBase
 {
-    protected lastPos: Vector2 = null
-
+    private lastPos: Vector2 = null
     private pressingShift: boolean = false
 
+    // Map from shape->local position of the mouse.
+    // After translation, local position should still remain unchanged.
     private startPosMap: Map<BaseShapeJS, Vector2> = new Map
     constructor() {
         super();
@@ -37,22 +38,27 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
 
         this.startPosMap.clear()
         for(let obj of this.curObjs){
-            this.startPosMap.set(obj, obj.position)
+            this.startPosMap.set(obj, obj.globalToLocal(startPos))
         }
     }
 
     // The pos is already in world space.
     dragging(newPos: Vector2) {
         if(this.isDragging && this.curObjs != null){
-            let offset = newPos.subtract(this.lastPos)
-            this.lastPos = newPos
 
             for(let obj of this.curObjs){
+                let prevGlobalPosition = obj.localToGlobal(this.startPosMap.get(obj))
+                let newGlobalPosition = newPos
+                let offset = new paper.Point(newGlobalPosition.x - prevGlobalPosition.x, newGlobalPosition.y - prevGlobalPosition.y)
+
+                let mouseOffset = new paper.Point(newPos.x - this.lastPos.x , newPos.y - this.lastPos.y)
                 // TODO: check whether the position is acceptable or need some modification
                 if(this.pressingShift){
-                    if(Math.abs(offset.x) > Math.abs(offset.y)){ // X dominant
+                    if(Math.abs(mouseOffset.x) > Math.abs(mouseOffset.y)){ // X dominant
+                        console.log("X dorminant")
                         offset.y = 0.0
                     }else{
+                        console.log("Y dorminant")
                         offset.x = 0.0
                     }
                 }
@@ -67,6 +73,8 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
                 obj.position = proposedNewPosition
                 obj.store()
             }
+
+            this.lastPos = newPos
         }
     }
 
