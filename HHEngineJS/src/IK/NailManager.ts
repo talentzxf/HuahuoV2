@@ -111,7 +111,7 @@ class NailManager {
                 if(!nail.isStatic) { // The nail is actually static, set it's position back and back propograte.
                     nail.isTransformationPermanent = isTransformationPermanent
                     // nail.position = newGlobalPosition
-                    nail.setParentLocalPosition(newGlobalPosition, false, false)
+                    nail.setParentLocalPosition(newGlobalPosition, false, false, false)
                     this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent, staticNailIteratedCount)
                 }else{ // The nail is static, begin to back propagate. This time perform a REAL FABRIK algorithm
                     tracePath.push(nail) // Add the nail into path.
@@ -165,7 +165,7 @@ class NailManager {
         let nailOffset = currentNailPosition.subtract(afterNailPosition)
 
         shape.isTransformationPermanent = isTransformationPermanent
-        shape.setParentLocalPosition(shape.position.add(nailOffset), false, false)
+        shape.setParentLocalPosition(shape.position.add(nailOffset), false, false, false)
         shape.isTransformationPermanent = true
         shape.updatePositionAndRotation()
     }
@@ -225,7 +225,7 @@ class NailManager {
                     stabledShapes.add(nextNail)
                 }else{
                     // nail.position = newGlobalPosition
-                    nextNail.setParentLocalPosition(newGlobalPosition, false, false)
+                    nextNail.setParentLocalPosition(newGlobalPosition, false, false, false)
                 }
             }
         }

@@ -308,7 +308,7 @@ abstract class BaseShapeJS {
     }
 
     // The method can only be called after the shape has been created.
-    setParentLocalPosition(val: paper.Point, callHandlers: boolean = true, forceUpdate: boolean = true){
+    setParentLocalPosition(val: paper.Point, callHandlers: boolean = true, forceUpdate: boolean = true, isUpdatefollowCurve: boolean = true){
         let currentScaling = this.scaling
 
         try {
@@ -327,7 +327,7 @@ abstract class BaseShapeJS {
             this.paperShape.position = nextShapePosition
             this.rawObj.SetGlobalPivotPosition(val.x, val.y, 0.0)
 
-            if (this.followCurve) {
+            if (this.followCurve && isUpdatefollowCurve) {
                 let followCurveShape = this.followCurve
                 let length = followCurveShape.getGlobalOffsetOf(val)
                 let lengthPortion = length / followCurveShape.length()

@@ -26,7 +26,12 @@ void AbstractFrameState::Transfer(TransferFunction &transfer) {
 }
 
 void AbstractFrameState::SetBaseShape(BaseShape *pBaseShape) {
+    if(pBaseShape == NULL)
+        return;
+
     baseShape = pBaseShape;
+
+    mBaseShapePPtr = pBaseShape;
 }
 
 const char *AbstractFrameState::GetName() const {

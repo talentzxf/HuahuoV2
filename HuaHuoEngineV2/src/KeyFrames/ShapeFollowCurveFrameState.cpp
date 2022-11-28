@@ -3,6 +3,7 @@
 //
 
 #include "ShapeFollowCurveFrameState.h"
+#include "Layer.h"
 
 float eps = 0.00001f;
 
@@ -69,6 +70,8 @@ void ShapeFollowCurveFrameState::RecordLengthRatio(int frameId, float lengthRati
         ShapeFollowCurveKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
         pKeyFrame->followCurveData = m_CurrentShapeFollowCurveData;
         pKeyFrame->followCurveData.lengthRatio = lengthRatio;
+
+        baseShape->GetLayer()->AddKeyFrame(frameId, baseShape);
         Apply(frameId);
     }else{
         this->m_CurrentShapeFollowCurveData.lengthRatio = lengthRatio;

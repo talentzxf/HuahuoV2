@@ -65,7 +65,7 @@ class AbstractFrameState : public Object {
 
 public:
     AbstractFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
-            : Super(memLabelId, creationMode), isValidFrame(false) {
+            : Super(memLabelId, creationMode), isValidFrame(false), baseShape(NULL) {
 
     }
 
