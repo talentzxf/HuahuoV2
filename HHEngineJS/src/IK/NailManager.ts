@@ -116,6 +116,8 @@ class NailManager {
                 nail.isTransformationPermanent = true
             }
         }
+
+        tracePath.pop()
     }
 
     _nailMoved(nail: NailShapeJS, exceptShapes: Set<BaseShapeJS>, tracePath: Array<BaseShapeJS>, isTransformationPermanent) {
@@ -127,10 +129,10 @@ class NailManager {
                 continue
 
             this.moveShapeBasedOnNailMovement(nail, shape, null, isTransformationPermanent)
-
             this._shapeMoved(shape, exceptShapes, tracePath, isTransformationPermanent)
-
         }
+
+        tracePath.pop()
     }
 
     moveShapeBasedOnNailMovement(nail: NailShapeJS, shape: BaseShapeJS, targetNail:NailShapeJS, isTransformationPermanent: boolean) {
@@ -139,21 +141,16 @@ class NailManager {
 
         let vector = null
         if (targetNail) { // The difference between a fake FABRIK and a real FABRIK
-            vector = targetNail.position.subtract(currentNailPosition)
+            vector = currentNailPosition.subtract(targetNail.position)
         } else {
             vector = currentNailPosition.subtract(shape.position)
         }
 
         shape.isTransformationPermanent = isTransformationPermanent
+        let nailVector = nailLocalPosition.subtract(shape.localPivotPosition)
+        let nailTheta = nailVector.angle
 
-        if (targetNail){ // Real FABRIK doesn't need to consider nailTheta
-            shape.setRotation(vector.angle, false, false)
-        }
-        else{
-            let nailVector = nailLocalPosition.subtract(shape.localPivotPosition)
-            let nailTheta = nailVector.angle
-            shape.setRotation(vector.angle - nailTheta, false, false)
-        }
+        shape.setRotation(vector.angle - nailTheta, false, false)
 
         shape.updatePositionAndRotation()
 
@@ -170,18 +167,23 @@ class NailManager {
     realFABRIK(path: Array<BaseShapeJS>, isTransformPermanent: boolean){
         // If we reached here. It means we hit a static nail.
         let involvedNails = new Set<NailShapeJS>()
+        let involvedShapes = new Set<BaseShapeJS>()
         let exceptShapes = new Set<BaseShapeJS>()
 
         let currentIndex = path.length - 1
         while(currentIndex > 1){ // We need to decrease the index twice in the loop. So currentIndex need to be larger than 1 to enter the loop.
             let currentNail = path[currentIndex--] as NailShapeJS
+            exceptShapes.add(currentNail)
             involvedNails.add(currentNail)
 
             let currentShape = path[currentIndex--]
             exceptShapes.add(currentShape)
+            involvedShapes.add(currentShape)
+
             let nextNail = path[currentIndex] as NailShapeJS // nextNail doesn't need to decrease index, cause it will be the next currentNail.
             if(nextNail){
                 exceptShapes.add(nextNail)
+                involvedNails.add(nextNail)
             }
             this.moveShapeBasedOnNailMovement(currentNail, currentShape, nextNail, isTransformPermanent)
 
@@ -199,6 +201,11 @@ class NailManager {
         for(let nail of involvedNails){
             let newTracePath = new Array()
             this._nailMoved(nail, exceptShapes, newTracePath, isTransformPermanent)
+        }
+
+        for(let shape of involvedShapes){
+            let newTracePath = new Array()
+            this._shapeMoved(shape, exceptShapes, newTracePath, isTransformPermanent)
         }
     }
 

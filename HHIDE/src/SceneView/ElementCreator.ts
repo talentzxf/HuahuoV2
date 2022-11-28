@@ -65,7 +65,6 @@ class ElementCreator {
     }
 
     dispatchElementChange(storeId) {
-        Logger.info("Dispatching element change for store:" + storeId)
         let targetStoreId = storeId
 
         while (targetStoreId) {
