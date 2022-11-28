@@ -65,11 +65,14 @@ bool ShapeFollowCurveFrameState::Apply(int frameId) {
 }
 
 void ShapeFollowCurveFrameState::RecordLengthRatio(int frameId, float lengthRatio) {
-    ShapeFollowCurveKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
-    pKeyFrame->followCurveData = m_CurrentShapeFollowCurveData;
-    pKeyFrame->followCurveData.lengthRatio = lengthRatio;
-
-    Apply(frameId);
+    if(this->baseShape->GetRecordTransformationOfKeyFrame()){
+        ShapeFollowCurveKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
+        pKeyFrame->followCurveData = m_CurrentShapeFollowCurveData;
+        pKeyFrame->followCurveData.lengthRatio = lengthRatio;
+        Apply(frameId);
+    }else{
+        this->m_CurrentShapeFollowCurveData.lengthRatio = lengthRatio;
+    }
 }
 
 void ShapeFollowCurveFrameState::RecordTargetShape(int frameId, BaseShape *targetCurve) {

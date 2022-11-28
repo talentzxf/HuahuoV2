@@ -186,7 +186,8 @@ abstract class BaseShapeJS {
     }
 
     getGlobalOffsetOf(globalPos: paper.Point){
-        let localPos = this.paperShape.globalToLocal(globalPos)
+        let globalNearestPos = this.paperShape.getNearestPoint(globalPos)
+        let localPos = this.paperShape.globalToLocal(globalNearestPos)
         return this.getOffsetOf(localPos)
     }
 

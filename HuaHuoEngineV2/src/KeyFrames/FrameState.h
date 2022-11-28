@@ -61,6 +61,8 @@ class AbstractFrameState : public Object {
     REGISTER_CLASS_TRAITS(kTypeIsAbstract);
     REGISTER_CLASS(AbstractFrameState);
 
+    DECLARE_OBJECT_SERIALIZE()
+
 public:
     AbstractFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
             : Super(memLabelId, creationMode), isValidFrame(false) {
@@ -85,13 +87,6 @@ public:
 
     virtual void SetBaseShape(BaseShape* pBaseShape);
 
-    template<class TransferFunction> void Transfer(TransferFunction &transfer){
-        Super::Transfer(transfer);
-        TRANSFER(baseShape);
-        TRANSFER(typeName);
-        TRANSFER(frameStateName);
-    }
-
     const char *GetName() const override;
 
     void SetName(const char *name) override;
@@ -111,7 +106,8 @@ public:
 protected:
     std::string typeName;
     bool isValidFrame;
-    PPtr<BaseShape> baseShape;
+    BaseShape* baseShape;
+    PPtr<BaseShape> mBaseShapePPtr;
     std::string frameStateName;
 };
 
