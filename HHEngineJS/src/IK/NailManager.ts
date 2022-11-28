@@ -170,6 +170,8 @@ class NailManager {
         let involvedShapes = new Set<BaseShapeJS>()
         let exceptShapes = new Set<BaseShapeJS>()
 
+        let stabledShapes = new Set<BaseShapeJS>()
+
         let currentIndex = path.length - 1
         while(currentIndex > 1){ // We need to decrease the index twice in the loop. So currentIndex need to be larger than 1 to enter the loop.
             let currentNail = path[currentIndex--] as NailShapeJS
@@ -185,25 +187,43 @@ class NailManager {
                 exceptShapes.add(nextNail)
                 involvedNails.add(nextNail)
             }
+
+            let prevShapePosition = currentShape.position
+            let prevShapeRotation = currentShape.rotation
             this.moveShapeBasedOnNailMovement(currentNail, currentShape, nextNail, isTransformPermanent)
+
+            if(prevShapePosition.getDistance(currentShape.position) < eps && Math.abs(prevShapeRotation - currentShape.rotation) < eps){
+                stabledShapes.add(currentShape)
+            }
 
             if(nextNail){
                 // Move the nail to the destination position
                 let localPosition = nextNail.getLocalPositionInShape(currentShape)
                 let newGlobalPosition = currentShape.localToGlobal(localPosition)
                 nextNail.isTransformationPermanent = isTransformPermanent
-                // nail.position = newGlobalPosition
-                nextNail.setParentLocalPosition(newGlobalPosition, false, false)
+
+                // The nail doesn't change much, remove it from involvedNails.
+                if(newGlobalPosition.getDistance(nextNail.position) < eps){
+                    stabledShapes.add(nextNail)
+                }else{
+                    // nail.position = newGlobalPosition
+                    nextNail.setParentLocalPosition(newGlobalPosition, false, false)
+                }
             }
         }
 
         // Adjust all nails if they are involved.
         for(let nail of involvedNails){
+            if(stabledShapes.has(nail))
+                continue
             let newTracePath = new Array()
             this._nailMoved(nail, exceptShapes, newTracePath, isTransformPermanent)
         }
 
         for(let shape of involvedShapes){
+            if(stabledShapes.has(shape))
+                continue
+
             let newTracePath = new Array()
             this._shapeMoved(shape, exceptShapes, newTracePath, isTransformPermanent)
         }
