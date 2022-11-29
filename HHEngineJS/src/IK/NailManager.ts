@@ -9,7 +9,7 @@ import {NailShapeJS} from "../Shapes/NailShapeJS";
 const eps: number = 0.1;
 
 const ITERATETHRESHOLD = 5;
-const MAX_ITERATE = 10
+const MAX_ITERATE = 2
 
 /**
  * Use FABRIK to do the IK. http://andreasaristidou.com/FABRIK.html
@@ -68,11 +68,11 @@ class NailManager {
     nailMoved(nail: NailShapeJS, isTransformationPermanent: boolean = false) {
 
         console.log("Nail Target:" + nail.position)
-        if(this.nailShape == null){
+        if (this.nailShape == null) {
             this.nailShape = new paper.Path.Circle(nail.position, 20)
             this.nailShape.fillColor = new paper.Color("purple")
             this.nailShape.bringToFront()
-        }else{
+        } else {
             this.nailShape.bringToFront()
             this.nailShape.position = nail.position
         }
@@ -82,7 +82,7 @@ class NailManager {
 
         let lastDistance = Number.NaN
 
-        while(iterateCount > 0){
+        while (iterateCount > 0) {
             let exceptShapes = new Set<BaseShapeJS>()
             let tracePath = new Array<BaseShapeJS>();
 
@@ -92,11 +92,11 @@ class NailManager {
             this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent, iteratedCount)
 
             let currentDistance = nail.position.getDistance(targetPosition)
-            if( currentDistance < eps){
+            if (currentDistance < eps) {
                 break;
             }
 
-            if(Math.abs(currentDistance - lastDistance) < eps)
+            if (Math.abs(currentDistance - lastDistance) < eps)
                 break;
 
             lastDistance = currentDistance
@@ -132,12 +132,12 @@ class NailManager {
             let newGlobalPosition = shape.localToGlobal(localPosition)
             let prevNailPosition = nail.position
             if (prevNailPosition.getDistance(newGlobalPosition) > eps) {
-                if(!nail.isStatic) { // The nail is actually static, set it's position back and back propograte.
+                if (!nail.isStatic) { // The nail is actually static, set it's position back and back propograte.
                     nail.isTransformationPermanent = isTransformationPermanent
                     // nail.position = newGlobalPosition
                     nail.setParentLocalPosition(newGlobalPosition, false, false)
                     this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent, staticNailIteratedCount)
-                }else{ // The nail is static, begin to back propagate. This time perform a REAL FABRIK algorithm
+                } else { // The nail is static, begin to back propagate. This time perform a REAL FABRIK algorithm
                     tracePath.push(nail) // Add the nail into path.
                     this.realFABRIK(tracePath, isTransformationPermanent, staticNailIteratedCount)
                 }
@@ -166,7 +166,7 @@ class NailManager {
         tracePath.pop()
     }
 
-    moveShapeBasedOnNailMovement(nail: NailShapeJS, shape: BaseShapeJS, targetNail:NailShapeJS, isTransformationPermanent: boolean) {
+    moveShapeBasedOnNailMovement(nail: NailShapeJS, shape: BaseShapeJS, targetNail: NailShapeJS, isTransformationPermanent: boolean) {
         let currentNailPosition = nail.position
         let nailLocalPosition = nail.getLocalPositionInShape(shape)
 
@@ -195,15 +195,17 @@ class NailManager {
     }
 
     // TODO: What if there's a loop?? What if there are two nails fixed in the path?
-    realFABRIK(path: Array<BaseShapeJS>, isTransformPermanent: boolean, staticNailIteratedCount: Map<NailShapeJS, number>){
+    realFABRIK(path: Array<BaseShapeJS>, isTransformPermanent: boolean, staticNailIteratedCount: Map<NailShapeJS, number>) {
         let staticNail = path[path.length - 1] as NailShapeJS
-        if(staticNailIteratedCount.has(staticNail)){
+
+        let staticNailPosition = staticNail.position
+        if (staticNailIteratedCount.has(staticNail)) {
             staticNailIteratedCount.set(staticNail, staticNailIteratedCount.get(staticNail) + 1)
-        }else{
+        } else {
             staticNailIteratedCount.set(staticNail, 0)
         }
 
-        if(staticNailIteratedCount.get(staticNail) > ITERATETHRESHOLD){
+        if (staticNailIteratedCount.get(staticNail) > ITERATETHRESHOLD) {
             return
         }
 
@@ -214,8 +216,40 @@ class NailManager {
 
         let stabledShapes = new Set<BaseShapeJS>()
 
-        let currentIndex = path.length - 1
-        while(currentIndex > 1){ // We need to decrease the index twice in the loop. So currentIndex need to be larger than 1 to enter the loop.
+
+        // TODO: Forward phase and back phase is almost the same. Merge them later.
+        // Forward phase
+        let currentIndex = 0
+        if(!(path[0] instanceof NailShapeJS)){
+            currentIndex = 2
+        }
+        while (currentIndex < path.length - 1) {
+            let currentNail = path[currentIndex++] as NailShapeJS
+            exceptShapes.add(currentNail)
+            let currentShape = path[currentIndex++]
+            if(currentShape == null)
+                break;
+            exceptShapes.add(currentShape)
+            let nextNail = path[currentIndex] as NailShapeJS
+            if (nextNail) {
+                exceptShapes.add(nextNail)
+            }
+            this.moveShapeBasedOnNailMovement(currentNail, currentShape, nextNail, isTransformPermanent)
+
+            if (nextNail) {
+                // Move the nail to the destination position
+                let localPosition = nextNail.getLocalPositionInShape(currentShape)
+                let newGlobalPosition = currentShape.localToGlobal(localPosition)
+                nextNail.isTransformationPermanent = isTransformPermanent
+                nextNail.setParentLocalPosition(newGlobalPosition, false, false)
+            }
+        }
+
+        staticNail.setParentLocalPosition(staticNailPosition, false, false)
+        exceptShapes.clear()
+        // Backward phase
+        currentIndex = path.length - 1
+        while (currentIndex > 1) { // We need to decrease the index twice in the loop. So currentIndex need to be larger than 1 to enter the loop.
             let currentNail = path[currentIndex--] as NailShapeJS
             exceptShapes.add(currentNail)
             involvedNails.add(currentNail)
@@ -225,7 +259,7 @@ class NailManager {
             involvedShapes.add(currentShape)
 
             let nextNail = path[currentIndex] as NailShapeJS // nextNail doesn't need to decrease index, cause it will be the next currentNail.
-            if(nextNail){
+            if (nextNail) {
                 exceptShapes.add(nextNail)
                 involvedNails.add(nextNail)
             }
@@ -234,36 +268,35 @@ class NailManager {
             let prevShapeRotation = currentShape.rotation
             this.moveShapeBasedOnNailMovement(currentNail, currentShape, nextNail, isTransformPermanent)
 
-            if(prevShapePosition.getDistance(currentShape.position) < eps && Math.abs(prevShapeRotation - currentShape.rotation) < eps){
+            if (prevShapePosition.getDistance(currentShape.position) < eps && Math.abs(prevShapeRotation - currentShape.rotation) < eps) {
                 stabledShapes.add(currentShape)
             }
 
-            if(nextNail){
+            if (nextNail) {
                 // Move the nail to the destination position
                 let localPosition = nextNail.getLocalPositionInShape(currentShape)
                 let newGlobalPosition = currentShape.localToGlobal(localPosition)
                 nextNail.isTransformationPermanent = isTransformPermanent
 
                 // The nail doesn't change much, remove it from involvedNails.
-                if(newGlobalPosition.getDistance(nextNail.position) < eps){
+                if (newGlobalPosition.getDistance(nextNail.position) < eps) {
                     stabledShapes.add(nextNail)
-                }else{
-                    // nail.position = newGlobalPosition
+                } else {
                     nextNail.setParentLocalPosition(newGlobalPosition, false, false)
                 }
             }
         }
 
         // Adjust all nails if they are involved.
-        for(let nail of involvedNails){
-            if(stabledShapes.has(nail))
+        for (let nail of involvedNails) {
+            if (stabledShapes.has(nail))
                 continue
             let newTracePath = new Array()
             this._nailMoved(nail, exceptShapes, newTracePath, isTransformPermanent, staticNailIteratedCount)
         }
 
-        for(let shape of involvedShapes){
-            if(stabledShapes.has(shape))
+        for (let shape of involvedShapes) {
+            if (stabledShapes.has(shape))
                 continue
 
             let newTracePath = new Array()
@@ -271,16 +304,16 @@ class NailManager {
         }
     }
 
-    update(){
-        for(let index = 0; index < this.cppNailManager.GetNailCount(); index++){
+    update() {
+        for (let index = 0; index < this.cppNailManager.GetNailCount(); index++) {
             let nailRawObj = this.cppNailManager.GetNail(index)
             let nailShape: NailShapeJS = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(nailRawObj)
 
-            for(let shape of nailShape.getBoundShapes()){
+            for (let shape of nailShape.getBoundShapes()) {
                 let localNailPosition = nailShape.getLocalPositionInShape(shape)
                 let prevGlobalNailPosition = shape.localToGlobal(localNailPosition)
 
-                if(nailShape.position.getDistance(prevGlobalNailPosition) >= eps){
+                if (nailShape.position.getDistance(prevGlobalNailPosition) >= eps) {
                     this.nailMoved(nailShape) // TODO: Nail moved or shape moved??
                     this.shapeMoved(shape)
                 }

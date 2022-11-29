@@ -26,6 +26,7 @@ void AbstractFrameState::Transfer(TransferFunction &transfer) {
 }
 
 void AbstractFrameState::SetBaseShape(BaseShape *pBaseShape) {
+    printf("Set base shape for:%s\n", this->GetTypeName());
     baseShape = pBaseShape;
 }
 
