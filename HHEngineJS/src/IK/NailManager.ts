@@ -9,6 +9,7 @@ import {NailShapeJS} from "../Shapes/NailShapeJS";
 const eps: number = 0.1;
 
 const ITERATETHRESHOLD = 5;
+const MAX_ITERATE = 10
 
 /**
  * Use FABRIK to do the IK. http://andreasaristidou.com/FABRIK.html
@@ -76,13 +77,36 @@ class NailManager {
             this.nailShape.position = nail.position
         }
 
-        let exceptShapes = new Set<BaseShapeJS>()
-        let tracePath = new Array<BaseShapeJS>();
+        let targetPosition = nail.position
+        let iterateCount = MAX_ITERATE
 
-        let iteratedCount = new Map<NailShapeJS, number>()
+        let lastDistance = Number.NaN
+
+        while(iterateCount > 0){
+            let exceptShapes = new Set<BaseShapeJS>()
+            let tracePath = new Array<BaseShapeJS>();
+
+            let iteratedCount = new Map<NailShapeJS, number>()
 
             // Iterate until target difference doesn't change or within a margin.
-        this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent, iteratedCount)
+            this._nailMoved(nail, exceptShapes, tracePath, isTransformationPermanent, iteratedCount)
+
+            let currentDistance = nail.position.getDistance(targetPosition)
+            if( currentDistance < eps){
+                break;
+            }
+
+            if(Math.abs(currentDistance - lastDistance) < eps)
+                break;
+
+            lastDistance = currentDistance
+            nail.isTransformationPermanent = isTransformationPermanent
+            nail.setParentLocalPosition(targetPosition, false, false)
+            nail.isTransformationPermanent = true
+            iterateCount--
+        }
+
+        console.log("IK iterated:" + (MAX_ITERATE - iterateCount + 1) + " times")
     }
 
     // TODO: Convert iterate to loop.
