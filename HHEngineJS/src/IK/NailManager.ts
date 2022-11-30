@@ -4,6 +4,7 @@ declare var Module: any;
 import {getMethodsAndVariables} from "hhcommoncomponents"
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {NailShapeJS} from "../Shapes/NailShapeJS";
+import {eventBus} from "hhcommoncomponents";
 
 const eps: number = 0.1;
 
@@ -23,6 +24,10 @@ class NailManager {
         huahuoEngine.ExecuteAfterInited(() => {
             _this.cppNailManager = Module.NailManager.prototype.GetNailManager();
             _this.interceptFunctions()
+        })
+
+        eventBus.addEventHandler("HHEngine", "CurveShapeTransformed", ()=>{
+            _this.update()
         })
     }
 
