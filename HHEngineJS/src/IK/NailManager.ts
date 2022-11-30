@@ -3,7 +3,6 @@ import {huahuoEngine} from "../EngineAPI";
 declare var Module: any;
 import {getMethodsAndVariables} from "hhcommoncomponents"
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
-import {BaseSolidShape} from "../Shapes/BaseSolidShape";
 import {NailShapeJS} from "../Shapes/NailShapeJS";
 
 const eps: number = 0.1;
@@ -57,7 +56,7 @@ class NailManager {
         return this.cppNailManager.CheckDuplication(shape1.getRawShape(), shape2.getRawShape())
     }
 
-    shapeMoved(shape: BaseSolidShape, isTransformationPermanent: boolean = false) {
+    shapeMoved(shape: BaseShapeJS, isTransformationPermanent: boolean = false) {
         let exceptShapes = new Set<BaseShapeJS>()
         let tracePath = new Array<BaseShapeJS>()
 
@@ -110,7 +109,7 @@ class NailManager {
     }
 
     // TODO: Convert iterate to loop.
-    _shapeMoved(shape: BaseSolidShape, exceptShapes: Set<BaseShapeJS>, tracePath: Array<BaseShapeJS>,
+    _shapeMoved(shape: BaseShapeJS, exceptShapes: Set<BaseShapeJS>, tracePath: Array<BaseShapeJS>,
                 isTransformationPermanent, staticNailIteratedCount: Map<NailShapeJS, number>) {
         exceptShapes.add(shape)
 
@@ -323,14 +322,4 @@ class NailManager {
     }
 }
 
-function getNailManager(): NailManager {
-    let nailManager = window["NailManagerJS"]
-    if (!nailManager) {
-        nailManager = new NailManager()
-        window["NailManagerJS"] = nailManager
-    }
-
-    return nailManager
-}
-
-export {getNailManager}
+export {NailManager}

@@ -2,7 +2,7 @@ import {GlobalConfig} from "../GlobalConfig";
 import {huahuoEngine} from "../EngineAPI";
 import {LayerShapesManager} from "./LayerShapesManager";
 import {IsValidWrappedObject} from "hhcommoncomponents";
-import {getNailManager} from "../IK/NailManager";
+import {getNailManager} from '../IK/GetNailManager'
 
 class Player{
     animationFrame = -1

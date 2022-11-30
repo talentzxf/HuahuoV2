@@ -1,7 +1,7 @@
 import {BaseShapeJS} from "./BaseShapeJS";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {BaseSolidShape} from "./BaseSolidShape";
-import {getNailManager} from "../IK/NailManager";
+import {getNailManager} from '../IK/GetNailManager'
 import {huahuoEngine} from "../EngineAPI";
 import {PropertyType} from "hhcommoncomponents";
 

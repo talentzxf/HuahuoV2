@@ -1,10 +1,11 @@
 import {huahuoEngine} from "../EngineAPI";
-import {Vector2} from "hhcommoncomponents";
+import {Vector2, EventBus} from "hhcommoncomponents";
 import {relaxRectangle, PropertySheet, PropertyType, Logger} from "hhcommoncomponents"
 import * as paper from "paper";
 import {ShapeCenterSelector} from "./ShapeCenterSelector";
 import {ValueChangeHandler} from "./ValueChangeHandler";
 import {AbstractComponent} from "../Components/AbstractComponent";
+import {getNailManager} from "../IK/GetNailManager";
 
 declare function castObject(obj: any, clz: any): any;
 
@@ -633,6 +634,12 @@ abstract class BaseShapeJS {
         if (curve != this && curve != this.followCurve) {
             this.followCurve = curve
             this.setFollowCurveLength(0.0)
+
+            let _this = this
+            this.followCurve.registerValueChangeHandler("position|scaling|rotation")(()=>{
+                _this.update(true)
+                getNailManager().update()
+            })
         } else {
             Logger.error("Can't bind the path !")
         }

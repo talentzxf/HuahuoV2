@@ -1,10 +1,6 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {NailShapeJS} from "../Shapes/NailShapeJS";
 import {PropertyCategory} from "./PropertySheetBuilder";
-import {getNailManager} from "../IK/NailManager";
-import {BaseShapeJS} from "../Shapes/BaseShapeJS";
-
-const eps: number = 0.001;
 
 @Component({compatibleShapes: ["BaseSolidShape"], maxCount: 1})
 class NailComponent extends AbstractComponent {
