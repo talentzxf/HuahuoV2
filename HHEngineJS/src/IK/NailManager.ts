@@ -221,7 +221,7 @@ class NailManager {
         // Forward phase
         let currentIndex = 0
         if(!(path[0] instanceof NailShapeJS)){
-            currentIndex = 2
+            currentIndex = 1
         }
         while (currentIndex < path.length - 1) {
             let currentNail = path[currentIndex++] as NailShapeJS
@@ -249,7 +249,7 @@ class NailManager {
         exceptShapes.clear()
         // Backward phase
         currentIndex = path.length - 1
-        while (currentIndex > 1) { // We need to decrease the index twice in the loop. So currentIndex need to be larger than 1 to enter the loop.
+        while (currentIndex >= 1) { // We need to decrease the index twice in the loop. So currentIndex need to be larger than 1 to enter the loop.
             let currentNail = path[currentIndex--] as NailShapeJS
             exceptShapes.add(currentNail)
             involvedNails.add(currentNail)
