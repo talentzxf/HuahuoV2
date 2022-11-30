@@ -8,7 +8,7 @@ function pointsNear(p1:paper.Point, p2:paper.Point, margin:number){
 function relaxRectangle(rectangle, margin) {
     if(rectangle == null)
         return
-    
+
     let retRectangle = rectangle.clone()
     retRectangle.x -= margin
     retRectangle.y -= margin
