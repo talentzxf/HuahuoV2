@@ -13,7 +13,8 @@ enum PropertyType{
     REFERENCE,
     ARRAY,
     COMPONENT,
-    COLORSTOPARRAY
+    COLORSTOPARRAY,
+    KEYFRAMES
 }
 
 class Property{

@@ -823,8 +823,7 @@ abstract class BaseShapeJS {
 
         componentConfigSheet.config.children.push({
             key:"inspector.property.keyframes",
-            type: PropertyType.ARRAY,
-            elementType: PropertyType.INT,
+            type: PropertyType.KEYFRAMES,
             getter: this.getKeyFrames.bind(this),
             setter: this.insertKeyFrame.bind(this)
         })

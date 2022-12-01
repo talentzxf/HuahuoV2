@@ -11,6 +11,7 @@ import {componentPropertyDivGenerator, panelPropertyDivGenerator} from "./PanelP
 import {arrayPropertyDivGenerator} from "./ArrayPropertyDivGenerator";
 import {colorStopArrayPropertyDivGenerator} from "./ColorStopArrayPropertyDivGenerator";
 import {booleanPropertyDivGenerator} from "./BooleanPropertyDivGenerator";
+import {keyFramesPropertyDivGenerator} from "./KeyFramesPropertyDivGenerator";
 
 // Avoid being imported twice.
 // TODO: Any less dirty approach ??
@@ -27,5 +28,6 @@ if(!window["IsTypesRegistered"]){
     RegisterDivGenerator(PropertyType.ARRAY, arrayPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.COMPONENT, componentPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.COLORSTOPARRAY, colorStopArrayPropertyDivGenerator)
+    RegisterDivGenerator(PropertyType.KEYFRAMES, keyFramesPropertyDivGenerator)
     window["IsTypeRegistered"] = true
 }
