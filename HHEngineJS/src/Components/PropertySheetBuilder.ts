@@ -10,6 +10,7 @@ enum PropertyCategory{
     interpolateVector3,
     shapeArray,
     colorStopArray, // Every color stop is a float->Color mapping entry.
+    intArray
 }
 
 abstract class InterpolateOperator{

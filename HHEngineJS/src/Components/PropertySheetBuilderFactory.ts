@@ -21,7 +21,24 @@ class PropertySheetFactory{
 
         this.categoryTypeMap.set(PropertyCategory.interpolateVector2, PropertyType.VECTOR2)
         this.categoryTypeMap.set(PropertyCategory.interpolateVector3, PropertyType.VECTOR3)
+
+        this.categoryTypeMap.set(PropertyCategory.intArray, PropertyType.ARRAY)
+        this.categoryElementTypeMap.set(PropertyCategory.intArray, PropertyType.INT)
     }
+
+    createEntryByNameAndCategory(propertyName, category: PropertyCategory) {
+        let propertyDef = {
+            key: propertyPrefix + propertyName,
+        }
+        let propertyType = this.categoryTypeMap.get(category)
+        propertyDef["type"] = propertyType
+        if (this.categoryElementTypeMap.has(category)) {
+            propertyDef["elementType"] = this.categoryElementTypeMap.get(category)
+        }
+
+        return propertyDef
+    }
+
 
     createEntry(component, propertyMeta:PropertyDef, valueChangeHandler: ValueChangeHandler){
         let fieldName = propertyMeta["key"]
@@ -31,24 +48,17 @@ class PropertySheetFactory{
         let deleterName = "delete" + capitalizeFirstLetter(fieldName) // TODO: Code duplication with AbstractComponent
         let updateName = "update" + capitalizeFirstLetter(fieldName)
 
-        let propertyDef = {
-            key: propertyPrefix + propertyMeta["key"],
-            getter: component[getterName].bind(component),
-            setter: component[setterName].bind(component),
-            registerValueChangeFunc: valueChangeHandler.registerValueChangeHandler(fieldName),
-            unregisterValueChagneFunc: valueChangeHandler.unregisterValueChangeHandler(fieldName),
-            config: propertyMeta.config
-        }
+        let propertyDef = this.createEntryByNameAndCategory(propertyMeta["key"], propertyMeta.type)
+
+        propertyDef["getter"] = component[getterName].bind(component),
+        propertyDef["setter"] = component[setterName].bind(component),
+        propertyDef["registerValueChangeFunc"] = valueChangeHandler.registerValueChangeHandler(fieldName),
+        propertyDef["unregisterValueChagneFunc"] = valueChangeHandler.unregisterValueChangeHandler(fieldName),
+        propertyDef["config"] = propertyMeta.config
 
         if(component[updateName]){
             propertyDef["updater"] = component[updateName].bind(component)
             propertyDef["deleter"] = component[deleterName].bind(component)
-        }
-
-        let propertyType = this.categoryTypeMap.get(propertyMeta.type)
-        propertyDef["type"] = propertyType
-        if(this.categoryElementTypeMap.has(propertyMeta.type)){
-            propertyDef["elementType"] = this.categoryElementTypeMap.get(propertyMeta.type)
         }
 
         return propertyDef
@@ -57,4 +67,4 @@ class PropertySheetFactory{
 
 let propertySheetFactory = new PropertySheetFactory()
 
-export {propertySheetFactory}
+export {propertySheetFactory, propertyPrefix}

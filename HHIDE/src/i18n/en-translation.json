@@ -86,7 +86,8 @@
       "fillColor": "FillColor",
       "generateInterval": "Generate Interval",
       "gradientColorArray": "Gradient Color Array",
-      "centerPosition": "Center Position"
+      "centerPosition": "Center Position",
+      "keyframes": "Key Frames"
     },
     "nail": {
       "isStatic": "Is Static"

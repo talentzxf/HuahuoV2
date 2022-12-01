@@ -821,7 +821,27 @@ abstract class BaseShapeJS {
             unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("rotation")
         })
 
+        componentConfigSheet.config.children.push({
+            key:"inspector.property.keyframes",
+            type: PropertyType.ARRAY,
+            elementType: PropertyType.INT,
+            getter: this.getKeyFrames.bind(this),
+            setter: this.insertKeyFrame.bind(this)
+        })
         this.propertySheet.addProperty(componentConfigSheet)
+    }
+
+    getKeyFrames(){
+        let keyFrameCount = this.rawObj.GetFrameStateCount()
+        let keyFrames = []
+        for(let idx = 0; idx < keyFrameCount ; idx++){
+            keyFrames.push(this.rawObj.GetKeyFrameAtIdx(idx))
+        }
+        return keyFrames
+    }
+
+    insertKeyFrame(val){
+
     }
 
     getPropertySheet() {
