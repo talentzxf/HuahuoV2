@@ -52,6 +52,8 @@ abstract class BaseShapeJS {
 
     private lastRenderFrame = -1
 
+    private followCurveEventRegistered = false
+
     set isTransformationPermanent(isPermanent: boolean){
         this.rawObj.SetRecordTransformationOfKeyFrame(isPermanent)
     }
@@ -432,14 +434,6 @@ abstract class BaseShapeJS {
     awakeFromLoad() {
         this.isLoadedFromFile = true
         this.update(true);
-
-        if(this.followCurve){
-            let _this = this
-            this.followCurve.registerValueChangeHandler("position|scaling|rotation")(()=>{
-                _this.update(true)
-                eventBus.triggerEvent("HHEngine", "CurveShapeTransformed")
-            })
-        }
     }
 
     getShapeName() {
@@ -617,7 +611,19 @@ abstract class BaseShapeJS {
 
     get followCurve():BaseShapeJS{
         let shapeObj = this.shapeFollowCurveFrameState.GetTargetShape()
-        return huahuoEngine.getActivePlayer().getJSShapeFromRawShape(shapeObj)
+        let followCurveShape = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(shapeObj)
+
+        if(followCurveShape && !this.followCurveEventRegistered){
+            let _this = this
+            followCurveShape.registerValueChangeHandler("position|scaling|rotation")(()=>{
+                _this.update(true)
+                eventBus.triggerEvent("HHEngine", "CurveShapeTransformed")
+            })
+
+            this.followCurveEventRegistered = true
+        }
+
+        return followCurveShape
     }
 
     set followCurve(target:BaseShapeJS){
@@ -641,12 +647,6 @@ abstract class BaseShapeJS {
         if (curve != this && curve != this.followCurve) {
             this.followCurve = curve
             this.setFollowCurveLength(0.0)
-
-            let _this = this
-            this.followCurve.registerValueChangeHandler("position|scaling|rotation")(()=>{
-                _this.update(true)
-                eventBus.triggerEvent("HHEngine", "CurveShapeTransformed")
-            })
         } else {
             Logger.error("Can't bind the path !")
         }

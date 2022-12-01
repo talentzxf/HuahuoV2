@@ -32,6 +32,9 @@ class SideBarTabMover extends TabMover {
 class HHSideBar extends HTMLElement implements MovableElement {
     currentlyDockedElement: HTMLElement = null;
     titleBar: HTMLDivElement
+    content: HTMLElement
+
+    minimizeButton: HTMLButtonElement = null;
 
     isMoving: boolean = false
     startMoving: boolean = false
@@ -44,12 +47,18 @@ class HHSideBar extends HTMLElement implements MovableElement {
     allowedDirectionBoolean: boolean[] = [false, false, false, false] // left, right, top, bottom
 
     connectedCallback() {
-        let content = this.querySelector("hh-sidebar-content") as HHContent
-        let title = content.getAttribute("title") || "No Title"
+        this.content = this.querySelector("hh-sidebar-content") as HHContent
+        let title = this.content.getAttribute("title") || "No Title"
 
         this.titleBar = document.createElement("div") as HTMLDivElement
-        this.titleBar.innerHTML = title
-        this.insertBefore(this.titleBar, content)
+
+        let titleSpan = document.createElement("span")
+        titleSpan.style.width = "100%"
+        titleSpan.innerText = title
+        this.titleBar.appendChild(titleSpan)
+
+        this.insertBefore(this.titleBar, this.content)
+        this.titleBar.style.display = "flex"
         this.titleBar.style.background = "lightgray"
         this.titleBar.style.userSelect = "none"
         this.titleBar.classList.add("title_tabs")
@@ -85,10 +94,42 @@ class HHSideBar extends HTMLElement implements MovableElement {
             let dirIdx = DIRECTIONS[dirNameUpper]
             this.allowedDirectionBoolean[dirIdx] = true
         }
+
+        this.createTitleButtons()
+    }
+
+    createTitleButtons(){
+        let titleToolBar = document.createElement("div")
+        titleToolBar.style.display = "flex"
+        titleToolBar.style.flexDirection = "row-reverse"
+
+        this.minimizeButton = document.createElement("input")
+        this.minimizeButton.type = "button"
+        this.minimizeButton.value = "-"
+
+        this.minimizeButton.onclick = this.minimizeContent.bind(this)
+
+        titleToolBar.appendChild(this.minimizeButton)
+        this.titleBar.appendChild(titleToolBar)
     }
 
     isVisible(ele: HTMLElement) {
         return ele.offsetWidth > 0 && ele.offsetHeight > 0
+    }
+
+    maximizeContent(){
+        this.minimizeButton.value = "-"
+        this.content.style.display = "block"
+        this.minimizeButton.onclick = this.minimizeContent.bind(this)
+        this.refreshDockables()
+    }
+
+    minimizeContent(){
+        this.minimizeButton.value = "+"
+        this.content.style.display = "none"
+        this.minimizeButton.onclick = this.maximizeContent.bind(this)
+
+        this.refreshDockables()
     }
 
     refreshDockables() {

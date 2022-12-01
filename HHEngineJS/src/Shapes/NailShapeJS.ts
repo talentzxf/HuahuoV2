@@ -63,7 +63,7 @@ class NailShapeJS extends BaseShapeJS{
 
         let _this = this
         // Only register for affine transforms
-        targetShape.registerValueChangeHandler("position|scaling|rotation")(() => {
+        targetShape.registerValueChangeHandler(allAffineTransformEvents)(() => {
             getNailManager().shapeMoved(targetShape, true)
         })
     }
