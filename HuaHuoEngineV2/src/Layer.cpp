@@ -102,12 +102,14 @@ void Layer::AddKeyFrame(int frameId, BaseShape *shape) {
     std::set<PPtr<BaseShape>> &shapeSet = keyFrames[frameId];
     shapeSet.insert(shape);
 
-    KeyFrameChangedEventHandlerArgs args(this, frameId);
-    GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
-
     if (this->GetObjectStore() != NULL) {
         this->GetObjectStore()->UpdateMaxFrameId(frameId);
     }
+
+    shape->RefreshKeyFrameCache();
+
+    KeyFrameChangedEventHandlerArgs args(this, frameId);
+    GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
 }
 
 void Layer::SetObjectStore(ObjectStore *store) {

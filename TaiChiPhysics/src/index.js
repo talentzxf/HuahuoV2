@@ -184,7 +184,7 @@ let main = async () => {
                 ti.random() * 0.2 + 0.3 + 0.1 * group_id,
                 ti.random() * 0.2 + 0.05 + 0.32 * group_id,
             ];
-            material[i] = group_id;
+            material[i] = 1;
             v[i] = [0, 0];
             F[i] = [
                 [1, 0],
@@ -219,7 +219,7 @@ let main = async () => {
 
     let htmlCanvas = document.getElementById('result_canvas');
     htmlCanvas.width = 2*n;
-    htmlCanvas.height = n;
+    htmlCanvas.height = 2*n;
     let canvas = new ti.Canvas(htmlCanvas);
 
     reset();

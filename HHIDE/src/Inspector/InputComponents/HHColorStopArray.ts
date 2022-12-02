@@ -3,6 +3,7 @@ import {paper} from "hhenginejs"
 import {HHColorInput} from "./HHColorInput";
 import {ColorStop} from "hhenginejs";
 import {HHToast, getMethodsAndVariables} from "hhcommoncomponents";
+import {createPenShape} from "./Utils";
 
 const rectangleOffset = 10
 const canvasWidth = 200
@@ -57,31 +58,16 @@ class Pen {
 
     constructor(colorStop?: ColorStop) {
 
-        let penGroup = new paper.Group()
-        this.penBody = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(penWidth, penHeight))
+        [this.paperGroup, this.penBody, this.penCap] = createPenShape()
 
-        let penCapSegments = [new paper.Point(0, 0), new paper.Point(penWidth / 2, -penCapHeight), new paper.Point(penWidth, 0)]
-        this.penBody.fillColor = new paper.Color("red")
-        this.penBody.strokeColor = new paper.Color("black")
-        this.penBody.strokeWidth = 3
-        penGroup.addChild(this.penBody)
-
-        this.penCap = new paper.Path(penCapSegments)
-        this.penCap.closed = true
-        this.penCap.fillColor = new paper.Color("lightgray")
-        this.selected = false // refresh the pencap color.
-        this.penCap.strokeColor = new paper.Color("black")
-        this.penCap.strokeWidth = 3
-        penGroup.addChild(this.penCap)
-
-        this.paperGroup = penGroup
+        this.selected = false
 
         this.interceptPaperFunctions()
 
         if (colorStop)
             this.setColorStop(colorStop)
 
-        penGroup.data.meta = this
+        this.paperGroup.data.meta = this
     }
 
     setColorStop(colorStop) {
