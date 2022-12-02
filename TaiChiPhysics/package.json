@@ -1,0 +1,21 @@
+{
+  "name": "hhtaichiphysics",
+  "version": "0.0.1",
+  "description": "Playground for Taichi physics",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js",
+    "start": "webpack serve --open"
+  },
+  "author": "vincentzhang",
+  "license": "ISC",
+  "devDependencies": {
+    "html-webpack-plugin": "^5.5.0",
+    "taichi.js": "^0.0.27",
+    "ts-loader": "^9.4.2",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.0",
+    "webpack-dev-server": "^4.11.1"
+  }
+}
