@@ -11,6 +11,7 @@ class TimelinePointer {
     paperGroup: paper.Group
     penCap: paper.Path
     penBody: paper.Path
+    penText: paper.PointText
     selected: boolean = false
 
     frameId: number = -1
@@ -22,10 +23,15 @@ class TimelinePointer {
         this.cellWidth = cellWidth
 
         this.paperGroup.rotation = 180
+
+        this.penText = new paper.PointText(this.penBody.bounds.topLeft)
+        this.penText.content = "Unknown frames"
+        this.paperGroup.addChild(this.penText)
     }
 
     setFrameId(frameId: number) {
         this.paperGroup.position = new paper.Point(penOffset + frameId * this.cellWidth, canvasHeight - penHeight)
+        this.penText.content = frameId
     }
 }
 
@@ -78,6 +84,8 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
 
         this.bgRectangle = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(canvasWidth, canvasHeight))
         this.bgRectangle.fillColor = new paper.Color("lightgray")
+
+        this.refresh()
 
         previousProject.activate()
     }
