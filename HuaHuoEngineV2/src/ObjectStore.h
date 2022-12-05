@@ -76,6 +76,10 @@ public:
         GetScriptEventManager()->TriggerEvent("OnMaxFrameIdUpdated", NULL);
     }
 
+    int GetMaxFrameId(){
+        return this->maxFrameId;
+    }
+
     void SyncLayersInfo(){
         maxFrameId = -1;
         for(PPtr<Layer> layer : layers){
