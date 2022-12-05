@@ -123,8 +123,8 @@ void BaseShape::SetGlobalPivotPosition(float x, float y, float z) {
     if(this->mRecordTransformationOfKeyFrame){
         Layer *shapeLayer = GetLayer();
         int currentFrameId = shapeLayer->GetCurrentFrame();
-        auto frameState = GetFrameState<ShapeTransformFrameState>();
-        frameState.RecordGlobalPivotPosition(currentFrameId, x, y, z);
+        AbstractFrameState* frameState = GetFrameState<ShapeTransformFrameState>();
+        frameState->RecordGlobalPivotPosition(currentFrameId, x, y, z);
         shapeLayer->AddKeyFrame(currentFrameId, &frameState);
     }else{ // Just update it temporarily
         GetFrameState<ShapeTransformFrameState>().UpdateTemporaryPosition(x, y, z);
