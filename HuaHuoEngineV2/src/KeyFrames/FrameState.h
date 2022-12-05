@@ -84,8 +84,11 @@ public:
     virtual int GetMaxFrameId() = 0;
     virtual void AddAnimationOffset(int offset) = 0;
 
-
     virtual void SetBaseShape(BaseShape* pBaseShape);
+
+    BaseShape* GetBaseShape() const {
+        return this->baseShape;
+    }
 
     const char *GetName() const override;
 
@@ -153,8 +156,6 @@ public:
 protected:
     KeyFrameManager<T> m_KeyFrames;
 };
-
-
 
 // TODO: Binary search rather than linear search !!!!
 template<class T>

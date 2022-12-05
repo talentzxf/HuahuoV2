@@ -13,6 +13,7 @@
 #include "Serialize/PersistentManager.h"
 #include "KeyFrames/ShapeSegmentFrameState.h"
 #include "BaseClasses/ImmediatePtr.h"
+#include "KeyFrames/KeyFrame.h"
 
 extern const int MAX_FRAMES;
 
@@ -82,7 +83,7 @@ private:
     SInt32 mIndex;
     bool mIsVisible;
     std::string mShapeName;
-    std::vector<int> mKeyFrameCache;
+    std::vector<KeyFrame> mKeyFrameCache;
 
     // The flag indicates whether we need to "really" update global position in key frames.
     // In some cases, the position are just temporary, we don't need to update it permanently.
@@ -262,11 +263,11 @@ public:
     void RefreshKeyFrameCache(){
         Container::const_iterator end = mFrameStates.end();
 
-        std::set<int> keyFrames;
+        std::set<KeyFrame> keyFrames;
         for (Container::const_iterator i = mFrameStates.begin(); i != end; ++i) {
             const vector<int>& keyFrameIds = i->GetComponentPtr()->GetKeyFrameIds();
             for(auto itr = keyFrameIds.begin(); itr != keyFrameIds.end(); itr++){
-                keyFrames.insert(*itr);
+                keyFrames.insert(KeyFrame(*itr, i->GetComponentPtr()));
             }
         }
 
@@ -283,7 +284,13 @@ public:
     int GetKeyFrameAtIdx(int idx){
         if(idx >= mKeyFrameCache.size())
             return -1;
-        return mKeyFrameCache[idx];
+        return mKeyFrameCache[idx].GetFrameId();
+    }
+
+    KeyFrame* GetKeyFrameObjectAtIdx(int idx){
+        if(idx >= mKeyFrameCache.size())
+            return NULL;
+        return &mKeyFrameCache[idx];
     }
 };
 

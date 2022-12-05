@@ -71,7 +71,7 @@ void ShapeFollowCurveFrameState::RecordLengthRatio(int frameId, float lengthRati
         pKeyFrame->followCurveData = m_CurrentShapeFollowCurveData;
         pKeyFrame->followCurveData.lengthRatio = lengthRatio;
 
-        baseShape->GetLayer()->AddKeyFrame(frameId, baseShape);
+        baseShape->GetLayer()->AddKeyFrame(frameId, this);
         Apply(frameId);
     }else{
         this->m_CurrentShapeFollowCurveData.lengthRatio = lengthRatio;

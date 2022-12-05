@@ -11,6 +11,7 @@
 #include "Serialize/PersistentManager.h"
 #include "TimeLineCellManager.h"
 #include "Shapes/ElementShape.h"
+#include "KeyFrames/KeyFrame.h"
 
 #include <vector>
 
@@ -72,6 +73,8 @@ private:
     BaseShape* baseShape;
 };
 
+class KeyFrame;
+
 class Layer : public Object {
 REGISTER_CLASS(Layer);
 
@@ -91,7 +94,7 @@ public:
         this->cellManager->SetLayer(this);
     }
 
-    void SetObjectStore(ObjectStore *store);
+    void SetObjectStore(const ObjectStore *store);
 
     virtual void SetName(const char *name) override {
         this->name = name;
@@ -137,7 +140,7 @@ public:
         return cellManager;
     }
 
-    void AddKeyFrame(int frameId, BaseShape* shape);
+    void AddKeyFrame(int frameId, AbstractFrameState* keyFrame);
 
     bool IsKeyFrame(int frameId) {
         if (keyFrames.contains(frameId) && !keyFrames[frameId].empty())
@@ -173,8 +176,8 @@ private:
     std::string name;
     PPtr<TimeLineCellManager> cellManager;
 
-    typedef std::map<int, std::set<PPtr<BaseShape>>> KeyFrameObjectSetMap;
-
+    typedef std::vector<KeyFrame> KeyFrameSet;
+    typedef std::map<int, KeyFrameSet> KeyFrameObjectSetMap;
     KeyFrameObjectSetMap keyFrames;
     PPtr<ObjectStore> objectStore;
     bool isVisible;

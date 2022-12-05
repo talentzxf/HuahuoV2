@@ -45,10 +45,10 @@ void Layer::RemoveShape(BaseShape *shape) {
     std::vector<int> toDeleteFrames;
     // Remove the shape from keyframes.
     for (auto keyframe: keyFrames) {
-        if (keyframe.second.contains(shape)) {
-            printf("Erasing shape!!!!\n");
-            keyframe.second.erase(shape);
-        }
+
+        std::erase_if(keyframe.second, [shape](const KeyFrame& keyFrameObj){
+            return keyFrameObj.GetFrameState()->GetBaseShape()->GetInstanceID() == shape->GetInstanceID();
+        });
 
         if (keyframe.second.empty()) {
             printf("Begin to erase keyframe!!!!\n");
@@ -89,30 +89,35 @@ void Layer::SetIsVisible(bool isVisible) {
     GetScriptEventManager()->TriggerEvent("OnLayerUpdated", &args);
 }
 
-void Layer::AddKeyFrame(int frameId, BaseShape *shape) {
-    if (keyFrames.contains(frameId) && keyFrames[frameId].contains(shape)) {
-        return;
+void Layer::AddKeyFrame(int frameId, AbstractFrameState* frameState) {
+    if (keyFrames.contains(frameId)) {
+        auto keyFrameSet = keyFrames[frameId];
+        auto foundKeyFrameObjItr = std::find_if(keyFrameSet.begin(), keyFrameSet.end(),[frameState](const KeyFrame& keyframeObject){
+            return keyframeObject.GetFrameState()->GetInstanceID() == frameState->GetInstanceID();
+        });
+        if(foundKeyFrameObjItr != keyFrameSet.end()) // frameId and frameState both match. No need to add again.
+            return;
     }
 
     if (!keyFrames.contains(frameId)) {
-        keyFrames.insert(std::pair<int, std::set<PPtr<BaseShape>>>(frameId, set<PPtr<BaseShape>>()));
+        keyFrames.insert(std::pair<int, KeyFrameSet>(frameId, KeyFrameSet()));
     }
 
     objectStore->UpdateMaxFrameId(frameId);
-    std::set<PPtr<BaseShape>> &shapeSet = keyFrames[frameId];
-    shapeSet.insert(shape);
+    keyFrames.find(frameId)->second.push_back(KeyFrame(frameId, frameState));
 
     if (this->GetObjectStore() != NULL) {
         this->GetObjectStore()->UpdateMaxFrameId(frameId);
     }
 
+    BaseShape* shape = frameState->GetBaseShape();
     shape->RefreshKeyFrameCache();
 
     KeyFrameChangedEventHandlerArgs args(this, frameId);
     GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
 }
 
-void Layer::SetObjectStore(ObjectStore *store) {
+void Layer::SetObjectStore(const ObjectStore *store) {
     this->objectStore = store;
 }
 
@@ -142,8 +147,8 @@ void Layer::SyncInfo() {
         shapePtr->RefreshKeyFrameCache();
         int keyFrameCount = shapePtr->GetKeyFrameCount();
         for (int keyFrameIdx = 0; keyFrameIdx < keyFrameCount; keyFrameIdx++) {
-            int keyFrameId = shapePtr->GetKeyFrameAtIdx(keyFrameIdx);
-            this->AddKeyFrame(keyFrameId, shapePtr);
+            KeyFrame* keyFrame = shapePtr->GetKeyFrameObjectAtIdx(keyFrameIdx);
+            this->AddKeyFrame(keyFrame->GetFrameId(), keyFrame->GetFrameState());
         }
     }
 }

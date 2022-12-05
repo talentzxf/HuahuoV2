@@ -76,10 +76,6 @@ public:
         GetScriptEventManager()->TriggerEvent("OnMaxFrameIdUpdated", NULL);
     }
 
-    int GetMaxFrameId(){
-        return this->maxFrameId;
-    }
-
     void SyncLayersInfo(){
         maxFrameId = -1;
         for(PPtr<Layer> layer : layers){
@@ -106,10 +102,11 @@ private:
     bool m_IsGlobal;
 public:
     ObjectStoreManager(MemLabelId label, ObjectCreationMode mode)
-        :Super(label, mode)
-        ,m_IsGlobal(false)
-        ,canvasWidth(-1)
-        ,canvasHeight(-1)
+        : Super(label, mode)
+        , m_IsGlobal(false)
+        , canvasWidth(-1)
+        , canvasHeight(-1)
+        , maxKeyFrameIdentifier(0)
     {
         printf("Creating new store manager!!!!\n");
     }
@@ -193,11 +190,16 @@ public:
         return this->canvasHeight;
     }
 
+    int GetAndIncreaseMaxKeyFrameIdentifier(){
+        return maxKeyFrameIdentifier++;
+    }
+
 private:
     std::vector<PPtr<ObjectStore>> allStores;
     PPtr<ObjectStore> currentStore;
     int canvasWidth;
     int canvasHeight;
+    int maxKeyFrameIdentifier; // This is NOT the frameId of the keyframes. It's just an ID for all the KeyFrame objects.
 };
 
 ObjectStoreManager* GetDefaultObjectStoreManager();

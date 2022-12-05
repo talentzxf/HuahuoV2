@@ -80,7 +80,7 @@ void CustomFrameState::SetFloatValue(float value) {
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     this->RecordFieldValue(currentFrameId, value);
-    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+    shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
 void CustomFrameState::SetVector3Value(float x, float y, float z) {
@@ -93,7 +93,7 @@ void CustomFrameState::SetVector3Value(float x, float y, float z) {
     int currentFrameId = shapeLayer->GetCurrentFrame();
     Vector3f value(x, y, z);
     this->RecordFieldValue(currentFrameId, value);
-    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+    shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
 float CustomFrameState::GetFloatValue() {
@@ -132,7 +132,7 @@ void CustomFrameState::SetColorValue(float r, float g, float b, float a) {
     int currentFrameId = shapeLayer->GetCurrentFrame();
     ColorRGBAf value(r, g, b, a);
     this->RecordFieldValue(currentFrameId, value);
-    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+    shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
 CustomDataKeyFrame* CustomFrameState::GetColorStopArrayKeyFrame(int currentFrameId) {
@@ -195,7 +195,7 @@ int CustomFrameState::AddColorStop(float value, float r, float g, float b, float
     }
 
     Apply(currentFrameId);
-    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+    shapeLayer->AddKeyFrame(currentFrameId, this);
 
     return colorStopEntry.GetIdentifier();
 }
@@ -214,7 +214,7 @@ void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, f
     pKeyFrame->data.colorStopArray.UpdateAtIdentifier(idx, value, r, g, b, a);
     Apply(currentFrameId);
 
-    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+    shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
 void CustomFrameState::DeleteColorStop(int idx) {
@@ -237,7 +237,7 @@ void CustomFrameState::DeleteColorStop(int idx) {
 
     Apply(currentFrameId);
 
-    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+    shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
 ColorRGBAf *CustomFrameState::GetColorValue() {
@@ -261,7 +261,7 @@ void CustomFrameState::CreateShapeArrayValue() {
     int currentFrameId = shapeLayer->GetCurrentFrame();
 
     this->RecordFieldValue(currentFrameId, FieldShapeArray());
-    shapeLayer->AddKeyFrame(currentFrameId, this->baseShape);
+    shapeLayer->AddKeyFrame(currentFrameId, this);
 }
 
 FieldShapeArray *CustomFrameState::GetShapeArrayValueForWrite() {

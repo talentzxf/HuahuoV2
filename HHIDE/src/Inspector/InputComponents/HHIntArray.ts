@@ -30,6 +30,7 @@ class TimelinePointer {
         this.paperGroup.addChild(this.penText)
 
         this.paperGroup.visible = false
+
     }
 
     setFrameId(frameId: number) {
