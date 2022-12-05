@@ -1,6 +1,7 @@
 import {CustomElement} from "hhcommoncomponents";
 import {paper} from "hhenginejs"
-import {createPenShape} from "./Utils";
+import {createPenShape, selectedPenCapColor, unselectedPenCapColor} from "./Utils";
+import {huahuoEngine} from "hhenginejs";
 
 const canvasWidth = 200
 const canvasHeight = 50
@@ -13,13 +14,26 @@ class TimelinePointer {
     penCap: paper.Path
     penBody: paper.Path
     penText: paper.PointText
-    selected: boolean = false
+    _selected: boolean = false
 
     frameId: number = -1
     cellWidth: number = -1
 
+    set selected(val: boolean){
+        if (this._selected == val)
+            return
+
+        this._selected = val
+        if (this._selected) {
+            this.penCap.fillColor = selectedPenCapColor
+        } else {
+            this.penCap.fillColor = unselectedPenCapColor
+        }
+    }
+
     constructor() {
         [this.paperGroup, this.penBody, this.penCap] = createPenShape()
+        this.paperGroup.data.meta = this
 
         this.paperGroup.rotation = 180
 
@@ -39,6 +53,8 @@ class TimelinePointer {
 
         this.paperGroup.position = new paper.Point(penOffset + frameId * this.cellWidth, penBounds.height / 2.0)
         this.penText.content = frameId + 1 // The frameId starts from 0 internall, but during display, it starts from 1.
+
+        this.frameId = frameId
     }
 
     get paperHeight(){
@@ -151,7 +167,9 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
 
     getTimelinePointer(idx: number): TimelinePointer {
         while (this.timelinePointers.length <= idx) {
-            this.timelinePointers.push(new TimelinePointer())
+            let newTimelinePointer = new TimelinePointer()
+            this.timelinePointers.push(newTimelinePointer)
+            newTimelinePointer.paperGroup.onClick = this.onPenClicked
         }
 
         return this.timelinePointers[idx]
@@ -163,6 +181,16 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
         }
 
         return this.timelineSpans[idx]
+    }
+
+    onPenClicked(evt: MouseEvent){
+        console.log(evt)
+        if(!evt.target["data"] || !evt.target["data"]["meta"]){
+            return
+        }
+
+        let timelinePointer = evt.target["data"]["meta"] as TimelinePointer
+        huahuoEngine.getActivePlayer().setFrameId(timelinePointer.frameId)
     }
 
     refresh() {
@@ -199,6 +227,13 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
                     let span = this.getTimelineSpan(index, timelinePointer.paperHeight)
                     span.cellWidth = cellWidth
                     span.setFrameSpan(lastSpanFrameId, frameId)
+                }
+
+                if(huahuoEngine.getActivePlayer().currentlyPlayingFrameId
+                 == frameId){
+                    timelinePointer.selected = true
+                }else{
+                    timelinePointer.selected = false
                 }
 
                 lastSpanFrameId = frameId

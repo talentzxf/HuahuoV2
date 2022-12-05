@@ -2,6 +2,9 @@ const penWidth = 10
 const penHeight = 10
 const penCapHeight = 10
 
+const unselectedPenCapColor = new paper.Color("lightgray")
+const selectedPenCapColor = new paper.Color("black")
+
 function createPenShape(){
     let penGroup = new paper.Group()
     let penBody = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(penWidth, penHeight))
@@ -22,4 +25,4 @@ function createPenShape(){
     return [penGroup, penBody, penCap]
 }
 
-export {createPenShape}
+export {createPenShape, selectedPenCapColor, unselectedPenCapColor}

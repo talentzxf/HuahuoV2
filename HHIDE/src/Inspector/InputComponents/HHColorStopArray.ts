@@ -3,7 +3,7 @@ import {paper} from "hhenginejs"
 import {HHColorInput} from "./HHColorInput";
 import {ColorStop} from "hhenginejs";
 import {HHToast, getMethodsAndVariables} from "hhcommoncomponents";
-import {createPenShape} from "./Utils";
+import {createPenShape, selectedPenCapColor, unselectedPenCapColor} from "./Utils";
 
 const rectangleOffset = 10
 const canvasWidth = 200
@@ -11,9 +11,6 @@ const canvasHeight = 20
 
 const rectangleWidth = 150
 const rectangleHeight = 20
-
-const unselectedPenCapColor = new paper.Color("lightgray")
-const selectedPenCapColor = new paper.Color("black")
 
 class Pen {
     colorStop: ColorStop
