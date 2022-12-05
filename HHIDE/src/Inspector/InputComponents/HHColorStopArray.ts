@@ -11,9 +11,6 @@ const canvasHeight = 20
 
 const rectangleWidth = 150
 const rectangleHeight = 20
-const penWidth = 10
-const penHeight = 10
-const penCapHeight = 10
 
 const unselectedPenCapColor = new paper.Color("lightgray")
 const selectedPenCapColor = new paper.Color("black")

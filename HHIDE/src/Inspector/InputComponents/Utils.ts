@@ -22,4 +22,4 @@ function createPenShape(){
     return [penGroup, penBody, penCap]
 }
 
-export {createPenShape, penWidth, penHeight}
+export {createPenShape}
