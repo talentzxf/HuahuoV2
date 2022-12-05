@@ -48,7 +48,8 @@ void BaseShape::TransferFrameStates(TransferFunction &transfer) {
 }
 
 void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
-    if(this->mLayer != NULL){ // When the shape is loaded, it's layer has not been loaded yet. It's possible as this might be a shape within another element.
+    if (this->mLayer !=
+        NULL) { // When the shape is loaded, it's layer has not been loaded yet. It's possible as this might be a shape within another element.
         int frameId = this->GetLayer()->GetCurrentFrame();
         Apply(frameId);
     }
@@ -69,7 +70,7 @@ BaseShape *BaseShape::CreateShape(const char *shapeName) {
 
 // TODO: This logic is not good. Explicit is better than implicit!!!!
 Layer *BaseShape::GetLayer(bool assignDefaultIfNotExist) {
-    if(assignDefaultIfNotExist){
+    if (assignDefaultIfNotExist) {
         if (!this->mLayer) {
             this->mLayer = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer();
         }
@@ -92,9 +93,9 @@ AbstractFrameState *BaseShape::AddFrameState(AbstractFrameState *frameState) {
     return frameState;
 }
 
-AbstractFrameState* BaseShape::GetFrameState(const char* name){
-    for(auto frameState : mFrameStates){
-        if(strcmp( frameState.GetComponentPtr()->GetName(), name) == 0){
+AbstractFrameState *BaseShape::GetFrameState(const char *name) {
+    for (auto frameState: mFrameStates) {
+        if (strcmp(frameState.GetComponentPtr()->GetName(), name) == 0) {
             return frameState.GetComponentPtr();
         }
     }
@@ -106,7 +107,7 @@ void BaseShape::SetLocalPivotPosition(float x, float y, float z) {
     Layer *shapeLayer = GetLayer();
 
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    ShapeTransformFrameState& frameState = GetFrameState<ShapeTransformFrameState>();
+    ShapeTransformFrameState &frameState = GetFrameState<ShapeTransformFrameState>();
     frameState.RecordLocalPivotPosition(currentFrameId, x, y, z);
 
     shapeLayer->AddKeyFrame(currentFrameId, &frameState);
@@ -120,28 +121,28 @@ void BaseShape::SetBornFrameId(SInt32 bornFrameId) {
 }
 
 void BaseShape::SetGlobalPivotPosition(float x, float y, float z) {
-    if(this->mRecordTransformationOfKeyFrame){
+    if (this->mRecordTransformationOfKeyFrame) {
         Layer *shapeLayer = GetLayer();
         int currentFrameId = shapeLayer->GetCurrentFrame();
-        AbstractFrameState* frameState = GetFrameState<ShapeTransformFrameState>();
-        frameState->RecordGlobalPivotPosition(currentFrameId, x, y, z);
+        ShapeTransformFrameState &frameState = GetFrameState<ShapeTransformFrameState>();
+        frameState.RecordGlobalPivotPosition(currentFrameId, x, y, z);
         shapeLayer->AddKeyFrame(currentFrameId, &frameState);
-    }else{ // Just update it temporarily
+    } else { // Just update it temporarily
         GetFrameState<ShapeTransformFrameState>().UpdateTemporaryPosition(x, y, z);
     }
 }
 
 void BaseShape::SetRotation(float rotation) {
 
-    if(this->mRecordTransformationOfKeyFrame){
+    if (this->mRecordTransformationOfKeyFrame) {
         Layer *shapeLayer = GetLayer();
 
         int currentFrameId = shapeLayer->GetCurrentFrame();
-        auto frameState = GetFrameState<ShapeTransformFrameState>();
+        ShapeTransformFrameState &frameState = GetFrameState<ShapeTransformFrameState>();
         frameState.RecordRotation(currentFrameId, rotation);
 
         shapeLayer->AddKeyFrame(currentFrameId, &frameState);
-    }else{
+    } else {
         GetFrameState<ShapeTransformFrameState>().UpdateTemporaryRotation(rotation);
     }
 }
@@ -149,7 +150,7 @@ void BaseShape::SetRotation(float rotation) {
 void BaseShape::SetScale(float xScale, float yScale, float zScale) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    auto frameState = GetFrameState<ShapeTransformFrameState>();
+    ShapeTransformFrameState &frameState = GetFrameState<ShapeTransformFrameState>();
     frameState.RecordScale(currentFrameId, xScale, yScale, zScale);
     shapeLayer->AddKeyFrame(currentFrameId, &frameState);
 }
@@ -182,7 +183,7 @@ bool BaseShape::IsVisible() {
 void BaseShape::SetSegments(float segmentBuffer[], int size) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    auto frameState = GetFrameState<ShapeSegmentFrameState>();
+    ShapeSegmentFrameState &frameState = GetFrameState<ShapeSegmentFrameState>();
     frameState.RecordSegments(currentFrameId, segmentBuffer, size);
     shapeLayer->AddKeyFrame(currentFrameId, &frameState);
 }
