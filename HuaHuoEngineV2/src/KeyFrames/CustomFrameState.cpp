@@ -195,7 +195,7 @@ int CustomFrameState::AddColorStop(float value, float r, float g, float b, float
     }
 
     Apply(currentFrameId);
-    shapeLayer->AddKeyFrame(currentFrameId, this);
+    shapeLayer->AddKeyFrame(pKeyFrame->GetKeyFrame());
 
     return colorStopEntry.GetIdentifier();
 }

@@ -20,7 +20,6 @@ public:
             keyFrameIdentifier(v.keyFrameIdentifier),
             frameId(v.frameId),
             frameState(v.frameState) {}   // Necessary for correct optimized GCC codegen
-    KeyFrame(int frameId, AbstractFrameState *frameState);
 
     int GetKeyFrameIdentifier() const;
 
@@ -37,8 +36,6 @@ public:
     bool operator<(const KeyFrame k1) {
         return GetFrameId() < k1.GetFrameId();
     }
-private:
-    void AssignKeyFrameIdentifier();
 
 private:
     /**
@@ -112,6 +109,31 @@ public:
 
 private:
     std::vector<T> m_KeyFrameData;
+};
+
+
+struct KeyFrameInfo{
+protected:
+    int keyFrameId;
+
+public:
+    KeyFrameInfo(): keyFrameId(-1){
+
+    }
+
+    KeyFrame& GetKeyFrame();
+
+    int GetFrameId() {
+        return GetKeyFrame().GetFrameId();
+    }
+
+    void SetFrameId(int frameId){
+        GetKeyFrame().SetFrameId(frameId);
+    }
+
+    void SetFrameState(AbstractFrameState* frameState){
+        GetKeyFrame().SetFrameState(frameState);
+    }
 };
 
 #endif //HUAHUOENGINEV2_KEYFRAME_H

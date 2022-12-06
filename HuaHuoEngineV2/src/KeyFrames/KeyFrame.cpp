@@ -5,20 +5,15 @@
 #include "ObjectStore.h"
 #include "KeyFrame.h"
 
-void KeyFrame::AssignKeyFrameIdentifier() {
-    if (keyFrameIdentifier <= 0)
-        this->keyFrameIdentifier = GetDefaultObjectStoreManager()->GetAndIncreaseMaxKeyFrameIdentifier();
+KeyFrame &KeyFrameInfo::GetKeyFrame() {
+    if(this->keyFrameId <= 0){
+        this->keyFrameId = GetDefaultObjectStoreManager()->ProduceKeyFrame();
+    }
+    return GetDefaultObjectStoreManager()->GetKeyFrameById(this->keyFrameId);
 }
 
 AbstractFrameState *KeyFrame::GetFrameState() const {
     return frameState;
-}
-
-KeyFrame::KeyFrame(int frameId, AbstractFrameState *frameState) {
-    this->frameId = frameId;
-    this->frameState = frameState;
-
-    AssignKeyFrameIdentifier();
 }
 
 int KeyFrame::GetKeyFrameIdentifier() const {
@@ -31,12 +26,10 @@ int KeyFrame::GetFrameId() const {
 
 void KeyFrame::SetFrameId(int frameId) {
     KeyFrame::frameId = frameId;
-    AssignKeyFrameIdentifier();
 }
 
 void KeyFrame::SetFrameState(AbstractFrameState *frameState) {
     this->frameState = frameState;
-    AssignKeyFrameIdentifier();
 }
 
 bool KeyFrameEq(const KeyFrame &k1, const KeyFrame &k2) {

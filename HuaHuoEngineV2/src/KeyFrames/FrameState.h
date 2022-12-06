@@ -11,28 +11,6 @@
 #include "BaseClasses/PPtr.h"
 #include "KeyFrame.h"
 
-struct KeyFrameInfo{
-protected:
-    KeyFrame keyFrame;
-
-public:
-    KeyFrame& GetKeyFrame(){
-        return keyFrame;
-    }
-
-    int GetFrameId() {
-        return keyFrame.GetFrameId();
-    }
-
-    void SetFrameId(int frameId){
-        keyFrame.SetFrameId(frameId);
-    }
-
-    void SetFrameState(AbstractFrameState* frameState){
-        keyFrame.SetFrameState(frameState);
-    }
-};
-
 class BaseShape;
 
 class AbstractFrameState : public Object {

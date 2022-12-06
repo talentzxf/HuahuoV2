@@ -140,7 +140,8 @@ public:
         return cellManager;
     }
 
-    void AddKeyFrame(int frameId, AbstractFrameState* keyFrame);
+    // void AddKeyFrame(int frameId, AbstractFrameState* keyFrame);
+    void AddKeyFrame(KeyFrame& keyFrame);
 
     bool IsKeyFrame(int frameId) {
         if (keyFrames.contains(frameId) && !keyFrames[frameId].empty())

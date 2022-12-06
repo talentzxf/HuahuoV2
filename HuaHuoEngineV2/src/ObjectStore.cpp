@@ -39,6 +39,7 @@ void ObjectStoreManager::Transfer(TransferFunction &transfer) {
     TRANSFER(canvasWidth);
     TRANSFER(canvasHeight);
     TRANSFER(maxKeyFrameIdentifier);
+    TRANSFER(allKeyFrames);
 }
 
 ObjectStoreManager* ObjectStoreManager::GetDefaultObjectStoreManager(){

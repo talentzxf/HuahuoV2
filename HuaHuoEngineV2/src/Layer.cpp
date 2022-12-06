@@ -89,7 +89,9 @@ void Layer::SetIsVisible(bool isVisible) {
     GetScriptEventManager()->TriggerEvent("OnLayerUpdated", &args);
 }
 
-void Layer::AddKeyFrame(int frameId, AbstractFrameState* frameState) {
+void Layer::AddKeyFrame(KeyFrame &keyFrame) {
+    int frameId = keyFrame.GetFrameId();
+    AbstractFrameState* frameState = keyFrame.GetFrameState();
     if (keyFrames.contains(frameId)) {
         auto keyFrameSet = keyFrames[frameId];
         auto foundKeyFrameObjItr = std::find_if(keyFrameSet.begin(), keyFrameSet.end(),[frameState](const KeyFrame& keyframeObject){
@@ -103,9 +105,7 @@ void Layer::AddKeyFrame(int frameId, AbstractFrameState* frameState) {
         keyFrames.insert(std::pair<int, KeyFrameSet>(frameId, KeyFrameSet()));
     }
 
-    objectStore->UpdateMaxFrameId(frameId);
-    keyFrames.find(frameId)->second.push_back(KeyFrame(frameId, frameState));
-
+    keyFrames.find(frameId)->second.push_back(keyFrame);
     if (this->GetObjectStore() != NULL) {
         this->GetObjectStore()->UpdateMaxFrameId(frameId);
     }
@@ -148,7 +148,7 @@ void Layer::SyncInfo() {
         int keyFrameCount = shapePtr->GetKeyFrameCount();
         for (int keyFrameIdx = 0; keyFrameIdx < keyFrameCount; keyFrameIdx++) {
             KeyFrame* keyFrame = shapePtr->GetKeyFrameObjectAtIdx(keyFrameIdx);
-            this->AddKeyFrame(keyFrame->GetFrameId(), keyFrame->GetFrameState());
+            this->AddKeyFrame(*keyFrame);
         }
     }
 }

@@ -131,6 +131,10 @@ void testShapeStore() {
     circleShape->SetGlobalPivotPosition(100, 100, 100);
     Vector3f* vector3F = circleShape->GetGlobalPivotPosition();
 
+    circleShape->RefreshKeyFrameCache();
+    int keyFrameCount = circleShape->GetKeyFrameCount();
+    int firstKeyFrame = circleShape->GetKeyFrameAtIdx(0);
+
     ShapeFollowCurveFrameState* curveFrameState = (ShapeFollowCurveFrameState*) circleShape->GetFrameStateByTypeName(
             "ShapeFollowCurveFrameState");
     curveFrameState->RecordTargetShape(10, rectangleShape);
