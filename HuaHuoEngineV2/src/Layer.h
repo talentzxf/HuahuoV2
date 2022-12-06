@@ -141,7 +141,7 @@ public:
     }
 
     // void AddKeyFrame(int frameId, AbstractFrameState* keyFrame);
-    void AddKeyFrame(KeyFrame& keyFrame);
+    void AddKeyFrame(KeyFrame* keyFrame);
 
     bool IsKeyFrame(int frameId) {
         if (keyFrames.contains(frameId) && !keyFrames[frameId].empty())
@@ -177,9 +177,9 @@ private:
     std::string name;
     PPtr<TimeLineCellManager> cellManager;
 
-    typedef std::vector<KeyFrame> KeyFrameSet;
-    typedef std::map<int, KeyFrameSet> KeyFrameObjectSetMap;
-    KeyFrameObjectSetMap keyFrames;
+    typedef std::vector<int> KeyFrameIdentifierSet;
+    typedef std::map<int, KeyFrameIdentifierSet> KeyFrameIdentifierSetMap;
+    KeyFrameIdentifierSetMap keyFrames;
     PPtr<ObjectStore> objectStore;
     bool isVisible;
     bool isSelected;

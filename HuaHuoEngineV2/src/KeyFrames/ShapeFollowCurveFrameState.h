@@ -38,7 +38,7 @@ struct ShapeFollowCurveKeyFrame: public KeyFrameInfo{
 };
 
 template<class TransferFunction> void ShapeFollowCurveKeyFrame::Transfer(TransferFunction &transfer){
-    TRANSFER(GetKeyFrame());
+    KeyFrameInfo::Transfer(transfer);
     TRANSFER(followCurveData);
 }
 

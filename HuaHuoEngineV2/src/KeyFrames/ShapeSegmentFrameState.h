@@ -45,7 +45,7 @@ struct SegmentKeyFrame : public KeyFrameInfo{
 
 template<class TransferFunction>
 void SegmentKeyFrame::Transfer(TransferFunction &transfer) {
-    TRANSFER(keyFrame);
+    KeyFrameInfo::Transfer(transfer);
     TRANSFER(positionArray);
     TRANSFER(handleInArray);
     TRANSFER(handleOutArray);

@@ -89,13 +89,14 @@ void Layer::SetIsVisible(bool isVisible) {
     GetScriptEventManager()->TriggerEvent("OnLayerUpdated", &args);
 }
 
-void Layer::AddKeyFrame(KeyFrame &keyFrame) {
-    int frameId = keyFrame.GetFrameId();
-    AbstractFrameState* frameState = keyFrame.GetFrameState();
+void Layer::AddKeyFrame(KeyFrame* keyFrame) {
+    int frameId = keyFrame->GetFrameId();
+    AbstractFrameState* frameState = keyFrame->GetFrameState();
     if (keyFrames.contains(frameId)) {
         auto keyFrameSet = keyFrames[frameId];
-        auto foundKeyFrameObjItr = std::find_if(keyFrameSet.begin(), keyFrameSet.end(),[frameState](const KeyFrame& keyframeObject){
-            return keyframeObject.GetFrameState()->GetInstanceID() == frameState->GetInstanceID();
+        auto foundKeyFrameObjItr = std::find_if(keyFrameSet.begin(), keyFrameSet.end(),[frameState](const int keyFrameIdentifier){
+            KeyFrame& keyFrameObject = GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameIdentifier);
+            return keyFrameObject.GetFrameState()->GetInstanceID() == frameState->GetInstanceID();
         });
         if(foundKeyFrameObjItr != keyFrameSet.end()) // frameId and frameState both match. No need to add again.
             return;

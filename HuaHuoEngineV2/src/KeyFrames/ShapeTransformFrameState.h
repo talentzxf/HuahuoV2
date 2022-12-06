@@ -46,7 +46,7 @@ struct TransformKeyFrame: public KeyFrameInfo{
 };
 
 template<class TransferFunction> void TransformKeyFrame::Transfer(TransferFunction &transfer){
-    TRANSFER(keyFrame);
+    KeyFrameInfo::Transfer(transfer);
     TRANSFER(frameData);
 }
 
@@ -86,12 +86,12 @@ public:
         return 0.0f;
     }
 
-    void RecordLocalPivotPosition(int frameId, float x, float y, float z);
-    void RecordGlobalPivotPosition(int frameId, float x, float y, float z);
+    TransformKeyFrame* RecordLocalPivotPosition(int frameId, float x, float y, float z);
+    TransformKeyFrame* RecordGlobalPivotPosition(int frameId, float x, float y, float z);
 
-    void RecordScale(int frameId, float xScale, float yScale, float zScale);
+    TransformKeyFrame* RecordScale(int frameId, float xScale, float yScale, float zScale);
 
-    void RecordRotation(int frameId, float rotation);
+    TransformKeyFrame* RecordRotation(int frameId, float rotation);
     friend class BaseShape;
 
     void UpdateTemporaryPosition(float x, float y, float z){

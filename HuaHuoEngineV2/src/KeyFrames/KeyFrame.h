@@ -116,6 +116,8 @@ struct KeyFrameInfo{
 protected:
     int keyFrameId;
 
+    DECLARE_SERIALIZE(KeyFrameInfo);
+
 public:
     KeyFrameInfo(): keyFrameId(-1){
 
@@ -135,5 +137,9 @@ public:
         GetKeyFrame().SetFrameState(frameState);
     }
 };
+
+template<class TransferFunction> void KeyFrameInfo::Transfer (TransferFunction& transfer){
+    TRANSFER(keyFrameId);
+}
 
 #endif //HUAHUOENGINEV2_KEYFRAME_H

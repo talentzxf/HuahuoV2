@@ -69,7 +69,7 @@ public:
 };
 
 template <class TransferFunction> void CustomDataKeyFrame::Transfer(TransferFunction &transfer) {
-    TRANSFER(GetKeyFrame());
+    KeyFrameInfo::Transfer(transfer);
     TRANSFER(data);
 }
 
