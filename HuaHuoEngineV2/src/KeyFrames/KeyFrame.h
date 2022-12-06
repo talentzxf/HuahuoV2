@@ -6,32 +6,39 @@
 #define HUAHUOENGINEV2_KEYFRAME_H
 
 #include "BaseClasses/PPtr.h"
+#include <vector>
 
+extern const int MAX_FRAMES;
+
+class KeyFrameInfo;
 class AbstractFrameState;
 
 class KeyFrame {
 public:
-    KeyFrame() {}  // Default ctor is intentionally empty for performance reasons
-    KeyFrame(const KeyFrame& v) :
-        keyFrameIdentifier(v.keyFrameIdentifier),
-        frameId(v.frameId),
-        frameState(v.frameState) {}   // Necessary for correct optimized GCC codegen
-    KeyFrame(int frameId, AbstractFrameState* frameState);
+    KeyFrame() : frameId(-1),keyFrameIdentifier(-1) {}  // Default ctor is intentionally empty for performance reasons
+    KeyFrame(const KeyFrame &v) :
+            keyFrameIdentifier(v.keyFrameIdentifier),
+            frameId(v.frameId),
+            frameState(v.frameState) {}   // Necessary for correct optimized GCC codegen
+    KeyFrame(int frameId, AbstractFrameState *frameState);
 
     int GetKeyFrameIdentifier() const;
 
     int GetFrameId() const;
+
     void SetFrameId(int frameId);
 
-    AbstractFrameState* GetFrameState() const {
-        return frameState;
-    }
+    void SetFrameState(AbstractFrameState* frameState);
+
+    AbstractFrameState *GetFrameState() const;
 
     DECLARE_SERIALIZE(KeyFrame);
 
-    bool operator<(const KeyFrame k1){
+    bool operator<(const KeyFrame k1) {
         return GetFrameId() < k1.GetFrameId();
     }
+private:
+    void AssignKeyFrameIdentifier();
 
 private:
     /**
@@ -50,7 +57,61 @@ void KeyFrame::Transfer(TransferFunction &transfer) {
     TRANSFER(frameState);
 }
 
-bool KeyFrameEq(const KeyFrame& k1, const KeyFrame& k2);
+bool KeyFrameEq(const KeyFrame &k1, const KeyFrame &k2);
 
-bool operator<(const KeyFrame& k1, const KeyFrame& k2);
+bool operator<(const KeyFrame &k1, const KeyFrame &k2);
+
+template<class T>
+class KeyFrameManager {
+    DECLARE_SERIALIZE(KeyFrameManager)
+
+public:
+    virtual int GetMaxFrameId() {
+        int maxFrameId = -1;
+        for (auto keyframe: m_KeyFrameData) {
+            if (keyframe.GetFrameId() > maxFrameId) {
+                maxFrameId = keyframe.GetFrameId();
+            }
+        }
+
+        return maxFrameId;
+    }
+
+    virtual int GetMinFrameId() {
+        int minFrameId = MAX_FRAMES;
+        for (auto keyframe: m_KeyFrameData) {
+            if (keyframe.GetFrameId() < minFrameId) {
+                minFrameId = keyframe.GetFrameId();
+            }
+        }
+
+        return minFrameId;
+    }
+
+    virtual void AddAnimationOffset(int offsetFrames) {
+        for (auto keyframeItr = m_KeyFrameData.begin(); keyframeItr != m_KeyFrameData.end(); keyframeItr++) {
+            if (keyframeItr->GetFrameId() >= 0) {
+                keyframeItr->SetFrameId(max(0, keyframeItr->GetFrameId() + offsetFrames));
+                keyframeItr->SetFrameId(min(MAX_FRAMES, keyframeItr->GetFrameId()));
+            }
+        }
+    }
+
+    std::vector<T> &GetKeyFrames() {
+        return m_KeyFrameData;
+    }
+
+    std::vector<KeyFrameInfo*> GetKeyFrameInfos(){
+        vector<KeyFrameInfo*> keyframeInfos;
+        for(T keyFrame: m_KeyFrameData){
+            keyframeInfos.push_back(&keyFrame);
+        }
+
+        return keyframeInfos;
+    }
+
+private:
+    std::vector<T> m_KeyFrameData;
+};
+
 #endif //HUAHUOENGINEV2_KEYFRAME_H

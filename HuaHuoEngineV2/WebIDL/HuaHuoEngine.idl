@@ -129,6 +129,7 @@ interface SegmentKeyFrame{
 interface AbstractFrameState{
     [Const] DOMString GetTypeName();
     void SetTypeName([Const] DOMString typeName);
+    long GetKeyFrameCount();
 };
 
 [NoDelete]

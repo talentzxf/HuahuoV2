@@ -83,7 +83,8 @@ private:
     SInt32 mIndex;
     bool mIsVisible;
     std::string mShapeName;
-    std::vector<KeyFrame> mKeyFrameCache;
+
+    std::vector<KeyFrameInfo*> mKeyFrameCache;
 
     // The flag indicates whether we need to "really" update global position in key frames.
     // In some cases, the position are just temporary, we don't need to update it permanently.
@@ -263,16 +264,16 @@ public:
     void RefreshKeyFrameCache(){
         Container::const_iterator end = mFrameStates.end();
 
-        std::set<KeyFrame> keyFrames;
+        std::vector<KeyFrameInfo*> allKeyFrames;
         for (Container::const_iterator i = mFrameStates.begin(); i != end; ++i) {
-            const vector<int>& keyFrameIds = i->GetComponentPtr()->GetKeyFrameIds();
-            for(auto itr = keyFrameIds.begin(); itr != keyFrameIds.end(); itr++){
-                keyFrames.insert(KeyFrame(*itr, i->GetComponentPtr()));
+            const vector<KeyFrameInfo*>& keyFrames = i->GetComponentPtr()->GetKeyFrameInfos();
+            for(auto itr = keyFrames.begin(); itr != keyFrames.end(); itr++){
+                allKeyFrames.insert(allKeyFrames.end(), keyFrames.begin(), keyFrames.end());
             }
         }
 
         mKeyFrameCache.clear();
-        for(auto setItr = keyFrames.begin(); setItr != keyFrames.end(); setItr++){
+        for(auto setItr = allKeyFrames.begin(); setItr != allKeyFrames.end(); setItr++){
             mKeyFrameCache.push_back(*setItr);
         }
     }
@@ -284,13 +285,13 @@ public:
     int GetKeyFrameAtIdx(int idx){
         if(idx >= mKeyFrameCache.size())
             return -1;
-        return mKeyFrameCache[idx].GetFrameId();
+        return mKeyFrameCache[idx]->GetFrameId();
     }
 
     KeyFrame* GetKeyFrameObjectAtIdx(int idx){
         if(idx >= mKeyFrameCache.size())
             return NULL;
-        return &mKeyFrameCache[idx];
+        return &mKeyFrameCache[idx]->GetKeyFrame();
     }
 };
 

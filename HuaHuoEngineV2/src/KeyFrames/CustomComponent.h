@@ -24,15 +24,17 @@ public:
         return m_FrameStates;
     }
 
-    const vector<int> GetKeyFrameIds() override{
-        vector<int> keyFrames;
+    const set<int> GetKeyFrameIds() override{
+        set<int> keyFrames;
         for(auto frameState: m_FrameStates){
             auto frameStateKeyFrames = frameState.GetComponentPtr()->GetKeyFrameIds();
-            keyFrames.insert(keyFrames.end(), frameStateKeyFrames.begin(), frameStateKeyFrames.end());
+            keyFrames.insert(frameStateKeyFrames.begin(), frameStateKeyFrames.end());
         }
 
         return keyFrames;
     }
+
+    vector<KeyFrameInfo *> GetKeyFrameInfos() override;
 
     virtual int GetMinFrameId() override{
         int minFrameId = MAX_FRAMES;
@@ -166,6 +168,9 @@ private:
 
         return m_fieldNameFieldIndexMap[fieldName];
     }
+
+public:
+    int GetKeyFrameCount() override;
 
 public:
     int RegisterFloatValue(const char* fieldName, float initValue){

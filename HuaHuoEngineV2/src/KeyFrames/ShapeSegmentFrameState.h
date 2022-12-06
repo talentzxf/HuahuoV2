@@ -8,18 +8,13 @@
 
 #include "FrameState.h"
 
-struct SegmentKeyFrame {
-    int frameId;
+struct SegmentKeyFrame : public KeyFrameInfo{
 
     std::vector<Vector3f> positionArray;
     std::vector<Vector3f> handleInArray;
     std::vector<Vector3f> handleOutArray;
 
     DECLARE_SERIALIZE(SegmentKeyFrame)
-
-    int GetFrameId() {
-        return frameId;
-    }
 
     int GetTotalSegments() {
         return positionArray.size();
@@ -43,23 +38,22 @@ struct SegmentKeyFrame {
         handleOutArray.erase(handleOutArray.begin() + index);
     }
 
-    SegmentKeyFrame():frameId(-1){
+    SegmentKeyFrame() {
 
     }
 };
 
 template<class TransferFunction>
 void SegmentKeyFrame::Transfer(TransferFunction &transfer) {
-    TRANSFER(frameId);
+    TRANSFER(keyFrame);
     TRANSFER(positionArray);
     TRANSFER(handleInArray);
     TRANSFER(handleOutArray);
 }
 
 class ShapeSegmentFrameState : public AbstractFrameStateWithKeyType<SegmentKeyFrame> {
-REGISTER_CLASS(ShapeSegmentFrameState);
-
-DECLARE_OBJECT_SERIALIZE();
+    REGISTER_CLASS(ShapeSegmentFrameState);
+    DECLARE_OBJECT_SERIALIZE();
 public:
     ShapeSegmentFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
             : AbstractFrameStateWithKeyType(memLabelId, creationMode) {
@@ -84,10 +78,6 @@ public:
 
     Vector3f *GetSegmentHandleOut(int segmentId) {
         return &m_currentHandleOutArray[segmentId];
-    }
-
-    int GetKeyFrameCount() {
-        return GetKeyFrames().size();
     }
 
     void RemoveSegment(int index);

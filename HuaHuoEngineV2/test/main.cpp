@@ -246,72 +246,72 @@ void testKeyFrames() {
     assert(result == false);
 
     TransformKeyFrame k1;
-    k1.frameId = 0;
-    k1.transformData.globalPivotPosition = Vector3f(0.0, 1.0, 0.0);
+    k1.SetFrameId(0);
+    k1.frameData.globalPivotPosition = Vector3f(0.0, 1.0, 0.0);
     transformKeyFrames.push_back(k1);
 
     result = FindKeyFramePair(0, transformKeyFrames, framePair);
     assert(result == true);
 
     transformKeyFrames.clear();
-    k1.frameId = 1;
-    k1.transformData.globalPivotPosition = Vector3f(0.0, 1.0, 0.0);
+    k1.SetFrameId(1);
+    k1.frameData.globalPivotPosition = Vector3f(0.0, 1.0, 0.0);
     transformKeyFrames.push_back(k1);
     result = FindKeyFramePair(0, transformKeyFrames, framePair);
     assert(result == true);
     assert(framePair.second == NULL);
-    assert(framePair.first->frameId == 1);
+    assert(framePair.first->GetFrameId() == 1);
 
 
     TransformKeyFrame k2;
-    k2.frameId = 5;
-    k2.transformData.globalPivotPosition = Vector3f(0.0, 5.0, 0.0);
+    k2.SetFrameId(5);
+    k2.frameData.globalPivotPosition = Vector3f(0.0, 5.0, 0.0);
     transformKeyFrames.push_back(k2);
     result = FindKeyFramePair(3, transformKeyFrames, framePair);
     assert(result == true);
 
     TransformKeyFrame k3;
-    k3.frameId = 10;
-    k3.transformData.globalPivotPosition = Vector3f(0.0, 10.0, 0.0);
+    k3.SetFrameId(10);
+    k3.frameData.globalPivotPosition = Vector3f(0.0, 10.0, 0.0);
     transformKeyFrames.push_back(k3);
     result = FindKeyFramePair(6, transformKeyFrames, framePair);
     assert(result == true);
-    assert(framePair.first->frameId == 5 && framePair.second->frameId == 10);
+    assert(framePair.first->GetFrameId() == 5 && framePair.second->GetFrameId() == 10);
 
     result = FindKeyFramePair(11, transformKeyFrames, framePair);
     assert(result == true);
     assert(framePair.second == NULL);
-    assert(framePair.first->frameId == 10);
+    assert(framePair.first->GetFrameId() == 10);
 }
 
 void testRecordKeyFrames() {
     std::vector<TransformKeyFrame> transformKeyFrames;
-    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(0, transformKeyFrames);
-    pKeyFrame->transformData.globalPivotPosition.Set(1.0, 0.0, 0.0f);
+    TransformKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(0, transformKeyFrames, NULL);
+    pKeyFrame->frameData.globalPivotPosition.Set(1.0, 0.0, 0.0f);
     assert(transformKeyFrames.size() == 1);
-    assert(transformKeyFrames[0].transformData.globalPivotPosition == Vector3f(1.0, 0.0, 0.0));
+    assert(transformKeyFrames[0].frameData.globalPivotPosition == Vector3f(1.0, 0.0, 0.0));
 
-    pKeyFrame = InsertOrUpdateKeyFrame(5, transformKeyFrames);
-    pKeyFrame->transformData.globalPivotPosition.Set(5.0, 1.0, 0.0f);
+    pKeyFrame = InsertOrUpdateKeyFrame(5, transformKeyFrames, NULL);
+    pKeyFrame->frameData.globalPivotPosition.Set(5.0, 1.0, 0.0f);
     assert(transformKeyFrames.size() == 2);
-    assert(transformKeyFrames[1].transformData.globalPivotPosition == Vector3f(5.0, 1.0, 0.0));
+    assert(transformKeyFrames[1].frameData.globalPivotPosition == Vector3f(5.0, 1.0, 0.0));
 
-    pKeyFrame = InsertOrUpdateKeyFrame(3, transformKeyFrames);
-    pKeyFrame->transformData.globalPivotPosition.Set(3.0, 1.0, 0.0f);
+    pKeyFrame = InsertOrUpdateKeyFrame(3, transformKeyFrames, NULL);
+    pKeyFrame->frameData.globalPivotPosition.Set(3.0, 1.0, 0.0f);
     assert(transformKeyFrames.size() == 3);
-    assert(transformKeyFrames[1].transformData.globalPivotPosition == Vector3f(3.0, 1.0, 0.0));
-    assert(transformKeyFrames[2].transformData.globalPivotPosition == Vector3f(5.0, 1.0, 0.0));
+    assert(transformKeyFrames[1].frameData.globalPivotPosition == Vector3f(3.0, 1.0, 0.0));
+    assert(transformKeyFrames[2].frameData.globalPivotPosition == Vector3f(5.0, 1.0, 0.0));
 
-    pKeyFrame = InsertOrUpdateKeyFrame(10, transformKeyFrames);
-    pKeyFrame->transformData.globalPivotPosition.Set(10.0, 1.0, 0.0f);
+    pKeyFrame = InsertOrUpdateKeyFrame(10, transformKeyFrames, NULL);
+    pKeyFrame->frameData.globalPivotPosition.Set(10.0, 1.0, 0.0f);
     assert(transformKeyFrames.size() == 4);
-    assert(transformKeyFrames[3].transformData.globalPivotPosition == Vector3f(10.0, 1.0, 0.0));
+    assert(transformKeyFrames[3].frameData.globalPivotPosition == Vector3f(10.0, 1.0, 0.0));
 
-    pKeyFrame = InsertOrUpdateKeyFrame(5, transformKeyFrames);
-    pKeyFrame->transformData.globalPivotPosition.Set(5.0, 2.0, 0.0f);
+    pKeyFrame = InsertOrUpdateKeyFrame(5, transformKeyFrames, NULL);
+    pKeyFrame->frameData.globalPivotPosition.Set(5.0, 2.0, 0.0f);
     assert(transformKeyFrames.size() == 4);
-    assert(transformKeyFrames[2].frameId == 5);
-    assert(transformKeyFrames[2].transformData.globalPivotPosition == Vector3f(5.0, 2.0, 0.0));
+    assert(transformKeyFrames[2].GetFrameId() == 5);
+    assert(transformKeyFrames[2].frameData.globalPivotPosition == Vector3f(5.0, 2.0, 0.0));
 }
 
 void testSegmentKeyFrames() {

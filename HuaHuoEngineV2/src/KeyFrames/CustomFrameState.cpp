@@ -56,11 +56,11 @@ bool CustomFrameState::Apply(int frameId) {
         CustomDataKeyFrame *k1 = resultKeyFrames.first;
         CustomDataKeyFrame *k2 = resultKeyFrames.second;
 
-        if (k2 == NULL || k2->frameId ==
-                          k1->frameId) { // Avoid 0/0 during ratio calculation. Or beyond the last frame. k1 is the last frame.
+        if (k2 == NULL || k2->GetFrameId() ==
+                          k1->GetFrameId()) { // Avoid 0/0 during ratio calculation. Or beyond the last frame. k1 is the last frame.
             this->m_CurrentKeyFrame = *k1;
         } else {
-            float ratio = float(frameId - k1->frameId) / float(k2->frameId - k1->frameId);
+            float ratio = float(frameId - k1->GetFrameId()) / float(k2->GetFrameId() - k1->GetFrameId());
 
             this->m_CurrentKeyFrame = Lerp(*k1, *k2, ratio);
         }
@@ -137,7 +137,7 @@ void CustomFrameState::SetColorValue(float r, float g, float b, float a) {
 
 CustomDataKeyFrame* CustomFrameState::GetColorStopArrayKeyFrame(int currentFrameId) {
     bool isInsert;
-    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames(), &isInsert);
+    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames(), this, &isInsert);
 
     if (isInsert) {
         // Copy the whole array from the previous keyframe.
@@ -188,7 +188,7 @@ int CustomFrameState::AddColorStop(float value, float r, float g, float b, float
 
     // Add the interpolated value to all other keyframes;
     for (auto frameId = 0 ; frameId < m_KeyFrames.GetKeyFrames().size(); frameId++) {
-        if(m_KeyFrames.GetKeyFrames()[frameId].frameId == pKeyFrame->frameId)
+        if(m_KeyFrames.GetKeyFrames()[frameId].GetFrameId() == pKeyFrame->GetFrameId())
             continue;
 
         m_KeyFrames.GetKeyFrames()[frameId].data.colorStopArray.AddEntry(colorStopEntry);
@@ -267,7 +267,7 @@ void CustomFrameState::CreateShapeArrayValue() {
 FieldShapeArray *CustomFrameState::GetShapeArrayValueForWrite() {
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames());
+    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames(), this);
 
     FieldShapeArray *pShapeArray = &pKeyFrame->data.shapeArrayValue;
     pShapeArray->SetFrameState(this);
@@ -291,7 +291,7 @@ bool CustomFrameState::Apply() {
 
 template<typename T>
 void CustomFrameState::RecordFieldValue(int frameId, T value) {
-    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames());
+    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames(), this);
 
     if constexpr(std::is_floating_point<T>()) {
         pKeyFrame->data.floatValue = value;

@@ -18,7 +18,7 @@ void ShapeSegmentFrameState::RemoveSegment(int index){
 }
 
 void ShapeSegmentFrameState::RecordSegments(int currentFrameId, float segmentBuffer[], int size) {
-    SegmentKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames());
+    SegmentKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames(), this);
     pKeyFrame->positionArray.resize(size);
     pKeyFrame->handleOutArray.resize(size);
     pKeyFrame->handleInArray.resize(size);
@@ -62,12 +62,12 @@ bool ShapeSegmentFrameState::Apply(int frameId) {
         SegmentKeyFrame *k1 = resultKeyFrames.first;
         SegmentKeyFrame *k2 = resultKeyFrames.second;
 
-        if (k2 == NULL || k1->frameId == k2->frameId) {
+        if (k2 == NULL || k1->GetFrameId() == k2->GetFrameId()) {
             this->m_currentPositionArray = k1->positionArray;
             this->m_currentHandleInArray = k1->handleInArray;
             this->m_currentHandleOutArray = k1->handleOutArray;
         } else {
-            float ratio = float(frameId - k1->frameId) / float(k2->frameId - k1->frameId);
+            float ratio = float(frameId - k1->GetFrameId()) / float(k2->GetFrameId() - k1->GetFrameId());
 
             this->m_currentPositionArray = Lerp(k1->positionArray, k2->positionArray, ratio);
             this->m_currentHandleInArray = Lerp(k1->handleInArray, k2->handleInArray, ratio);

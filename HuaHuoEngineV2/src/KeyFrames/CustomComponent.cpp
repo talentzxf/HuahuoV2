@@ -40,3 +40,18 @@ void CustomComponent::SetBaseShape(BaseShape *pBaseShape) {
         frameState.GetComponentPtr()->SetBaseShape(pBaseShape);
     }
 }
+
+int CustomComponent::GetKeyFrameCount() {
+    return GetKeyFrameIds().size();
+}
+
+vector<KeyFrameInfo *> CustomComponent::GetKeyFrameInfos() {
+    std::vector<KeyFrameInfo *> returnKeyFrameInfos;
+
+    for(auto frameState : m_FrameStates){
+        auto keyframeInfos = frameState.GetComponentPtr()->GetKeyFrameInfos();
+        returnKeyFrameInfos.insert(returnKeyFrameInfos.end(), keyframeInfos.begin(), keyframeInfos.end());
+    }
+
+    return returnKeyFrameInfos;
+}

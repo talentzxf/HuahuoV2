@@ -58,20 +58,18 @@ template<class TransferFunction> void CustomData::Transfer(TransferFunction &tra
 }
 
 
-class CustomDataKeyFrame{
+class CustomDataKeyFrame: public KeyFrameInfo{
 public:
     CustomData data;
-    int frameId;
 
     DECLARE_SERIALIZE(CustomDataKeyFrame);
 
-    CustomDataKeyFrame():
-        frameId(-1){
+    CustomDataKeyFrame(){
     }
 };
 
 template <class TransferFunction> void CustomDataKeyFrame::Transfer(TransferFunction &transfer) {
-    TRANSFER(frameId);
+    TRANSFER(GetKeyFrame());
     TRANSFER(data);
 }
 
