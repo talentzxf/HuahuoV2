@@ -8,6 +8,8 @@
 #include "BaseClasses/PPtr.h"
 #include <vector>
 
+typedef int KeyframeIdentifier;
+
 extern const int MAX_FRAMES;
 
 class KeyFrameInfo;
@@ -21,7 +23,7 @@ public:
             frameId(v.frameId),
             frameState(v.frameState) {}   // Necessary for correct optimized GCC codegen
 
-    int GetKeyFrameIdentifier() const;
+    KeyframeIdentifier GetKeyFrameIdentifier() const;
 
     int GetFrameId() const;
 
@@ -42,7 +44,7 @@ private:
      * The keyFrameIdentifier is different than the frameId it represents!
      * keyFrameIdentifier won't be changed after the object is created but frameId might be changed in Editor UI.
      */
-    int keyFrameIdentifier;
+    KeyframeIdentifier keyFrameIdentifier;
     int frameId;
     PPtr<AbstractFrameState> frameState;
 };

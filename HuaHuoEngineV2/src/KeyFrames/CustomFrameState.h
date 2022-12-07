@@ -115,7 +115,7 @@ public:
         return &m_defaultValue;
     }
 private:
-    template <typename T> void RecordFieldValue(int frameId, T value);
+    template <typename T> CustomDataKeyFrame* RecordFieldValue(int frameId, T value);
 
     CustomDataKeyFrame* GetColorStopArrayKeyFrame(int currentFrameId);
 

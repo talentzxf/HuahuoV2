@@ -79,8 +79,8 @@ void CustomFrameState::SetFloatValue(float value) {
 
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    this->RecordFieldValue(currentFrameId, value);
-    shapeLayer->AddKeyFrame(currentFrameId, this);
+    CustomDataKeyFrame* pKeyFrame = this->RecordFieldValue(currentFrameId, value);
+    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 }
 
 void CustomFrameState::SetVector3Value(float x, float y, float z) {
@@ -92,8 +92,8 @@ void CustomFrameState::SetVector3Value(float x, float y, float z) {
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     Vector3f value(x, y, z);
-    this->RecordFieldValue(currentFrameId, value);
-    shapeLayer->AddKeyFrame(currentFrameId, this);
+    CustomDataKeyFrame* pKeyFrame = this->RecordFieldValue(currentFrameId, value);
+    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 }
 
 float CustomFrameState::GetFloatValue() {
@@ -131,8 +131,8 @@ void CustomFrameState::SetColorValue(float r, float g, float b, float a) {
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     ColorRGBAf value(r, g, b, a);
-    this->RecordFieldValue(currentFrameId, value);
-    shapeLayer->AddKeyFrame(currentFrameId, this);
+    CustomDataKeyFrame* pKeyFrame = this->RecordFieldValue(currentFrameId, value);
+    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 }
 
 CustomDataKeyFrame* CustomFrameState::GetColorStopArrayKeyFrame(int currentFrameId) {
@@ -195,7 +195,7 @@ int CustomFrameState::AddColorStop(float value, float r, float g, float b, float
     }
 
     Apply(currentFrameId);
-    shapeLayer->AddKeyFrame(pKeyFrame->GetKeyFrame());
+    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 
     return colorStopEntry.GetIdentifier();
 }
@@ -214,7 +214,7 @@ void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, f
     pKeyFrame->data.colorStopArray.UpdateAtIdentifier(idx, value, r, g, b, a);
     Apply(currentFrameId);
 
-    shapeLayer->AddKeyFrame(currentFrameId, this);
+    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 }
 
 void CustomFrameState::DeleteColorStop(int idx) {
@@ -226,7 +226,7 @@ void CustomFrameState::DeleteColorStop(int idx) {
     int currentFrameId = shapeLayer->GetCurrentFrame();
 
     // If this frame is not keyframe, need to copy all color stops over first.
-    GetColorStopArrayKeyFrame(currentFrameId);
+    CustomDataKeyFrame* pKeyFrame = GetColorStopArrayKeyFrame(currentFrameId);
 
     // Delete the color stop from all key frames.
     for(int keyFrameDataIndex = 0; keyFrameDataIndex < m_KeyFrames.GetKeyFrames().size(); keyFrameDataIndex++){
@@ -237,7 +237,7 @@ void CustomFrameState::DeleteColorStop(int idx) {
 
     Apply(currentFrameId);
 
-    shapeLayer->AddKeyFrame(currentFrameId, this);
+    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 }
 
 ColorRGBAf *CustomFrameState::GetColorValue() {
@@ -260,8 +260,8 @@ void CustomFrameState::CreateShapeArrayValue() {
     Layer *shapeLayer = baseShape->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
 
-    this->RecordFieldValue(currentFrameId, FieldShapeArray());
-    shapeLayer->AddKeyFrame(currentFrameId, this);
+    CustomDataKeyFrame* pDataKeyFrame = this->RecordFieldValue(currentFrameId, FieldShapeArray());
+    shapeLayer->AddKeyFrame(&pDataKeyFrame->GetKeyFrame());
 }
 
 FieldShapeArray *CustomFrameState::GetShapeArrayValueForWrite() {
@@ -290,7 +290,7 @@ bool CustomFrameState::Apply() {
 }
 
 template<typename T>
-void CustomFrameState::RecordFieldValue(int frameId, T value) {
+CustomDataKeyFrame * CustomFrameState::RecordFieldValue(int frameId, T value) {
     CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames(), this);
 
     if constexpr(std::is_floating_point<T>()) {
@@ -311,6 +311,8 @@ void CustomFrameState::RecordFieldValue(int frameId, T value) {
     }
 
     Apply(frameId);
+
+    return pKeyFrame;
 }
 
 CustomFrameState *CustomFrameState::CreateFrameState(CustomDataType dataType) {

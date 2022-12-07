@@ -62,7 +62,7 @@ public:
 
     virtual bool Apply(int frameId) override;
 
-    void RecordSegments(int currentFrameId, float segmentBuffer[], int size);
+    SegmentKeyFrame* RecordSegments(int currentFrameId, float segmentBuffer[], int size);
 
     int GetSegmentCount() {
         return m_currentPositionArray.size();

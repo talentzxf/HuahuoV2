@@ -17,7 +17,7 @@ void ShapeSegmentFrameState::RemoveSegment(int index){
     }
 }
 
-void ShapeSegmentFrameState::RecordSegments(int currentFrameId, float segmentBuffer[], int size) {
+SegmentKeyFrame* ShapeSegmentFrameState::RecordSegments(int currentFrameId, float segmentBuffer[], int size) {
     SegmentKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames(), this);
     pKeyFrame->positionArray.resize(size);
     pKeyFrame->handleOutArray.resize(size);
@@ -35,6 +35,7 @@ void ShapeSegmentFrameState::RecordSegments(int currentFrameId, float segmentBuf
     }
 
     Apply(currentFrameId);
+    return pKeyFrame;
 }
 
 std::vector<Vector3f> Lerp(std::vector<Vector3f> &k1, std::vector<Vector3f> &k2, float ratio) {

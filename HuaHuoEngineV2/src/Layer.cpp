@@ -103,10 +103,10 @@ void Layer::AddKeyFrame(KeyFrame* keyFrame) {
     }
 
     if (!keyFrames.contains(frameId)) {
-        keyFrames.insert(std::pair<int, KeyFrameSet>(frameId, KeyFrameSet()));
+        keyFrames.insert(std::pair<KeyframeIdentifier, KeyFrameIdentifierSet>(frameId, KeyFrameIdentifierSet()));
     }
 
-    keyFrames.find(frameId)->second.push_back(keyFrame);
+    keyFrames.find(frameId)->second.push_back(keyFrame->GetKeyFrameIdentifier());
     if (this->GetObjectStore() != NULL) {
         this->GetObjectStore()->UpdateMaxFrameId(frameId);
     }
@@ -149,7 +149,7 @@ void Layer::SyncInfo() {
         int keyFrameCount = shapePtr->GetKeyFrameCount();
         for (int keyFrameIdx = 0; keyFrameIdx < keyFrameCount; keyFrameIdx++) {
             KeyFrame* keyFrame = shapePtr->GetKeyFrameObjectAtIdx(keyFrameIdx);
-            this->AddKeyFrame(*keyFrame);
+            this->AddKeyFrame(keyFrame);
         }
     }
 }
