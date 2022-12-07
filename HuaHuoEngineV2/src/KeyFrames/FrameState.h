@@ -96,7 +96,7 @@ public:
     }
 
     std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers(){
-        return m_KeyFrames.GetKeyFrameInfos();
+        return m_KeyFrames.GetKeyFrameIdentifiers();
     }
 
     vector<T>& GetKeyFrames(){

@@ -109,13 +109,13 @@ public:
         return m_KeyFrameData;
     }
 
-    std::vector<KeyFrameIdentifier> GetKeyFrameInfos(){
-        vector<KeyFrameIdentifier> keyframeInfos;
+    std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers(){
+        vector<KeyFrameIdentifier> keyFrameIdentifiers;
         for(T keyFrame: m_KeyFrameData){
-            keyframeInfos.push_back(keyFrame.GetKeyFrame().GetKeyFrameIdentifier());
+            keyFrameIdentifiers.push_back(keyFrame.GetKeyFrame().GetKeyFrameIdentifier());
         }
 
-        return keyframeInfos;
+        return keyFrameIdentifiers;
     }
 
 private:

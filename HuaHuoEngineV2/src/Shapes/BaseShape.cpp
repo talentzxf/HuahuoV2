@@ -20,9 +20,14 @@ void BaseShape::Transfer(TransferFunction &transfer) {
     TRANSFER(mShapeName);
     TRANSFER(mBornFrameId);
     TRANSFER(mIndex);
+
+    printf("KeyFrame: Before mBaseShapeLevelKeyFrames size:%d\n", mBaseShapeLevelKeyFrames.size());
     TRANSFER(mBaseShapeLevelKeyFrames);
+    printf("KeyFrame: After mBaseShapeLevelKeyFrames size:%d\n", mBaseShapeLevelKeyFrames.size());
 
     TransferFrameStates(transfer);
+
+    printf("KeyFrame: AfterAfter mBaseShapeLevelKeyFrames size:%d\n", mBaseShapeLevelKeyFrames.size());
 }
 
 template<class TransferFunction>
