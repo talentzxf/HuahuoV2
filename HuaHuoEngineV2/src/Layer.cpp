@@ -46,7 +46,7 @@ void Layer::RemoveShape(BaseShape *shape) {
     // Remove the shape from keyframes.
     for (auto keyframe: keyFrames) {
 
-        std::erase_if(keyframe.second, [shape](KeyframeIdentifier keyframeIdentifier){
+        std::erase_if(keyframe.second, [shape](KeyFrameIdentifier keyframeIdentifier){
             KeyFrame& keyFrameObj = GetDefaultObjectStoreManager()->GetKeyFrameById(keyframeIdentifier);
             return keyFrameObj.GetBaseShape()->GetInstanceID() == shape->GetInstanceID();
         });
@@ -97,6 +97,9 @@ void Layer::AddKeyFrame(KeyFrame* keyFrame) {
         auto keyFrameSet = keyFrames[frameId];
         auto foundKeyFrameObjItr = std::find_if(keyFrameSet.begin(), keyFrameSet.end(),[frameState](const int keyFrameIdentifier){
             KeyFrame& keyFrameObject = GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameIdentifier);
+            if(keyFrameObject.GetFrameState() == NULL || !keyFrameObject.GetFrameState()->IsValid())
+                return false;
+
             return keyFrameObject.GetFrameState()->GetInstanceID() == frameState->GetInstanceID();
         });
         if(foundKeyFrameObjItr != keyFrameSet.end()) // frameId and frameState both match. No need to add again.
@@ -104,7 +107,7 @@ void Layer::AddKeyFrame(KeyFrame* keyFrame) {
     }
 
     if (!keyFrames.contains(frameId)) {
-        keyFrames.insert(std::pair<KeyframeIdentifier, KeyFrameIdentifierSet>(frameId, KeyFrameIdentifierSet()));
+        keyFrames.insert(std::pair<KeyFrameIdentifier, KeyFrameIdentifierSet>(frameId, KeyFrameIdentifierSet()));
     }
 
     keyFrames.find(frameId)->second.push_back(keyFrame->GetKeyFrameIdentifier());

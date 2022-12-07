@@ -116,7 +116,7 @@ void BaseShape::SetLocalPivotPosition(float x, float y, float z) {
 void BaseShape::SetBornFrameId(SInt32 bornFrameId) {
     mBornFrameId = bornFrameId;
 
-    KeyframeIdentifier shapeBornKeyFrameIdentifier = GetDefaultObjectStoreManager()->ProduceKeyFrame();
+    KeyFrameIdentifier shapeBornKeyFrameIdentifier = GetDefaultObjectStoreManager()->ProduceKeyFrame();
     KeyFrame& shapeBornKeyFrame = GetDefaultObjectStoreManager()->GetKeyFrameById(shapeBornKeyFrameIdentifier);
     shapeBornKeyFrame.SetFrameId(bornFrameId);
     shapeBornKeyFrame.SetBaseShape(this);

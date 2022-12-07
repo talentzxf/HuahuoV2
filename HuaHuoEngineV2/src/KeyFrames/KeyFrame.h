@@ -8,7 +8,7 @@
 #include "BaseClasses/PPtr.h"
 #include <vector>
 
-typedef int KeyframeIdentifier;
+typedef int KeyFrameIdentifier;
 
 extern const int MAX_FRAMES;
 
@@ -24,7 +24,7 @@ public:
             frameId(v.frameId),
             frameState(v.frameState) {}   // Necessary for correct optimized GCC codegen
 
-    KeyframeIdentifier GetKeyFrameIdentifier() const;
+    KeyFrameIdentifier GetKeyFrameIdentifier() const;
 
     int GetFrameId() const;
 
@@ -44,12 +44,15 @@ public:
 
     void SetBaseShape(BaseShape* shape);
 
+    void SetKeyFrameIdentifier(KeyFrameIdentifier keyframeIdentifier){
+        this->keyFrameIdentifier = keyframeIdentifier;
+    }
 private:
     /**
      * The keyFrameIdentifier is different than the frameId it represents!
      * keyFrameIdentifier won't be changed after the object is created but frameId might be changed in Editor UI.
      */
-    KeyframeIdentifier keyFrameIdentifier;
+    KeyFrameIdentifier keyFrameIdentifier;
     int frameId;
     PPtr<AbstractFrameState> frameState;
     PPtr<BaseShape> baseShape;
@@ -122,7 +125,7 @@ private:
 
 struct KeyFrameInfo{
 protected:
-    KeyframeIdentifier keyFrameId;
+    KeyFrameIdentifier keyFrameId;
 
     DECLARE_SERIALIZE(KeyFrameInfo);
 

@@ -178,7 +178,7 @@ private:
     PPtr<TimeLineCellManager> cellManager;
 
     // This is the keyframe identifier. Use this identifier we can get the real keyframe object stored in objectstoremanager.
-    typedef std::vector<KeyframeIdentifier> KeyFrameIdentifierSet;
+    typedef std::vector<KeyFrameIdentifier> KeyFrameIdentifierSet;
 
     // Map from frameId -> Keyframe identifier set. Because each frameId might corresponds to different keyframe objects(identifiers).
     typedef std::map<int, KeyFrameIdentifierSet> KeyFrameIdentifierSetMap;
