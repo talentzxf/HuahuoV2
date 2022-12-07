@@ -275,7 +275,7 @@ public:
 
         std::set<KeyFrameIdentifier> allKeyFrames;
         for (Container::const_iterator i = mFrameStates.begin(); i != end; ++i) {
-            const vector<KeyFrameIdentifier>& keyFrames = i->GetComponentPtr()->GetKeyFrameInfos();
+            const vector<KeyFrameIdentifier>& keyFrames = i->GetComponentPtr()->GetKeyFrameIdentifiers();
             for(auto itr = keyFrames.begin(); itr != keyFrames.end(); itr++){
                 allKeyFrames.insert(*itr);
             }

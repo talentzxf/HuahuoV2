@@ -34,7 +34,7 @@ public:
         return keyFrames;
     }
 
-    vector<KeyFrameIdentifier> GetKeyFrameInfos() override;
+    vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() override;
 
     virtual int GetMinFrameId() override{
         int minFrameId = MAX_FRAMES;
@@ -171,6 +171,8 @@ private:
 
 public:
     int GetKeyFrameCount() override;
+
+    int GetKeyFrameAtIndex(int idx) override;
 
 public:
     int RegisterFloatValue(const char* fieldName, float initValue){

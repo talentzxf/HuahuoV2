@@ -63,7 +63,8 @@ public:
     }
 
     virtual int GetKeyFrameCount() = 0;
-    virtual std::vector<KeyFrameIdentifier> GetKeyFrameInfos() = 0;
+    virtual int GetKeyFrameAtIndex(int idx) = 0;
+    virtual std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() = 0;
 
 protected:
     std::string typeName;
@@ -94,7 +95,7 @@ public:
         m_KeyFrames.AddAnimationOffset(offset);
     }
 
-    std::vector<KeyFrameIdentifier> GetKeyFrameInfos(){
+    std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers(){
         return m_KeyFrames.GetKeyFrameInfos();
     }
 
@@ -116,8 +117,12 @@ public:
         TRANSFER(GetKeyFrames());
     }
 
-    virtual int GetKeyFrameCount(){
+    virtual int GetKeyFrameCount() override {
         return GetKeyFrames().size();
+    }
+
+    virtual int GetKeyFrameAtIndex(int idx) override{
+        return GetKeyFrames()[idx].GetKeyFrame().GetFrameId();
     }
 
 protected:

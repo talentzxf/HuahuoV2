@@ -824,13 +824,13 @@ abstract class BaseShapeJS {
         componentConfigSheet.config.children.push({
             key:"inspector.property.keyframes",
             type: PropertyType.KEYFRAMES,
-            getter: this.getTranslationKeyFrames.bind(this),
-            setter: this.insertTranslationKeyFrame.bind(this)
+            getter: this.getTransformKeyFrames.bind(this),
+            setter: this.insertTransformKeyFrame.bind(this)
         })
         this.propertySheet.addProperty(componentConfigSheet)
     }
 
-    getTranslationKeyFrames(){
+    getTransformKeyFrames(){
         let keyFrameCount = this.rawObj.GetKeyFrameCount()
         let keyFrames = []
         for(let idx = 0; idx < keyFrameCount ; idx++){
@@ -839,7 +839,7 @@ abstract class BaseShapeJS {
         return keyFrames
     }
 
-    insertTranslationKeyFrame(val){
+    insertTransformKeyFrame(val){
 
     }
 
