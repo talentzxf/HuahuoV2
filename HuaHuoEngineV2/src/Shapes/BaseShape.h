@@ -14,6 +14,7 @@
 #include "KeyFrames/ShapeSegmentFrameState.h"
 #include "BaseClasses/ImmediatePtr.h"
 #include "KeyFrames/KeyFrame.h"
+#include <algorithm>
 
 extern const int MAX_FRAMES;
 
@@ -74,9 +75,16 @@ public:
     bool GetRecordTransformationOfKeyFrame(){
         return this->mRecordTransformationOfKeyFrame;
     }
+
+    // This keyframe is baseshape level. It doesn't belong to any framestate.
+    void AddKeyFrame(KeyFrameIdentifier keyFrameIdentifier){
+        mBaseShapeLevelKeyFrames.insert(keyFrameIdentifier);
+    }
 private:
 
     Container   mFrameStates;
+
+    std::set<KeyFrameIdentifier> mBaseShapeLevelKeyFrames;
 
     Layer* mLayer;
     SInt32 mBornFrameId;
@@ -84,7 +92,8 @@ private:
     bool mIsVisible;
     std::string mShapeName;
 
-    std::vector<KeyFrameInfo*> mKeyFrameCache;
+    // This is just a temporary cache to fetch all keyframes
+    std::vector<KeyFrameIdentifier> mKeyFrameCache;
 
     // The flag indicates whether we need to "really" update global position in key frames.
     // In some cases, the position are just temporary, we don't need to update it permanently.
@@ -264,19 +273,16 @@ public:
     void RefreshKeyFrameCache(){
         Container::const_iterator end = mFrameStates.end();
 
-        std::vector<KeyFrameInfo*> allKeyFrames;
+        mKeyFrameCache = std::vector<KeyFrameIdentifier>(mBaseShapeLevelKeyFrames.begin(), mBaseShapeLevelKeyFrames.end());
+
+        std::set<KeyFrameIdentifier> allKeyFrames;
         for (Container::const_iterator i = mFrameStates.begin(); i != end; ++i) {
             const vector<KeyFrameInfo*>& keyFrames = i->GetComponentPtr()->GetKeyFrameInfos();
             for(auto itr = keyFrames.begin(); itr != keyFrames.end(); itr++){
-                allKeyFrames.insert(allKeyFrames.end(), keyFrames.begin(), keyFrames.end());
+                allKeyFrames.insert((*itr)->GetKeyFrame().GetKeyFrameIdentifier());
             }
         }
-
-        mKeyFrameCache.clear();
-        for(auto setItr = allKeyFrames.begin(); setItr != allKeyFrames.end(); setItr++){
-            mKeyFrameCache.push_back(*setItr);
-        }
-    }
+   }
 
     int GetKeyFrameCount(){
         return mKeyFrameCache.size();
@@ -285,14 +291,17 @@ public:
     int GetKeyFrameAtIdx(int idx){
         if(idx >= mKeyFrameCache.size())
             return -1;
-        return mKeyFrameCache[idx]->GetFrameId();
+        return GetKeyFrameFromCache(idx).GetFrameId();
     }
 
     KeyFrame* GetKeyFrameObjectAtIdx(int idx){
         if(idx >= mKeyFrameCache.size())
             return NULL;
-        return &mKeyFrameCache[idx]->GetKeyFrame();
+        return &GetKeyFrameFromCache(idx);
     }
+
+private:
+    KeyFrame& GetKeyFrameFromCache(int idx);
 };
 
 template<class T> inline
