@@ -14,6 +14,7 @@ extern const int MAX_FRAMES;
 
 class KeyFrameInfo;
 class AbstractFrameState;
+class BaseShape;
 
 class KeyFrame {
 public:
@@ -39,6 +40,10 @@ public:
         return GetFrameId() < k1.GetFrameId();
     }
 
+    BaseShape* GetBaseShape();
+
+    void SetBaseShape(BaseShape* shape);
+
 private:
     /**
      * The keyFrameIdentifier is different than the frameId it represents!
@@ -47,6 +52,7 @@ private:
     KeyframeIdentifier keyFrameIdentifier;
     int frameId;
     PPtr<AbstractFrameState> frameState;
+    PPtr<BaseShape> baseShape;
 };
 
 template<class TransferFunction>
@@ -116,7 +122,7 @@ private:
 
 struct KeyFrameInfo{
 protected:
-    int keyFrameId;
+    KeyframeIdentifier keyFrameId;
 
     DECLARE_SERIALIZE(KeyFrameInfo);
 
@@ -137,6 +143,10 @@ public:
 
     void SetFrameState(AbstractFrameState* frameState){
         GetKeyFrame().SetFrameState(frameState);
+    }
+
+    BaseShape* GetBaseShape(){
+        return GetKeyFrame().GetBaseShape();
     }
 };
 

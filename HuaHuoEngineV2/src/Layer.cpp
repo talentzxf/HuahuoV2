@@ -46,8 +46,9 @@ void Layer::RemoveShape(BaseShape *shape) {
     // Remove the shape from keyframes.
     for (auto keyframe: keyFrames) {
 
-        std::erase_if(keyframe.second, [shape](const KeyFrame& keyFrameObj){
-            return keyFrameObj.GetFrameState()->GetBaseShape()->GetInstanceID() == shape->GetInstanceID();
+        std::erase_if(keyframe.second, [shape](KeyframeIdentifier keyframeIdentifier){
+            KeyFrame& keyFrameObj = GetDefaultObjectStoreManager()->GetKeyFrameById(keyframeIdentifier);
+            return keyFrameObj.GetBaseShape()->GetInstanceID() == shape->GetInstanceID();
         });
 
         if (keyframe.second.empty()) {
@@ -92,7 +93,7 @@ void Layer::SetIsVisible(bool isVisible) {
 void Layer::AddKeyFrame(KeyFrame* keyFrame) {
     int frameId = keyFrame->GetFrameId();
     AbstractFrameState* frameState = keyFrame->GetFrameState();
-    if (keyFrames.contains(frameId)) {
+    if (keyFrames.contains(frameId) && frameState != NULL) {
         auto keyFrameSet = keyFrames[frameId];
         auto foundKeyFrameObjItr = std::find_if(keyFrameSet.begin(), keyFrameSet.end(),[frameState](const int keyFrameIdentifier){
             KeyFrame& keyFrameObject = GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameIdentifier);
@@ -111,7 +112,7 @@ void Layer::AddKeyFrame(KeyFrame* keyFrame) {
         this->GetObjectStore()->UpdateMaxFrameId(frameId);
     }
 
-    BaseShape* shape = frameState->GetBaseShape();
+    BaseShape* shape = keyFrame->GetBaseShape();
     shape->RefreshKeyFrameCache();
 
     KeyFrameChangedEventHandlerArgs args(this, frameId);

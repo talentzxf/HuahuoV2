@@ -116,8 +116,12 @@ void BaseShape::SetLocalPivotPosition(float x, float y, float z) {
 void BaseShape::SetBornFrameId(SInt32 bornFrameId) {
     mBornFrameId = bornFrameId;
 
-    // TODO: How to handle this?? Do we need to handle this??
-    // GetLayer()->AddKeyFrame(bornFrameId, this);
+    KeyframeIdentifier shapeBornKeyFrameIdentifier = GetDefaultObjectStoreManager()->ProduceKeyFrame();
+    KeyFrame& shapeBornKeyFrame = GetDefaultObjectStoreManager()->GetKeyFrameById(shapeBornKeyFrameIdentifier);
+    shapeBornKeyFrame.SetFrameId(bornFrameId);
+    shapeBornKeyFrame.SetBaseShape(this);
+
+    GetLayer()->AddKeyFrame(&shapeBornKeyFrame);
 }
 
 void BaseShape::SetGlobalPivotPosition(float x, float y, float z) {

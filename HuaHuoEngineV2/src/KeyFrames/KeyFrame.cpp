@@ -6,7 +6,7 @@
 #include "KeyFrame.h"
 
 KeyFrame &KeyFrameInfo::GetKeyFrame() {
-    if(this->keyFrameId <= 0){
+    if (this->keyFrameId <= 0) {
         this->keyFrameId = GetDefaultObjectStoreManager()->ProduceKeyFrame();
     }
     return GetDefaultObjectStoreManager()->GetKeyFrameById(this->keyFrameId);
@@ -22,6 +22,18 @@ int KeyFrame::GetKeyFrameIdentifier() const {
 
 int KeyFrame::GetFrameId() const {
     return frameId;
+}
+
+BaseShape *KeyFrame::GetBaseShape() {
+    if (frameState.IsValid()) {
+        return frameState->GetBaseShape();
+    }
+
+    return baseShape;
+}
+
+void KeyFrame::SetBaseShape(BaseShape *shape) {
+    this->baseShape = shape;
 }
 
 void KeyFrame::SetFrameId(int frameId) {

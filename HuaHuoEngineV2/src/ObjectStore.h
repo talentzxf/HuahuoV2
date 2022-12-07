@@ -194,23 +194,23 @@ public:
         return this->canvasHeight;
     }
 
-    int ProduceKeyFrame(){
+    KeyframeIdentifier ProduceKeyFrame(){
         allKeyFrames[maxKeyFrameIdentifier] = KeyFrame();
         return maxKeyFrameIdentifier++;
     }
 
-    KeyFrame& GetKeyFrameById(int keyFrameId){
+    KeyFrame& GetKeyFrameById(KeyframeIdentifier keyFrameId){
         return allKeyFrames[keyFrameId];
     }
 
 private:
     std::vector<PPtr<ObjectStore>> allStores;
-    std::map<int, KeyFrame> allKeyFrames; // All key frames in the store.
+    KeyframeIdentifier maxKeyFrameIdentifier; // This is NOT the frameId of the keyframes. It's just an ID for all the KeyFrame objects.
+    std::map<KeyframeIdentifier, KeyFrame> allKeyFrames; // All key frames in the store. Map from keyframe identifier to keyframe object.
 
     PPtr<ObjectStore> currentStore;
     int canvasWidth;
     int canvasHeight;
-    int maxKeyFrameIdentifier; // This is NOT the frameId of the keyframes. It's just an ID for all the KeyFrame objects.
 };
 
 ObjectStoreManager* GetDefaultObjectStoreManager();
