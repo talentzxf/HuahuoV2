@@ -273,14 +273,24 @@ public:
     void RefreshKeyFrameCache(){
         Container::const_iterator end = mFrameStates.end();
 
-        mKeyFrameCache = std::vector<KeyFrameIdentifier>(mBaseShapeLevelKeyFrames.begin(), mBaseShapeLevelKeyFrames.end());
-
         std::set<KeyFrameIdentifier> allKeyFrames;
         for (Container::const_iterator i = mFrameStates.begin(); i != end; ++i) {
             const vector<KeyFrameInfo*>& keyFrames = i->GetComponentPtr()->GetKeyFrameInfos();
             for(auto itr = keyFrames.begin(); itr != keyFrames.end(); itr++){
                 allKeyFrames.insert((*itr)->GetKeyFrame().GetKeyFrameIdentifier());
             }
+        }
+
+        if(!mBaseShapeLevelKeyFrames.empty()){ // Not sure why, but sometimes empty set will also iterate the set and stuck there???
+            for(auto itr = mBaseShapeLevelKeyFrames.begin(); itr != mBaseShapeLevelKeyFrames.end(); itr++){
+                allKeyFrames.insert(*itr);
+            }
+        }
+
+        mKeyFrameCache.clear();
+
+        for(KeyFrameIdentifier keyFrameIdentifier: allKeyFrames){
+            mKeyFrameCache.push_back(keyFrameIdentifier);
         }
    }
 
