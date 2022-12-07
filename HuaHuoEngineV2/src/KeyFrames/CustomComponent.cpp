@@ -45,8 +45,8 @@ int CustomComponent::GetKeyFrameCount() {
     return GetKeyFrameIds().size();
 }
 
-vector<KeyFrameInfo *> CustomComponent::GetKeyFrameInfos() {
-    std::vector<KeyFrameInfo *> returnKeyFrameInfos;
+vector<KeyFrameIdentifier> CustomComponent::GetKeyFrameInfos() {
+    std::vector<KeyFrameIdentifier> returnKeyFrameInfos;
 
     for(auto frameState : m_FrameStates){
         auto keyframeInfos = frameState.GetComponentPtr()->GetKeyFrameInfos();

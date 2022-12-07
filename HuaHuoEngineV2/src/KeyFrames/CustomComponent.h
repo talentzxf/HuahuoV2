@@ -34,7 +34,7 @@ public:
         return keyFrames;
     }
 
-    vector<KeyFrameInfo *> GetKeyFrameInfos() override;
+    vector<KeyFrameIdentifier> GetKeyFrameInfos() override;
 
     virtual int GetMinFrameId() override{
         int minFrameId = MAX_FRAMES;

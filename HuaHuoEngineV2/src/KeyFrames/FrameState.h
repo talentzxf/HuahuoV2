@@ -63,7 +63,7 @@ public:
     }
 
     virtual int GetKeyFrameCount() = 0;
-    virtual std::vector<KeyFrameInfo*> GetKeyFrameInfos() = 0;
+    virtual std::vector<KeyFrameIdentifier> GetKeyFrameInfos() = 0;
 
 protected:
     std::string typeName;
@@ -94,7 +94,7 @@ public:
         m_KeyFrames.AddAnimationOffset(offset);
     }
 
-    std::vector<KeyFrameInfo*> GetKeyFrameInfos(){
+    std::vector<KeyFrameIdentifier> GetKeyFrameInfos(){
         return m_KeyFrames.GetKeyFrameInfos();
     }
 
