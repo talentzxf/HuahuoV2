@@ -115,11 +115,8 @@ void Layer::AddKeyFrame(KeyFrame* keyFrame) {
         this->GetObjectStore()->UpdateMaxFrameId(frameId);
     }
 
-    printf("Here here:%s %d\n", __FILE__, __LINE__);
     BaseShape* shape = keyFrame->GetBaseShape();
-    printf("Here here:%s %d\n", __FILE__, __LINE__);
     shape->RefreshKeyFrameCache();
-    printf("Here here:%s %d\n", __FILE__, __LINE__);
 
     KeyFrameChangedEventHandlerArgs args(this, frameId);
     GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
