@@ -160,7 +160,7 @@ private:
             m_fieldIndexFieldNameMap[index] = fieldName;
 
             CustomFrameState* pFrameState = CustomFrameState::CreateFrameState(dataType);
-            pFrameState->SetBaseShape(this->baseShape);
+            pFrameState->SetBaseShape(this->GetBaseShape());
             m_FrameStates.push_back(FrameStatePair::FromState(pFrameState));
 
             return index;

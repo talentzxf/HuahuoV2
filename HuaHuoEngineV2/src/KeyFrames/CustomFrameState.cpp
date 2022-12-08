@@ -77,7 +77,7 @@ void CustomFrameState::SetFloatValue(float value) {
         return;
     }
 
-    Layer *shapeLayer = baseShape->GetLayer();
+    Layer *shapeLayer = GetBaseShape()->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     CustomDataKeyFrame* pKeyFrame = this->RecordFieldValue(currentFrameId, value);
     shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
@@ -89,7 +89,7 @@ void CustomFrameState::SetVector3Value(float x, float y, float z) {
         return;
     }
 
-    Layer *shapeLayer = baseShape->GetLayer();
+    Layer *shapeLayer = GetBaseShape()->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     Vector3f value(x, y, z);
     CustomDataKeyFrame* pKeyFrame = this->RecordFieldValue(currentFrameId, value);
@@ -128,7 +128,7 @@ void CustomFrameState::SetColorValue(float r, float g, float b, float a) {
         return;
     }
 
-    Layer *shapeLayer = baseShape->GetLayer();
+    Layer *shapeLayer = GetBaseShape()->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     ColorRGBAf value(r, g, b, a);
     CustomDataKeyFrame* pKeyFrame = this->RecordFieldValue(currentFrameId, value);
@@ -179,7 +179,7 @@ int CustomFrameState::AddColorStop(float value, float r, float g, float b, float
         Assert("Data Type mismatch!");
     }
 
-    Layer *shapeLayer = baseShape->GetLayer();
+    Layer *shapeLayer = GetBaseShape()->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
 
     ColorStopEntry colorStopEntry(-1, value, r, g, b, a);
@@ -206,7 +206,7 @@ void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, f
         return;
     }
 
-    Layer *shapeLayer = baseShape->GetLayer();
+    Layer *shapeLayer = GetBaseShape()->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
 
     CustomDataKeyFrame* pKeyFrame = GetColorStopArrayKeyFrame(currentFrameId);
@@ -222,7 +222,7 @@ void CustomFrameState::DeleteColorStop(int idx) {
         Assert("Data Type mismatch!");
     }
 
-    Layer *shapeLayer = baseShape->GetLayer();
+    Layer *shapeLayer = GetBaseShape()->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
 
     // If this frame is not keyframe, need to copy all color stops over first.
@@ -257,7 +257,7 @@ ColorStopArray *CustomFrameState::GetColorStopArray() {
 }
 
 void CustomFrameState::CreateShapeArrayValue() {
-    Layer *shapeLayer = baseShape->GetLayer();
+    Layer *shapeLayer = GetBaseShape()->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
 
     CustomDataKeyFrame* pDataKeyFrame = this->RecordFieldValue(currentFrameId, FieldShapeArray());
@@ -265,7 +265,7 @@ void CustomFrameState::CreateShapeArrayValue() {
 }
 
 FieldShapeArray *CustomFrameState::GetShapeArrayValueForWrite() {
-    Layer *shapeLayer = baseShape->GetLayer();
+    Layer *shapeLayer = GetBaseShape()->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames(), this);
 
@@ -284,7 +284,7 @@ FieldShapeArray *CustomFrameState::GetShapeArrayValue() {
 }
 
 bool CustomFrameState::Apply() {
-    Layer *shapeLayer = baseShape->GetLayer();
+    Layer *shapeLayer = GetBaseShape()->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     return this->Apply(currentFrameId);
 }
