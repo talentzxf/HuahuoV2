@@ -116,60 +116,75 @@ class MirrorComponent extends AbstractComponent {
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
-        let baseShapeParent = this.baseShape.paperShape.parent
-        if(baseShapeParent != null && this.paperShapeGroup.parent != baseShapeParent)
-            baseShapeParent.addChild(this.paperShapeGroup)
+        if(this.baseShape.isVisible()){
+            let baseShapeParent = this.baseShape.paperShape.parent
+            if(baseShapeParent != null && this.paperShapeGroup.parent != baseShapeParent)
+                baseShapeParent.addChild(this.paperShapeGroup)
 
-        let segments = this.baseShape.getSegments()
+            let segments = this.baseShape.getSegments()
 
-        if(segments == null || segments.length != 2){ // The base shape is not ready!
-            return;
-        }
+            if(segments == null || segments.length != 2){ // The base shape is not ready!
+                return;
+            }
 
-        // Update p1 and p2 according to the updated position.
-        this.p1 = this.baseShape.localToParent( segments[0].point )
-        this.p2 = this.baseShape.localToParent( segments[1].point )
+            // Update p1 and p2 according to the updated position.
+            this.p1 = this.baseShape.localToParent( segments[0].point )
+            this.p2 = this.baseShape.localToParent( segments[1].point )
 
-        // Rotate the coordinate
-        let mirroredX = mirrorPoint(new paper.Point(1,0), this.p1, this.p2)
-        let mirroredZero = mirrorPoint(new paper.Point(0,0), this.p1, this.p2)
+            // Rotate the coordinate
+            let mirroredX = mirrorPoint(new paper.Point(1,0), this.p1, this.p2)
+            let mirroredZero = mirrorPoint(new paper.Point(0,0), this.p1, this.p2)
 
-        let radian = -Math.atan2(mirroredX.y - mirroredZero.y, mirroredX.x - mirroredZero.x)
+            let radian = -Math.atan2(mirroredX.y - mirroredZero.y, mirroredX.x - mirroredZero.x)
 
-        // this.paperShapeGroup.scaling.x = -1
-        this.paperShapeGroup.scaling.y = -1
+            // this.paperShapeGroup.scaling.x = -1
+            this.paperShapeGroup.scaling.y = -1
 
-        // Convert to angle
-        this.paperShapeGroup.rotation = -radian/ Math.PI * 180
+            // Convert to angle
+            this.paperShapeGroup.rotation = -radian/ Math.PI * 180
 
-        // Get the current offset of the group shape.
-        let offset = this.paperShapeGroup.position.subtract(this.paperShapeGroup.localToParent(new paper.Point(0,0)))
+            // Get the current offset of the group shape.
+            let offset = this.paperShapeGroup.position.subtract(this.paperShapeGroup.localToParent(new paper.Point(0,0)))
 
-        let newPosition = mirroredZero.add(offset)
-        this.paperShapeGroup.position = newPosition
+            let newPosition = mirroredZero.add(offset)
+            this.paperShapeGroup.position = newPosition
 
-        // this.paperShapeGroup.scaling = new paper.Point(0.0, -1.0)
+            // this.paperShapeGroup.scaling = new paper.Point(0.0, -1.0)
 
-        if (this.targetShapeArray) {
-            // Check if all target shapes are mirrored
-            for (let targetShape of this.targetShapeArray) {
-                if(targetShape != null){ // Target shape might be null if the target shape has not been loaded yet.
-                    if (!this.targetShapeMirroredShapeMap.has(targetShape.rawObj.ptr)) {
-                        this.createDuplication(targetShape)
-                    }
+            if (this.targetShapeArray) {
+                // Check if all target shapes are mirrored
+                for (let targetShape of this.targetShapeArray) {
+                    if(targetShape != null){ // Target shape might be null if the target shape has not been loaded yet.
+                        if (!this.targetShapeMirroredShapeMap.has(targetShape.rawObj.ptr)) {
+                            this.createDuplication(targetShape)
+                        }
 
-                    let duplicatedShape = this.targetShapeMirroredShapeMap.get(targetShape.rawObj.ptr)
-                    if(duplicatedShape.getBornStoreId() != this.baseShape.getBornStoreId()){
-                        duplicatedShape.removePaperObj()
-                        duplicatedShape = this.createDuplication(targetShape)
-                    }
+                        let duplicatedShape = this.targetShapeMirroredShapeMap.get(targetShape.rawObj.ptr)
+                        if(duplicatedShape.getBornStoreId() != this.baseShape.getBornStoreId()){
+                            duplicatedShape.removePaperObj()
+                            duplicatedShape = this.createDuplication(targetShape)
+                        }
 
-                    if(force){
-                        duplicatedShape.update(force)
+                        duplicatedShape.paperShape.visible = targetShape.paperShape.visible
+
+                        if(force){
+                            duplicatedShape.update(force)
+                        }
                     }
                 }
             }
+        }else{
+            this.setInvisible()
         }
+    }
+
+
+    setInvisible() {
+        super.setInvisible();
+
+        this.targetShapeMirroredShapeMap.forEach((duplicatedShape: BaseShapeJS)=>{
+            duplicatedShape.paperShape.visible = false
+        })
     }
 }
 

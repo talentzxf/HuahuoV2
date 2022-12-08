@@ -1136,6 +1136,12 @@ abstract class BaseShapeJS {
             if (!this.rawObj.IsVisible()) {
                 this.paperItem.visible = false
                 this.selected = false
+
+                // Execute after update of all components
+                for (let component of this.customComponents) {
+                    component.setInvisible()
+                }
+
             } else {
                 this.paperItem.visible = true
                 this.afterUpdate(true)

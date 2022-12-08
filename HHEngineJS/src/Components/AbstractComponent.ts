@@ -154,6 +154,10 @@ class AbstractComponent {
 
     }
 
+    setInvisible(){
+
+    }
+
     // Pass in a set to avoid creation of the set multiple times.
     getReferencedShapes(set: Set<BaseShapeJS>) {
 
