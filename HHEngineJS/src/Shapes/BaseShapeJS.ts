@@ -876,7 +876,7 @@ abstract class BaseShapeJS {
             let keyFrameCount = frameStateRawObj.GetKeyFrameCount()
             let keyFrames = []
             for (let idx = 0; idx < keyFrameCount; idx++) {
-                keyFrames.push(this.rawObj.GetKeyFrameAtIdx(idx))
+                keyFrames.push(frameStateRawObj.GetKeyFrameAtIndex(idx))
             }
             return keyFrames
         }

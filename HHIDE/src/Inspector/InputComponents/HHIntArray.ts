@@ -18,6 +18,7 @@ class TimelinePointer {
 
     frameId: number = -1
     cellWidth: number = -1
+    minFrameId: number = -1
 
     set selected(val: boolean){
         if (this._selected == val)
@@ -51,7 +52,7 @@ class TimelinePointer {
         this.paperGroup.visible = true
         let penBounds = this.paperGroup.bounds
 
-        this.paperGroup.position = new paper.Point(penOffset + frameId * this.cellWidth, penBounds.height / 2.0)
+        this.paperGroup.position = new paper.Point(penOffset + (frameId - this.minFrameId) * this.cellWidth, penBounds.height / 2.0)
         this.penText.content = frameId + 1 // The frameId starts from 0 internall, but during display, it starts from 1.
 
         this.frameId = frameId
@@ -220,6 +221,7 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
                 // Draw timeline pointer
                 let timelinePointer = this.getTimelinePointer(index)
                 timelinePointer.cellWidth = cellWidth
+                timelinePointer.minFrameId = minValue
                 timelinePointer.setFrameId(frameId)
 
                 // Draw timeline span

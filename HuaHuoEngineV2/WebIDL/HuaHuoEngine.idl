@@ -130,6 +130,7 @@ interface AbstractFrameState{
     [Const] DOMString GetTypeName();
     void SetTypeName([Const] DOMString typeName);
     long GetKeyFrameCount();
+    long GetKeyFrameAtIndex(long idx);
 };
 
 [NoDelete]

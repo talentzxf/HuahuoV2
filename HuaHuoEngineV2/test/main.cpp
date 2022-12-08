@@ -384,6 +384,11 @@ void testCloneObject() {
     ShapeTransformFrameState* shapeTransformFrameState = (ShapeTransformFrameState*)clonedRectangle->GetFrameStateByTypeName("ShapeTransformFrameState");
 
     int keyFrameCount = shapeTransformFrameState->GetKeyFrameCount();
+
+    for(int i = 0 ; i < keyFrameCount; i++){
+        int frameId = shapeTransformFrameState->GetKeyFrameAtIndex(i);
+        Assert(frameId >= 0);
+    }
 }
 
 void testDelete() {
