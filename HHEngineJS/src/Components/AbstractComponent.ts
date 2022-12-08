@@ -66,7 +66,7 @@ class AbstractComponent {
         }
 
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
-        if(properties){
+        if (properties) {
             properties.forEach(propertyEntry => {
                 if (propertyEntry.type == PropertyCategory.interpolateFloat
                     || propertyEntry.type == PropertyCategory.interpolateColor
@@ -101,7 +101,7 @@ class AbstractComponent {
 
     getPropertySheet() {
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
-        if(properties == null)
+        if (properties == null)
             return null;
 
         let componentConfigSheet = {
@@ -119,7 +119,7 @@ class AbstractComponent {
             }
         }
 
-        let keyFramePropertySheet = propertySheetFactory.createEntryByNameAndCategory("keyframes", PropertyCategory.intArray)
+        let keyFramePropertySheet = propertySheetFactory.createEntryByNameAndCategory("keyframes", PropertyCategory.keyframeArray)
 
         keyFramePropertySheet["getter"] = this.getKeyFrames.bind(this)
         keyFramePropertySheet["setter"] = this.insertKeyFrames.bind(this) // Same as other arrays, setter is alias of inserter.
@@ -128,11 +128,16 @@ class AbstractComponent {
         return componentConfigSheet
     }
 
-    getKeyFrames(){
-        return []
+    getKeyFrames() {
+        let keyFrameCount = this.rawObj.GetKeyFrameCount()
+        let keyFrames = []
+        for (let idx = 0; idx < keyFrameCount; idx++) {
+            keyFrames.push(this.rawObj.GetKeyFrameAtIndex(idx))
+        }
+        return keyFrames
     }
 
-    insertKeyFrames(val){
+    insertKeyFrames(val) {
 
     }
 
@@ -140,7 +145,7 @@ class AbstractComponent {
         if (!this.propertySheetInited) {
             this.propertySheetInited = true
             let myPropertySheet = this.getPropertySheet()
-            if(myPropertySheet)
+            if (myPropertySheet)
                 propertySheet.addProperty(myPropertySheet)
         }
     }

@@ -212,6 +212,8 @@ private:
     std::map<int, string> m_fieldIndexFieldNameMap;
 
     Container m_FrameStates; // All the frame states. Each field has one.
+
+    std::vector<int> keyFrameIdCache;
 };
 
 

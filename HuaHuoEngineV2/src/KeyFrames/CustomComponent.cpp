@@ -42,7 +42,21 @@ void CustomComponent::SetBaseShape(BaseShape *pBaseShape) {
 }
 
 int CustomComponent::GetKeyFrameCount() {
-    return GetKeyFrameIds().size();
+    std::set<int> keyframeIdSet = GetKeyFrameIds();
+
+    int totalKeyFrames = keyframeIdSet.size();
+    keyFrameIdCache.clear();
+    for(int keyframeId : keyframeIdSet){
+        keyFrameIdCache.push_back(keyframeId);
+    }
+
+    return totalKeyFrames;
+}
+
+int CustomComponent::GetKeyFrameAtIndex(int idx) {
+    if(idx >= keyFrameIdCache.size())
+        return -1;
+    return keyFrameIdCache[idx];
 }
 
 vector<KeyFrameIdentifier> CustomComponent::GetKeyFrameIdentifiers() {
@@ -56,6 +70,4 @@ vector<KeyFrameIdentifier> CustomComponent::GetKeyFrameIdentifiers() {
     return returnKeyFrameIdentifiers;
 }
 
-int CustomComponent::GetKeyFrameAtIndex(int idx) {
-    return -1; // As there might be more than 1 frameState in the component. Return -1 for now.
-}
+

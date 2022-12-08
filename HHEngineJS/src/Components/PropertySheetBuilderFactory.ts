@@ -22,8 +22,7 @@ class PropertySheetFactory{
         this.categoryTypeMap.set(PropertyCategory.interpolateVector2, PropertyType.VECTOR2)
         this.categoryTypeMap.set(PropertyCategory.interpolateVector3, PropertyType.VECTOR3)
 
-        this.categoryTypeMap.set(PropertyCategory.intArray, PropertyType.ARRAY)
-        this.categoryElementTypeMap.set(PropertyCategory.intArray, PropertyType.INT)
+        this.categoryTypeMap.set(PropertyCategory.keyframeArray, PropertyType.KEYFRAMES)
     }
 
     createEntryByNameAndCategory(propertyName, category: PropertyCategory) {
