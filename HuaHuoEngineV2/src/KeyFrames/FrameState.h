@@ -42,9 +42,7 @@ public:
 
     virtual void SetBaseShape(BaseShape* pBaseShape);
 
-    BaseShape* GetBaseShape() const {
-        return this->baseShape;
-    }
+    BaseShape* GetBaseShape();
 
     const char *GetName() const override;
 

@@ -78,10 +78,7 @@ public:
 
     // This keyframe is baseshape level. It doesn't belong to any framestate.
     void AddKeyFrame(KeyFrameIdentifier keyFrameIdentifier){
-
-        printf("KeyFrame: AddKeyFrame:%d\n", mBaseShapeLevelKeyFrames.size());
         mBaseShapeLevelKeyFrames.insert(keyFrameIdentifier);
-        printf("KeyFrame: After AddKeyFrame:%d\n", mBaseShapeLevelKeyFrames.size());
     }
 private:
 
@@ -274,8 +271,6 @@ public:
     void AddAnimationOffset(int offset);
 
     void RefreshKeyFrameCache(){
-        printf("KeyFrame: Before RefreshKeyFrameCache mBaseShapeLevelKeyFrames size:%d\n", mBaseShapeLevelKeyFrames.size());
-
         Container::const_iterator end = mFrameStates.end();
 
         std::set<KeyFrameIdentifier> allKeyFrames;
@@ -286,7 +281,6 @@ public:
             }
         }
 
-        printf("KeyFrame: mBaseShapeLevelKeyFrames size:%d\n", mBaseShapeLevelKeyFrames.size());
         if(!mBaseShapeLevelKeyFrames.empty()){ // Not sure why, but sometimes empty set will also iterate the set and stuck there???
             for(auto itr = mBaseShapeLevelKeyFrames.begin(); itr != mBaseShapeLevelKeyFrames.end(); itr++){
                 allKeyFrames.insert(*itr);
@@ -295,7 +289,6 @@ public:
 
         mKeyFrameCache.clear();
 
-        printf("KeyFrame: After Refresh keyframe cache:%d\n" , allKeyFrames.size());
         for(KeyFrameIdentifier keyFrameIdentifier: allKeyFrames){
             mKeyFrameCache.push_back(keyFrameIdentifier);
         }

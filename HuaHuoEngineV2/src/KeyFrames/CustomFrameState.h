@@ -58,7 +58,7 @@ template<class TransferFunction> void CustomData::Transfer(TransferFunction &tra
 }
 
 
-class CustomDataKeyFrame: public KeyFrameInfo{
+class CustomDataKeyFrame: public AbstractKeyFrameData{
 public:
     CustomData data;
 
@@ -69,7 +69,7 @@ public:
 };
 
 template <class TransferFunction> void CustomDataKeyFrame::Transfer(TransferFunction &transfer) {
-    KeyFrameInfo::Transfer(transfer);
+    AbstractKeyFrameData::Transfer(transfer);
     TRANSFER(data);
 }
 

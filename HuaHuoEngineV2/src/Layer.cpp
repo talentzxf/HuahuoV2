@@ -58,7 +58,6 @@ void Layer::RemoveShape(BaseShape *shape) {
     }
 
     for (int toDeleteFrameId: toDeleteFrames) {
-        printf("Erased keyframe:%d\n", toDeleteFrameId);
         keyFrames.erase(toDeleteFrameId);
 
         KeyFrameChangedEventHandlerArgs args(this, toDeleteFrameId);

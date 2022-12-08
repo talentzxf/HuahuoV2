@@ -8,7 +8,7 @@
 
 #include "FrameState.h"
 
-struct SegmentKeyFrame : public KeyFrameInfo{
+struct SegmentKeyFrame : public AbstractKeyFrameData{
 
     std::vector<Vector3f> positionArray;
     std::vector<Vector3f> handleInArray;
@@ -45,7 +45,7 @@ struct SegmentKeyFrame : public KeyFrameInfo{
 
 template<class TransferFunction>
 void SegmentKeyFrame::Transfer(TransferFunction &transfer) {
-    KeyFrameInfo::Transfer(transfer);
+    AbstractKeyFrameData::Transfer(transfer);
     TRANSFER(positionArray);
     TRANSFER(handleInArray);
     TRANSFER(handleOutArray);

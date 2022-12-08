@@ -46,14 +46,14 @@ int CustomComponent::GetKeyFrameCount() {
 }
 
 vector<KeyFrameIdentifier> CustomComponent::GetKeyFrameIdentifiers() {
-    std::vector<KeyFrameIdentifier> returnKeyFrameInfos;
+    std::vector<KeyFrameIdentifier> returnKeyFrameIdentifiers;
 
     for(auto frameState : m_FrameStates){
-        auto keyframeInfos = frameState.GetComponentPtr()->GetKeyFrameIdentifiers();
-        returnKeyFrameInfos.insert(returnKeyFrameInfos.end(), keyframeInfos.begin(), keyframeInfos.end());
+        auto keyframeIdentifiers = frameState.GetComponentPtr()->GetKeyFrameIdentifiers();
+        returnKeyFrameIdentifiers.insert(returnKeyFrameIdentifiers.end(), keyframeIdentifiers.begin(), keyframeIdentifiers.end());
     }
 
-    return returnKeyFrameInfos;
+    return returnKeyFrameIdentifiers;
 }
 
 int CustomComponent::GetKeyFrameAtIndex(int idx) {

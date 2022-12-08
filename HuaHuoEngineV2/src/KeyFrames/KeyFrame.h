@@ -12,7 +12,7 @@ typedef int KeyFrameIdentifier;
 
 extern const int MAX_FRAMES;
 
-class KeyFrameInfo;
+class AbstractKeyFrameData;
 class AbstractFrameState;
 class BaseShape;
 
@@ -63,11 +63,8 @@ void KeyFrame::Transfer(TransferFunction &transfer) {
     TRANSFER(keyFrameIdentifier);
     TRANSFER(frameId);
     TRANSFER(frameState);
+    TRANSFER(baseShape);
 }
-
-bool KeyFrameEq(const KeyFrame &k1, const KeyFrame &k2);
-
-bool operator<(const KeyFrame &k1, const KeyFrame &k2);
 
 template<class T>
 class KeyFrameManager {
@@ -123,14 +120,14 @@ private:
 };
 
 
-struct KeyFrameInfo{
+struct AbstractKeyFrameData{
 protected:
     KeyFrameIdentifier keyFrameId;
 
-    DECLARE_SERIALIZE(KeyFrameInfo);
+    DECLARE_SERIALIZE(AbstractKeyFrameData);
 
 public:
-    KeyFrameInfo(): keyFrameId(-1){
+    AbstractKeyFrameData(): keyFrameId(-1){
 
     }
 
@@ -153,7 +150,7 @@ public:
     }
 };
 
-template<class TransferFunction> void KeyFrameInfo::Transfer (TransferFunction& transfer){
+template<class TransferFunction> void AbstractKeyFrameData::Transfer (TransferFunction& transfer){
     TRANSFER(keyFrameId);
 }
 

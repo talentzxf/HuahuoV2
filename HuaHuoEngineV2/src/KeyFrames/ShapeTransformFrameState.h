@@ -35,7 +35,7 @@ template<class TransferFunction> void TransformData::Transfer(TransferFunction &
 
 TransformData Lerp(TransformData& k1, TransformData& k2, float ratio);
 
-struct TransformKeyFrame: public KeyFrameInfo{
+struct TransformKeyFrame: public AbstractKeyFrameData{
     DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(TransformKeyFrame)
 
     TransformData frameData;
@@ -46,7 +46,7 @@ struct TransformKeyFrame: public KeyFrameInfo{
 };
 
 template<class TransferFunction> void TransformKeyFrame::Transfer(TransferFunction &transfer){
-    KeyFrameInfo::Transfer(transfer);
+    AbstractKeyFrameData::Transfer(transfer);
     TRANSFER(frameData);
 }
 

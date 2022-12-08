@@ -13,12 +13,11 @@ template<class TransferFunction>
 void AbstractFrameState::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
 
-    if(transfer.IsWriting() ){
+    if (transfer.IsWriting()) {
         mBaseShapePPtr = baseShape;
         TRANSFER(mBaseShapePPtr);
-    }else{
+    } else {
         TRANSFER(mBaseShapePPtr);
-        baseShape = mBaseShapePPtr;
     }
 
     TRANSFER(typeName);
@@ -26,13 +25,22 @@ void AbstractFrameState::Transfer(TransferFunction &transfer) {
 }
 
 void AbstractFrameState::SetBaseShape(BaseShape *pBaseShape) {
-    if(pBaseShape == NULL)
+    if (pBaseShape == NULL)
         return;
 
     printf("Set base shape for:%s\n", this->GetTypeName());
     baseShape = pBaseShape;
 
     mBaseShapePPtr = pBaseShape;
+}
+
+BaseShape *AbstractFrameState::GetBaseShape() {
+    if (this->baseShape != NULL)
+        return this->baseShape;
+
+    this->baseShape = &(*mBaseShapePPtr);
+
+    return this->baseShape;
 }
 
 const char *AbstractFrameState::GetName() const {
