@@ -295,6 +295,7 @@ public:
    }
 
     int GetKeyFrameCount(){
+        RefreshKeyFrameCache();
         return mKeyFrameCache.size();
     }
 
