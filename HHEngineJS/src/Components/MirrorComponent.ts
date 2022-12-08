@@ -184,6 +184,7 @@ class MirrorComponent extends AbstractComponent {
 
         this.targetShapeMirroredShapeMap.forEach((duplicatedShape: BaseShapeJS)=>{
             duplicatedShape.paperShape.visible = false
+            duplicatedShape.selected = false
         })
     }
 }
