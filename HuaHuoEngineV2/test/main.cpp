@@ -380,6 +380,10 @@ void testCloneObject() {
     currentLayer->SetCurrentFrame(0);
     Vector3f *curPosition = clonedRectangle->GetGlobalPivotPosition();
     Assert(curPosition != NULL);
+
+    ShapeTransformFrameState* shapeTransformFrameState = (ShapeTransformFrameState*)clonedRectangle->GetFrameStateByTypeName("ShapeTransformFrameState");
+
+    int keyFrameCount = shapeTransformFrameState->GetKeyFrameCount();
 }
 
 void testDelete() {

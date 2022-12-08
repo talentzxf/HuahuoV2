@@ -871,7 +871,7 @@ abstract class BaseShapeJS {
 
     getComponentKeyFrames(componentName) {
         return function(){
-            let frameStateRawObj = this.rawObj.GetFrameState(componentName)
+            let frameStateRawObj = this.rawObj.GetFrameStateByTypeName(componentName)
 
             let keyFrameCount = frameStateRawObj.GetKeyFrameCount()
             let keyFrames = []
