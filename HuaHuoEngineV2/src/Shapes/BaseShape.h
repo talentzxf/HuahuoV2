@@ -113,7 +113,6 @@ public:
     {
         AddFrameStateByName("ShapeTransformFrameState");
         AddFrameStateByName("ShapeSegmentFrameState");
-        AddFrameStateByName("ShapeColorFrameState");
         AddFrameStateByName("ShapeFollowCurveFrameState");
     }
 

@@ -67,9 +67,11 @@ public:
 protected:
     std::string typeName;
     bool isValidFrame;
+    std::string frameStateName;
+
+private:
     BaseShape* baseShape;
     PPtr<BaseShape> mBaseShapePPtr;
-    std::string frameStateName;
 };
 
 template<class T>

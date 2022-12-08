@@ -55,6 +55,9 @@
     "drawMirror": "Drawing mirror, press Shift to draw vertical/horizontal mirror"
   },
   "inspector": {
+    "BornFrame": "Born Frame",
+    "ShapeTransformFrameState": "Basic Transforms",
+    "ShapeFollowCurveFrameState": "Follow Path",
     "BaseProperties": "Base Properties",
     "CollapseAll": "Collapse All",
     "OpenAll": "Open All",

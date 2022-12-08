@@ -164,8 +164,8 @@ void testShapeStore() {
     fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath), length, 1, fp);
     fclose(fp);
 
-    std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo_project\\0Gp3iuAmyG1670459838");
-//    std::string filenamestr = std::string("mem://") + filename;
+//    std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo_project\\0Gp3iuAmyG1670459838");
+    std::string filenamestr = std::string("mem://") + filename;
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
     GetScriptEventManager()->IsEventRegistered("Hello");
@@ -469,6 +469,10 @@ void testReadFromFile(){
     circleShape->SetRadius(10.0f);
     circleShape->SetCenter(0.0, 1.0, 2.0);
     circleShape->SetBornFrameId(10);
+
+    Layer* pLayer = circleShape->GetLayer();
+    pLayer->SetCurrentFrame(0);
+    bool shapeIsVisible = circleShape->IsVisible();
 
     CustomComponent* customComponent = CustomComponent::CreateComponent();
     customComponent->SetName("CurveGrowth");

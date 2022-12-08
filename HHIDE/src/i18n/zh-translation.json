@@ -55,6 +55,9 @@
     "drawMirror": "绘制镜面反射器，请按Shift键绘制水平/垂直镜面"
   },
   "inspector": {
+    "BornFrame": "出生帧",
+    "ShapeTransformFrameState": "基本变换",
+    "ShapeFollowCurveFrameState": "贴边",
     "BaseProperties": "基础属性",
     "CollapseAll": "折叠所有配置",
     "OpenAll": "打开所有配置",
