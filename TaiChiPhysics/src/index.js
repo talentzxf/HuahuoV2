@@ -11,8 +11,8 @@ let main = async () => {
     let p_vol = (dx * 0.5) ** 2;
     let p_rho = 1;
     let p_mass = p_vol * p_rho;
-    let E = 5e3; // Young's modulus a
-    let nu = 0.2; // Poisson's ratio
+    let E = 1e3; // Young's modulus a
+    let nu = 0.1; // Poisson's ratio
     let mu_0 = E / (2 * (1 + nu));
     let lambda_0 = (E * nu) / ((1 + nu) * (1 - 2 * nu)); // Lame parameters
     let x = ti.Vector.field(2, ti.f32, [n_particles]); // position
@@ -24,9 +24,18 @@ let main = async () => {
     let grid_v = ti.Vector.field(2, ti.f32, [n_grid, n_grid]);
     let grid_m = ti.field(ti.f32, [n_grid, n_grid]);
 
-    let img_size = 512;
+    let img_size = 640;
     let image = ti.Vector.field(4, ti.f32, [img_size, img_size]);
-    let group_size = n_particles / 3;
+    let group_size = n_particles/ 2;
+
+    let attractor_strength = 1
+    let attractor_pos = [512, 512]
+
+    let fixed_point_1 = [0.51, 0.41]
+    let fixed_point_2 = [0.3, 0.41]
+
+    let center_pos_1 = [0.51, 0.5]
+    let center_pos_2 = [0.3, 0.5]
 
     ti.addToKernelScope({
         n_particles,
@@ -52,9 +61,14 @@ let main = async () => {
         image,
         img_size,
         group_size,
+        attractor_strength,
+        center_pos_1,
+        center_pos_2,
+        fixed_point_1,
+        fixed_point_2
     });
 
-    let substep = ti.kernel(() => {
+    let substep = ti.kernel((attractor_pos_x, attractor_pos_y) => {
         for (let I of ti.ndrange(n_grid, n_grid)) {
             grid_v[I] = [0, 0];
             grid_m[I] = 0;
@@ -129,12 +143,30 @@ let main = async () => {
                 }
             }
         }
+
         for (let I of ndrange(n_grid, n_grid)) {
             let i = I[0];
             let j = I[1];
             if (grid_m[I] > 0) {
                 grid_v[I] = (1 / grid_m[I]) * grid_v[I];
-                grid_v[I][1] -= dt * 50;
+                grid_v[I][1] -= dt * 50;  // Gravity
+
+                // let dist = [attractor_pos_x, attractor_pos_y] - dx * [i,j]
+                //
+                // grid_v[i, j] += dist / (0.01 + dist.norm()) * dt * 100
+
+                let dist1 = fixed_point_1 - dx * [i,j]
+                if(dist1.norm() < 0.01){
+                    grid_v[I][0] = 0;
+                    grid_v[I][1] = 0;
+                }
+
+                let dist2 = fixed_point_2 - dx * [i,j]
+                if(dist2.norm() < 0.01){
+                    grid_v[I][0] = 0;
+                    grid_v[I][1] = 0;
+                }
+
                 if (i < 3 && grid_v[I][0] < 0) {
                     grid_v[I][0] = 0;
                 }
@@ -180,10 +212,24 @@ let main = async () => {
     let reset = ti.kernel(() => {
         for (let i of range(n_particles)) {
             let group_id = i32(ti.floor(i / group_size));
+
+            // Generator points in circle ( 0.5,0.5) radius 0.1
+
+            let center_pos = center_pos_1
+            if(group_id == 1){
+                center_pos = center_pos_2
+            }
+
+            let theta = ti.random() * 2.0 * Math.PI
+            let r = 0.1 * ti.sqrt(ti.random())
+            let point_x = center_pos[0] + r * ti.sin(theta)
+            let point_y = center_pos[1] + r * ti.cos(theta)
+
             x[i] = [
-                ti.random() * 0.2 + 0.3 + 0.1 * group_id,
-                ti.random() * 0.2 + 0.05 + 0.32 * group_id,
+                point_x,
+                point_y
             ];
+
             material[i] = 1;
             v[i] = [0, 0];
             F[i] = [
@@ -198,9 +244,14 @@ let main = async () => {
         }
     });
 
-    let render = ti.kernel(() => {
+    let render = ti.kernel((attractor_x, attractor_y) => {
         for (let I of ndrange(img_size, img_size)) {
-            image[I] = [0.067, 0.184, 0.255, 1.0];
+            if(abs(I[0] - attractor_x) + abs(I[1] - attractor_y) < 10.){
+                image[I] = [1.0, 0.0, 0.0, 1.0];
+            } else{
+                image[I] = [0.067, 0.184, 0.255, 1.0];
+            }
+
         }
         for (let i of range(n_particles)) {
             let pos = x[i];
@@ -218,25 +269,36 @@ let main = async () => {
     });
 
     let htmlCanvas = document.getElementById('result_canvas');
-    htmlCanvas.width = 2*n;
-    htmlCanvas.height = 2*n;
-    let canvas = new ti.Canvas(htmlCanvas);
+    htmlCanvas.width = 2 * n;
+    htmlCanvas.height = 2 * n;
 
+    htmlCanvas.onclick = function(evt){
+        const rect = htmlCanvas.getBoundingClientRect()
+        const x = evt.clientX - rect.left
+        const y = rect.height - evt.clientY + rect.top
+        attractor_pos = [x, y]
+
+        console.log("Set attractor_pos at:" + attractor_pos[0]/ img_size + "," + attractor_pos[1]/img_size)
+    }
+
+    let canvas = new ti.Canvas(htmlCanvas);
     reset();
 
     let i = 0;
+
     async function frame() {
         if (window.shouldStop) {
             return;
         }
         for (let i = 0; i < Math.floor(2e-3 / dt); ++i) {
-            substep();
+            substep(attractor_pos[0], attractor_pos[1]);
         }
-        render();
+        render(attractor_pos[0], attractor_pos[1]);
         i = i + 1;
         canvas.setImage(image);
         requestAnimationFrame(frame);
     }
+
     await frame();
 };
 // This is just because StackBlitz has some weird handling of external scripts.
