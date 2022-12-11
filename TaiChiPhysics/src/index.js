@@ -11,8 +11,8 @@ let main = async () => {
     let p_vol = (dx * 0.5) ** 2;
     let p_rho = 1;
     let p_mass = p_vol * p_rho;
-    let E = 1e3; // Young's modulus a
-    let nu = 0.1; // Poisson's ratio
+    let E = 8e2; // Young's modulus a
+    let nu = 0.01; // Poisson's ratio
     let mu_0 = E / (2 * (1 + nu));
     let lambda_0 = (E * nu) / ((1 + nu) * (1 - 2 * nu)); // Lame parameters
     let x = ti.Vector.field(2, ti.f32, [n_particles]); // position
@@ -26,15 +26,15 @@ let main = async () => {
 
     let img_size = 640;
     let image = ti.Vector.field(4, ti.f32, [img_size, img_size]);
-    let group_size = n_particles/ 2;
+    let group_size = n_particles/ 4;
 
     let attractor_strength = 1
     let attractor_pos = [512, 512]
 
-    let fixed_point_1 = [0.51, 0.41]
-    let fixed_point_2 = [0.3, 0.41]
+    let fixed_point_1 = [0.42, 0.56]
+    let fixed_point_2 = [0.38, 0.56]
 
-    let center_pos_1 = [0.51, 0.5]
+    let center_pos_1 = [0.5, 0.5]
     let center_pos_2 = [0.3, 0.5]
 
     ti.addToKernelScope({
@@ -62,13 +62,14 @@ let main = async () => {
         img_size,
         group_size,
         attractor_strength,
+        attractor_pos,
         center_pos_1,
         center_pos_2,
         fixed_point_1,
         fixed_point_2
     });
 
-    let substep = ti.kernel((attractor_pos_x, attractor_pos_y) => {
+    let substep = ti.kernel(() => {
         for (let I of ti.ndrange(n_grid, n_grid)) {
             grid_v[I] = [0, 0];
             grid_m[I] = 0;
@@ -90,13 +91,16 @@ let main = async () => {
             ).matmul(F[p]);
             let h = f32(max(0.1, min(5, ti.exp(10 * (1.0 - Jp[p])))));
             if (material[p] == 1) {
-                h = 0.3;
+                h = 0.01;
+            }
+            if(material[p] == 0){
+                h = 1.0;
             }
             let mu = mu_0 * h;
             let la = lambda_0 * h;
-            if (material[p] == 0) {
-                mu = 0.0;
-            }
+            // if (material[p] == 0) {
+            //     mu = 0.0;
+            // }
             let svd = ti.svd2D(F[p]);
             let U = svd.U;
             let sig = svd.E;
@@ -104,23 +108,23 @@ let main = async () => {
             let J = 1.0;
             for (let d of ti.static(ti.range(2))) {
                 let new_sig = sig[[d, d]];
-                if (material[p] == 2) {
-                    // Plasticity
-                    new_sig = min(max(sig[[d, d]], 1 - 2.5e-2), 1 + 4.5e-3);
-                }
+                // if (material[p] == 2) {
+                //     // Plasticity
+                //     new_sig = min(max(sig[[d, d]], 1 - 2.5e-2), 1 + 4.5e-3);
+                // }
                 Jp[p] = (Jp[p] * sig[[d, d]]) / new_sig;
                 sig[[d, d]] = new_sig;
                 J = J * new_sig;
             }
-            if (material[p] == 0) {
-                F[p] =
-                    [
-                        [1.0, 0.0],
-                        [0.0, 1.0],
-                    ] * sqrt(J);
-            } else if (material[p] == 2) {
-                F[p] = U.matmul(sig).matmul(V.transpose());
-            }
+            // if (material[p] == 0) {
+            //     F[p] =
+            //         [
+            //             [1.0, 0.0],
+            //             [0.0, 1.0],
+            //         ] * sqrt(J);
+            // } else if (material[p] == 2) {
+            //     F[p] = U.matmul(sig).matmul(V.transpose());
+            // }
             let stress =
                 (2 * mu * (F[p] - U.matmul(V.transpose()))).matmul(F[p].transpose()) +
                 [
@@ -213,30 +217,40 @@ let main = async () => {
         for (let i of range(n_particles)) {
             let group_id = i32(ti.floor(i / group_size));
 
-            // Generator points in circle ( 0.5,0.5) radius 0.1
+            let point_x = -1.0
+            let point_y = -1.0
 
+            // Generator points in circle ( 0.5,0.5) radius 0.1
             let center_pos = center_pos_1
-            if(group_id == 1){
+            let theta = ti.random() * 2.0 * Math.PI
+
+            if(group_id == 2 || group_id == 3){
                 center_pos = center_pos_2
             }
+            if(group_id == 0 || group_id == 2){ // Internal
+                let r = 0.1 * ti.sqrt(ti.random())
+                point_x = center_pos[0] + r * ti.sin(theta)
+                point_y = center_pos[1] + r * ti.cos(theta)
 
-            let theta = ti.random() * 2.0 * Math.PI
-            let r = 0.1 * ti.sqrt(ti.random())
-            let point_x = center_pos[0] + r * ti.sin(theta)
-            let point_y = center_pos[1] + r * ti.cos(theta)
+                material[i] = 0;
+            }else{
+                point_x = center_pos[0] + 0.1 * ti.sin(theta)
+                point_y = center_pos[1] + 0.1 * ti.cos(theta)
+
+                material[i] = 1;
+            }
 
             x[i] = [
                 point_x,
                 point_y
             ];
 
-            material[i] = 1;
             v[i] = [0, 0];
             F[i] = [
                 [1, 0],
                 [0, 1],
             ];
-            Jp[i] = 1;
+            Jp[i] = 1.0;
             C[i] = [
                 [0, 0],
                 [0, 0],
@@ -244,7 +258,10 @@ let main = async () => {
         }
     });
 
-    let render = ti.kernel((attractor_x, attractor_y) => {
+    let render = ti.kernel(() => {
+        let attractor_x = attractor_pos[0]
+        let attractor_y = attractor_pos[1]
+
         for (let I of ndrange(img_size, img_size)) {
             if(abs(I[0] - attractor_x) + abs(I[1] - attractor_y) < 10.){
                 image[I] = [1.0, 0.0, 0.0, 1.0];
@@ -277,7 +294,9 @@ let main = async () => {
         const x = evt.clientX - rect.left
         const y = rect.height - evt.clientY + rect.top
         attractor_pos = [x, y]
-
+        ti.addToKernelScope({
+            attractor_pos
+        })
         console.log("Set attractor_pos at:" + attractor_pos[0]/ img_size + "," + attractor_pos[1]/img_size)
     }
 
@@ -290,10 +309,12 @@ let main = async () => {
         if (window.shouldStop) {
             return;
         }
+
         for (let i = 0; i < Math.floor(2e-3 / dt); ++i) {
-            substep(attractor_pos[0], attractor_pos[1]);
+            substep();
         }
-        render(attractor_pos[0], attractor_pos[1]);
+
+        render();
         i = i + 1;
         canvas.setImage(image);
         requestAnimationFrame(frame);
