@@ -11,9 +11,9 @@ let main = async() => {
     let circle = new CircleShape()
     circle.addToShapeManager(shapeManager)
 
-    // let board2 = new BoardShape()
-    // board2.center = [0.8, 0.1]
-    // board2.addToShapeManager(shapeManager)
+    let board2 = new BoardShape()
+    board2.center = [0.8, 0.1]
+    board2.addToShapeManager(shapeManager)
 
 
     // let circleShape = new CircleShape()
@@ -33,20 +33,6 @@ let main = async() => {
         if (window.shouldStop) {
             return;
         }
-
-        // let currentTime = Date.now()
-        // if(currentTime - lastBoardCreateTime > 100){
-        //     if(currentBoards < totalBoards){
-        //
-        //         console.log("Creating board:" + currentBoards)
-        //         let board = new BoardShape()
-        //         board.center = [0.1 * currentBoards + 0.1, 0.1]
-        //         board.addToShapeManager(shapeManager)
-        //         currentBoards++
-        //
-        //         lastBoardCreateTime = currentTime
-        //     }
-        // }
 
         for (let i = 0; i < Math.floor(2e-3 / dt); ++i) {
             shapeManager.substep();
