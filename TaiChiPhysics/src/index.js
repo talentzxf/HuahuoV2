@@ -1,5 +1,6 @@
 import {ShapeManager} from "./ShapeManager";
 import {CircleShape} from "./Shapes";
+import {BoardShape} from "./Shapes";
 import {dt} from "./Constants";
 
 let main = async() => {
@@ -10,9 +11,9 @@ let main = async() => {
 
     circle.addToShapeManager(shapeManager)
 
-    let circle2 = new CircleShape()
-    circle2.center = [0.7, 0.7]
-    circle2.addToShapeManager(shapeManager)
+    let board = new BoardShape()
+    board.center = [0.5, 0.1]
+    board.addToShapeManager(shapeManager)
 
     shapeManager.resetSimulation()
 
@@ -21,7 +22,6 @@ let main = async() => {
     // shapeManager.addShape(circleShape)
     //
     // shapeManager.render()
-
 
     async function frame() {
         if (window.shouldStop) {

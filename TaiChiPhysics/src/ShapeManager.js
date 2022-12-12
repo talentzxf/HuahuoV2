@@ -26,7 +26,8 @@ class ShapeManager{
     shapes = []
     canvas
     internalRenderKernel
-    sub_step
+    sub_step_grid
+    sub_step_point
 
     x // particle positions
     V
@@ -99,8 +100,8 @@ class ShapeManager{
     }
 
     substep(){
-        if(this.sub_step == null){
-            this.sub_step = ti.kernel(() => {
+        if(this.sub_step_grid == null){
+            this.sub_step_grid = ti.kernel(() => {
                 for (let I of ti.ndrange(n_grid, n_grid)) {
                     grid_v[I] = [0, 0];
                     grid_m[I] = 0;
@@ -197,6 +198,9 @@ class ShapeManager{
                         }
                     }
                 }
+            });
+
+            this.sub_step_point = ti.kernel(()=>{
                 for (let p of range(n_particles)) {
                     let base = i32(x[p] * inv_dx - 0.5);
                     let fx = x[p] * inv_dx - f32(base);
@@ -223,10 +227,17 @@ class ShapeManager{
                     C[p] = new_C;
                     x[p] = x[p] + dt * new_v;
                 }
-            });
+            })
         }
 
-        this.sub_step()
+        this.sub_step_grid()
+
+        for(let shape of this.shapes){
+            shape.apply_constraint()
+        }
+        this.sub_step_point()
+
+
     }
 
     render(){
