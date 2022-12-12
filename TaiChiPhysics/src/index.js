@@ -12,8 +12,12 @@ let main = async() => {
     circle.addToShapeManager(shapeManager)
 
     let board = new BoardShape()
-    board.center = [0.5, 0.1]
+    board.centerY = [0.5, 0.1]
     board.addToShapeManager(shapeManager)
+
+    let board2 = new BoardShape()
+    board2.centerY = [0.8, 0.1]
+    board2.addToShapeManager(shapeManager)
 
     shapeManager.resetSimulation()
 

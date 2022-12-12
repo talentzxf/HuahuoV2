@@ -105,14 +105,21 @@ class BoardShape extends BaseShape {
     length = 0.2
     height = 0.02
 
+    handleVelocity = [0.0, 1.0]
+
     velocityConstraintFunc
+
+    constructor() {
+        super();
+    }
 
     addParametersToKernel() {
         super.addParametersToKernel();
         ti.addToKernelScope({
             center: this.center,
             boardLength: this.length,
-            boardHeight: this.height
+            boardHeight: this.height,
+            handleVelocity: this.handleVelocity
         })
     }
 
@@ -120,24 +127,41 @@ class BoardShape extends BaseShape {
         if(this.velocityConstraintFunc == null){
             // Fix handle's velocity
             this.velocityConstraintFunc = ti.kernel((startIdx, endIdx)=>{
+
+                let minY = 100.0
+
                 let totalParticles = endIdx - startIdx
                 for(let i of ti.range(totalParticles)){
                     let particleIdx = i32(startIdx + i)
-                    v[particleIdx] = [0.0, 0.0]
+                    v[particleIdx] = handleVelocity
 
                     let base = i32(x[particleIdx] * inv_dx - 0.5);
                     for (let i of ti.static(ti.range(3))) {
                         for (let j of ti.static(ti.range(3))) {
-                            grid_v[base + [i, j]] = [0.0, 0.0]
+                            grid_v[base + [i, j]] = handleVelocity
                         }
                     }
+
+                    if(x[particleIdx][1] < minY){
+                        minY = x[particleIdx][1]
+                    }
                 }
+
+                return minY
             })
         }
 
         let leftHandleStartIdx = this.startIdx + this.totalParticles * 8.0/9.0
         let rightHandleEndIdx = this.endIdx
-        this.velocityConstraintFunc(leftHandleStartIdx, rightHandleEndIdx)
+        let minY = this.velocityConstraintFunc(leftHandleStartIdx, rightHandleEndIdx)
+
+        let _this = this
+        minY.then((val)=>{
+            if(val > 0.5){
+                _this.reset(true)
+            }
+        })
+
     }
 
     nextPosition() {
