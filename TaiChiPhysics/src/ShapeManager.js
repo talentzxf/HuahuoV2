@@ -237,7 +237,9 @@ class ShapeManager{
         }
         this.sub_step_point()
 
-
+        for(let shape of this.shapes){
+            shape.check_boundary()
+        }
     }
 
     render(){
