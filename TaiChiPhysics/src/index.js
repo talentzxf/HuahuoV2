@@ -36,14 +36,16 @@ let main = async () => {
     document.addEventListener("keydown", (event) => {
         console.log(event.key)
 
+        let speed = 0.005
+
         if (event.key == "w" || event.key == "W") { // Up
-            circle.addVelocity([0.0, 10.0])
+            circle.addVelocity([0.0, speed])
         } else if (event.key == "a" || event.key == "A") { // Left
-            circle.addVelocity([-1.0, 0.0])
+            circle.addVelocity([-speed, 0.0])
         } else if (event.key == "d" || event.key == "D") {
-            circle.addVelocity([1.0, 0.0])
+            circle.addVelocity([speed, 0.0])
         } else if (event.key == "s" || event.key == "S") {
-            circle.addVelocity([0.0, -1.0])
+            circle.addVelocity([0.0, -speed])
         }
     })
 

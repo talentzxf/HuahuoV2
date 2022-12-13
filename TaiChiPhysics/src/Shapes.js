@@ -158,21 +158,23 @@ class CircleShape extends BaseShape {
                 let totalParticles = endIdx - startIdx
                 for (let i of ti.range(totalParticles)) {
                     let particleIdx = i32(startIdx + i)
-                    v[particleIdx] += [velocityX, velocityY]
+                    x[particleIdx] += [velocityX, velocityY]
 
-                    let base = i32(x[particleIdx] * inv_dx - 0.5);
-                    for (let i of ti.static(ti.range(3))) {
-                        for (let j of ti.static(ti.range(3))) {
-                            grid_v[base + [i, j]] += [velocityX, velocityY]
-                        }
-                    }
+                    // v[particleIdx] += [velocityX, velocityY]
+                    //
+                    // let base = i32(x[particleIdx] * inv_dx - 0.5);
+                    // for (let i of ti.static(ti.range(3))) {
+                    //     for (let j of ti.static(ti.range(3))) {
+                    //         grid_v[base + [i, j]] += [velocityX, velocityY]
+                    //     }
+                    // }
                 }
             })
         }
 
-        let handleStartIdx = this.startIdx + this.totalParticles * 15.0/16.0
-        let handleEndIdx = this.endIdx
-        this.addVelocityKernel(handleStartIdx, handleEndIdx, velocity[0], velocity[1])
+        // let handleStartIdx = this.startIdx + this.totalParticles * 15.0/16.0
+        // let handleEndIdx = this.endIdx
+        this.addVelocityKernel(this.startIdx, this.endIdx, velocity[0], velocity[1])
     }
 
     check_boundary() {
