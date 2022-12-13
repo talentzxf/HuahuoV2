@@ -19,11 +19,11 @@ class BaseShape {
 
     activeKernel
 
-    setActive(isActive){
-        if(this.activeKernel == null){
-            this.activeKernel = ti.kernel((startIdx, endIdx, isActive)=>{
+    setActive(isActive) {
+        if (this.activeKernel == null) {
+            this.activeKernel = ti.kernel((startIdx, endIdx, isActive) => {
                 let totalParticleCount = endIdx - startIdx
-                for(let i of range(totalParticleCount)){
+                for (let i of range(totalParticleCount)) {
                     let particleIndex = i32(startIdx + i)
                     active[particleIndex] = i32(isActive)
                 }
@@ -56,16 +56,16 @@ class BaseShape {
         })
     }
 
-    apply_constraint(){
+    apply_constraint() {
 
     }
 
-    check_boundary(){
+    check_boundary() {
 
     }
 
     reset(offsetX = 0.0, offsetY = 0.0) {
-        if(this.reloading)
+        if (this.reloading)
             return false
 
         this.reloading = true
@@ -104,10 +104,10 @@ class BaseShape {
         console.log("Resetting kernel:" + _this.startIdx + "," + _this.endIdx)
 
         let resetKernelPromise = this.resetKernel(_this.startIdx, _this.endIdx, _this.materialId, offsetX, offsetY)
-        resetKernelPromise.then((val)=>{
-            if(val)
+        resetKernelPromise.then((val) => {
+            if (val)
                 _this.reloading = false
-            else{
+            else {
                 console.log("Why why why?")
             }
         })
@@ -122,20 +122,62 @@ class CircleShape extends BaseShape {
     center = [0.5, 0.5]
     radius = 0.05
 
+    handleRadius = this.radius / 10.0
+    handleCenter = [0.5, 0.47]
+
+    addVelocityKernel
+
+    addVelocity(velocity) {
+        console.log("Adding velocity:" + velocity)
+
+        if(this.addVelocityKernel == null){
+            this.addVelocityKernel = ti.kernel((startIdx, endIdx, velocityX, velocityY)=>{
+                let totalParticles = endIdx - startIdx
+                for (let i of ti.range(totalParticles)) {
+                    let particleIdx = i32(startIdx + i)
+                    v[particleIdx] += [velocityX, velocityY]
+
+                    let base = i32(x[particleIdx] * inv_dx - 0.5);
+                    for (let i of ti.static(ti.range(3))) {
+                        for (let j of ti.static(ti.range(3))) {
+                            grid_v[base + [i, j]] += [velocityX, velocityY]
+                        }
+                    }
+                }
+            })
+        }
+
+        let handleStartIdx = this.startIdx + this.totalParticles * 15.0/16.0
+        let handleEndIdx = this.endIdx
+        this.addVelocityKernel(handleStartIdx, handleEndIdx, velocity[0], velocity[1])
+    }
+
     addParametersToKernel() {
         super.addParametersToKernel();
         ti.addToKernelScope({
             center: this.center,
-            radius: this.radius
+            radius: this.radius,
+            handleRadius: this.handleRadius,
+            handleCenter: this.handleCenter
         })
     }
 
     nextPosition() {
         return (total, idx) => {
-            let theta = ti.random() * 2.0 * Math.PI
-            let r = radius * ti.sqrt(ti.random())
 
-            return [center[0] + r * ti.sin(theta), center[1] + r * ti.cos(theta)]
+            let retPosition = [-1.0, -1.0]
+
+            if (idx * 16.0 < 15.0 * total) { // 8/9 particles are inside the circle.
+                let theta = ti.random() * 2.0 * Math.PI
+                let r = radius * ti.sqrt(ti.random())
+                retPosition = [center[0] + r * ti.sin(theta), center[1] + r * ti.cos(theta)]
+            } else { // Other particles are concentracted in the handle part.
+                let theta = ti.random() * 2.0 * Math.PI
+                let r = handleRadius * ti.sqrt(ti.random())
+                retPosition = [handleCenter[0] + r * ti.sin(theta), handleCenter[1] + r * ti.cos(theta)]
+            }
+
+            return retPosition
         }
     }
 }
@@ -145,7 +187,7 @@ class BoardShape extends BaseShape {
     length = 0.2
     height = 0.02
 
-    handleVelocity = [0.0, 5.0]
+    handleVelocity = [0.0, 0.0]
 
     velocityConstraintFunc
     check_boundry
@@ -164,16 +206,16 @@ class BoardShape extends BaseShape {
         })
     }
 
-    check_boundary(){
-        if(this.check_boundry == null){
+    check_boundary() {
+        if (this.check_boundry == null) {
             this.check_boundry = ti.kernel((startIdx, endIdx) => {
                 let minY = 100.0
 
                 let totalParticles = endIdx - startIdx
-                for(let i of ti.range(totalParticles)){
+                for (let i of ti.range(totalParticles)) {
                     let particleIdx = i32(startIdx + i)
 
-                    if(x[particleIdx][1] < minY){
+                    if (x[particleIdx][1] < minY) {
                         minY = x[particleIdx][1]
                     }
                 }
@@ -183,30 +225,30 @@ class BoardShape extends BaseShape {
         }
 
         let _this = this
-        this.check_boundry(this.startIdx, this.endIdx).then((val)=>{
-            if(this.reloading)
+        this.check_boundry(this.startIdx, this.endIdx).then((val) => {
+            if (this.reloading)
                 return
 
-            if(val > 0.8){
+            if (val > 0.8) {
                 let currentCenterX = _this.center[0]
 
                 let nextCenterX = (Math.random() - 0.5) * 0.5 + 0.4
 
                 console.log("Proposed center x:" + nextCenterX)
                 console.log("Current center:" + currentCenterX + "Offset:" + (nextCenterX - currentCenterX))
-                if( _this.reset( nextCenterX - currentCenterX, 0.0) ){
+                if (_this.reset(nextCenterX - currentCenterX, 0.0)) {
                     console.log("New center x:" + nextCenterX)
                 }
             }
         })
     }
 
-    apply_constraint(){
-        if(this.velocityConstraintFunc == null){
+    apply_constraint() {
+        if (this.velocityConstraintFunc == null) {
             // Fix handle's velocity
-            this.velocityConstraintFunc = ti.kernel((startIdx, endIdx)=>{
+            this.velocityConstraintFunc = ti.kernel((startIdx, endIdx) => {
                 let totalParticles = endIdx - startIdx
-                for(let i of ti.range(totalParticles)){
+                for (let i of ti.range(totalParticles)) {
                     let particleIdx = i32(startIdx + i)
                     v[particleIdx] = handleVelocity
 
@@ -220,7 +262,7 @@ class BoardShape extends BaseShape {
             })
         }
 
-        let leftHandleStartIdx = this.startIdx + this.totalParticles * 8.0/9.0
+        let leftHandleStartIdx = this.startIdx + this.totalParticles * 8.0 / 9.0
         let rightHandleEndIdx = this.endIdx
         this.velocityConstraintFunc(leftHandleStartIdx, rightHandleEndIdx)
     }
@@ -228,16 +270,15 @@ class BoardShape extends BaseShape {
     nextPosition() {
         return (total, idx) => {
             let resultPosition = [-1.0, -1.0]
-            if (idx * 9.0 < 8.0 * total){
+            if (idx * 9.0 < 8.0 * total) {
                 // Leave 8/9 in the inner and keep 1/9 as handles.
                 resultPosition = [
                     ti.random() * boardLength + center[0] - boardLength / 2.0,
                     ti.random() * boardHeight + center[1] - boardHeight / 2.0
                 ]
-            }
-            else if (idx * 18.0 < 17.0 * total) { // Left handle
+            } else if (idx * 18.0 < 17.0 * total) { // Left handle
                 resultPosition = [center[0] - boardLength / 2.0, ti.random() * boardHeight + center[1] - boardHeight / 2.0]
-            } else {
+            } else { // Right handle
                 resultPosition = [center[0] + boardLength / 2.0, ti.random() * boardHeight + center[1] - boardHeight / 2.0]
             }
 

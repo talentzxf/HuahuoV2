@@ -3,7 +3,7 @@ import {CircleShape} from "./Shapes";
 import {BoardShape} from "./Shapes";
 import {dt} from "./Constants";
 
-let main = async() => {
+let main = async () => {
     await ti.init()
 
     let shapeManager = new ShapeManager()
@@ -16,7 +16,7 @@ let main = async() => {
     board2.addToShapeManager(shapeManager)
 
     let board3 = new BoardShape()
-    board3.center = [ 0.2, 0.1]
+    board3.center = [0.2, 0.1]
     board3.addToShapeManager(shapeManager)
 
 
@@ -33,14 +33,28 @@ let main = async() => {
 
     let lastBoardCreationTime = Date.now()
 
+    document.addEventListener("keydown", (event) => {
+        console.log(event.key)
+
+        if (event.key == "w" || event.key == "W") { // Up
+            circle.addVelocity([0.0, 10.0])
+        } else if (event.key == "a" || event.key == "A") { // Left
+            circle.addVelocity([-1.0, 0.0])
+        } else if (event.key == "d" || event.key == "D") {
+            circle.addVelocity([1.0, 0.0])
+        } else if (event.key == "s" || event.key == "S") {
+            circle.addVelocity([0.0, -1.0])
+        }
+    })
+
     async function frame() {
         if (window.shouldStop) {
             return;
         }
 
         let currentTime = Date.now()
-        if(currentTime - lastBoardCreationTime > 3000){
-            if(!board3HasActiviated){
+        if (currentTime - lastBoardCreationTime > 3000) {
+            if (!board3HasActiviated) {
                 board3.setActive(1)
                 board3HasActiviated = true
             }
