@@ -1,7 +1,9 @@
 import {quality} from "./Constants";
 import {MATERIAL_TYPE} from "./ShapeManager";
+import {scoreManager} from "./ScoreManager";
 
 class BaseShape {
+    check_boundary_kernel
     totalParticles = 500 * quality ** 2;
     E = 8e2; // Young's modulus a
     nu = 0.01; // Poisson's ratio
@@ -60,7 +62,28 @@ class BaseShape {
 
     }
 
-    check_boundary() {
+    invoke_check_boundary_kernel(startIdx, endIdx) {
+        if (this.check_boundary_kernel == null) {
+            this.check_boundary_kernel = ti.kernel((startIdx, endIdx) => {
+                let minY = 100.0
+
+                let totalParticles = endIdx - startIdx
+                for (let i of ti.range(totalParticles)) {
+                    let particleIdx = i32(startIdx + i)
+
+                    if (x[particleIdx][1] < minY) {
+                        minY = x[particleIdx][1]
+                    }
+                }
+
+                return minY
+            })
+        }
+
+        return this.check_boundary_kernel(startIdx, endIdx)
+    }
+
+    check_boundary(){
 
     }
 
@@ -152,6 +175,15 @@ class CircleShape extends BaseShape {
         this.addVelocityKernel(handleStartIdx, handleEndIdx, velocity[0], velocity[1])
     }
 
+    check_boundary() {
+        this.invoke_check_boundary_kernel(this.startIdx, this.endIdx).then((minY) => {
+            console.log("Circle minY:" + minY)
+            if(minY < 0.1){
+                scoreManager.deduceLife()
+            }
+        })
+    }
+
     addParametersToKernel() {
         super.addParametersToKernel();
         ti.addToKernelScope({
@@ -187,10 +219,9 @@ class BoardShape extends BaseShape {
     length = 0.2
     height = 0.02
 
-    handleVelocity = [0.0, 0.0]
+    handleVelocity = [0.0, 0.2]
 
     velocityConstraintFunc
-    check_boundry
 
     constructor() {
         super();
@@ -207,25 +238,8 @@ class BoardShape extends BaseShape {
     }
 
     check_boundary() {
-        if (this.check_boundry == null) {
-            this.check_boundry = ti.kernel((startIdx, endIdx) => {
-                let minY = 100.0
-
-                let totalParticles = endIdx - startIdx
-                for (let i of ti.range(totalParticles)) {
-                    let particleIdx = i32(startIdx + i)
-
-                    if (x[particleIdx][1] < minY) {
-                        minY = x[particleIdx][1]
-                    }
-                }
-
-                return minY
-            })
-        }
-
         let _this = this
-        this.check_boundry(this.startIdx, this.endIdx).then((val) => {
+        this.invoke_check_boundary_kernel(this.startIdx, this.endIdx).then((val) => {
             if (this.reloading)
                 return
 
@@ -238,6 +252,8 @@ class BoardShape extends BaseShape {
                 console.log("Current center:" + currentCenterX + "Offset:" + (nextCenterX - currentCenterX))
                 if (_this.reset(nextCenterX - currentCenterX, 0.0)) {
                     console.log("New center x:" + nextCenterX)
+
+                    scoreManager.addScore()
                 }
             }
         })
