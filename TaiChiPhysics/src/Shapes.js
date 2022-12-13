@@ -17,10 +17,26 @@ class BaseShape {
 
     reloading = false
 
+    activeKernel
+
+    setActive(isActive){
+        if(this.activeKernel == null){
+            this.activeKernel = ti.kernel((startIdx, endIdx, isActive)=>{
+                let totalParticleCount = endIdx - startIdx
+                for(let i of range(totalParticleCount)){
+                    let particleIndex = i32(startIdx + i)
+                    active[particleIndex] = i32(isActive)
+                }
+            })
+        }
+
+        this.activeKernel(this.startIdx, this.endIdx, isActive)
+    }
+
     constructor() {
     }
 
-    addToShapeManager(shapeManager) {
+    addToShapeManager(shapeManager, active = 1) {
         let [startIdx, endIdx] = shapeManager.addShape(this)
 
         this.startIdx = startIdx
@@ -86,6 +102,7 @@ class BaseShape {
                 })
         }
         console.log("Resetting kernel:" + _this.startIdx + "," + _this.endIdx)
+
         let resetKernelPromise = this.resetKernel(_this.startIdx, _this.endIdx, _this.materialId, offsetX, offsetY)
         resetKernelPromise.then((val)=>{
             if(val)
@@ -94,6 +111,9 @@ class BaseShape {
                 console.log("Why why why?")
             }
         })
+
+        this.setActive(true)
+
         return true
     }
 }
@@ -164,13 +184,18 @@ class BoardShape extends BaseShape {
 
         let _this = this
         this.check_boundry(this.startIdx, this.endIdx).then((val)=>{
+            if(this.reloading)
+                return
+
             if(val > 0.8){
                 let currentCenterX = _this.center[0]
 
-                let nextCenterX = Math.random() * 0.3 + 0.5
+                let nextCenterX = (Math.random() - 0.5) * 0.5 + 0.4
 
+                console.log("Proposed center x:" + nextCenterX)
+                console.log("Current center:" + currentCenterX + "Offset:" + (nextCenterX - currentCenterX))
                 if( _this.reset( nextCenterX - currentCenterX, 0.0) ){
-                    _this.center[0] = nextCenterX
+                    console.log("New center x:" + nextCenterX)
                 }
             }
         })

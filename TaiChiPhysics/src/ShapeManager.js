@@ -23,6 +23,7 @@ class ShapeManager{
     totalParticles = 0;
     image = ti.Vector.field(4, ti.f32, [img_size, img_size]);
     material
+    active
     shapes = []
     canvas
     internalRenderKernel
@@ -78,12 +79,14 @@ class ShapeManager{
             E,
             nu,
             mu_0,
-            lambda_0
+            lambda_0,
+            active: this.active
         })
     }
 
     resetSimulation(){
         this.material = ti.field(ti.i32, [this.totalParticles]); // material id
+        this.active = ti.field(ti.i32, [this.totalParticles])
         this.x = ti.Vector.field(2, ti.f32, [this.totalParticles]); // position
         this.v = ti.Vector.field(2, ti.f32, [this.totalParticles]); // velocity
         this.C = ti.Matrix.field(2, 2, ti.f32, [this.totalParticles]); // affine vel field
@@ -184,9 +187,9 @@ class ShapeManager{
                         grid_v[I] = (1 / grid_m[I]) * grid_v[I];
                         grid_v[I][1] -= dt * 50;  // Gravity
 
-                        if (i < 3 && grid_v[I][0] < 0) {
-                            grid_v[I][0] = 0;
-                        }
+                        // if (i < 3 && grid_v[I][0] < 0) {
+                        //     grid_v[I][0] = 0;
+                        // }
                         if (i > n_grid - 3 && grid_v[I][0] > 0) {
                             grid_v[I][0] = 0;
                         }
