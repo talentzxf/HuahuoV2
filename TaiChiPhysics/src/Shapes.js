@@ -36,7 +36,7 @@ class BaseShape {
     constructor() {
     }
 
-    addToShapeManager(shapeManager, active = 1) {
+    addToShapeManager(shapeManager) {
         let [startIdx, endIdx] = shapeManager.addShape(this)
 
         this.startIdx = startIdx
@@ -145,7 +145,7 @@ class BoardShape extends BaseShape {
     length = 0.2
     height = 0.02
 
-    handleVelocity = [0.0, 1.0]
+    handleVelocity = [0.0, 5.0]
 
     velocityConstraintFunc
     check_boundry

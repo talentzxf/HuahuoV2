@@ -110,6 +110,9 @@ class ShapeManager{
                     grid_m[I] = 0;
                 }
                 for (let p of ti.range(n_particles)) {
+                    if(active[p] == 0)
+                        continue
+
                     let base = i32(x[p] * inv_dx - 0.5);
                     let fx = x[p] * inv_dx - f32(base);
                     let w = [
@@ -187,9 +190,9 @@ class ShapeManager{
                         grid_v[I] = (1 / grid_m[I]) * grid_v[I];
                         grid_v[I][1] -= dt * 50;  // Gravity
 
-                        // if (i < 3 && grid_v[I][0] < 0) {
-                        //     grid_v[I][0] = 0;
-                        // }
+                        if (i < 3 && grid_v[I][0] < 0) {
+                            grid_v[I][0] = 0;
+                        }
                         if (i > n_grid - 3 && grid_v[I][0] > 0) {
                             grid_v[I][0] = 0;
                         }
@@ -205,6 +208,9 @@ class ShapeManager{
 
             this.sub_step_point = ti.kernel(()=>{
                 for (let p of range(n_particles)) {
+                    if(active[p] == 0)
+                        continue
+
                     let base = i32(x[p] * inv_dx - 0.5);
                     let fx = x[p] * inv_dx - f32(base);
                     let w = [
@@ -252,11 +258,14 @@ class ShapeManager{
                     image[I] = [0.067, 0.184, 0.255, 1.0];
                 }
 
-                for(let i of range(n_particles)){
+                for(let i of range(n_particles)) {
+                    if (active[i] == 0)
+                        continue
+
                     let pos = x[i];
                     let ipos = i32(pos * img_size)
 
-                    let this_color = f32([0,0,0,0])
+                    let this_color = f32([0, 0, 0, 0])
                     if (material[i] == 0) {
                         this_color = [0, 0.5, 0.5, 1.0];
                     } else if (material[i] == 1) {
@@ -265,7 +274,13 @@ class ShapeManager{
                         this_color = [1, 1, 1, 1.0];
                     }
 
-                    image[ipos] = this_color;
+                    for (let i of ti.static(ti.range(7))) {
+                        for (let j of ti.static(ti.range(7))) {
+                            let xoffset = i - 2
+                            let yoffset = j - 2
+                            image[ipos + [xoffset, yoffset]] = this_color;
+                        }
+                    }
                 }
             })
         }

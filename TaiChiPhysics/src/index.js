@@ -15,6 +15,10 @@ let main = async() => {
     board2.center = [0.8, 0.1]
     board2.addToShapeManager(shapeManager)
 
+    let board3 = new BoardShape()
+    board3.center = [ 0.2, 0.1]
+    board3.addToShapeManager(shapeManager)
+
 
     // let circleShape = new CircleShape()
     //
@@ -24,14 +28,22 @@ let main = async() => {
 
     shapeManager.resetSimulation()
 
-    let lastBoardCreateTime = Date.now()
+    board3.setActive(0)
+    let board3HasActiviated = false
 
-    let currentBoards = 1
-    let totalBoards = 3
+    let lastBoardCreationTime = Date.now()
 
     async function frame() {
         if (window.shouldStop) {
             return;
+        }
+
+        let currentTime = Date.now()
+        if(currentTime - lastBoardCreationTime > 3000){
+            if(!board3HasActiviated){
+                board3.setActive(1)
+                board3HasActiviated = true
+            }
         }
 
         for (let i = 0; i < Math.floor(2e-3 / dt); ++i) {
