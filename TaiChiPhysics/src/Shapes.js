@@ -146,7 +146,7 @@ class CircleShape extends BaseShape {
     radius = 0.05
 
     handleRadius = this.radius / 10.0
-    handleCenter = [0.5, 0.47]
+    handleCenter = [0.5, 0.5]
 
     addVelocityKernel
 
@@ -219,7 +219,7 @@ class BoardShape extends BaseShape {
     length = 0.2
     height = 0.02
 
-    handleVelocity = [0.0, 0.2]
+    handleVelocity = [0.0, 1.0]
 
     velocityConstraintFunc
 

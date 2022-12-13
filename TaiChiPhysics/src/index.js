@@ -53,7 +53,7 @@ let main = async () => {
         }
 
         let currentTime = Date.now()
-        if (currentTime - lastBoardCreationTime > 3000) {
+        if (currentTime - lastBoardCreationTime > 5000) {
             if (!board3HasActiviated) {
                 board3.setActive(1)
                 board3HasActiviated = true
