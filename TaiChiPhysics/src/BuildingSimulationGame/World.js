@@ -86,51 +86,16 @@ class World {
                         lines[totalLines[0] * 2] = i
                         lines[totalLines[0] * 2 + 1] = new_particle_id
 
-                        totalLines[0] = totalLines[0] + 1
-                    }
-                }
-            })
-        }
-
-        add_particle(posX, posY)
-    }
-
-    updateIndices() {
-        if (update_indices == null) {
-            update_indices = ti.kernel(() => {
-                let totalUnusedParticleCount = max_num_particles - num_particles[0]
-                for (let i of range(totalUnusedParticleCount)) {
-                    let unUsedIdx = i + num_particles[0]
-                    x[unUsedIdx] = [-1, 1]
-                }
-
-                for (let i of range(num_particles[0])) {
-                    per_vertex_color[i] = [0, 0, 0]
-                }
-
-                let lineIndex = 0
-                for (let i of range(num_particles[0])) {
-                    let jCount = num_particles[0] - i
-                    for (let jIdx of range(jCount)) {
-                        let j = jIdx - i
-
-                        if (reset_length[i, j] != 0) {
-                            lines[lineIndex * 2] = i
-                            lines[lineIndex * 2 + 1] = j
-
-                            lineIndex = lineIndex + 1
-                        }
+                        ti.atomicAdd(totalLines[0], 1)
                     }
                 }
 
-                totalLines[0] = lineIndex
-
-                return lineIndex
+                return totalLines[0]
             })
         }
 
-        update_indices().then((lineCount) => {
-            console.log("Total lines:" + lineCount)
+        add_particle(posX, posY).then(val=>{
+            console.log("Totally added:" + val + " lines")
         })
     }
 }

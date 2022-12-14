@@ -16,8 +16,6 @@ let main = async()=>{
     let htmlCanvas = document.getElementById('result_canvas');
     let renderer = new Renderer(htmlCanvas, image_size)
 
-    world.updateIndices()
-
     htmlCanvas.addEventListener("click", (evt)=>{
         // Need to have a mapping from screen coordinate to world coordinate.
 
