@@ -41,7 +41,7 @@ let main = async()=>{
             world.substep(eachStepTime/1000.0);
         }
 
-        world.updateIndices()
+        // world.updateIndices()
         renderer.render()
 
         lastDrawTime = currentDrawTime

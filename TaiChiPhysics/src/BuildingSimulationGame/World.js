@@ -78,20 +78,21 @@ class World {
 
                 for (let i of range(new_particle_id)) {
                     let dist = (x[new_particle_id] - x[i]).norm()
-                    let connection_radius = 30.0
+                    let connection_radius = 1000.0
                     if (dist < connection_radius) {
                         reset_length[i, new_particle_id] = 30.0
                         reset_length[new_particle_id, i] = 30.0
+
+                        lines[totalLines[0] * 2] = i
+                        lines[totalLines[0] * 2 + 1] = new_particle_id
+
+                        totalLines[0] = totalLines[0] + 1
                     }
                 }
-
-                return v[new_particle_id]
             })
         }
 
-        add_particle(posX, posY).then((val)=>{
-            console.log("Currently :" + val + " particles")
-        })
+        add_particle(posX, posY)
     }
 
     updateIndices() {
@@ -128,7 +129,7 @@ class World {
             })
         }
 
-        update_indices().then((lineCount)=>{
+        update_indices().then((lineCount) => {
             console.log("Total lines:" + lineCount)
         })
     }
