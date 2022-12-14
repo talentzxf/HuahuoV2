@@ -129,7 +129,7 @@ class ShapeManager{
                     ).matmul(F[p]);
                     let h = f32(max(0.1, min(5, ti.exp(10 * (1.0 - Jp[p])))));
                     if (material[p] == 1) {
-                        h = 0.3;
+                        h = 1.0;
                     }
                     let mu = mu_0 * h;
                     let la = lambda_0 * h;
@@ -274,13 +274,15 @@ class ShapeManager{
                         this_color = [1, 1, 1, 1.0];
                     }
 
-                    for (let i of ti.static(ti.range(7))) {
-                        for (let j of ti.static(ti.range(7))) {
-                            let xoffset = i - 2
-                            let yoffset = j - 2
-                            image[ipos + [xoffset, yoffset]] = this_color;
-                        }
-                    }
+                    // for (let i of ti.static(ti.range(7))) {
+                    //     for (let j of ti.static(ti.range(7))) {
+                    //         let xoffset = i - 2
+                    //         let yoffset = j - 2
+                    //         image[ipos + [xoffset, yoffset]] = this_color;
+                    //     }
+                    // }
+
+                    image[ipos] = this_color;
                 }
             })
         }

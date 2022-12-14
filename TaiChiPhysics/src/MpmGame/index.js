@@ -39,7 +39,7 @@ let main = async () => {
         let speed = 0.005
 
         if (event.key == "w" || event.key == "W") { // Up
-            circle.addVelocity([0.0, speed])
+            circle.addVelocity([0.0, speed * 10])
         } else if (event.key == "a" || event.key == "A") { // Left
             circle.addVelocity([-speed, 0.0])
         } else if (event.key == "d" || event.key == "D") {

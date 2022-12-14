@@ -114,7 +114,7 @@ class BaseShape {
                             [0, 1]
                         ]
 
-                        Jp[i] = 1.0
+                        Jp[i] = 100.0
                         C[i] = [
                             [0, 0],
                             [0, 0]
@@ -218,10 +218,10 @@ class CircleShape extends BaseShape {
 
 class BoardShape extends BaseShape {
     center = [0.1, 0.5]
-    length = 0.2
+    length = 0.1
     height = 0.02
 
-    handleVelocity = [0.0, 1.0]
+    handleVelocity = [0.0, 10.0]
 
     velocityConstraintFunc
 

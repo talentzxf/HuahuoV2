@@ -1,10 +1,11 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+let gameName = "BuildingSimulationGame"
 module.exports = {
     mode:"development",
     entry: {
-        app: './src/index.js',
+        app: './src/' + gameName + '/index.js',
     },
     devtool: 'inline-source-map',
     devServer: {
@@ -16,7 +17,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Hot Module Replacement',
-            template:"src/index.ejs"
+            template:"src/" + gameName + "/index.ejs"
         }),
     ],
     module: {
