@@ -81,17 +81,18 @@ class Renderer {
                     }
                 }
 
-                let totalLineCont = totalLines[0]
                 // Draw lines
-                for (let lineIdx of range(totalLineCont)) {
-                    let l1Index = lines[lineIdx * 2]
-                    let l2Index = lines[lineIdx * 2 + 1]
+                for (let particleX of range(num_particles[0])) {
+                    let remainingParticles = num_particles[0] - particleX - 1
+                    for(let particleYId of range(remainingParticles)){
+                        let particleY = particleYId + particleX + 1
 
-                    let p1Position = x[l1Index]
-                    let p2Position = x[l2Index]
-
-                    // Bresenham algorithm
-                    plotLine(p1Position, p2Position)
+                        if(reset_length[particleX, particleY] > 0){
+                            let p1position = x[particleX]
+                            let p2position = x[particleY]
+                            plotLine(p1position, p2position)
+                        }
+                    }
                 }
             })
         }

@@ -16,10 +16,6 @@ class World {
     v = ti.Vector.field(2, ti.f32, [this.max_num_particles])
     f = ti.Vector.field(2, ti.f32, [this.max_num_particles])
 
-    // Format: 1,2  2,3   3,4
-    lines = ti.field(ti.i32, [this.max_num_particles * this.max_num_particles * 2])
-    totalLines = ti.field(ti.i32, [1])
-
     per_vertex_color = ti.Vector.field(3, ti.f32, [this.max_num_particles])
 
     reset_length = ti.field(ti.f32, [this.max_num_particles, this.max_num_particles])
@@ -78,25 +74,17 @@ class World {
 
                 for (let i of range(new_particle_id)) {
                     let dist = (x[new_particle_id] - x[i]).norm()
-                    let connection_radius = 1000.0
+                    let connection_radius = 30.0
                     if (dist < connection_radius) {
                         reset_length[i, new_particle_id] = 30.0
                         reset_length[new_particle_id, i] = 30.0
-
-                        lines[totalLines[0] * 2] = i
-                        lines[totalLines[0] * 2 + 1] = new_particle_id
-
-                        ti.atomicAdd(totalLines[0], 1)
                     }
                 }
 
-                return totalLines[0]
             })
         }
 
-        add_particle(posX, posY).then(val=>{
-            console.log("Totally added:" + val + " lines")
-        })
+        add_particle(posX, posY)
     }
 }
 
