@@ -2,7 +2,7 @@
   "name": "hhtaichiphysics",
   "version": "0.0.1",
   "description": "Playground for Taichi physics",
-  "main": "src/BuildingSimulationGame/index.js",
+  "main": "src/LoveMeltHeart/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.js",

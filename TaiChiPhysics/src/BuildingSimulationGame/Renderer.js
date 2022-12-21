@@ -1,6 +1,5 @@
 let render_func
 
-
 class Renderer {
     canvas
     image
@@ -13,7 +12,7 @@ class Renderer {
         ti.addToKernelScope({
             image: this.image,
             img_size: image_size,
-            plotLine: this.plotLine()
+            plotLine: this.plotLine(),
         })
 
         this.canvas = new ti.Canvas(htmlCanvas)
@@ -71,7 +70,7 @@ class Renderer {
 
                 // Draw particles
                 for (let particleIdx of range(num_particles[0])) {
-                    let particle_pos = i32(x[particleIdx])
+                    let particle_pos = i32(x[particleIdx] * img_size)
                     for (let i of ti.static(ti.range(7))) {
                         for (let j of ti.static(ti.range(7))) {
                             let xoffset = i - 3
@@ -88,8 +87,8 @@ class Renderer {
                         let particleY = particleYId + particleX + 1
 
                         if(reset_length[particleX, particleY] > 0){
-                            let p1position = x[particleX]
-                            let p2position = x[particleY]
+                            let p1position = x[particleX] * img_size
+                            let p2position = x[particleY] * img_size
                             plotLine(p1position, p2position)
                         }
                     }

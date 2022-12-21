@@ -1,5 +1,4 @@
-import {quality} from "./Constants";
-
+let quality = 1
 let n_grid = 128 * quality;
 let dx = 1 / n_grid;
 let inv_dx = n_grid;
@@ -19,13 +18,11 @@ class MATERIAL_TYPE{
     static SNOW = 2
 }
 
-class ShapeManager{
+class World{
     totalParticles = 0;
-    image = ti.Vector.field(4, ti.f32, [img_size, img_size]);
     material
     active
     shapes = []
-    canvas
     internalRenderKernel
     sub_step_grid
     sub_step_point
@@ -37,13 +34,6 @@ class ShapeManager{
     Jp
     grid_v
     grid_m
-
-    constructor() {
-        let htmlCanvas = document.getElementById('result_canvas');
-        htmlCanvas.width = img_size;
-        htmlCanvas.height = img_size;
-        this.canvas = new ti.Canvas(htmlCanvas);
-    }
 
     addShape(shape){
         let startParticleIndex = this.totalParticles
@@ -250,46 +240,6 @@ class ShapeManager{
             shape.check_boundary()
         }
     }
-
-    render(){
-        if(this.internalRenderKernel == null){
-            this.internalRenderKernel = ti.kernel(()=>{
-                for(let I of ndrange(img_size, img_size)){
-                    image[I] = [0.067, 0.184, 0.255, 1.0];
-                }
-
-                for(let i of range(n_particles)) {
-                    if (active[i] == 0)
-                        continue
-
-                    let pos = x[i];
-                    let ipos = i32(pos * img_size)
-
-                    let this_color = f32([0, 0, 0, 0])
-                    if (material[i] == 0) {
-                        this_color = [0, 0.5, 0.5, 1.0];
-                    } else if (material[i] == 1) {
-                        this_color = [0.93, 0.33, 0.23, 1.0];
-                    } else if (material[i] == 2) {
-                        this_color = [1, 1, 1, 1.0];
-                    }
-
-                    // for (let i of ti.static(ti.range(7))) {
-                    //     for (let j of ti.static(ti.range(7))) {
-                    //         let xoffset = i - 2
-                    //         let yoffset = j - 2
-                    //         image[ipos + [xoffset, yoffset]] = this_color;
-                    //     }
-                    // }
-
-                    image[ipos] = this_color;
-                }
-            })
-        }
-
-        this.internalRenderKernel()
-        this.canvas.setImage(this.image)
-    }
 }
 
-export {ShapeManager, quality, MATERIAL_TYPE}
+export {World, quality, MATERIAL_TYPE}

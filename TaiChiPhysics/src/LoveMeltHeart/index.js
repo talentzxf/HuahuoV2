@@ -1,10 +1,8 @@
 import {World} from "./World";
 import {Renderer} from "./Renderer";
+import {Hose} from "./Hose";
 
 console.log("Hello Hello")
-
-let quality = 1.0
-let dt = 1e-4 / quality;
 
 let image_size = 640
 
@@ -13,17 +11,22 @@ let main = async()=>{
 
     let world = new World()
 
+    let hose = new Hose()
+    hose.addToShapeManager(world)
+
+    world.resetSimulation()
+
     let htmlCanvas = document.getElementById('result_canvas');
     let renderer = new Renderer(htmlCanvas, image_size)
 
-    htmlCanvas.addEventListener("click", (evt)=>{
-        // Need to have a mapping from screen coordinate to world coordinate.
-
-        let mouseX = evt.offsetX
-        let mouseY = image_size - evt.offsetY
-
-        world.addNewParticle(mouseX/ image_size, mouseY/ image_size)
-    })
+    // htmlCanvas.addEventListener("click", (evt)=>{
+    //     // Need to have a mapping from screen coordinate to world coordinate.
+    //
+    //     let mouseX = evt.offsetX
+    //     let mouseY = image_size - evt.offsetY
+    //
+    //     world.addNewParticle(mouseX/ image_size, mouseY/ image_size)
+    // })
 
     let lastDrawTime = Date.now()
     async function frame(){
@@ -31,7 +34,7 @@ let main = async()=>{
 
         let elapsedMiliseconds = currentDrawTime - lastDrawTime
 
-        let stepCount = 1
+        let stepCount = 10
 
         let eachStepTime = elapsedMiliseconds/ stepCount
 
@@ -39,7 +42,6 @@ let main = async()=>{
             world.substep(eachStepTime/1000.0);
         }
 
-        // world.updateIndices()
         renderer.render()
 
         lastDrawTime = currentDrawTime

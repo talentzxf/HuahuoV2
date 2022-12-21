@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-let gameName = "BuildingSimulationGame"
+let gameName = "LoveMeltHeart"
 module.exports = {
     mode:"development",
     entry: {
