@@ -59,7 +59,7 @@ class Hose extends BaseShape {
                 let lastIdx = (lastElapsedTimeSinceStart % recycleTimeMili) / recycleTimeMili * this.totalParticles
                 let currentIdx = currentElapsedTimeSinceStart % recycleTimeMili/ recycleTimeMili * this.totalParticles
 
-                console.log("Recycling:" + lastIdx+":"+currentIdx)
+                // console.log("Recycling:" + lastIdx+":"+currentIdx)
                 this.resetKernel(lastIdx, currentIdx, this.materialId, 0.0, 0.0)
 
                 this.lastRecycleTime = Date.now()

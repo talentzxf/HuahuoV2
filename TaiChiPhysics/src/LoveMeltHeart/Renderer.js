@@ -17,14 +17,25 @@ class Renderer {
         this.canvas = new ti.Canvas(htmlCanvas)
     }
 
-    render(){
-        if(this.internalRenderKernel == null){
-            this.internalRenderKernel = ti.kernel(()=>{
-                for(let I of ndrange(img_size, img_size)){
+    render() {
+        if (this.internalRenderKernel == null) {
+            this.internalRenderKernel = ti.kernel(() => {
+                for (let I of ndrange(img_size, img_size)) {
                     image[I] = [0.067, 0.184, 0.255, 1.0];
                 }
 
-                for(let i of range(n_particles)) {
+                // Draw bricks
+                for (let grid_x of range(n_grid)) {
+                    for (let grid_y of range(n_grid)) {
+                        if (grid_material[grid_x, grid_y] == 1){
+                            let img_coordinate = i32([grid_x * dx * img_size, grid_y * dx * img_size])
+                            image[img_coordinate] = [1.0, 0.0, 0.0, 1.0]
+                        }
+                    }
+                }
+
+                // Draw particles
+                for (let i of range(n_particles)) {
                     if (active[i] == 0)
                         continue
 

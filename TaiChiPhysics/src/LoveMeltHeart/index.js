@@ -20,14 +20,14 @@ let main = async()=>{
     let htmlCanvas = document.getElementById('result_canvas');
     let renderer = new Renderer(htmlCanvas, image_size)
 
-    // htmlCanvas.addEventListener("click", (evt)=>{
-    //     // Need to have a mapping from screen coordinate to world coordinate.
-    //
-    //     let mouseX = evt.offsetX
-    //     let mouseY = image_size - evt.offsetY
-    //
-    //     world.addNewParticle(mouseX/ image_size, mouseY/ image_size)
-    // })
+    htmlCanvas.addEventListener("click", (evt)=>{
+        // Need to have a mapping from screen coordinate to world coordinate.
+
+        let mouseX = evt.offsetX
+        let mouseY = image_size - evt.offsetY
+
+        world.addBrick(mouseX/ image_size, mouseY/ image_size)
+    })
 
     let lastDrawTime = Date.now()
     async function frame(){

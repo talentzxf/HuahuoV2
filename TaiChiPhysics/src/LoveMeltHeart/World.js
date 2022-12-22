@@ -26,6 +26,7 @@ class World{
     internalRenderKernel
     sub_step_grid
     sub_step_point
+    add_brick_kernel
 
     x // particle positions
     V
@@ -34,6 +35,8 @@ class World{
     Jp
     grid_v
     grid_m
+
+    grid_material  // 0 -- nothing.  1 -- brick
 
     addShape(shape){
         let startParticleIndex = this.totalParticles
@@ -70,7 +73,8 @@ class World{
             nu,
             mu_0,
             lambda_0,
-            active: this.active
+            active: this.active,
+            grid_material: this.grid_material
         })
     }
 
@@ -85,11 +89,29 @@ class World{
         this.grid_v = ti.Vector.field(2, ti.f32, [n_grid, n_grid]);
         this.grid_m = ti.field(ti.f32, [n_grid, n_grid]);
 
+        this.grid_material = ti.field(ti.f32, [n_grid, n_grid])
+
         this.addParametersToKernel()
 
         for(let shape of this.shapes){
             shape.reset()
         }
+    }
+
+    addBrick(brick_pos_x, brick_pos_y){
+        if(this.add_brick_kernel == null){
+            this.add_brick_kernel = ti.kernel((pos_x, pos_y)=>{
+                    let brick_pos = [pos_x, pos_y]
+                    let base = i32(brick_pos * inv_dx - 0.5);
+                    for (let i of ti.static(ti.range(3))) {
+                        for (let j of ti.static(ti.range(3))) {
+                            grid_material[base + [i, j]] = 1
+                        }
+                    }
+            })
+        }
+
+        this.add_brick_kernel(brick_pos_x, brick_pos_y)
     }
 
     substep(){
@@ -179,6 +201,11 @@ class World{
                     if (grid_m[I] > 0) {
                         grid_v[I] = (1 / grid_m[I]) * grid_v[I];
                         grid_v[I][1] -= dt * 50;  // Gravity
+
+                        if(grid_material[I] == 1){
+                            grid_v[I][0] = 0
+                            grid_v[I][1] = 0
+                        }
 
                         if (i < 3 && grid_v[I][0] < 0) {
                             grid_v[I][0] = 0;
