@@ -15,6 +15,7 @@ let main = async()=>{
     hose.addToShapeManager(world)
 
     world.resetSimulation()
+    hose.setActivePercentage(0.0)
 
     let htmlCanvas = document.getElementById('result_canvas');
     let renderer = new Renderer(htmlCanvas, image_size)
@@ -42,6 +43,7 @@ let main = async()=>{
             world.substep(eachStepTime/1000.0);
         }
 
+        world.update()
         renderer.render()
 
         lastDrawTime = currentDrawTime

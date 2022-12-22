@@ -240,6 +240,12 @@ class World{
             shape.check_boundary()
         }
     }
+
+    update(){
+        for(let shape of this.shapes){
+            shape.update()
+        }
+    }
 }
 
 export {World, quality, MATERIAL_TYPE}

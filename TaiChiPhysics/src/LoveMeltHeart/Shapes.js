@@ -21,6 +21,24 @@ class BaseShape {
 
     activeKernel
 
+    activePercentageKernel
+    setActivePercentage(activePercentage){
+        if(this.activePercentageKernel == null){
+            this.activePercentageKernel = ti.kernel((startIdx, activeEndIdx, totalParticleCount)=>{
+                for (let i of range(totalParticleCount)) {
+                    let particleIndex = i32(startIdx + i)
+                    if(i < activeEndIdx)
+                        active[particleIndex] = 1
+                    else
+                        active[particleIndex] = 0
+                }
+            })
+        }
+
+        let totalParticles = this.endIdx - this.startIdx
+        this.activePercentageKernel(this.startIdx, this.startIdx + totalParticles * activePercentage, this.totalParticles)
+    }
+
     setActive(isActive) {
         if (this.activeKernel == null) {
             this.activeKernel = ti.kernel((startIdx, endIdx, isActive) => {
@@ -51,10 +69,17 @@ class BaseShape {
         }
     }
 
+    nextVelocity(){
+        return (total, idx)=>{
+            return [0.0, 0.0]
+        }
+    }
+
     addParametersToKernel() {
         let _this = this
         ti.addToKernelScope({
-            nextPositionFunc: _this.nextPosition()
+            nextPositionFunc: _this.nextPosition(),
+            nextVelocityFunc: _this.nextVelocity()
         })
     }
 
@@ -108,7 +133,7 @@ class BaseShape {
                         x[particleIndex] = point
 
                         material[particleIndex] = i32(materialId)
-                        v[particleIndex] = [0, 0]
+                        v[particleIndex] = nextVelocityFunc(totalParticleCount, i)
                         F[particleIndex] = [
                             [1, 0],
                             [0, 1]
@@ -138,6 +163,10 @@ class BaseShape {
         this.setActive(true)
 
         return true
+    }
+
+    update(){
+
     }
 }
 
@@ -189,6 +218,10 @@ class CircleShape extends BaseShape {
             handleRadius: this.handleRadius,
             handleCenter: this.handleCenter
         })
+    }
+
+    update(){
+
     }
 
     nextPosition() {
