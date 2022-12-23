@@ -1,6 +1,7 @@
 import {World} from "./World";
 import {Renderer} from "./Renderer";
 import {Hose} from "./Hose";
+import {HeartInCubeShape} from "./HeartInCubeShape";
 
 console.log("Hello Hello")
 
@@ -13,6 +14,9 @@ let main = async()=>{
 
     let hose = new Hose()
     hose.addToShapeManager(world)
+
+    let heartInCubde = new HeartInCubeShape()
+    heartInCubde.addToShapeManager(world)
 
     world.resetSimulation()
     hose.setActivePercentage(0.0)

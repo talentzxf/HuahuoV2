@@ -22,12 +22,13 @@ class BaseShape {
     activeKernel
 
     activePercentageKernel
-    setActivePercentage(activePercentage){
-        if(this.activePercentageKernel == null){
-            this.activePercentageKernel = ti.kernel((startIdx, activeEndIdx, totalParticleCount)=>{
+
+    setActivePercentage(activePercentage) {
+        if (this.activePercentageKernel == null) {
+            this.activePercentageKernel = ti.kernel((startIdx, activeEndIdx, totalParticleCount) => {
                 for (let i of range(totalParticleCount)) {
                     let particleIndex = i32(startIdx + i)
-                    if(i < activeEndIdx)
+                    if (i < activeEndIdx)
                         active[particleIndex] = 1
                     else
                         active[particleIndex] = 0
@@ -69,9 +70,15 @@ class BaseShape {
         }
     }
 
-    nextVelocity(){
-        return (total, idx)=>{
+    nextVelocity() {
+        return (total, idx) => {
             return [0.0, 0.0]
+        }
+    }
+
+    nextMaterial() {
+        return (total, idx, materialId) => {
+            return materialId
         }
     }
 
@@ -79,7 +86,8 @@ class BaseShape {
         let _this = this
         ti.addToKernelScope({
             nextPositionFunc: _this.nextPosition(),
-            nextVelocityFunc: _this.nextVelocity()
+            nextVelocityFunc: _this.nextVelocity(),
+            nextMaterialFunc: _this.nextMaterial()
         })
     }
 
@@ -108,7 +116,7 @@ class BaseShape {
         return this.check_boundary_kernel(startIdx, endIdx)
     }
 
-    check_boundary(){
+    check_boundary() {
 
     }
 
@@ -132,7 +140,7 @@ class BaseShape {
                         let point = nextPositionFunc(totalParticleCount, i) + [offsetX, offsetY];
                         x[particleIndex] = point
 
-                        material[particleIndex] = i32(materialId)
+                        material[particleIndex] = i32(nextMaterialFunc(totalParticleCount, i, materialId))
                         v[particleIndex] = nextVelocityFunc(totalParticleCount, i)
                         F[particleIndex] = [
                             [1, 0],
@@ -165,7 +173,7 @@ class BaseShape {
         return true
     }
 
-    update(){
+    update() {
 
     }
 }
@@ -182,8 +190,8 @@ class CircleShape extends BaseShape {
     addVelocity(velocity) {
         console.log("Adding velocity:" + velocity)
 
-        if(this.addVelocityKernel == null){
-            this.addVelocityKernel = ti.kernel((startIdx, endIdx, velocityX, velocityY)=>{
+        if (this.addVelocityKernel == null) {
+            this.addVelocityKernel = ti.kernel((startIdx, endIdx, velocityX, velocityY) => {
                 let totalParticles = endIdx - startIdx
                 for (let i of ti.range(totalParticles)) {
                     let particleIdx = i32(startIdx + i)
@@ -220,7 +228,7 @@ class CircleShape extends BaseShape {
         })
     }
 
-    update(){
+    update() {
 
     }
 
