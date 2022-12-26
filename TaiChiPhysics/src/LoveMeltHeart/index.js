@@ -18,7 +18,7 @@ let main = async()=>{
     let heartInCubde = new HeartInCubeShape()
     heartInCubde.addToShapeManager(world)
 
-    world.resetSimulation()
+    await world.resetSimulation()
     hose.setActivePercentage(0.0)
 
     let htmlCanvas = document.getElementById('result_canvas');

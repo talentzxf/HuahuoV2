@@ -82,12 +82,28 @@ class BaseShape {
         }
     }
 
-    addParametersToKernel() {
+    colorFunc() {
+        return (total, idx, materialId) => {
+            let this_color = f32([0, 0, 0, 0])
+            if (materialId == 0) {
+                this_color = [0, 0.5, 0.5, 1.0];
+            } else if (materialId == 1) {
+                this_color = [0.93, 0.33, 0.23, 1.0];
+            } else if (materialId == 2) {
+                this_color = [1, 1, 1, 1.0];
+            }
+
+            return this_color
+        }
+    }
+
+    async addParametersToKernel() {
         let _this = this
         ti.addToKernelScope({
             nextPositionFunc: _this.nextPosition(),
             nextVelocityFunc: _this.nextVelocity(),
-            nextMaterialFunc: _this.nextMaterial()
+            nextMaterialFunc: _this.nextMaterial(),
+            colorFunc: _this.colorFunc(),
         })
     }
 
@@ -120,14 +136,14 @@ class BaseShape {
 
     }
 
-    reset(offsetX = 0.0, offsetY = 0.0) {
+    async reset(offsetX = 0.0, offsetY = 0.0) {
         if (this.reloading)
             return false
 
         this.reloading = true
         let _this = this
 
-        this.addParametersToKernel()
+        await this.addParametersToKernel()
 
         if (!this.resetKernel) {
             this.resetKernel = ti.kernel(
@@ -152,6 +168,8 @@ class BaseShape {
                             [0, 0],
                             [0, 0]
                         ]
+
+                        particle_color[particleIndex] = colorFunc(totalParticleCount, i, materialId)
                     }
 
                     return true

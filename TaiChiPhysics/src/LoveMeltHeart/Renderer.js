@@ -42,15 +42,6 @@ class Renderer {
                     let pos = x[i];
                     let ipos = i32(pos * img_size)
 
-                    let this_color = f32([0, 0, 0, 0])
-                    if (material[i] == 0) {
-                        this_color = [0, 0.5, 0.5, 1.0];
-                    } else if (material[i] == 1) {
-                        this_color = [0.93, 0.33, 0.23, 1.0];
-                    } else if (material[i] == 2) {
-                        this_color = [1, 1, 1, 1.0];
-                    }
-
                     // for (let i of ti.static(ti.range(7))) {
                     //     for (let j of ti.static(ti.range(7))) {
                     //         let xoffset = i - 2
@@ -59,7 +50,7 @@ class Renderer {
                     //     }
                     // }
 
-                    image[ipos] = this_color;
+                    image[ipos] = particle_color[i];
                 }
             })
         }

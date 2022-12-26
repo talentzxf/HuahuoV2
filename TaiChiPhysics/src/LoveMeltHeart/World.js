@@ -35,6 +35,7 @@ class World{
     Jp
     grid_v
     grid_m
+    particle_color
 
     grid_material  // 0 -- nothing.  1 -- brick
 
@@ -74,11 +75,14 @@ class World{
             mu_0,
             lambda_0,
             active: this.active,
-            grid_material: this.grid_material
+            grid_material: this.grid_material,
+            particle_color: this.particle_color
         })
     }
 
-    resetSimulation(){
+    async resetSimulation(){
+        this.particle_color = ti.Vector.field(4, ti.f32, [this.totalParticles]) // Each component is the color of the particle
+
         this.material = ti.field(ti.i32, [this.totalParticles]); // material id
         this.active = ti.field(ti.i32, [this.totalParticles])
         this.x = ti.Vector.field(2, ti.f32, [this.totalParticles]); // position
@@ -94,7 +98,7 @@ class World{
         this.addParametersToKernel()
 
         for(let shape of this.shapes){
-            shape.reset()
+            await shape.reset()
         }
     }
 

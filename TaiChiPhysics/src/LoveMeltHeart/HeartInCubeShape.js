@@ -10,6 +10,7 @@ class HeartInCubeShape extends BaseShape {
     img
 
     heartMask
+
     constructor(image_size) {
         super();
         this.img = document.createElement("img")
@@ -18,34 +19,46 @@ class HeartInCubeShape extends BaseShape {
         let destinationWidth = image_size * this.size
         let destinationHeight = image_size * this.size
 
-        let _this = this
-        this.img.onload = () => {
-            _this.hiddenCanvas = document.createElement("canvas")
-            _this.hiddenCanvas.style.width = this.img.width + "px"
-            _this.hiddenCanvas.style.height = this.img.height + "px"
-            _this.hiddenCanvas.width = this.img.width
-            _this.hiddenCanvas.height = this.img.height
-            let context = _this.hiddenCanvas.getContext("2d")
-            context.drawImage(_this.img, 0, 0)
-            document.body.appendChild(_this.hiddenCanvas)
-
-            _this.heartMask = ti.Vector.field(4, ti.f32, [this.img.width, this.img.height]);
-            let imgData = context.getImageData(0, 0, this.img.width, this.img.height)
-            for(let i = 0; i < this.img.width; i++){
-                for(let j = 0 ; j < this.img.height; j++){
-                    _this.heartMask[i,j] = imgData[i * 4 + j]
-                }
-            }
-        }
-
         document.body.appendChild(this.img)
     }
 
-    addParametersToKernel() {
+    async loadImage() {
+        let promise = new Promise((resolve, reject)=>{
+            this.img.onload = ()=>{
+                this.hiddenCanvas = document.createElement("canvas")
+                this.hiddenCanvas.style.width = this.img.width + "px"
+                this.hiddenCanvas.style.height = this.img.height + "px"
+                this.hiddenCanvas.width = this.img.width
+                this.hiddenCanvas.height = this.img.height
+                let context = this.hiddenCanvas.getContext("2d")
+                context.drawImage(this.img, 0, 0)
+                document.body.appendChild(this.hiddenCanvas)
+
+                this.heartMask = ti.field(ti.i32, [this.img.width, this.img.height]);
+                let imgData = context.getImageData(0, 0, this.img.width, this.img.height)
+                for (let i = 0; i < this.img.width; i++) {
+                    for (let j = 0; j < this.img.height; j++) {
+                        // this.heartMask[i, j] = imgData.data[i * 4 * this.img.width + j * 4 + 3]
+                        this.heartMask.set([i,j], imgData.data[i * 4 * this.img.width + j * 4 + 3])
+                    }
+                }
+
+                resolve([this.img.width, this.img.height])
+            }
+        })
+        return promise
+    }
+
+    async addParametersToKernel() {
         super.addParametersToKernel();
+
+        let image_size = await this.loadImage()
+
         ti.addToKernelScope({
             center: this.center,
-            size: this.size
+            size: this.size,
+            heartMask: this.heartMask,
+            heartMaskSize: image_size
         })
     }
 
@@ -55,6 +68,15 @@ class HeartInCubeShape extends BaseShape {
                 ti.random() * size + center[0] - size / 2.0,
                 ti.random() * size + center[1] - size / 2.0
             ]
+
+            let mask_x = resultPosition[0]
+            //while (heartMask[i32(resultPosition)] < i32(1))
+             {
+                resultPosition = [
+                    ti.random() * size + center[0] - size / 2.0,
+                    ti.random() * size + center[1] - size / 2.0
+                ]
+            }
 
             return resultPosition
         }
