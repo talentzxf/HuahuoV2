@@ -77,13 +77,13 @@ class BaseShape {
     }
 
     nextMaterial() {
-        return (total, idx, materialId) => {
+        return (particle_position, materialId) => {
             return materialId
         }
     }
 
     colorFunc() {
-        return (total, idx, materialId) => {
+        return (particle_position, materialId) => {
             let this_color = f32([0, 0, 0, 0])
             if (materialId == 0) {
                 this_color = [0, 0.5, 0.5, 1.0];
@@ -156,7 +156,7 @@ class BaseShape {
                         let point = nextPositionFunc(totalParticleCount, i) + [offsetX, offsetY];
                         x[particleIndex] = point
 
-                        material[particleIndex] = i32(nextMaterialFunc(totalParticleCount, i, materialId))
+                        material[particleIndex] = i32(nextMaterialFunc(x[particleIndex], materialId))
                         v[particleIndex] = nextVelocityFunc(totalParticleCount, i)
                         F[particleIndex] = [
                             [1, 0],
@@ -169,7 +169,7 @@ class BaseShape {
                             [0, 0]
                         ]
 
-                        particle_color[particleIndex] = colorFunc(totalParticleCount, i, materialId)
+                        particle_color[particleIndex] = colorFunc(x[particleIndex], materialId)
                     }
 
                     return true
@@ -179,8 +179,9 @@ class BaseShape {
 
         let resetKernelPromise = this.resetKernel(_this.startIdx, _this.endIdx, _this.materialId, offsetX, offsetY)
         resetKernelPromise.then((val) => {
-            if (val)
+            if (val){
                 _this.reloading = false
+            }
             else {
                 console.log("Why why why?")
             }

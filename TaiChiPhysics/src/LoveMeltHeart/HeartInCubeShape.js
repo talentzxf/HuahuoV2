@@ -16,15 +16,12 @@ class HeartInCubeShape extends BaseShape {
         this.img = document.createElement("img")
         this.img.src = this.imgUrl
 
-        let destinationWidth = image_size * this.size
-        let destinationHeight = image_size * this.size
-
-        document.body.appendChild(this.img)
+        // document.body.appendChild(this.img)
     }
 
     async loadImage() {
-        let promise = new Promise((resolve, reject)=>{
-            this.img.onload = ()=>{
+        let promise = new Promise((resolve, reject) => {
+            this.img.onload = () => {
                 this.hiddenCanvas = document.createElement("canvas")
                 this.hiddenCanvas.style.width = this.img.width + "px"
                 this.hiddenCanvas.style.height = this.img.height + "px"
@@ -32,13 +29,12 @@ class HeartInCubeShape extends BaseShape {
                 this.hiddenCanvas.height = this.img.height
                 let context = this.hiddenCanvas.getContext("2d")
                 context.drawImage(this.img, 0, 0)
-                document.body.appendChild(this.hiddenCanvas)
+                // document.body.appendChild(this.hiddenCanvas)
 
                 this.heartMask = ti.field(ti.i32, [this.img.width, this.img.height]);
                 let imgData = context.getImageData(0, 0, this.img.width, this.img.height)
                 for (let i = 0; i < this.img.width; i++) {
                     for (let j = 0; j < this.img.height; j++) {
-                        // this.heartMask[i, j] = imgData.data[i * 4 * this.img.width + j * 4 + 3]
                         this.heartMask.set([i,j], imgData.data[i * 4 * this.img.width + j * 4 + 3])
                     }
                 }
@@ -69,16 +65,72 @@ class HeartInCubeShape extends BaseShape {
                 ti.random() * size + center[1] - size / 2.0
             ]
 
-            let mask_x = resultPosition[0]
-            //while (heartMask[i32(resultPosition)] < i32(1))
-             {
-                resultPosition = [
-                    ti.random() * size + center[0] - size / 2.0,
-                    ti.random() * size + center[1] - size / 2.0
-                ]
-            }
-
             return resultPosition
+        }
+    }
+
+
+    async reset(offsetX = 0.0, offsetY = 0.0) {
+        await super.reset(offsetX, offsetY);
+
+        // verify heart mask
+
+        let testKernel = ti.kernel(
+            //(posX, posY) =>
+            (idx) =>
+            {
+                let position = x[i32(idx)]
+                let returnColor = [0.0, 1.0, 1.0, 1.0]
+                if (position[0] >= position[1]) {
+                    returnColor = [1.0, 0.0, 0.0, 1.0]
+                }
+                return [position[0],position[1], returnColor[0],returnColor[1],returnColor[2]]
+                //return unifiedOffsetLeftDown
+                // return position
+                //return [position, heartMask[heartCoordinate]]
+            })
+
+        testKernel(this.startIdx + 256).then((val) => {
+            console.log("Result (0.1,0.1) is:" + val)
+        })
+    }
+
+    nextMaterial() {
+        return (position, materialId) => {
+            let leftDown = center - size / 2
+
+            let offsetLeftDown = position - leftDown
+
+            let unifiedOffsetLeftDown = offsetLeftDown / size // Map to [0.0, 0.0] --- [1.0, 1.0]
+
+            // Map to heart map
+            let heartCoordinate = i32(unifiedOffsetLeftDown * heartMaskSize)
+
+            let returnMaterial = 1
+            // if (heartMask[heartCoordinate] > 0) {
+            //     returnMaterial = 1
+            // }
+
+            return returnMaterial
+        }
+    }
+
+    colorFunc() {
+        return (position, materialId) => {
+            let leftDown = center - size / 2
+
+            let offsetLeftDown = position - leftDown
+
+            let unifiedOffsetLeftDown = offsetLeftDown / size // Map to [0.0, 0.0] --- [1.0, 1.0]
+
+            // Map to heart map
+            let heartCoordinate = i32(unifiedOffsetLeftDown * heartMaskSize)
+
+            let returnColor = [1.0, 1.0, 1.0, 1.0]
+            if (heartMask[heartCoordinate] > 0) {
+                returnColor = [1.0, 0.0, 0.0, 1.0]
+            }
+            return returnColor
         }
     }
 }
