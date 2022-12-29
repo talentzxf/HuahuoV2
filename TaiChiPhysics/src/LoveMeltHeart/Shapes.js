@@ -104,7 +104,14 @@ class BaseShape {
             nextVelocityFunc: _this.nextVelocity(),
             nextMaterialFunc: _this.nextMaterial(),
             colorFunc: _this.colorFunc(),
+            rhoFunc: _this.rhoFunc(),
         })
+    }
+
+    rhoFunc(){
+        return ()=>{
+            return 2.0
+        }
     }
 
     apply_constraint() {
@@ -170,6 +177,8 @@ class BaseShape {
                         ]
 
                         particle_color[particleIndex] = colorFunc(x[particleIndex], materialId)
+
+                        p_mass[particleIndex] = p_vol * rhoFunc()
                     }
 
                     return true

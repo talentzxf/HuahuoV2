@@ -7,6 +7,22 @@ console.log("Hello Hello")
 
 let image_size = 640
 
+let isPlace = true
+function setupEvents(){
+    let digButton = document.getElementById("digBrick")
+    let placeBrickButton = document.getElementById("placeBrick")
+
+    digButton.addEventListener("click", (evt)=>{
+        isPlace = false
+    })
+
+    placeBrickButton.addEventListener("click", (evt)=>{
+        isPlace = true
+    })
+
+
+}
+
 let main = async()=>{
     await ti.init()
 
@@ -23,15 +39,19 @@ let main = async()=>{
 
     let htmlCanvas = document.getElementById('result_canvas');
     let renderer = new Renderer(htmlCanvas, image_size)
-
     htmlCanvas.addEventListener("click", (evt)=>{
         // Need to have a mapping from screen coordinate to world coordinate.
 
         let mouseX = evt.offsetX
         let mouseY = image_size - evt.offsetY
 
-        world.addBrick(mouseX/ image_size, mouseY/ image_size)
+        if(isPlace)
+            world.addBrick(mouseX/ image_size, mouseY/ image_size)
+        else
+            world.removeBrick(mouseX/ image_size, mouseY/ image_size)
     })
+
+    setupEvents()
 
     let lastDrawTime = Date.now()
     async function frame(){

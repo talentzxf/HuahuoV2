@@ -95,6 +95,12 @@ class HeartInCubeShape extends BaseShape {
         })
     }
 
+    rhoFunc(){
+        return ()=>{
+            return 1.0
+        }
+    }
+
     nextMaterial() {
         return (position, materialId) => {
             let leftDown = center - size / 2

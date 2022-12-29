@@ -3,8 +3,8 @@ let n_grid = 128 * quality;
 let dx = 1 / n_grid;
 let inv_dx = n_grid;
 let p_vol = (dx * 0.5) ** 2;
-let p_rho = 1;
-let p_mass = p_vol * p_rho;
+// let p_rho = 1;
+// let p_mass = p_vol * p_rho;
 let img_size = 640
 let E = 5e3; // Young's modulus a
 let nu = 0.2; // Poisson's ratio
@@ -27,6 +27,7 @@ class World{
     sub_step_grid
     sub_step_point
     add_brick_kernel
+    remove_brick_kernel
 
     x // particle positions
     V
@@ -38,6 +39,7 @@ class World{
     particle_color
 
     grid_material  // 0 -- nothing.  1 -- brick
+    p_mass // The unit weight of each particle.
 
     addShape(shape){
         let startParticleIndex = this.totalParticles
@@ -68,8 +70,7 @@ class World{
             dx,
             inv_dx,
             p_vol,
-            p_rho,
-            p_mass,
+            p_mass: this.p_mass,
             E,
             nu,
             mu_0,
@@ -95,6 +96,8 @@ class World{
 
         this.grid_material = ti.field(ti.f32, [n_grid, n_grid])
 
+        this.p_mass = ti.field(ti.f32, [this.totalParticles])
+
         this.addParametersToKernel()
 
         for(let shape of this.shapes){
@@ -116,6 +119,22 @@ class World{
         }
 
         this.add_brick_kernel(brick_pos_x, brick_pos_y)
+    }
+
+    removeBrick(brick_pos_x, brick_pos_y){
+        if(this.remove_brick_kernel == null){
+            this.remove_brick_kernel = ti.kernel((pos_x, pos_y)=>{
+                let brick_pos = [pos_x, pos_y]
+                let base = i32(brick_pos * inv_dx - 0.5);
+                for (let i of ti.static(ti.range(3))) {
+                    for (let j of ti.static(ti.range(3))) {
+                        grid_material[base + [i, j]] = 0
+                    }
+                }
+            })
+        }
+
+        this.remove_brick_kernel(brick_pos_x, brick_pos_y)
     }
 
     substep(){
@@ -186,15 +205,15 @@ class World{
                         J *
                         (J - 1);
                     stress = -dt * p_vol * 4 * inv_dx * inv_dx * stress;
-                    let affine = stress + p_mass * C[p];
+                    let affine = stress + p_mass[p] * C[p];
                     for (let i of ti.static(ti.range(3))) {
                         for (let j of ti.static(ti.range(3))) {
                             let offset = [i, j];
                             let dpos = (f32(offset) - fx) * dx;
                             let weight = w[[i, 0]] * w[[j, 1]];
                             grid_v[base + offset] +=
-                                weight * (p_mass * v[p] + affine.matmul(dpos));
-                            grid_m[base + offset] += weight * p_mass;
+                                weight * (p_mass[p] * v[p] + affine.matmul(dpos));
+                            grid_m[base + offset] += weight * p_mass[p];
                         }
                     }
                 }
