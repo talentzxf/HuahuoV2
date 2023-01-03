@@ -50,7 +50,8 @@ class Renderer {
                     //     }
                     // }
 
-                    image[ipos] = particle_color[i];
+                    if(ipos[0] >= 0 && ipos[1] >= 0)
+                        image[ipos] = particle_color[i];
                 }
             })
         }
