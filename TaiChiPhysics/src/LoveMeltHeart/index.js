@@ -43,8 +43,16 @@ let main = async()=>{
     hose.setActivePercentage(0.0)
 
     // Init bricks
-    for(let brick of stage.bricks){
-        world.addBrick(brick[0], brick[1])
+    for(let brick of stage.unremovable_bricks){
+        world.addBrick(brick[0], brick[1], 2)
+    }
+
+    for(let brick of stage.removable_bricks){
+        world.addBrick(brick[0], brick[1], 1)
+    }
+
+    for(let pipe of stage.pipes){
+        world.addPipe(pipe.start, pipe.end)
     }
 
     let htmlCanvas = document.getElementById('result_canvas');

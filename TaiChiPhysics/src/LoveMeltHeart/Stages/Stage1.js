@@ -2,7 +2,7 @@ let stage = {
     hosePosition: [0.2, 0.8],
     heartPosition : [0.1, 0.1],
     heartSize: 0.1,
-    bricks: [
+    unremovable_bricks: [
             [0.0, 0.17],
             [0.025, 0.17],
             [0.05, 0.17],
@@ -31,6 +31,13 @@ let stage = {
             // [0.15, 0.17],
             // [0.175, 0.17],
             // [0.2, 0.17],
+        ],
+        removable_bricks: [],
+        pipes:[
+                {
+                        start: [0.2, 0.2],
+                        end:[0.15,0.8]
+                }
         ]
 }
 

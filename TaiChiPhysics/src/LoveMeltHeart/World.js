@@ -27,6 +27,7 @@ class World{
     sub_step_grid
     sub_step_point
     add_brick_kernel
+    add_pipe_kernel
     remove_brick_kernel
 
     x // particle positions
@@ -38,9 +39,12 @@ class World{
     grid_m
     particle_color
 
-    grid_material  // 0 -- nothing.  1 -- brick
+    grid_material  // 0 -- nothing.  1 -- brick. 2 -- unbreakable brick
     p_mass // The unit weight of each particle.
 
+    max_pipes = 10
+    pipes
+    total_pipes
     addShape(shape){
         let startParticleIndex = this.totalParticles
         this.totalParticles += shape.totalParticles;
@@ -77,7 +81,10 @@ class World{
             lambda_0,
             active: this.active,
             grid_material: this.grid_material,
-            particle_color: this.particle_color
+            particle_color: this.particle_color,
+            pipes: this.pipes,
+            max_pipes: this.max_pipes,
+            total_pipes: this.total_pipes
         })
     }
 
@@ -98,6 +105,9 @@ class World{
 
         this.p_mass = ti.field(ti.f32, [this.totalParticles])
 
+        this.pipes = ti.Vector.field(4, ti.f32, [this.max_pipes] ) // First two components are start, last two components are destination.
+
+        this.total_pipes = ti.field(ti.i32, [1])
         this.addParametersToKernel()
 
         for(let shape of this.shapes){
@@ -105,20 +115,35 @@ class World{
         }
     }
 
-    addBrick(brick_pos_x, brick_pos_y){
+    addPipe(start_pos, destination_pos){
+        if(this.add_pipe_kernel == null){
+            this.add_pipe_kernel = ti.kernel((startPosX, startPosY, endPosX, endPosY)=>{
+                pipes[total_pipes[0]] = [startPosX, startPosY, endPosX, endPosY]
+                total_pipes[0] = total_pipes[0] + 1
+
+                return total_pipes[0]
+            })
+        }
+
+        this.add_pipe_kernel(start_pos[0], start_pos[1], destination_pos[0], destination_pos[1]).then((val)=>{
+            console.log("Current total pipes:" + val)
+        })
+    }
+
+    addBrick(brick_pos_x, brick_pos_y, brick_type = 1){
         if(this.add_brick_kernel == null){
-            this.add_brick_kernel = ti.kernel((pos_x, pos_y)=>{
+            this.add_brick_kernel = ti.kernel((pos_x, pos_y, brick_type)=>{
                     let brick_pos = [pos_x, pos_y]
                     let base = i32(brick_pos * inv_dx - 0.5);
                     for (let i of ti.static(ti.range(3))) {
                         for (let j of ti.static(ti.range(3))) {
-                            grid_material[base + [i, j]] = 1
+                            grid_material[base + [i, j]] = brick_type
                         }
                     }
             })
         }
 
-        this.add_brick_kernel(brick_pos_x, brick_pos_y)
+        this.add_brick_kernel(brick_pos_x, brick_pos_y, brick_type)
     }
 
     removeBrick(brick_pos_x, brick_pos_y){
@@ -128,7 +153,8 @@ class World{
                 let base = i32(brick_pos * inv_dx - 0.5);
                 for (let i of ti.static(ti.range(3))) {
                     for (let j of ti.static(ti.range(3))) {
-                        grid_material[base + [i, j]] = 0
+                        if(grid_material[base + [i, j]] != 2)
+                            grid_material[base + [i, j]] = 0
                     }
                 }
             })
@@ -225,7 +251,7 @@ class World{
                         grid_v[I] = (1 / grid_m[I]) * grid_v[I];
                         grid_v[I][1] -= dt * 50;  // Gravity
 
-                        if(grid_material[I] == 1){
+                        if(grid_material[I] == 1 || grid_material[I] == 2){
                             grid_v[I][0] = 0
                             grid_v[I][1] = 0
                         }
