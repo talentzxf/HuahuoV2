@@ -194,7 +194,7 @@ class World{
                         dt * C[p]
                     ).matmul(F[p]);
                     let h = f32(max(0.1, min(5, ti.exp(10 * (1.0 - Jp[p])))));
-                    if (material[p] == 1) {
+                    if (material[p] == 1 || material[p] == 2) {
                         h = 1.0;
                     }
                     let mu = mu_0 * h;
@@ -209,10 +209,10 @@ class World{
                     let J = 1.0;
                     for (let d of ti.static(ti.range(2))) {
                         let new_sig = sig[[d, d]];
-                        if (material[p] == 2) {
-                            // Plasticity
-                            new_sig = min(max(sig[[d, d]], 1 - 2.5e-2), 1 + 4.5e-3);
-                        }
+                        // if (material[p] == 2) {
+                        //     // Plasticity
+                        //     new_sig = min(max(sig[[d, d]], 1 - 2.5e-2), 1 + 4.5e-3);
+                        // }
                         Jp[p] = (Jp[p] * sig[[d, d]]) / new_sig;
                         sig[[d, d]] = new_sig;
                         J = J * new_sig;
@@ -223,9 +223,10 @@ class World{
                                 [1.0, 0.0],
                                 [0.0, 1.0],
                             ] * sqrt(J);
-                    } else if (material[p] == 2) {
-                        F[p] = U.matmul(sig).matmul(V.transpose());
                     }
+                    // else if (material[p] == 2) {
+                    //     F[p] = U.matmul(sig).matmul(V.transpose());
+                    // }
                     let stress =
                         (2 * mu * (F[p] - U.matmul(V.transpose()))).matmul(F[p].transpose()) +
                         [
@@ -306,6 +307,19 @@ class World{
                     v[p] = new_v;
                     C[p] = new_C;
                     x[p] = x[p] + dt * new_v;
+                }
+
+                for(let p of range(n_particles)){
+                    if(material[p] == 1){
+                        for(let checkIdx of range(n_particles)){
+                            if(material[checkIdx] == 0){
+                                let dist = (x[p] - x[checkIdx]).norm()
+                                if(dist < 0.02){
+                                    active[p] = 0
+                                }
+                            }
+                        }
+                    }
                 }
             })
         }

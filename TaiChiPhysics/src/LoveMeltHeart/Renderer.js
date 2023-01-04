@@ -4,9 +4,9 @@ class Renderer {
     canvas
     image
 
-    pointLineSide(){
-        return (l1, l2, x)=>{
-            return ((l2[0] - l1[0])*(x[1] - l1[1]) - (l2[1] - l1[0])*(x[0] - l1[0])) > 0;
+    pointLineSide() {
+        return (l1, l2, x) => {
+            return ((l2[0] - l1[0]) * (x[1] - l1[1]) - (l2[1] - l1[0]) * (x[0] - l1[0])) > 0;
         }
     }
 
@@ -54,31 +54,31 @@ class Renderer {
         }
     }
 
-    // fillRectangle(){
-    //     return (p1, p2)=>{
-    //         let x0 = p1[0]
-    //         let y0 = p1[1]
-    //         let x1 = p2[0]
-    //         let y1 = p2[1]
-    //
-    //         let xmin = x0<x1?x0:x1;
-    //         let ymin = y0<y1?y0:y1;
-    //         let xmax = x0<x1?x1:x0;
-    //         let ymax = y0<y1?y1:y0;
-    //
-    //         let xWidth = xmax - xmin
-    //         let yHeight = ymax - ymin
-    //         for(let xIndex of range(xWidth)){
-    //             for(let yIndex of range(yHeight)){
-    //                 let xPos = xIndex + xmin
-    //                 let yPos = yIndex + ymin
-    //
-    //
-    //             }
-    //         }
-    //
-    //     }
-    // }
+    fillRectangle() {
+        return (p1, p2) => {
+            let x0 = p1[0]
+            let y0 = p1[1]
+            let x1 = p2[0]
+            let y1 = p2[1]
+
+            let xmin = min(x0, x1)
+            let ymin = min(y0, y1)
+            let xmax = max(x0, x1)
+            let ymax = max(y0, y1)
+
+            let xWidth = xmax - xmin
+            let yHeight = ymax - ymin
+            for (let xIndex of range(xWidth)) {
+                for (let yIndex of range(yHeight)) {
+                    let xPos = xIndex + xmin
+                    let yPos = yIndex + ymin
+
+                    let imageIndex = i32([xPos, yPos])
+                    image[imageIndex] = [0.0, 1.0, 0.0, 1.0]
+                }
+            }
+        }
+    }
 
     constructor(htmlCanvas, image_size) {
         htmlCanvas.width = image_size
@@ -88,7 +88,8 @@ class Renderer {
         ti.addToKernelScope({
             image: this.image,
             img_size: image_size,
-            plot_line: this.plotLine()
+            plot_line: this.plotLine(),
+            fill_rectangle: this.fillRectangle()
         })
 
         this.canvas = new ti.Canvas(htmlCanvas)
@@ -138,20 +139,21 @@ class Renderer {
                     let start = [pipes[i][0], pipes[i][1]]
                     let end = [pipes[i][2], pipes[i][3]]
 
+                    // Draw based on display info
+                    let leftUp = [pipe_display_info[i][0] * img_size, pipe_display_info[i][1] * img_size]
+                    let rightDown = [pipe_display_info[i][2] * img_size, pipe_display_info[i][3] * img_size]
+                    fill_rectangle(leftUp, rightDown)
+
                     let startIPos = i32(start * img_size)
                     let endIPos = i32(end * img_size)
 
                     // Use Bresenham to draw the line
                     plot_line(startIPos, endIPos)
                 }
-
-                return total_pipes[0]
             })
         }
 
-        this.internalRenderKernel().then((val) => {
-            console.log("Rendered total pipes:" + val)
-        })
+        this.internalRenderKernel()
         this.canvas.setImage(this.image)
     }
 }
