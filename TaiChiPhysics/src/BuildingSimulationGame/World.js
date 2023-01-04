@@ -1,6 +1,7 @@
 let update_indices
 let add_particle
 let sub_step
+let has_won_kernel
 
 class World {
     sprint_Y = 0.0001 // Spring's modulus

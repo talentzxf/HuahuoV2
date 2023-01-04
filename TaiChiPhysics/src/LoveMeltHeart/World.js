@@ -29,6 +29,8 @@ class World{
     add_brick_kernel
     add_pipe_kernel
     remove_brick_kernel
+    snow_particl_count_kernel
+    melt_snow_kernel
 
     x // particle positions
     V
@@ -46,6 +48,7 @@ class World{
     pipes
     pipe_display_info
     total_pipes
+
     addShape(shape){
         let startParticleIndex = this.totalParticles
         this.totalParticles += shape.totalParticles;
@@ -308,19 +311,6 @@ class World{
                     C[p] = new_C;
                     x[p] = x[p] + dt * new_v;
                 }
-
-                for(let p of range(n_particles)){
-                    if(material[p] == 1){
-                        for(let checkIdx of range(n_particles)){
-                            if(material[checkIdx] == 0){
-                                let dist = (x[p] - x[checkIdx]).norm()
-                                if(dist < 0.02){
-                                    active[p] = 0
-                                }
-                            }
-                        }
-                    }
-                }
             })
         }
 
@@ -336,10 +326,51 @@ class World{
         }
     }
 
+    meltSnow(){
+        if(!this.melt_snow_kernel){
+            this.melt_snow_kernel = ti.kernel(()=>{
+                for(let p of range(n_particles)){
+                    if(material[p] == 2){
+                        for(let checkIdx of range(n_particles)){
+                            if(material[checkIdx] == 0){
+                                let dist = (x[p] - x[checkIdx]).norm()
+                                if(dist < 0.02){
+                                    active[p] = 0
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        }
+        this.melt_snow_kernel()
+    }
+
+    hasWon(){
+        if(!this.snow_particl_count_kernel){
+            this.snow_particl_count_kernel = ti.kernel(()=>{
+                let totalSnowParticlCount = 0
+
+                // Check material == 2
+                for(let p of range(n_particles)){
+                    if(material[p] == 2 && active[p] == 1){
+                        totalSnowParticlCount = totalSnowParticlCount + 1
+                    }
+                }
+
+                return totalSnowParticlCount
+            })
+        }
+
+        return this.snow_particl_count_kernel()
+    }
+
     update(){
         for(let shape of this.shapes){
             shape.update()
         }
+
+        this.meltSnow()
     }
 }
 

@@ -72,6 +72,8 @@ let main = async()=>{
     setupEvents()
 
     let lastDrawTime = Date.now()
+
+    let win = false
     async function frame(){
         let currentDrawTime = Date.now()
 
@@ -89,6 +91,9 @@ let main = async()=>{
         renderer.render()
 
         lastDrawTime = currentDrawTime
+        world.hasWon().then((val)=>{
+            console.log("Current snow particle count:" + val)
+        })
 
         requestAnimationFrame(frame)
     }
