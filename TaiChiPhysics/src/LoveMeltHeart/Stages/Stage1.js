@@ -35,8 +35,12 @@ let stage = {
         removable_bricks: [],
         pipes:[
                 {
-                        start: [0.2, 0.2],
-                        end:[0.15,0.8]
+                        start: [0.1, 0.2],
+                        end:[0.1,0.15],
+                        displayRectangle: {
+                            leftup: [0.05, 0.15],
+                            rightdown:[0.15, 0.2]
+                        }
                 }
         ]
 }

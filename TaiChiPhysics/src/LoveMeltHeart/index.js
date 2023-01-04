@@ -52,7 +52,7 @@ let main = async()=>{
     }
 
     for(let pipe of stage.pipes){
-        world.addPipe(pipe.start, pipe.end)
+        world.addPipe(pipe.start, pipe.end, pipe.displayRectangle.leftup, pipe.displayRectangle.rightdown)
     }
 
     let htmlCanvas = document.getElementById('result_canvas');

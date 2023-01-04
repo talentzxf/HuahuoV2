@@ -4,6 +4,12 @@ class Renderer {
     canvas
     image
 
+    pointLineSide(){
+        return (l1, l2, x)=>{
+            return ((l2[0] - l1[0])*(x[1] - l1[1]) - (l2[1] - l1[0])*(x[0] - l1[0])) > 0;
+        }
+    }
+
     // Bresenham's line algorithm
     plotLine() {
         return (p1, p2) => {
@@ -25,6 +31,7 @@ class Renderer {
             while (true) {
                 let imageIndex = i32([x0, y0])
                 image[imageIndex] = [1.0, 1.0, 0.0, 1.0]
+
                 if (x0 == x1 && y0 == y1)
                     break
 
@@ -46,6 +53,32 @@ class Renderer {
             }
         }
     }
+
+    // fillRectangle(){
+    //     return (p1, p2)=>{
+    //         let x0 = p1[0]
+    //         let y0 = p1[1]
+    //         let x1 = p2[0]
+    //         let y1 = p2[1]
+    //
+    //         let xmin = x0<x1?x0:x1;
+    //         let ymin = y0<y1?y0:y1;
+    //         let xmax = x0<x1?x1:x0;
+    //         let ymax = y0<y1?y1:y0;
+    //
+    //         let xWidth = xmax - xmin
+    //         let yHeight = ymax - ymin
+    //         for(let xIndex of range(xWidth)){
+    //             for(let yIndex of range(yHeight)){
+    //                 let xPos = xIndex + xmin
+    //                 let yPos = yIndex + ymin
+    //
+    //
+    //             }
+    //         }
+    //
+    //     }
+    // }
 
     constructor(htmlCanvas, image_size) {
         htmlCanvas.width = image_size

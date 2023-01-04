@@ -35,7 +35,7 @@ class HeartInCubeShape extends BaseShape {
                 let imgData = context.getImageData(0, 0, this.img.width, this.img.height)
                 for (let i = 0; i < this.img.width; i++) {
                     for (let j = 0; j < this.img.height; j++) {
-                        this.heartMask.set([i,j], imgData.data[i * 4 * this.img.width + j * 4 + 3])
+                        this.heartMask.set([j, this.img.width - i], imgData.data[i * 4 * this.img.width + j * 4 + 3])
                     }
                 }
 

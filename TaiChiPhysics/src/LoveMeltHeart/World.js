@@ -44,6 +44,7 @@ class World{
 
     max_pipes = 10
     pipes
+    pipe_display_info
     total_pipes
     addShape(shape){
         let startParticleIndex = this.totalParticles
@@ -84,7 +85,8 @@ class World{
             particle_color: this.particle_color,
             pipes: this.pipes,
             max_pipes: this.max_pipes,
-            total_pipes: this.total_pipes
+            total_pipes: this.total_pipes,
+            pipe_display_info: this.pipe_display_info
         })
     }
 
@@ -107,6 +109,8 @@ class World{
 
         this.pipes = ti.Vector.field(4, ti.f32, [this.max_pipes] ) // First two components are start, last two components are destination.
 
+        this.pipe_display_info = ti.Vector.field(4, ti.f32, [this.max_pipes]) // Leftup-Rightdown of the pipe display rectangle.
+
         this.total_pipes = ti.field(ti.i32, [1])
         this.addParametersToKernel()
 
@@ -115,17 +119,18 @@ class World{
         }
     }
 
-    addPipe(start_pos, destination_pos){
+    addPipe(start_pos, destination_pos, display_leftup, display_rightdown){
         if(this.add_pipe_kernel == null){
-            this.add_pipe_kernel = ti.kernel((startPosX, startPosY, endPosX, endPosY)=>{
+            this.add_pipe_kernel = ti.kernel((startPosX, startPosY, endPosX, endPosY, display_leftupX, display_leftupY, display_rightdownX, display_rightdownY)=>{
                 pipes[total_pipes[0]] = [startPosX, startPosY, endPosX, endPosY]
+                pipe_display_info[total_pipes[0]] = [display_leftupX, display_leftupY, display_rightdownX, display_rightdownY]
                 total_pipes[0] = total_pipes[0] + 1
 
                 return total_pipes[0]
             })
         }
 
-        this.add_pipe_kernel(start_pos[0], start_pos[1], destination_pos[0], destination_pos[1]).then((val)=>{
+        this.add_pipe_kernel(start_pos[0], start_pos[1], destination_pos[0], destination_pos[1], display_leftup[0], display_leftup[1], display_rightdown[0], display_rightdown[1]).then((val)=>{
             console.log("Current total pipes:" + val)
         })
     }
