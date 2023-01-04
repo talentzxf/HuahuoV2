@@ -31,6 +31,7 @@ class World{
     remove_brick_kernel
     snow_particl_count_kernel
     melt_snow_kernel
+    remove_all_particles_except_heart
 
     x // particle positions
     V
@@ -344,6 +345,24 @@ class World{
             })
         }
         this.melt_snow_kernel()
+    }
+
+    removeAllParticlesExceptHeart(){
+        if(!this.remove_all_particles_except_heart){
+            this.remove_all_particles_except_heart = ti.kernel(()=>{
+                for(let p of range(n_particles)){
+                    if(material[p] != 1){
+                        active[p] = 0
+                    }
+                }
+
+                for (let I of ndrange(n_grid, n_grid)) {
+                    grid_material[I] = 0
+                }
+            })
+        }
+
+        this.remove_all_particles_except_heart()
     }
 
     hasWon(){

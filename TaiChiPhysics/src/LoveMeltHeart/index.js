@@ -25,6 +25,8 @@ function setupEvents(){
 
 }
 
+let win = true
+
 let main = async()=>{
     await ti.init()
 
@@ -63,17 +65,23 @@ let main = async()=>{
         let mouseX = evt.offsetX
         let mouseY = image_size - evt.offsetY
 
-        if(isPlace)
-            world.addBrick(mouseX/ image_size, mouseY/ image_size)
-        else
-            world.removeBrick(mouseX/ image_size, mouseY/ image_size)
+        if(!win){
+            if(isPlace)
+                world.addBrick(mouseX/ image_size, mouseY/ image_size)
+            else
+                world.removeBrick(mouseX/ image_size, mouseY/ image_size)
+        }
     })
 
     setupEvents()
 
     let lastDrawTime = Date.now()
 
-    let win = false
+    function gameWin(){
+        win = true
+        world.removeAllParticlesExceptHeart()
+    }
+
     async function frame(){
         let currentDrawTime = Date.now()
 
@@ -83,18 +91,25 @@ let main = async()=>{
 
         let eachStepTime = elapsedMiliseconds/ stepCount
 
-        for (let i = 0; i < stepCount; ++i) {
-            world.substep(eachStepTime/1000.0);
+        if(!win){
+            for (let i = 0; i < stepCount; ++i) {
+                world.substep(eachStepTime/1000.0);
+            }
+
+            world.update()
+
+            world.hasWon().then((val)=>{
+                if(val <= 0){
+                    gameWin()
+                }
+            })
+        }else{
+            heartInCubde.playHeartAnimation(htmlCanvas)
         }
 
-        world.update()
         renderer.render()
 
         lastDrawTime = currentDrawTime
-        world.hasWon().then((val)=>{
-            console.log("Current snow particle count:" + val)
-        })
-
         requestAnimationFrame(frame)
     }
 
