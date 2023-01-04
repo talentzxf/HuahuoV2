@@ -21,11 +21,9 @@ function setupEvents(){
     placeBrickButton.addEventListener("click", (evt)=>{
         isPlace = true
     })
-
-
 }
 
-let win = true
+let win = false
 
 let main = async()=>{
     await ti.init()

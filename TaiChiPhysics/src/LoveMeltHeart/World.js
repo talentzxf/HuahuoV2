@@ -335,7 +335,7 @@ class World{
                         for(let checkIdx of range(n_particles)){
                             if(material[checkIdx] == 0){
                                 let dist = (x[p] - x[checkIdx]).norm()
-                                if(dist < 0.02){
+                                if(dist < 0.017){
                                     active[p] = 0
                                 }
                             }

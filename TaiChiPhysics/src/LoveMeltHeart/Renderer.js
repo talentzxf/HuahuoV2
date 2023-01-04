@@ -99,7 +99,8 @@ class Renderer {
         if (this.internalRenderKernel == null) {
             this.internalRenderKernel = ti.kernel(() => {
                 for (let I of ndrange(img_size, img_size)) {
-                    image[I] = [0.067, 0.184, 0.255, 1.0];
+                    // image[I] = [0.067, 0.184, 0.255, 1.0];
+                    image[I] = [25/255, 39/255, 77/255, 1.0];
                 }
 
                 // Draw bricks
@@ -122,16 +123,28 @@ class Renderer {
                     let pos = x[i];
                     let ipos = i32(pos * img_size)
 
-                    // for (let i of ti.static(ti.range(7))) {
-                    //     for (let j of ti.static(ti.range(7))) {
-                    //         let xoffset = i - 2
-                    //         let yoffset = j - 2
-                    //         image[ipos + [xoffset, yoffset]] = this_color;
-                    //     }
-                    // }
+                    if(material[i] == 0){
+                        for (let x_i of ti.static(ti.range(3))) {
+                            for (let y_j of ti.static(ti.range(3))) {
+                                if( !((x_i == 0 && y_j == 0)
+                                    || (x_i == 0 && y_j == 2)
+                                    ||(x_i == 2 && y_j == 0)
+                                    || (x_i == 2 && y_j == 2)
+                                ))
+                                {
+                                    let xoffset = x_i - 2
+                                    let yoffset = y_j - 2
 
-                    if (ipos[0] >= 0 && ipos[1] >= 0)
-                        image[ipos] = particle_color[i];
+                                    let IPos = ipos + [xoffset, yoffset]
+                                    if(IPos[0] > 0 && IPos[1] > 0)
+                                        image[IPos] = particle_color[i];
+                                }
+                            }
+                        }
+                    }else{
+                        if (ipos[0] >= 0 && ipos[1] >= 0)
+                            image[ipos] = particle_color[i];
+                    }
                 }
 
                 // Draw pipes

@@ -86,7 +86,8 @@ class BaseShape {
         return (particle_position, materialId) => {
             let this_color = f32([0, 0, 0, 0])
             if (materialId == 0) {
-                this_color = [0, 0.5, 0.5, 1.0];
+                // this_color = [0, 0.5, 0.5, 1.0];
+                this_color = [46/255, 156/255, 202/255, 1.0]
             } else if (materialId == 1) {
                 this_color = [0.93, 0.33, 0.23, 1.0];
             } else if (materialId == 2) {

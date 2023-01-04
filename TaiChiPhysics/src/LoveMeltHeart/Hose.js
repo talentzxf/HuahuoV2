@@ -5,7 +5,7 @@ class Hose extends BaseShape {
     center = [0.2, 0.8]
     radius = 0.01
 
-    totalParticles = 2000
+    totalParticles = 3000
     hoseEjectTime = 10.0
     materialId = MATERIAL_TYPE.LIQUID
 
