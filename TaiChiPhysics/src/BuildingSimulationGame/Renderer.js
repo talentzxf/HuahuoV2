@@ -4,6 +4,8 @@ class Renderer {
     canvas
     image
 
+
+
     constructor(htmlCanvas, image_size) {
         htmlCanvas.width = image_size
         htmlCanvas.height = image_size

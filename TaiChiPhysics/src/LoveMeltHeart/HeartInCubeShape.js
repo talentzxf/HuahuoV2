@@ -89,8 +89,8 @@ class HeartInCubeShape extends BaseShape {
 
                 this.heartMask = ti.field(ti.i32, [this.img.width, this.img.height]);
                 let imgData = context.getImageData(0, 0, this.img.width, this.img.height)
-                for (let i = 0; i < this.img.width; i++) {
-                    for (let j = 0; j < this.img.height; j++) {
+                for (let i = 0; i < this.img.height; i++) {
+                    for (let j = 0; j < this.img.width; j++) {
                         this.heartMask.set([j, this.img.width - i - 1], imgData.data[i * 4 * this.img.width + j * 4 + 3])
                     }
                 }

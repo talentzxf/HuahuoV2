@@ -4,11 +4,13 @@ class Renderer {
     canvas
     image
 
-    pointLineSide() {
-        return (l1, l2, x) => {
-            return ((l2[0] - l1[0]) * (x[1] - l1[1]) - (l2[1] - l1[0]) * (x[0] - l1[0])) > 0;
-        }
-    }
+    hiddenCanvas
+    brickImg
+
+    brickImageUrl = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='iso-8859-1'%3F%3E%3C!-- Uploaded to: SVG Repo  www.svgrepo.com  Generator: SVG Repo Mixer Tools --%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'  viewBox='0 0 512 512' xml:space='preserve'%3E%3Crect style='fill:%23FFCC67%3B' width='512' height='512'/%3E%3Cg%3E%3Crect y='165.336' style='fill:%23E3AA4D%3B' width='512' height='16'/%3E%3Crect y='330.64' style='fill:%23E3AA4D%3B' width='512' height='16'/%3E%3Crect x='248' style='fill:%23E3AA4D%3B' width='16' height='173.336'/%3E%3Crect x='248' y='338.64' style='fill:%23E3AA4D%3B' width='16' height='173.336'/%3E%3Crect x='124.256' y='173.656' style='fill:%23E3AA4D%3B' width='16' height='164.696'/%3E%3Crect x='371.76' y='174.56' style='fill:%23E3AA4D%3B' width='16' height='164.696'/%3E%3C/g%3E%3C/svg%3E"
+
+    brickImage
+    brickImageDimension
 
     // Bresenham's line algorithm
     plotLine() {
@@ -93,6 +95,68 @@ class Renderer {
         })
 
         this.canvas = new ti.Canvas(htmlCanvas)
+
+        this.brickImg = document.createElement("img")
+        this.brickImg.id = "brickImage"
+        this.brickImg.src = this.brickImageUrl
+    }
+
+    async loadResources() {
+        let promise = new Promise((resolve, reject) => {
+            this.brickImg.onload = () => {
+                this.hiddenCanvas = document.createElement("canvas")
+                this.hiddenCanvas.style.width = this.brickImg.width + "px"
+                this.hiddenCanvas.style.height = this.brickImg.height + "px"
+                this.hiddenCanvas.width = this.brickImg.width
+                this.hiddenCanvas.height = this.brickImg.height
+
+                document.body.appendChild(this.hiddenCanvas)
+
+                let context = this.hiddenCanvas.getContext("2d")
+                context.drawImage(this.brickImg, 0, 0)
+
+                this.brickImage = ti.Vector.field(4, ti.i32, [this.brickImg.width, this.brickImg.height])
+                let brickImageData = context.getImageData(0, 0, this.brickImg.width, this.brickImg.height)
+
+                for (let i = 0; i < this.brickImg.height; i++) {
+                    for (let j = 0; j < this.brickImg.width; j++) {
+                        this.brickImage.set([i, j], [
+                            brickImageData.data[i * 4 * this.brickImg.width + j * 4],
+                            brickImageData.data[i * 4 * this.brickImg.width + j * 4 + 1],
+                            brickImageData.data[i * 4 * this.brickImg.width + j * 4 + 2],
+                            brickImageData.data[i * 4 * this.brickImg.width + j * 4 + 3],
+                        ])
+                    }
+                }
+
+                let brickImageSize = [this.brickImg.width, this.brickImg.height]
+                ti.addToKernelScope({
+                    brickImage: this.brickImage,
+                    brickImageSize: brickImageSize,
+                    renderBrick: this.renderBrick()
+                })
+
+                resolve(brickImageSize)
+            }
+        })
+
+        return promise
+    }
+
+    renderBrick(){
+        return (img_coordinate, baseColor)=>{
+            let grid_diff = [dx * img_size, dx * img_size] * 2
+            for (let i of range(grid_diff[0])) {
+                for (let j of range(grid_diff[1])) {
+                    let brick_image_coordinate = img_coordinate + [i, -j]
+
+                    let texture_i = i32(f32(i)/f32(grid_diff[0]) * f32(brickImageSize[0]))
+                    let texture_j = i32(f32(j)/f32(grid_diff[1]) * f32(brickImageSize[1]))
+
+                    image[brick_image_coordinate] = brickImage[texture_i, texture_j]/255.0 * baseColor
+                }
+            }
+        }
     }
 
     render() {
@@ -100,7 +164,7 @@ class Renderer {
             this.internalRenderKernel = ti.kernel(() => {
                 for (let I of ndrange(img_size, img_size)) {
                     // image[I] = [0.067, 0.184, 0.255, 1.0];
-                    image[I] = [25/255, 39/255, 77/255, 1.0];
+                    image[I] = [25 / 255, 39 / 255, 77 / 255, 1.0];
                 }
 
                 // Draw bricks
@@ -108,8 +172,16 @@ class Renderer {
                     for (let grid_y of range(n_grid)) {
                         let img_coordinate = i32([grid_x * dx * img_size, grid_y * dx * img_size])
                         if (grid_material[grid_x, grid_y] == 2) {
+                            if(grid_material[grid_x + 1, grid_y - 1] == 2){
+                                renderBrick(img_coordinate, [0.7, 0.25, 0.17, 1.0])
+                            }
                             image[img_coordinate] = [1.0, 0.0, 0.0, 1.0]
                         } else if (grid_material[grid_x, grid_y] == 1) {
+
+                            if(grid_material[grid_x + 1, grid_y - 1] == 1){
+                                renderBrick(img_coordinate, [1.0, 1.0, 1.0, 1.0])
+                            }
+
                             image[img_coordinate] = [0.0, 1.0, 0.0, 1.0]
                         }
                     }
@@ -123,25 +195,24 @@ class Renderer {
                     let pos = x[i];
                     let ipos = i32(pos * img_size)
 
-                    if(material[i] == 0){
+                    if (material[i] == 0) {
                         for (let x_i of ti.static(ti.range(3))) {
                             for (let y_j of ti.static(ti.range(3))) {
-                                if( !((x_i == 0 && y_j == 0)
+                                if (!((x_i == 0 && y_j == 0)
                                     || (x_i == 0 && y_j == 2)
-                                    ||(x_i == 2 && y_j == 0)
+                                    || (x_i == 2 && y_j == 0)
                                     || (x_i == 2 && y_j == 2)
-                                ))
-                                {
+                                )) {
                                     let xoffset = x_i - 2
                                     let yoffset = y_j - 2
 
                                     let IPos = ipos + [xoffset, yoffset]
-                                    if(IPos[0] > 0 && IPos[1] > 0)
+                                    if (IPos[0] > 0 && IPos[1] > 0)
                                         image[IPos] = particle_color[i];
                                 }
                             }
                         }
-                    }else{
+                    } else {
                         if (ipos[0] >= 0 && ipos[1] >= 0)
                             image[ipos] = particle_color[i];
                     }

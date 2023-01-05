@@ -29,7 +29,6 @@ let main = async()=>{
     await ti.init()
 
     let world = new World()
-
     let hose = new Hose()
     hose.center = stage.hosePosition
     hose.addToShapeManager(world)
@@ -57,6 +56,8 @@ let main = async()=>{
 
     let htmlCanvas = document.getElementById('result_canvas');
     let renderer = new Renderer(htmlCanvas, image_size)
+    await renderer.loadResources()
+
     htmlCanvas.addEventListener("click", (evt)=>{
         // Need to have a mapping from screen coordinate to world coordinate.
 
