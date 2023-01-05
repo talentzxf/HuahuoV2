@@ -110,7 +110,7 @@ class Renderer {
                 this.hiddenCanvas.width = this.brickImg.width
                 this.hiddenCanvas.height = this.brickImg.height
 
-                document.body.appendChild(this.hiddenCanvas)
+                // document.body.appendChild(this.hiddenCanvas)
 
                 let context = this.hiddenCanvas.getContext("2d")
                 context.drawImage(this.brickImg, 0, 0)
@@ -167,26 +167,6 @@ class Renderer {
                     image[I] = [25 / 255, 39 / 255, 77 / 255, 1.0];
                 }
 
-                // Draw bricks
-                for (let grid_x of range(n_grid)) {
-                    for (let grid_y of range(n_grid)) {
-                        let img_coordinate = i32([grid_x * dx * img_size, grid_y * dx * img_size])
-                        if (grid_material[grid_x, grid_y] == 2) {
-                            if(grid_material[grid_x + 1, grid_y - 1] == 2){
-                                renderBrick(img_coordinate, [0.7, 0.25, 0.17, 1.0])
-                            }
-                            image[img_coordinate] = [1.0, 0.0, 0.0, 1.0]
-                        } else if (grid_material[grid_x, grid_y] == 1) {
-
-                            if(grid_material[grid_x + 1, grid_y - 1] == 1){
-                                renderBrick(img_coordinate, [1.0, 1.0, 1.0, 1.0])
-                            }
-
-                            image[img_coordinate] = [0.0, 1.0, 0.0, 1.0]
-                        }
-                    }
-                }
-
                 // Draw particles
                 for (let i of range(n_particles)) {
                     if (active[i] == 0)
@@ -215,6 +195,26 @@ class Renderer {
                     } else {
                         if (ipos[0] >= 0 && ipos[1] >= 0)
                             image[ipos] = particle_color[i];
+                    }
+                }
+
+                // Draw bricks
+                for (let grid_x of range(n_grid)) {
+                    for (let grid_y of range(n_grid)) {
+                        let img_coordinate = i32([grid_x * dx * img_size, grid_y * dx * img_size])
+                        if (grid_material[grid_x, grid_y] == 2) {
+                            if(grid_material[grid_x + 1, grid_y - 1] == 2){
+                                renderBrick(img_coordinate, [0.7, 0.25, 0.17, 1.0])
+                            }
+                            image[img_coordinate] = [1.0, 0.0, 0.0, 1.0]
+                        } else if (grid_material[grid_x, grid_y] == 1) {
+
+                            if(grid_material[grid_x + 1, grid_y - 1] == 1){
+                                renderBrick(img_coordinate, [1.0, 1.0, 1.0, 1.0])
+                            }
+
+                            image[img_coordinate] = [0.0, 1.0, 0.0, 1.0]
+                        }
                     }
                 }
 
