@@ -3,7 +3,7 @@ import {BaseShape} from "./Shapes";
 
 class Hose extends BaseShape {
     center = [0.2, 0.8]
-    radius = 0.01
+    radius = 0.02
 
     totalParticles = 3000
     hoseEjectTime = 10.0

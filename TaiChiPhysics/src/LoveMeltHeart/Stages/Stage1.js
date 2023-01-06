@@ -1,5 +1,5 @@
 let stage = {
-    hosePosition: [0.1, 0.9],
+    hosePosition: [0.1, 0.65],
     heartPosition : [0.1, 0.1],
     heartSize: 0.1,
     unremovable_bricks: [
