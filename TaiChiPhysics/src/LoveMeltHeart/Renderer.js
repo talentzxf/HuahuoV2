@@ -247,11 +247,12 @@ class Renderer {
                                     let yoffset = y_j - 2
 
                                     let IPos = ipos + [xoffset, yoffset]
+                                    let guessedIPos = guessed_ipos + [xoffset, yoffset]
                                     if (IPos[0] > 0 && IPos[1] > 0){
                                         // image[IPos] = particle_color[i];
                                         // image[IPos] = [0.0, 1.0, 1.0, 1.0] * 2.0 ;
                                         image[IPos] = [0.0, 1.0, 1.0, 1.0] * 2.0 ;
-                                        image[IPos] = image[IPos] * raw_bg_image[guessed_ipos]
+                                        image[IPos] = image[IPos] * raw_bg_image[guessedIPos]
                                     }
                                 }
                             }
