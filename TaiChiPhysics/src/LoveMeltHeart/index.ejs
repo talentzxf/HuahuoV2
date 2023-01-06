@@ -13,13 +13,23 @@
 </head>
 
 <body>
-<div style="display: flex;justify-content: center; flex-direction: column">
-    <div style="display: flex;justify-content: center; flex-direction: row">
-        <input type="button" value="Create" id="placeBrick" style="width: 50px">
-        <input type="button" value="Dig" id="digBrick" style="width: 50px">
+<div id="loading">
+    <div style="display: flex; flex-direction: column; width: 30%; margin: auto; text-align: center">
+        <h1 style="color: deeppink; font-family: Papyrus">Thawing Frozen Heart</h1>
+        <img src="static/img/loading.gif">
+        <h3>Loading</h3>
     </div>
-    <div style="display: flex;justify-content: center;">
-        <canvas id="result_canvas" width="300" height="300"></canvas>
+</div>
+
+<div id="content" style="display: none;justify-content: center; flex-direction: column">
+    <div>
+        <div style="display: flex;justify-content: center; flex-direction: row">
+            <input type="button" value="Create" id="placeBrick" style="width: 50px">
+            <input type="button" value="Dig" id="digBrick" style="width: 50px">
+        </div>
+        <div style="display: flex;justify-content: center;">
+            <canvas id="result_canvas" width="300" height="300"></canvas>
+        </div>
     </div>
 </div>
 </body>

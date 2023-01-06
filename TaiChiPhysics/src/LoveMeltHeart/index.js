@@ -2,6 +2,7 @@ import {World} from "./World";
 import {Renderer} from "./Renderer";
 import {Hose} from "./Hose";
 import {HeartInCubeShape} from "./HeartInCubeShape";
+import LoadingImg from "../static/img/loading.gif"
 
 import {stage} from "./Stages/Stage1";
 
@@ -112,6 +113,10 @@ let main = async()=>{
         requestAnimationFrame(frame)
     }
 
+    let loadingDiv = document.body.querySelector("#loading")
+    let contentDiv = document.body.querySelector("#content")
+    loadingDiv.style.display = "none"
+    contentDiv.style.display = "flex"
     await frame()
 
     console.log("HiHi")
