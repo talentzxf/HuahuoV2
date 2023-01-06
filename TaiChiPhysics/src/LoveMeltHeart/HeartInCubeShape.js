@@ -52,7 +52,7 @@ class HeartInCubeShape extends BaseShape {
                 if(document.querySelector("#winText") == null){
                     let input = document.createElement("span")
                     input.id = "winText"
-                    input.innerHTML = "<p style='color: lavenderblush; font-weight: bolder; font-size: larger'>You Win! You've melt the ice and won her heart!</p>"
+                    input.innerHTML = "<p style='color: lavenderblush; font-weight: bolder; font-size: larger; font-family: cursive'>You Win! You've melt the ice and won her heart!</p>"
                     input.style.position = "absolute"
 
                     let imgBoundingRect = this.img.getBoundingClientRect()
