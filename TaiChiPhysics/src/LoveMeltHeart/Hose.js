@@ -15,6 +15,8 @@ class Hose extends BaseShape {
     lastRecycleTime = null
     recycleTime = 10.0
 
+    velocity = [5.0, 1.0]
+
     constructor() {
         super();
 
@@ -25,13 +27,14 @@ class Hose extends BaseShape {
         super.addParametersToKernel();
         ti.addToKernelScope({
             center: this.center,
-            radius: this.radius
+            radius: this.radius,
+            hoseVelocity: this.velocity
         })
     }
 
     nextVelocity() {
         return (total, idx)=>{
-            return [5.0, 1.0]
+            return hoseVelocity
         }
     }
 
@@ -46,7 +49,10 @@ class Hose extends BaseShape {
     update() {
         super.update()
         let currentHosePercentage = (Date.now() - this.startTime) / 1000.0 / this.hoseEjectTime
-        this.setActivePercentage(Math.min(1.0, currentHosePercentage))
+        if(currentHosePercentage < 1.0){
+            this.setActivePercentage(Math.min(1.0, currentHosePercentage))
+        }
+
         if(currentHosePercentage >= 1.0){
             if(this.lastRecycleTime == null){
                 this.lastRecycleTime = Date.now()
@@ -56,10 +62,11 @@ class Hose extends BaseShape {
                 let lastElapsedTimeSinceStart = this.lastRecycleTime - this.startRecycleTime
                 let currentElapsedTimeSinceStart = Date.now() - this.startRecycleTime
 
-                let lastIdx = (lastElapsedTimeSinceStart % recycleTimeMili) / recycleTimeMili * this.totalParticles
-                let currentIdx = currentElapsedTimeSinceStart % recycleTimeMili/ recycleTimeMili * this.totalParticles
+                let lastIdx = Math.floor((lastElapsedTimeSinceStart % recycleTimeMili) / recycleTimeMili * this.totalParticles)
+                let currentIdx = Math.floor(currentElapsedTimeSinceStart % recycleTimeMili/ recycleTimeMili * this.totalParticles)
 
-                // console.log("Recycling:" + lastIdx+":"+currentIdx)
+                console.log("Recycling:" + lastIdx+":"+currentIdx)
+
                 this.resetKernel(lastIdx, currentIdx, this.materialId, 0.0, 0.0)
 
                 this.lastRecycleTime = Date.now()

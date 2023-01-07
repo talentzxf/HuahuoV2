@@ -180,6 +180,8 @@ class BaseShape {
                         particle_color[particleIndex] = colorFunc(x[particleIndex], materialId)
 
                         p_mass[particleIndex] = p_vol * rhoFunc()
+
+                        active[particleIndex] = 1
                     }
 
                     return true

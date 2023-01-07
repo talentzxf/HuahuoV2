@@ -26,7 +26,7 @@ class HeartInCubeShape extends BaseShape {
         // document.body.appendChild(this.img)
     }
 
-    playHeartAnimation(canvas) {
+    playHeartAnimation(canvas, curLevel) {
         if (document.body.querySelector("#heartImage") == null) {
             document.body.appendChild(this.img)
             this.img.style.position = "absolute"
@@ -61,6 +61,20 @@ class HeartInCubeShape extends BaseShape {
                     let inputRect = input.getBoundingClientRect()
                     input.style.left = imgBoundingRect.left - inputRect.width / 2.0 + "px"
                     input.style.top = imgBoundingRect.bottom + "px"
+
+                    inputRect = input.getBoundingClientRect()
+                    if(curLevel == "level1"){
+                        let nextLevelButton = document.createElement("button")
+                        document.body.appendChild(nextLevelButton)
+                        nextLevelButton.innerText = "Goto Level2"
+                        nextLevelButton.style.position = "absolute"
+                        nextLevelButton.style.left = inputRect.left + inputRect.width/2 + "px"
+                        nextLevelButton.style.top = inputRect.bottom + "px"
+
+                        nextLevelButton.onclick = ()=>{
+                            window.location.href = "./?level=level2"
+                        }
+                    }
                 }
 
                 return
