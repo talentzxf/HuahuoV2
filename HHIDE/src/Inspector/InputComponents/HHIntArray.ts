@@ -2,12 +2,30 @@ import {CustomElement} from "hhcommoncomponents";
 import {paper} from "hhenginejs"
 import {createPenShape, selectedPenCapColor, unselectedPenCapColor} from "./Utils";
 import {huahuoEngine} from "hhenginejs";
+import {HHToast} from "hhcommoncomponents";
 
 const canvasWidth = 200
 const canvasHeight = 50
 const penOffset = 10
 const textMargin = 5
 const spanRectHeight = 5
+
+function triggerFocus(element) {
+    var eventType = "focusin",
+        bubbles = null,
+        event;
+
+    if ("createEvent" in document) {
+        event = document.createEvent("Event");
+        event.initEvent(eventType, bubbles, true);
+    }
+    else if ("Event" in window) {
+        event = new Event(eventType, { bubbles: bubbles, cancelable: true });
+    }
+
+    element.focus();
+    element.dispatchEvent(event);
+}
 
 class TimelinePointer {
     paperGroup: paper.Group
@@ -115,6 +133,10 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
     timelinePointers: TimelinePointer[] = new Array()
     timelineSpans: TimelineSpan[] = new Array()
 
+    selectedPointer = null
+
+    kbEventAttached = false
+
     constructor(getter, setter, updater, deleter, titleDiv) {
         super();
 
@@ -148,6 +170,44 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
         this.refresh()
 
         previousProject.activate()
+
+        let kbEventListener = this.onKeyUp.bind(this)
+
+        this.addEventListener("focusin", ()=>{
+            if(this.kbEventAttached == false){
+                document.addEventListener("keyup", kbEventListener)
+                this.kbEventAttached = true
+            }
+        })
+
+        this.addEventListener("focusout", ()=>{
+            document.removeEventListener("keyup", kbEventListener)
+            this.kbEventAttached = false
+        })
+    }
+
+    onKeyUp(evt: KeyboardEvent){
+            if(evt.code == "Delete"){
+                if(this.timelinePointers.length <= 2){
+                    HHToast.warn(i18n.t("toast.insufficientColorStop"))
+                }else{
+                    let tobeDeletedPointer = this.selectedPointer
+
+                    this.selectedPointer = null
+
+                    this.timelinePointers = this.timelinePointers.filter( (penInArray)=>{
+                        return penInArray.frameId != tobeDeletedPointer.frameId
+                    })
+
+                    this.deleter(tobeDeletedPointer.frameId)
+
+                    tobeDeletedPointer.remove()
+
+                    this.refresh()
+
+                    evt.stopPropagation()
+                }
+            }
     }
 
     openTimeline() {
@@ -170,7 +230,7 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
         while (this.timelinePointers.length <= idx) {
             let newTimelinePointer = new TimelinePointer()
             this.timelinePointers.push(newTimelinePointer)
-            newTimelinePointer.paperGroup.onClick = this.onPenClicked
+            newTimelinePointer.paperGroup.onClick = this.onPenClicked.bind(this)
         }
 
         return this.timelinePointers[idx]
@@ -192,6 +252,8 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
 
         let timelinePointer = evt.target["data"]["meta"] as TimelinePointer
         huahuoEngine.getActivePlayer().setFrameId(timelinePointer.frameId)
+
+        triggerFocus(this)
     }
 
     refresh() {
@@ -238,6 +300,7 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
 
                 if(huahuoEngine.getActivePlayer().currentlyPlayingFrameId == frameId){
                     timelinePointer.selected = true
+                    this.selectedPointer = timelinePointer
                 }else{
                     timelinePointer.selected = false
                 }

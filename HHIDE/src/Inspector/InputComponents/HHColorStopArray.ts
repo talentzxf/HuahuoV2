@@ -121,6 +121,8 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
 
     selectedPen: Pen = null
 
+    kbEventAttached = false
+
     constructor(getter, setter, updater, deleter) {
         super();
 
@@ -169,11 +171,16 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         let kbEventListener = this.onKeyUp.bind(this)
 
         this.addEventListener("focusin", ()=>{
-            document.addEventListener("keyup", kbEventListener)
+            if(this.kbEventAttached == false){
+                document.addEventListener("keyup", kbEventListener)
+                this.kbEventAttached = true
+            }
+
         })
 
         this.addEventListener("focusout", ()=>{
             document.removeEventListener("keyup", kbEventListener)
+            this.kbEventAttached = false
         })
 
         this.tabIndex = 0;
