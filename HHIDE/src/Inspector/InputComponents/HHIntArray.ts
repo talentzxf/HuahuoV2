@@ -215,8 +215,13 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
             let index = 0
             let cellWidth = (canvasWidth - 2 * penOffset) / (maxValue - minValue + 1)
 
+            let firstSpanFrameId = -1
             let lastSpanFrameId = -1
             for (let frameId of intArrayValues) {
+
+                if(firstSpanFrameId < 0){
+                    firstSpanFrameId = frameId
+                }
 
                 // Draw timeline pointer
                 let timelinePointer = this.getTimelinePointer(index)
@@ -228,7 +233,7 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
                 if(lastSpanFrameId >= 0){
                     let span = this.getTimelineSpan(index, timelinePointer.paperHeight)
                     span.cellWidth = cellWidth
-                    span.setFrameSpan(lastSpanFrameId, frameId)
+                    span.setFrameSpan(lastSpanFrameId - firstSpanFrameId, frameId - firstSpanFrameId)
                 }
 
                 if(huahuoEngine.getActivePlayer().currentlyPlayingFrameId
