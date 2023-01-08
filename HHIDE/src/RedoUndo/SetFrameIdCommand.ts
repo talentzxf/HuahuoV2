@@ -1,7 +1,8 @@
-import {UndoableCommand} from "./UndoManager";
+import {MergableCommand, UndoableCommand} from "./UndoManager";
 import {sceneViewManager} from "../SceneView/SceneViewManager";
 
-class SetFrameIdCommand extends UndoableCommand{
+let commandName = "SetFrameIdCommand"
+class SetFrameIdCommand extends MergableCommand{
     player
     prevFrameId
     currentFrameId
@@ -14,7 +15,7 @@ class SetFrameIdCommand extends UndoableCommand{
     }
 
     GetType(): string {
-        return "SetFrameIdCommand";
+        return commandName;
     }
 
     _DoCommand() {
@@ -24,6 +25,20 @@ class SetFrameIdCommand extends UndoableCommand{
 
     _UnDoCommand() {
         this.player.setFrameId(this.prevFrameId)
+    }
+
+    MergeCommand(anotherCommand: MergableCommand): boolean {
+        if (anotherCommand.GetType() == commandName) {
+            let setFrameIdCommand = anotherCommand as SetFrameIdCommand
+            if (setFrameIdCommand) {
+                if(this.player == setFrameIdCommand.player){
+
+                    this.currentFrameId = setFrameIdCommand.currentFrameId
+                    return true
+                }
+            }
+        }
+        return false;
     }
 }
 export {SetFrameIdCommand}

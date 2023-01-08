@@ -236,8 +236,7 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
                     span.setFrameSpan(lastSpanFrameId - firstSpanFrameId, frameId - firstSpanFrameId)
                 }
 
-                if(huahuoEngine.getActivePlayer().currentlyPlayingFrameId
-                 == frameId){
+                if(huahuoEngine.getActivePlayer().currentlyPlayingFrameId == frameId){
                     timelinePointer.selected = true
                 }else{
                     timelinePointer.selected = false
