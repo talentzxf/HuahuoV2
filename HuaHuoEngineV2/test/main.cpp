@@ -553,6 +553,7 @@ void testReadFromFile(){
 
         Assert(keyframeId >= 0);
     }
+    customComponent->DeleteKeyFrame(0);
 }
 
 int main() {

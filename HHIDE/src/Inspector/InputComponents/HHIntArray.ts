@@ -79,6 +79,10 @@ class TimelinePointer {
     get paperHeight(){
         return this.paperGroup.bounds.height
     }
+
+    remove(){
+        this.paperGroup.remove()
+    }
 }
 
 class TimelineSpan{

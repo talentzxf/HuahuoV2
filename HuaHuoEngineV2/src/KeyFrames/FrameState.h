@@ -62,6 +62,7 @@ public:
 
     virtual int GetKeyFrameCount() = 0;
     virtual int GetKeyFrameAtIndex(int idx) = 0;
+    virtual void DeleteKeyFrame(int frameId) = 0;
     virtual std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() = 0;
 
 protected:
@@ -123,6 +124,20 @@ public:
 
     virtual int GetKeyFrameAtIndex(int idx) override{
         return GetKeyFrames()[idx].GetKeyFrame().GetFrameId();
+    }
+
+    void DeleteKeyFrame(int frameId) override {
+        std::vector<T> & keyframes = m_KeyFrames.GetKeyFrames();
+        int targetIdx = -1;
+        for(int keyframeIdx = 0 ; keyframeIdx < keyframes.size(); keyframeIdx++){
+            if(keyframes[keyframeIdx].GetKeyFrame().GetFrameId() == frameId){
+                targetIdx = keyframeIdx;
+                break;
+            }
+        }
+
+        if(targetIdx >= 0)
+            keyframes.erase(keyframes.begin() + targetIdx);
     }
 
 protected:

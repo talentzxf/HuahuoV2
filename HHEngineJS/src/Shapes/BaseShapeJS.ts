@@ -865,7 +865,8 @@ abstract class BaseShapeJS {
             key: "inspector." + componentName,
             type: PropertyType.KEYFRAMES,
             getter: this.getComponentKeyFrames(componentName).bind(this),
-            setter: this.insertComponentKeyFrame(componentName).bind(this)
+            setter: this.insertComponentKeyFrame(componentName).bind(this),
+            deleter: this.deleteComponentKeyFrame(componentName).bind(this)
         }
     }
 
@@ -885,6 +886,18 @@ abstract class BaseShapeJS {
     insertComponentKeyFrame(componentName){
         return function(){
 
+        }
+    }
+
+    deleteComponentKeyFrame(componentName){
+        let _this = this
+        return function(frameId){
+            console.log("Trying to delete keyframe:" + frameId + " from component:" + componentName)
+
+            let component = _this.rawObj.GetFrameState(componentName)
+            component.DeleteKeyFrame(frameId)
+
+            _this.update(true)
         }
     }
 

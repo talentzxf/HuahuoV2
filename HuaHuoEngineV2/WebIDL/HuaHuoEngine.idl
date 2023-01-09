@@ -131,6 +131,7 @@ interface AbstractFrameState{
     void SetTypeName([Const] DOMString typeName);
     long GetKeyFrameCount();
     long GetKeyFrameAtIndex(long idx);
+    void DeleteKeyFrame(long frameId);
 };
 
 [NoDelete]
