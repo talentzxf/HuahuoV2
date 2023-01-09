@@ -189,7 +189,7 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
     onKeyUp(evt: KeyboardEvent){
             if(evt.code == "Delete"){
                 if(this.timelinePointers.length <= 2){
-                    HHToast.warn(i18n.t("toast.insufficientColorStop"))
+                    HHToast.warn(i18n.t("toast.insufficientKeyFrames"))
                 }else{
                     let tobeDeletedPointer = this.selectedPointer
 
@@ -217,6 +217,8 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
         this.style.display = "block"
 
         this.refresh()
+
+        triggerFocus(this)
     }
 
     collapseTimeline() {
