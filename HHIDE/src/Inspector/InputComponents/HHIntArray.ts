@@ -114,6 +114,10 @@ class TimelineSpan{
 
         this.rectangleShape.visible = true
     }
+
+    remove(){
+        this.rectangleShape.remove()
+    }
 }
 
 @CustomElement({
@@ -258,6 +262,8 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
 
         let timelinePointer = evt.target["data"]["meta"] as TimelinePointer
         huahuoEngine.getActivePlayer().setFrameId(timelinePointer.frameId)
+        timelinePointer.selected = true
+        this.selectedPointer = timelinePointer
 
         triggerFocus(this)
     }
@@ -305,8 +311,8 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
                 }
 
                 if(huahuoEngine.getActivePlayer().currentlyPlayingFrameId == frameId){
-                    timelinePointer.selected = true
-                    this.selectedPointer = timelinePointer
+                    // timelinePointer.selected = true
+                    // this.selectedPointer = timelinePointer
                 }else{
                     timelinePointer.selected = false
                 }
@@ -314,6 +320,12 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
                 lastSpanFrameId = frameId
                 index++
             }
+
+            for(let unusedSpanIndex = index; unusedSpanIndex < this.timelineSpans.length; unusedSpanIndex++){
+                let span = this.timelineSpans.pop()
+                span.remove()
+            }
+
         } finally {
             paper.projects[oldProjectId].activate()
         }
