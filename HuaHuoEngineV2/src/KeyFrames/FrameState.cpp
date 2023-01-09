@@ -4,6 +4,7 @@
 
 #include "FrameState.h"
 #include "Shapes/BaseShape.h"
+#include "Layer.h"
 
 IMPLEMENT_REGISTER_CLASS(AbstractFrameState, 10007);
 
@@ -49,4 +50,9 @@ const char *AbstractFrameState::GetName() const {
 
 void AbstractFrameState::SetName(const char *name) {
     frameStateName = name;
+}
+
+void AbstractFrameState::SendFrameChangeNotification(int frameId) {
+    KeyFrameChangedEventHandlerArgs args(GetBaseShape()->GetLayer(false), frameId);
+    GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
 }

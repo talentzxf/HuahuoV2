@@ -10,14 +10,14 @@
 #include "Math/Vector3f.h"
 #include "BaseClasses/PPtr.h"
 #include "KeyFrame.h"
-
 class BaseShape;
 
 class AbstractFrameState : public Object {
-    REGISTER_CLASS_TRAITS(kTypeIsAbstract);
-    REGISTER_CLASS(AbstractFrameState);
+REGISTER_CLASS_TRAITS(kTypeIsAbstract);
 
-    DECLARE_OBJECT_SERIALIZE()
+REGISTER_CLASS(AbstractFrameState);
+
+DECLARE_OBJECT_SERIALIZE()
 
 public:
     AbstractFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
@@ -37,23 +37,25 @@ public:
     virtual const std::set<int> GetKeyFrameIds() = 0;
 
     virtual int GetMinFrameId() = 0;
+
     virtual int GetMaxFrameId() = 0;
+
     virtual void AddAnimationOffset(int offset) = 0;
 
-    virtual void SetBaseShape(BaseShape* pBaseShape);
+    virtual void SetBaseShape(BaseShape *pBaseShape);
 
-    BaseShape* GetBaseShape();
+    BaseShape *GetBaseShape();
 
     const char *GetName() const override;
 
     void SetName(const char *name) override;
 
-    void SetTypeName(const char* typeName){
+    void SetTypeName(const char *typeName) {
         this->typeName = typeName;
     }
 
-    const char* GetTypeName(){
-        if(typeName.length() == 0){
+    const char *GetTypeName() {
+        if (typeName.length() == 0) {
             typeName = GetType()->GetName();
         }
 
@@ -61,9 +63,14 @@ public:
     }
 
     virtual int GetKeyFrameCount() = 0;
+
     virtual int GetKeyFrameAtIndex(int idx) = 0;
+
     virtual void DeleteKeyFrame(int frameId) = 0;
+
     virtual std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() = 0;
+protected:
+    void SendFrameChangeNotification(int frameId);
 
 protected:
     std::string typeName;
@@ -71,49 +78,49 @@ protected:
     std::string frameStateName;
 
 private:
-    BaseShape* baseShape;
+    BaseShape *baseShape;
     PPtr<BaseShape> mBaseShapePPtr;
 };
 
 template<class T>
-class AbstractFrameStateWithKeyType: public AbstractFrameState{
+class AbstractFrameStateWithKeyType : public AbstractFrameState {
 public:
     AbstractFrameStateWithKeyType(MemLabelId memLabelId, ObjectCreationMode creationMode)
-        :AbstractFrameState(memLabelId, creationMode)
-    {
+            : AbstractFrameState(memLabelId, creationMode) {
 
     }
 
-    virtual int GetMinFrameId(){
+    virtual int GetMinFrameId() {
         return m_KeyFrames.GetMinFrameId();
     }
 
-    virtual int GetMaxFrameId(){
+    virtual int GetMaxFrameId() {
         return m_KeyFrames.GetMaxFrameId();
     }
 
-    void AddAnimationOffset(int offset){
+    void AddAnimationOffset(int offset) {
         m_KeyFrames.AddAnimationOffset(offset);
     }
 
-    std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers(){
+    std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() {
         return m_KeyFrames.GetKeyFrameIdentifiers();
     }
 
-    vector<T>& GetKeyFrames(){
+    vector<T> &GetKeyFrames() {
         return m_KeyFrames.GetKeyFrames();
     }
 
-    const std::set<int> GetKeyFrameIds(){
+    const std::set<int> GetKeyFrameIds() {
         std::set<int> keyFrameIds;
-        vector<T>& keyFrames = GetKeyFrames();
-        for(auto itr = keyFrames.begin(); itr != keyFrames.end(); itr++){
+        vector<T> &keyFrames = GetKeyFrames();
+        for (auto itr = keyFrames.begin(); itr != keyFrames.end(); itr++) {
             keyFrameIds.insert(itr->GetFrameId());
         }
         return keyFrameIds;
     }
 
-    template<class TransferFunction> void Transfer(TransferFunction &transfer){
+    template<class TransferFunction>
+    void Transfer(TransferFunction &transfer) {
         AbstractFrameState::Transfer(transfer);
         TRANSFER(GetKeyFrames());
     }
@@ -122,24 +129,26 @@ public:
         return GetKeyFrames().size();
     }
 
-    virtual int GetKeyFrameAtIndex(int idx) override{
+    virtual int GetKeyFrameAtIndex(int idx) override {
         return GetKeyFrames()[idx].GetKeyFrame().GetFrameId();
     }
 
     void DeleteKeyFrame(int frameId) override {
-        std::vector<T> & keyframes = m_KeyFrames.GetKeyFrames();
+        std::vector<T> &keyframes = m_KeyFrames.GetKeyFrames();
         int targetIdx = -1;
-        for(int keyframeIdx = 0 ; keyframeIdx < keyframes.size(); keyframeIdx++){
-            if(keyframes[keyframeIdx].GetKeyFrame().GetFrameId() == frameId){
+        for (int keyframeIdx = 0; keyframeIdx < keyframes.size(); keyframeIdx++) {
+            if (keyframes[keyframeIdx].GetKeyFrame().GetFrameId() == frameId) {
                 targetIdx = keyframeIdx;
                 break;
             }
         }
 
-        if(targetIdx >= 0)
+        if (targetIdx >= 0)
             keyframes.erase(keyframes.begin() + targetIdx);
 
         this->Apply(frameId);
+
+        SendFrameChangeNotification(frameId);
     }
 
 protected:
@@ -182,12 +191,12 @@ FindKeyFramePair(int frameId, std::vector<T> &keyFrames, std::pair<T *, T *> &re
 
 template<typename T>
 typename std::vector<T>::iterator FindLastKeyFrame(int frameId, std::vector<T> &keyFrames) {
-    if(keyFrames.size() == 0){
+    if (keyFrames.size() == 0) {
         return keyFrames.end();
     }
 
-    if(keyFrames.size() == 1){
-        if(frameId >= keyFrames[0].GetFrameId())
+    if (keyFrames.size() == 1) {
+        if (frameId >= keyFrames[0].GetFrameId())
             return keyFrames.begin();
         else
             return keyFrames.end();
@@ -219,20 +228,21 @@ typename std::vector<T>::iterator FindInsertPosition(int frameId, std::vector<T>
 }
 
 template<typename T>
-T *InsertOrUpdateKeyFrame(int frameId, std::vector<T> &keyFrames, AbstractFrameState* pFrameState, bool* isInsert = NULL) {
+T *
+InsertOrUpdateKeyFrame(int frameId, std::vector<T> &keyFrames, AbstractFrameState *pFrameState, bool *isInsert = NULL) {
     auto itr = FindInsertPosition(frameId, keyFrames);
     T *pKeyFrame = NULL;
     if (itr == keyFrames.end()) {
         int currentFrameSize = keyFrames.size();
         keyFrames.resize(currentFrameSize + 1);
         pKeyFrame = &keyFrames[currentFrameSize];
-        if(isInsert){ // Inserted at last of the keyFrames.
+        if (isInsert) { // Inserted at last of the keyFrames.
             *isInsert = true;
         }
     } else if (itr->GetFrameId() == frameId) { // The frame exists, reassign value later
         pKeyFrame = &(*itr);
 
-        if(isInsert){
+        if (isInsert) {
             *isInsert = false; // Update the value
         }
     } else {
@@ -240,7 +250,7 @@ T *InsertOrUpdateKeyFrame(int frameId, std::vector<T> &keyFrames, AbstractFrameS
         auto newFrameItr = keyFrames.insert(itr, transformKeyFrame);
         pKeyFrame = &(*newFrameItr);
 
-        if(isInsert){
+        if (isInsert) {
             *isInsert = true;
         }
     }
