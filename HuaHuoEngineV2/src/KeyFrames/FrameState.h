@@ -138,6 +138,8 @@ public:
 
         if(targetIdx >= 0)
             keyframes.erase(keyframes.begin() + targetIdx);
+
+        this->Apply(frameId);
     }
 
 protected:
