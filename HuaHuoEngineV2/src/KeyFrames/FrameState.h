@@ -66,11 +66,9 @@ public:
 
     virtual int GetKeyFrameAtIndex(int idx) = 0;
 
-    virtual void DeleteKeyFrame(int frameId) = 0;
+    virtual void DeleteKeyFrame(KeyFrame* keyFrame);
 
     virtual std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() = 0;
-protected:
-    void SendFrameChangeNotification(int frameId);
 
 protected:
     std::string typeName;
@@ -143,12 +141,12 @@ public:
             }
         }
 
-        if (targetIdx >= 0)
+        if (targetIdx >= 0){
+            AbstractFrameState::DeleteKeyFrame(keyframes[targetIdx].GetKeyFrame());
             keyframes.erase(keyframes.begin() + targetIdx);
+            this->Apply(frameId);
+        }
 
-        this->Apply(frameId);
-
-        SendFrameChangeNotification(frameId);
     }
 
 protected:

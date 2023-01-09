@@ -143,6 +143,8 @@ public:
     // void AddKeyFrame(int frameId, AbstractFrameState* keyFrame);
     void AddKeyFrame(KeyFrame* keyFrame);
 
+    void DeleteKeyFrame(KeyFrame* keyFrame);
+
     bool IsKeyFrame(int frameId) {
         if (keyFrames.contains(frameId) && !keyFrames[frameId].empty())
             return true;

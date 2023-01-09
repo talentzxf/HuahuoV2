@@ -52,7 +52,7 @@ void AbstractFrameState::SetName(const char *name) {
     frameStateName = name;
 }
 
-void AbstractFrameState::SendFrameChangeNotification(int frameId) {
-    KeyFrameChangedEventHandlerArgs args(GetBaseShape()->GetLayer(false), frameId);
-    GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
+void AbstractFrameState::DeleteKeyFrame(KeyFrame* keyFrame) {
+    Layer* layer = GetBaseShape()->GetLayer(false);
+    layer->DeleteKeyFrame(keyFrame);
 }

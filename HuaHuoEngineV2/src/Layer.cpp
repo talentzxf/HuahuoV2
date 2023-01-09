@@ -121,6 +121,38 @@ void Layer::AddKeyFrame(KeyFrame* keyFrame) {
     GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
 }
 
+void Layer::DeleteKeyFrame(KeyFrame *keyFrame) {
+    int frameId = keyFrame->GetFrameId();
+    AbstractFrameState* frameState = keyFrame->GetFrameState();
+    if (keyFrames.contains(frameId) && frameState != NULL) {
+        auto keyFrameSet = keyFrames[frameId];
+        auto foundKeyFrameObjItr = std::find_if(keyFrameSet.begin(), keyFrameSet.end(),[frameState](const int keyFrameIdentifier){
+            KeyFrame& keyFrameObject = GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameIdentifier);
+            if(keyFrameObject.GetFrameState() == NULL || !keyFrameObject.GetFrameState()->IsValid())
+                return false;
+
+            return keyFrameObject.GetFrameState()->GetInstanceID() == frameState->GetInstanceID();
+        });
+        if(foundKeyFrameObjItr != keyFrameSet.end()) // frameId and frameState both match. No need to add again.
+            return;
+    }
+
+    if (!keyFrames.contains(frameId)) {
+        keyFrames.insert(std::pair<KeyFrameIdentifier, KeyFrameIdentifierSet>(frameId, KeyFrameIdentifierSet()));
+    }
+
+    keyFrames.find(frameId)->second.push_back(keyFrame->GetKeyFrameIdentifier());
+    if (this->GetObjectStore() != NULL) {
+        this->GetObjectStore()->UpdateMaxFrameId(frameId);
+    }
+
+    BaseShape* shape = keyFrame->GetBaseShape();
+    shape->RefreshKeyFrameCache();
+
+    KeyFrameChangedEventHandlerArgs args(this, frameId);
+    GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
+}
+
 void Layer::SetObjectStore(const ObjectStore *store) {
     this->objectStore = store;
 }
