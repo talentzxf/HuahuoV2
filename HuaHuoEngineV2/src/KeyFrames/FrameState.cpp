@@ -52,7 +52,7 @@ void AbstractFrameState::SetName(const char *name) {
     frameStateName = name;
 }
 
-void AbstractFrameState::DeleteKeyFrame(KeyFrame* keyFrame) {
+void AbstractFrameState::DeleteKeyFrameInternal(KeyFrame* keyFrame) {
     Layer* layer = GetBaseShape()->GetLayer(false);
     layer->DeleteKeyFrame(keyFrame);
 }
