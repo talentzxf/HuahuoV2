@@ -68,7 +68,7 @@ public:
 
     virtual void DeleteKeyFrame(int keyFrameId) = 0;
     virtual std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() = 0;
-    
+
 protected:
     void DeleteKeyFrameInternal(KeyFrame* keyFrame);
 
