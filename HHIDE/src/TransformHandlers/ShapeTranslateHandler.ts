@@ -71,7 +71,7 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
                 }
 
                 obj.position = proposedNewPosition
-                obj.store()
+                obj.store(false) // No need to store segments.
             }
 
             this.lastPos = newPos

@@ -539,10 +539,12 @@ abstract class BaseShapeJS {
     }
 
     // TODO: Do we really need a store ????
-    store() {
-        let segments = this.getSegments()
-        if (segments) {
-            this.storeSegments(segments)
+    store(storeSegments: boolean = true) {
+        if(storeSegments){
+            let segments = this.getSegments()
+            if (segments) {
+                this.storeSegments(segments)
+            }
         }
 
         // Store index
