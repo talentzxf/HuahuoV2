@@ -554,6 +554,13 @@ void testReadFromFile(){
         Assert(keyframeId >= 0);
     }
     customComponent->DeleteKeyFrame(0);
+
+    customComponent->GetBaseShape()->GetLayer()->SetCurrentFrame(20);
+    customComponent->SetFloatValue("growth", 0.5);
+
+    customComponent->DeleteKeyFrame(20);
+
+    customComponent->GetBaseShape()->GetLayer()->IsKeyFrame(20);
 }
 
 int main() {

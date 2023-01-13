@@ -171,12 +171,12 @@ void Layer::DeleteKeyFrame(KeyFrame *keyFrame) {
         }
     }
 
+    BaseShape *shape = keyFrame->GetBaseShape();
+    shape->RefreshKeyFrameCache();
+
     if (this->GetObjectStore() != NULL) {
         this->GetObjectStore()->SyncLayersInfo();
     }
-
-    BaseShape *shape = keyFrame->GetBaseShape();
-    shape->RefreshKeyFrameCache();
 
     KeyFrameChangedEventHandlerArgs args(this, frameId);
     GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);

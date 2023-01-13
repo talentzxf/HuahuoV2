@@ -144,8 +144,9 @@ public:
         }
 
         if (targetIdx >= 0){
-            AbstractFrameState::DeleteKeyFrameInternal(&keyframes[targetIdx].GetKeyFrame());
+            KeyFrame* tobeDeletedKeyFrame = &keyframes[targetIdx].GetKeyFrame();
             keyframes.erase(keyframes.begin() + targetIdx);
+            AbstractFrameState::DeleteKeyFrameInternal(tobeDeletedKeyFrame);
             this->Apply(frameId);
         }
     }
