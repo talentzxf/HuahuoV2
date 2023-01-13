@@ -148,6 +148,8 @@ public:
             keyframes.erase(keyframes.begin() + targetIdx);
             AbstractFrameState::DeleteKeyFrameInternal(tobeDeletedKeyFrame);
             this->Apply(frameId);
+        }else{
+            printf("Doesn't found the frameId:%d\n", frameId);
         }
     }
 

@@ -875,7 +875,7 @@ abstract class BaseShapeJS {
                 getter: ()=>{
                     let keyFrames = []
                     for(let componentName of basicComponents){
-                        let componentKeyFrames = _this.getComponentKeyFrames(componentName)()
+                        let componentKeyFrames = _this.getComponentKeyFrames(componentName).bind(_this)()
 
                         for(let keyFrameId of componentKeyFrames){
                             if(keyFrames.indexOf(keyFrameId) == -1){
@@ -883,11 +883,13 @@ abstract class BaseShapeJS {
                             }
                         }
                     }
+
+                    return keyFrames
                 },
                 setter: this.insertComponentKeyFrame("ShapeTransformFrameState").bind(this), // How to handle setter??
-                deleter: ()=>{
+                deleter: (frameId)=>{
                     for(let componentName of basicComponents){
-                        _this.deleteComponentKeyFrame(componentName)
+                        _this.deleteComponentKeyFrame(componentName).bind(_this)(frameId)
                     }
                 }
             }
@@ -927,7 +929,7 @@ abstract class BaseShapeJS {
         return function (frameId) {
             console.log("Trying to delete keyframe:" + frameId + " from component:" + componentName)
 
-            let component = _this.rawObj.GetFrameState(componentName)
+            let component = _this.rawObj.GetFrameStateByTypeName(componentName)
             component.DeleteKeyFrame(frameId)
 
             _this.update(true)
