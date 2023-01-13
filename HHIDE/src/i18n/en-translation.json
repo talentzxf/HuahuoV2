@@ -56,7 +56,7 @@
   },
   "inspector": {
     "BornFrame": "Born Frame",
-    "ShapeTransformFrameState": "Basic Transforms",
+    "BasicComponents": "Basic Transforms",
     "ShapeFollowCurveFrameState": "Follow Path",
     "BaseProperties": "Base Properties",
     "CollapseAll": "Collapse All",

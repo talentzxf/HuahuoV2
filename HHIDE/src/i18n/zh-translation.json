@@ -56,7 +56,7 @@
   },
   "inspector": {
     "BornFrame": "出生帧",
-    "ShapeTransformFrameState": "基本变换",
+    "BasicComponents": "基本变换",
     "ShapeFollowCurveFrameState": "贴边",
     "BaseProperties": "基础属性",
     "CollapseAll": "折叠所有配置",

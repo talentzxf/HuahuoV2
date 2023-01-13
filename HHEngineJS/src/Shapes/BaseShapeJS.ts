@@ -6,6 +6,10 @@ import {ShapeCenterSelector} from "./ShapeCenterSelector";
 import {ValueChangeHandler} from "./ValueChangeHandler";
 import {AbstractComponent} from "../Components/AbstractComponent";
 
+let BASIC_COMPONENTS = "BasicComponents"
+
+let basicComponents = ["ShapeTransformFrameState", "ShapeSegmentFrameState"]
+
 declare function castObject(obj: any, clz: any): any;
 
 declare var Module: any;
@@ -837,7 +841,7 @@ abstract class BaseShapeJS {
             unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("rotation")
         })
 
-        let transformFrameStateSheet = this.getComponentConfigSheet("ShapeTransformFrameState")
+        let transformFrameStateSheet = this.getComponentConfigSheet(BASIC_COMPONENTS)
         let followCurveFrameStateSheet = this.getComponentConfigSheet("ShapeFollowCurveFrameState")
 
         componentConfigSheet.config.children.push({
@@ -861,12 +865,41 @@ abstract class BaseShapeJS {
     }
 
     getComponentConfigSheet(componentName) {
-        return {
-            key: "inspector." + componentName,
-            type: PropertyType.KEYFRAMES,
-            getter: this.getComponentKeyFrames(componentName).bind(this),
-            setter: this.insertComponentKeyFrame(componentName).bind(this),
-            deleter: this.deleteComponentKeyFrame(componentName).bind(this)
+
+        let _this = this
+
+        if(componentName == BASIC_COMPONENTS){
+            return {
+                key: "inspector." + componentName,
+                type: PropertyType.KEYFRAMES,
+                getter: ()=>{
+                    let keyFrames = []
+                    for(let componentName of basicComponents){
+                        let componentKeyFrames = _this.getComponentKeyFrames(componentName)()
+
+                        for(let keyFrameId of componentKeyFrames){
+                            if(keyFrames.indexOf(keyFrameId) == -1){
+                                keyFrames.push(keyFrameId)
+                            }
+                        }
+                    }
+                },
+                setter: this.insertComponentKeyFrame("ShapeTransformFrameState").bind(this), // How to handle setter??
+                deleter: ()=>{
+                    for(let componentName of basicComponents){
+                        _this.deleteComponentKeyFrame(componentName)
+                    }
+                }
+            }
+        }
+        else{
+            return {
+                key: "inspector." + componentName,
+                type: PropertyType.KEYFRAMES,
+                getter: this.getComponentKeyFrames(componentName).bind(this),
+                setter: this.insertComponentKeyFrame(componentName).bind(this),
+                deleter: this.deleteComponentKeyFrame(componentName).bind(this)
+            }
         }
     }
 
