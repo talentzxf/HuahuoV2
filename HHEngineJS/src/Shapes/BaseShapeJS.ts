@@ -539,12 +539,10 @@ abstract class BaseShapeJS {
     }
 
     // TODO: Do we really need a store ????
-    store(storeSegments: boolean = true) {
-        if(storeSegments){
-            let segments = this.getSegments()
-            if (segments) {
-                this.storeSegments(segments)
-            }
+    store() {
+        let segments = this.getSegments()
+        if (segments) {
+            this.storeSegments(segments)
         }
 
         // Store index
@@ -716,7 +714,7 @@ abstract class BaseShapeJS {
         this.name = name
     }
 
-    getBornFrame(){
+    getBornFrame() {
         return this.rawObj.GetBornFrameId() + 1 // Stored in Cpp side starts from 0 while during display starts from 1.
     }
 
@@ -873,7 +871,7 @@ abstract class BaseShapeJS {
     }
 
     getComponentKeyFrames(componentName) {
-        return function(){
+        return function () {
             let frameStateRawObj = this.rawObj.GetFrameStateByTypeName(componentName)
 
             let keyFrameCount = frameStateRawObj.GetKeyFrameCount()
@@ -885,15 +883,15 @@ abstract class BaseShapeJS {
         }
     }
 
-    insertComponentKeyFrame(componentName){
-        return function(){
+    insertComponentKeyFrame(componentName) {
+        return function () {
 
         }
     }
 
-    deleteComponentKeyFrame(componentName){
+    deleteComponentKeyFrame(componentName) {
         let _this = this
-        return function(frameId){
+        return function (frameId) {
             console.log("Trying to delete keyframe:" + frameId + " from component:" + componentName)
 
             let component = _this.rawObj.GetFrameState(componentName)
