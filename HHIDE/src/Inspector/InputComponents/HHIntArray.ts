@@ -3,6 +3,7 @@ import {paper} from "hhenginejs"
 import {createPenShape, selectedPenCapColor, unselectedPenCapColor} from "./Utils";
 import {huahuoEngine} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
+import {ContextMenu} from "hhcommoncomponents";
 
 const canvasWidth = 200
 const canvasHeight = 50
@@ -89,6 +90,9 @@ class TimelineSpan {
     cellWidth: number = -1
     yOffset: number = -1
 
+    startFrameId: number = -1
+    endFrameId: number = -1
+
     constructor(yOffset) {
         this.rectangleShape = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Size(10, 10))
         this.rectangleShape.fillColor = new paper.Color("lightblue")
@@ -100,7 +104,6 @@ class TimelineSpan {
     }
 
     pointOverRectangle(point: paper.Point) {
-        console.log("Here here")
         if (this.rectangleShape.contains(point)) {
             this.rectangleShape.fillColor = new paper.Color("darkblue")
             this.rectangleShape.strokeColor = new paper.Color("gray")
@@ -114,6 +117,9 @@ class TimelineSpan {
     }
 
     setFrameSpan(startFrameId, endFrameId) {
+        this.startFrameId = startFrameId
+        this.endFrameId = endFrameId
+
         let left = penOffset + startFrameId * this.cellWidth
         let right = penOffset + endFrameId * this.cellWidth
 
@@ -159,7 +165,9 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
 
     kbEventAttached = false
 
-    curHighlighedSpan = null
+    curHighlighedSpan: TimelineSpan = null
+
+    contextMenu: ContextMenu = new ContextMenu()
 
     constructor(getter, setter, updater, deleter, titleDiv) {
         super();
@@ -210,6 +218,7 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
         })
 
         this.addEventListener("mousemove", (evt: MouseEvent) => {
+            this.curHighlighedSpan = null
             let oldProjectId = paper.project.index
 
             try {
@@ -217,12 +226,39 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
                 for (let spanIdx = 0; spanIdx < this.timelineSpans.length; spanIdx++) {
                     let worldPos = paper.view.viewToProject(new paper.Point(evt.offsetX, evt.offsetY))
                     let targetSpan = this.timelineSpans[spanIdx]
-                    if(targetSpan.pointOverRectangle(worldPos)){
+                    if (targetSpan.pointOverRectangle(worldPos)) {
                         this.curHighlighedSpan = targetSpan
                     }
                 }
             } finally {
                 paper.projects[oldProjectId].activate()
+            }
+        })
+
+        this.addEventListener("click", (evt: MouseEvent) => {
+            if (this.curHighlighedSpan) {
+                this.contextMenu.setItems([
+                    {
+                        itemName: "Reverse Span",
+                        onclick: () => {
+                            let startFrameId = this.curHighlighedSpan.startFrameId
+                            let endFrameId = this.curHighlighedSpan.endFrameId
+
+                            alert("To be implemented")
+                        }
+                    }
+//                 {
+//                     itemName: "Create Cube",
+//                     onclick: _this.treeEventHandler.createCube.bind(_this.treeEventHandler)
+//                 },
+//                 {
+//                     itemName: "Delete Object",
+//                     onclick: () => {
+//                         alert("Delete object")
+//                     }
+                ])
+
+                this.contextMenu.onContextMenu(evt)
             }
         })
     }
