@@ -326,6 +326,10 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
                 span.remove()
             }
 
+            for(let unusedTimelineIndex = index; unusedTimelineIndex < this.timelinePointers.length; unusedTimelineIndex++){
+                let pointer = this.timelinePointers.pop()
+                pointer.remove()
+            }
         } finally {
             paper.projects[oldProjectId].activate()
         }
