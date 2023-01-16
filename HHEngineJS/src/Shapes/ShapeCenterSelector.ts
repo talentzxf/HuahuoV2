@@ -31,6 +31,14 @@ class ShapeCenterSelector {
             })
     }
 
+    globalToLocal(globalPosition: paper.Point): paper.Point{
+        return this._targetObj.globalToLocal(globalPosition)
+    }
+
+    localToGlobal(localPosition: paper.Point): paper.Point{
+        return this._targetObj.localToGlobal(localPosition)
+    }
+
     getTypeName() {
         return "CenterOf"
     }
