@@ -18,9 +18,8 @@ function triggerFocus(element) {
     if ("createEvent" in document) {
         event = document.createEvent("Event");
         event.initEvent(eventType, bubbles, true);
-    }
-    else if ("Event" in window) {
-        event = new Event(eventType, { bubbles: bubbles, cancelable: true });
+    } else if ("Event" in window) {
+        event = new Event(eventType, {bubbles: bubbles, cancelable: true});
     }
 
     element.focus();
@@ -38,7 +37,7 @@ class TimelinePointer {
     cellWidth: number = -1
     minFrameId: number = -1
 
-    set selected(val: boolean){
+    set selected(val: boolean) {
         if (this._selected == val)
             return
 
@@ -76,21 +75,22 @@ class TimelinePointer {
         this.frameId = frameId
     }
 
-    get paperHeight(){
+    get paperHeight() {
         return this.paperGroup.bounds.height
     }
 
-    remove(){
+    remove() {
         this.paperGroup.remove()
     }
 }
 
-class TimelineSpan{
+class TimelineSpan {
     rectangleShape: paper.Path
     cellWidth: number = -1
     yOffset: number = -1
+
     constructor(yOffset) {
-        this.rectangleShape = new paper.Path.Rectangle(new paper.Point(0,0), new paper.Size(10,10))
+        this.rectangleShape = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Size(10, 10))
         this.rectangleShape.fillColor = new paper.Color("lightblue")
         this.rectangleShape.strokeColor = new paper.Color("black")
         this.rectangleShape.strokeWidth = 2
@@ -99,7 +99,21 @@ class TimelineSpan{
         this.rectangleShape.visible = false
     }
 
-    setFrameSpan(startFrameId, endFrameId){
+    pointOverRectangle(point: paper.Point) {
+        console.log("Here here")
+        if (this.rectangleShape.contains(point)) {
+            this.rectangleShape.fillColor = new paper.Color("darkblue")
+            this.rectangleShape.strokeColor = new paper.Color("gray")
+            return true
+        } else {
+            this.rectangleShape.fillColor = new paper.Color("lightblue")
+            this.rectangleShape.strokeColor = new paper.Color("black")
+
+            return false
+        }
+    }
+
+    setFrameSpan(startFrameId, endFrameId) {
         let left = penOffset + startFrameId * this.cellWidth
         let right = penOffset + endFrameId * this.cellWidth
 
@@ -115,7 +129,7 @@ class TimelineSpan{
         this.rectangleShape.visible = true
     }
 
-    remove(){
+    remove() {
         this.rectangleShape.remove()
     }
 }
@@ -144,6 +158,8 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
     selectedPointer = null
 
     kbEventAttached = false
+
+    curHighlighedSpan = null
 
     constructor(getter, setter, updater, deleter, titleDiv) {
         super();
@@ -181,41 +197,58 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
 
         let kbEventListener = this.onKeyUp.bind(this)
 
-        this.addEventListener("focusin", ()=>{
-            if(this.kbEventAttached == false){
+        this.addEventListener("focusin", () => {
+            if (this.kbEventAttached == false) {
                 document.addEventListener("keyup", kbEventListener)
                 this.kbEventAttached = true
             }
         })
 
-        this.addEventListener("focusout", ()=>{
+        this.addEventListener("focusout", () => {
             document.removeEventListener("keyup", kbEventListener)
             this.kbEventAttached = false
         })
+
+        this.addEventListener("mousemove", (evt: MouseEvent) => {
+            let oldProjectId = paper.project.index
+
+            try {
+                paper.projects[this.projectId].activate()
+                for (let spanIdx = 0; spanIdx < this.timelineSpans.length; spanIdx++) {
+                    let worldPos = paper.view.viewToProject(new paper.Point(evt.offsetX, evt.offsetY))
+                    let targetSpan = this.timelineSpans[spanIdx]
+                    if(targetSpan.pointOverRectangle(worldPos)){
+                        this.curHighlighedSpan = targetSpan
+                    }
+                }
+            } finally {
+                paper.projects[oldProjectId].activate()
+            }
+        })
     }
 
-    onKeyUp(evt: KeyboardEvent){
-            if(evt.code == "Delete"){
-                if(this.timelinePointers.length <= 2){
-                    HHToast.warn(i18n.t("toast.insufficientKeyFrames"))
-                }else{
-                    let tobeDeletedPointer = this.selectedPointer
+    onKeyUp(evt: KeyboardEvent) {
+        if (evt.code == "Delete") {
+            if (this.timelinePointers.length <= 2) {
+                HHToast.warn(i18n.t("toast.insufficientKeyFrames"))
+            } else {
+                let tobeDeletedPointer = this.selectedPointer
 
-                    this.selectedPointer = null
+                this.selectedPointer = null
 
-                    this.timelinePointers = this.timelinePointers.filter( (penInArray)=>{
-                        return penInArray.frameId != tobeDeletedPointer.frameId
-                    })
+                this.timelinePointers = this.timelinePointers.filter((penInArray) => {
+                    return penInArray.frameId != tobeDeletedPointer.frameId
+                })
 
-                    this.deleter(tobeDeletedPointer.frameId)
+                this.deleter(tobeDeletedPointer.frameId)
 
-                    tobeDeletedPointer.remove()
+                tobeDeletedPointer.remove()
 
-                    this.refresh()
+                this.refresh()
 
-                    evt.stopPropagation()
-                }
+                evt.stopPropagation()
             }
+        }
     }
 
     openTimeline() {
@@ -246,17 +279,17 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
         return this.timelinePointers[idx]
     }
 
-    getTimelineSpan(idx: number, yOffset: number): TimelineSpan{
-        while(this.timelineSpans.length <= idx){
+    getTimelineSpan(idx: number, yOffset: number): TimelineSpan {
+        while (this.timelineSpans.length <= idx) {
             this.timelineSpans.push(new TimelineSpan(yOffset))
         }
 
         return this.timelineSpans[idx]
     }
 
-    onPenClicked(evt: MouseEvent){
+    onPenClicked(evt: MouseEvent) {
         console.log(evt)
-        if(!evt.target["data"] || !evt.target["data"]["meta"]){
+        if (!evt.target["data"] || !evt.target["data"]["meta"]) {
             return
         }
 
@@ -293,7 +326,7 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
             let lastSpanFrameId = -1
             for (let frameId of intArrayValues) {
 
-                if(firstSpanFrameId < 0){
+                if (firstSpanFrameId < 0) {
                     firstSpanFrameId = frameId
                 }
 
@@ -304,16 +337,16 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
                 timelinePointer.setFrameId(frameId)
 
                 // Draw timeline span
-                if(lastSpanFrameId >= 0){
+                if (lastSpanFrameId >= 0) {
                     let span = this.getTimelineSpan(index, timelinePointer.paperHeight)
                     span.cellWidth = cellWidth
                     span.setFrameSpan(lastSpanFrameId - firstSpanFrameId, frameId - firstSpanFrameId)
                 }
 
-                if(huahuoEngine.getActivePlayer().currentlyPlayingFrameId == frameId){
+                if (huahuoEngine.getActivePlayer().currentlyPlayingFrameId == frameId) {
                     // timelinePointer.selected = true
                     // this.selectedPointer = timelinePointer
-                }else{
+                } else {
                     timelinePointer.selected = false
                 }
 
@@ -321,12 +354,12 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
                 index++
             }
 
-            for(let unusedSpanIndex = index; unusedSpanIndex < this.timelineSpans.length; unusedSpanIndex++){
+            for (let unusedSpanIndex = index; unusedSpanIndex < this.timelineSpans.length; unusedSpanIndex++) {
                 let span = this.timelineSpans.pop()
                 span.remove()
             }
 
-            for(let unusedTimelineIndex = index; unusedTimelineIndex < this.timelinePointers.length; unusedTimelineIndex++){
+            for (let unusedTimelineIndex = index; unusedTimelineIndex < this.timelinePointers.length; unusedTimelineIndex++) {
                 let pointer = this.timelinePointers.pop()
                 pointer.remove()
             }
