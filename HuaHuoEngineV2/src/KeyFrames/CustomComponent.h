@@ -149,6 +149,8 @@ public:
 
     void DeleteKeyFrame(int frameId) override;
 
+    void ReverseKeyFrame(int startFrameId, int endFrameId) override;
+
 private:
     int RegisterField(const char* fieldName, CustomDataType dataType){
         if(m_FrameStates.size() != m_fieldNameFieldIndexMap.size()){

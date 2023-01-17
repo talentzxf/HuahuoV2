@@ -76,4 +76,10 @@ void CustomComponent::DeleteKeyFrame(int frameId) {
     }
 }
 
+void CustomComponent::ReverseKeyFrame(int startFrameId, int endFrameId) {
+    for(auto frameState : m_FrameStates){
+        frameState.GetComponentPtr()->ReverseKeyFrame(startFrameId, endFrameId);
+    }
+}
+
 

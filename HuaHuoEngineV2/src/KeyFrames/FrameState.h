@@ -10,6 +10,7 @@
 #include "Math/Vector3f.h"
 #include "BaseClasses/PPtr.h"
 #include "KeyFrame.h"
+
 class BaseShape;
 
 class AbstractFrameState : public Object {
@@ -67,10 +68,13 @@ public:
     virtual int GetKeyFrameAtIndex(int idx) = 0;
 
     virtual void DeleteKeyFrame(int keyFrameId) = 0;
+
+    virtual void ReverseKeyFrame(int startFrameId, int endFrameId) = 0;
+
     virtual std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() = 0;
 
 protected:
-    void DeleteKeyFrameInternal(KeyFrame* keyFrame);
+    void DeleteKeyFrameInternal(KeyFrame *keyFrame);
 
 protected:
     std::string typeName;
@@ -133,6 +137,10 @@ public:
         return GetKeyFrames()[idx].GetKeyFrame().GetFrameId();
     }
 
+    virtual void ReverseKeyFrame(int startFrameId, int endFrameId) override {
+        GetKeyFrames()[startFrameId]
+    }
+
     virtual void DeleteKeyFrame(int frameId) override {
         std::vector<T> &keyframes = m_KeyFrames.GetKeyFrames();
         int targetIdx = -1;
@@ -143,12 +151,12 @@ public:
             }
         }
 
-        if (targetIdx >= 0){
-            KeyFrame* tobeDeletedKeyFrame = &keyframes[targetIdx].GetKeyFrame();
+        if (targetIdx >= 0) {
+            KeyFrame *tobeDeletedKeyFrame = &keyframes[targetIdx].GetKeyFrame();
             keyframes.erase(keyframes.begin() + targetIdx);
             AbstractFrameState::DeleteKeyFrameInternal(tobeDeletedKeyFrame);
             this->Apply(frameId);
-        }else{
+        } else {
             printf("Doesn't found the frameId:%d\n", frameId);
         }
     }
