@@ -56,3 +56,4 @@ void AbstractFrameState::DeleteKeyFrameInternal(KeyFrame* keyFrame) {
     Layer* layer = GetBaseShape()->GetLayer(false);
     layer->DeleteKeyFrame(keyFrame);
 }
+

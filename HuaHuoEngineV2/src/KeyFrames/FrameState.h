@@ -10,6 +10,8 @@
 #include "Math/Vector3f.h"
 #include "BaseClasses/PPtr.h"
 #include "KeyFrame.h"
+#include "Serialize/SerializationCaching/BlockMemoryCacheWriter.h"
+#include "Serialize/SerializationCaching/MemoryCacherReadBlocks.h"
 
 class BaseShape;
 
@@ -138,7 +140,23 @@ public:
     }
 
     virtual void ReverseKeyFrame(int startFrameId, int endFrameId) override {
-        GetKeyFrames()[startFrameId]
+        // TODO: Do we need remap the pptr ??
+
+        BlockMemoryCacheWriter cacheWriter(kMemTempAlloc);
+
+        StreamedBinaryWrite writeStream;
+        CachedWriter& writeCache = writeStream.Init(kSerializeForInspector);
+        writeCache.InitWrite(cacheWriter);
+
+        GetKeyFrames()[startFrameId].Transfer(writeStream);
+        writeCache.CompleteWriting();
+
+        MemoryCacherReadBlocks cacheReader(cacheWriter.GetCacheBlocks(), cacheWriter.GetFileLength(), cacheWriter.GetCacheSize());
+        StreamedBinaryRead readStream;
+        CachedReader& readCache = readStream.Init(kSerializeForInspector | kDontCreateMonoBehaviourScriptWrapper | kIsCloningObject);
+        readCache.InitRead(cacheReader, 0, writeCache.GetPosition());
+        GetKeyFrames()[endFrameId].Transfer(readStream);
+        readCache.End();
     }
 
     virtual void DeleteKeyFrame(int frameId) override {
