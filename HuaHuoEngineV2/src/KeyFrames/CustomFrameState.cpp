@@ -146,7 +146,7 @@ CustomDataKeyFrame* CustomFrameState::GetColorStopArrayKeyFrame(int currentFrame
         // Copy the whole array from the previous keyframe.
         auto itr = FindLastKeyFrame(currentFrameId - 1, GetKeyFrames());
 
-        printf("Total frames:%d\n", GetKeyFrames().size());
+        printf("Total frames:%lu\n", GetKeyFrames().size());
         if (itr == GetKeyFrames().begin()) {
             printf("Is begin\n");
         }

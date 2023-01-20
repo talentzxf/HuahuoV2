@@ -22,11 +22,11 @@ public:
     MemoryFile(std::string fName, size_t reservedLength){
         data.resize(reservedLength);
         this->fName = fName;
-        printf("Reserving length:%d for file:%s\n", reservedLength, fName.c_str());
+        printf("Reserving length:%zu for file:%s\n", reservedLength, fName.c_str());
     }
 
     size_t GetFileLength(){
-        printf("%s,%d. File:%s, Data size is: %d bytes\n", __FILE__, __LINE__, fName.c_str(), data.size());
+        printf("%s,%d. File:%s, Data size is: %lu bytes\n", __FILE__, __LINE__, fName.c_str(), data.size());
         return data.size();
     }
 

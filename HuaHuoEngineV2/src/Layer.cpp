@@ -132,15 +132,8 @@ void Layer::DeleteKeyFrame(KeyFrame *keyFrame) {
     if (keyFrames.contains(frameId) && frameState != NULL) {
         KeyFrameIdentifierSet &keyFrameSet = keyFrames[frameId];
 
-        printf("Before erasing, component:%s still has %d objects for frameId:%d\n", frameState->GetName(), keyFrameSet.size(), frameId);
-
         for(int keyFrameObjectIdentifier : keyFrameSet){
             KeyFrame &keyFrameObject = GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameObjectIdentifier);
-
-            printf("\t KeyFrameObj Identifier:%d\n" + keyFrameObjectIdentifier);
-            printf("\t KeyFrameObject frameId:%d\n", keyFrameObject.GetFrameId());
-            printf("\t ComponentName:%s\n", keyFrameObject.GetFrameState()->GetName());
-            printf("\t ComponentTypeName:%s\n", keyFrameObject.GetFrameState()->GetTypeName());
         }
 
         std::erase_if(keyFrameSet, [keyFrame, frameState](const int keyFrameIdentifier) {
@@ -155,18 +148,10 @@ void Layer::DeleteKeyFrame(KeyFrame *keyFrame) {
             return false;
         });
 
-        printf("After erasing, component:%s still has %d objects for frameId:%d\n", frameState->GetName(), keyFrameSet.size(), frameId);
         for(int keyFrameObjectIdentifier : keyFrameSet){
             KeyFrame &keyFrameObject = GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameObjectIdentifier);
-
-            printf("\t KeyFrameObj Identifier:%d\n" + keyFrameObjectIdentifier);
-            printf("\t KeyFrameObject frameId:%d\n", keyFrameObject.GetFrameId());
-            printf("\t ComponentName:%s\n", keyFrameObject.GetFrameState()->GetName());
-            printf("\t ComponentTypeName:%s\n", keyFrameObject.GetFrameState()->GetTypeName());
         }
         if (keyFrameSet.size() == 0) {
-
-            printf("Erased key frame:%d from this component:%s \n", frameId, frameState->GetName());
             keyFrames.erase(frameId);
         }
     }

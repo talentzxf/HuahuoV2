@@ -264,7 +264,7 @@ SerializedFileLoadError SerializedFile::ReadHeader()
             || header.m_FileSize == 0
             || header.m_FileSize == std::numeric_limits<UInt32>::max())
             {
-                printf("m_ReadOffset: %d, header.m_FileSize:%d, header.m_DataOffset:%d, m_ReadEndOffset:%d\n", m_ReadOffset, header.m_FileSize, header.m_DataOffset, m_ReadEndOffset);
+                printf("m_ReadOffset: %zu, header.m_FileSize:%llu, header.m_DataOffset:%llu, m_ReadEndOffset:%zu\n", m_ReadOffset, header.m_FileSize, header.m_DataOffset, m_ReadEndOffset);
                 return kSerializedFileLoadError_Unknown;
             }
         // [header][metadata[...]][data]

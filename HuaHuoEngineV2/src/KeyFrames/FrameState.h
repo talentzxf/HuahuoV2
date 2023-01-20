@@ -96,19 +96,19 @@ public:
 
     }
 
-    virtual int GetMinFrameId() {
+    virtual int GetMinFrameId() override{
         return m_KeyFrames.GetMinFrameId();
     }
 
-    virtual int GetMaxFrameId() {
+    virtual int GetMaxFrameId() override{
         return m_KeyFrames.GetMaxFrameId();
     }
 
-    void AddAnimationOffset(int offset) {
+    void AddAnimationOffset(int offset) override{
         m_KeyFrames.AddAnimationOffset(offset);
     }
 
-    std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() {
+    std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() override{
         return m_KeyFrames.GetKeyFrameIdentifiers();
     }
 
@@ -116,7 +116,7 @@ public:
         return m_KeyFrames.GetKeyFrames();
     }
 
-    const std::set<int> GetKeyFrameIds() {
+    const std::set<int> GetKeyFrameIds() override{
         std::set<int> keyFrameIds;
         vector<T> &keyFrames = GetKeyFrames();
         for (auto itr = keyFrames.begin(); itr != keyFrames.end(); itr++) {
