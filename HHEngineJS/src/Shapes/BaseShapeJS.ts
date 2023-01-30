@@ -900,15 +900,32 @@ abstract class BaseShapeJS {
                 type: PropertyType.KEYFRAMES,
                 getter: this.getComponentKeyFrames(componentName).bind(this),
                 setter: this.insertComponentKeyFrame(componentName).bind(this),
-                deleter: this.deleteComponentKeyFrame(componentName).bind(this)
+                deleter: this.deleteComponentKeyFrame(componentName).bind(this),
+                updater: this.updateComponentKeyFrame(componentName).bind(this)
+            }
+        }
+    }
+
+    updateComponentKeyFrame(componentName){
+        let _this = this
+        let frameStateRawObj = this.rawObj.GetFrameStateByTypeName(componentName)
+
+        return function(type: string, params: object){
+            if(type == "ReverseKeyFrames"){
+                let startFrameId = params["startFrameId"]
+                let endFrameId = params["endFrameId"]
+
+                let currentFrameId = _this.getLayer().GetCurrentFrame()
+                frameStateRawObj.ReverseKeyFrame(startFrameId, endFrameId, currentFrameId);
+
+                _this.update(true)
             }
         }
     }
 
     getComponentKeyFrames(componentName) {
+        let frameStateRawObj = this.rawObj.GetFrameStateByTypeName(componentName)
         return function () {
-            let frameStateRawObj = this.rawObj.GetFrameStateByTypeName(componentName)
-
             let keyFrameCount = frameStateRawObj.GetKeyFrameCount()
             let keyFrames = []
             for (let idx = 0; idx < keyFrameCount; idx++) {

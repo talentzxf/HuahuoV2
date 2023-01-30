@@ -132,6 +132,7 @@ interface AbstractFrameState{
     long GetKeyFrameCount();
     long GetKeyFrameAtIndex(long idx);
     void DeleteKeyFrame(long frameId);
+    boolean ReverseKeyFrame(long startFrameId, long endFrameId, long currentFrameId);
 };
 
 [NoDelete]

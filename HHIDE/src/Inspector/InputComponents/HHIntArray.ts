@@ -244,7 +244,7 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
                             let startFrameId = this.curHighlighedSpan.startFrameId
                             let endFrameId = this.curHighlighedSpan.endFrameId
 
-                            alert("To be implemented")
+                            this.updater("ReverseKeyFrames", {startFrameId: startFrameId, endFrameId: endFrameId})
                         }
                     }
 //                 {

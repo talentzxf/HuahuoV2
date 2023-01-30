@@ -149,7 +149,7 @@ public:
 
     void DeleteKeyFrame(int frameId) override;
 
-    bool ReverseKeyFrame(int startFrameId, int endFrameId) override;
+    bool ReverseKeyFrame(int startFrameId, int endFrameId, int currentFrameId) override;
 
 private:
     int RegisterField(const char* fieldName, CustomDataType dataType){

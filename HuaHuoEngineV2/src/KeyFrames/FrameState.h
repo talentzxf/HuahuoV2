@@ -71,7 +71,7 @@ public:
 
     virtual void DeleteKeyFrame(int keyFrameId) = 0;
 
-    virtual bool ReverseKeyFrame(int startFrameId, int endFrameId) = 0;
+    virtual bool ReverseKeyFrame(int startFrameId, int endFrameId, int currentFrameId) = 0;
 
     virtual std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() = 0;
 
@@ -143,7 +143,7 @@ public:
     }
 
     KeyFrameIterator GetKeyFrameByFrameId(int frameId) {
-        KeyFrameArray& keyframes = GetKeyFrames();
+        KeyFrameArray &keyframes = GetKeyFrames();
 
         KeyFrameIterator resultKeyFrame = std::find_if(keyframes.begin(), keyframes.end(), [frameId](auto &keyFrame) {
             return keyFrame.GetFrameId() == frameId;
@@ -152,8 +152,8 @@ public:
         return resultKeyFrame;
     }
 
-    CachedWriter WriteToCache(T& object, BlockMemoryCacheWriter& cacheWriter, StreamedBinaryWrite& writeStream){
-        CachedWriter& writeCache = writeStream.Init(kSerializeForInspector);
+    CachedWriter WriteToCache(T &object, BlockMemoryCacheWriter &cacheWriter, StreamedBinaryWrite &writeStream) {
+        CachedWriter &writeCache = writeStream.Init(kSerializeForInspector);
         writeCache.InitWrite(cacheWriter);
 
         object.Transfer(writeStream);
@@ -162,16 +162,18 @@ public:
         return writeCache;
     }
 
-    void ReadFromCache(T& object, BlockMemoryCacheWriter& cacheWriter, CachedWriter& writeCache){
-        MemoryCacherReadBlocks cacheReader(cacheWriter.GetCacheBlocks(), cacheWriter.GetFileLength(), cacheWriter.GetCacheSize());
+    void ReadFromCache(T &object, BlockMemoryCacheWriter &cacheWriter, CachedWriter &writeCache) {
+        MemoryCacherReadBlocks cacheReader(cacheWriter.GetCacheBlocks(), cacheWriter.GetFileLength(),
+                                           cacheWriter.GetCacheSize());
         StreamedBinaryRead readStream;
-        CachedReader& readCache = readStream.Init(kSerializeForInspector | kDontCreateMonoBehaviourScriptWrapper | kIsCloningObject);
+        CachedReader &readCache = readStream.Init(
+                kSerializeForInspector | kDontCreateMonoBehaviourScriptWrapper | kIsCloningObject);
         readCache.InitRead(cacheReader, 0, writeCache.GetPosition());
         object.Transfer(readStream);
         readCache.End();
     }
 
-    virtual bool ReverseKeyFrame(int startFrameId, int endFrameId) override {
+    virtual bool ReverseKeyFrame(int startFrameId, int endFrameId, int currentFrameId) override {
 
         // TODO: Do we need remap the pptr ??
         KeyFrameIterator startKeyFrameItr = GetKeyFrameByFrameId(startFrameId);
@@ -182,8 +184,8 @@ public:
             return false;
         }
 
-        T& startKeyFrame = *startKeyFrameItr;
-        T& endKeyFrame = *endKeyFrameItr;
+        T &startKeyFrame = *startKeyFrameItr;
+        T &endKeyFrame = *endKeyFrameItr;
 
         BlockMemoryCacheWriter startCacheWriter(kMemTempAlloc);
         StreamedBinaryWrite startKeyFrameStream;
@@ -198,6 +200,8 @@ public:
 
         startKeyFrame.SetFrameId(startFrameId);
         endKeyFrame.SetFrameId(endFrameId);
+
+        Apply(currentFrameId);
         return true;
     }
 
