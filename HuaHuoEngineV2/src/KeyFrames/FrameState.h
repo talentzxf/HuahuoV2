@@ -71,7 +71,7 @@ public:
 
     virtual void DeleteKeyFrame(int keyFrameId) = 0;
 
-    virtual void ReverseKeyFrame(int startFrameId, int endFrameId) = 0;
+    virtual bool ReverseKeyFrame(int startFrameId, int endFrameId) = 0;
 
     virtual std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() = 0;
 
@@ -96,27 +96,30 @@ public:
 
     }
 
-    virtual int GetMinFrameId() override{
+    virtual int GetMinFrameId() override {
         return m_KeyFrames.GetMinFrameId();
     }
 
-    virtual int GetMaxFrameId() override{
+    virtual int GetMaxFrameId() override {
         return m_KeyFrames.GetMaxFrameId();
     }
 
-    void AddAnimationOffset(int offset) override{
+    void AddAnimationOffset(int offset) override {
         m_KeyFrames.AddAnimationOffset(offset);
     }
 
-    std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() override{
+    std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() override {
         return m_KeyFrames.GetKeyFrameIdentifiers();
     }
 
-    vector<T> &GetKeyFrames() {
+    typedef vector<T> KeyFrameArray;
+    typedef typename vector<T>::iterator KeyFrameIterator;
+
+    KeyFrameArray &GetKeyFrames() {
         return m_KeyFrames.GetKeyFrames();
     }
 
-    const std::set<int> GetKeyFrameIds() override{
+    const std::set<int> GetKeyFrameIds() override {
         std::set<int> keyFrameIds;
         vector<T> &keyFrames = GetKeyFrames();
         for (auto itr = keyFrames.begin(); itr != keyFrames.end(); itr++) {
@@ -139,24 +142,63 @@ public:
         return GetKeyFrames()[idx].GetKeyFrame().GetFrameId();
     }
 
-    virtual void ReverseKeyFrame(int startFrameId, int endFrameId) override {
-        // TODO: Do we need remap the pptr ??
+    KeyFrameIterator GetKeyFrameByFrameId(int frameId) {
+        KeyFrameArray& keyframes = GetKeyFrames();
 
-        BlockMemoryCacheWriter cacheWriter(kMemTempAlloc);
+        KeyFrameIterator resultKeyFrame = std::find_if(keyframes.begin(), keyframes.end(), [frameId](auto &keyFrame) {
+            return keyFrame.GetFrameId() == frameId;
+        });
 
-        StreamedBinaryWrite writeStream;
+        return resultKeyFrame;
+    }
+
+    CachedWriter WriteToCache(T& object, BlockMemoryCacheWriter& cacheWriter, StreamedBinaryWrite& writeStream){
         CachedWriter& writeCache = writeStream.Init(kSerializeForInspector);
         writeCache.InitWrite(cacheWriter);
 
-        GetKeyFrames()[startFrameId].Transfer(writeStream);
+        object.Transfer(writeStream);
         writeCache.CompleteWriting();
 
+        return writeCache;
+    }
+
+    void ReadFromCache(T& object, BlockMemoryCacheWriter& cacheWriter, CachedWriter& writeCache){
         MemoryCacherReadBlocks cacheReader(cacheWriter.GetCacheBlocks(), cacheWriter.GetFileLength(), cacheWriter.GetCacheSize());
         StreamedBinaryRead readStream;
         CachedReader& readCache = readStream.Init(kSerializeForInspector | kDontCreateMonoBehaviourScriptWrapper | kIsCloningObject);
         readCache.InitRead(cacheReader, 0, writeCache.GetPosition());
-        GetKeyFrames()[endFrameId].Transfer(readStream);
+        object.Transfer(readStream);
         readCache.End();
+    }
+
+    virtual bool ReverseKeyFrame(int startFrameId, int endFrameId) override {
+
+        // TODO: Do we need remap the pptr ??
+        KeyFrameIterator startKeyFrameItr = GetKeyFrameByFrameId(startFrameId);
+
+        KeyFrameIterator endKeyFrameItr = GetKeyFrameByFrameId(endFrameId);
+
+        if (startKeyFrameItr == GetKeyFrames().end() || endKeyFrameItr == GetKeyFrames().end()) {
+            return false;
+        }
+
+        T& startKeyFrame = *startKeyFrameItr;
+        T& endKeyFrame = *endKeyFrameItr;
+
+        BlockMemoryCacheWriter startCacheWriter(kMemTempAlloc);
+        StreamedBinaryWrite startKeyFrameStream;
+        CachedWriter startObjectCache = WriteToCache(startKeyFrame, startCacheWriter, startKeyFrameStream);
+
+        BlockMemoryCacheWriter endCacheWriter(kMemTempAlloc);
+        StreamedBinaryWrite endKeyFrameStream;
+        CachedWriter endObjectCache = WriteToCache(endKeyFrame, endCacheWriter, endKeyFrameStream);
+
+        ReadFromCache(startKeyFrame, endCacheWriter, endObjectCache);
+        ReadFromCache(endKeyFrame, startCacheWriter, startObjectCache);
+
+        startKeyFrame.SetFrameId(startFrameId);
+        endKeyFrame.SetFrameId(endFrameId);
+        return true;
     }
 
     virtual void DeleteKeyFrame(int frameId) override {

@@ -547,6 +547,8 @@ void testReadFromFile(){
 
     Assert(customComponent->GetFloatValue("growth") != clonedGrowthComponent->GetFloatValue("growth"));
 
+    customComponent->ReverseKeyFrame(0, 10);
+
     int keyFrameCount = customComponent->GetKeyFrameCount();
     for(int idx = 0 ; idx < keyFrameCount; idx++){
         int keyframeId = customComponent->GetKeyFrameAtIndex(idx);
