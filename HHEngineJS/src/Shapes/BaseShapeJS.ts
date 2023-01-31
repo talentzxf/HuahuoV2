@@ -891,6 +891,11 @@ abstract class BaseShapeJS {
                     for(let componentName of basicComponents){
                         _this.deleteComponentKeyFrame(componentName).bind(_this)(frameId)
                     }
+                },
+                updater: (type, params)=>{
+                    for(let componentName of basicComponents){
+                        _this.updateComponentKeyFrame(componentName).bind(_this)(type, params)
+                    }
                 }
             }
         }
