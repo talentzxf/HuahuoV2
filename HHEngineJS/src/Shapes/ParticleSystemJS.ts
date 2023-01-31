@@ -42,6 +42,10 @@ class ParticleSystemJS extends BaseShapeJS{
         this.createShape()
         this.store()
     }
+
+    override isSegmentSeletable(){
+        return false
+    }
 }
 
 clzObjectFactory.RegisterClass(shapeName, ParticleSystemJS.createParticleSystem)

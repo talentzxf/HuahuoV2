@@ -16,6 +16,7 @@
 #include "KeyFrames/CustomComponent.h"
 #include "Shapes/MirrorShape.h"
 #include "Shapes/NailShape.h"
+#include "Shapes/ParticleSystem.h"
 
 #ifdef HUAHUO_EDITOR
 #include "Editor/SceneInspector.h"

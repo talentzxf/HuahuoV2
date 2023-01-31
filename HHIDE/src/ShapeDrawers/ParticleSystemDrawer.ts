@@ -3,6 +3,7 @@ import {SVGFiles} from "../Utilities/Svgs";
 import {Vector2} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {ParticleSystemJS} from "hhenginejs";
+import {huahuoEngine} from "hhenginejs";
 
 class ParticleSystemDrawer extends BaseShapeDrawer {
     name = "Particles"
@@ -41,8 +42,13 @@ class ParticleSystemDrawer extends BaseShapeDrawer {
     onMouseUp(evt: MouseEvent) {
         super.onMouseUp(evt);
 
-        this.isDrawing = false
-        EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, this)
+        let _this = this
+
+        huahuoEngine.ExecuteAfterInited(()=>{
+            this.isDrawing = false
+            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, this)
+            _this.addShapeToCurrentLayer(_this.tempShape)
+        })
     }
 }
 
