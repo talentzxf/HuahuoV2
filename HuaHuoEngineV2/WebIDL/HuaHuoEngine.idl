@@ -290,6 +290,16 @@ interface RectangleShape{
 RectangleShape implements BaseShape;
 
 [NoDelete]
+interface ParticleSystem{
+    void SetStartPoint(float x, float y, float z);
+    void SetEndPoint(float x, float y, float z);
+    Vector3f GetStartPoint();
+    Vector3f GetEndPoint();
+};
+
+ParticleSystem implements BaseShape;
+
+[NoDelete]
 interface CircleShape{
     void SetCenter(float x, float y, float z);
     void SetRadius(float radius);
