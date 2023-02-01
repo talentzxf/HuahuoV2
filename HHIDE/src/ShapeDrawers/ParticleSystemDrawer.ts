@@ -2,7 +2,7 @@ import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {SVGFiles} from "../Utilities/Svgs";
 import {Vector2} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
-import {ParticleSystemJS} from "hhenginejs";
+import {ParticleSystemJS, ParticleSystemRenderer} from "hhenginejs";
 import {huahuoEngine} from "hhenginejs";
 
 class ParticleSystemDrawer extends BaseShapeDrawer {
@@ -48,6 +48,8 @@ class ParticleSystemDrawer extends BaseShapeDrawer {
             this.isDrawing = false
             EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, this)
             _this.addShapeToCurrentLayer(_this.tempShape)
+
+            _this.tempShape.addComponent(new ParticleSystemRenderer())
         })
     }
 }

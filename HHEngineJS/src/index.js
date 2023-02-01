@@ -17,6 +17,7 @@ import {ColorStop} from "./Components/ColorStop";
 import {getNailManager} from "./IK/GetNailManager";
 import {NailShapeJS} from "./Shapes/NailShapeJS";
 import {ParticleSystemJS} from "./Shapes/ParticleSystemJS";
+import {ParticleSystemRenderer} from "./Components/ParticleSystemRenderer";
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 
@@ -65,6 +66,7 @@ export {
     MirrorShapeJS,
     NailShapeJS,
     ParticleSystemJS,
+    ParticleSystemRenderer,
     NailComponent,
     ColorStop,
     getNailManager,
