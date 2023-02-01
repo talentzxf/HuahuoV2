@@ -9,8 +9,9 @@ class ParticleSystemJS extends BaseShapeJS {
         return new ParticleSystemJS(rawObj)
     }
 
-    hasUpdatedToRaster: boolean = false
-    
+    boundRectangle: paper.Path.Rectangle
+    raster: paper.Raster
+
 
     getShapeName(): string {
         return shapeName
@@ -19,15 +20,34 @@ class ParticleSystemJS extends BaseShapeJS {
     createShape() {
         super.createShape()
 
-        let p1 = this.getPaperPoint(this.rawObj.GetStartPoint())
-        let p2 = this.getPaperPoint(this.rawObj.GetEndPoint())
+        let p1 = this.globalToLocal(this.getPaperPoint(this.rawObj.GetStartPoint()))
+        let p2 = this.globalToLocal(this.getPaperPoint(this.rawObj.GetEndPoint()))
 
         let paperjs = this.getPaperJs()
-        this.paperShape = new paperjs.Path.Rectangle(p1, p2)
-        this.paperShape.applyMatrix = false;
-        this.paperShape.strokeColor = new paperjs.Color("black");
-        this.paperShape.fillColor = new paperjs.Color('#00000000') // Transparent
-        this.paperShape.data.meta = this
+        let width = p2.x - p1.x
+        let height = p2.y - p1.y
+
+        this.paperItem = new paperjs.Group()
+
+        this.boundRectangle = new paperjs.Path.Rectangle(p1, p2)
+        this.boundRectangle.applyMatrix = false;
+        this.boundRectangle.strokeColor = new paperjs.Color("black");
+        this.boundRectangle.fillColor = new paperjs.Color('#00000000') // Transparent
+        this.boundRectangle.data.meta = this
+
+        this.raster = new paperjs.Raster(new paper.Point(width, height))
+        this.raster.applyMatrix = false;
+        this.raster.strokeColor = new paperjs.Color("black");
+        this.raster.fillColor = new paperjs.Color('#00000000') // Transparent
+        this.raster.data.meta = this
+
+        this.paperItem.addChild(this.boundRectangle)
+        this.paperItem.addChild(this.raster)
+
+        this.paperItem.applyMatrix = false
+        this.paperItem.data.meta = this
+
+        this.paperItem.position = p1.add(p2).divide(2.0)
 
         super.afterCreateShape()
     }
@@ -47,22 +67,6 @@ class ParticleSystemJS extends BaseShapeJS {
         this.store()
     }
 
-    upgradeToRasterObj() {
-        if (!this.hasUpdatedToRaster) {
-            let p1 = this.getPaperPoint(this.rawObj.GetStartPoint())
-            let p2 = this.getPaperPoint(this.rawObj.GetEndPoint())
-
-            let paperjs = this.getPaperJs()
-            this.paperItem = new paperjs.Raster(new paper.Point(p2.x - p1.x, p2.y - p1.y))
-            this.paperItem.applyMatrix = false;
-            this.paperItem.strokeColor = new paperjs.Color("black");
-            this.paperItem.fillColor = new paperjs.Color('#00000000') // Transparent
-            this.paperItem.data.meta = this
-
-            this.hasUpdatedToRaster = true
-        }
-    }
-
     getLeftUp() {
         return this.getPaperPoint(this.rawObj.GetStartPoint())
     }
@@ -72,10 +76,7 @@ class ParticleSystemJS extends BaseShapeJS {
     }
 
     setPixel(i, j, color) {
-        // Change to raster object.
-        this.upgradeToRasterObj();
-
-        (this.paperItem as paper.Raster).setPixel(i, j, color)
+        this.raster.setPixel(i, j, color)
     }
 
     override isSegmentSeletable() {
