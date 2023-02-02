@@ -20,14 +20,19 @@ class ParticleSystemJS extends BaseShapeJS {
     createShape() {
         super.createShape()
 
-        let p1 = this.globalToLocal(this.getPaperPoint(this.rawObj.GetStartPoint()))
-        let p2 = this.globalToLocal(this.getPaperPoint(this.rawObj.GetEndPoint()))
-
+        let p1Global = this.getPaperPoint(this.rawObj.GetStartPoint())
+        let p2Global = this.getPaperPoint(this.rawObj.GetEndPoint())
         let paperjs = this.getPaperJs()
+        this.paperItem = new paperjs.Group()
+        this.paperItem.applyMatrix = false
+        this.paperItem.data.meta = this
+
+        this.paperItem.position = p1Global.add(p2Global).divide(2.0)
+
+        let p1 = this.globalToLocal(p1Global)
+        let p2 = this.globalToLocal(p2Global)
         let width = p2.x - p1.x
         let height = p2.y - p1.y
-
-        this.paperItem = new paperjs.Group()
 
         this.boundRectangle = new paperjs.Path.Rectangle(p1, p2)
         this.boundRectangle.applyMatrix = false;
@@ -41,13 +46,12 @@ class ParticleSystemJS extends BaseShapeJS {
         this.raster.fillColor = new paperjs.Color('#00000000') // Transparent
         this.raster.data.meta = this
 
+        this.raster.position = p2.subtract(p1).divide(2.0)
+
         this.paperItem.addChild(this.boundRectangle)
         this.paperItem.addChild(this.raster)
 
-        this.paperItem.applyMatrix = false
-        this.paperItem.data.meta = this
 
-        this.paperItem.position = p1.add(p2).divide(2.0)
 
         super.afterCreateShape()
     }
