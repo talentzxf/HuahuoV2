@@ -49,8 +49,8 @@ if(!window["taichiInitBegun"]){
     // This is just because StackBlitz has some weird handling of external scripts.
     // Normally, you would just use `<script src="https://unpkg.com/taichi.js/dist/taichi.umd.js"></script>` in the HTML
     const script = document.createElement('script');
-    script.addEventListener('load', function () {
-        huahuoEngine.OnTaichiInit()
+    script.addEventListener('load', async function () {
+        await huahuoEngine.OnTaichiInit()
     });
 // script.src = 'https://unpkg.com/taichi.js/dist/taichi.umd.js';
     script.src = 'https://unpkg.com/taichi.js/dist/taichi.dev.umd.js';

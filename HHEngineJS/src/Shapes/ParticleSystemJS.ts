@@ -77,8 +77,9 @@ class ParticleSystemJS extends BaseShapeJS {
         return this.getPaperPoint(this.rawObj.GetEndPoint())
     }
 
-    setPixel(i, j, color) {
-        this.raster.setPixel(i, j, color)
+    getCanvas(){
+        // @ts-ignore
+        return this.raster.getCanvas()
     }
 
     override isSegmentSeletable() {

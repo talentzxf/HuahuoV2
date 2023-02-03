@@ -91,6 +91,9 @@ class AbstractComponent {
     afterUpdate(force: boolean = false) {
     }
 
+    getCurrentFrameId(){
+        return this.baseShape.getLayer().GetCurrentFrame()
+    }
     getTypeName() {
         return this.rawObj.GetTypeName()
     }

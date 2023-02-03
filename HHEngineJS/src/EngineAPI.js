@@ -42,10 +42,12 @@ class EngineAPI{
         return this.cppEngine;
     }
 
-    OnTaichiInit(){
+    async OnTaichiInit(){
         if(this.taichiInited){
             return
         }
+
+        await ti.init()
 
         this.taichiInited = true
 
