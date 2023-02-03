@@ -46,13 +46,11 @@ class ParticleSystemJS extends BaseShapeJS {
         this.raster.fillColor = new paperjs.Color('#00000000') // Transparent
         this.raster.data.meta = this
 
-        this.raster.position = p2.subtract(p1).divide(2.0)
+        this.raster.position = p2.add(p1).divide(2.0)
 
         this.paperItem.addChild(this.boundRectangle)
         this.paperItem.addChild(this.raster)
-
-
-
+        
         super.afterCreateShape()
     }
 

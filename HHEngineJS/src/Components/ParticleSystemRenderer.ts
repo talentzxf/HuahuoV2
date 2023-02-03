@@ -11,7 +11,6 @@ class ParticleSystemRenderer extends AbstractComponent {
         super(rawObj);
     }
 
-
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
