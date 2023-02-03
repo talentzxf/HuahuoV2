@@ -16,6 +16,8 @@ class EngineAPI{
 
     hasShape = false
 
+    taichiInited = false
+
     constructor() {
         Logger.info("Creating Engine API!!!!")
     }
@@ -40,6 +42,22 @@ class EngineAPI{
         return this.cppEngine;
     }
 
+    OnTaichiInit(){
+        if(this.taichiInited){
+            return
+        }
+
+        this.taichiInited = true
+
+        Logger.info("Taichi Inited!!!!")
+
+        if(this.inited && this.taichiInited){
+            this.PendingInitFunctions.forEach(func=>{
+                func();
+            })
+        }
+    }
+
     OnInit(){
         if(this.inited)
             return;
@@ -49,9 +67,11 @@ class EngineAPI{
         this.inited = true
         Logger.info("Engine inited!!!!!")
 
-        this.PendingInitFunctions.forEach(func=>{
-            func();
-        })
+        if(this.inited && this.taichiInited){
+            this.PendingInitFunctions.forEach(func=>{
+                func();
+            })
+        }
     }
 
     CreateShape(shapeName){

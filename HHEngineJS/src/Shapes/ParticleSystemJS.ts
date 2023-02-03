@@ -50,7 +50,7 @@ class ParticleSystemJS extends BaseShapeJS {
 
         this.paperItem.addChild(this.boundRectangle)
         this.paperItem.addChild(this.raster)
-        
+
         super.afterCreateShape()
     }
 

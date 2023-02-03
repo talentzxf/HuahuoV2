@@ -6,7 +6,6 @@ class ParticleSystemRenderer extends AbstractComponent {
 
     rendered: boolean = false
 
-
     constructor(rawObj?) {
         super(rawObj);
     }
@@ -33,7 +32,6 @@ class ParticleSystemRenderer extends AbstractComponent {
 
             this.rendered = true
         }
-
     }
 }
 
