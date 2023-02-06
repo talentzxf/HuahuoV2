@@ -13,6 +13,9 @@ class ParticleSystemRenderer extends AbstractComponent {
     outputImage
     renderKernel
 
+    htmlCanvas
+    taichiCanvas
+
     constructor(rawObj?) {
         super(rawObj);
     }
@@ -35,6 +38,15 @@ class ParticleSystemRenderer extends AbstractComponent {
                 }
             })
         }
+
+        if(this.taichiCanvas == null){
+            this.htmlCanvas = document.createElement("canvas")
+            this.htmlCanvas.width = Math.ceil(width)
+            this.htmlCanvas.height = Math.ceil(height)
+            this.taichiCanvas = new ti.Canvas(this.htmlCanvas)
+
+            document.body.appendChild(this.htmlCanvas)
+        }
     }
 
     afterUpdate(force: boolean = false) {
@@ -52,7 +64,7 @@ class ParticleSystemRenderer extends AbstractComponent {
             this.initImage(width, height)
 
             this.renderKernel()
-            particleSystem.getCanvas().setImage(this.outputImage)
+            this.taichiCanvas.setImage(this.outputImage)
 
             this.rendered = true
         }
