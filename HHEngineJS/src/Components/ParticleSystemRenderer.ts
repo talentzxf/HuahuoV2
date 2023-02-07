@@ -1,13 +1,13 @@
 // @ts-nocheck
 
-import {AbstractComponent, Component} from "./AbstractComponent";
+import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {ParticleSystemJS} from "../Shapes/ParticleSystemJS";
+import {PropertyCategory} from "./PropertySheetBuilder";
 
 declare var ti: any;
 
 @Component({compatibleShapes: ["ParticleSystemJS"], maxCount: 1})
 class ParticleSystemRenderer extends AbstractComponent {
-
     rendered: boolean = false
 
     outputImage
@@ -15,6 +15,9 @@ class ParticleSystemRenderer extends AbstractComponent {
 
     htmlCanvas
     taichiCanvas
+
+    @PropertyValue(PropertyCategory.interpolateColor, {random: true})
+    backgroundColor
 
     constructor(rawObj?) {
         super(rawObj);

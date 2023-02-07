@@ -50,6 +50,8 @@ class ParticleSystemDrawer extends BaseShapeDrawer {
             _this.addShapeToCurrentLayer(_this.tempShape)
 
             _this.tempShape.addComponent(new ParticleSystemRenderer())
+
+            _this.tempShape.update(true)
         })
     }
 }
