@@ -36,8 +36,8 @@ class ParticleSystemRenderer extends AbstractComponent {
             this.renderKernel = ti.kernel(() => {
 
                 for (let I of ndrange(i32(outputImageWidth), i32(outputImageHeight))) {
-                    // outputImage[I] = [random(), random(), random(), 1.0]
-                    outputImage[I] = [25.0 / 255.0, 39.0 / 255.0, 77.0 / 255.0, 1.0]
+                    outputImage[I] = [random(), random(), random(), 1.0]
+                    // outputImage[I] = [25.0 / 255.0, 39.0 / 255.0, 77.0 / 255.0, 1.0]
                 }
             })
         }
@@ -68,6 +68,8 @@ class ParticleSystemRenderer extends AbstractComponent {
 
             this.renderKernel()
             this.taichiCanvas.setImage(this.outputImage)
+            let particleSystemCanvasCtx = particleSystem.getCanvas().getContext("2d")
+            particleSystemCanvasCtx.drawImage(this.htmlCanvas, 0, 0)
 
             this.rendered = true
         }
