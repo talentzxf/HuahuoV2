@@ -55,9 +55,10 @@ class ParticleSystemRenderer extends AbstractComponent {
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
+        // Only particle system can have this renderer.
+        let particleSystem = this.baseShape as ParticleSystemJS
+
         if (!this.rendered) {
-            // Only particle system can have this renderer.
-            let particleSystem = this.baseShape as ParticleSystemJS
             let p1 = particleSystem.getLeftUp()
             let p2 = particleSystem.getRightDown()
 
@@ -66,13 +67,13 @@ class ParticleSystemRenderer extends AbstractComponent {
 
             this.initImage(width, height)
 
-            this.renderKernel()
-            this.taichiCanvas.setImage(this.outputImage)
-            let particleSystemCanvasCtx = particleSystem.getCanvas().getContext("2d")
-            particleSystemCanvasCtx.drawImage(this.htmlCanvas, 0, 0)
-
             this.rendered = true
         }
+
+        this.renderKernel()
+        this.taichiCanvas.setImage(this.outputImage)
+        let particleSystemCanvasCtx = particleSystem.getCanvas().getContext("2d")
+        particleSystemCanvasCtx.drawImage(this.htmlCanvas, 0, 0)
     }
 }
 
