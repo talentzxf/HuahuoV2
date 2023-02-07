@@ -21,12 +21,15 @@ class ParticleSystemRenderer extends AbstractComponent {
     }
 
     initImage(width, height) {
-        this.outputImage = ti.Vector.field(4, ti.f32, [width, height])
+        let widthInt = Math.ceil(width)
+        let heightInt = Math.ceil(height)
+
+        this.outputImage = ti.Vector.field(4, ti.f32, [widthInt, heightInt])
 
         ti.addToKernelScope({
             outputImage: this.outputImage,
-            outputImageWidth: Math.ceil(width),
-            outputImageHeight: Math.ceil(height)
+            outputImageWidth: widthInt,
+            outputImageHeight: heightInt
         })
 
         if (this.renderKernel == null) {
@@ -41,11 +44,11 @@ class ParticleSystemRenderer extends AbstractComponent {
 
         if(this.taichiCanvas == null){
             this.htmlCanvas = document.createElement("canvas")
-            this.htmlCanvas.width = Math.ceil(width)
-            this.htmlCanvas.height = Math.ceil(height)
+            this.htmlCanvas.width = widthInt
+            this.htmlCanvas.height = heightInt
+            this.htmlCanvas.style.width = widthInt + "px"
+            this.htmlCanvas.style.height = heightInt + "px"
             this.taichiCanvas = new ti.Canvas(this.htmlCanvas)
-
-            document.body.appendChild(this.htmlCanvas)
         }
     }
 
