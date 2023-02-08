@@ -90,7 +90,8 @@
       "generateInterval": "生成间隔",
       "gradientColorArray": "径向渐变颜色",
       "centerPosition": "中心位置",
-      "keyframes": "关键帧"
+      "keyframes": "关键帧",
+      "backgroundColor": "背景颜色"
     },
     "nail": {
       "isStatic": "是否静态"

@@ -65,14 +65,16 @@ function internalProcessComponent(component: AbstractComponent, fieldName: strin
             },
             set: function (val) { // Direct set of the variable won't trigger events.
                 config.setter(val)
-            }
+            },
+            configurable: true
         })
     } else if (config.getter) {
         // Add getter only
         Object.defineProperty(component, fieldName, {
             get: function () {
                 return component[getterName]()
-            }
+            },
+            configurable: true
         })
     }
 }

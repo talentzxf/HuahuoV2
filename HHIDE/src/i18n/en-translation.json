@@ -90,7 +90,8 @@
       "generateInterval": "Generate Interval",
       "gradientColorArray": "Gradient Color Array",
       "centerPosition": "Center Position",
-      "keyframes": "Key Frames"
+      "keyframes": "Key Frames",
+      "backgroundColor": "Background color"
     },
     "nail": {
       "isStatic": "Is Static"
