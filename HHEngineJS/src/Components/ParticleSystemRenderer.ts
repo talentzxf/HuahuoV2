@@ -16,25 +16,43 @@ class ParticleSystemRenderer extends AbstractComponent {
     htmlCanvas
     taichiCanvas
 
-    bgColor
+    _backgroundColor
 
     @PropertyValue(PropertyCategory.interpolateColor, {random: true})
     backgroundColor
+
+    _particleNumbers
+
+    @PropertyValue(PropertyCategory.interpolateFloat, 10)
+    particleNumbers
+
+
+    maxNumbers = 10000 // Preload 10000 particles.
+
+    _particleStatuses // 0 - inactive, 1 - active
+    _particlePositions
+    _particleVelocity
 
     async initImage(width, height) {
         let widthInt = Math.ceil(width)
         let heightInt = Math.ceil(height)
 
         this.outputImage = ti.Vector.field(4, ti.f32, [widthInt, heightInt])
-        this.bgColor = ti.Vector.field(4, ti.f32, [1])
+        this._backgroundColor = ti.Vector.field(4, ti.f32, [1])
+        this._particleNumbers = ti.field(1, ti.f32)
 
-        await this.bgColor.set([0], [25.0 / 255.0, 39.0 / 255.0, 77.0 / 255.0, 1.0])
+        this._particleVelocity = ti.Vector.field(3, ti.f32, [this.maxNumbers])
+        this._particlePositions = ti.Vector.field(3, ti.f32, [this.maxNumbers])
+        this._particleStatuses = ti.field(this.maxNumbers, ti.f32)
+        
+        await this._backgroundColor.set([0], [25.0 / 255.0, 39.0 / 255.0, 77.0 / 255.0, 1.0])
 
         ti.addToKernelScope({
             outputImage: this.outputImage,
             outputImageWidth: widthInt,
             outputImageHeight: heightInt,
-            bgColor: this.bgColor
+            backgroundColor: this._backgroundColor,
+            particleNumbers: this._particleNumbers
         })
 
         if (this.renderKernel == null) {
@@ -69,7 +87,8 @@ class ParticleSystemRenderer extends AbstractComponent {
             this.inited = true
         }
 
-        await this.bgColor.set([0], [this.backgroundColor.red, this.backgroundColor.green, this.backgroundColor.blue, this.backgroundColor.alpha])
+        await this._particleNumbers.set([0], this.particleNumbers)
+        await this._backgroundColor.set([0], [this.backgroundColor.red, this.backgroundColor.green, this.backgroundColor.blue, this.backgroundColor.alpha])
 
         this.renderKernel()
         this.taichiCanvas.setImage(this.outputImage)
@@ -82,7 +101,7 @@ class ParticleSystemRenderer extends AbstractComponent {
 
             for (let I of ndrange(i32(outputImageWidth), i32(outputImageHeight))) {
                 // outputImage[I] = [random(), random(), random(), 1.0]
-                outputImage[I] = bgColor[0]
+                outputImage[I] = backgroundColor[0]
             }
         })
     }
