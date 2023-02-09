@@ -1,6 +1,7 @@
 import {Logger} from "hhcommoncomponents"
 import {engineEventManager} from "./EngineEvents/EngineEventManager";
 import {clzObjectFactory} from "./CppClassObjectFactory";
+import * as ti from "taichi.js"
 
 class EngineAPI{
     inited = false

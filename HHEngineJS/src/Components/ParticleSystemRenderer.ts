@@ -3,7 +3,6 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {ParticleSystemJS} from "../Shapes/ParticleSystemJS";
 import {PropertyCategory} from "./PropertySheetBuilder";
-import {TransparentCanvas} from "../TaichiJS/TransparentCanvas";
 
 declare var ti: any;
 
@@ -67,7 +66,7 @@ class ParticleSystemRenderer extends AbstractComponent {
             this.htmlCanvas.height = heightInt
             this.htmlCanvas.style.width = widthInt + "px"
             this.htmlCanvas.style.height = heightInt + "px"
-            this.taichiCanvas = new TransparentCanvas(this.htmlCanvas)
+            this.taichiCanvas = new ti.Canvas(this.htmlCanvas)
         }
     }
 

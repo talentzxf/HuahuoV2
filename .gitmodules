@@ -1,0 +1,3 @@
+[submodule "Libs/taichi.js"]
+	path = Libs/taichi.js
+	url = https://github.com/AmesingFlank/taichi.js.git

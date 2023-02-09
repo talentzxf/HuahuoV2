@@ -45,21 +45,23 @@ if (Module.IsWASMInited && Module.IsWASMInited()) {
     }
 }
 
-if(!window["taichiInitBegun"]){
-    // This is just because StackBlitz has some weird handling of external scripts.
-    // Normally, you would just use `<script src="https://unpkg.com/taichi.js/dist/taichi.umd.js"></script>` in the HTML
-    const script = document.createElement('script');
-    script.addEventListener('load', async function () {
-        await huahuoEngine.OnTaichiInit()
-    });
-// script.src = 'https://unpkg.com/taichi.js/dist/taichi.umd.js';
-    script.src = 'https://unpkg.com/taichi.js/dist/taichi.dev.umd.js';
+// if(!window["taichiInitBegun"]){
+//     // This is just because StackBlitz has some weird handling of external scripts.
+//     // Normally, you would just use `<script src="https://unpkg.com/taichi.js/dist/taichi.umd.js"></script>` in the HTML
+//     const script = document.createElement('script');
+//     script.addEventListener('load', async function () {
+//         await huahuoEngine.OnTaichiInit()
+//     });
+// // script.src = 'https://unpkg.com/taichi.js/dist/taichi.umd.js';
+//     script.src = 'https://unpkg.com/taichi.js/dist/taichi.dev.umd.js';
+//
+// // Append to the `head` element
+//     document.head.appendChild(script);
+//
+//     window["taichiInitBegun"] = true
+// }
 
-// Append to the `head` element
-    document.head.appendChild(script);
-
-    window["taichiInitBegun"] = true
-}
+huahuoEngine.OnTaichiInit()
 
 window.enginejsInited = true
 export {
