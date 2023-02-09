@@ -37,15 +37,16 @@ class ParticleSystemRenderer extends AbstractComponent {
         let widthInt = Math.ceil(width)
         let heightInt = Math.ceil(height)
 
-        this.outputImage = ti.Vector.field(4, ti.f32, [widthInt, heightInt])
+        this.outputImage = ti.Vector.field(4, ti.i32, [widthInt, heightInt])
         this._backgroundColor = ti.Vector.field(4, ti.f32, [1])
-        this._particleNumbers = ti.field(1, ti.f32)
+        this._particleNumbers = ti.field(ti.f32, [1])
 
         this._particleVelocity = ti.Vector.field(3, ti.f32, [this.maxNumbers])
         this._particlePositions = ti.Vector.field(3, ti.f32, [this.maxNumbers])
-        this._particleStatuses = ti.field(this.maxNumbers, ti.f32)
-        
-        await this._backgroundColor.set([0], [25.0 / 255.0, 39.0 / 255.0, 77.0 / 255.0, 1.0])
+        this._particleStatuses = ti.field(ti.f32, [this.maxNumbers])
+
+        // await this._backgroundColor.set([0], [25.0 / 255.0, 39.0 / 255.0, 77.0 / 255.0, 1.0])
+        await this._backgroundColor.set([0], [25.0, 39.0, 77.0, 0.5])
 
         ti.addToKernelScope({
             outputImage: this.outputImage,
@@ -88,12 +89,17 @@ class ParticleSystemRenderer extends AbstractComponent {
         }
 
         await this._particleNumbers.set([0], this.particleNumbers)
-        await this._backgroundColor.set([0], [this.backgroundColor.red, this.backgroundColor.green, this.backgroundColor.blue, this.backgroundColor.alpha])
+        await this._backgroundColor.set([0], [this.backgroundColor.red * 255.0, this.backgroundColor.green * 255.0,
+            this.backgroundColor.blue * 255.0, this.backgroundColor.alpha * 255.0])
 
         this.renderKernel()
-        this.taichiCanvas.setImage(this.outputImage)
-        let particleSystemCanvasCtx = particleSystem.getCanvas().getContext("2d")
-        particleSystemCanvasCtx.drawImage(this.htmlCanvas, 0, 0)
+        // this.taichiCanvas.setImage(this.outputImage)
+        // let particleSystemCanvasCtx = particleSystem.getCanvas().getContext("2d")
+        // particleSystemCanvasCtx.drawImage(this.htmlCanvas, 0, 0)
+
+        this.outputImage.toArray().then((array)=>{
+            console.log("Here, Here!!!")
+        })
     }
 
     createRenderKernel(){
@@ -101,7 +107,7 @@ class ParticleSystemRenderer extends AbstractComponent {
 
             for (let I of ndrange(i32(outputImageWidth), i32(outputImageHeight))) {
                 // outputImage[I] = [random(), random(), random(), 1.0]
-                outputImage[I] = backgroundColor[0]
+                outputImage[I] = i32(backgroundColor[0])
             }
         })
     }
