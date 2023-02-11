@@ -3,8 +3,7 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {ParticleSystemJS} from "../Shapes/ParticleSystemJS";
 import {PropertyCategory} from "./PropertySheetBuilder";
-
-declare var ti: any;
+import {huahuoEngine} from "../EngineAPI";
 
 @Component({compatibleShapes: ["ParticleSystemJS"], maxCount: 1})
 class ParticleSystemRenderer extends AbstractComponent {
@@ -37,18 +36,17 @@ class ParticleSystemRenderer extends AbstractComponent {
         let widthInt = Math.ceil(width)
         let heightInt = Math.ceil(height)
 
-        this.outputImage = ti.Vector.field(4, ti.i32, [widthInt, heightInt])
-        this._backgroundColor = ti.Vector.field(4, ti.f32, [1])
-        this._particleNumbers = ti.field(ti.f32, [1])
+        this.outputImage = huahuoEngine.ti.Vector.field(4, ti.f32, [widthInt, heightInt])
+        this._backgroundColor = huahuoEngine.ti.Vector.field(4, ti.f32, [1])
+        this._particleNumbers = huahuoEngine.ti.field(ti.f32, [1])
 
-        this._particleVelocity = ti.Vector.field(3, ti.f32, [this.maxNumbers])
-        this._particlePositions = ti.Vector.field(3, ti.f32, [this.maxNumbers])
-        this._particleStatuses = ti.field(ti.f32, [this.maxNumbers])
+        this._particleVelocity = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
+        this._particlePositions = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
+        this._particleStatuses = huahuoEngine.ti.field(ti.f32, [this.maxNumbers])
 
-        // await this._backgroundColor.set([0], [25.0 / 255.0, 39.0 / 255.0, 77.0 / 255.0, 1.0])
-        await this._backgroundColor.set([0], [25.0, 39.0, 77.0, 0.5])
+        await this._backgroundColor.set([0], [25.0 / 255.0, 39.0 / 255.0, 77.0 / 255.0, 1.0])
 
-        ti.addToKernelScope({
+        huahuoEngine.ti.addToKernelScope({
             outputImage: this.outputImage,
             outputImageWidth: widthInt,
             outputImageHeight: heightInt,
@@ -66,7 +64,12 @@ class ParticleSystemRenderer extends AbstractComponent {
             this.htmlCanvas.height = heightInt
             this.htmlCanvas.style.width = widthInt + "px"
             this.htmlCanvas.style.height = heightInt + "px"
-            this.taichiCanvas = new ti.Canvas(this.htmlCanvas)
+            this.taichiCanvas = new huahuoEngine.ti.Canvas(this.htmlCanvas)
+
+            document.body.append(this.htmlCanvas)
+            this.htmlCanvas.style.position = "absolute"
+            this.htmlCanvas.style.top = "0px"
+            this.htmlCanvas.style.left = "0px"
         }
     }
 
@@ -89,8 +92,8 @@ class ParticleSystemRenderer extends AbstractComponent {
         }
 
         await this._particleNumbers.set([0], this.particleNumbers)
-        await this._backgroundColor.set([0], [this.backgroundColor.red * 255.0, this.backgroundColor.green * 255.0,
-            this.backgroundColor.blue * 255.0, this.backgroundColor.alpha * 255.0])
+        await this._backgroundColor.set([0], [this.backgroundColor.red, this.backgroundColor.green,
+            this.backgroundColor.blue, this.backgroundColor.alpha])
 
         this.renderKernel()
         this.taichiCanvas.setImage(this.outputImage)
@@ -99,11 +102,11 @@ class ParticleSystemRenderer extends AbstractComponent {
     }
 
     createRenderKernel(){
-        this.renderKernel = ti.kernel(() => {
+        this.renderKernel = huahuoEngine.ti.kernel(() => {
 
             for (let I of ndrange(i32(outputImageWidth), i32(outputImageHeight))) {
                 // outputImage[I] = [random(), random(), random(), 1.0]
-                outputImage[I] = i32(backgroundColor[0])
+                outputImage[I] = backgroundColor[0]
             }
         })
     }

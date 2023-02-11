@@ -45,7 +45,9 @@ if (Module.IsWASMInited && Module.IsWASMInited()) {
     }
 }
 
-// if(!window["taichiInitBegun"]){
+if(!window["taichiInitBegun"]){
+    window["taichiInitBegun"] = true
+
 //     // This is just because StackBlitz has some weird handling of external scripts.
 //     // Normally, you would just use `<script src="https://unpkg.com/taichi.js/dist/taichi.umd.js"></script>` in the HTML
 //     const script = document.createElement('script');
@@ -57,11 +59,9 @@ if (Module.IsWASMInited && Module.IsWASMInited()) {
 //
 // // Append to the `head` element
 //     document.head.appendChild(script);
-//
-//     window["taichiInitBegun"] = true
-// }
 
-huahuoEngine.OnTaichiInit()
+    huahuoEngine.OnTaichiInit()
+}
 
 window.enginejsInited = true
 export {

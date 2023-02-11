@@ -1,7 +1,7 @@
 import {Logger} from "hhcommoncomponents"
 import {engineEventManager} from "./EngineEvents/EngineEventManager";
 import {clzObjectFactory} from "./CppClassObjectFactory";
-import * as ti from "taichi.js"
+import * as ti from "taichi.js/dist/taichi.dev"
 
 class EngineAPI{
     inited = false
@@ -183,6 +183,10 @@ class EngineAPI{
         let constructor = clzObjectFactory.GetClassConstructor(componentName)
         let retObj = new constructor()
         return retObj
+    }
+
+    get ti(){
+        return ti
     }
 }
 
