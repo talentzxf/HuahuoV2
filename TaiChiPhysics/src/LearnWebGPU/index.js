@@ -18,7 +18,7 @@ const init = async () => {
     });
 
     const canvas = document.getElementById("canvas-container");
-    const context = canvas.getContext("webgpu");
+    const context = canvas.getContext("webgpu", {alpha: true});
     if (!context) {
         console.error(
             "WebGPU cannot be initialized - Canvas does not support WebGPU"
@@ -37,7 +37,7 @@ const init = async () => {
     context.configure({
         device,
         format: presentationFormat,
-        alphaMode: "opaque"
+        alphaMode: "premultiplied"
     });
 
     // ~~ SETUP VERTICES (position (vec3<f32>), color(vec4<i32>)) ~~
@@ -127,7 +127,7 @@ const init = async () => {
     const renderPassDescriptor = {
         colorAttachments: [
             {
-                clearValue: { r: 0.0, g: 0.0, b: 0.0, a: 1.0 },
+                clearValue: { r: 0.0, g: 0.0, b: 0.0, a: 0.0 },
                 loadOp: "clear",
                 storeOp: "store",
             },
