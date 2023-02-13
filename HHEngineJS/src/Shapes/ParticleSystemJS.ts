@@ -77,7 +77,7 @@ class ParticleSystemJS extends BaseShapeJS {
         return this.getPaperPoint(this.rawObj.GetEndPoint())
     }
 
-    getCanvas(){
+    getCanvas() {
         // @ts-ignore
         return this.raster.getCanvas()
     }

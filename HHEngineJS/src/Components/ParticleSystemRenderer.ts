@@ -65,11 +65,6 @@ class ParticleSystemRenderer extends AbstractComponent {
             this.htmlCanvas.style.width = widthInt + "px"
             this.htmlCanvas.style.height = heightInt + "px"
             this.taichiCanvas = new huahuoEngine.ti.Canvas(this.htmlCanvas)
-
-            document.body.append(this.htmlCanvas)
-            this.htmlCanvas.style.position = "absolute"
-            this.htmlCanvas.style.top = "0px"
-            this.htmlCanvas.style.left = "0px"
         }
     }
 
@@ -104,9 +99,18 @@ class ParticleSystemRenderer extends AbstractComponent {
     createRenderKernel(){
         this.renderKernel = huahuoEngine.ti.kernel(() => {
 
+            let center = [outputImageWidth/2.0, outputImageHeight/2.0]
+
             for (let I of ndrange(i32(outputImageWidth), i32(outputImageHeight))) {
                 // outputImage[I] = [random(), random(), random(), 1.0]
-                outputImage[I] = backgroundColor[0]
+
+                let dist = (I - center).norm()
+
+                if(dist < 100.0)
+                    outputImage[I] = backgroundColor[0]
+                else{
+                    outputImage[I] = [0.0, 0.0, 0.0, 0.0]
+                }
             }
         })
     }
