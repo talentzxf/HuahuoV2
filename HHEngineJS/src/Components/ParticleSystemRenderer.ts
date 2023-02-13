@@ -5,6 +5,8 @@ import {ParticleSystemJS} from "../Shapes/ParticleSystemJS";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {huahuoEngine} from "../EngineAPI";
 
+// Convention: All variables start with _ is taichi variables.
+//             All variables with the same name is to receive input from Inspector.
 @Component({compatibleShapes: ["ParticleSystemJS"], maxCount: 1})
 class ParticleSystemRenderer extends AbstractComponent {
     inited: boolean = false
@@ -25,13 +27,6 @@ class ParticleSystemRenderer extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateFloat, 10)
     particleNumbers
 
-
-    maxNumbers = 10000 // Preload 10000 particles.
-
-    _particleStatuses // 0 - inactive, 1 - active
-    _particlePositions
-    _particleVelocity
-
     async initImage(width, height) {
         let widthInt = Math.ceil(width)
         let heightInt = Math.ceil(height)
@@ -39,10 +34,6 @@ class ParticleSystemRenderer extends AbstractComponent {
         this.outputImage = huahuoEngine.ti.Vector.field(4, ti.f32, [widthInt, heightInt])
         this._backgroundColor = huahuoEngine.ti.Vector.field(4, ti.f32, [1])
         this._particleNumbers = huahuoEngine.ti.field(ti.f32, [1])
-
-        this._particleVelocity = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
-        this._particlePositions = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
-        this._particleStatuses = huahuoEngine.ti.field(ti.f32, [this.maxNumbers])
 
         await this._backgroundColor.set([0], [25.0 / 255.0, 39.0 / 255.0, 77.0 / 255.0, 1.0])
 
@@ -72,11 +63,11 @@ class ParticleSystemRenderer extends AbstractComponent {
         super.afterUpdate(force);
 
         // Only particle system can have this renderer.
-        let particleSystem = this.baseShape as ParticleSystemJS
+        let particleSystemRaster = this.baseShape as ParticleSystemJS
 
         if (!this.inited) {
-            let p1 = particleSystem.getLeftUp()
-            let p2 = particleSystem.getRightDown()
+            let p1 = particleSystemRaster.getLeftUp()
+            let p2 = particleSystemRaster.getRightDown()
 
             let width = p2.x - p1.x
             let height = p2.y - p1.y
@@ -86,13 +77,16 @@ class ParticleSystemRenderer extends AbstractComponent {
             this.inited = true
         }
 
-        await this._particleNumbers.set([0], this.particleNumbers)
-        await this._backgroundColor.set([0], [this.backgroundColor.red, this.backgroundColor.green,
-            this.backgroundColor.blue, this.backgroundColor.alpha])
+        // await parallel
+        await Promise.all([
+            this._particleNumbers.set([0], this.particleNumbers),
+            this._backgroundColor.set([0], [this.backgroundColor.red, this.backgroundColor.green,
+                this.backgroundColor.blue, this.backgroundColor.alpha])
+        ])
 
         this.renderKernel()
         this.taichiCanvas.setImage(this.outputImage)
-        let particleSystemCanvasCtx = particleSystem.getCanvas().getContext("2d")
+        let particleSystemCanvasCtx = particleSystemRaster.getCanvas().getContext("2d")
         particleSystemCanvasCtx.drawImage(this.htmlCanvas, 0, 0)
     }
 

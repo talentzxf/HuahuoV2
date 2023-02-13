@@ -1,3 +1,4 @@
 emcmake/*
 cmake-build-debug/*
 cmake-build-debug-emscripten/*
+build/*
