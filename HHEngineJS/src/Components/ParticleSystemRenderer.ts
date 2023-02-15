@@ -42,20 +42,25 @@ class ParticleSystemRenderer extends AbstractComponent {
             outputImageWidth: widthInt,
             outputImageHeight: heightInt,
             backgroundColor: this._backgroundColor,
-            particleNumbers: this._particleNumbers
+            particleNumbers: this._particleNumbers,
         })
 
         if (this.renderKernel == null) {
             this.createRenderKernel()
         }
 
-        if(this.taichiCanvas == null){
+        if (this.taichiCanvas == null) {
             this.htmlCanvas = document.createElement("canvas")
             this.htmlCanvas.width = widthInt
             this.htmlCanvas.height = heightInt
             this.htmlCanvas.style.width = widthInt + "px"
             this.htmlCanvas.style.height = heightInt + "px"
             this.taichiCanvas = new huahuoEngine.ti.Canvas(this.htmlCanvas)
+
+            document.body.appendChild(this.htmlCanvas)
+            // this.htmlCanvas.style.position = "absolute"
+            // this.htmlCanvas.style.top = "0px"
+            // this.htmlCanvas.style.left = "0px"
         }
     }
 
@@ -81,29 +86,31 @@ class ParticleSystemRenderer extends AbstractComponent {
         await Promise.all([
             this._particleNumbers.set([0], this.particleNumbers),
             this._backgroundColor.set([0], [this.backgroundColor.red, this.backgroundColor.green,
-                this.backgroundColor.blue, this.backgroundColor.alpha])
-        ])
+                this.backgroundColor.blue, this.backgroundColor.alpha])])
 
-        this.renderKernel()
-        this.taichiCanvas.setImage(this.outputImage)
-        let particleSystemCanvasCtx = particleSystemRaster.getCanvas().getContext("2d")
-        particleSystemCanvasCtx.drawImage(this.htmlCanvas, 0, 0)
+        await this.renderKernel()
+        await this.taichiCanvas.setImage(this.outputImage)
+
+        particleSystemRaster.drawImage(this.htmlCanvas)
     }
 
-    createRenderKernel(){
+    createRenderKernel() {
         this.renderKernel = huahuoEngine.ti.kernel(() => {
 
-            let center = [outputImageWidth/2.0, outputImageHeight/2.0]
+            let center = [outputImageWidth / 2.0, outputImageHeight / 2.0]
 
             for (let I of ndrange(i32(outputImageWidth), i32(outputImageHeight))) {
                 // outputImage[I] = [random(), random(), random(), 1.0]
 
-                let dist = (I - center).norm()
-
-                if(dist < 100.0)
+                if(I[0] <= 50){
                     outputImage[I] = backgroundColor[0]
-                else{
-                    outputImage[I] = [0.0, 0.0, 0.0, 0.0]
+                } else {
+                    let dist = (I - center).norm()
+                    if (dist < 100.0) {
+                        outputImage[I] = backgroundColor[0]
+                    } else {
+                        outputImage[I] = [0.0, 0.0, 0.0, 0.0]
+                    }
                 }
             }
         })

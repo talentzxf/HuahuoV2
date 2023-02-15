@@ -77,9 +77,8 @@ class ParticleSystemJS extends BaseShapeJS {
         return this.getPaperPoint(this.rawObj.GetEndPoint())
     }
 
-    getCanvas() {
-        // @ts-ignore
-        return this.raster.getCanvas()
+    drawImage(canvas){
+        this.raster.drawImage(canvas, new paper.Point(0,0))
     }
 
     override isSegmentSeletable() {
