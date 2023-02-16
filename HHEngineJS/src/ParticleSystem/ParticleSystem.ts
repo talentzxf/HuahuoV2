@@ -7,7 +7,6 @@ class ParticleSystem{
     _particlePositions
     _particleVelocity
 
-
     maxNumbers = 10000 // Preload 10000 particles.
 
     constructor() {
