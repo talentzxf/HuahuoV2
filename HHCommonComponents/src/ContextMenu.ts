@@ -17,6 +17,8 @@ class ContextMenu
 
     setItems(items:MenuItem[]){
         this.items = items
+
+        this.menuDiv = null
     }
 
     constructMenuDiv(){

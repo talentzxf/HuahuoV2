@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="origin-trial"
+          content="AtP9x4V9t7hOc6q3uPd12rBaena66Pf+EPHPN+hUbGuYeSWA8/wFRLu/09CWhwAfkMF6gQHVRI1KjuCNZ6mivQAAAABJeyJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjgxODEiLCJmZWF0dXJlIjoiV2ViR1BVIiwiZXhwaXJ5IjoxNjkxNzExOTk5fQ==">
+
+    <!-- PROD
+    <meta http-equiv="origin-trial" content="AlEK79kzQH3fq96fJbxPL6b8K95REaaTDyVjIkqXmTcDIFzg9I5W+YAreHnYPe4YtJEJR4I/X7Qxzq22uh341wEAAABkeyJvcmlnaW4iOiJodHRwczovL3d3dy5odWFodW8ub25saW5lOjQ0MyIsImZlYXR1cmUiOiJXZWJHUFUiLCJleHBpcnkiOjE2OTE3MTE5OTksImlzU3ViZG9tYWluIjp0cnVlfQ==">
+    -->
+
+    <style>
+        #heartImg > path{
+            fill: red;
+        }
+    </style>
+</head>
+
+<body>
+<div id="loading">
+    <div style="display: flex; flex-direction: column; width: 30%; margin: auto; text-align: center">
+        <h1 style="color: deeppink; font-family: Papyrus">Thawing Frozen Heart</h1>
+        <img src="static/img/loading.gif">
+        <h3>Loading</h3>
+    </div>
+</div>
+
+<div id="content" style="display: none;justify-content: center; flex-direction: column">
+    <div>
+        <div style="display: flex;justify-content: center; flex-direction: row">
+            <input type="button" value="Create" id="placeBrick" style="width: 50px">
+            <input type="button" value="Dig" id="digBrick" style="width: 50px">
+        </div>
+        <div style="display: flex;justify-content: center;">
+            <canvas id="result_canvas" width="300" height="300"></canvas>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

@@ -31,6 +31,14 @@ class ShapeCenterSelector {
             })
     }
 
+    globalToLocal(globalPosition: paper.Point): paper.Point{
+        return this.paperShape.globalToLocal(globalPosition)
+    }
+
+    localToGlobal(localPosition: paper.Point): paper.Point{
+        return this.paperShape.localToGlobal(localPosition)
+    }
+
     getTypeName() {
         return "CenterOf"
     }
@@ -75,6 +83,7 @@ class ShapeCenterSelector {
             let paperJs = this._targetObj.getPaperJs()
             this.circleShape = new paperJs.Path.Circle(this._targetObj.pivotPosition, 20)
             this.circleShape.fillColor = new paper.Color("red")
+            this.circleShape.applyMatrix = false
         }
         return this.circleShape
     }

@@ -33,7 +33,8 @@ class NailDrawer extends BaseShapeDrawer {
                 let hitItem = hitResult.item
                 if (itemSelectable(hitResult.item)) {
                     let shape = hitItem.data.meta
-                    if (isInheritedFromClzName(shape, "BaseSolidShape")){
+                    // if (isInheritedFromClzName(shape, "BaseSolidShape")){
+                    if (isInheritedFromClzName(shape, "BaseShapeJS")){
                         if(shape.isMirage){
                             HHToast.warn(i18n.t("toast.nailMirageError"))
                         }else{

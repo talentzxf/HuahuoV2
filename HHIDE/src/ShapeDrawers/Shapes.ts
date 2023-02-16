@@ -9,6 +9,7 @@ import {ImageSelector} from "./ImageSelector"
 import {MirrorDrawer} from "./MirrorDrawer";
 import {IconShapeDrawer} from "./IconShapeDrawer";
 import {NailDrawer} from "./NailDrawer";
+import {ParticleSystemDrawer} from "./ParticleSystemDrawer";
 
 let shapes = [
     new ShapeSelector(),
@@ -21,7 +22,8 @@ let shapes = [
     new AudioClipSelector(),
     new ImageSelector(),
     new IconShapeDrawer(),
-    new NailDrawer()
+    new NailDrawer(),
+    new ParticleSystemDrawer()
 ]
 
 let defaultShapeDrawerArray = shapes.filter(drawer=>{

@@ -547,12 +547,22 @@ void testReadFromFile(){
 
     Assert(customComponent->GetFloatValue("growth") != clonedGrowthComponent->GetFloatValue("growth"));
 
+    customComponent->ReverseKeyFrame(0, 10, 5);
+
     int keyFrameCount = customComponent->GetKeyFrameCount();
     for(int idx = 0 ; idx < keyFrameCount; idx++){
         int keyframeId = customComponent->GetKeyFrameAtIndex(idx);
 
         Assert(keyframeId >= 0);
     }
+    customComponent->DeleteKeyFrame(0);
+
+    customComponent->GetBaseShape()->GetLayer()->SetCurrentFrame(20);
+    customComponent->SetFloatValue("growth", 0.5);
+
+    customComponent->DeleteKeyFrame(20);
+
+    customComponent->GetBaseShape()->GetLayer()->IsKeyFrame(20);
 }
 
 int main() {

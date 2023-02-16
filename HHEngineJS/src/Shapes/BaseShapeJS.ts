@@ -6,6 +6,10 @@ import {ShapeCenterSelector} from "./ShapeCenterSelector";
 import {ValueChangeHandler} from "./ValueChangeHandler";
 import {AbstractComponent} from "../Components/AbstractComponent";
 
+let BASIC_COMPONENTS = "BasicComponents"
+
+let basicComponents = ["ShapeTransformFrameState", "ShapeSegmentFrameState"]
+
 declare function castObject(obj: any, clz: any): any;
 
 declare var Module: any;
@@ -714,7 +718,7 @@ abstract class BaseShapeJS {
         this.name = name
     }
 
-    getBornFrame(){
+    getBornFrame() {
         return this.rawObj.GetBornFrameId() + 1 // Stored in Cpp side starts from 0 while during display starts from 1.
     }
 
@@ -837,7 +841,7 @@ abstract class BaseShapeJS {
             unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("rotation")
         })
 
-        let transformFrameStateSheet = this.getComponentConfigSheet("ShapeTransformFrameState")
+        let transformFrameStateSheet = this.getComponentConfigSheet(BASIC_COMPONENTS)
         let followCurveFrameStateSheet = this.getComponentConfigSheet("ShapeFollowCurveFrameState")
 
         componentConfigSheet.config.children.push({
@@ -861,18 +865,72 @@ abstract class BaseShapeJS {
     }
 
     getComponentConfigSheet(componentName) {
-        return {
-            key: "inspector." + componentName,
-            type: PropertyType.KEYFRAMES,
-            getter: this.getComponentKeyFrames(componentName).bind(this),
-            setter: this.insertComponentKeyFrame(componentName).bind(this)
+
+        let _this = this
+
+        if(componentName == BASIC_COMPONENTS){
+            return {
+                key: "inspector." + componentName,
+                type: PropertyType.KEYFRAMES,
+                getter: ()=>{
+                    let keyFrames = []
+                    for(let componentName of basicComponents){
+                        let componentKeyFrames = _this.getComponentKeyFrames(componentName).bind(_this)()
+
+                        for(let keyFrameId of componentKeyFrames){
+                            if(keyFrames.indexOf(keyFrameId) == -1){
+                                keyFrames.push(keyFrameId)
+                            }
+                        }
+                    }
+
+                    return keyFrames
+                },
+                setter: this.insertComponentKeyFrame("ShapeTransformFrameState").bind(this), // How to handle setter??
+                deleter: (frameId)=>{
+                    for(let componentName of basicComponents){
+                        _this.deleteComponentKeyFrame(componentName).bind(_this)(frameId)
+                    }
+                },
+                updater: (type, params)=>{
+                    for(let componentName of basicComponents){
+                        _this.updateComponentKeyFrame(componentName).bind(_this)(type, params)
+                    }
+                }
+            }
+        }
+        else{
+            return {
+                key: "inspector." + componentName,
+                type: PropertyType.KEYFRAMES,
+                getter: this.getComponentKeyFrames(componentName).bind(this),
+                setter: this.insertComponentKeyFrame(componentName).bind(this),
+                deleter: this.deleteComponentKeyFrame(componentName).bind(this),
+                updater: this.updateComponentKeyFrame(componentName).bind(this)
+            }
+        }
+    }
+
+    updateComponentKeyFrame(componentName){
+        let _this = this
+        let frameStateRawObj = this.rawObj.GetFrameStateByTypeName(componentName)
+
+        return function(type: string, params: object){
+            if(type == "ReverseKeyFrames"){
+                let startFrameId = params["startFrameId"]
+                let endFrameId = params["endFrameId"]
+
+                let currentFrameId = _this.getLayer().GetCurrentFrame()
+                frameStateRawObj.ReverseKeyFrame(startFrameId, endFrameId, currentFrameId);
+
+                _this.update(true)
+            }
         }
     }
 
     getComponentKeyFrames(componentName) {
-        return function(){
-            let frameStateRawObj = this.rawObj.GetFrameStateByTypeName(componentName)
-
+        let frameStateRawObj = this.rawObj.GetFrameStateByTypeName(componentName)
+        return function () {
             let keyFrameCount = frameStateRawObj.GetKeyFrameCount()
             let keyFrames = []
             for (let idx = 0; idx < keyFrameCount; idx++) {
@@ -882,9 +940,21 @@ abstract class BaseShapeJS {
         }
     }
 
-    insertComponentKeyFrame(componentName){
-        return function(){
+    insertComponentKeyFrame(componentName) {
+        return function () {
 
+        }
+    }
+
+    deleteComponentKeyFrame(componentName) {
+        let _this = this
+        return function (frameId) {
+            console.log("Trying to delete keyframe:" + frameId + " from component:" + componentName)
+
+            let component = _this.rawObj.GetFrameStateByTypeName(componentName)
+            component.DeleteKeyFrame(frameId)
+
+            _this.update(true)
         }
     }
 

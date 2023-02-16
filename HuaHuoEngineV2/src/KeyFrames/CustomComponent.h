@@ -147,6 +147,10 @@ public:
 
     void SetBaseShape(BaseShape *pBaseShape) override;
 
+    void DeleteKeyFrame(int frameId) override;
+
+    bool ReverseKeyFrame(int startFrameId, int endFrameId, int currentFrameId) override;
+
 private:
     int RegisterField(const char* fieldName, CustomDataType dataType){
         if(m_FrameStates.size() != m_fieldNameFieldIndexMap.size()){

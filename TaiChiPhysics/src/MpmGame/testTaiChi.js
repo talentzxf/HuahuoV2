@@ -1,4 +1,4 @@
-import * as ti from "taichi.js"
+import * as ti from "../../node_modules/taichi.js/dist/taichi"
 
 let fractal = async () => {
     await ti.init()

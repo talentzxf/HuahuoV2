@@ -1,0 +1,5 @@
+[submodule "Libs/taichi.js"]
+	path = Libs/taichi.js
+	url = https://github.com/talentzxf/taichi.js.git
+	branch = master
+	update = merge

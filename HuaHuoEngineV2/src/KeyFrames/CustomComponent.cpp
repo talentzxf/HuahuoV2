@@ -70,4 +70,18 @@ vector<KeyFrameIdentifier> CustomComponent::GetKeyFrameIdentifiers() {
     return returnKeyFrameIdentifiers;
 }
 
+void CustomComponent::DeleteKeyFrame(int frameId) {
+    for(auto frameState : m_FrameStates){
+        frameState.GetComponentPtr()->DeleteKeyFrame(frameId);
+    }
+}
+
+bool CustomComponent::ReverseKeyFrame(int startFrameId, int endFrameId, int currentFrameId) {
+    for(auto frameState : m_FrameStates){
+        frameState.GetComponentPtr()->ReverseKeyFrame(startFrameId, endFrameId, currentFrameId);
+    }
+
+    return true;
+}
+
 

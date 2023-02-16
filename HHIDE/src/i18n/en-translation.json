@@ -56,7 +56,7 @@
   },
   "inspector": {
     "BornFrame": "Born Frame",
-    "ShapeTransformFrameState": "Basic Transforms",
+    "BasicComponents": "Basic Transforms",
     "ShapeFollowCurveFrameState": "Follow Path",
     "BaseProperties": "Base Properties",
     "CollapseAll": "Collapse All",
@@ -90,7 +90,8 @@
       "generateInterval": "Generate Interval",
       "gradientColorArray": "Gradient Color Array",
       "centerPosition": "Center Position",
-      "keyframes": "Key Frames"
+      "keyframes": "Key Frames",
+      "backgroundColor": "Background color"
     },
     "nail": {
       "isStatic": "Is Static"
@@ -110,6 +111,7 @@
     "projectUploaded": "Project has been successfully uploaded",
     "elementCreated": "Element {{elementName}} just created!",
     "insufficientColorStop": "Can't delete the color stop. At least two color stops needed.",
+    "insufficientKeyFrames": "Can't delete the keyframe. At least two keyframes needed",
     "nailDuplicated": "Duplicated nail, the shape has already been bound with another nail",
     "nailMirageError": "Nail can't bind mirage."
   },

@@ -80,6 +80,7 @@ void CustomFrameState::SetFloatValue(float value) {
     Layer *shapeLayer = GetBaseShape()->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     CustomDataKeyFrame* pKeyFrame = this->RecordFieldValue(currentFrameId, value);
+    pKeyFrame->SetFrameState(this);
     shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 }
 
@@ -93,6 +94,7 @@ void CustomFrameState::SetVector3Value(float x, float y, float z) {
     int currentFrameId = shapeLayer->GetCurrentFrame();
     Vector3f value(x, y, z);
     CustomDataKeyFrame* pKeyFrame = this->RecordFieldValue(currentFrameId, value);
+    pKeyFrame->SetFrameState(this);
     shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 }
 
@@ -132,6 +134,7 @@ void CustomFrameState::SetColorValue(float r, float g, float b, float a) {
     int currentFrameId = shapeLayer->GetCurrentFrame();
     ColorRGBAf value(r, g, b, a);
     CustomDataKeyFrame* pKeyFrame = this->RecordFieldValue(currentFrameId, value);
+    pKeyFrame->SetFrameState(this);
     shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 }
 
@@ -143,7 +146,7 @@ CustomDataKeyFrame* CustomFrameState::GetColorStopArrayKeyFrame(int currentFrame
         // Copy the whole array from the previous keyframe.
         auto itr = FindLastKeyFrame(currentFrameId - 1, GetKeyFrames());
 
-        printf("Total frames:%d\n", GetKeyFrames().size());
+        printf("Total frames:%lu\n", GetKeyFrames().size());
         if (itr == GetKeyFrames().begin()) {
             printf("Is begin\n");
         }
@@ -195,6 +198,7 @@ int CustomFrameState::AddColorStop(float value, float r, float g, float b, float
     }
 
     Apply(currentFrameId);
+    pKeyFrame->GetKeyFrame().SetFrameState(this);
     shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 
     return colorStopEntry.GetIdentifier();
@@ -214,6 +218,7 @@ void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, f
     pKeyFrame->data.colorStopArray.UpdateAtIdentifier(idx, value, r, g, b, a);
     Apply(currentFrameId);
 
+    pKeyFrame->GetKeyFrame().SetFrameState(this);
     shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 }
 
@@ -237,6 +242,7 @@ void CustomFrameState::DeleteColorStop(int idx) {
 
     Apply(currentFrameId);
 
+    pKeyFrame->GetKeyFrame().SetFrameState(this);
     shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 }
 
@@ -261,6 +267,7 @@ void CustomFrameState::CreateShapeArrayValue() {
     int currentFrameId = shapeLayer->GetCurrentFrame();
 
     CustomDataKeyFrame* pDataKeyFrame = this->RecordFieldValue(currentFrameId, FieldShapeArray());
+    pDataKeyFrame->SetFrameState(this);
     shapeLayer->AddKeyFrame(&pDataKeyFrame->GetKeyFrame());
 }
 

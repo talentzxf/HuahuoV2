@@ -10,14 +10,17 @@
 #include "Math/Vector3f.h"
 #include "BaseClasses/PPtr.h"
 #include "KeyFrame.h"
+#include "Serialize/SerializationCaching/BlockMemoryCacheWriter.h"
+#include "Serialize/SerializationCaching/MemoryCacherReadBlocks.h"
 
 class BaseShape;
 
 class AbstractFrameState : public Object {
-    REGISTER_CLASS_TRAITS(kTypeIsAbstract);
-    REGISTER_CLASS(AbstractFrameState);
+REGISTER_CLASS_TRAITS(kTypeIsAbstract);
 
-    DECLARE_OBJECT_SERIALIZE()
+REGISTER_CLASS(AbstractFrameState);
+
+DECLARE_OBJECT_SERIALIZE()
 
 public:
     AbstractFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
@@ -37,23 +40,25 @@ public:
     virtual const std::set<int> GetKeyFrameIds() = 0;
 
     virtual int GetMinFrameId() = 0;
+
     virtual int GetMaxFrameId() = 0;
+
     virtual void AddAnimationOffset(int offset) = 0;
 
-    virtual void SetBaseShape(BaseShape* pBaseShape);
+    virtual void SetBaseShape(BaseShape *pBaseShape);
 
-    BaseShape* GetBaseShape();
+    BaseShape *GetBaseShape();
 
     const char *GetName() const override;
 
     void SetName(const char *name) override;
 
-    void SetTypeName(const char* typeName){
+    void SetTypeName(const char *typeName) {
         this->typeName = typeName;
     }
 
-    const char* GetTypeName(){
-        if(typeName.length() == 0){
+    const char *GetTypeName() {
+        if (typeName.length() == 0) {
             typeName = GetType()->GetName();
         }
 
@@ -61,8 +66,17 @@ public:
     }
 
     virtual int GetKeyFrameCount() = 0;
+
     virtual int GetKeyFrameAtIndex(int idx) = 0;
+
+    virtual void DeleteKeyFrame(int keyFrameId) = 0;
+
+    virtual bool ReverseKeyFrame(int startFrameId, int endFrameId, int currentFrameId) = 0;
+
     virtual std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() = 0;
+
+protected:
+    void DeleteKeyFrameInternal(KeyFrame *keyFrame);
 
 protected:
     std::string typeName;
@@ -70,49 +84,52 @@ protected:
     std::string frameStateName;
 
 private:
-    BaseShape* baseShape;
+    BaseShape *baseShape;
     PPtr<BaseShape> mBaseShapePPtr;
 };
 
 template<class T>
-class AbstractFrameStateWithKeyType: public AbstractFrameState{
+class AbstractFrameStateWithKeyType : public AbstractFrameState {
 public:
     AbstractFrameStateWithKeyType(MemLabelId memLabelId, ObjectCreationMode creationMode)
-        :AbstractFrameState(memLabelId, creationMode)
-    {
+            : AbstractFrameState(memLabelId, creationMode) {
 
     }
 
-    virtual int GetMinFrameId(){
+    virtual int GetMinFrameId() override {
         return m_KeyFrames.GetMinFrameId();
     }
 
-    virtual int GetMaxFrameId(){
+    virtual int GetMaxFrameId() override {
         return m_KeyFrames.GetMaxFrameId();
     }
 
-    void AddAnimationOffset(int offset){
+    void AddAnimationOffset(int offset) override {
         m_KeyFrames.AddAnimationOffset(offset);
     }
 
-    std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers(){
+    std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() override {
         return m_KeyFrames.GetKeyFrameIdentifiers();
     }
 
-    vector<T>& GetKeyFrames(){
+    typedef vector<T> KeyFrameArray;
+    typedef typename vector<T>::iterator KeyFrameIterator;
+
+    KeyFrameArray &GetKeyFrames() {
         return m_KeyFrames.GetKeyFrames();
     }
 
-    const std::set<int> GetKeyFrameIds(){
+    const std::set<int> GetKeyFrameIds() override {
         std::set<int> keyFrameIds;
-        vector<T>& keyFrames = GetKeyFrames();
-        for(auto itr = keyFrames.begin(); itr != keyFrames.end(); itr++){
+        vector<T> &keyFrames = GetKeyFrames();
+        for (auto itr = keyFrames.begin(); itr != keyFrames.end(); itr++) {
             keyFrameIds.insert(itr->GetFrameId());
         }
         return keyFrameIds;
     }
 
-    template<class TransferFunction> void Transfer(TransferFunction &transfer){
+    template<class TransferFunction>
+    void Transfer(TransferFunction &transfer) {
         AbstractFrameState::Transfer(transfer);
         TRANSFER(GetKeyFrames());
     }
@@ -121,8 +138,91 @@ public:
         return GetKeyFrames().size();
     }
 
-    virtual int GetKeyFrameAtIndex(int idx) override{
+    virtual int GetKeyFrameAtIndex(int idx) override {
         return GetKeyFrames()[idx].GetKeyFrame().GetFrameId();
+    }
+
+    KeyFrameIterator GetKeyFrameByFrameId(int frameId) {
+        KeyFrameArray &keyframes = GetKeyFrames();
+
+        KeyFrameIterator resultKeyFrame = std::find_if(keyframes.begin(), keyframes.end(), [frameId](auto &keyFrame) {
+            return keyFrame.GetFrameId() == frameId;
+        });
+
+        return resultKeyFrame;
+    }
+
+    CachedWriter WriteToCache(T &object, BlockMemoryCacheWriter &cacheWriter, StreamedBinaryWrite &writeStream) {
+        CachedWriter &writeCache = writeStream.Init(kSerializeForInspector);
+        writeCache.InitWrite(cacheWriter);
+
+        object.Transfer(writeStream);
+        writeCache.CompleteWriting();
+
+        return writeCache;
+    }
+
+    void ReadFromCache(T &object, BlockMemoryCacheWriter &cacheWriter, CachedWriter &writeCache) {
+        MemoryCacherReadBlocks cacheReader(cacheWriter.GetCacheBlocks(), cacheWriter.GetFileLength(),
+                                           cacheWriter.GetCacheSize());
+        StreamedBinaryRead readStream;
+        CachedReader &readCache = readStream.Init(
+                kSerializeForInspector | kDontCreateMonoBehaviourScriptWrapper | kIsCloningObject);
+        readCache.InitRead(cacheReader, 0, writeCache.GetPosition());
+        object.Transfer(readStream);
+        readCache.End();
+    }
+
+    virtual bool ReverseKeyFrame(int startFrameId, int endFrameId, int currentFrameId) override {
+
+        // TODO: Do we need remap the pptr ??
+        KeyFrameIterator startKeyFrameItr = GetKeyFrameByFrameId(startFrameId);
+
+        KeyFrameIterator endKeyFrameItr = GetKeyFrameByFrameId(endFrameId);
+
+        if (startKeyFrameItr == GetKeyFrames().end() || endKeyFrameItr == GetKeyFrames().end()) {
+            return false;
+        }
+
+        T &startKeyFrame = *startKeyFrameItr;
+        T &endKeyFrame = *endKeyFrameItr;
+
+        BlockMemoryCacheWriter startCacheWriter(kMemTempAlloc);
+        StreamedBinaryWrite startKeyFrameStream;
+        CachedWriter startObjectCache = WriteToCache(startKeyFrame, startCacheWriter, startKeyFrameStream);
+
+        BlockMemoryCacheWriter endCacheWriter(kMemTempAlloc);
+        StreamedBinaryWrite endKeyFrameStream;
+        CachedWriter endObjectCache = WriteToCache(endKeyFrame, endCacheWriter, endKeyFrameStream);
+
+        ReadFromCache(startKeyFrame, endCacheWriter, endObjectCache);
+        ReadFromCache(endKeyFrame, startCacheWriter, startObjectCache);
+
+        startKeyFrame.SetFrameId(startFrameId);
+        endKeyFrame.SetFrameId(endFrameId);
+
+        Apply(currentFrameId);
+        return true;
+    }
+
+    virtual void DeleteKeyFrame(int frameId) override {
+        std::vector<T> &keyframes = m_KeyFrames.GetKeyFrames();
+        int targetIdx = -1;
+        for (int keyframeIdx = 0; keyframeIdx < keyframes.size(); keyframeIdx++) {
+            if (keyframes[keyframeIdx].GetKeyFrame().GetFrameId() == frameId) {
+                targetIdx = keyframeIdx;
+                break;
+            }
+        }
+
+        if (targetIdx >= 0) {
+            KeyFrame *tobeDeletedKeyFrame = &keyframes[targetIdx].GetKeyFrame();
+            keyframes.erase(keyframes.begin() + targetIdx);
+            AbstractFrameState::DeleteKeyFrameInternal(tobeDeletedKeyFrame);
+            this->Apply(frameId);
+        } else {
+            printf("Doesn't found the frameId:%d\n", frameId);
+        }
     }
 
 protected:
@@ -165,12 +265,12 @@ FindKeyFramePair(int frameId, std::vector<T> &keyFrames, std::pair<T *, T *> &re
 
 template<typename T>
 typename std::vector<T>::iterator FindLastKeyFrame(int frameId, std::vector<T> &keyFrames) {
-    if(keyFrames.size() == 0){
+    if (keyFrames.size() == 0) {
         return keyFrames.end();
     }
 
-    if(keyFrames.size() == 1){
-        if(frameId >= keyFrames[0].GetFrameId())
+    if (keyFrames.size() == 1) {
+        if (frameId >= keyFrames[0].GetFrameId())
             return keyFrames.begin();
         else
             return keyFrames.end();
@@ -202,20 +302,21 @@ typename std::vector<T>::iterator FindInsertPosition(int frameId, std::vector<T>
 }
 
 template<typename T>
-T *InsertOrUpdateKeyFrame(int frameId, std::vector<T> &keyFrames, AbstractFrameState* pFrameState, bool* isInsert = NULL) {
+T *
+InsertOrUpdateKeyFrame(int frameId, std::vector<T> &keyFrames, AbstractFrameState *pFrameState, bool *isInsert = NULL) {
     auto itr = FindInsertPosition(frameId, keyFrames);
     T *pKeyFrame = NULL;
     if (itr == keyFrames.end()) {
         int currentFrameSize = keyFrames.size();
         keyFrames.resize(currentFrameSize + 1);
         pKeyFrame = &keyFrames[currentFrameSize];
-        if(isInsert){ // Inserted at last of the keyFrames.
+        if (isInsert) { // Inserted at last of the keyFrames.
             *isInsert = true;
         }
     } else if (itr->GetFrameId() == frameId) { // The frame exists, reassign value later
         pKeyFrame = &(*itr);
 
-        if(isInsert){
+        if (isInsert) {
             *isInsert = false; // Update the value
         }
     } else {
@@ -223,7 +324,7 @@ T *InsertOrUpdateKeyFrame(int frameId, std::vector<T> &keyFrames, AbstractFrameS
         auto newFrameItr = keyFrames.insert(itr, transformKeyFrame);
         pKeyFrame = &(*newFrameItr);
 
-        if(isInsert){
+        if (isInsert) {
             *isInsert = true;
         }
     }

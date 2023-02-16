@@ -16,6 +16,8 @@ import {MirrorShapeJS} from "./Shapes/MirrorShapeJS";
 import {ColorStop} from "./Components/ColorStop";
 import {getNailManager} from "./IK/GetNailManager";
 import {NailShapeJS} from "./Shapes/NailShapeJS";
+import {ParticleSystemJS} from "./Shapes/ParticleSystemJS";
+import {ParticleSystemRenderer} from "./Components/ParticleSystemRenderer";
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 
@@ -43,6 +45,24 @@ if (Module.IsWASMInited && Module.IsWASMInited()) {
     }
 }
 
+if(!window["taichiInitBegun"]){
+    window["taichiInitBegun"] = true
+
+//     // This is just because StackBlitz has some weird handling of external scripts.
+//     // Normally, you would just use `<script src="https://unpkg.com/taichi.js/dist/taichi.umd.js"></script>` in the HTML
+//     const script = document.createElement('script');
+//     script.addEventListener('load', async function () {
+//         await huahuoEngine.OnTaichiInit()
+//     });
+// // script.src = 'https://unpkg.com/taichi.js/dist/taichi.umd.js';
+//     script.src = 'https://unpkg.com/taichi.js/dist/taichi.dev.umd.js';
+//
+// // Append to the `head` element
+//     document.head.appendChild(script);
+
+    huahuoEngine.OnTaichiInit()
+}
+
 window.enginejsInited = true
 export {
     renderEngine2D,
@@ -63,6 +83,8 @@ export {
     SVGShapeJS,
     MirrorShapeJS,
     NailShapeJS,
+    ParticleSystemJS,
+    ParticleSystemRenderer,
     NailComponent,
     ColorStop,
     getNailManager,

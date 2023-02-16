@@ -8,6 +8,8 @@ class InterpolateVariableProcessor{
 
         let fieldName = propertyEntry["key"]
 
+        delete this[fieldName] // Undefine the property
+
         internalProcessComponent(component, fieldName, {
             getter: ()=>{
                 return operator.getField(fieldName)

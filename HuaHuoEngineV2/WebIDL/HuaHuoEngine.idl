@@ -131,6 +131,8 @@ interface AbstractFrameState{
     void SetTypeName([Const] DOMString typeName);
     long GetKeyFrameCount();
     long GetKeyFrameAtIndex(long idx);
+    void DeleteKeyFrame(long frameId);
+    boolean ReverseKeyFrame(long startFrameId, long endFrameId, long currentFrameId);
 };
 
 [NoDelete]
@@ -286,6 +288,16 @@ interface RectangleShape{
 };
 
 RectangleShape implements BaseShape;
+
+[NoDelete]
+interface ParticleSystem{
+    void SetStartPoint(float x, float y, float z);
+    void SetEndPoint(float x, float y, float z);
+    Vector3f GetStartPoint();
+    Vector3f GetEndPoint();
+};
+
+ParticleSystem implements BaseShape;
 
 [NoDelete]
 interface CircleShape{
