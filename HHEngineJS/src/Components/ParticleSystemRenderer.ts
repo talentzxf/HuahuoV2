@@ -22,6 +22,9 @@ class ParticleSystemRenderer extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateColor, {random: true})
     backgroundColor
 
+    @PropertyValue(PropertyCategory.subcomponentArray)
+    particleSystems
+
     async initImage(width, height) {
         let widthInt = Math.ceil(width)
         let heightInt = Math.ceil(height)

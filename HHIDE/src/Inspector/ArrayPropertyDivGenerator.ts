@@ -66,4 +66,4 @@ class ArrayPropertyDivGenerator extends BasePropertyDivGenerator{
 
 let arrayPropertyDivGenerator = new ArrayPropertyDivGenerator()
 
-export {arrayPropertyDivGenerator}
+export {arrayPropertyDivGenerator, ArrayPropertyDesc}
