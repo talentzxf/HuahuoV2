@@ -19,7 +19,8 @@ enum CustomDataType{
     COLOR,
     SHAPEARRAY,
     COLORSTOPARRAY,
-    VECTOR3
+    VECTOR3,
+    SUBCOMPONENTS
 };
 
 // Use union to save space.

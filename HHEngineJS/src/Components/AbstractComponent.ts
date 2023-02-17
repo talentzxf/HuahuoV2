@@ -9,6 +9,7 @@ import {ComponentConfig} from "./ComponentConfig";
 import {interpolateVariableProcessor} from "./VariableHandlers/InterpolateVariableProcessor";
 import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
 import {colorStopArrayHandler} from "./VariableHandlers/ColorArrayProcessor";
+import {subComponentArrayHandler} from "./VariableHandlers/SubComponentArrayHandler";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -77,6 +78,11 @@ class AbstractComponent {
                     shapeArrayHandler.handleEntry(this, propertyEntry)
                 } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
                     colorStopArrayHandler.handleEntry(this, propertyEntry)
+                } else if (propertyEntry.type == PropertyCategory.subcomponentArray){
+                    subComponentArrayHandler.handleEntry(this, propertyEntry)
+                }
+                else {
+                    throw "Unknown property type"
                 }
             })
         }

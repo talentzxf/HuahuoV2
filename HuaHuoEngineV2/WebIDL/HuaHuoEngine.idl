@@ -164,6 +164,11 @@ interface CustomComponent{
     long RegisterShapeArrayValue([Const] DOMString fieldName);
     long RegisterColorValue([Const] DOMString fieldName, float r, float g, float b, float a);
     long RegisterColorStopArrayValue([Const] DOMString fieldName);
+    long RegisterSubcomponentArray([Const] DOMString fieldName);
+
+    long GetSubComponentCount();
+    CustomComponent GetSubComponentByIdx(long idx);
+    CustomComponent GetSubComponentByName([Const] DOMString fieldName);
 
     void CreateShapeArrayValue([Const] DOMString fieldName);
     FieldShapeArray GetShapeArrayValueForWrite([Const] DOMString fieldName);
