@@ -1,18 +1,24 @@
 import {AbstractComponent, Component} from "./AbstractComponent";
 
 /**
- * ComponentGroup is a special Component. It's responsibility is to store other components.
+ * GroupComponent is a special Component. It's responsibility is to store other components.
  */
 @Component()
-class GroupComponent extends AbstractComponent{
-    subComponents: Array<AbstractComponent> = new Array<AbstractComponent>()
+class GroupComponent extends AbstractComponent {
+    subComponents: Array<AbstractComponent>
 
-    addSubComponent(component: AbstractComponent){
+    addSubComponent(component: AbstractComponent) {
+        if (this.subComponents == null) {
+            this.subComponents = new Array<AbstractComponent>()
+        }
         this.subComponents.push(component)
     }
 
-    getComponentByRawObj(componentRawObj){
-        return this.subComponents.find((component)=>{
+    getComponentByRawObj(componentRawObj) {
+        if(this.subComponents == null)
+            return null
+
+        return this.subComponents.find((component) => {
             return component.rawObj == componentRawObj
         })
     }
@@ -20,7 +26,10 @@ class GroupComponent extends AbstractComponent{
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
-        for(let subComponent of this.subComponents){
+        if(this.subComponents == null)
+            return
+
+        for (let subComponent of this.subComponents) {
             subComponent.afterUpdate(force)
         }
     }

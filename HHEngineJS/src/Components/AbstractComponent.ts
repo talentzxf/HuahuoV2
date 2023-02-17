@@ -79,6 +79,8 @@ class AbstractComponent {
                 } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
                     colorStopArrayHandler.handleEntry(this, propertyEntry)
                 } else if (propertyEntry.type == PropertyCategory.subcomponentArray){
+                    // Only Components inherits GroupComponent can have subComponentArray. Cause SubComponentArray itself is a component.
+                    //@ts-ignore
                     subComponentArrayHandler.handleEntry(this, propertyEntry)
                 }
                 else {

@@ -1,14 +1,15 @@
 // @ts-nocheck
 
-import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
+import {Component, PropertyValue} from "./AbstractComponent";
 import {ParticleSystemJS} from "../Shapes/ParticleSystemJS";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {huahuoEngine} from "../EngineAPI";
+import {GroupComponent} from "./GroupComponent";
 
 // Convention: All variables start with _ is taichi variables.
 //             All variables with the same name is to receive input from Inspector.
 @Component({compatibleShapes: ["ParticleSystemJS"], maxCount: 1})
-class ParticleSystemRenderer extends AbstractComponent {
+class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupComponent, because each particle system renderer might contain multiple particles.
     inited: boolean = false
 
     outputImage

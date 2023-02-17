@@ -6,10 +6,11 @@ import {internalProcessComponent} from "./AbstractVariableHandler";
 import {capitalizeFirstLetter} from "../PropertySheetBuilder";
 import {AbstractComponent} from "../AbstractComponent";
 import {clzObjectFactory} from "../../CppClassObjectFactory";
+import {GroupComponent} from "../GroupComponent";
 
 class FieldSubComponentArrayIterable {
-    parentComponent
-    constructor(parentComponent) {
+    parentComponent: GroupComponent
+    constructor(parentComponent: GroupComponent) {
         this.parentComponent = parentComponent
     }
 
@@ -33,7 +34,7 @@ class FieldSubComponentArrayIterable {
 }
 
 class SubComponentArrayHandler {
-    handleEntry(component, propertyEntry) {
+    handleEntry(component: GroupComponent, propertyEntry) {
         let fieldName = propertyEntry["key"]
         component.rawObj.RegisterSubcomponentArray(fieldName)
         let rawSubComponent = component.rawObj.GetSubComponentByName(fieldName)
@@ -41,7 +42,7 @@ class SubComponentArrayHandler {
         // Recreate the subcomponent
         let subComponentConstructor = clzObjectFactory.GetClassConstructor(rawSubComponent.GetTypeName())
         let groupComponent = new subComponentConstructor(rawSubComponent)
-        component.addComponent(groupComponent)
+        component.addSubComponent(groupComponent)
 
         let inserterName = "insert" + capitalizeFirstLetter(fieldName)
 
