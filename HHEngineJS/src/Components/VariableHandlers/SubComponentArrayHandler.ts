@@ -48,7 +48,7 @@ class SubComponentArrayHandler {
 
         internalProcessComponent(component, fieldName, {
             getter: () => {
-                return new FieldSubComponentArrayIterable(component)
+                return new FieldSubComponentArrayIterable(groupComponent)
             },
             inserter: (val: AbstractComponent) => {
 

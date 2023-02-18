@@ -91,7 +91,8 @@
       "gradientColorArray": "Gradient Color Array",
       "centerPosition": "Center Position",
       "keyframes": "Key Frames",
-      "backgroundColor": "Background color"
+      "backgroundColor": "Background color",
+      "particleSystems": "Particles"
     },
     "nail": {
       "isStatic": "Is Static"
