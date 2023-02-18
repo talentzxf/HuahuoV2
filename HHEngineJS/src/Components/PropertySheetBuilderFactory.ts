@@ -25,6 +25,7 @@ class PropertySheetFactory{
         this.categoryTypeMap.set(PropertyCategory.keyframeArray, PropertyType.KEYFRAMES)
 
         this.categoryTypeMap.set(PropertyCategory.subcomponentArray, PropertyType.SUBCOMPONENTARRAY)
+        this.categoryTypeMap.set(PropertyCategory.subcomponentArray, PropertyType.COMPONENT)
     }
 
     createEntryByNameAndCategory(propertyName, category: PropertyCategory) {
