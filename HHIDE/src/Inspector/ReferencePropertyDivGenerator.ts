@@ -56,6 +56,9 @@ class ReferencePropertyDesc extends BasePropertyDesc{
     }
 
     onValueChanged(val) {
+        if(val == null)
+            return;
+        
         let typeName = val.typename
         let name = val.name
 
