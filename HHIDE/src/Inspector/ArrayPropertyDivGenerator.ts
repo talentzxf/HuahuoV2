@@ -36,10 +36,7 @@ class ArrayPropertyDesc extends BasePropertyDesc{
 
     addEntry(){
         let propertyDivGenerator = GetPropertyDivGenerator(this.elementType)
-        let propertyDesc = propertyDivGenerator.generatePropertyDesc({
-            getter: this.property.getter,
-            setter: this.property.setter
-        })
+        let propertyDesc = propertyDivGenerator.generatePropertyDesc(this.property)
 
         let generatedDiv = GenerateDiv(propertyDivGenerator, propertyDesc)
 

@@ -75,6 +75,10 @@ public:
 
     virtual std::vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() = 0;
 
+    int GetSubComponentCount() {
+        return 0;
+    }
+
 protected:
     void DeleteKeyFrameInternal(KeyFrame *keyFrame);
 

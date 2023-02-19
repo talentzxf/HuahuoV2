@@ -133,6 +133,8 @@ interface AbstractFrameState{
     long GetKeyFrameAtIndex(long idx);
     void DeleteKeyFrame(long frameId);
     boolean ReverseKeyFrame(long startFrameId, long endFrameId, long currentFrameId);
+
+    long GetSubComponentCount();
 };
 
 [NoDelete]
@@ -166,7 +168,6 @@ interface CustomComponent{
     long RegisterColorStopArrayValue([Const] DOMString fieldName);
     long RegisterSubcomponentArray([Const] DOMString fieldName);
 
-    long GetSubComponentCount();
     CustomComponent GetSubComponentByIdx(long idx);
     CustomComponent GetSubComponentByName([Const] DOMString fieldName);
 
