@@ -87,13 +87,13 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
                 this.backgroundColor.blue, this.backgroundColor.alpha])])
 
         await this.renderKernel()
-        await this.taichiCanvas.setImage(this.outputImage)
-
-        particleSystemRaster.drawImage(this.htmlCanvas)
 
         for(let particles of this.particleSystems){
-
+            particles.renderImage()
         }
+
+        await this.taichiCanvas.setImage(this.outputImage)
+        particleSystemRaster.drawImage(this.htmlCanvas)
     }
 
     createRenderKernel() {

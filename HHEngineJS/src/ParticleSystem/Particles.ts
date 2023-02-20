@@ -89,6 +89,30 @@ class Particles extends AbstractComponent{
         this._updateParticlesKernel(mass, dt)
     }
 
+    _renderImageKernel
+    renderImage(){
+        if(_renderImageKernel == null){
+            this._renderImageKernel = huahuoEngine.ti.kernel(()=>{
+
+                let viewPortXMin = -outputImageWidth/2;
+                let viewPortYMin = -outputImageHeight/2;
+                for(let i of range(maxNumbers)){
+                    if(particleStatuses[i] == 1){
+                        // projection. For simplicity, ignore z coordinate first.
+                        let projectedPosition = _particlePositions[i][0,1]
+
+                        // TODO: https://www.geeksforgeeks.org/window-to-viewport-transformation-in-computer-graphics-with-implementation/
+                        let windowPosition = projectedPosition - [viewPortXMin, viewPortYMin]
+
+                        outputImage[windowPosition] = [1.0, 1.0, 0.0, 1.0]
+                    }
+                }
+            })
+        }
+
+        this._renderImageKernel()
+    }
+
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
