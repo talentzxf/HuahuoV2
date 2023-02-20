@@ -90,6 +90,10 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
         await this.taichiCanvas.setImage(this.outputImage)
 
         particleSystemRaster.drawImage(this.htmlCanvas)
+
+        for(let particles of this.particleSystems){
+
+        }
     }
 
     createRenderKernel() {
