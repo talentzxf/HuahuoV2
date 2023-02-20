@@ -1,4 +1,9 @@
-import {BasePropertyDesc, BasePropertyDivGenerator} from "./BasePropertyDivGenerator";
+import {
+    BasePropertyDesc,
+    BasePropertyDivGenerator,
+    GenerateDiv,
+    GetPropertyDivGenerator
+} from "./BasePropertyDivGenerator";
 import {ArrayPropertyDesc} from "./ArrayPropertyDivGenerator";
 import {huahuoEngine} from "hhenginejs";
 
@@ -15,6 +20,12 @@ class SubComponentsPropertyDesc extends ArrayPropertyDesc {
 
         let subComponent = huahuoEngine.produceObject(subComponentTypeName)
         this.property.inserter(subComponent)
+
+        let propertyDivGenerator = GetPropertyDivGenerator(this.property.elementType)
+        let propertyDesc = propertyDivGenerator.generatePropertyDesc(this.property)
+        let generatedDiv = GenerateDiv(propertyDivGenerator, propertyDesc)
+
+        this.arrayEntryDivs.appendChild(generatedDiv)
 
         return null;
     }

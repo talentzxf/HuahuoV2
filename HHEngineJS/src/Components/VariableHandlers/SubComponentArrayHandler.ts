@@ -1,15 +1,11 @@
-import {BaseShapeJS} from "../../Shapes/BaseShapeJS";
-import {huahuoEngine} from "../../EngineAPI";
-
-import {IsValidWrappedObject} from "hhcommoncomponents";
 import {internalProcessComponent} from "./AbstractVariableHandler";
-import {capitalizeFirstLetter} from "../PropertySheetBuilder";
 import {AbstractComponent} from "../AbstractComponent";
 import {clzObjectFactory} from "../../CppClassObjectFactory";
 import {GroupComponent} from "../GroupComponent";
 
 class FieldSubComponentArrayIterable {
     parentComponent: GroupComponent
+
     constructor(parentComponent: GroupComponent) {
         this.parentComponent = parentComponent
     }
@@ -48,8 +44,8 @@ class SubComponentArrayHandler {
             getter: () => {
                 return new FieldSubComponentArrayIterable(groupComponent)
             },
-            inserter: (val: AbstractComponent) => {
-
+            inserter: (subComponent: AbstractComponent) => {
+                component.addSubComponent(subComponent)
             },
             deleter: (val) => {
             }
