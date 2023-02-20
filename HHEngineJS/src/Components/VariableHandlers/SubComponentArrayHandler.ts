@@ -44,8 +44,6 @@ class SubComponentArrayHandler {
         let groupComponent = new subComponentConstructor(rawSubComponent)
         component.addSubComponent(groupComponent)
 
-        let inserterName = "insert" + capitalizeFirstLetter(fieldName)
-
         internalProcessComponent(component, fieldName, {
             getter: () => {
                 return new FieldSubComponentArrayIterable(groupComponent)
@@ -54,10 +52,7 @@ class SubComponentArrayHandler {
 
             },
             deleter: (val) => {
-            },
-            setter: (val) => {
-                component[inserterName](val)
-            } // Setter is just alias of inserter.
+            }
         })
     }
 }

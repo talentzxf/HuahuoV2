@@ -18,6 +18,7 @@ import {getNailManager} from "./IK/GetNailManager";
 import {NailShapeJS} from "./Shapes/NailShapeJS";
 import {ParticleSystemJS} from "./Shapes/ParticleSystemJS";
 import {ParticleSystemRenderer} from "./Components/ParticleSystemRenderer";
+import {Particles} from "./ParticleSystem/Particles";
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 

@@ -3,7 +3,7 @@ import {AbstractComponent, Component} from "./AbstractComponent";
 /**
  * GroupComponent is a special Component. It's responsibility is to store other components.
  */
-@Component()
+@Component({compatibleShapes: []})
 class GroupComponent extends AbstractComponent {
     subComponents: Array<AbstractComponent>
 
@@ -15,7 +15,7 @@ class GroupComponent extends AbstractComponent {
     }
 
     getComponentByRawObj(componentRawObj) {
-        if(this.subComponents == null)
+        if (this.subComponents == null)
             return null
 
         return this.subComponents.find((component) => {
@@ -26,7 +26,7 @@ class GroupComponent extends AbstractComponent {
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
-        if(this.subComponents == null)
+        if (this.subComponents == null)
             return
 
         for (let subComponent of this.subComponents) {

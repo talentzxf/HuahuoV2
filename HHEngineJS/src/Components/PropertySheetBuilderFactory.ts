@@ -50,17 +50,29 @@ class PropertySheetFactory{
         let deleterName = "delete" + capitalizeFirstLetter(fieldName) // TODO: Code duplication with AbstractComponent
         let updateName = "update" + capitalizeFirstLetter(fieldName)
 
+        let inserterName = "insert" + capitalizeFirstLetter(fieldName)
+
         let propertyDef = this.createEntryByNameAndCategory(propertyMeta["key"], propertyMeta.type)
 
-        propertyDef["getter"] = component[getterName].bind(component),
-        propertyDef["setter"] = component[setterName].bind(component),
-        propertyDef["registerValueChangeFunc"] = valueChangeHandler.registerValueChangeHandler(fieldName),
-        propertyDef["unregisterValueChagneFunc"] = valueChangeHandler.unregisterValueChangeHandler(fieldName),
+        propertyDef["getter"] = component[getterName].bind(component)
+
+        if(propertyDef["setter"])
+            propertyDef["setter"] = component[setterName].bind(component)
+
+        propertyDef["registerValueChangeFunc"] = valueChangeHandler.registerValueChangeHandler(fieldName)
+        propertyDef["unregisterValueChangeFunc"] = valueChangeHandler.unregisterValueChangeHandler(fieldName)
         propertyDef["config"] = propertyMeta.config
 
         if(component[updateName]){
             propertyDef["updater"] = component[updateName].bind(component)
+        }
+
+        if(component[deleterName]){
             propertyDef["deleter"] = component[deleterName].bind(component)
+        }
+
+        if(component[inserterName]){
+            propertyDef["inserter"] = component[inserterName].bind(component)
         }
 
         return propertyDef

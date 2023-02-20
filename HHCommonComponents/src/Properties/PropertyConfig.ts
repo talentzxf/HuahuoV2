@@ -12,6 +12,10 @@ class ActionPropertyConfig extends PropertyConfig{
     action?: Function // For Button property
 }
 
-export {PropertyConfig, FloatPropertyConfig, ActionPropertyConfig}
+class SubComponentArrayProperty extends PropertyConfig{
+    subComponentTypeName: string;
+}
+
+export {PropertyConfig, FloatPropertyConfig, ActionPropertyConfig, SubComponentArrayProperty}
 
 

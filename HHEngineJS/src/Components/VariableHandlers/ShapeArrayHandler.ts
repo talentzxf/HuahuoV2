@@ -58,10 +58,7 @@ class ShapeArrayHandler {
                     component.baseShape.update(true)
 
                 component.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
-            },
-            setter: (val) => {
-                component[inserterName](val)
-            } // Setter is just alias of inserter.
+            }
         })
     }
 }

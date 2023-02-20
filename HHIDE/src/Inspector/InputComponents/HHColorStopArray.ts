@@ -106,7 +106,7 @@ class Pen {
 })
 class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent {
     getter: Function
-    setter: Function // This is actually inserter
+    inserter: Function // This is actually inserter
     deleter: Function
     updater: Function
 
@@ -123,13 +123,13 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
 
     kbEventAttached = false
 
-    constructor(getter, setter, updater, deleter) {
+    constructor(getter, inserter, updater, deleter) {
         super();
 
         this.updater = updater
         this.deleter = deleter
         this.getter = getter
-        this.setter = setter
+        this.inserter = inserter
 
         this.canvas = document.createElement("canvas")
         this.canvas.style.width = canvasWidth + "px"
@@ -246,7 +246,7 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         let clickPoint = evt["point"]
         let value = clickPoint.x / rectangleWidth
 
-        let insertedColorStopIdentifier = this.setter(value) // Setter is actually inserter.
+        let insertedColorStopIdentifier = this.inserter(value) // Setter is actually inserter.
         this.refresh()
 
         for(let pen of this.pens){

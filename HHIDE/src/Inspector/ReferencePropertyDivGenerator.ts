@@ -48,7 +48,7 @@ class ReferencePropertyDesc extends BasePropertyDesc{
 
     onShapePicked(selectedShape:BaseShapeJS){
         this.onValueChanged(selectedShape)
-        this.property.setter(selectedShape)
+        this.property.inserter(selectedShape) // Callback the inserter
 
         let currentFocusedSceneView = sceneViewManager.getFocusedSceneView()
         currentFocusedSceneView.resetDefaultShapeDrawer()

@@ -30,7 +30,8 @@ class ArrayPropertyDesc extends BasePropertyDesc{
         let currentArray = property.getter()
         for(let entry of currentArray){
             let desc = this.addEntry()
-            desc["onValueChanged"](entry)
+            if(desc)
+                desc["onValueChanged"](entry)
         }
     }
 

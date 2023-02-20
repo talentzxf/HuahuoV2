@@ -1,5 +1,6 @@
 import {BasePropertyDesc, BasePropertyDivGenerator} from "./BasePropertyDivGenerator";
 import {ArrayPropertyDesc} from "./ArrayPropertyDivGenerator";
+import {huahuoEngine} from "hhenginejs";
 
 class SubComponentsPropertyDesc extends ArrayPropertyDesc {
     constructor(property) {
@@ -10,7 +11,12 @@ class SubComponentsPropertyDesc extends ArrayPropertyDesc {
     }
 
     addEntry(): BasePropertyDesc {
-        return super.addEntry();
+        let subComponentTypeName = this.property.config.subComponentTypeName
+
+        let subComponent = huahuoEngine.produceObject(subComponentTypeName)
+        this.property.inserter(subComponent)
+
+        return null;
     }
 }
 

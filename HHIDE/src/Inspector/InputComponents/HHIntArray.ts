@@ -145,7 +145,7 @@ class TimelineSpan {
 })
 class HHIntArray extends HTMLElement implements RefreshableComponent {
     getter: Function
-    setter: Function
+    inserter: Function
     updater: Function
     deleter: Function
     titleDiv: HTMLDivElement
@@ -169,14 +169,14 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
 
     contextMenu: ContextMenu = new ContextMenu()
 
-    constructor(getter, setter, updater, deleter, titleDiv) {
+    constructor(getter, inserter, updater, deleter, titleDiv) {
         super();
 
         this.titleDiv = titleDiv
         this.getter = getter
         this.updater = updater
         this.deleter = deleter
-        this.setter = setter
+        this.inserter = inserter
 
         this.collapseButton = document.createElement("input")
         this.collapseButton.type = "button"

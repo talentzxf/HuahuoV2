@@ -12,7 +12,6 @@ class ParticleSystemJS extends BaseShapeJS {
     boundRectangle: paper.Path.Rectangle
     raster: paper.Raster
 
-
     getShapeName(): string {
         return shapeName
     }

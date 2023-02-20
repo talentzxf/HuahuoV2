@@ -133,7 +133,6 @@ class AbstractComponent {
         let keyFramePropertySheet = propertySheetFactory.createEntryByNameAndCategory("keyframes", PropertyCategory.keyframeArray)
 
         keyFramePropertySheet["getter"] = this.getKeyFrames.bind(this)
-        keyFramePropertySheet["setter"] = this.insertKeyFrames.bind(this) // Same as other arrays, setter is alias of inserter.
         componentConfigSheet.config.children.push(keyFramePropertySheet)
 
         return componentConfigSheet

@@ -1,8 +1,11 @@
 // @ts-nocheck
 
 import {huahuoEngine} from "../EngineAPI";
+import {Component} from "../Components/AbstractComponent";
 
-class ParticleSystem{
+// ParticleSystem is not compatible with any shape. It should be used in ParticleSystemRenderer only as a subcomponent.
+@Component({compatibleShapes:[]})
+class Particles {
     _particleStatuses // 0 - inactive, 1 - active
     _particlePositions
     _particleVelocity
@@ -16,4 +19,4 @@ class ParticleSystem{
     }
 }
 
-export {ParticleSystem}
+export {Particles}

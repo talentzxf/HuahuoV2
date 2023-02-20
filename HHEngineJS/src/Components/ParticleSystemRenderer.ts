@@ -5,6 +5,8 @@ import {ParticleSystemJS} from "../Shapes/ParticleSystemJS";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {huahuoEngine} from "../EngineAPI";
 import {GroupComponent} from "./GroupComponent";
+import {SubComponentArrayProperty} from "hhcommoncomponents/dist/src/Properties/PropertyConfig";
+import {Particles} from "../ParticleSystem/particles.component";
 
 // Convention: All variables start with _ is taichi variables.
 //             All variables with the same name is to receive input from Inspector.
@@ -23,7 +25,7 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
     @PropertyValue(PropertyCategory.interpolateColor, {random: true})
     backgroundColor
 
-    @PropertyValue(PropertyCategory.subcomponentArray)
+    @PropertyValue(PropertyCategory.subcomponentArray, null, {subComponentTypeName: "Particles"} as SubComponentArrayProperty)
     particleSystems
 
     async initImage(width, height) {
