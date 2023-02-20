@@ -78,12 +78,11 @@ class AbstractComponent {
                     shapeArrayHandler.handleEntry(this, propertyEntry)
                 } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
                     colorStopArrayHandler.handleEntry(this, propertyEntry)
-                } else if (propertyEntry.type == PropertyCategory.subcomponentArray){
+                } else if (propertyEntry.type == PropertyCategory.subcomponentArray) {
                     // Only Components inherits GroupComponent can have subComponentArray. Cause SubComponentArray itself is a component.
                     //@ts-ignore
                     subComponentArrayHandler.handleEntry(this, propertyEntry)
-                }
-                else {
+                } else {
                     throw "Unknown property type"
                 }
             })
@@ -99,9 +98,10 @@ class AbstractComponent {
     afterUpdate(force: boolean = false) {
     }
 
-    getCurrentFrameId(){
+    getCurrentFrameId() {
         return this.baseShape.getLayer().GetCurrentFrame()
     }
+
     getTypeName() {
         return this.rawObj.GetTypeName()
     }
@@ -111,10 +111,6 @@ class AbstractComponent {
     }
 
     getPropertySheet() {
-        const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
-        if (properties == null)
-            return null;
-
         let componentConfigSheet = {
             key: this.getTypeName(),
             type: PropertyType.COMPONENT,
@@ -123,10 +119,13 @@ class AbstractComponent {
             }
         }
 
-        for (let propertyMeta of properties) {
-            let propertySheetEntry = propertySheetFactory.createEntry(this, propertyMeta, this.valueChangeHandler)
-            if (propertySheetEntry != null) {
-                componentConfigSheet.config.children.push(propertySheetEntry)
+        const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
+        if (properties != null) {
+            for (let propertyMeta of properties) {
+                let propertySheetEntry = propertySheetFactory.createEntry(this, propertyMeta, this.valueChangeHandler)
+                if (propertySheetEntry != null) {
+                    componentConfigSheet.config.children.push(propertySheetEntry)
+                }
             }
         }
 
@@ -164,7 +163,7 @@ class AbstractComponent {
 
     }
 
-    setInvisible(){
+    setInvisible() {
 
     }
 

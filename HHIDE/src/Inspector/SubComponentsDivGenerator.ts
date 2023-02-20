@@ -22,7 +22,7 @@ class SubComponentsPropertyDesc extends ArrayPropertyDesc {
         this.property.inserter(subComponent)
 
         let propertyDivGenerator = GetPropertyDivGenerator(this.property.elementType)
-        let propertyDesc = propertyDivGenerator.generatePropertyDesc(this.property)
+        let propertyDesc = propertyDivGenerator.generatePropertyDesc(subComponent.getPropertySheet())
         let generatedDiv = GenerateDiv(propertyDivGenerator, propertyDesc)
 
         this.arrayEntryDivs.appendChild(generatedDiv)
