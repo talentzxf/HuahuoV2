@@ -94,7 +94,8 @@
       "backgroundColor": "Background color",
       "particleSystems": "Particles",
       "activeParticleCount": "Active Particle Count",
-      "particleMass": "Particle Mass"
+      "particleMass": "Particle Mass",
+      "initMaxVelocity": "Max start velocity"
     },
     "nail": {
       "isStatic": "Is Static"
