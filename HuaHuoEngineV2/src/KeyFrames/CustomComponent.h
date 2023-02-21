@@ -153,17 +153,31 @@ DECLARE_OBJECT_SERIALIZE();
 
     bool ReverseKeyFrame(int startFrameId, int endFrameId, int currentFrameId) override;
 
-    int GetSubComponentCount(){
+    int GetSubComponentCount() {
         return m_SubComponents.size();
     }
 
-    CustomComponent* GetSubComponentByIdx(int idx){
-        return (CustomComponent*)&(*m_SubComponents[idx].GetComponentPtr());
+    CustomComponent *GetSubComponentByIdx(int idx) {
+        return (CustomComponent *) &(*m_SubComponents[idx].GetComponentPtr());
     }
 
-    CustomComponent* GetSubComponentByName(const char* fieldName){
+    CustomComponent *GetSubComponentArrayByName(const char *fieldName) {
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        return (CustomComponent*)&(*m_FrameStates[idx].GetComponentPtr());
+        return (CustomComponent *) &(*m_FrameStates[idx].GetComponentPtr());
+    }
+
+    void AddSubComponent(CustomComponent *pSubComponent) {
+        std::vector<FrameStatePair>::iterator itr = std::find_if(m_SubComponents.begin(), m_SubComponents.end(),
+                                                                 [pSubComponent](FrameStatePair componentPtr) {
+                                                                     return componentPtr.GetComponentPtr().GetInstanceID() ==
+                                                                            pSubComponent->GetInstanceID();
+                                                                 });
+        if (itr == m_SubComponents.end()) // Already added, no need to add again.
+            return;
+
+        pSubComponent->SetBaseShape(this->GetBaseShape());
+        m_FrameStates.push_back(FrameStatePair::FromState(pSubComponent));
+        m_SubComponents.push_back(FrameStatePair::FromState(pSubComponent));
     }
 
 private:
@@ -236,9 +250,7 @@ public:
             m_fieldIndexFieldNameMap[index] = fieldName;
 
             CustomComponent *pComponent = CreateComponent();
-            pComponent->SetBaseShape(this->GetBaseShape());
-            m_FrameStates.push_back(FrameStatePair::FromState(pComponent));
-            m_SubComponents.push_back(FrameStatePair::FromState(pComponent));
+            this->AddSubComponent(pComponent);
 
             // This type name should correspond to the ComponentGroup in the ts side.
             pComponent->SetTypeName("GroupComponent");

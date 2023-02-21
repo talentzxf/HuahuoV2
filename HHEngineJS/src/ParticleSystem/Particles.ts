@@ -3,6 +3,7 @@
 import {huahuoEngine} from "../EngineAPI";
 import {AbstractComponent, Component, PropertyValue} from "../Components/AbstractComponent";
 import {PropertyCategory} from "../Components/PropertySheetBuilder";
+import {GlobalConfig} from "../GlobalConfig";
 
 const MAX_PARTICLE_COUNT = 1000
 
@@ -36,7 +37,7 @@ class Particles extends AbstractComponent{
         huahuoEngine.ti.addToKernelScope({
             particleVelocity: this._particleVelocity,
             particlePositions: this._particlePositions,
-            particleStatues: this._particleStatuses,
+            particleStatuses: this._particleStatuses,
             maxNumbers: this.maxNumbers
         })
     }
@@ -116,9 +117,9 @@ class Particles extends AbstractComponent{
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
-        let currentFrameId = this.baseShape.getLayer().getCurrentFrameId()
+        let currentFrameId = this.baseShape.getLayer().GetCurrentFrame()
 
-        if(this.lastUpdatedFrameId != currentFrameId){
+        if(force || this.lastUpdatedFrameId != currentFrameId){
             // Set particle statuses.
             this.updateParticleStatuses(this.activeParticleCount)
 
@@ -126,7 +127,9 @@ class Particles extends AbstractComponent{
                 this.initParticles()
             }
 
-            this.updateParticles()
+            // TODO: Split into fixed physical frames.
+            let dt = (currentFrameId - this.lastUpdatedFrameId)/GlobalConfig.fps
+            this.updateParticles(this.particleMass, dt)
 
             this.lastUpdatedFrameId = currentFrameId
         }

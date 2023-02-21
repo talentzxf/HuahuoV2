@@ -27,7 +27,7 @@ class SubComponentsPropertyDesc extends ArrayPropertyDesc {
 
         this.arrayEntryDivs.appendChild(generatedDiv)
 
-        return null;
+        return propertyDesc;
     }
 }
 

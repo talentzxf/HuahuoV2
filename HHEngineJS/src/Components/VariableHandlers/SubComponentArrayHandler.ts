@@ -33,7 +33,7 @@ class SubComponentArrayHandler {
     handleEntry(component: GroupComponent, propertyEntry) {
         let fieldName = propertyEntry["key"]
         component.rawObj.RegisterSubcomponentArray(fieldName)
-        let rawSubComponent = component.rawObj.GetSubComponentByName(fieldName)
+        let rawSubComponent = component.rawObj.GetSubComponentArrayByName(fieldName)
 
         // Recreate the subcomponent
         let subComponentConstructor = clzObjectFactory.GetClassConstructor(rawSubComponent.GetTypeName())
@@ -45,7 +45,8 @@ class SubComponentArrayHandler {
                 return new FieldSubComponentArrayIterable(groupComponent)
             },
             inserter: (subComponent: AbstractComponent) => {
-                component.addSubComponent(subComponent)
+                groupComponent.addSubComponent(subComponent)
+                component.baseShape.update(true)
             },
             deleter: (val) => {
             }
