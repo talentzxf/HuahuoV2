@@ -16,7 +16,7 @@ class FieldSubComponentArrayIterable {
         const iterator = {
             next() {
                 if (curIdx < _this.parentComponent.rawObj.GetSubComponentCount()) {
-                    let componentRawObj = _this.parentComponent.rawObj.GetSubComponentByIdx(curIdx)
+                    let componentRawObj = _this.parentComponent.rawObj.GetSubComponentByIdx(curIdx++)
                     let targetComponent = _this.parentComponent.getComponentByRawObj(componentRawObj)
                     return {value: targetComponent, done: false}
                 }
@@ -32,7 +32,7 @@ class FieldSubComponentArrayIterable {
 class SubComponentArrayHandler {
     handleEntry(component: GroupComponent, propertyEntry) {
         let fieldName = propertyEntry["key"]
-        component.rawObj.RegisterSubcomponentArray(fieldName)
+        let fieldIdx = component.rawObj.RegisterSubcomponentArray(fieldName)
         let rawSubComponent = component.rawObj.GetSubComponentArrayByName(fieldName)
 
         // Recreate the subcomponent

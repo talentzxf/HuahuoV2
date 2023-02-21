@@ -172,12 +172,14 @@ DECLARE_OBJECT_SERIALIZE();
                                                                      return componentPtr.GetComponentPtr().GetInstanceID() ==
                                                                             pSubComponent->GetInstanceID();
                                                                  });
-        if (itr == m_SubComponents.end()) // Already added, no need to add again.
+        if (itr != m_SubComponents.end()) // Already added, no need to add again.
             return;
 
         pSubComponent->SetBaseShape(this->GetBaseShape());
         m_FrameStates.push_back(FrameStatePair::FromState(pSubComponent));
         m_SubComponents.push_back(FrameStatePair::FromState(pSubComponent));
+
+        printf("Successfully added subcomponent with type:%s\n", pSubComponent->GetTypeName());
     }
 
 private:
@@ -250,13 +252,14 @@ public:
             m_fieldIndexFieldNameMap[index] = fieldName;
 
             CustomComponent *pComponent = CreateComponent();
-            this->AddSubComponent(pComponent);
-
-            // This type name should correspond to the ComponentGroup in the ts side.
+            // This type name should correspond to the GroupComponent in the ts side.
             pComponent->SetTypeName("GroupComponent");
+
+            this->AddSubComponent(pComponent);
 
             return index;
         }
+        printf("ERROR: Field: %s has already been registered.\n", fieldName);
         return m_fieldNameFieldIndexMap[fieldName];
     }
 

@@ -60,19 +60,19 @@ class Particles extends AbstractComponent{
     }
 
     _initParticlesKernel
-    initParticles(){
+    initParticles(maxVelocity:number){
         if(this._initParticlesKernel == null){
-            this._initParticlesKernel = huahuoEngine.ti.kernel(()=>{
+            this._initParticlesKernel = huahuoEngine.ti.kernel((maxVelocity)=>{
                 for(let i of range(maxNumbers)){
                     if(particleStatuses[i] == 1){
-                        particleVelocity[i] = [ti.random(), ti.random(), ti.random()]
+                        particleVelocity[i] = [ti.random() * maxVelocity, ti.random() * maxVelocity, ti.random() * maxVelocity]
                     }
 
                     particlePositions[i] = [0.0, 0.0, 0.0]
                 }
             })
         }
-        this._initParticlesKernel()
+        this._initParticlesKernel(maxVelocity)
     }
 
     _updateParticlesKernel
@@ -92,7 +92,7 @@ class Particles extends AbstractComponent{
 
     _renderImageKernel
     renderImage(){
-        if(_renderImageKernel == null){
+        if(this._renderImageKernel == null){
             this._renderImageKernel = huahuoEngine.ti.kernel(()=>{
 
                 let viewPortXMin = -outputImageWidth/2;
@@ -100,11 +100,10 @@ class Particles extends AbstractComponent{
                 for(let i of range(maxNumbers)){
                     if(particleStatuses[i] == 1){
                         // projection. For simplicity, ignore z coordinate first.
-                        let projectedPosition = _particlePositions[i][0,1]
+                        let projectedPosition = [particlePositions[i][0], particlePositions[i][1]]
 
                         // TODO: https://www.geeksforgeeks.org/window-to-viewport-transformation-in-computer-graphics-with-implementation/
-                        let windowPosition = projectedPosition - [viewPortXMin, viewPortYMin]
-
+                        let windowPosition = i32(projectedPosition - [viewPortXMin, viewPortYMin])
                         outputImage[windowPosition] = [1.0, 1.0, 0.0, 1.0]
                     }
                 }
@@ -112,6 +111,11 @@ class Particles extends AbstractComponent{
         }
 
         this._renderImageKernel()
+
+        // For debug purpose, get the position array back
+        this._particlePositions.toArray().then(function(val){
+            console.log(val)
+        })
     }
 
     afterUpdate(force: boolean = false) {
@@ -124,7 +128,7 @@ class Particles extends AbstractComponent{
             this.updateParticleStatuses(this.activeParticleCount)
 
             if(this.lastUpdatedFrameId == -1){
-                this.initParticles()
+                this.initParticles(100.0)
             }
 
             // TODO: Split into fixed physical frames.
