@@ -92,7 +92,9 @@
       "centerPosition": "Center Position",
       "keyframes": "Key Frames",
       "backgroundColor": "Background color",
-      "particleSystems": "Particles"
+      "particleSystems": "Particles",
+      "activeParticleCount": "Active Particle Count",
+      "particleMass": "Particle Mass"
     },
     "nail": {
       "isStatic": "Is Static"

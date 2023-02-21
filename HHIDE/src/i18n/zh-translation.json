@@ -92,7 +92,9 @@
       "centerPosition": "中心位置",
       "keyframes": "关键帧",
       "backgroundColor": "背景颜色",
-      "particleSystems": "粒子"
+      "particleSystems": "粒子",
+      "activeParticleCount": "粒子数",
+      "particleMass": "粒子质量"
     },
     "nail": {
       "isStatic": "是否静态"

@@ -14,6 +14,9 @@ class Particles extends AbstractComponent {
     _particlePositions
     _particleVelocity
 
+    @PropertyValue(PropertyCategory.interpolateVector3, {x:100.0, y:100.0, z: 100.0})
+    initMaxVelocity
+
     @PropertyValue(PropertyCategory.interpolateFloat, 100, {max: MAX_PARTICLE_COUNT})
     activeParticleCount
 
@@ -64,13 +67,17 @@ class Particles extends AbstractComponent {
 
     initParticles(velocity) {
         if (this._initParticlesKernel == null) {
-            this._initParticlesKernel = huahuoEngine.ti.kernel((initMaxVelocityX, initMaxVelocityY, initMaxVelocityZ) => {
+            let vType = huahuoEngine.ti.types.vector(ti.f32, 3)
+
+            this._initParticlesKernel = huahuoEngine.ti.kernel(
+                {v: vType},
+                (v) => {
                 for (let i of range(maxNumbers)) {
                     if (particleStatuses[i] == 1) {
                         particleVelocity[i] = 2.0 * [
-                            (ti.random() - 0.5) * initMaxVelocityX,
-                            (ti.random() - 0.5) * initMaxVelocityY,
-                            (ti.random() - 0.5) * initMaxVelocityZ
+                            (ti.random() - 0.5) * v[0],
+                            (ti.random() - 0.5) * v[1],
+                            (ti.random() - 0.5) * v[2]
                         ] // random vector in [-1, -1, -1] - [1, 1, 1]
                     }
 
@@ -78,7 +85,7 @@ class Particles extends AbstractComponent {
                 }
             })
         }
-        this._initParticlesKernel(velocity[0], velocity[1], velocity[2])
+        this._initParticlesKernel(velocity);
     }
 
     _updateParticlesKernel
@@ -136,7 +143,7 @@ class Particles extends AbstractComponent {
             this.updateParticleStatuses(this.activeParticleCount)
 
             if (this.lastUpdatedFrameId == -1) {
-                this.initParticles([100.0, 100.0, 100.0])
+                this.initParticles(this.initMaxVelocity)
             }
 
             // TODO: Split into fixed physical frames.
