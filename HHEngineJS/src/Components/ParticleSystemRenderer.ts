@@ -56,7 +56,7 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
             this.htmlCanvas.style.height = heightInt + "px"
             this.taichiCanvas = new huahuoEngine.ti.Canvas(this.htmlCanvas)
 
-            document.body.appendChild(this.htmlCanvas)
+            // document.body.appendChild(this.htmlCanvas)
             // this.htmlCanvas.style.position = "absolute"
             // this.htmlCanvas.style.top = "0px"
             // this.htmlCanvas.style.left = "0px"
@@ -93,7 +93,7 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
         }
 
         await this.taichiCanvas.setImage(this.outputImage)
-        particleSystemRaster.drawImage(this.htmlCanvas)
+        particleSystemRaster.clearAndDrawImage(this.htmlCanvas)
     }
 
     createRenderKernel() {
@@ -104,12 +104,14 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
             for (let I of ndrange(i32(outputImageWidth), i32(outputImageHeight))) {
                 // outputImage[I] = [random(), random(), random(), 1.0]
 
-                let dist = (I - center).norm()
-                if (dist < 100.0) {
-                    outputImage[I] = backgroundColor[0]
-                } else {
-                    outputImage[I] = [0.0, 0.0, 0.0, 0.0]
-                }
+                // let dist = (I - center).norm()
+                // if (dist < 100.0) {
+                //     outputImage[I] = backgroundColor[0]
+                // } else {
+                //     outputImage[I] = [0.0, 0.0, 0.0, 0.0]
+                // }
+
+                outputImage[I] = [0.0, 0.0, 0.0, 0.0]
             }
         })
     }

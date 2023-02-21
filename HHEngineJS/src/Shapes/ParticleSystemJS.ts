@@ -76,7 +76,8 @@ class ParticleSystemJS extends BaseShapeJS {
         return this.getPaperPoint(this.rawObj.GetEndPoint())
     }
 
-    drawImage(canvas){
+    clearAndDrawImage(canvas){
+        this.raster.clear()
         this.raster.drawImage(canvas, new paper.Point(0,0))
     }
 
