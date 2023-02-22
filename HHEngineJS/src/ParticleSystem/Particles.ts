@@ -140,6 +140,10 @@ class Particles extends AbstractComponent {
         }
 
         this._updateGravityKernel(Vector3ToArray(this.gravity), dt, mass)
+
+        this._particleVelocity.toArray().then((val)=>{
+            console.log(val)
+        })
         this._updateParticlesKernel(dt)
     }
 
