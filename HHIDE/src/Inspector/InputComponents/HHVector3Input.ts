@@ -48,11 +48,11 @@ class HHVector3Input extends HTMLElement implements RefreshableComponent {
             () => {
                 return _this.getter().z
             },
-            (yVal) => {
+            (zVal) => {
                 _this.setter({
                     x: Number(_this.inputX.value),
-                    y: yVal,
-                    z: Number(_this.inputZ.value),
+                    y: Number(_this.inputY.value),
+                    z: zVal
                 })
             })
 
