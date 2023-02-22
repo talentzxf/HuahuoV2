@@ -37,6 +37,9 @@ class Particles extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateColor, {random: true})
     particleColor
 
+    @PropertyValue(PropertyCategory.interpolateVector3, {x: 0.0, y: 9.8, z: 0.0})
+    gravity
+
     maxNumbers = MAX_PARTICLE_COUNT // Preload MAX_PARTICLE_COUNT particles.
 
     lastUpdatedFrameId = -1;
@@ -109,10 +112,11 @@ class Particles extends AbstractComponent {
     }
 
     _updateParticlesKernel
+    _updateGravityKernel
 
     updateParticles(mass, dt) {
         if (this._updateParticlesKernel == null) {
-            this._updateParticlesKernel = huahuoEngine.ti.kernel((mass, dt) => {
+            this._updateParticlesKernel = huahuoEngine.ti.kernel((dt) => {
                 for (let i of range(maxNumbers)) {
                     if (particleStatuses[i] == 1) {
                         particlePositions[i] = particlePositions[i] + particleVelocity[i] * dt
@@ -121,7 +125,22 @@ class Particles extends AbstractComponent {
             })
         }
 
-        this._updateParticlesKernel(mass, dt)
+        if (this._updateGravityKernel == null) {
+            let vType = huahuoEngine.ti.types.vector(ti.f32, 3)
+
+            this._updateGravityKernel = huahuoEngine.ti.kernel(
+                {gravity: vType},
+                (gravity, dt, mass) => {
+                    for (let i of range(maxNumbers)) {
+                        if(particleStatuses[i] == 1){
+                            particleVelocity[i] = particleVelocity[i] + dt * gravity/mass
+                        }
+                    }
+                })
+        }
+
+        this._updateGravityKernel(Vector3ToArray(this.gravity), dt, mass)
+        this._updateParticlesKernel(dt)
     }
 
     _renderImageKernel

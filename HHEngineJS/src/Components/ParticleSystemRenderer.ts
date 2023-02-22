@@ -28,7 +28,7 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
     @PropertyValue(PropertyCategory.subcomponentArray, null, {subComponentTypeName: "Particles"} as SubComponentArrayProperty)
     particleSystems
 
-    addParticles(particles: Particles){
+    addParticles(particles: Particles) {
         let groupComponentRawObj = this.rawObj.GetSubComponentArrayByName("particleSystems")
         let groupComponent = this.getComponentByRawObj(groupComponentRawObj)
         groupComponent.addSubComponent(particles)
@@ -94,7 +94,7 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
 
         await this.renderKernel()
 
-        for(let particles of this.particleSystems){
+        for (let particles of this.particleSystems) {
             particles.renderImage()
         }
 
