@@ -56,7 +56,7 @@ class PropertySheetFactory{
 
         propertyDef["getter"] = component[getterName].bind(component)
 
-        if(propertyDef["setter"])
+        if(component[setterName])
             propertyDef["setter"] = component[setterName].bind(component)
 
         propertyDef["registerValueChangeFunc"] = valueChangeHandler.registerValueChangeHandler(fieldName)
