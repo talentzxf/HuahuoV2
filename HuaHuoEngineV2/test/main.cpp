@@ -563,6 +563,19 @@ void testReadFromFile(){
     customComponent->DeleteKeyFrame(20);
 
     customComponent->GetBaseShape()->GetLayer()->IsKeyFrame(20);
+
+    customComponent->RegisterSubcomponentArray("particleSystems");
+
+    CustomComponent* particleSystem = customComponent->GetSubComponentArrayByName("particleSystems");
+
+    particleSystem->RegisterVector3Value("maxInitVelocity", 100.0, 100.0, 100.0);
+    Vector3f* velocity = particleSystem->GetVector3Value("maxInitVelocity");
+
+    customComponent->Apply(1);
+    velocity = particleSystem->GetVector3Value("maxInitVelocity");
+
+    Assert(particleSystem != NULL);
+    Assert(velocity != NULL);
 }
 
 int main() {
