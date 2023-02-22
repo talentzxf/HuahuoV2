@@ -7,6 +7,10 @@ import {GlobalConfig} from "../GlobalConfig";
 
 const MAX_PARTICLE_COUNT = 1000
 
+function Vector3ToArray(vec:Vector3){
+    return [vec.x, vec.y, vec.z]
+}
+
 // ParticleSystem is not compatible with any shape. It should be used in ParticleSystemRenderer only as a subcomponent.
 @Component({compatibleShapes: []})
 class Particles extends AbstractComponent {
@@ -143,7 +147,7 @@ class Particles extends AbstractComponent {
             this.updateParticleStatuses(this.activeParticleCount)
 
             if (this.lastUpdatedFrameId == -1) {
-                this.initParticles(this.initMaxVelocity)
+                this.initParticles(Vector3ToArray(this.initMaxVelocity))
             }
 
             // TODO: Split into fixed physical frames.
