@@ -11,6 +11,10 @@ function Vector3ToArray(vec: Vector3) {
     return [vec.x, vec.y, vec.z]
 }
 
+function ColorToArray(color) {
+    return [color.red, color.green, color.blue, color.alpha]
+}
+
 // ParticleSystem is not compatible with any shape. It should be used in ParticleSystemRenderer only as a subcomponent.
 @Component({compatibleShapes: []})
 class Particles extends AbstractComponent {
@@ -29,6 +33,9 @@ class Particles extends AbstractComponent {
 
     @PropertyValue(PropertyCategory.interpolateFloat, 100)
     particleMass
+
+    @PropertyValue(PropertyCategory.interpolateColor, {random: true})
+    particleColor
 
     maxNumbers = MAX_PARTICLE_COUNT // Preload MAX_PARTICLE_COUNT particles.
 
@@ -115,32 +122,34 @@ class Particles extends AbstractComponent {
 
     renderImage() {
         if (this._renderImageKernel == null) {
-            this._renderImageKernel = huahuoEngine.ti.kernel((particleSize) => {
+            let cType = huahuoEngine.ti.types.vector(ti.f32, 4)
 
-                let viewPortXMin = -outputImageWidth / 2;
-                let viewPortYMin = -outputImageHeight / 2;
-                for (let i of range(maxNumbers)) {
-                    if (particleStatuses[i] == 1) {
-                        // projection. For simplicity, ignore z coordinate first.
-                        let projectedPosition = [particlePositions[i][0], particlePositions[i][1]]
+            this._renderImageKernel = huahuoEngine.ti.kernel(
+                {particleColor: cType},
+                (particleSize, particleColor) => {
 
-                        // TODO: https://www.geeksforgeeks.org/window-to-viewport-transformation-in-computer-graphics-with-implementation/
-                        let centerWindowPosition = i32(projectedPosition - [viewPortXMin, viewPortYMin])
+                    let viewPortXMin = -outputImageWidth / 2;
+                    let viewPortYMin = -outputImageHeight / 2;
+                    for (let i of range(maxNumbers)) {
+                        if (particleStatuses[i] == 1) {
+                            // projection. For simplicity, ignore z coordinate first.
+                            let projectedPosition = [particlePositions[i][0], particlePositions[i][1]]
 
-                        // outputImage[centerWindowPosition] = [1.0, 0.0, 0.0, 1.0]
+                            // TODO: https://www.geeksforgeeks.org/window-to-viewport-transformation-in-computer-graphics-with-implementation/
+                            let centerWindowPosition = i32(projectedPosition - [viewPortXMin, viewPortYMin])
 
-                        let particleSizeSquare = f32(particleSize * particleSize / 4.0)
-                        for (let pixelIndex of ndrange(particleSize, particleSize)) {
-                            let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
-                            if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare)
-                                outputImage[windowPosition] = [1.0, 0.0, 0.0, 1.0]
+                            let particleSizeSquare = f32(particleSize * particleSize / 4.0)
+                            for (let pixelIndex of ndrange(particleSize, particleSize)) {
+                                let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
+                                if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare)
+                                    outputImage[windowPosition] = particleColor
+                            }
                         }
                     }
-                }
-            })
+                })
         }
 
-        this._renderImageKernel(this.particleSize)
+        this._renderImageKernel(this.particleSize, ColorToArray(this.particleColor))
 
         // // For debug purpose, get the position array back
         // this._particlePositions.toArray().then(function (val) {
