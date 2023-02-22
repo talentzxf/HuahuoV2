@@ -37,7 +37,7 @@ class Particles extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateColor, {random: true})
     particleColor
 
-    @PropertyValue(PropertyCategory.interpolateVector3, {x: 0.0, y: 9.8, z: 0.0})
+    @PropertyValue(PropertyCategory.interpolateVector3, {x: 0.0, y: -98, z: 0.0})
     gravity
 
     maxNumbers = MAX_PARTICLE_COUNT // Preload MAX_PARTICLE_COUNT particles.
@@ -130,16 +130,16 @@ class Particles extends AbstractComponent {
 
             this._updateGravityKernel = huahuoEngine.ti.kernel(
                 {gravity: vType},
-                (gravity, dt, mass) => {
+                (gravity, dt) => {
                     for (let i of range(maxNumbers)) {
                         if(particleStatuses[i] == 1){
-                            particleVelocity[i] = particleVelocity[i] + dt * gravity/mass
+                            particleVelocity[i] = particleVelocity[i] + dt * gravity
                         }
                     }
                 })
         }
 
-        this._updateGravityKernel(Vector3ToArray(this.gravity), dt, mass)
+        this._updateGravityKernel(Vector3ToArray(this.gravity), dt)
 
         this._particleVelocity.toArray().then((val)=>{
             console.log(val)
@@ -170,8 +170,10 @@ class Particles extends AbstractComponent {
                             let particleSizeSquare = f32(particleSize * particleSize / 4.0)
                             for (let pixelIndex of ndrange(particleSize, particleSize)) {
                                 let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
-                                if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare)
+                                if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare){
+                                    if(windowPosition[0] <= outputImageWidth && windowPosition[1] <= outputImageHeight)
                                     outputImage[windowPosition] = particleColor
+                                }
                             }
                         }
                     }
