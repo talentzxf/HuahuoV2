@@ -7,7 +7,7 @@ import {GlobalConfig} from "../GlobalConfig";
 
 const MAX_PARTICLE_COUNT = 1000
 
-function Vector3ToArray(vec:Vector3){
+function Vector3ToArray(vec: Vector3) {
     return [vec.x, vec.y, vec.z]
 }
 
@@ -18,7 +18,10 @@ class Particles extends AbstractComponent {
     _particlePositions
     _particleVelocity
 
-    @PropertyValue(PropertyCategory.interpolateVector3, {x:100.0, y:100.0, z: 100.0})
+    @PropertyValue(PropertyCategory.interpolateFloat, 10.0)
+    particleSize
+
+    @PropertyValue(PropertyCategory.interpolateVector3, {x: 100.0, y: 100.0, z: 100.0})
     initMaxVelocity
 
     @PropertyValue(PropertyCategory.interpolateFloat, 100, {max: MAX_PARTICLE_COUNT})
@@ -76,18 +79,18 @@ class Particles extends AbstractComponent {
             this._initParticlesKernel = huahuoEngine.ti.kernel(
                 {v: vType},
                 (v) => {
-                for (let i of range(maxNumbers)) {
-                    if (particleStatuses[i] == 1) {
-                        particleVelocity[i] = 2.0 * [
-                            (ti.random() - 0.5) * v[0],
-                            (ti.random() - 0.5) * v[1],
-                            (ti.random() - 0.5) * v[2]
-                        ] // random vector in [-1, -1, -1] - [1, 1, 1]
-                    }
+                    for (let i of range(maxNumbers)) {
+                        if (particleStatuses[i] == 1) {
+                            particleVelocity[i] = 2.0 * [
+                                (ti.random() - 0.5) * v[0],
+                                (ti.random() - 0.5) * v[1],
+                                (ti.random() - 0.5) * v[2]
+                            ] // random vector in [-1, -1, -1] - [1, 1, 1]
+                        }
 
-                    particlePositions[i] = [0.0, 0.0, 0.0]
-                }
-            })
+                        particlePositions[i] = [0.0, 0.0, 0.0]
+                    }
+                })
         }
         this._initParticlesKernel(velocity);
     }
@@ -112,7 +115,7 @@ class Particles extends AbstractComponent {
 
     renderImage() {
         if (this._renderImageKernel == null) {
-            this._renderImageKernel = huahuoEngine.ti.kernel(() => {
+            this._renderImageKernel = huahuoEngine.ti.kernel((particleSize) => {
 
                 let viewPortXMin = -outputImageWidth / 2;
                 let viewPortYMin = -outputImageHeight / 2;
@@ -122,14 +125,22 @@ class Particles extends AbstractComponent {
                         let projectedPosition = [particlePositions[i][0], particlePositions[i][1]]
 
                         // TODO: https://www.geeksforgeeks.org/window-to-viewport-transformation-in-computer-graphics-with-implementation/
-                        let windowPosition = i32(projectedPosition - [viewPortXMin, viewPortYMin])
-                        outputImage[windowPosition] = [1.0, 0.0, 0.0, 1.0]
+                        let centerWindowPosition = i32(projectedPosition - [viewPortXMin, viewPortYMin])
+
+                        // outputImage[centerWindowPosition] = [1.0, 0.0, 0.0, 1.0]
+
+                        let particleSizeSquare = f32(particleSize * particleSize / 4.0)
+                        for (let pixelIndex of ndrange(particleSize, particleSize)) {
+                            let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
+                            if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare)
+                                outputImage[windowPosition] = [1.0, 0.0, 0.0, 1.0]
+                        }
                     }
                 }
             })
         }
 
-        this._renderImageKernel()
+        this._renderImageKernel(this.particleSize)
 
         // // For debug purpose, get the position array back
         // this._particlePositions.toArray().then(function (val) {
