@@ -95,7 +95,9 @@
       "particleSystems": "粒子",
       "activeParticleCount": "粒子数",
       "particleMass": "粒子质量",
-      "initMaxVelocity": "最大初始速度"
+      "initMaxVelocity": "最大初始速度",
+      "particleSize": "粒子大小",
+      "particleColor": "粒子颜色"
     },
     "nail": {
       "isStatic": "是否静态"

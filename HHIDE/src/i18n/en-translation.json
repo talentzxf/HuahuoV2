@@ -95,7 +95,8 @@
       "particleSystems": "Particles",
       "activeParticleCount": "Active Particle Count",
       "particleMass": "Particle Mass",
-      "initMaxVelocity": "Max start velocity"
+      "initMaxVelocity": "Max start velocity",
+      "particleSize": "Particle Size"
     },
     "nail": {
       "isStatic": "Is Static"
