@@ -20,7 +20,11 @@ class ArrayPropertyDesc extends BasePropertyDesc{
         let addButton = document.createElement("button")
         addButton.innerText = "+"
         this.getTitleDiv().appendChild(addButton)
-        addButton.addEventListener("click", this.addEntry.bind(this))
+
+        let _this = this
+        addButton.addEventListener("click", ()=>{
+            _this.addEntry()
+        })
 
         this.arrayEntryDivs = document.createElement("div")
         this.contentDiv.appendChild(this.arrayEntryDivs)

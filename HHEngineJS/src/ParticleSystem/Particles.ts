@@ -55,7 +55,8 @@ class Particles extends AbstractComponent {
             particleVelocity: this._particleVelocity,
             particlePositions: this._particlePositions,
             particleStatuses: this._particleStatuses,
-            maxNumbers: this.maxNumbers
+            maxNumbers: this.maxNumbers,
+            PI: Math.PI
         })
     }
 
@@ -88,11 +89,16 @@ class Particles extends AbstractComponent {
                 (v) => {
                     for (let i of range(maxNumbers)) {
                         if (particleStatuses[i] == 1) {
+
+                            let theta = ti.random() * 2 * PI
+                            let phi = ti.random() * PI
+                            let radius = ti.sqrt(ti.random())
+
                             particleVelocity[i] = 2.0 * [
-                                (ti.random() - 0.5) * v[0],
-                                (ti.random() - 0.5) * v[1],
-                                (ti.random() - 0.5) * v[2]
-                            ] // random vector in [-1, -1, -1] - [1, 1, 1]
+                                ti.sin(phi) * ti.cos(theta) * radius * v[0],
+                                ti.sin(phi) * ti.sin(theta) * radius * v[1],
+                                ti.cos(phi) * radius * v[2]
+                            ] // random vector in the incircle of [-1, -1, -1] - [1, 1, 1]
                         }
 
                         particlePositions[i] = [0.0, 0.0, 0.0]
