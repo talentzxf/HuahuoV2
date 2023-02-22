@@ -15,11 +15,14 @@ class SubComponentsPropertyDesc extends ArrayPropertyDesc {
     onValueChanged(val) {
     }
 
-    addEntry(): BasePropertyDesc {
+    addEntry(componentEntry?): BasePropertyDesc {
         let subComponentTypeName = this.property.config.subComponentTypeName
 
-        let subComponent = huahuoEngine.produceObject(subComponentTypeName)
-        this.property.inserter(subComponent)
+        let subComponent = componentEntry
+        if(subComponent == null){ // If not inputted the componentEntry, create a new one.
+            subComponent = huahuoEngine.produceObject(subComponentTypeName)
+            this.property.inserter(subComponent)
+        }
 
         let propertyDivGenerator = GetPropertyDivGenerator(this.property.elementType)
         let propertyDesc = propertyDivGenerator.generatePropertyDesc(subComponent.getPropertySheet())

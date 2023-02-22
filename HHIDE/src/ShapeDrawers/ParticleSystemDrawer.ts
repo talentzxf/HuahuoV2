@@ -51,7 +51,7 @@ class ParticleSystemDrawer extends BaseShapeDrawer {
             _this.addShapeToCurrentLayer(_this.tempShape)
 
             let particleSystemRender = huahuoEngine.produceObject("ParticleSystemRenderer")
-            particleSystemRender.addSubComponent(huahuoEngine.produceObject("Particles"))
+            particleSystemRender.addParticles(huahuoEngine.produceObject("Particles"))
 
             _this.tempShape.addComponent(particleSystemRender)
 

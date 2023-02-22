@@ -29,13 +29,13 @@ class ArrayPropertyDesc extends BasePropertyDesc{
 
         let currentArray = property.getter()
         for(let entry of currentArray){
-            let desc = this.addEntry()
+            let desc = this.addEntry(entry)
             if(desc)
                 desc["onValueChanged"](entry)
         }
     }
 
-    addEntry(){
+    addEntry(entry?){
         let propertyDivGenerator = GetPropertyDivGenerator(this.elementType)
         let propertyDesc = propertyDivGenerator.generatePropertyDesc(this.property)
 
