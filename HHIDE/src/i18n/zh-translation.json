@@ -97,7 +97,8 @@
       "particleMass": "粒子质量",
       "initMaxVelocity": "最大初始速度",
       "particleSize": "粒子大小",
-      "particleColor": "粒子颜色"
+      "particleColor": "粒子颜色",
+      "gravity": "重力加速度"
     },
     "nail": {
       "isStatic": "是否静态"

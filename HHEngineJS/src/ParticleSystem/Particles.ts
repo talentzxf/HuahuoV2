@@ -22,6 +22,8 @@ class Particles extends AbstractComponent {
     _particlePositions
     _particleVelocity
 
+    _currentActiveParticleNumber;
+
     @PropertyValue(PropertyCategory.interpolateFloat, 10.0)
     particleSize
 
@@ -53,11 +55,13 @@ class Particles extends AbstractComponent {
         this._particleVelocity = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
         this._particlePositions = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
         this._particleStatuses = huahuoEngine.ti.field(ti.f32, [this.maxNumbers])
+        this._currentActiveParticleNumber = huahuoEngine.ti.field(ti.f32, [1])
 
         huahuoEngine.ti.addToKernelScope({
             particleVelocity: this._particleVelocity,
             particlePositions: this._particlePositions,
             particleStatuses: this._particleStatuses,
+            currentActiveParticleCount: this._currentActiveParticleNumber,
             maxNumbers: this.maxNumbers,
             PI: Math.PI
         })
@@ -122,7 +126,7 @@ class Particles extends AbstractComponent {
                 (gravity, dt) => {
                 for (let i of range(maxNumbers)) {
                     if (particleStatuses[i] == 1) {
-                        // Use implicit Euler to update position.
+                        // -----   Use implicit Euler to update position.   -----
                         let nextVelocity = particleVelocity[i] + dt * gravity
 
                         let possibleVelocity = (nextVelocity + particleVelocity[i])/2.0
@@ -164,6 +168,10 @@ class Particles extends AbstractComponent {
                                 if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare) {
                                     if (windowPosition[0] >= 0 && windowPosition[0] <= outputImageWidth && windowPosition[1] >= 0 && windowPosition[1] <= outputImageHeight)
                                         outputImage[windowPosition] = particleColor
+                                    else{
+                                        // This particle is out of range. Mark it as inactive.
+                                        activeParticleCount[i] = 0
+                                    }
                                 }
                             }
                         }
@@ -188,9 +196,7 @@ class Particles extends AbstractComponent {
             // Set particle statuses.
             this.updateParticleStatuses(this.activeParticleCount)
 
-            if (this.lastUpdatedFrameId == -1) {
-                this.initParticles(Vector3ToArray(this.initMaxVelocity))
-            }
+            this.initParticles(Vector3ToArray(this.initMaxVelocity))
 
             let timeElapseDirection = currentFrameId > this.lastUpdatedFrameId ? 1 : -1;
 
