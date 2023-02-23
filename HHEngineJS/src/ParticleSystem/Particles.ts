@@ -61,7 +61,7 @@ class Particles extends AbstractComponent {
             particleVelocity: this._particleVelocity,
             particlePositions: this._particlePositions,
             particleStatuses: this._particleStatuses,
-            currentActiveParticleCount: this._currentActiveParticleNumber,
+            currentActiveParticleNumber: this._currentActiveParticleNumber,
             maxNumbers: this.maxNumbers,
             PI: Math.PI
         })
@@ -72,7 +72,7 @@ class Particles extends AbstractComponent {
     updateParticleStatuses(activeParticleCount, initMaxVelocity) {
         if (this._updateParticleStatusesKernel == null) {
 
-            function initParticle(i, v){
+            function initParticle(i, v) {
                 let theta = ti.random() * 2 * PI
                 let phi = ti.random() * PI
                 let radius = ti.sqrt(ti.random())
@@ -86,19 +86,21 @@ class Particles extends AbstractComponent {
                 particlePositions[i] = [0.0, 0.0, 0.0]
             }
 
+            huahuoEngine.ti.addToKernelScope({initParticle})
+
             let vType = huahuoEngine.ti.types.vector(ti.f32, 3)
 
             this._updateParticleStatusesKernel = huahuoEngine.ti.kernel(
                 {initMaxVelocity: vType},
                 (activeParticleCount, initMaxVelocity) => {
-                for (let i of range(maxNumbers)) {
-                    if(currentActiveParticleCount < activeParticleCount){
-                        ti.atomicAdd(currentActiveParticleNumber, 1)
+                    for (let i of range(maxNumbers)) {
+                        if (currentActiveParticleNumber[0] < activeParticleCount) {
+                            ti.atomicAdd(currentActiveParticleNumber[0], 1)
 
-                        initParticle(i, initMaxVelocity)
+                            initParticle(i, initMaxVelocity)
+                        }
                     }
-                }
-            })
+                })
         }
 
         this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity)
@@ -113,19 +115,19 @@ class Particles extends AbstractComponent {
             this._updateParticlesKernel = huahuoEngine.ti.kernel(
                 {gravity: vType},
                 (gravity, dt) => {
-                for (let i of range(maxNumbers)) {
-                    if (particleStatuses[i] == 1) {
-                        // -----   Use implicit Euler to update position.   -----
-                        let nextVelocity = particleVelocity[i] + dt * gravity
+                    for (let i of range(maxNumbers)) {
+                        if (particleStatuses[i] == 1) {
+                            // -----   Use implicit Euler to update position.   -----
+                            let nextVelocity = particleVelocity[i] + dt * gravity
 
-                        let possibleVelocity = (nextVelocity + particleVelocity[i])/2.0
-                        particlePositions[i] = particlePositions[i] + possibleVelocity * dt
+                            let possibleVelocity = (nextVelocity + particleVelocity[i]) / 2.0
+                            particlePositions[i] = particlePositions[i] + possibleVelocity * dt
 
-                        // Update the velocity
-                        particleVelocity[i] = possibleVelocity
+                            // Update the velocity
+                            particleVelocity[i] = possibleVelocity
+                        }
                     }
-                }
-            })
+                })
         }
 
         this._updateParticlesKernel(Vector3ToArray(this.gravity), dt)
@@ -146,7 +148,7 @@ class Particles extends AbstractComponent {
                     for (let i of range(maxNumbers)) {
                         if (particleStatuses[i] == 1) {
                             // projection. For simplicity, ignore z coordinate first.
-                            let projectedPosition = [particlePositions[i][0], particlePositions[i][1]]
+                            let projectedPosition = particlePositions[i].xy
 
                             // TODO: https://www.geeksforgeeks.org/window-to-viewport-transformation-in-computer-graphics-with-implementation/
                             let centerWindowPosition = i32(projectedPosition - [viewPortXMin, viewPortYMin])
@@ -157,10 +159,10 @@ class Particles extends AbstractComponent {
                                 if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare) {
                                     if (windowPosition[0] >= 0 && windowPosition[0] <= outputImageWidth && windowPosition[1] >= 0 && windowPosition[1] <= outputImageHeight)
                                         outputImage[windowPosition] = particleColor
-                                    else{
+                                    else {
                                         // This particle is out of range. Mark it as inactive.
-                                        activeParticleCount[i] = 0
-                                        ti.atomicAdd(currentActiveParticleNumber, -1)
+                                        particleStatuses[i] = 0
+                                        ti.atomicAdd(currentActiveParticleNumber[0], -1)
                                     }
                                 }
                             }
