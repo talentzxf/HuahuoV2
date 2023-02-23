@@ -112,39 +112,30 @@ class Particles extends AbstractComponent {
     }
 
     _updateParticlesKernel
-    _updateGravityKernel
 
     updateParticles(mass, dt) {
         if (this._updateParticlesKernel == null) {
-            this._updateParticlesKernel = huahuoEngine.ti.kernel((dt) => {
+            let vType = huahuoEngine.ti.types.vector(ti.f32, 3)
+
+            this._updateParticlesKernel = huahuoEngine.ti.kernel(
+                {gravity: vType},
+                (gravity, dt) => {
                 for (let i of range(maxNumbers)) {
                     if (particleStatuses[i] == 1) {
-                        particlePositions[i] = particlePositions[i] + particleVelocity[i] * dt
+                        // Use implicit Euler to update position.
+                        let nextVelocity = particleVelocity[i] + dt * gravity
+
+                        let possibleVelocity = (nextVelocity + particleVelocity[i])/2.0
+                        particlePositions[i] = particlePositions[i] + possibleVelocity * dt
+
+                        // Update the velocity
+                        particleVelocity[i] = possibleVelocity
                     }
                 }
             })
         }
 
-        if (this._updateGravityKernel == null) {
-            let vType = huahuoEngine.ti.types.vector(ti.f32, 3)
-
-            this._updateGravityKernel = huahuoEngine.ti.kernel(
-                {gravity: vType},
-                (gravity, dt) => {
-                    for (let i of range(maxNumbers)) {
-                        if(particleStatuses[i] == 1){
-                            particleVelocity[i] = particleVelocity[i] + dt * gravity
-                        }
-                    }
-                })
-        }
-
-        this._updateGravityKernel(Vector3ToArray(this.gravity), dt)
-
-        this._particleVelocity.toArray().then((val)=>{
-            console.log(val)
-        })
-        this._updateParticlesKernel(dt)
+        this._updateParticlesKernel(Vector3ToArray(this.gravity), dt)
     }
 
     _renderImageKernel
@@ -170,9 +161,9 @@ class Particles extends AbstractComponent {
                             let particleSizeSquare = f32(particleSize * particleSize / 4.0)
                             for (let pixelIndex of ndrange(particleSize, particleSize)) {
                                 let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
-                                if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare){
-                                    if(windowPosition[0] <= outputImageWidth && windowPosition[1] <= outputImageHeight)
-                                    outputImage[windowPosition] = particleColor
+                                if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare) {
+                                    if (windowPosition[0] >= 0 && windowPosition[0] <= outputImageWidth && windowPosition[1] >= 0 && windowPosition[1] <= outputImageHeight)
+                                        outputImage[windowPosition] = particleColor
                                 }
                             }
                         }
@@ -201,9 +192,12 @@ class Particles extends AbstractComponent {
                 this.initParticles(Vector3ToArray(this.initMaxVelocity))
             }
 
-            // TODO: Split into fixed physical frames.
-            let dt = (currentFrameId - this.lastUpdatedFrameId) / GlobalConfig.fps
-            this.updateParticles(this.particleMass, dt)
+            let timeElapseDirection = currentFrameId > this.lastUpdatedFrameId ? 1 : -1;
+
+            let dt = timeElapseDirection / GlobalConfig.fps
+            for (let curUpdatingFrameId = this.lastUpdatedFrameId; curUpdatingFrameId != currentFrameId; curUpdatingFrameId += timeElapseDirection) {
+                this.updateParticles(this.particleMass, dt)
+            }
 
             this.lastUpdatedFrameId = currentFrameId
         }
