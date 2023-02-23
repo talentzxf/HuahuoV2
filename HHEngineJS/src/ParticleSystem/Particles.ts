@@ -69,50 +69,39 @@ class Particles extends AbstractComponent {
 
     _updateParticleStatusesKernel
 
-    updateParticleStatuses(activeParticleCount) {
+    updateParticleStatuses(activeParticleCount, initMaxVelocity) {
         if (this._updateParticleStatusesKernel == null) {
-            this._updateParticleStatusesKernel = huahuoEngine.ti.kernel((activeParticleCount) => {
+
+            function initParticle(i, v){
+                let theta = ti.random() * 2 * PI
+                let phi = ti.random() * PI
+                let radius = ti.sqrt(ti.random())
+
+                particleVelocity[i] = 2.0 * [
+                    ti.sin(phi) * ti.cos(theta) * radius * v[0],
+                    ti.sin(phi) * ti.sin(theta) * radius * v[1],
+                    ti.cos(phi) * radius * v[2]
+                ] // random vector in the incircle of [-1, -1, -1] - [1, 1, 1]
+
+                particlePositions[i] = [0.0, 0.0, 0.0]
+            }
+
+            let vType = huahuoEngine.ti.types.vector(ti.f32, 3)
+
+            this._updateParticleStatusesKernel = huahuoEngine.ti.kernel(
+                {initMaxVelocity: vType},
+                (activeParticleCount, initMaxVelocity) => {
                 for (let i of range(maxNumbers)) {
-                    if (i < activeParticleCount) {
-                        particleStatuses[i] = 1
-                    } else {
-                        particleStatuses[i] = 0
+                    if(currentActiveParticleCount < activeParticleCount){
+                        ti.atomicAdd(currentActiveParticleNumber, 1)
+
+                        initParticle(i, initMaxVelocity)
                     }
                 }
             })
         }
 
-        this._updateParticleStatusesKernel(activeParticleCount)
-    }
-
-    _initParticlesKernel
-
-    initParticles(velocity) {
-        if (this._initParticlesKernel == null) {
-            let vType = huahuoEngine.ti.types.vector(ti.f32, 3)
-
-            this._initParticlesKernel = huahuoEngine.ti.kernel(
-                {v: vType},
-                (v) => {
-                    for (let i of range(maxNumbers)) {
-                        if (particleStatuses[i] == 1) {
-
-                            let theta = ti.random() * 2 * PI
-                            let phi = ti.random() * PI
-                            let radius = ti.sqrt(ti.random())
-
-                            particleVelocity[i] = 2.0 * [
-                                ti.sin(phi) * ti.cos(theta) * radius * v[0],
-                                ti.sin(phi) * ti.sin(theta) * radius * v[1],
-                                ti.cos(phi) * radius * v[2]
-                            ] // random vector in the incircle of [-1, -1, -1] - [1, 1, 1]
-                        }
-
-                        particlePositions[i] = [0.0, 0.0, 0.0]
-                    }
-                })
-        }
-        this._initParticlesKernel(velocity);
+        this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity)
     }
 
     _updateParticlesKernel
@@ -171,6 +160,7 @@ class Particles extends AbstractComponent {
                                     else{
                                         // This particle is out of range. Mark it as inactive.
                                         activeParticleCount[i] = 0
+                                        ti.atomicAdd(currentActiveParticleNumber, -1)
                                     }
                                 }
                             }
@@ -194,10 +184,7 @@ class Particles extends AbstractComponent {
 
         if (force || this.lastUpdatedFrameId != currentFrameId) {
             // Set particle statuses.
-            this.updateParticleStatuses(this.activeParticleCount)
-
-            this.initParticles(Vector3ToArray(this.initMaxVelocity))
-
+            this.updateParticleStatuses(this.activeParticleCount, Vector3ToArray(this.initMaxVelocity))
             let timeElapseDirection = currentFrameId > this.lastUpdatedFrameId ? 1 : -1;
 
             let dt = timeElapseDirection / GlobalConfig.fps
