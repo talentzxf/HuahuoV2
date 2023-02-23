@@ -84,6 +84,8 @@ class Particles extends AbstractComponent {
                 ] // random vector in the incircle of [-1, -1, -1] - [1, 1, 1]
 
                 particlePositions[i] = [0.0, 0.0, 0.0]
+
+                particleStatuses[i] = 1
             }
 
             huahuoEngine.ti.addToKernelScope({initParticle})
@@ -93,17 +95,31 @@ class Particles extends AbstractComponent {
             this._updateParticleStatusesKernel = huahuoEngine.ti.kernel(
                 {initMaxVelocity: vType},
                 (activeParticleCount, initMaxVelocity) => {
-                    for (let i of range(maxNumbers)) {
-                        if (currentActiveParticleNumber[0] < activeParticleCount) {
-                            ti.atomicAdd(currentActiveParticleNumber[0], 1)
+                    let currentInactiveParticleNumber = maxNumbers - currentActiveParticleNumber[0]
+                    let tobeActivatedParticleNumber = activeParticleCount - currentActiveParticleNumber[0]
 
-                            initParticle(i, initMaxVelocity)
+                    if(tobeActivatedParticleNumber > 0){
+                        let possibility = tobeActivatedParticleNumber / currentInactiveParticleNumber
+
+                        for (let i of range(maxNumbers)) {
+                            if(particleStatuses[i] == 0){
+
+                                let randomNumber = ti.random()
+                                if(randomNumber <= possibility){
+                                    initParticle(i, initMaxVelocity)
+                                    ti.atomicAdd(currentActiveParticleNumber[0], 1)
+                                }
+                            }
                         }
                     }
                 })
         }
 
         this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity)
+
+        this._currentActiveParticleNumber.toArray().then((val)=>{
+            console.log("Totally active particles:" + val)
+        })
     }
 
     _updateParticlesKernel
