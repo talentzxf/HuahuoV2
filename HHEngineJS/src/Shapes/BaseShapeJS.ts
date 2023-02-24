@@ -1198,7 +1198,7 @@ abstract class BaseShapeJS {
         let currentFrame = this.getLayer().GetCurrentFrame()
         if (force || currentFrame != this.lastRenderFrame) {
             totallyUpdated++
-            console.log("Totally updated:" + totallyUpdated)
+            // console.log("Totally updated:" + totallyUpdated)
 
             this.beforeUpdate(true)
             this.duringUpdate(true)

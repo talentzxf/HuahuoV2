@@ -18,9 +18,7 @@ function ColorToArray(color) {
 // ParticleSystem is not compatible with any shape. It should be used in ParticleSystemRenderer only as a subcomponent.
 @Component({compatibleShapes: []})
 class Particles extends AbstractComponent {
-    _particleStatuses // 0 - inactive, 1 - active
-    _particlePositions
-    _particleVelocity
+    _particles
 
     _currentActiveParticleNumber;
 
@@ -52,30 +50,48 @@ class Particles extends AbstractComponent {
 
     constructor(rawObj?) {
         super(rawObj)
-        this._particleVelocity = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
-        this._particlePositions = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
-        this._particleStatuses = huahuoEngine.ti.field(ti.f32, [this.maxNumbers])
-        this._currentActiveParticleNumber = huahuoEngine.ti.field(ti.f32, [1])
+
+        let particleType = ti.types.struct({
+            velocity: ti.types.vector(f32, 3),
+            position: ti.types.vector(f32, 3),
+            status: i32,
+            startUpFrameId: i32,
+            lastUpdatedFrameId: i32
+        })
+
+        this._particles = ti.field(particleType, [maxNumbers])
+        this._currentActiveParticleNumber = huahuoEngine.ti.field(ti.i32, [1])
 
         huahuoEngine.ti.addToKernelScope({
-            particleVelocity: this._particleVelocity,
-            particlePositions: this._particlePositions,
-            particleStatuses: this._particleStatuses,
+            particles: this._particles,
             currentActiveParticleNumber: this._currentActiveParticleNumber,
             maxNumbers: this.maxNumbers,
             PI: Math.PI
         })
     }
 
+    _updateActiveParticleCountKernel
     _updateParticleStatusesKernel
 
-    updateParticleStatuses(activeParticleCount, initMaxVelocity) {
+    updateParticleStatuses(activeParticleCount, initMaxVelocity, curFrameId) {
+
+        if (this._updateActiveParticleCountKernel == null) {
+            this._updateActiveParticleCountKernel = huahuoEngine.ti.kernel(() => {
+                currentActiveParticleNumber[0] = 0
+                for (let j: i32 of range(maxNumbers)) { // Check the active particle count
+                    if (particles[j].status == 1) {
+                        ti.atomicAdd(currentActiveParticleNumber[0], 1)
+                    }
+                }
+            })
+        }
+
         if (this._updateParticleStatusesKernel == null) {
 
             function initParticle(i, v) {
-                let theta = ti.random() * 2 * PI
-                let phi = ti.random() * PI
-                let radius = ti.sqrt(ti.random())
+                let theta: f32 = ti.random() * 2 * PI
+                let phi: f32 = ti.random() * PI
+                let radius: f32 = ti.sqrt(ti.random())
 
                 particleVelocity[i] = 2.0 * [
                     ti.sin(phi) * ti.cos(theta) * radius * v[0],
@@ -95,19 +111,17 @@ class Particles extends AbstractComponent {
             this._updateParticleStatusesKernel = huahuoEngine.ti.kernel(
                 {initMaxVelocity: vType},
                 (activeParticleCount, initMaxVelocity) => {
-                    let currentInactiveParticleNumber = maxNumbers - currentActiveParticleNumber[0]
-                    let tobeActivatedParticleNumber = activeParticleCount - currentActiveParticleNumber[0]
+                    let currentInactiveParticleNumber: i32 = maxNumbers - currentActiveParticleNumber[0]
+                    let tobeActivatedParticleNumber: i32 = activeParticleCount - currentActiveParticleNumber[0]
 
-                    if(tobeActivatedParticleNumber > 0){
-                        let possibility = tobeActivatedParticleNumber / currentInactiveParticleNumber
+                    if (tobeActivatedParticleNumber > 0) {
+                        let possibility: f32 = f32(tobeActivatedParticleNumber) / f32(currentInactiveParticleNumber)
 
-                        for (let i of range(maxNumbers)) {
-                            if(particleStatuses[i] == 0){
-
-                                let randomNumber = ti.random()
-                                if(randomNumber <= possibility){
-                                    initParticle(i, initMaxVelocity)
-                                    ti.atomicAdd(currentActiveParticleNumber[0], 1)
+                        for (let i: i32 of range(maxNumbers)) {
+                            if (particleStatuses[i] == 0) {
+                                let randomNumber: f32 = ti.random()
+                                if (randomNumber <= possibility) {
+                                    initParticle(i, f32(initMaxVelocity))
                                 }
                             }
                         }
@@ -115,10 +129,11 @@ class Particles extends AbstractComponent {
                 })
         }
 
-        this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity)
+        this._updateActiveParticleCountKernel()
 
-        this._currentActiveParticleNumber.toArray().then((val)=>{
-            console.log("Totally active particles:" + val)
+        this._currentActiveParticleNumber.toArray().then((val) => {
+            console.log("Target active particle count:" + activeParticleCount + " ,Current total active particle count:" + val)
+            this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity, )
         })
     }
 
@@ -146,7 +161,7 @@ class Particles extends AbstractComponent {
                 })
         }
 
-        this._updateParticlesKernel(Vector3ToArray(this.gravity), dt)
+        return this._updateParticlesKernel(Vector3ToArray(this.gravity), dt)
     }
 
     _renderImageKernel
@@ -178,7 +193,6 @@ class Particles extends AbstractComponent {
                                     else {
                                         // This particle is out of range. Mark it as inactive.
                                         particleStatuses[i] = 0
-                                        ti.atomicAdd(currentActiveParticleNumber[0], -1)
                                     }
                                 }
                             }
@@ -202,7 +216,7 @@ class Particles extends AbstractComponent {
 
         if (force || this.lastUpdatedFrameId != currentFrameId) {
             // Set particle statuses.
-            this.updateParticleStatuses(this.activeParticleCount, Vector3ToArray(this.initMaxVelocity))
+            this.updateParticleStatuses(this.activeParticleCount, Vector3ToArray(this.initMaxVelocity), currentFrameId)
             let timeElapseDirection = currentFrameId > this.lastUpdatedFrameId ? 1 : -1;
 
             let dt = timeElapseDirection / GlobalConfig.fps
