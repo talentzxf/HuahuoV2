@@ -81,9 +81,23 @@ class Particles extends AbstractComponent {
         })
     }
 
+    _updateParticleCountKernel
     _updateParticleStatusesKernel
 
     updateParticleStatuses(activeParticleCount, initMaxVelocity) {
+        if(this._updateParticleCountKernel == null){
+            this._updateParticleCountKernel = huahuoEngine.ti.kernel(()=>{
+                currentActiveParticleNumber[0] = 0
+                let i = 0
+                while(i < maxNumbers){  // while is not parallel. So no need to lock
+                    if(particles[i].status == 1){
+                        currentActiveParticleNumber[0] += 1
+                    }
+                    i += 1
+                }
+            })
+        }
+
         if (this._updateParticleStatusesKernel == null) {
 
             function initParticle(i, v) {
@@ -120,7 +134,6 @@ class Particles extends AbstractComponent {
                                 let randomNumber = ti.random()
                                 if(randomNumber <= possibility){
                                     initParticle(i, initMaxVelocity)
-                                    ti.atomicAdd(currentActiveParticleNumber[0], 1)
                                 }
                             }
                         }
@@ -128,10 +141,12 @@ class Particles extends AbstractComponent {
                 })
         }
 
-        this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity)
+        this._updateParticleCountKernel().then(()=>{
+            this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity)
 
-        this._currentActiveParticleNumber.toArray().then((val)=>{
-            console.log("Totally active particles:" + val)
+            this._currentActiveParticleNumber.toArray().then((val)=>{
+                console.log("Totally active particles:" + val)
+            })
         })
     }
 
@@ -191,7 +206,6 @@ class Particles extends AbstractComponent {
                                     else {
                                         // This particle is out of range. Mark it as inactive.
                                         particles[i].status = 0
-                                        ti.atomicAdd(currentActiveParticleNumber[0], -1)
                                     }
                                 }
                             }
