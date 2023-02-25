@@ -60,6 +60,7 @@ class Particles extends AbstractComponent {
         })
 
         this._particles = huahuoEngine.ti.field(particleType, [this.maxNumbers])
+
         this._currentActiveParticleNumber = huahuoEngine.ti.field(ti.i32, [1])
 
         huahuoEngine.ti.addToKernelScope({
@@ -130,11 +131,7 @@ class Particles extends AbstractComponent {
         }
 
         this._updateActiveParticleCountKernel()
-
-        this._currentActiveParticleNumber.toArray().then((val) => {
-            console.log("Target active particle count:" + activeParticleCount + " ,Current total active particle count:" + val)
-            this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity, )
-        })
+        this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity)
     }
 
     _updateParticlesKernel
@@ -206,12 +203,12 @@ class Particles extends AbstractComponent {
 
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
-
         let currentFrameId = this.baseShape.getLayer().GetCurrentFrame()
 
         if (force || this.lastUpdatedFrameId != currentFrameId) {
             // Set particle statuses.
             this.updateParticleStatuses(this.activeParticleCount, Vector3ToArray(this.initMaxVelocity), currentFrameId)
+
             let timeElapseDirection = currentFrameId > this.lastUpdatedFrameId ? 1 : -1;
 
             let dt = timeElapseDirection / GlobalConfig.fps

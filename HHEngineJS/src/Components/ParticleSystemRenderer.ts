@@ -20,11 +20,6 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
     htmlCanvas
     taichiCanvas
 
-    _backgroundColor
-
-    @PropertyValue(PropertyCategory.interpolateColor, {random: true})
-    backgroundColor
-
     @PropertyValue(PropertyCategory.subcomponentArray, null, {subComponentTypeName: "Particles"} as SubComponentArrayProperty)
     particleSystems
 
@@ -39,15 +34,11 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
         let heightInt = Math.ceil(height)
 
         this.outputImage = huahuoEngine.ti.Vector.field(4, ti.f32, [widthInt, heightInt])
-        this._backgroundColor = huahuoEngine.ti.Vector.field(4, ti.f32, [1])
-
-        await this._backgroundColor.set([0], [25.0 / 255.0, 39.0 / 255.0, 77.0 / 255.0, 1.0])
 
         huahuoEngine.ti.addToKernelScope({
             outputImage: this.outputImage,
             outputImageWidth: widthInt,
             outputImageHeight: heightInt,
-            backgroundColor: this._backgroundColor,
         })
 
         if (this.renderKernel == null) {
@@ -56,6 +47,7 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
 
         if (this.taichiCanvas == null) {
             this.htmlCanvas = document.createElement("canvas")
+
             this.htmlCanvas.width = widthInt
             this.htmlCanvas.height = heightInt
             this.htmlCanvas.style.width = widthInt + "px"
@@ -88,9 +80,9 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
         }
 
         // await parallel
-        await Promise.all([
-            this._backgroundColor.set([0], [this.backgroundColor.red, this.backgroundColor.green,
-                this.backgroundColor.blue, this.backgroundColor.alpha])])
+        // await Promise.all([
+        //     this._backgroundColor.set([0], [this.backgroundColor.red, this.backgroundColor.green,
+        //         this.backgroundColor.blue, this.backgroundColor.alpha])])
 
         await this.renderKernel()
 
