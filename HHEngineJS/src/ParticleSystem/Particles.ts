@@ -18,9 +18,10 @@ function ColorToArray(color) {
 // ParticleSystem is not compatible with any shape. It should be used in ParticleSystemRenderer only as a subcomponent.
 @Component({compatibleShapes: []})
 class Particles extends AbstractComponent {
-    _particleStatuses // 0 - inactive, 1 - active
-    _particlePositions
-    _particleVelocity
+    _particles
+    // _particleStatuses // 0 - inactive, 1 - active
+    // _particlePositions
+    // _particleVelocity
 
     _currentActiveParticleNumber;
 
@@ -52,15 +53,28 @@ class Particles extends AbstractComponent {
 
     constructor(rawObj?) {
         super(rawObj)
-        this._particleVelocity = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
-        this._particlePositions = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
-        this._particleStatuses = huahuoEngine.ti.field(ti.f32, [this.maxNumbers])
+        // this._particleVelocity = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
+        // this._particlePositions = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
+        // this._particleStatuses = huahuoEngine.ti.field(ti.f32, [this.maxNumbers])
+
+        let particleType = huahuoEngine.ti.types.struct({
+            velocity: huahuoEngine.ti.types.vector(huahuoEngine.ti.f32, 3),
+            position: huahuoEngine.ti.types.vector(huahuoEngine.ti.f32, 3),
+            status: huahuoEngine.ti.i32,
+            startUpFrameId: huahuoEngine.ti.i32,
+            lastUpdatedFrameId: huahuoEngine.ti.i32
+        })
+
+        this._particles = huahuoEngine.ti.field(particleType, [this.maxNumbers])
+
+
         this._currentActiveParticleNumber = huahuoEngine.ti.field(ti.f32, [1])
 
         huahuoEngine.ti.addToKernelScope({
-            particleVelocity: this._particleVelocity,
-            particlePositions: this._particlePositions,
-            particleStatuses: this._particleStatuses,
+            // particleVelocity: this._particleVelocity,
+            // particlePositions: this._particlePositions,
+            // particleStatuses: this._particleStatuses,
+            particles: this._particles,
             currentActiveParticleNumber: this._currentActiveParticleNumber,
             maxNumbers: this.maxNumbers,
             PI: Math.PI
@@ -77,15 +91,15 @@ class Particles extends AbstractComponent {
                 let phi = ti.random() * PI
                 let radius = ti.sqrt(ti.random())
 
-                particleVelocity[i] = 2.0 * [
+                particles[i].velocity = 2.0 * [
                     ti.sin(phi) * ti.cos(theta) * radius * v[0],
                     ti.sin(phi) * ti.sin(theta) * radius * v[1],
                     ti.cos(phi) * radius * v[2]
                 ] // random vector in the incircle of [-1, -1, -1] - [1, 1, 1]
 
-                particlePositions[i] = [0.0, 0.0, 0.0]
+                particles[i].position = [0.0, 0.0, 0.0]
 
-                particleStatuses[i] = 1
+                particles[i].status = 1
             }
 
             huahuoEngine.ti.addToKernelScope({initParticle})
@@ -102,8 +116,7 @@ class Particles extends AbstractComponent {
                         let possibility = tobeActivatedParticleNumber / currentInactiveParticleNumber
 
                         for (let i of range(maxNumbers)) {
-                            if(particleStatuses[i] == 0){
-
+                            if(particles[i].status == 0){
                                 let randomNumber = ti.random()
                                 if(randomNumber <= possibility){
                                     initParticle(i, initMaxVelocity)
@@ -132,15 +145,15 @@ class Particles extends AbstractComponent {
                 {gravity: vType},
                 (gravity, dt) => {
                     for (let i of range(maxNumbers)) {
-                        if (particleStatuses[i] == 1) {
+                        if (particles[i].status == 1) {
                             // -----   Use implicit Euler to update position.   -----
-                            let nextVelocity = particleVelocity[i] + dt * gravity
+                            let nextVelocity = particles[i].velocity + dt * gravity
 
-                            let possibleVelocity = (nextVelocity + particleVelocity[i]) / 2.0
-                            particlePositions[i] = particlePositions[i] + possibleVelocity * dt
+                            let possibleVelocity = (nextVelocity + particles[i].velocity) / 2.0
+                            particles[i].position = particles[i].position + possibleVelocity * dt
 
                             // Update the velocity
-                            particleVelocity[i] = possibleVelocity
+                            particles[i].velocity = possibleVelocity
                         }
                     }
                 })
@@ -162,9 +175,9 @@ class Particles extends AbstractComponent {
                     let viewPortXMin = -outputImageWidth / 2;
                     let viewPortYMin = -outputImageHeight / 2;
                     for (let i of range(maxNumbers)) {
-                        if (particleStatuses[i] == 1) {
+                        if (particles[i].status == 1) {
                             // projection. For simplicity, ignore z coordinate first.
-                            let projectedPosition = particlePositions[i].xy
+                            let projectedPosition = particles[i].position.xy
 
                             // TODO: https://www.geeksforgeeks.org/window-to-viewport-transformation-in-computer-graphics-with-implementation/
                             let centerWindowPosition = i32(projectedPosition - [viewPortXMin, viewPortYMin])
@@ -177,7 +190,7 @@ class Particles extends AbstractComponent {
                                         outputImage[windowPosition] = particleColor
                                     else {
                                         // This particle is out of range. Mark it as inactive.
-                                        particleStatuses[i] = 0
+                                        particles[i].status = 0
                                         ti.atomicAdd(currentActiveParticleNumber[0], -1)
                                     }
                                 }
