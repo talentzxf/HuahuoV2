@@ -145,7 +145,7 @@ class Particles extends AbstractComponent {
             this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity)
 
             this._currentActiveParticleNumber.toArray().then((val)=>{
-                console.log("Totally active particles:" + val)
+                console.log("Expected active particle count:" + activeParticleCount + ", actually active particles:" + val)
             })
         })
     }
