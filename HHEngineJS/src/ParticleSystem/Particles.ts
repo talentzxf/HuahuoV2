@@ -117,12 +117,12 @@ class Particles extends AbstractComponent {
                 particles[i].status = 1
 
                 particles[i].bornFrameId = curFrameId
-                particles[i].lastUpdatedFrameId = -1 // Need to be updated anyways
+                particles[i].lastUpdatedFrameId = curFrameId // Need to be updated anyways
                 particles[i].life = i32(life)
             }
 
             function particleIsAlive(i, curFrameId) {
-                return particles[i].status == 1 && particles[i].bornFrameId <= curFrameId // && particles[i].bornFrameId + particles[i].life >= curFrameId
+                return particles[i].status == 1 && particles[i].bornFrameId <= curFrameId && particles[i].bornFrameId + particles[i].life >= curFrameId
             }
 
             huahuoEngine.ti.addToKernelScope({initParticle, particleIsAlive})
@@ -142,7 +142,7 @@ class Particles extends AbstractComponent {
                             if (particles[i].status == 0) {
                                 let randomNumber = ti.random()
                                 if (randomNumber <= possibility) {
-                                    initParticle(i, initMaxVelocity, maxLife, i32(curFrameId))
+                                    initParticle(i, initMaxVelocity, ti.random() * maxLife, i32(curFrameId))
                                 }
                             }
                         }
@@ -150,14 +150,15 @@ class Particles extends AbstractComponent {
                 })
         }
 
-        this._updateParticleCountKernel().then(() => {
-            this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity, maxLife, currentFrameId).then(()=>{
-                this._updateParticleCountKernel().then(()=>{
-                    this._currentActiveParticleNumber.toArray().then((val) => {
-                        console.log("Expected active particle count:" + activeParticleCount + ", actually active particles:" + val)
-                    })
-                })
-            })
+        this._updateParticleCountKernel()
+        this._currentActiveParticleNumber.toArray().then((val) => {
+            console.log("Expected active particle count:" + activeParticleCount + ", before active particles:" + val)
+        })
+
+        this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity, maxLife, currentFrameId)
+        this._updateParticleCountKernel()
+        this._currentActiveParticleNumber.toArray().then((val) => {
+            console.log("Expected active particle count:" + activeParticleCount + ", actually active particles:" + val)
         })
     }
 
