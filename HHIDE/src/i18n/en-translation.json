@@ -98,7 +98,8 @@
       "initMaxVelocity": "Max start velocity",
       "particleSize": "Particle Size",
       "particleColor": "Particle Color",
-      "gravity": "Gravity"
+      "gravity": "Gravity",
+      "lifeSpanRange": "Lifetime Range(seconds)"
     },
     "nail": {
       "isStatic": "Is Static"

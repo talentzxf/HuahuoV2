@@ -98,7 +98,8 @@
       "initMaxVelocity": "最大初始速度",
       "particleSize": "粒子大小",
       "particleColor": "粒子颜色",
-      "gravity": "重力加速度"
+      "gravity": "重力加速度",
+      "lifeSpanRange": "粒子寿命范围(秒)"
     },
     "nail": {
       "isStatic": "是否静态"

@@ -27,8 +27,8 @@ class Particles extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateVector3, {x: 100.0, y: 100.0, z: 100.0})
     initMaxVelocity
 
-    @PropertyValue(PropertyCategory.interpolateFloat, 2.0) // Unit is seconds.
-    maxLife
+    @PropertyValue(PropertyCategory.interpolateVector2, {x: 3.0, y: 3.0}) // Unit is seconds.
+    lifeSpanRange
 
     @PropertyValue(PropertyCategory.interpolateFloat, 100, {max: MAX_PARTICLE_COUNT})
     activeParticleCount
@@ -79,13 +79,14 @@ class Particles extends AbstractComponent {
     _updateParticleStatusesKernel
 
     /**
-     *
+     * Both minLife and maxLife are in seconds. So need to convert to frames beforeUse
      * @param activeParticleCount
      * @param initMaxVelocity
-     * @param maxLife    Note the maxLife is in seconds, so need to be converted to frames first.
+     * @param minLifeFrames
+     * @param maxLifeFrames
      * @param currentFrameId
      */
-    updateParticleStatuses(activeParticleCount, initMaxVelocity, maxLife, currentFrameId) {
+    updateParticleStatuses(activeParticleCount, initMaxVelocity, minLifeFrames, maxLifeFrames, currentFrameId) {
         if (this._updateParticleCountKernel == null) {
             this._updateParticleCountKernel = huahuoEngine.ti.kernel(() => {
                 currentActiveParticleNumber[0] = 0
@@ -131,7 +132,7 @@ class Particles extends AbstractComponent {
 
             this._updateParticleStatusesKernel = huahuoEngine.ti.kernel(
                 {initMaxVelocity: vType},
-                (activeParticleCount, initMaxVelocity, maxLife, curFrameId) => {
+                (activeParticleCount, initMaxVelocity, minLifeFrames, maxLifeFrames, curFrameId) => {
                     let currentInactiveParticleNumber = maxNumbers - currentActiveParticleNumber[0]
                     let tobeActivatedParticleNumber = activeParticleCount - currentActiveParticleNumber[0]
 
@@ -142,7 +143,7 @@ class Particles extends AbstractComponent {
                             if (particles[i].status == 0) {
                                 let randomNumber = ti.random()
                                 if (randomNumber <= possibility) {
-                                    initParticle(i, initMaxVelocity, ti.random() * maxLife, i32(curFrameId))
+                                    initParticle(i, initMaxVelocity, minLifeFrames + ti.random() * (maxLifeFrames - minLifeFrames), i32(curFrameId))
                                 }
                             }
                         }
@@ -155,7 +156,7 @@ class Particles extends AbstractComponent {
             console.log("Expected active particle count:" + activeParticleCount + ", before active particles:" + val)
         })
 
-        this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity, maxLife, currentFrameId)
+        this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity, minLifeFrames, maxLifeFrames, currentFrameId)
         this._updateParticleCountKernel()
         this._currentActiveParticleNumber.toArray().then((val) => {
             console.log("Expected active particle count:" + activeParticleCount + ", actually active particles:" + val)
@@ -254,8 +255,12 @@ class Particles extends AbstractComponent {
         let currentFrameId = this.baseShape.getLayer().GetCurrentFrame()
 
         if (force || this.lastUpdatedFrameId != currentFrameId) {
+
+            let minLife = Math.min(this.lifeSpanRange.x, this.lifeSpanRange.y)
+            let maxLife = Math.max(this.lifeSpanRange.x, this.lifeSpanRange.y)
+
             // Set particle statuses.
-            this.updateParticleStatuses(this.activeParticleCount, Vector3ToArray(this.initMaxVelocity), this.maxLife * GlobalConfig.fps, currentFrameId)
+            this.updateParticleStatuses(this.activeParticleCount, Vector3ToArray(this.initMaxVelocity), minLife * GlobalConfig.fps, maxLife * GlobalConfig.fps, currentFrameId)
 
             let dt = 1 / GlobalConfig.fps
             this.updateParticles(this.particleMass, dt, currentFrameId)
