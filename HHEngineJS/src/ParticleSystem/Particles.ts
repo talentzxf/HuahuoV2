@@ -19,10 +19,6 @@ function ColorToArray(color) {
 @Component({compatibleShapes: []})
 class Particles extends AbstractComponent {
     _particles
-    // _particleStatuses // 0 - inactive, 1 - active
-    // _particlePositions
-    // _particleVelocity
-
     _currentActiveParticleNumber;
 
     @PropertyValue(PropertyCategory.interpolateFloat, 10.0)
@@ -30,6 +26,9 @@ class Particles extends AbstractComponent {
 
     @PropertyValue(PropertyCategory.interpolateVector3, {x: 100.0, y: 100.0, z: 100.0})
     initMaxVelocity
+
+    @PropertyValue(PropertyCategory.interpolateFloat, 2.0) // Unit is seconds.
+    maxLife
 
     @PropertyValue(PropertyCategory.interpolateFloat, 100, {max: MAX_PARTICLE_COUNT})
     activeParticleCount
@@ -53,16 +52,14 @@ class Particles extends AbstractComponent {
 
     constructor(rawObj?) {
         super(rawObj)
-        // this._particleVelocity = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
-        // this._particlePositions = huahuoEngine.ti.Vector.field(3, ti.f32, [this.maxNumbers])
-        // this._particleStatuses = huahuoEngine.ti.field(ti.f32, [this.maxNumbers])
 
         let particleType = huahuoEngine.ti.types.struct({
             velocity: huahuoEngine.ti.types.vector(huahuoEngine.ti.f32, 3),
             position: huahuoEngine.ti.types.vector(huahuoEngine.ti.f32, 3),
             status: huahuoEngine.ti.i32,
-            startUpFrameId: huahuoEngine.ti.i32,
-            lastUpdatedFrameId: huahuoEngine.ti.i32
+            bornFrameId: huahuoEngine.ti.i32,
+            lastUpdatedFrameId: huahuoEngine.ti.i32,
+            life: huahuoEngine.ti.i32
         })
 
         this._particles = huahuoEngine.ti.field(particleType, [this.maxNumbers])
@@ -71,9 +68,6 @@ class Particles extends AbstractComponent {
         this._currentActiveParticleNumber = huahuoEngine.ti.field(ti.f32, [1])
 
         huahuoEngine.ti.addToKernelScope({
-            // particleVelocity: this._particleVelocity,
-            // particlePositions: this._particlePositions,
-            // particleStatuses: this._particleStatuses,
             particles: this._particles,
             currentActiveParticleNumber: this._currentActiveParticleNumber,
             maxNumbers: this.maxNumbers,
@@ -84,13 +78,20 @@ class Particles extends AbstractComponent {
     _updateParticleCountKernel
     _updateParticleStatusesKernel
 
-    updateParticleStatuses(activeParticleCount, initMaxVelocity) {
-        if(this._updateParticleCountKernel == null){
-            this._updateParticleCountKernel = huahuoEngine.ti.kernel(()=>{
+    /**
+     *
+     * @param activeParticleCount
+     * @param initMaxVelocity
+     * @param maxLife    Note the maxLife is in seconds, so need to be converted to frames first.
+     * @param currentFrameId
+     */
+    updateParticleStatuses(activeParticleCount, initMaxVelocity, maxLife, currentFrameId) {
+        if (this._updateParticleCountKernel == null) {
+            this._updateParticleCountKernel = huahuoEngine.ti.kernel(() => {
                 currentActiveParticleNumber[0] = 0
                 let i = 0
-                while(i < maxNumbers){  // while is not parallel. So no need to lock
-                    if(particles[i].status == 1){
+                while (i < maxNumbers) {  // while is not parallel. So no need to lock
+                    if (particles[i].status == 1) {
                         currentActiveParticleNumber[0] += 1
                     }
                     i += 1
@@ -100,7 +101,7 @@ class Particles extends AbstractComponent {
 
         if (this._updateParticleStatusesKernel == null) {
 
-            function initParticle(i, v) {
+            function initParticle(i, v, life, curFrameId) {
                 let theta = ti.random() * 2 * PI
                 let phi = ti.random() * PI
                 let radius = ti.sqrt(ti.random())
@@ -114,26 +115,34 @@ class Particles extends AbstractComponent {
                 particles[i].position = [0.0, 0.0, 0.0]
 
                 particles[i].status = 1
+
+                particles[i].bornFrameId = curFrameId
+                particles[i].lastUpdatedFrameId = -1 // Need to be updated anyways
+                particles[i].life = i32(life)
             }
 
-            huahuoEngine.ti.addToKernelScope({initParticle})
+            function particleIsAlive(i, curFrameId) {
+                return particles[i].status == 1 && particles[i].bornFrameId <= curFrameId // && particles[i].bornFrameId + particles[i].life >= curFrameId
+            }
+
+            huahuoEngine.ti.addToKernelScope({initParticle, particleIsAlive})
 
             let vType = huahuoEngine.ti.types.vector(ti.f32, 3)
 
             this._updateParticleStatusesKernel = huahuoEngine.ti.kernel(
                 {initMaxVelocity: vType},
-                (activeParticleCount, initMaxVelocity) => {
+                (activeParticleCount, initMaxVelocity, maxLife, curFrameId) => {
                     let currentInactiveParticleNumber = maxNumbers - currentActiveParticleNumber[0]
                     let tobeActivatedParticleNumber = activeParticleCount - currentActiveParticleNumber[0]
 
-                    if(tobeActivatedParticleNumber > 0){
+                    if (tobeActivatedParticleNumber > 0) {
                         let possibility = tobeActivatedParticleNumber / currentInactiveParticleNumber
 
                         for (let i of range(maxNumbers)) {
-                            if(particles[i].status == 0){
+                            if (particles[i].status == 0) {
                                 let randomNumber = ti.random()
-                                if(randomNumber <= possibility){
-                                    initParticle(i, initMaxVelocity)
+                                if (randomNumber <= possibility) {
+                                    initParticle(i, initMaxVelocity, maxLife, i32(curFrameId))
                                 }
                             }
                         }
@@ -141,56 +150,76 @@ class Particles extends AbstractComponent {
                 })
         }
 
-        this._updateParticleCountKernel().then(()=>{
-            this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity)
-
-            this._currentActiveParticleNumber.toArray().then((val)=>{
-                console.log("Expected active particle count:" + activeParticleCount + ", actually active particles:" + val)
+        this._updateParticleCountKernel().then(() => {
+            this._updateParticleStatusesKernel(activeParticleCount, initMaxVelocity, maxLife, currentFrameId).then(()=>{
+                this._updateParticleCountKernel().then(()=>{
+                    this._currentActiveParticleNumber.toArray().then((val) => {
+                        console.log("Expected active particle count:" + activeParticleCount + ", actually active particles:" + val)
+                    })
+                })
             })
         })
     }
 
     _updateParticlesKernel
 
-    updateParticles(mass, dt) {
+    updateParticles(mass, dt, curFrameId) {
         if (this._updateParticlesKernel == null) {
             let vType = huahuoEngine.ti.types.vector(ti.f32, 3)
 
             this._updateParticlesKernel = huahuoEngine.ti.kernel(
                 {gravity: vType},
-                (gravity, dt) => {
+                (gravity, dt, curFrameId) => {
                     for (let i of range(maxNumbers)) {
-                        if (particles[i].status == 1) {
-                            // -----   Use implicit Euler to update position.   -----
-                            let nextVelocity = particles[i].velocity + dt * gravity
+                        // Ensure the particle is born in this frame
+                        if (particleIsAlive(i, curFrameId)) {
+                            let timeElapseDirection = 1
+                            if (curFrameId < particles[i].lastUpdatedFrameId) {
+                                timeElapseDirection = -1
+                            }
 
-                            let possibleVelocity = (nextVelocity + particles[i].velocity) / 2.0
-                            particles[i].position = particles[i].position + possibleVelocity * dt
+                            let signedDt = timeElapseDirection * dt
 
-                            // Update the velocity
-                            particles[i].velocity = possibleVelocity
+                            let curUpdatingFrameId = particles[i].lastUpdatedFrameId
+
+                            while (curUpdatingFrameId != curFrameId) {
+                                // -----   Use implicit Euler to update position.   -----
+                                let nextVelocity = particles[i].velocity + signedDt * gravity
+
+                                let possibleVelocity = (nextVelocity + particles[i].velocity) / 2.0
+                                particles[i].position = particles[i].position + possibleVelocity * signedDt
+
+                                // Update the velocity
+                                particles[i].velocity = possibleVelocity
+
+                                curUpdatingFrameId += timeElapseDirection
+                            }
+
+                            particles[i].lastUpdatedFrameId = i32(curFrameId)
+                        } else {
+                            particles[i].status = 0
                         }
                     }
                 })
         }
 
-        this._updateParticlesKernel(Vector3ToArray(this.gravity), dt)
+        this._updateParticlesKernel(Vector3ToArray(this.gravity), dt, curFrameId)
     }
 
     _renderImageKernel
 
-    renderImage() {
+    renderImage(curFrameId) {
         if (this._renderImageKernel == null) {
             let cType = huahuoEngine.ti.types.vector(ti.f32, 4)
 
             this._renderImageKernel = huahuoEngine.ti.kernel(
                 {particleColor: cType},
-                (particleSize, particleColor) => {
+                (particleSize, particleColor, curFrameId) => {
 
                     let viewPortXMin = -outputImageWidth / 2;
                     let viewPortYMin = -outputImageHeight / 2;
                     for (let i of range(maxNumbers)) {
-                        if (particles[i].status == 1) {
+                        if (particleIsAlive(i, curFrameId)) {
                             // projection. For simplicity, ignore z coordinate first.
                             let projectedPosition = particles[i].position.xy
 
@@ -203,10 +232,6 @@ class Particles extends AbstractComponent {
                                 if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare) {
                                     if (windowPosition[0] >= 0 && windowPosition[0] <= outputImageWidth && windowPosition[1] >= 0 && windowPosition[1] <= outputImageHeight)
                                         outputImage[windowPosition] = particleColor
-                                    else {
-                                        // This particle is out of range. Mark it as inactive.
-                                        particles[i].status = 0
-                                    }
                                 }
                             }
                         }
@@ -214,7 +239,7 @@ class Particles extends AbstractComponent {
                 })
         }
 
-        this._renderImageKernel(this.particleSize, ColorToArray(this.particleColor))
+        this._renderImageKernel(this.particleSize, ColorToArray(this.particleColor), curFrameId)
 
         // // For debug purpose, get the position array back
         // this._particlePositions.toArray().then(function (val) {
@@ -229,13 +254,13 @@ class Particles extends AbstractComponent {
 
         if (force || this.lastUpdatedFrameId != currentFrameId) {
             // Set particle statuses.
-            this.updateParticleStatuses(this.activeParticleCount, Vector3ToArray(this.initMaxVelocity))
-            let timeElapseDirection = currentFrameId > this.lastUpdatedFrameId ? 1 : -1;
+            this.updateParticleStatuses(this.activeParticleCount, Vector3ToArray(this.initMaxVelocity), this.maxLife * GlobalConfig.fps, currentFrameId)
 
-            let dt = timeElapseDirection / GlobalConfig.fps
-            for (let curUpdatingFrameId = this.lastUpdatedFrameId; curUpdatingFrameId != currentFrameId; curUpdatingFrameId += timeElapseDirection) {
-                this.updateParticles(this.particleMass, dt)
-            }
+            let dt = 1 / GlobalConfig.fps
+            this.updateParticles(this.particleMass, dt, currentFrameId)
+
+            // // Check particles status again.
+            // this.updateParticleStatuses(this.activeParticleCount, Vector3ToArray(this.initMaxVelocity), this.maxLife * GlobalConfig.fps, currentFrameId)
 
             this.lastUpdatedFrameId = currentFrameId
         }
