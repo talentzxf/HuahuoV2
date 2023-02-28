@@ -24,7 +24,7 @@ class Particles extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateFloat, 10.0)
     particleSize
 
-    @PropertyValue(PropertyCategory.interpolateVector2, {x: 300.0, y: 500.0})
+    @PropertyValue(PropertyCategory.interpolateVector2, {x: 1000.0, y: 2000.0})
     velocityMagnitudeRange
 
     @PropertyValue(PropertyCategory.interpolateVector2, {x: 0.0, y: 360.0})
