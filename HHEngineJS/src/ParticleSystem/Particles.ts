@@ -140,7 +140,7 @@ class Particles extends AbstractComponent {
                     ti.cos(phi) * ti.cos(theta) * radius,
                     ti.cos(phi) * ti.sin(theta) * radius,
                     ti.sin(phi) * radius
-                ] // random vector in the incircle of [-1, -1, -1] - [1, 1, 1]
+                ]
 
                 particles[i].position = [0.0, 0.0, 0.0]
 
