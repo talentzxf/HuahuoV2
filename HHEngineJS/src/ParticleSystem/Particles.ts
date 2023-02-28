@@ -24,7 +24,7 @@ class Particles extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateFloat, 10.0)
     particleSize
 
-    @PropertyValue(PropertyCategory.interpolateVector2, {x: 1000.0, y: 2000.0})
+    @PropertyValue(PropertyCategory.interpolateVector2, {x: 300.0, y: 500.0})
     velocityMagnitudeRange
 
     @PropertyValue(PropertyCategory.interpolateVector2, {x: 0.0, y: 360.0})
@@ -80,6 +80,23 @@ class Particles extends AbstractComponent {
             maxNumbers: this.maxNumbers,
             PI: Math.PI
         })
+
+        this.valueChangeHandler.registerValueChangeHandler("*")(this.propertyChanged.bind(this))
+    }
+
+    _invalidateAllParticlesKernel
+
+    propertyChanged() {
+        if (this._invalidateAllParticlesKernel == null) {
+            this._invalidateAllParticlesKernel = huahuoEngine.ti.kernel(() => {
+                for (let i of range(maxNumbers)) {
+                    particles[i].status = 0
+                }
+            })
+        }
+
+        this._invalidateAllParticlesKernel()
+        this.afterUpdate(true)
     }
 
     _updateParticleCountKernel
@@ -112,14 +129,17 @@ class Particles extends AbstractComponent {
         if (this._updateParticleStatusesKernel == null) {
 
             function initParticle(i, vMagRange, vThetaRange, vPhiRange, life, curFrameId) {
-                let theta = (ti.random() * (vThetaRange[1] - vThetaRange[0]) + vThetaRange[0]) * 2 * PI
-                let phi = (ti.random() * (vPhiRange[1] - vPhiRange[0]) + vPhiRange[0]) * PI
-                let radius = ti.sqrt(ti.random() * (vMagRange[1] - vMagRange[0]) + vMagRange[0])
+                let theta = ti.random() * (vThetaRange[1] - vThetaRange[0]) + vThetaRange[0]
+                let phi = ti.random() * (vPhiRange[1] - vPhiRange[0]) + vPhiRange[0] // Rotate phi 180 degrees, so if phi=0, the particles face the viewer.
+                let radius = ti.sqrt(ti.random()) * (vMagRange[1] - vMagRange[0]) + vMagRange[0]
+
+                theta = theta * Math.PI / 180  // Convert degree to radian.
+                phi = phi * Math.PI / 180 // Convert degree to radian.
 
                 particles[i].velocity = 2.0 * [
-                    ti.sin(phi) * ti.cos(theta) * radius,
-                    ti.sin(phi) * ti.sin(theta) * radius,
-                    ti.cos(phi) * radius
+                    ti.cos(phi) * ti.cos(theta) * radius,
+                    ti.cos(phi) * ti.sin(theta) * radius,
+                    ti.sin(phi) * radius
                 ] // random vector in the incircle of [-1, -1, -1] - [1, 1, 1]
 
                 particles[i].position = [0.0, 0.0, 0.0]

@@ -868,17 +868,17 @@ abstract class BaseShapeJS {
 
         let _this = this
 
-        if(componentName == BASIC_COMPONENTS){
+        if (componentName == BASIC_COMPONENTS) {
             return {
                 key: "inspector." + componentName,
                 type: PropertyType.KEYFRAMES,
-                getter: ()=>{
+                getter: () => {
                     let keyFrames = []
-                    for(let componentName of basicComponents){
+                    for (let componentName of basicComponents) {
                         let componentKeyFrames = _this.getComponentKeyFrames(componentName).bind(_this)()
 
-                        for(let keyFrameId of componentKeyFrames){
-                            if(keyFrames.indexOf(keyFrameId) == -1){
+                        for (let keyFrameId of componentKeyFrames) {
+                            if (keyFrames.indexOf(keyFrameId) == -1) {
                                 keyFrames.push(keyFrameId)
                             }
                         }
@@ -887,19 +887,18 @@ abstract class BaseShapeJS {
                     return keyFrames
                 },
                 setter: this.insertComponentKeyFrame("ShapeTransformFrameState").bind(this), // How to handle setter??
-                deleter: (frameId)=>{
-                    for(let componentName of basicComponents){
+                deleter: (frameId) => {
+                    for (let componentName of basicComponents) {
                         _this.deleteComponentKeyFrame(componentName).bind(_this)(frameId)
                     }
                 },
-                updater: (type, params)=>{
-                    for(let componentName of basicComponents){
+                updater: (type, params) => {
+                    for (let componentName of basicComponents) {
                         _this.updateComponentKeyFrame(componentName).bind(_this)(type, params)
                     }
                 }
             }
-        }
-        else{
+        } else {
             return {
                 key: "inspector." + componentName,
                 type: PropertyType.KEYFRAMES,
@@ -911,12 +910,12 @@ abstract class BaseShapeJS {
         }
     }
 
-    updateComponentKeyFrame(componentName){
+    updateComponentKeyFrame(componentName) {
         let _this = this
         let frameStateRawObj = this.rawObj.GetFrameStateByTypeName(componentName)
 
-        return function(type: string, params: object){
-            if(type == "ReverseKeyFrames"){
+        return function (type: string, params: object) {
+            if (type == "ReverseKeyFrames") {
                 let startFrameId = params["startFrameId"]
                 let endFrameId = params["endFrameId"]
 

@@ -41,7 +41,6 @@ class PropertySheetFactory{
         return propertyDef
     }
 
-
     createEntry(component, propertyMeta:PropertyDef, valueChangeHandler: ValueChangeHandler){
         let fieldName = propertyMeta["key"]
         // Generate setter and getter
