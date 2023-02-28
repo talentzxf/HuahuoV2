@@ -95,11 +95,13 @@
       "particleSystems": "Particles",
       "activeParticleCount": "Active Particle Count",
       "particleMass": "Particle Mass",
-      "initMaxVelocity": "Max start velocity",
       "particleSize": "Particle Size",
       "particleColor": "Particle Color",
       "gravity": "Gravity",
-      "lifeSpanRange": "Lifetime Range(seconds)"
+      "lifeSpanRange": "Lifetime Range(seconds)",
+      "velocityMagnitudeRange": "Velocity Magnitude Range",
+      "velocityThetaRange": "Velocity Angle(xy) Range",
+      "velocityPhiRange": "Velocity Angle(xz) Range"
     },
     "nail": {
       "isStatic": "Is Static"

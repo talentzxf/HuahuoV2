@@ -1,6 +1,8 @@
 import {Logger} from "hhcommoncomponents"
 import {engineEventManager} from "./EngineEvents/EngineEventManager";
 import {clzObjectFactory} from "./CppClassObjectFactory";
+
+// @ts-ignore
 import * as ti from "taichi.js/dist/taichi"
 // import * as ti from "taichi.js/dist/taichi.dev"
 
