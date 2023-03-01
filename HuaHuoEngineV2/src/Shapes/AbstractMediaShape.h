@@ -15,6 +15,7 @@ public:
     AbstractMediaShape(MemLabelId label, ObjectCreationMode mode)
     :Super(label, mode)
     ,mType("UnknownType")
+    ,mFileDataPointer(NULL)
     {
     }
 
@@ -46,9 +47,19 @@ public:
         return const_cast<char*>(mFileName.c_str());
     }
 
+    std::vector<UInt8>& GetFileDataPointer(){
+        if(mFileDataPointer == NULL){
+            mFileDataPointer = &GetDefaultResourceManager()->GetFileData(mFileName);
+        }
+
+        return *mFileDataPointer;
+    }
+
 private:
     std::string mType;
     std::string mFileName;
+
+    std::vector<UInt8>* mFileDataPointer;
 };
 
 

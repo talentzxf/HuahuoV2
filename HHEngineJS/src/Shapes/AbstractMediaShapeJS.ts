@@ -62,10 +62,10 @@ abstract class AbstractMediaShapeJS extends BaseShapeJS{
 
         if(this.data != null && !this.data.startsWith("blob") && this.dirty){
             let binaryData:Uint8Array = dataURItoBlob(this.data)
+            this.rawObj.SetFileName(this.fileName) // Should set file name before set data. TODO: Merge these two functions.
             this.rawObj.SetData(binaryData, binaryData.length);
 
             this.rawObj.SetMimeType(getMimeTypeFromDataURI(this.data))
-            this.rawObj.SetFileName(this.fileName)
             this.dirty = false
         }
     }

@@ -34,6 +34,7 @@ template<class TransferFunction>
 void ObjectStoreManager::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
     TRANSFER(m_IsGlobal);
+    TRANSFER(resourceManager);
     TRANSFER(allStores);
     TRANSFER(currentStore);
     TRANSFER(canvasWidth);

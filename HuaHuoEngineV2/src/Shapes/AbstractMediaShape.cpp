@@ -24,7 +24,7 @@ void AbstractMediaShape::SetData(UInt8 *pData, UInt32 dataSize) {
 }
 
 UInt8 AbstractMediaShape::GetDataAtIndex(UInt32 index) {
-    std::vector<UInt8> &fileData = GetDefaultResourceManager()->GetFileData(mFileName);
+    std::vector<UInt8> &fileData = GetFileDataPointer();
     return fileData[index];
 }
 

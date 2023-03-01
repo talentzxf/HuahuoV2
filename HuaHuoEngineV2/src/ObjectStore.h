@@ -15,6 +15,7 @@
 #include <string>
 #include "Utilities/MemoryFileSystem.h"
 #include "Layer.h"
+#include "ResourceManager.h"
 
 extern std::string StoreFilePath;
 
@@ -113,6 +114,7 @@ public:
         , maxKeyFrameIdentifier(0)
     {
         printf("Creating new store manager!!!!\n");
+        resourceManager = GetDefaultResourceManager();
     }
 
     void SetIsGlobal(bool isGlobal){
@@ -205,6 +207,7 @@ public:
     }
 
 private:
+    PPtr<ResourceManager> resourceManager;
     std::vector<PPtr<ObjectStore>> allStores;
     KeyFrameIdentifier maxKeyFrameIdentifier; // This is NOT the frameId of the keyframes. It's just an ID for all the KeyFrame objects.
     std::map<KeyFrameIdentifier, KeyFrame> allKeyFrames; // All key frames in the store. Map from keyframe identifier to keyframe object.

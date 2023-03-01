@@ -31,6 +31,11 @@ public:
     }
 
     std::vector<UInt8>& GetFileData(std::string &fileName){
+        if(!mFileNameDataMap.contains(fileName)){
+            printf("ResourceManager: File:%s has not been registered yet during GetFileData\n", fileName.c_str());
+
+            // TODO: Throw exception here.
+        }
         return mFileNameDataMap[fileName];
     }
 

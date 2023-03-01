@@ -40,10 +40,13 @@ void ResourceManager::Transfer(TransferFunction &transfer) {
 }
 
 bool ResourceManager::RegisterFile(std::string &fileName) {
+    printf("ResourceManager: RegisterFile for:%s\n", fileName.c_str());
     if (mFileNameDataMap.contains(fileName)) {
+        printf("ResourceManager: File:%s has already been registered before\n", fileName.c_str());
         return false;
     }
 
+    printf("ResourceManager: File:%s has not been registered yet, register here\n", fileName.c_str());
     mFileNameDataMap[fileName] = std::vector<UInt8>();
     return true;
 }
