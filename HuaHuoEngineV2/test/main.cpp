@@ -26,6 +26,7 @@
 #include "CloneObject.h"
 #include "KeyFrames/CustomFrameState.h"
 #include "KeyFrames/CustomComponent.h"
+#include "Shapes/ImageShape.h"
 
 #define ASSERT assert
 
@@ -122,20 +123,20 @@ void testShapeStore() {
 
     currentLayer->AddShapeInternal(rectangleShape);
 
-    RectangleShape* clonedRectangleShape = (RectangleShape*) CloneObject(*rectangleShape);
+    RectangleShape *clonedRectangleShape = (RectangleShape *) CloneObject(*rectangleShape);
 
-    CircleShape* circleShape = (CircleShape*)BaseShape::CreateShape("CircleShape");
+    CircleShape *circleShape = (CircleShape *) BaseShape::CreateShape("CircleShape");
     circleShape->SetCenter(1.0, 1.0, 1.0);
     circleShape->SetRadius(1.0);
 
     circleShape->SetGlobalPivotPosition(100, 100, 100);
-    Vector3f* vector3F = circleShape->GetGlobalPivotPosition();
+    Vector3f *vector3F = circleShape->GetGlobalPivotPosition();
 
     circleShape->RefreshKeyFrameCache();
     int keyFrameCount = circleShape->GetKeyFrameCount();
     int firstKeyFrame = circleShape->GetKeyFrameAtIdx(0);
 
-    ShapeFollowCurveFrameState* curveFrameState = (ShapeFollowCurveFrameState*) circleShape->GetFrameStateByTypeName(
+    ShapeFollowCurveFrameState *curveFrameState = (ShapeFollowCurveFrameState *) circleShape->GetFrameStateByTypeName(
             "ShapeFollowCurveFrameState");
     curveFrameState->RecordTargetShape(10, rectangleShape);
     curveFrameState->RecordLengthRatio(10, 1.0f);
@@ -381,14 +382,25 @@ void testCloneObject() {
     Vector3f *curPosition = clonedRectangle->GetGlobalPivotPosition();
     Assert(curPosition != NULL);
 
-    ShapeTransformFrameState* shapeTransformFrameState = (ShapeTransformFrameState*)clonedRectangle->GetFrameStateByTypeName("ShapeTransformFrameState");
+    ShapeTransformFrameState *shapeTransformFrameState = (ShapeTransformFrameState *) clonedRectangle->GetFrameStateByTypeName(
+            "ShapeTransformFrameState");
 
     int keyFrameCount = shapeTransformFrameState->GetKeyFrameCount();
 
-    for(int i = 0 ; i < keyFrameCount; i++){
+    for (int i = 0; i < keyFrameCount; i++) {
         int frameId = shapeTransformFrameState->GetKeyFrameAtIndex(i);
         Assert(frameId >= 0);
     }
+
+    ImageShape *imageShape = (ImageShape *) BaseShape::CreateShape("ImageShape");
+    std::string imgName("TestImageTestImage");
+    imageShape->SetFileName(imgName);
+    vector<UInt8> imgData = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
+    imageShape->SetData(imgData.data(), imgData.size());
+
+    ImageShape *imageShapeDup = (ImageShape *) CloneObject(*imageShape);
+    Assert(imageShapeDup->GetFileName() == imgName);
+    Assert(imageShapeDup->GetDataSize() == imgData.size());
 }
 
 void testDelete() {
@@ -422,7 +434,7 @@ void testDelete() {
 
     currentLayer->RemoveShape(rectangleShape);
 
-    for(int i = 0 ; i < 100; i++){
+    for (int i = 0; i < 100; i++) {
         RectangleShape *rectangleShape2 = (RectangleShape *) BaseShape::CreateShape("RectangleShape");
 
         float segments2[] = {
@@ -452,7 +464,7 @@ void testDelete() {
     }
 }
 
-void testReadFromFile(){
+void testReadFromFile() {
 //    std::string fileName("0Gp3iuAmyG1663567838");
 //    std::string filePath = "C:\\Users\\vincentzhang\\Downloads\\" + fileName + ".hua";
 //
@@ -479,11 +491,11 @@ void testReadFromFile(){
     circleShape->SetCenter(0.0, 1.0, 2.0);
     circleShape->SetBornFrameId(10);
 
-    Layer* pLayer = circleShape->GetLayer();
+    Layer *pLayer = circleShape->GetLayer();
     pLayer->SetCurrentFrame(0);
     bool shapeIsVisible = circleShape->IsVisible();
 
-    CustomComponent* customComponent = CustomComponent::CreateComponent();
+    CustomComponent *customComponent = CustomComponent::CreateComponent();
     customComponent->SetName("CurveGrowth");
 
     customComponent->RegisterFloatValue("growth", 1.0f);
@@ -511,7 +523,7 @@ void testReadFromFile(){
     customComponent->SetFloatValue("growth", 1.0f);
     customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
 
-    ColorRGBAf* color = customComponent->GetColorValue("strokeColor");
+    ColorRGBAf *color = customComponent->GetColorValue("strokeColor");
 
     customComponent->Apply(0);
     circleShape->GetMinFrameId();
@@ -523,7 +535,7 @@ void testReadFromFile(){
 
     customComponent->UpdateColorStop("gradientColor", 0, 1.0, 1.0, 0.0, 0.0, 1.0);
 
-    ColorStopArray* pResult = customComponent->GetColorStopArray("gradientColor");
+    ColorStopArray *pResult = customComponent->GetColorStopArray("gradientColor");
 
     customComponent->SetColorValue("strokeColor", 0.0, 1.0, 0.0, 1.0);
     float growthValue = customComponent->GetFloatValue("growth");
@@ -537,12 +549,12 @@ void testReadFromFile(){
     printf("GetValue:%f\n", customComponent->GetFloatValue("growth"));
 
     color = customComponent->GetColorValue("strokeColor");
-    printf("GetColor:%f,%f,%f,%f\n",color->r, color->g, color->b, color->a);
+    printf("GetColor:%f,%f,%f,%f\n", color->r, color->g, color->b, color->a);
 
 
-    CircleShape* clonedCircleShape = (CircleShape*) CloneObject(*circleShape);
+    CircleShape *clonedCircleShape = (CircleShape *) CloneObject(*circleShape);
 
-    CustomComponent* clonedGrowthComponent = (CustomComponent*)clonedCircleShape->GetFrameState("CurveGrowth");
+    CustomComponent *clonedGrowthComponent = (CustomComponent *) clonedCircleShape->GetFrameState("CurveGrowth");
     clonedGrowthComponent->SetFloatValue("growth", 100.0f);
 
     Assert(customComponent->GetFloatValue("growth") != clonedGrowthComponent->GetFloatValue("growth"));
@@ -550,7 +562,7 @@ void testReadFromFile(){
     customComponent->ReverseKeyFrame(0, 10, 5);
 
     int keyFrameCount = customComponent->GetKeyFrameCount();
-    for(int idx = 0 ; idx < keyFrameCount; idx++){
+    for (int idx = 0; idx < keyFrameCount; idx++) {
         int keyframeId = customComponent->GetKeyFrameAtIndex(idx);
 
         Assert(keyframeId >= 0);
@@ -566,10 +578,10 @@ void testReadFromFile(){
 
     customComponent->RegisterSubcomponentArray("particleSystems");
 
-    CustomComponent* particleSystem = customComponent->GetSubComponentArrayByName("particleSystems");
+    CustomComponent *particleSystem = customComponent->GetSubComponentArrayByName("particleSystems");
 
     particleSystem->RegisterVector3Value("maxInitVelocity", 100.0, 100.0, 100.0);
-    Vector3f* velocity = particleSystem->GetVector3Value("maxInitVelocity");
+    Vector3f *velocity = particleSystem->GetVector3Value("maxInitVelocity");
 
     customComponent->Apply(1);
     velocity = particleSystem->GetVector3Value("maxInitVelocity");

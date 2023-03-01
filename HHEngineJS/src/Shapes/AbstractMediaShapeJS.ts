@@ -60,7 +60,7 @@ abstract class AbstractMediaShapeJS extends BaseShapeJS{
     store() {
         super.store();
 
-        if(!this.data.startsWith("blob") && this.dirty){
+        if(this.data != null && !this.data.startsWith("blob") && this.dirty){
             let binaryData:Uint8Array = dataURItoBlob(this.data)
             this.rawObj.SetData(binaryData, binaryData.length);
 
