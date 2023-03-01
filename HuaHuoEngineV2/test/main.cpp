@@ -152,7 +152,10 @@ void testShapeStore() {
 
     printf("maxFrameId: %d\n", circleShape->GetMaxFrameId());
 
-    GetPersistentManagerPtr()->WriteFile(StoreFilePath);
+    ImageShape* imageShape = Object::Produce<ImageShape>();
+    imageShape->SetFileName("TestTestTest");
+    vector<UInt8> data = {30,31,32,33,34,35,36,37,38,39,40};
+    imageShape->SetData(data.data(), data.size());
 
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
 

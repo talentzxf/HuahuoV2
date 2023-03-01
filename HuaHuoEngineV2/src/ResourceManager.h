@@ -47,5 +47,4 @@ private:
 
 ResourceManager *GetDefaultResourceManager();
 
-
 #endif //HUAHUOENGINEV2_RESOURCEMANAGER_H

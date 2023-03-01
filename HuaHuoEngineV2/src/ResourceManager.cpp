@@ -12,15 +12,15 @@ ResourceManager *gDefaultResourceManager = NULL;
 ResourceManager *GetDefaultResourceManager() {
     if (gDefaultResourceManager == NULL) {
         gDefaultResourceManager = Object::Produce<ResourceManager>();
-        GetPersistentManager().MakeObjectPersistent(gDefaultResourceManager->GetInstanceID(), StoreFilePath);
     }
+
+    GetPersistentManager().MakeObjectPersistent(gDefaultResourceManager->GetInstanceID(), StoreFilePath);
 
     return gDefaultResourceManager;
 }
 
 void SetDefaultResourceManager(ResourceManager* resourceManager){
     gDefaultResourceManager = resourceManager;
-
     printf("Set Default object store manager\n");
 }
 
@@ -37,6 +37,8 @@ INSTANTIATE_TEMPLATE_TRANSFER(ResourceManager);
 template<class TransferFunction>
 void ResourceManager::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
+
+    TRANSFER(mFileNameDataMap);
 }
 
 bool ResourceManager::RegisterFile(std::string &fileName) {
