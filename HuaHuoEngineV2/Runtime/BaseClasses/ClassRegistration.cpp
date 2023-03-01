@@ -26,6 +26,7 @@
 #include "Shapes/ParticleSystem.h"
 #include "KeyFrames/CustomFrameState.h"
 #include "KeyFrames/CustomComponent.h"
+#include "ResourceManager.h"
 
 void RegisterBuiltinTypes()
 {
@@ -87,4 +88,6 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<ShapeFollowCurveFrameState>("ObjectStore");
     RegisterHuaHuoClass<CustomFrameState>("ObjectStore");
     RegisterHuaHuoClass<CustomComponent>("ObjectStore");
+
+    RegisterHuaHuoClass<ResourceManager>("ObjectStore");
 }
