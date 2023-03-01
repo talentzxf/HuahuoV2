@@ -8,20 +8,37 @@
 
 #include "TypeSystem/Object.h"
 
-class ResourceManager: public Object {
-    REGISTER_CLASS(ResourceManager);
-    DECLARE_OBJECT_SERIALIZE();
+class ResourceManager : public Object {
+REGISTER_CLASS(ResourceManager);
+
+DECLARE_OBJECT_SERIALIZE();
 public:
     ResourceManager(MemLabelId label, ObjectCreationMode mode)
-        :Super(label, mode)
-    {
+            : Super(label, mode) {
 
     }
 
-    static ResourceManager* GetDefaultResourceManager();
+    static ResourceManager *GetDefaultResourceManager();
+
+    /**
+     *
+     * @return true - Registered successfully, no duplicate. false - There's a duplication.
+     */
+    bool RegisterFile(std::string &fileName);
+
+    UInt32 GetDataSize(std::string &fileName) {
+        return mFileNameDataMap[fileName].size();
+    }
+
+    std::vector<UInt8>& GetFileData(std::string &fileName){
+        return mFileNameDataMap[fileName];
+    }
+
+private:
+    std::map<std::string, vector<UInt8> > mFileNameDataMap;
 };
 
-ResourceManager* GetDefaultResourceManager();
+ResourceManager *GetDefaultResourceManager();
 
 
 #endif //HUAHUOENGINEV2_RESOURCEMANAGER_H

@@ -7,10 +7,10 @@
 
 extern std::string StoreFilePath;
 
-ResourceManager* gDefaultResourceManager = NULL;
+ResourceManager *gDefaultResourceManager = NULL;
 
-ResourceManager* GetDefaultResourceManager(){
-    if(gDefaultResourceManager == NULL){
+ResourceManager *GetDefaultResourceManager() {
+    if (gDefaultResourceManager == NULL) {
         gDefaultResourceManager = Object::Produce<ResourceManager>();
         GetPersistentManager().MakeObjectPersistent(gDefaultResourceManager->GetInstanceID(), StoreFilePath);
     }
@@ -18,14 +18,26 @@ ResourceManager* GetDefaultResourceManager(){
     return gDefaultResourceManager;
 }
 
-ResourceManager* ResourceManager::GetDefaultResourceManager(){
+ResourceManager *ResourceManager::GetDefaultResourceManager() {
     return ::GetDefaultResourceManager();
 }
 
 IMPLEMENT_REGISTER_CLASS(ResourceManager, 10025);
+
 IMPLEMENT_OBJECT_SERIALIZE(ResourceManager);
+
 INSTANTIATE_TEMPLATE_TRANSFER(ResourceManager);
+
 template<class TransferFunction>
 void ResourceManager::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
+}
+
+bool ResourceManager::RegisterFile(std::string &fileName) {
+    if (mFileNameDataMap.contains(fileName)) {
+        return false;
+    }
+
+    mFileNameDataMap[fileName] = std::vector<UInt8>();
+    return true;
 }

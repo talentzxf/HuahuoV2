@@ -5,6 +5,7 @@
 #ifndef HUAHUOENGINEV2_ABSTRACTMEDIASHAPE_H
 #define HUAHUOENGINEV2_ABSTRACTMEDIASHAPE_H
 #include "BaseShape.h"
+#include "ResourceManager.h"
 
 class AbstractMediaShape : public BaseShape{
     REGISTER_CLASS_TRAITS(kTypeIsAbstract);
@@ -24,7 +25,7 @@ public:
     // TODO: This is not working for WebIDL, not sure why
     void LoadData(UInt8* pData);
     UInt32 GetDataSize(){
-        return this->data.size();
+        return GetDefaultResourceManager()->GetDataSize(mFileName);
     }
 
     void SetMimeType(std::string type){
@@ -37,6 +38,8 @@ public:
 
     void SetFileName(std::string fName){
         this->mFileName = fName;
+
+        GetDefaultResourceManager()->RegisterFile(fName);
     }
 
     char* GetFileName(){
@@ -44,7 +47,6 @@ public:
     }
 
 private:
-    std::vector<UInt8> data;
     std::string mType;
     std::string mFileName;
 };
