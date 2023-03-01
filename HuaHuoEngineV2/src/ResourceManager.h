@@ -34,6 +34,8 @@ public:
         return mFileNameDataMap[fileName];
     }
 
+    void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
+
 private:
     std::map<std::string, vector<UInt8> > mFileNameDataMap;
 };

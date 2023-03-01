@@ -18,6 +18,12 @@ ResourceManager *GetDefaultResourceManager() {
     return gDefaultResourceManager;
 }
 
+void SetDefaultResourceManager(ResourceManager* resourceManager){
+    gDefaultResourceManager = resourceManager;
+
+    printf("Set Default object store manager\n");
+}
+
 ResourceManager *ResourceManager::GetDefaultResourceManager() {
     return ::GetDefaultResourceManager();
 }
@@ -40,4 +46,11 @@ bool ResourceManager::RegisterFile(std::string &fileName) {
 
     mFileNameDataMap[fileName] = std::vector<UInt8>();
     return true;
+}
+
+
+void ResourceManager::AwakeFromLoad(AwakeFromLoadMode awakeMode){
+    Super::AwakeFromLoad(awakeMode);
+
+    SetDefaultResourceManager(this);
 }
