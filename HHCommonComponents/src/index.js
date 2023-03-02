@@ -17,7 +17,7 @@ import {HHToast} from "./Toast/Toast";
 import {eventBus} from "./EventBus/EventBus";
 import {mirrorPoint} from "./Math/MathFunctions";
 import {IsValidWrappedObject} from "./WrappedObjectUtils"
-import {CustomFieldConfig, CustomFieldDivGenerator} from "./Properties/PropertyConfig";
+import {CustomFieldConfig, CustomFieldContentDivGenerator} from "./Properties/PropertyConfig";
 
 if (!window.i18n) {
     window.i18n = new I18nHandler()
@@ -30,6 +30,6 @@ export {
     relaxRectangle, PropertySheet, Property, PropertyType, getMimeTypeFromDataURI,
     dataURItoBlob, HHToast, getFileNameFromGZip, eventBus, mirrorPoint,
     IsValidWrappedObject, getMethodsAndVariables,
-    CustomFieldDivGenerator, CustomFieldConfig
+    CustomFieldContentDivGenerator, CustomFieldConfig
 }
 

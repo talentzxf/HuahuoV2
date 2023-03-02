@@ -17,6 +17,7 @@ import {ProjectListForm} from "./UIComponents/ProjectListForm";
 import {ProjectInfoForm} from "./UIComponents/ProjectInfoForm";
 import {HHEditorToolBar} from "./UIComponents/HHEditorToolBar";
 import {HHHistoryCommandList} from "./UIComponents/HHHistoryCommandList"
+import {IconSelectDivGenerator} from "./Inspector/CustomFieldDivGenerators/IconSelectDivGenerator"
 
 // Input components
 import {HHFloatInput} from "./Inspector/InputComponents/HHFloatInput";

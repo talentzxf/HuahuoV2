@@ -2,7 +2,7 @@ class PropertyConfig {
     elementType ?: string // Secondary type. Maybe used in some cases.
 }
 
-interface CustomFieldDivGenerator {
+interface CustomFieldContentDivGenerator {
     generateDiv(): HTMLDivElement
 }
 
@@ -24,6 +24,6 @@ class SubComponentArrayProperty extends PropertyConfig {
     subComponentTypeName: string;
 }
 
-export {PropertyConfig, FloatPropertyConfig, ActionPropertyConfig, SubComponentArrayProperty, CustomFieldConfig, CustomFieldDivGenerator}
+export {PropertyConfig, FloatPropertyConfig, ActionPropertyConfig, SubComponentArrayProperty, CustomFieldConfig, CustomFieldContentDivGenerator}
 
 

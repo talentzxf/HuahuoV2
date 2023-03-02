@@ -19,6 +19,7 @@ import {NailShapeJS} from "./Shapes/NailShapeJS";
 import {ParticleSystemJS} from "./Shapes/ParticleSystemJS";
 import {ParticleSystemRenderer} from "./Components/ParticleSystemRenderer";
 import {Particles} from "./ParticleSystem/Particles";
+import {registerCustomFieldContentDivGeneratorConstructor} from "./Components/AbstractComponent"
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 
@@ -86,8 +87,10 @@ export {
     NailShapeJS,
     ParticleSystemJS,
     ParticleSystemRenderer,
+    Particles,
     NailComponent,
     ColorStop,
     getNailManager,
-    isInheritedFromClzName
+    isInheritedFromClzName,
+    registerCustomFieldContentDivGeneratorConstructor
 }

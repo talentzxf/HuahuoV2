@@ -16,27 +16,13 @@ function ColorToArray(color) {
     return [color.red, color.green, color.blue, color.alpha]
 }
 
-class ParticleShapeGenerator implements CustomFieldDivGenerator{
-    particles
-
-    constructor(particles) {
-        this.particles
-    }
-    override generateDiv(){
-        let div = document.createElement("div")
-        div.innerHTML = "HiHiHi"
-
-        return div
-    }
-}
-
 // ParticleSystem is not compatible with any shape. It should be used in ParticleSystemRenderer only as a subcomponent.
 @Component({compatibleShapes: []})
 class Particles extends AbstractComponent {
     _particles
     _currentActiveParticleNumber;
 
-    @PropertyValue(PropertyCategory.customField, null, {contentDivGenerator: new ParticleShapeGenerator()} as CustomFieldConfig)
+    @PropertyValue(PropertyCategory.customField)
     particleShape
 
     @PropertyValue(PropertyCategory.interpolateFloat, 10.0)

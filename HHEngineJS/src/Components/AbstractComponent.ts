@@ -10,10 +10,24 @@ import {interpolateVariableProcessor} from "./VariableHandlers/InterpolateVariab
 import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
 import {colorStopArrayHandler} from "./VariableHandlers/ColorArrayProcessor";
 import {subComponentArrayHandler} from "./VariableHandlers/SubComponentArrayHandler";
+import {CustomFieldConfig} from "hhcommoncomponents";
+
+
+// Key is: className#fieldName
+// Value is the constructor of the divContent generator
+let customFieldContentDivGeneratorMap: Map<string, Function> = new Map()
+function registerCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string, constructor: Function){
+    let fieldFullName = className + "#" + fieldName
+    customFieldContentDivGeneratorMap.set(fieldFullName, constructor)
+}
+
+function getCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string): Function{
+    let fieldFullName = className + "#" + fieldName
+    return customFieldContentDivGeneratorMap.get(fieldFullName)
+}
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
-
 function getProperties(target): object[] {
     let properties: object[] = Reflect.getMetadata(metaDataKey, target)
     if (!properties) {
@@ -82,8 +96,9 @@ class AbstractComponent {
                     // Only Components inherits GroupComponent can have subComponentArray. Cause SubComponentArray itself is a component.
                     //@ts-ignore
                     subComponentArrayHandler.handleEntry(this, propertyEntry)
-                }
-                else if(propertyEntry.type != PropertyCategory.customField){ // For custom field, we don't know anything about it, so do nothing.
+                } else if (propertyEntry.type == PropertyCategory.customField) {
+                    // Seems need to do nothing?
+                } else {
                     throw "Unknown property type"
                 }
             })
@@ -123,6 +138,18 @@ class AbstractComponent {
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
         if (properties != null) {
             for (let propertyMeta of properties) {
+                if (propertyMeta.type == PropertyCategory.customField) {
+                    if (propertyMeta.config == null || propertyMeta.config["contentDivGenerator"] == null) {
+
+                        let divGeneratorConstructor = getCustomFieldContentDivGeneratorConstructor(this.constructor.name, propertyMeta.key)
+
+                        // @ts-ignore
+                        let contentDivGenerator = new divGeneratorConstructor(this)
+                        propertyMeta.config = {
+                            contentDivGenerator: contentDivGenerator
+                        } as CustomFieldConfig
+                    }
+                }
                 let propertySheetEntry = propertySheetFactory.createEntry(this, propertyMeta, this.valueChangeHandler)
                 if (propertySheetEntry != null) {
                     componentConfigSheet.config.children.push(propertySheetEntry)
@@ -180,4 +207,5 @@ class AbstractComponent {
     }
 }
 
-export {AbstractComponent, PropertyValue, Component}
+
+export {AbstractComponent, PropertyValue, Component, registerCustomFieldContentDivGeneratorConstructor}
