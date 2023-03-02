@@ -82,7 +82,8 @@ class AbstractComponent {
                     // Only Components inherits GroupComponent can have subComponentArray. Cause SubComponentArray itself is a component.
                     //@ts-ignore
                     subComponentArrayHandler.handleEntry(this, propertyEntry)
-                } else {
+                }
+                else if(propertyEntry.type != PropertyCategory.customField){ // For custom field, we don't know anything about it, so do nothing.
                     throw "Unknown property type"
                 }
             })

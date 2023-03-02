@@ -15,7 +15,8 @@ enum PropertyType {
     COMPONENT,
     COLORSTOPARRAY,
     KEYFRAMES,
-    SUBCOMPONENTARRAY
+    SUBCOMPONENTARRAY,
+    CUSTOMFIELD
 }
 
 class Property {

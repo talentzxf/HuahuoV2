@@ -1,5 +1,5 @@
 import {BasePropertyDesc, BasePropertyDivGenerator} from "./BasePropertyDivGenerator";
-import {Property, Vector3} from "hhcommoncomponents"
+import {Property} from "hhcommoncomponents"
 import {HHVector3Input} from "./InputComponents/HHVector3Input";
 
 class Vector3PropertyDesc extends BasePropertyDesc{
@@ -19,8 +19,8 @@ class Vector3PropertyDesc extends BasePropertyDesc{
 class Vector3PropertyDivGenerator extends BasePropertyDivGenerator{
 
     generatePropertyDesc(property): BasePropertyDesc {
-        let vector2PropertyDiv = new Vector3PropertyDesc(property)
-        return vector2PropertyDiv
+        let vector2PropertyDesc = new Vector3PropertyDesc(property)
+        return vector2PropertyDesc
     }
 }
 

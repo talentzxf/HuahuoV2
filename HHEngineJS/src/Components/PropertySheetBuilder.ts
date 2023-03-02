@@ -11,7 +11,8 @@ enum PropertyCategory{
     shapeArray,
     colorStopArray, // Every color stop is a float->Color mapping entry.
     keyframeArray,
-    subcomponentArray
+    subcomponentArray,
+    customField // Need to return a HTML div element to the inspector and inspector will draw it.
 }
 
 abstract class InterpolateOperator{

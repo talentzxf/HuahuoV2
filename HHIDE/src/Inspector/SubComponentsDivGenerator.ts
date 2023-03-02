@@ -6,6 +6,7 @@ import {
 } from "./BasePropertyDivGenerator";
 import {ArrayPropertyDesc} from "./ArrayPropertyDivGenerator";
 import {huahuoEngine} from "hhenginejs";
+import {subComponentArrayHandler} from "hhenginejs/dist/src/Components/VariableHandlers/SubComponentArrayHandler";
 
 class SubComponentsPropertyDesc extends ArrayPropertyDesc {
     constructor(property) {

@@ -5,7 +5,7 @@ import {ParticleSystemJS} from "../Shapes/ParticleSystemJS";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {huahuoEngine} from "../EngineAPI";
 import {GroupComponent} from "./GroupComponent";
-import {SubComponentArrayProperty} from "hhcommoncomponents/dist/src/Properties/PropertyConfig";
+import {SubComponentArrayProperty} from "hhcommoncomponents";
 import {Particles} from "../ParticleSystem/Particles";
 
 // Convention: All variables start with _ is taichi variables.

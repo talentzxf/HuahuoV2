@@ -4,11 +4,11 @@ import {PropertyType} from "hhcommoncomponents";
 
 const propertyPrefix = "inspector.property."
 
-class PropertySheetFactory{
-    categoryTypeMap:Map<PropertyCategory, PropertyType> = new Map<PropertyCategory, PropertyType>()
+class PropertySheetFactory {
+    categoryTypeMap: Map<PropertyCategory, PropertyType> = new Map<PropertyCategory, PropertyType>()
     categoryElementTypeMap: Map<PropertyCategory, string> = new Map<PropertyCategory, string>()
 
-    constructor(){
+    constructor() {
         this.categoryTypeMap.set(PropertyCategory.interpolateFloat, PropertyType.FLOAT)
         this.categoryElementTypeMap.set(PropertyCategory.interpolateFloat, "range")
 
@@ -26,6 +26,8 @@ class PropertySheetFactory{
 
         this.categoryTypeMap.set(PropertyCategory.subcomponentArray, PropertyType.SUBCOMPONENTARRAY)
         this.categoryElementTypeMap.set(PropertyCategory.subcomponentArray, PropertyType.COMPONENT)
+
+        this.categoryTypeMap.set(PropertyCategory.customField, PropertyType.CUSTOMFIELD)
     }
 
     createEntryByNameAndCategory(propertyName, category: PropertyCategory) {
@@ -41,7 +43,15 @@ class PropertySheetFactory{
         return propertyDef
     }
 
-    createEntry(component, propertyMeta:PropertyDef, valueChangeHandler: ValueChangeHandler){
+    createEntry(component, propertyMeta: PropertyDef, valueChangeHandler: ValueChangeHandler) {
+        if (propertyMeta.type == PropertyCategory.customField) {
+            return {
+                key: propertyMeta.key,
+                type: PropertyType.CUSTOMFIELD,
+                config: propertyMeta.config
+            }
+        }
+
         let fieldName = propertyMeta["key"]
         // Generate setter and getter
         let getterName = "get" + capitalizeFirstLetter(fieldName)
@@ -55,22 +65,22 @@ class PropertySheetFactory{
 
         propertyDef["getter"] = component[getterName].bind(component)
 
-        if(component[setterName])
+        if (component[setterName])
             propertyDef["setter"] = component[setterName].bind(component)
 
         propertyDef["registerValueChangeFunc"] = valueChangeHandler.registerValueChangeHandler(fieldName)
         propertyDef["unregisterValueChangeFunc"] = valueChangeHandler.unregisterValueChangeHandler(fieldName)
         propertyDef["config"] = propertyMeta.config
 
-        if(component[updateName]){
+        if (component[updateName]) {
             propertyDef["updater"] = component[updateName].bind(component)
         }
 
-        if(component[deleterName]){
+        if (component[deleterName]) {
             propertyDef["deleter"] = component[deleterName].bind(component)
         }
 
-        if(component[inserterName]){
+        if (component[inserterName]) {
             propertyDef["inserter"] = component[inserterName].bind(component)
         }
 
