@@ -14,6 +14,7 @@ class SelectIconForm extends HTMLElement implements HHForm {
     imgSvgMap: Map<HTMLImageElement, string> = new Map() // Map from image element to the svgFile.
 
     closeForm() {
+        
     }
 
     onShapeClicked(evt: MouseEvent) {
@@ -58,6 +59,9 @@ class SelectIconForm extends HTMLElement implements HHForm {
             btn.style.width = "30px"
             btn.style.height = "30px"
             btn.style.padding = "0px 0px"
+            btn.style.border = "1px solid black"
+            btn.style.backgroundColor = "lightgray"
+            btn.style.margin = "0px"
             btn.appendChild(btnImg)
             form.appendChild(btn)
 
