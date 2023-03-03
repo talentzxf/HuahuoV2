@@ -11,6 +11,7 @@ import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
 import {colorStopArrayHandler} from "./VariableHandlers/ColorArrayProcessor";
 import {subComponentArrayHandler} from "./VariableHandlers/SubComponentArrayHandler";
 import {CustomFieldConfig} from "hhcommoncomponents";
+import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariableHandler";
 
 
 // Key is: className#fieldName
@@ -97,7 +98,7 @@ class AbstractComponent {
                     //@ts-ignore
                     subComponentArrayHandler.handleEntry(this, propertyEntry)
                 } else if (propertyEntry.type == PropertyCategory.customField) {
-                    // Seems need to do nothing?
+                    customFieldVariableHandler.handleEntry(this, propertyEntry)
                 } else {
                     throw "Unknown property type"
                 }

@@ -86,6 +86,11 @@ class Particles extends AbstractComponent {
         })
 
         this.valueChangeHandler.registerValueChangeHandler("*")(this.propertyChanged.bind(this))
+        this.valueChangeHandler.registerValueChangeHandler("particleShape")(this.particleShapeChanged.bind(this))
+    }
+
+    particleShapeChanged(data){
+        console.log("particle shape changed." + data)
     }
 
     _invalidateAllParticlesKernel

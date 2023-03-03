@@ -12,7 +12,12 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
     }
 
     onSelectButtonClicked(){
-        formManager.openForm(SelectIconForm)
+        let selectIconForm = formManager.openForm(SelectIconForm)
+        selectIconForm.onIconClicked = this.onIconClicked.bind(this)
+    }
+
+    onIconClicked(data){
+        this.particles.particleShape = data
     }
 
     generateDiv() {
