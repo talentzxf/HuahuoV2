@@ -18,6 +18,6 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
 }
 
 // TODO: How to get the field name in a more elegant way ??
-registerCustomFieldContentDivGeneratorConstructor(Particles.name, "particleShape")
+registerCustomFieldContentDivGeneratorConstructor(Particles.name, "particleShape", IconSelectDivGenerator)
 
 export {IconSelectDivGenerator}

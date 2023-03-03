@@ -45,11 +45,9 @@ class PropertySheetFactory {
 
     createEntry(component, propertyMeta: PropertyDef, valueChangeHandler: ValueChangeHandler) {
         if (propertyMeta.type == PropertyCategory.customField) {
-            return {
-                key: propertyMeta.key,
-                type: PropertyType.CUSTOMFIELD,
-                config: propertyMeta.config
-            }
+            let propertyDef = this.createEntryByNameAndCategory(propertyMeta["key"], propertyMeta.type)
+            propertyDef["config"] = propertyMeta.config
+            return propertyDef
         }
 
         let fieldName = propertyMeta["key"]

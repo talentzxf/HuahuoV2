@@ -101,7 +101,8 @@
       "lifeSpanRange": "粒子寿命范围(秒)",
       "velocityMagnitudeRange": "速率范围",
       "velocityThetaRange": "速度角度(xy)范围",
-      "velocityPhiRange": "速度角度(xz)范围"
+      "velocityPhiRange": "速度角度(xz)范围",
+      "particleShape": "粒子形状"
     },
     "nail": {
       "isStatic": "是否静态"

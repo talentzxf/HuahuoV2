@@ -101,7 +101,8 @@
       "lifeSpanRange": "Lifetime Range(seconds)",
       "velocityMagnitudeRange": "Velocity Magnitude Range",
       "velocityThetaRange": "Velocity Angle(xy) Range",
-      "velocityPhiRange": "Velocity Angle(xz) Range"
+      "velocityPhiRange": "Velocity Angle(xz) Range",
+      "particleShape": "Particle Shape"
     },
     "nail": {
       "isStatic": "Is Static"
