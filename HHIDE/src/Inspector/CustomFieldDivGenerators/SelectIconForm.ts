@@ -9,19 +9,19 @@ import {CSSUtils} from "../../Utilities/CSSUtils";
 class SelectIconForm extends HTMLElement implements HHForm {
     selector: string;
     iconsContainerDiv: HTMLDivElement
+    closeBtn: HTMLElement
 
     imgSvgMap: Map<HTMLImageElement, string> = new Map() // Map from image element to the svgFile.
 
     closeForm() {
     }
 
-    onShapeClicked(evt:MouseEvent){
+    onShapeClicked(evt: MouseEvent) {
         evt.preventDefault()
         evt.stopPropagation()
-
     }
 
-    connectedCallback(){
+    connectedCallback() {
         this.style.position = "absolute"
         this.style.top = "50%"
         this.style.left = "50%"
@@ -38,10 +38,16 @@ class SelectIconForm extends HTMLElement implements HHForm {
             "</form>"
 
         let form = this.iconsContainerDiv.querySelector("form")
+        this.closeBtn = this.iconsContainerDiv.querySelector("#closeBtn")
+
+        let _this = this
+        this.closeBtn.onclick = () => {
+            _this.style.display = "none"
+        }
 
         // TODO: Duplicate with IconShapeDrawer.
         // Create Buttons
-        for(let shape of svgShapes){
+        for (let shape of svgShapes) {
             let btnImg = document.createElement("img")
             btnImg.src = shape.svg
             btnImg.style.width = "30px"
