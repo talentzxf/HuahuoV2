@@ -89,8 +89,12 @@ class Particles extends AbstractComponent {
         this.valueChangeHandler.registerValueChangeHandler("particleShape")(this.particleShapeChanged.bind(this))
     }
 
-    particleShapeChanged(data){
-        console.log("particle shape changed." + data)
+    particleShapeChanged(imgName){
+        let fieldName = "particleShape"
+
+        if(this.rawObj.IsFieldRegistered(fieldName)){
+            this.rawObj.RegisterBinaryResource(fieldName)
+        }
     }
 
     _invalidateAllParticlesKernel

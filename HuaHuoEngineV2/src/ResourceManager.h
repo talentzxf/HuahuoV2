@@ -41,6 +41,8 @@ public:
 
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
 
+    void SetFileData(const char* fileName, UInt8* pData, UInt32 dataSize);
+
 private:
     std::map<std::string, vector<UInt8> > mFileNameDataMap;
 };

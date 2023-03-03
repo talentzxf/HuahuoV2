@@ -236,6 +236,10 @@ public:
         return this->RegisterField(fieldName, COLORSTOPARRAY);
     }
 
+    int RegisterBinaryResource(const char* fieldName){
+        return this->RegisterField(fieldName, BINARYRESOURCE);
+    }
+
     int RegisterShapeArrayValue(const char *fieldName) {
         return this->RegisterField(fieldName, SHAPEARRAY);
     }
@@ -261,6 +265,10 @@ public:
         }
         printf("ERROR: Field: %s has already been registered.\n", fieldName);
         return m_fieldNameFieldIndexMap[fieldName];
+    }
+
+    bool IsFieldRegistered(const char* fieldName){
+        return m_fieldNameFieldIndexMap.contains(fieldName);
     }
 
     static CustomComponent *CreateComponent();

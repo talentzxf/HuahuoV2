@@ -20,8 +20,29 @@ enum CustomDataType{
     SHAPEARRAY,
     COLORSTOPARRAY,
     VECTOR3,
-    SUBCOMPONENTS
+    BINARYRESOURCE
 };
+
+class BinaryResource{
+public:
+    std::string GetResourceName(){
+        return mResourceName;
+    }
+
+    void SetResourceName(std::string resourceName){
+        mResourceName = resourceName;
+    }
+
+    DECLARE_SERIALIZE(BinaryResource);
+private:
+    std::string mResourceName;
+};
+
+template<class TransferFunction>
+void BinaryResource::Transfer(TransferFunction& transfer)
+{
+    TRANSFER(mResourceName);
+}
 
 // Use union to save space.
 struct CustomData{
@@ -31,6 +52,7 @@ struct CustomData{
     FieldShapeArray shapeArrayValue;
     ColorRGBAf colorValue;
     ColorStopArray colorStopArray;
+    BinaryResource binaryResource;
     CustomDataType dataType;
 
     DECLARE_SERIALIZE(CustomData);
@@ -54,6 +76,9 @@ template<class TransferFunction> void CustomData::Transfer(TransferFunction &tra
             break;
         case VECTOR3:
             TRANSFER(vector3Value);
+            break;
+        case BINARYRESOURCE:
+            TRANSFER(binaryResource);
             break;
     }
 }

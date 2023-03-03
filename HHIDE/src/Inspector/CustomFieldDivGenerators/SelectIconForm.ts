@@ -5,6 +5,8 @@ import {CSSUtils} from "../../Utilities/CSSUtils";
 import axios from "axios";
 import {BaseShapeDrawer} from "../../ShapeDrawers/BaseShapeDrawer";
 import {svgToDataURL} from "../../Utilities/Svgs";
+import {formManager} from "../../Utilities/FormManager";
+import {huahuoEngine} from "hhenginejs/dist/src";
 
 @CustomElement({
     selector: "hh-select-icon-form"
@@ -17,6 +19,7 @@ class SelectIconForm extends HTMLElement implements HHForm {
     onIconClicked: Function
 
     imgSvgMap: Map<HTMLImageElement, string> = new Map() // Map from image element to the svgFile.
+    imgShapeNameMap: Map<HTMLImageElement, string> = new Map()
 
     closeForm() {
         this.style.display = "none"
@@ -31,14 +34,20 @@ class SelectIconForm extends HTMLElement implements HHForm {
         let selectedImageEle = evt.target as HTMLImageElement
 
         let imgURL = this.imgSvgMap.get(selectedImageEle)
-        axios.get(imgURL).then(response=>{
+        let imgName = this.imgShapeNameMap.get(selectedImageEle)
+        axios.get(imgURL).then(response => {
             let data = response["data"]
-            if(imgURL.endsWith(".svg")){
+            if (imgURL.endsWith(".svg")) {
                 data = svgToDataURL(data)
             }
 
-            if(_this.onIconClicked)
-                _this.onIconClicked(data)
+            // Upload the img into the Default resource manager.
+            huahuoEngine.SetBinaryResource(imgName, data)
+
+            if (_this.onIconClicked)
+                _this.onIconClicked(imgName)
+
+            _this.closeForm()
         })
 
     }
@@ -82,6 +91,7 @@ class SelectIconForm extends HTMLElement implements HHForm {
             btn.appendChild(btnImg)
             form.appendChild(btn)
 
+            this.imgShapeNameMap.set(btnImg, shape.name)
             this.imgSvgMap.set(btnImg, shape.svg)
         }
 

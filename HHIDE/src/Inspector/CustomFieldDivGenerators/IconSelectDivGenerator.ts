@@ -25,7 +25,7 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
         let button = document.createElement("input")
         button.type = "button"
         button.value = i18n.t("inspector.select")
-        button.onclick = this.onSelectButtonClicked
+        button.onclick = this.onSelectButtonClicked.bind(this)
 
         div.appendChild(button)
 

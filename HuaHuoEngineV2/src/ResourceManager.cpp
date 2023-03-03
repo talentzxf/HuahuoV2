@@ -41,6 +41,18 @@ void ResourceManager::Transfer(TransferFunction &transfer) {
     TRANSFER(mFileNameDataMap);
 }
 
+void ResourceManager::SetFileData(const char* fileName, UInt8* pData, UInt32 dataSize){
+    std::string fileNameStr(fileName);
+
+    if(!mFileNameDataMap.contains(fileName)){
+        RegisterFile(fileNameStr);
+    }
+
+    std::vector<UInt8> &fileData = mFileNameDataMap[fileNameStr];
+    fileData.resize(dataSize);
+    memcpy(fileData.data(), pData, dataSize);
+}
+
 bool ResourceManager::RegisterFile(std::string &fileName) {
     printf("ResourceManager: RegisterFile for:%s\n", fileName.c_str());
     if (mFileNameDataMap.contains(fileName)) {

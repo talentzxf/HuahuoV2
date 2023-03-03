@@ -43,6 +43,8 @@ CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ra
         case VECTOR3:
             resultData.data.vector3Value = Lerp(k1.data.vector3Value, k2.data.vector3Value, ratio);
             break;
+        case BINARYRESOURCE:
+            resultData.data.binaryResource = k1.data.binaryResource;
     }
 
     resultData.data.dataType = k1.data.dataType;

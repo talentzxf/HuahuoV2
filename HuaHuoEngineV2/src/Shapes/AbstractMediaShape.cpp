@@ -18,9 +18,7 @@ void AbstractMediaShape::Transfer(TransferFunction &transfer) {
 }
 
 void AbstractMediaShape::SetData(UInt8 *pData, UInt32 dataSize) {
-    std::vector<UInt8> &fileData = GetDefaultResourceManager()->GetFileData(mFileName);
-    fileData.resize(dataSize);
-    memcpy(fileData.data(), pData, dataSize);
+    GetDefaultResourceManager()->SetFileData(mFileName.c_str(), pData, dataSize);
 }
 
 UInt8 AbstractMediaShape::GetDataAtIndex(UInt32 index) {

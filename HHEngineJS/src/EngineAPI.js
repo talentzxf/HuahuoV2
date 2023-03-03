@@ -188,6 +188,11 @@ class EngineAPI{
         return retObj
     }
 
+    SetBinaryResource(resourceName, resourceData){
+        let resourceSize = resourceData.length
+        Module.ResourceManager.prototype.SetFileData(resourceName, resourceData, resourceSize)
+    }
+
     get ti(){
         return ti
     }
