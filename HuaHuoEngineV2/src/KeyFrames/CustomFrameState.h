@@ -117,6 +117,8 @@ public:
     void SetFloatValue(float value);
     void SetVector3Value(float x, float y, float z);
 
+    void SetBinaryResourceName(const char* resourceName);
+
 
     float GetFloatValue();
     Vector3f* GetVector3Value();

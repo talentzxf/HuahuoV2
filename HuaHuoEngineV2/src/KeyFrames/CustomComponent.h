@@ -61,6 +61,12 @@ DECLARE_OBJECT_SERIALIZE();
 
     bool Apply(int frameId) override;
 
+    void SetBinaryResourceName(const char* fieldName, const char* resourceName){
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        pComponent->SetBinaryResourceName(resourceName);
+    }
+
     void SetVector3Value(const char *fieldName, float x, float y, float z) {
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());

@@ -4,7 +4,6 @@ import {huahuoEngine} from "../EngineAPI";
 import {AbstractComponent, Component, PropertyValue} from "../Components/AbstractComponent";
 import {PropertyCategory} from "../Components/PropertySheetBuilder";
 import {GlobalConfig} from "../GlobalConfig";
-import {CustomFieldConfig, CustomFieldDivGenerator} from "hhcommoncomponents"
 
 const MAX_PARTICLE_COUNT = 1000
 
@@ -95,6 +94,8 @@ class Particles extends AbstractComponent {
         if(this.rawObj.IsFieldRegistered(fieldName)){
             this.rawObj.RegisterBinaryResource(fieldName)
         }
+
+        this.rawObj.SetBinaryResourceByName(fieldName, imgName)
     }
 
     _invalidateAllParticlesKernel

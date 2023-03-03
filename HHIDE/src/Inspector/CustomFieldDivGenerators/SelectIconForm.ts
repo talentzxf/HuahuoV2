@@ -3,10 +3,8 @@ import {CustomElement} from "hhcommoncomponents";
 import {svgShapes} from "../../ShapeDrawers/SVGShapes";
 import {CSSUtils} from "../../Utilities/CSSUtils";
 import axios from "axios";
-import {BaseShapeDrawer} from "../../ShapeDrawers/BaseShapeDrawer";
 import {svgToDataURL} from "../../Utilities/Svgs";
-import {formManager} from "../../Utilities/FormManager";
-import {huahuoEngine} from "hhenginejs/dist/src";
+import {huahuoEngine} from "hhenginejs";
 
 @CustomElement({
     selector: "hh-select-icon-form"

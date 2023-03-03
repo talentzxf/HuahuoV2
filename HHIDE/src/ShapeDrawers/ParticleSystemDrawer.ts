@@ -4,7 +4,6 @@ import {Vector2} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
 import {ParticleSystemJS, ParticleSystemRenderer} from "hhenginejs";
 import {huahuoEngine} from "hhenginejs";
-import {Particles} from "hhenginejs/dist/src/ParticleSystem/Particles";
 
 class ParticleSystemDrawer extends BaseShapeDrawer {
     name = "Particles"

@@ -86,6 +86,24 @@ void CustomFrameState::SetFloatValue(float value) {
     shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 }
 
+void CustomFrameState::SetBinaryResourceName(const char* resourceName){
+    if(this->m_DataType != BINARYRESOURCE){
+        Assert("Data Type mismatch!");
+        return;
+    }
+
+    Layer *shapeLayer = GetBaseShape()->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames(), this);
+    pKeyFrame->data.binaryResource.SetResourceName(resourceName);
+    pKeyFrame->data.dataType = BINARYRESOURCE;
+
+    Apply(currentFrameId);
+
+    pKeyFrame->SetFrameState(this);
+    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
+}
+
 void CustomFrameState::SetVector3Value(float x, float y, float z) {
     if (this->m_DataType != VECTOR3) {
         Assert("Data Type mismatch!");
