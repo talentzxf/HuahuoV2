@@ -1,6 +1,8 @@
 import {CustomFieldContentDivGenerator} from "hhcommoncomponents";
 import {Particles} from "hhenginejs";
 import {registerCustomFieldContentDivGeneratorConstructor} from "hhenginejs";
+import {formManager} from "../../Utilities/FormManager";
+import {SelectIconForm} from "./SelectIconForm";
 
 class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
     particles: Particles
@@ -9,9 +11,18 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
         this.particles = particles
     }
 
+    onSelectButtonClicked(){
+        formManager.openForm(SelectIconForm)
+    }
+
     generateDiv() {
         let div = document.createElement("div")
-        div.innerHTML = "KKKKKKKKKKKKKKKKKK"
+        let button = document.createElement("input")
+        button.type = "button"
+        button.value = i18n.t("inspector.select")
+        button.onclick = this.onSelectButtonClicked
+
+        div.appendChild(button)
 
         return div
     }

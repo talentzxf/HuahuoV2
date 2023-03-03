@@ -81,6 +81,7 @@
     "AtEnd": "Set At End",
     "AtLength": "At Length",
     "Unfollow": "UnFollow",
+    "select": "Select",
     "property": {
       "growth": "growth",
       "targetShapeArray": "Target Shapes",
