@@ -1,4 +1,5 @@
 import {CustomElement} from "hhcommoncomponents";
+import {SVGFiles} from "../../Utilities/Svgs";
 
 @CustomElement({
     selector: "hh-refreshable-icon-component",
@@ -23,20 +24,24 @@ class HHRefreshableIconComponent extends HTMLImageElement implements Refreshable
         let binaryResource = targetComponent.rawObj.GetBinaryResource(fieldName)
 
         let dataLength = binaryResource.GetDataSize()
-        let ab = new ArrayBuffer(dataLength)
-        let binaryData:Uint8Array = new Uint8Array(ab)
-        for(let idx = 0; idx < dataLength; idx++){
-            binaryData[idx] = binaryResource.GetDataAtIndex(idx)
-        }
+        if(dataLength > 0){
+            let ab = new ArrayBuffer(dataLength)
+            let binaryData:Uint8Array = new Uint8Array(ab)
+            for(let idx = 0; idx < dataLength; idx++){
+                binaryData[idx] = binaryResource.GetDataAtIndex(idx)
+            }
 
-        let mimeType: string = binaryResource.GetMimeType()
-        let blob = new Blob([binaryData], {'type': mimeType})
-        let reader = new FileReader()
-        reader.readAsDataURL(blob)
+            let mimeType: string = binaryResource.GetMimeType()
+            let blob = new Blob([binaryData], {'type': mimeType})
+            let reader = new FileReader()
+            reader.readAsDataURL(blob)
 
-        let _this = this
-        reader.onload = function(){
-            _this.src = reader.result as string
+            let _this = this
+            reader.onload = function(){
+                _this.src = reader.result as string
+            }
+        }else{
+            this.src = SVGFiles.emptyPlaceHolder
         }
     }
 }

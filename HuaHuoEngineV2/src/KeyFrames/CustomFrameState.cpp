@@ -8,15 +8,24 @@
 #include <type_traits>
 
 UInt32 BinaryResource::GetDataSize() {
+    if(mResourceName.length() == 0) // Empty string is a placeholder
+        return 0;
+    
     return GetDefaultResourceManager()->GetDataSize(mResourceName);
 }
 
 UInt8 BinaryResource::GetDataAtIndex(UInt32 index) {
+    if(mResourceName.length() == 0) // Empty string is a placeholder
+        return 0;
+
     std::vector<UInt8> &fileData = GetFileDataPointer();
     return fileData[index];
 }
 
 const char* BinaryResource::GetMimeType(){
+    if(mResourceName.length() == 0) // Empty string is a placeholder
+        return "Unknown";
+
     return GetDefaultResourceManager()->GetMimeType(mResourceName).c_str();
 }
 

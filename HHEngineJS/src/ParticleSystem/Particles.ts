@@ -84,17 +84,18 @@ class Particles extends AbstractComponent {
             PI: Math.PI
         })
 
+        // Handle the particle shape part, as it's a custom field. We have to handle everything by our selves.
+        if(rawObj == null){ // If this is a new object, register the field and init the value.
+            this.rawObj.RegisterBinaryResource("particleShape")
+            this.rawObj.SetBinaryResourceName("particleShape" , "") // Empty string is a placeholder.
+        }
+
         this.valueChangeHandler.registerValueChangeHandler("*")(this.propertyChanged.bind(this))
         this.valueChangeHandler.registerValueChangeHandler("particleShape")(this.particleShapeChanged.bind(this))
     }
 
     particleShapeChanged(imgName){
         let fieldName = "particleShape"
-
-        if(!this.rawObj.IsFieldRegistered(fieldName)){
-            this.rawObj.RegisterBinaryResource(fieldName)
-        }
-
         this.rawObj.SetBinaryResourceName(fieldName, imgName)
     }
 
