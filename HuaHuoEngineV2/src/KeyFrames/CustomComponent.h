@@ -118,42 +118,63 @@ DECLARE_OBJECT_SERIALIZE();
     }
 
     FieldShapeArray *GetShapeArrayValueForWrite(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetShapeArrayValueForWrite();
     }
 
     Vector3f *GetVector3Value(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetVector3Value();
     }
 
     float GetFloatValue(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return -1.0f;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetFloatValue();
     }
 
     FieldShapeArray *GetShapeArrayValue(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetShapeArrayValue();
     }
 
     ColorRGBAf *GetColorValue(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetColorValue();
     }
 
     ColorStopArray *GetColorStopArray(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetColorStopArray();
     }
 
     BinaryResource *GetBinaryResource(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetBinaryResource()->Reset();

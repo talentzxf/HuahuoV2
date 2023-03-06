@@ -5,15 +5,14 @@ import {SelectIconForm} from "./SelectIconForm";
 import {Property} from "hhcommoncomponents";
 import {AbstractComponent} from "hhenginejs";
 import {Particles} from "hhenginejs";
+import {HHRefreshableIconComponent} from "../InputComponents/HHRefreshableIconComponent";
 
-class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
+class IconSelectDivGenerator implements CustomFieldContentDivGenerator{
     targetComponent: AbstractComponent
 
     handlerId: number = -1
 
-    iconImage: HTMLImageElement
-
-    onValueChangedFunc: Function
+    iconImage: HHRefreshableIconComponent
 
     constructor(targetComponent) {
         this.targetComponent = targetComponent
@@ -28,51 +27,21 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
         this.targetComponent.particleShape = data
     }
 
-    refresh(){
-        if(this.onValueChangedFunc)
-            this.onValueChangedFunc()
-    }
-
-    onValueChanged(fieldName: string){
-        return function(){
-            if(this.iconImage){
-                let binaryResource = this.targetComponent.rawObj.GetBinaryResource(fieldName)
-
-                let dataLength = binaryResource.GetDataSize()
-                let ab = new ArrayBuffer(dataLength)
-                let binaryData:Uint8Array = new Uint8Array(ab)
-                for(let idx = 0; idx < dataLength; idx++){
-                    binaryData[idx] = binaryResource.GetDataAtIndex(idx)
-                }
-
-                let mimeType: string = binaryResource.GetMimeType()
-                let blob = new Blob([binaryData], {'type': mimeType})
-                let reader = new FileReader()
-                reader.readAsDataURL(blob)
-
-                let _this = this
-                reader.onload = function(){
-                    _this.iconImage.src = reader.result
-                }
-            }
-            else
-                console.warn("Icon image is null??")
-        }
-
-    }
-
     generateDiv(property: Property) {
         if(this.handlerId > 0){
             property.unregisterValueChangeFunc(this.handlerId)
         }
 
         let fieldName = property.config.fieldName
-
-        this.onValueChangedFunc = this.onValueChanged(fieldName).bind(this)
-        this.handlerId = property.registerValueChangeFunc(this.onValueChangedFunc)
-
         let div = document.createElement("div")
-        this.iconImage = document.createElement("img")
+
+        let _this = this
+        this.iconImage = new HHRefreshableIconComponent(()=>{
+            return [_this.targetComponent, fieldName]
+        })
+
+        this.handlerId = property.registerValueChangeFunc(this.iconImage.refresh.bind(this.iconImage))
+
         this.iconImage.style.width = "30px"
         this.iconImage.style.height = "30px"
         div.appendChild(this.iconImage)

@@ -11,9 +11,6 @@ class CustomFieldPropertyDesc extends BasePropertyDesc{
 
     onValueChanged(val) {
         console.log("value changed!")
-
-        if(this.property.config && this.property.config.contentDivGenerator)
-            this.property.config.contentDivGenerator.refresh()
     }
 
 }

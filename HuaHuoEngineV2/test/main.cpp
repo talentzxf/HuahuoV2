@@ -504,6 +504,9 @@ void testReadFromFile() {
     customComponent->RegisterFloatValue("growth", 1.0f);
     customComponent->RegisterColorValue("strokeColor", 1.0, 0.0, 0.0, 1.0);
     customComponent->RegisterColorStopArrayValue("gradientColor");
+
+    customComponent->GetBinaryResource("particleShape");
+
     customComponent->RegisterBinaryResource("particleShape");
     printf("GetValue:%f\n", customComponent->GetFloatValue("growth"));
 
