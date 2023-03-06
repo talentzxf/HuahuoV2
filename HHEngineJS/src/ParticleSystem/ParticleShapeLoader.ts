@@ -1,5 +1,4 @@
 import {huahuoEngine} from "../EngineAPI";
-import {Vector} from "taichi.js/src/api/Fields";
 
 const MAX_PARTICLE_SHAPE_SIZE = 1024
 
@@ -12,8 +11,8 @@ class ParticleShapeLoader {
     _particleShapeSize
 
     constructor() {
-        this._particleShapeData = huahuoEngine.ti.field(huahuoEngine.ti.i32, [2])
-        this._particleShapeData.fromArray1D([0, 0])
+        this._particleShapeSize = huahuoEngine.ti.field(huahuoEngine.ti.i32, [2])
+        this._particleShapeSize.fromArray1D([0, 0])
 
         this._particleShapeData = huahuoEngine.ti.Vector.field(4, huahuoEngine.ti.i32, [MAX_PARTICLE_SHAPE_SIZE, MAX_PARTICLE_SHAPE_SIZE])
         huahuoEngine.ti.addToKernelScope({

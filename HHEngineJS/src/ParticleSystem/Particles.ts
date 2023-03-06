@@ -277,16 +277,19 @@ class Particles extends AbstractComponent {
 
                             let particleSizeSquare = f32(particleSize * particleSize / 4.0)
                             for (let pixelIndex of ndrange(particleSize, particleSize)) {
-
-                                if(particleShapeSize[0] <= 0 || particleShapeSize[0] <= 0){
                                     let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
                                     if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare) {
-                                        if (windowPosition[0] >= 0 && windowPosition[0] <= outputImageWidth && windowPosition[1] >= 0 && windowPosition[1] <= outputImageHeight)
-                                            outputImage[windowPosition] = particleColor
-                                    }
-                                } else {
+                                        if (windowPosition[0] >= 0 && windowPosition[0] <= outputImageWidth && windowPosition[1] >= 0 && windowPosition[1] <= outputImageHeight){
+                                            if(particleShapeSize[0] <= 0 || particleShapeSize[0] <= 0){
+                                                outputImage[windowPosition] = particleColor
+                                            }else{
+                                                let imgPositionX = particleShapeSize[0] * pixelIndex[0] / particleSize[0]
+                                                let imgPositionY = particleShapeSize[1] * pixelIndex[1] / particleSize[1]
 
-                                }
+                                                outputImage[windowPosition] = particleShapeData[imgPositionX, imgPositionY]
+                                            }
+                                        }
+                                    }
                             }
                         }
                     }
