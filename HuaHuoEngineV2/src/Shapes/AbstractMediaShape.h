@@ -7,6 +7,7 @@
 #include "BaseShape.h"
 #include "ResourceManager.h"
 
+// TODO: Some functionality duplicate with class BinaryResource
 class AbstractMediaShape : public BaseShape{
     REGISTER_CLASS_TRAITS(kTypeIsAbstract);
     REGISTER_CLASS(AbstractMediaShape);

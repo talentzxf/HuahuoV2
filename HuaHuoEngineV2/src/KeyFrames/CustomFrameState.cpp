@@ -4,7 +4,25 @@
 
 #include "CustomFrameState.h"
 #include "Layer.h"
+#include "ResourceManager.h"
 #include <type_traits>
+
+UInt32 BinaryResource::GetDataSize() {
+    return GetDefaultResourceManager()->GetDataSize(mResourceName);
+}
+
+UInt8 BinaryResource::GetDataAtIndex(UInt32 index) {
+    std::vector<UInt8> &fileData = GetFileDataPointer();
+    return fileData[index];
+}
+
+std::vector<UInt8> &BinaryResource::GetFileDataPointer() {
+    if(mFileDataPointer == NULL){
+        mFileDataPointer = &GetDefaultResourceManager()->GetFileData(mResourceName);
+    }
+
+    return *mFileDataPointer;
+}
 
 IMPLEMENT_REGISTER_CLASS(CustomFrameState, 10021);
 

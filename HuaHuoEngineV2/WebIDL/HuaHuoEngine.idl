@@ -192,6 +192,8 @@ interface CustomComponent{
     long AddColorStop([Const] DOMString fieldName, float value);
     void UpdateColorStop([Const] DOMString fieldName, long colorStopIdentifier, float value, float r, float g, float b, float a);
     void DeleteColorStop([Const] DOMString fieldName, long colorStopIdentifier);
+
+    void SetBinaryResourceName([Const] DOMString fieldName, [Const] DOMString resourceName);
 };
 
 CustomComponent implements AbstractFrameState;

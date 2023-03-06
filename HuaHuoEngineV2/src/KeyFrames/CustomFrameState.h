@@ -25,6 +25,8 @@ enum CustomDataType{
 
 class BinaryResource{
 public:
+    BinaryResource():mFileDataPointer(NULL){}
+
     std::string GetResourceName(){
         return mResourceName;
     }
@@ -33,9 +35,15 @@ public:
         mResourceName = resourceName;
     }
 
+    UInt8 GetDataAtIndex(UInt32 index);
+    UInt32 GetDataSize();
+
     DECLARE_SERIALIZE(BinaryResource);
 private:
+    std::vector<UInt8>& GetFileDataPointer();
+private:
     std::string mResourceName;
+    std::vector<UInt8>* mFileDataPointer;
 };
 
 template<class TransferFunction>
@@ -119,6 +127,7 @@ public:
 
     void SetBinaryResourceName(const char* resourceName);
 
+    BinaryResource* GetBinaryResource(const char* resourceName);
 
     float GetFloatValue();
     Vector3f* GetVector3Value();

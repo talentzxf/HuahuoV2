@@ -95,7 +95,7 @@ class Particles extends AbstractComponent {
             this.rawObj.RegisterBinaryResource(fieldName)
         }
 
-        this.rawObj.SetBinaryResourceByName(fieldName, imgName)
+        this.rawObj.SetBinaryResourceName(fieldName, imgName)
     }
 
     _invalidateAllParticlesKernel
