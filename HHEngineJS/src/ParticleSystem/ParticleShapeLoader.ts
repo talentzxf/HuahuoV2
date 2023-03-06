@@ -65,7 +65,7 @@ class ParticleShapeLoader {
         let particleShapeImageData = context.getImageData(0, 0, this.hiddenImage.width, this.hiddenImage.height)
 
         this._particleShapeData = huahuoEngine.ti.Vector.field(4, huahuoEngine.ti.i32, [this.hiddenImage.height, this.hiddenImage.width])
-        this._particleShapeData.fromArray1D(particleShapeImageData)
+        this._particleShapeData.fromArray1D(particleShapeImageData.data)
 
         huahuoEngine.ti.addToKernelScope({
             particleShapeData: this._particleShapeData
