@@ -155,7 +155,7 @@ void testShapeStore() {
     ImageShape* imageShape = Object::Produce<ImageShape>();
     imageShape->SetFileName("TestTestTest");
     vector<UInt8> data = {30,31,32,33,34,35,36,37,38,39,40};
-    imageShape->SetData(data.data(), data.size());
+    imageShape->SetData("asdf", data.data(), data.size());
 
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
 
@@ -399,7 +399,7 @@ void testCloneObject() {
     std::string imgName("TestImageTestImage");
     imageShape->SetFileName(imgName);
     vector<UInt8> imgData = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
-    imageShape->SetData(imgData.data(), imgData.size());
+    imageShape->SetData("asdf", imgData.data(), imgData.size());
 
     ImageShape *imageShapeDup = (ImageShape *) CloneObject(*imageShape);
     Assert(imageShapeDup->GetFileName() == imgName);
@@ -504,6 +504,7 @@ void testReadFromFile() {
     customComponent->RegisterFloatValue("growth", 1.0f);
     customComponent->RegisterColorValue("strokeColor", 1.0, 0.0, 0.0, 1.0);
     customComponent->RegisterColorStopArrayValue("gradientColor");
+    customComponent->RegisterBinaryResource("particleShape");
     printf("GetValue:%f\n", customComponent->GetFloatValue("growth"));
 
     circleShape->AddFrameState(customComponent);
@@ -526,6 +527,8 @@ void testReadFromFile() {
     customComponent->SetFloatValue("growth", 1.0f);
     customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
 
+    customComponent->SetBinaryResourceName("particleShape", "HelloHello1");
+
     ColorRGBAf *color = customComponent->GetColorValue("strokeColor");
 
     customComponent->Apply(0);
@@ -542,6 +545,10 @@ void testReadFromFile() {
 
     customComponent->SetColorValue("strokeColor", 0.0, 1.0, 0.0, 1.0);
     float growthValue = customComponent->GetFloatValue("growth");
+
+    customComponent->SetBinaryResourceName("particleShape", "HelloHello2");
+    BinaryResource* binaryResource = customComponent->GetBinaryResource("particleShape");
+    Assert(binaryResource->GetResourceName() == "HelloHello2");
 
     GetPersistentManager().WriteFile(StoreFilePath);
 
