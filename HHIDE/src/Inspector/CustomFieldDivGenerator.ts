@@ -6,7 +6,7 @@ class CustomFieldPropertyDesc extends BasePropertyDesc{
         super(property);
 
         if(property.config && property.config.contentDivGenerator)
-            this.contentDiv.appendChild(property.config.contentDivGenerator.generateDiv())
+            this.contentDiv.appendChild(property.config.contentDivGenerator.generateDiv(property))
     }
 
     onValueChanged(val) {

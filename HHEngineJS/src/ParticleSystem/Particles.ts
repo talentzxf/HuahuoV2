@@ -91,7 +91,7 @@ class Particles extends AbstractComponent {
     particleShapeChanged(imgName){
         let fieldName = "particleShape"
 
-        if(this.rawObj.IsFieldRegistered(fieldName)){
+        if(!this.rawObj.IsFieldRegistered(fieldName)){
             this.rawObj.RegisterBinaryResource(fieldName)
         }
 

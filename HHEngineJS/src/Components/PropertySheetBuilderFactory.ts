@@ -44,43 +44,44 @@ class PropertySheetFactory {
     }
 
     createEntry(component, propertyMeta: PropertyDef, valueChangeHandler: ValueChangeHandler) {
-        if (propertyMeta.type == PropertyCategory.customField) {
-            let propertyDef = this.createEntryByNameAndCategory(propertyMeta["key"], propertyMeta.type)
-            propertyDef["config"] = propertyMeta.config
-            return propertyDef
-        }
-
         let fieldName = propertyMeta["key"]
-        // Generate setter and getter
-        let getterName = "get" + capitalizeFirstLetter(fieldName)
-        let setterName = "set" + capitalizeFirstLetter(fieldName)
-        let deleterName = "delete" + capitalizeFirstLetter(fieldName) // TODO: Code duplication with AbstractComponent
-        let updateName = "update" + capitalizeFirstLetter(fieldName)
-
-        let inserterName = "insert" + capitalizeFirstLetter(fieldName)
 
         let propertyDef = this.createEntryByNameAndCategory(propertyMeta["key"], propertyMeta.type)
 
-        propertyDef["getter"] = component[getterName].bind(component)
+        let isCustomField = propertyMeta.type == PropertyCategory.customField
+        if (!isCustomField) {
+            // Generate setter and getter
+            let getterName = "get" + capitalizeFirstLetter(fieldName)
+            let setterName = "set" + capitalizeFirstLetter(fieldName)
+            let deleterName = "delete" + capitalizeFirstLetter(fieldName) // TODO: Code duplication with AbstractComponent
+            let updateName = "update" + capitalizeFirstLetter(fieldName)
 
-        if (component[setterName])
-            propertyDef["setter"] = component[setterName].bind(component)
+            let inserterName = "insert" + capitalizeFirstLetter(fieldName)
 
+            propertyDef["getter"] = component[getterName].bind(component)
+
+            if (component[setterName])
+                propertyDef["setter"] = component[setterName].bind(component)
+
+
+            propertyDef["config"] = propertyMeta.config
+
+            if (component[updateName]) {
+                propertyDef["updater"] = component[updateName].bind(component)
+            }
+
+            if (component[deleterName]) {
+                propertyDef["deleter"] = component[deleterName].bind(component)
+            }
+
+            if (component[inserterName]) {
+                propertyDef["inserter"] = component[inserterName].bind(component)
+            }
+        }
+
+        propertyDef["config"] = propertyMeta.config
         propertyDef["registerValueChangeFunc"] = valueChangeHandler.registerValueChangeHandler(fieldName)
         propertyDef["unregisterValueChangeFunc"] = valueChangeHandler.unregisterValueChangeHandler(fieldName)
-        propertyDef["config"] = propertyMeta.config
-
-        if (component[updateName]) {
-            propertyDef["updater"] = component[updateName].bind(component)
-        }
-
-        if (component[deleterName]) {
-            propertyDef["deleter"] = component[deleterName].bind(component)
-        }
-
-        if (component[inserterName]) {
-            propertyDef["inserter"] = component[inserterName].bind(component)
-        }
 
         return propertyDef
     }

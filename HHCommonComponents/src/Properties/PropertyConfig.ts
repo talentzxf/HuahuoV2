@@ -1,9 +1,11 @@
+import {Property} from "./PropertySheet";
+
 class PropertyConfig {
     elementType ?: string // Secondary type. Maybe used in some cases.
 }
 
 interface CustomFieldContentDivGenerator {
-    generateDiv(): HTMLDivElement
+    generateDiv(property: Property): HTMLDivElement
 }
 
 class CustomFieldConfig extends PropertyConfig {
