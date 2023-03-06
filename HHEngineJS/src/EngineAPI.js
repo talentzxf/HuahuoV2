@@ -2,6 +2,7 @@ import {Logger} from "hhcommoncomponents"
 import {engineEventManager} from "./EngineEvents/EngineEventManager";
 import {clzObjectFactory} from "./CppClassObjectFactory";
 import {getMimeTypeFromDataURI} from "hhcommoncomponents";
+import {dataURItoBlob} from "hhcommoncomponents";
 
 // @ts-ignore
 import * as ti from "taichi.js/dist/taichi"
@@ -188,11 +189,12 @@ class EngineAPI{
         let retObj = new constructor()
         return retObj
     }
-
+    
     SetBinaryResource(resourceName, resourceData){
-        let resourceSize = resourceData.length
         let mimeType = getMimeTypeFromDataURI(resourceData)
-        this.cppEngine.SetFileData(resourceName, mimeType, resourceData, resourceSize)
+
+        let binaryData = dataURItoBlob(resourceData)
+        this.cppEngine.SetFileData(resourceName, mimeType, binaryData, binaryData.length)
     }
 
     GetBinaryResource(resourceName){
