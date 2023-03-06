@@ -57,7 +57,10 @@ CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ra
             resultData.data.colorValue = Lerp(k1.data.colorValue, k2.data.colorValue, ratio);
             break;
         case SHAPEARRAY:
-            resultData.data.shapeArrayValue = k1.data.shapeArrayValue;
+            if(ratio < 1.0)
+                resultData.data.shapeArrayValue = k1.data.shapeArrayValue;
+            else
+                resultData.data.shapeArrayValue = k2.data.shapeArrayValue;
             break;
         case COLORSTOPARRAY:
             resultData.data.colorStopArray = Lerp(k1.data.colorStopArray, k2.data.colorStopArray, ratio);
@@ -66,7 +69,11 @@ CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ra
             resultData.data.vector3Value = Lerp(k1.data.vector3Value, k2.data.vector3Value, ratio);
             break;
         case BINARYRESOURCE:
-            resultData.data.binaryResource = k1.data.binaryResource;
+            if(ratio < 1.0)
+                resultData.data.binaryResource = k1.data.binaryResource;
+            else
+                resultData.data.binaryResource = k2.data.binaryResource;
+            break;
     }
 
     resultData.data.dataType = k1.data.dataType;
