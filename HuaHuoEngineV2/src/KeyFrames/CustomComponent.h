@@ -153,6 +153,12 @@ DECLARE_OBJECT_SERIALIZE();
         return pComponent->GetColorStopArray();
     }
 
+    BinaryResource *GetBinaryResource(const char *fieldName) {
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        return pComponent->GetBinaryResource();
+    }
+
     void SetBaseShape(BaseShape *pBaseShape) override;
 
     void DeleteKeyFrame(int frameId) override;

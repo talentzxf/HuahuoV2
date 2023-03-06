@@ -300,6 +300,14 @@ ColorStopArray *CustomFrameState::GetColorStopArray() {
     return NULL;
 }
 
+BinaryResource* CustomFrameState::GetBinaryResource(){
+    if(isValidFrame){
+        return &m_CurrentKeyFrame.data.binaryResource;
+    }
+
+    return NULL;
+}
+
 void CustomFrameState::CreateShapeArrayValue() {
     Layer *shapeLayer = GetBaseShape()->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();

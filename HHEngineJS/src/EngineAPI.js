@@ -193,6 +193,10 @@ class EngineAPI{
         this.cppEngine.SetFileData(resourceName, resourceData, resourceSize)
     }
 
+    GetBinaryResource(resourceName){
+        return this.cppEngine.GetBinaryResource(resourceName)
+    }
+
     get ti(){
         return ti
     }

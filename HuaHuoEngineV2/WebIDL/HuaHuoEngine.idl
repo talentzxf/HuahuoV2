@@ -159,6 +159,14 @@ interface ColorStopArray{
 };
 
 [NoDelete]
+interface BinaryResource{
+    [Const] DOMString GetResourceName();
+    octet GetDataAtIndex(long index);
+    long GetDataSize();
+};
+
+
+[NoDelete]
 interface CustomComponent{
     static CustomComponent CreateComponent();
     long RegisterFloatValue([Const] DOMString fieldName, float initValue);
@@ -195,6 +203,7 @@ interface CustomComponent{
     void DeleteColorStop([Const] DOMString fieldName, long colorStopIdentifier);
 
     void SetBinaryResourceName([Const] DOMString fieldName, [Const] DOMString resourceName);
+    BinaryResource GetBinaryResource([Const] DOMString fieldName);
 };
 
 CustomComponent implements AbstractFrameState;
@@ -393,5 +402,5 @@ interface HuaHuoEngine {
     BaseShape DuplicateShape(BaseShape shape);
     void DestroyShape(BaseShape shape);
 
-    void SetFileData(DOMString fileName, octet[] pData, long dataSize);
+    void SetFileData([Const] DOMString fileName, octet[] pData, long dataSize);
 };

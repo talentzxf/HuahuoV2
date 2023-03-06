@@ -1,19 +1,20 @@
 import {CustomFieldContentDivGenerator} from "hhcommoncomponents";
-import {Particles} from "hhenginejs";
 import {registerCustomFieldContentDivGeneratorConstructor} from "hhenginejs";
 import {formManager} from "../../Utilities/FormManager";
 import {SelectIconForm} from "./SelectIconForm";
 import {Property} from "hhcommoncomponents";
+import {AbstractComponent} from "hhenginejs";
+import {Particles} from "hhenginejs";
 
 class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
-    particles: Particles
+    targetComponent: AbstractComponent
 
     handlerId: number = -1
 
     iconImage: HTMLImageElement
 
-    constructor(particles) {
-        this.particles = particles
+    constructor(targetComponent) {
+        this.targetComponent = targetComponent
     }
 
     onSelectButtonClicked(){
@@ -22,14 +23,18 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
     }
 
     onIconClicked(data){
-        this.particles.particleShape = data
+        this.targetComponent.particleShape = data
     }
 
-    onValueChanged(data){
-        if(this.iconImage)
-            this.iconImage.src = data
-        else
-            console.warn("Icon image is null??")
+    onValueChanged(){
+        return function(fieldName: string){
+            if(this.iconImage){
+                this.iconImage.src = fieldName
+            }
+            else
+                console.warn("Icon image is null??")
+        }
+
     }
 
     generateDiv(property: Property) {
@@ -37,7 +42,9 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
             property.unregisterValueChangeFunc(this.handlerId)
         }
 
-        this.handlerId = property.registerValueChangeFunc(this.onValueChanged.bind(this))
+        let fieldName = property["key"]
+
+        this.handlerId = property.registerValueChangeFunc(this.onValueChanged(fieldName).bind(this))
 
         let div = document.createElement("div")
         this.iconImage = document.createElement("img")

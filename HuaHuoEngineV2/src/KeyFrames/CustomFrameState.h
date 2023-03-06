@@ -127,7 +127,7 @@ public:
 
     void SetBinaryResourceName(const char* resourceName);
 
-    BinaryResource* GetBinaryResource(const char* resourceName);
+    BinaryResource* GetBinaryResource();
 
     float GetFloatValue();
     Vector3f* GetVector3Value();
