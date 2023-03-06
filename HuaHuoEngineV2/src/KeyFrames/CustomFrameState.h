@@ -37,6 +37,11 @@ public:
         mResourceName = resourceName;
     }
 
+    BinaryResource* Reset(){
+        mFileDataPointer = NULL;
+        return this;
+    }
+
     UInt8 GetDataAtIndex(UInt32 index);
     UInt32 GetDataSize();
 

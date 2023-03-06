@@ -156,7 +156,7 @@ DECLARE_OBJECT_SERIALIZE();
     BinaryResource *GetBinaryResource(const char *fieldName) {
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
-        return pComponent->GetBinaryResource();
+        return pComponent->GetBinaryResource()->Reset();
     }
 
     void SetBaseShape(BaseShape *pBaseShape) override;
