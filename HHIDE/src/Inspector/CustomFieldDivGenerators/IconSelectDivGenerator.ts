@@ -13,6 +13,8 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
 
     iconImage: HTMLImageElement
 
+    onValueChangedFunc: Function
+
     constructor(targetComponent) {
         this.targetComponent = targetComponent
     }
@@ -24,6 +26,11 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
 
     onIconClicked(data){
         this.targetComponent.particleShape = data
+    }
+
+    refresh(){
+        if(this.onValueChangedFunc)
+            this.onValueChangedFunc()
     }
 
     onValueChanged(fieldName: string){
@@ -60,7 +67,9 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
         }
 
         let fieldName = property.config.fieldName
-        this.handlerId = property.registerValueChangeFunc(this.onValueChanged(fieldName).bind(this))
+
+        this.onValueChangedFunc = this.onValueChanged(fieldName).bind(this)
+        this.handlerId = property.registerValueChangeFunc(this.onValueChangedFunc)
 
         let div = document.createElement("div")
         this.iconImage = document.createElement("img")

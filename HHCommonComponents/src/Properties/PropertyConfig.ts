@@ -5,6 +5,7 @@ class PropertyConfig {
 }
 
 interface CustomFieldContentDivGenerator {
+    refresh()
     generateDiv(property: Property): HTMLDivElement
 }
 
