@@ -10,7 +10,7 @@
 UInt32 BinaryResource::GetDataSize() {
     if(mResourceName.length() == 0) // Empty string is a placeholder
         return 0;
-    
+
     return GetDefaultResourceManager()->GetDataSize(mResourceName);
 }
 

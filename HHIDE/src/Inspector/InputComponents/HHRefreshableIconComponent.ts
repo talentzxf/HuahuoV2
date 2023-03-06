@@ -23,6 +23,7 @@ class HHRefreshableIconComponent extends HTMLImageElement implements Refreshable
 
         let binaryResource = targetComponent.rawObj.GetBinaryResource(fieldName)
 
+        // TODO: Duplicate with IconShapeDrawer/ParticleShape
         let dataLength = binaryResource.GetDataSize()
         if(dataLength > 0){
             let ab = new ArrayBuffer(dataLength)

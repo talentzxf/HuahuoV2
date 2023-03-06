@@ -44,6 +44,7 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator{
 
         this.iconImage.style.width = "30px"
         this.iconImage.style.height = "30px"
+        this.iconImage.style.border = "1px solid black"
         div.appendChild(this.iconImage)
 
         let button = document.createElement("input")
