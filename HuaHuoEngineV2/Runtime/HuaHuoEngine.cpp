@@ -9,6 +9,7 @@
 #include "Serialize/PathNamePersistentManager.h"
 #include "BaseClasses/MessageHandler.h"
 #include "Layer.h"
+#include "ResourceManager.h"
 
 #ifdef HUAHUO_EDITOR
 
@@ -88,4 +89,8 @@ void HuaHuoEngine::DestroyShape(BaseShape *shape){
     shape->GetLayer()->RemoveShape(shape);
 
     DestroySingleObject(shape);
+}
+
+void HuaHuoEngine::SetFileData(const char* fileName, UInt8* pData, long dataSize){
+    GetDefaultResourceManager()->SetFileData(fileName, pData, dataSize);
 }

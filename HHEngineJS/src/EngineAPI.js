@@ -190,7 +190,7 @@ class EngineAPI{
 
     SetBinaryResource(resourceName, resourceData){
         let resourceSize = resourceData.length
-        Module.ResourceManager.prototype.SetFileData(resourceName, resourceData, resourceSize)
+        this.cppEngine.SetFileData(resourceName, resourceData, resourceSize)
     }
 
     get ti(){

@@ -168,7 +168,7 @@ interface CustomComponent{
     long RegisterColorStopArrayValue([Const] DOMString fieldName);
     long RegisterSubcomponentArray([Const] DOMString fieldName);
 
-    bool IsFieldRegistered([Const] DOMString fieldName);
+    boolean IsFieldRegistered([Const] DOMString fieldName);
 
     CustomComponent GetSubComponentByIdx(long idx);
     CustomComponent GetSubComponentArrayByName([Const] DOMString fieldName);
@@ -389,9 +389,6 @@ interface HuaHuoEngine {
     BaseShape CreateShape(DOMString shapeName);
     BaseShape DuplicateShape(BaseShape shape);
     void DestroyShape(BaseShape shape);
-};
 
-interface ResourceManager {
-    static ResourceManager GetDefaultResourceManager()
     void SetFileData(DOMString fileName, octet[] pData, long dataSize);
-}
+};

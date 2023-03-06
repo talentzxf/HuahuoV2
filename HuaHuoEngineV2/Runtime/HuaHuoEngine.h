@@ -46,6 +46,8 @@ public:
     BaseShape* DuplicateShape(BaseShape *object);
 
     void DestroyShape(BaseShape *object);
+
+    void SetFileData(const char* fileName, UInt8* pData, long dataSize);
 };
 
 
