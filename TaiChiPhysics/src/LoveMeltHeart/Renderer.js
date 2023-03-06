@@ -167,7 +167,7 @@ class Renderer {
 
                 let bgImageData = context.getImageData(0, 0, this.bgImg.width, this.bgImg.height)
 
-                this.bgImage = ti.Vector.field(4, ti.i32, [this.bgImg.height, this.bgImg.width])
+                this.bgImage = ti.Vector.field(4, ti.i32, [this.bgImg.width, this.bgImg.height])
                 this.bgImage.fromArray1D(bgImageData.data)
 
                 let bgImageSize = [this.bgImg.width, this.bgImg.height]

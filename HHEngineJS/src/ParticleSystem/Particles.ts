@@ -88,16 +88,16 @@ class Particles extends AbstractComponent {
         })
 
         // Handle the particle shape part, as it's a custom field. We have to handle everything by our selves.
-        if(rawObj == null){ // If this is a new object, register the field and init the value.
+        if (rawObj == null) { // If this is a new object, register the field and init the value.
             this.rawObj.RegisterBinaryResource("particleShape")
-            this.rawObj.SetBinaryResourceName("particleShape" , "") // Empty string is a placeholder.
+            this.rawObj.SetBinaryResourceName("particleShape", "") // Empty string is a placeholder.
         }
 
         this.valueChangeHandler.registerValueChangeHandler("*")(this.propertyChanged.bind(this))
         this.valueChangeHandler.registerValueChangeHandler("particleShape")(this.particleShapeChanged.bind(this))
     }
 
-    particleShapeChanged(imgName){
+    particleShapeChanged(imgName) {
         let fieldName = "particleShape"
         this.rawObj.SetBinaryResourceName(fieldName, imgName)
     }
@@ -277,19 +277,19 @@ class Particles extends AbstractComponent {
 
                             let particleSizeSquare = f32(particleSize * particleSize / 4.0)
                             for (let pixelIndex of ndrange(particleSize, particleSize)) {
-                                    let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
-                                    if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare) {
-                                        if (windowPosition[0] >= 0 && windowPosition[0] <= outputImageWidth && windowPosition[1] >= 0 && windowPosition[1] <= outputImageHeight){
-                                            if(particleShapeSize[0] <= 0 || particleShapeSize[0] <= 0){
-                                                outputImage[windowPosition] = particleColor
-                                            }else{
-                                                let imgPositionX = particleShapeSize[0] * pixelIndex[0] / particleSize[0]
-                                                let imgPositionY = particleShapeSize[1] * pixelIndex[1] / particleSize[1]
+                                let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
+                                if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare) {
+                                    if (windowPosition[0] >= 0 && windowPosition[0] <= outputImageWidth && windowPosition[1] >= 0 && windowPosition[1] <= outputImageHeight) {
+                                        if (particleShapeSize[0] <= 0 || particleShapeSize[0] <= 0) {
+                                            outputImage[windowPosition] = particleColor
+                                        } else {
+                                            let imgPositionX = i32(particleShapeSize[0] * pixelIndex[0] / particleSize)
+                                            let imgPositionY = i32(particleShapeSize[1] * pixelIndex[1] / particleSize)
 
-                                                outputImage[windowPosition] = particleShapeData[imgPositionX, imgPositionY]
-                                            }
+                                            outputImage[windowPosition] = particleShapeData[imgPositionX, imgPositionY]
                                         }
                                     }
+                                }
                             }
                         }
                     }
