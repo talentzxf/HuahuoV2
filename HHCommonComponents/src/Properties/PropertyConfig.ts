@@ -9,6 +9,7 @@ interface CustomFieldContentDivGenerator {
 }
 
 class CustomFieldConfig extends PropertyConfig {
+    fieldName: string
     contentDivGenerator?: Function
 }
 

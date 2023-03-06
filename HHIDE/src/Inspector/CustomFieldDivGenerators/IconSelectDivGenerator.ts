@@ -26,10 +26,27 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
         this.targetComponent.particleShape = data
     }
 
-    onValueChanged(){
-        return function(fieldName: string){
+    onValueChanged(fieldName: string){
+        return function(){
             if(this.iconImage){
-                this.iconImage.src = fieldName
+                let binaryResource = this.targetComponent.rawObj.GetBinaryResource(fieldName).GetDataSize()
+
+                let dataLength = binaryResource.GetDataLength()
+                let ab = new ArrayBuffer(dataLength)
+                let binaryData:Uint8Array = new Uint8Array(ab)
+                for(let idx = 0; idx < dataLength; idx++){
+                    binaryData[idx] = binaryResource.GetDataAtIndex(idx)
+                }
+
+                let mimeType: string = binaryResource.GetMimeType()
+                let blob = new Blob([binaryData], {'type': mimeType})
+                let reader = new FileReader()
+                reader.readAsDataURL(blob)
+
+                let _this = this
+                reader.onload = function(){
+                    _this.iconImage.src = fieldName
+                }
             }
             else
                 console.warn("Icon image is null??")
@@ -42,8 +59,7 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
             property.unregisterValueChangeFunc(this.handlerId)
         }
 
-        let fieldName = property["key"]
-
+        let fieldName = property.config.fieldName
         this.handlerId = property.registerValueChangeFunc(this.onValueChanged(fieldName).bind(this))
 
         let div = document.createElement("div")

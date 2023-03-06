@@ -27,8 +27,8 @@ class BinaryResource{
 public:
     BinaryResource():mFileDataPointer(NULL){}
 
-    std::string GetResourceName(){
-        return mResourceName;
+    const char* GetResourceName(){
+        return mResourceName.c_str();
     }
 
     void SetResourceName(std::string resourceName){

@@ -147,6 +147,7 @@ class AbstractComponent {
                         // @ts-ignore
                         let contentDivGenerator = new divGeneratorConstructor(this)
                         propertyMeta.config = {
+                            fieldName: propertyMeta["key"],
                             contentDivGenerator: contentDivGenerator
                         } as CustomFieldConfig
                     }
