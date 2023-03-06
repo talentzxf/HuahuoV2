@@ -4,6 +4,7 @@ import {huahuoEngine} from "../EngineAPI";
 import {AbstractComponent, Component, PropertyValue} from "../Components/AbstractComponent";
 import {PropertyCategory} from "../Components/PropertySheetBuilder";
 import {GlobalConfig} from "../GlobalConfig";
+import {ParticleShapeLoader} from "./ParticleShapeLoader";
 
 const MAX_PARTICLE_COUNT = 1000
 
@@ -18,6 +19,8 @@ function ColorToArray(color) {
 // ParticleSystem is not compatible with any shape. It should be used in ParticleSystemRenderer only as a subcomponent.
 @Component({compatibleShapes: []})
 class Particles extends AbstractComponent {
+    particleShapeLoader: ParticleShapeLoader = new ParticleShapeLoader()
+
     _particles
     _currentActiveParticleNumber;
 
@@ -274,10 +277,15 @@ class Particles extends AbstractComponent {
 
                             let particleSizeSquare = f32(particleSize * particleSize / 4.0)
                             for (let pixelIndex of ndrange(particleSize, particleSize)) {
-                                let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
-                                if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare) {
-                                    if (windowPosition[0] >= 0 && windowPosition[0] <= outputImageWidth && windowPosition[1] >= 0 && windowPosition[1] <= outputImageHeight)
-                                        outputImage[windowPosition] = particleColor
+
+                                if(particleShapeSize[0] <= 0 || particleShapeSize[0] <= 0){
+                                    let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
+                                    if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare) {
+                                        if (windowPosition[0] >= 0 && windowPosition[0] <= outputImageWidth && windowPosition[1] >= 0 && windowPosition[1] <= outputImageHeight)
+                                            outputImage[windowPosition] = particleColor
+                                    }
+                                } else {
+
                                 }
                             }
                         }
@@ -299,6 +307,8 @@ class Particles extends AbstractComponent {
         let currentFrameId = this.baseShape.getLayer().GetCurrentFrame()
 
         if (force || this.lastUpdatedFrameId != currentFrameId) {
+
+            this.particleShapeLoader.setParticleShape(this.rawObj.GetBinaryResource("particleShape"))
 
             let minLife = Math.min(this.lifeSpanRange.x, this.lifeSpanRange.y)
             let maxLife = Math.max(this.lifeSpanRange.x, this.lifeSpanRange.y)

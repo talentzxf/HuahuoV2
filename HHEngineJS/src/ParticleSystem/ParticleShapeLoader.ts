@@ -3,7 +3,7 @@ import {Vector} from "taichi.js/src/api/Fields";
 
 const MAX_PARTICLE_SHAPE_SIZE = 1024
 
-class ParticleShape {
+class ParticleShapeLoader {
     hiddenImage: HTMLImageElement
     hiddenCanvas: HTMLCanvasElement
     lastParticleShapeResourceName: string = ""
@@ -69,4 +69,4 @@ class ParticleShape {
     }
 }
 
-export {ParticleShape}
+export {ParticleShapeLoader}
