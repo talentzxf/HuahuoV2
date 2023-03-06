@@ -15,12 +15,11 @@ class AbstractMediaShape : public BaseShape{
 public:
     AbstractMediaShape(MemLabelId label, ObjectCreationMode mode)
     :Super(label, mode)
-    ,mType("UnknownType")
     ,mFileDataPointer(NULL)
     {
     }
 
-    void SetData(UInt8* pData, UInt32 dataSize);
+    void SetData(const char* mimeType, UInt8* pData, UInt32 dataSize);
 
     UInt8 GetDataAtIndex(UInt32 index);
 
@@ -30,12 +29,8 @@ public:
         return GetDefaultResourceManager()->GetDataSize(mFileName);
     }
 
-    void SetMimeType(std::string type){
-        this->mType = type;
-    }
-
-    char* GetMimeType(){
-        return const_cast<char*>(this->mType.c_str());
+    const char* GetMimeType(){
+        return GetDefaultResourceManager()->GetMimeType(mFileName).c_str();
     }
 
     void SetFileName(std::string fName){
@@ -44,8 +39,8 @@ public:
         GetDefaultResourceManager()->RegisterFile(fName);
     }
 
-    char* GetFileName(){
-        return const_cast<char*>(mFileName.c_str());
+    const char* GetFileName(){
+        return mFileName.c_str();
     }
 
     std::vector<UInt8>& GetFileDataPointer(){
@@ -57,7 +52,6 @@ public:
     }
 
 private:
-    std::string mType;
     std::string mFileName;
 
     std::vector<UInt8>* mFileDataPointer;

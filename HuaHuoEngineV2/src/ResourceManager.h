@@ -30,6 +30,10 @@ public:
         return mFileNameDataMap[fileName].size();
     }
 
+    std::string& GetMimeType(std::string &fileName){
+        return mFileNameMimeMap[fileName];
+    }
+
     std::vector<UInt8>& GetFileData(std::string &fileName){
         if(!mFileNameDataMap.contains(fileName)){
             printf("ResourceManager: File:%s has not been registered yet during GetFileData\n", fileName.c_str());
@@ -41,10 +45,11 @@ public:
 
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
 
-    void SetFileData(const char* fileName, UInt8* pData, UInt32 dataSize);
+    void SetFileData(const char* fileName, const char* mimeType, UInt8* pData, UInt32 dataSize);
 
 private:
     std::map<std::string, vector<UInt8> > mFileNameDataMap;
+    std::map<std::string, std::string> mFileNameMimeMap;
 };
 
 ResourceManager *GetDefaultResourceManager();

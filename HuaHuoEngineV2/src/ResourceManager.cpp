@@ -39,9 +39,10 @@ void ResourceManager::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
 
     TRANSFER(mFileNameDataMap);
+    TRANSFER(mFileNameMimeMap);
 }
 
-void ResourceManager::SetFileData(const char* fileName, UInt8* pData, UInt32 dataSize){
+void ResourceManager::SetFileData(const char* fileName, const char* mimeType, UInt8* pData, UInt32 dataSize){
     std::string fileNameStr(fileName);
 
     if(!mFileNameDataMap.contains(fileName)){
@@ -51,6 +52,8 @@ void ResourceManager::SetFileData(const char* fileName, UInt8* pData, UInt32 dat
     std::vector<UInt8> &fileData = mFileNameDataMap[fileNameStr];
     fileData.resize(dataSize);
     memcpy(fileData.data(), pData, dataSize);
+
+    mFileNameMimeMap[fileNameStr] = mimeType;
 }
 
 bool ResourceManager::RegisterFile(std::string &fileName) {
@@ -62,6 +65,7 @@ bool ResourceManager::RegisterFile(std::string &fileName) {
 
     printf("ResourceManager: File:%s has not been registered yet, register here\n", fileName.c_str());
     mFileNameDataMap[fileName] = std::vector<UInt8>();
+    mFileNameMimeMap[fileName] = "unknown";
     return true;
 }
 

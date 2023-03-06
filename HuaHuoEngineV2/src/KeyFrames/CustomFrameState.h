@@ -31,6 +31,8 @@ public:
         return mResourceName.c_str();
     }
 
+    const char* GetMimeType();
+
     void SetResourceName(std::string resourceName){
         mResourceName = resourceName;
     }

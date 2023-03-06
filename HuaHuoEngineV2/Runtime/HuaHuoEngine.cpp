@@ -91,6 +91,6 @@ void HuaHuoEngine::DestroyShape(BaseShape *shape){
     DestroySingleObject(shape);
 }
 
-void HuaHuoEngine::SetFileData(const char* fileName, UInt8* pData, long dataSize){
-    GetDefaultResourceManager()->SetFileData(fileName, pData, dataSize);
+void HuaHuoEngine::SetFileData(const char* fileName, const char* mimeType, UInt8* pData, long dataSize){
+    GetDefaultResourceManager()->SetFileData(fileName, mimeType, pData, dataSize);
 }

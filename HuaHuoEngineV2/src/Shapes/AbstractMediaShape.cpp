@@ -13,12 +13,11 @@ INSTANTIATE_TEMPLATE_TRANSFER(AbstractMediaShape);
 template<class TransferFunction>
 void AbstractMediaShape::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-    TRANSFER(this->mType);
     TRANSFER(this->mFileName);
 }
 
-void AbstractMediaShape::SetData(UInt8 *pData, UInt32 dataSize) {
-    GetDefaultResourceManager()->SetFileData(mFileName.c_str(), pData, dataSize);
+void AbstractMediaShape::SetData(const char* mimeType, UInt8 *pData, UInt32 dataSize) {
+    GetDefaultResourceManager()->SetFileData(mFileName.c_str(), mimeType, pData, dataSize);
 }
 
 UInt8 AbstractMediaShape::GetDataAtIndex(UInt32 index) {

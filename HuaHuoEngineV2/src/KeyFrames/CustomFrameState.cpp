@@ -16,6 +16,10 @@ UInt8 BinaryResource::GetDataAtIndex(UInt32 index) {
     return fileData[index];
 }
 
+const char* BinaryResource::GetMimeType(){
+    return GetDefaultResourceManager()->GetMimeType(mResourceName).c_str();
+}
+
 std::vector<UInt8> &BinaryResource::GetFileDataPointer() {
     if(mFileDataPointer == NULL){
         mFileDataPointer = &GetDefaultResourceManager()->GetFileData(mResourceName);

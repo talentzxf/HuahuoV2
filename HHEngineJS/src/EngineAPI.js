@@ -1,6 +1,7 @@
 import {Logger} from "hhcommoncomponents"
 import {engineEventManager} from "./EngineEvents/EngineEventManager";
 import {clzObjectFactory} from "./CppClassObjectFactory";
+import {getMimeTypeFromDataURI} from "hhcommoncomponents";
 
 // @ts-ignore
 import * as ti from "taichi.js/dist/taichi"
@@ -190,7 +191,8 @@ class EngineAPI{
 
     SetBinaryResource(resourceName, resourceData){
         let resourceSize = resourceData.length
-        this.cppEngine.SetFileData(resourceName, resourceData, resourceSize)
+        let mimeType = getMimeTypeFromDataURI(resourceData)
+        this.cppEngine.SetFileData(resourceName, mimeType, resourceData, resourceSize)
     }
 
     GetBinaryResource(resourceName){

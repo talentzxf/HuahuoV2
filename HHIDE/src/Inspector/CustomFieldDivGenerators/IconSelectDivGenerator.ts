@@ -29,9 +29,9 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
     onValueChanged(fieldName: string){
         return function(){
             if(this.iconImage){
-                let binaryResource = this.targetComponent.rawObj.GetBinaryResource(fieldName).GetDataSize()
+                let binaryResource = this.targetComponent.rawObj.GetBinaryResource(fieldName)
 
-                let dataLength = binaryResource.GetDataLength()
+                let dataLength = binaryResource.GetDataSize()
                 let ab = new ArrayBuffer(dataLength)
                 let binaryData:Uint8Array = new Uint8Array(ab)
                 for(let idx = 0; idx < dataLength; idx++){
@@ -45,7 +45,7 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator {
 
                 let _this = this
                 reader.onload = function(){
-                    _this.iconImage.src = fieldName
+                    _this.iconImage.src = reader.result
                 }
             }
             else

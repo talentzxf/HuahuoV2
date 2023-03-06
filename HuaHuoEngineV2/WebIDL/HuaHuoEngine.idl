@@ -161,6 +161,7 @@ interface ColorStopArray{
 [NoDelete]
 interface BinaryResource{
     [Const] DOMString GetResourceName();
+    [Const] DOMString GetMimeType();
     octet GetDataAtIndex(long index);
     long GetDataSize();
 };
@@ -336,11 +337,10 @@ interface AbstractMediaShape{
     octet GetDataAtIndex(long index);
     void LoadData(octet[] pData);
     long GetDataSize();
-    void SetData(octet[] pData, long dataSize);
-    void SetMimeType(DOMString type);
-    DOMString GetMimeType();
+    void SetData([Const] DOMString mimeType, octet[] pData, long dataSize);
+    [Const] DOMString GetMimeType();
     void SetFileName(DOMString fName);
-    DOMString GetFileName();
+    [Const] DOMString GetFileName();
 };
 
 [NoDelete]
@@ -402,5 +402,5 @@ interface HuaHuoEngine {
     BaseShape DuplicateShape(BaseShape shape);
     void DestroyShape(BaseShape shape);
 
-    void SetFileData([Const] DOMString fileName, octet[] pData, long dataSize);
+    void SetFileData([Const] DOMString fileName,[Const] DOMString mimeType, octet[] pData, long dataSize);
 };
