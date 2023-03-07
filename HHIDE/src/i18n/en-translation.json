@@ -103,7 +103,8 @@
       "velocityMagnitudeRange": "Velocity Magnitude Range",
       "velocityThetaRange": "Velocity Angle(xy) Range",
       "velocityPhiRange": "Velocity Angle(xz) Range",
-      "particleShape": "Particle Shape"
+      "particleShape": "Particle Shape",
+      "particleDirection": "Particle Direction"
     },
     "nail": {
       "isStatic": "Is Static"

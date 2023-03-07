@@ -39,8 +39,11 @@ class Particles extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateVector2, {x: 0.0, y: 360.0})
     velocityPhiRange
 
-    @PropertyValue(PropertyCategory.stringValue)
-    followVelocityDirection
+    /**
+     * Follow means particle's dir will be it's velocity's direction     *
+     */
+    @PropertyValue(PropertyCategory.stringValue, "follow")
+    particleDirection
 
     @PropertyValue(PropertyCategory.interpolateVector2, {x: 1.0, y: 3.0}) // Unit is seconds.
     lifeSpanRange
