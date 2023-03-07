@@ -49,6 +49,8 @@ class ParticleShapeLoader {
             } else {
                 this._particleShapeSize.fromArray1D([0, 0])
             }
+
+            this.lastParticleShapeResourceName = binaryResource.GetResourceName()
         }
     }
 

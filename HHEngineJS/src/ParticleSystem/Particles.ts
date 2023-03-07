@@ -286,7 +286,9 @@ class Particles extends AbstractComponent {
                                             let imgPositionX = i32(particleShapeSize[0] * pixelIndex[0] / particleSize)
                                             let imgPositionY = i32(particleShapeSize[1] * pixelIndex[1] / particleSize)
 
-                                            outputImage[windowPosition] = particleShapeData[imgPositionX, imgPositionY]
+                                            let particleShapeColor = particleShapeData[particleShapeSize[1] - imgPositionY, imgPositionX]
+                                            if(particleShapeColor[3] > 0.0)
+                                                outputImage[windowPosition] = particleColor
                                         }
                                     }
                                 }
