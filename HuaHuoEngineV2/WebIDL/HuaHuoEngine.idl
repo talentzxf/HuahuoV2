@@ -177,6 +177,7 @@ interface CustomComponent{
     long RegisterColorStopArrayValue([Const] DOMString fieldName);
     long RegisterSubcomponentArray([Const] DOMString fieldName);
     long RegisterBinaryResource([Const] DOMString fieldName);
+    long RegisterStringValue([Const] DOMString fieldName, [Const] DOMString defaultValue);
 
     boolean IsFieldRegistered([Const] DOMString fieldName);
 
@@ -205,6 +206,9 @@ interface CustomComponent{
 
     void SetBinaryResourceName([Const] DOMString fieldName, [Const] DOMString resourceName);
     BinaryResource GetBinaryResource([Const] DOMString fieldName);
+
+    void SetStringValue([Const] DOMString fieldName, [Const] DOMString strValue);
+    [Const] DOMString GetStringValue([Const] DOMString fieldName);
 };
 
 CustomComponent implements AbstractFrameState;

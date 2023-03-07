@@ -3,14 +3,13 @@ import "reflect-metadata"
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
 import {PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
 import {propertySheetFactory} from "./PropertySheetBuilderFactory"
-import {PropertyConfig, PropertyType} from "hhcommoncomponents";
+import {CustomFieldConfig, PropertyConfig, PropertyType} from "hhcommoncomponents";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {ComponentConfig} from "./ComponentConfig";
-import {interpolateVariableProcessor} from "./VariableHandlers/InterpolateVariableProcessor";
+import {defaultVariableProcessor} from "./VariableHandlers/DefaultVariableProcessor";
 import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
 import {colorStopArrayHandler} from "./VariableHandlers/ColorArrayProcessor";
 import {subComponentArrayHandler} from "./VariableHandlers/SubComponentArrayHandler";
-import {CustomFieldConfig} from "hhcommoncomponents";
 import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariableHandler";
 
 
@@ -84,12 +83,7 @@ class AbstractComponent {
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
         if (properties) {
             properties.forEach(propertyEntry => {
-                if (propertyEntry.type == PropertyCategory.interpolateFloat
-                    || propertyEntry.type == PropertyCategory.interpolateColor
-                    || propertyEntry.type == PropertyCategory.interpolateVector2
-                    || propertyEntry.type == PropertyCategory.interpolateVector3) {
-                    interpolateVariableProcessor.handleEntry(this, propertyEntry)
-                } else if (propertyEntry.type == PropertyCategory.shapeArray) {
+                if (propertyEntry.type == PropertyCategory.shapeArray) {
                     shapeArrayHandler.handleEntry(this, propertyEntry)
                 } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
                     colorStopArrayHandler.handleEntry(this, propertyEntry)
@@ -99,8 +93,8 @@ class AbstractComponent {
                     subComponentArrayHandler.handleEntry(this, propertyEntry)
                 } else if (propertyEntry.type == PropertyCategory.customField) {
                     customFieldVariableHandler.handleEntry(this, propertyEntry)
-                } else {
-                    throw "Unknown property type"
+                } else{
+                    defaultVariableProcessor.handleEntry(this, propertyEntry)
                 }
             })
         }

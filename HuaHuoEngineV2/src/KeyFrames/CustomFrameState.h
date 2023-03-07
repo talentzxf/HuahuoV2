@@ -20,7 +20,8 @@ enum CustomDataType{
     SHAPEARRAY,
     COLORSTOPARRAY,
     VECTOR3,
-    BINARYRESOURCE
+    BINARYRESOURCE,
+    STRING
 };
 
 class BinaryResource{
@@ -68,6 +69,7 @@ struct CustomData{
     ColorRGBAf colorValue;
     ColorStopArray colorStopArray;
     BinaryResource binaryResource;
+    std::string stringValue;
     CustomDataType dataType;
 
     DECLARE_SERIALIZE(CustomData);
@@ -94,6 +96,9 @@ template<class TransferFunction> void CustomData::Transfer(TransferFunction &tra
             break;
         case BINARYRESOURCE:
             TRANSFER(binaryResource);
+            break;
+        case STRING:
+            TRANSFER(stringValue);
             break;
     }
 }
@@ -134,6 +139,8 @@ public:
 
     void SetBinaryResourceName(const char* resourceName);
 
+    void SetStringValue(const char* stringValue);
+
     BinaryResource* GetBinaryResource();
 
     float GetFloatValue();
@@ -158,6 +165,8 @@ public:
     CustomData* GetDefaultValueData(){
         return &m_defaultValue;
     }
+
+    const char* GetStringValue();
 private:
     template <typename T> CustomDataKeyFrame* RecordFieldValue(int frameId, T value);
 

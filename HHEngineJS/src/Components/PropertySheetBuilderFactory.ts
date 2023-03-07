@@ -28,6 +28,8 @@ class PropertySheetFactory {
         this.categoryElementTypeMap.set(PropertyCategory.subcomponentArray, PropertyType.COMPONENT)
 
         this.categoryTypeMap.set(PropertyCategory.customField, PropertyType.CUSTOMFIELD)
+
+        this.categoryTypeMap.set(PropertyCategory.stringValue, PropertyType.STRING)
     }
 
     createEntryByNameAndCategory(propertyName, category: PropertyCategory) {

@@ -39,6 +39,8 @@ class Particles extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateVector2, {x: 0.0, y: 360.0})
     velocityPhiRange
 
+    @PropertyValue(PropertyCategory.stringValue)
+    followVelocityDirection
 
     @PropertyValue(PropertyCategory.interpolateVector2, {x: 1.0, y: 3.0}) // Unit is seconds.
     lifeSpanRange
@@ -287,8 +289,18 @@ class Particles extends AbstractComponent {
                                             let imgPositionY = i32(particleShapeSize[1] * pixelIndex[1] / particleSize)
 
                                             let particleShapeColor = particleShapeData[particleShapeSize[1] - imgPositionY, imgPositionX]
-                                            if(particleShapeColor[3] > 0.0)
+                                            if (particleShapeColor[3] > 0.0) {
                                                 outputImage[windowPosition] = particleColor
+
+                                                // TODO: How to do alpha blending??
+                                                // let alpha = particleShapeColor[3]
+                                                //
+                                                // // alpha * new + (1-alpha)*old
+                                                // let currentRGB = outputImage[windowPosition].rgb
+                                                // let newRGB = alpha * particleColor.rgb + (1.0 - alpha) * currentRGB
+                                                //
+                                                // outputImage[windowPosition] = [newRGB[0], newRGB[1], newRGB[2], alpha]
+                                            }
                                         }
                                     }
                                 }

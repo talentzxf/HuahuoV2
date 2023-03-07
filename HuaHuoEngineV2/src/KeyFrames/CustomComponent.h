@@ -85,6 +85,12 @@ DECLARE_OBJECT_SERIALIZE();
         pComponent->SetColorValue(r, g, b, a);
     }
 
+    void SetStringValue(const char* fieldName, const char* strValue){
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        pComponent->SetStringValue(strValue);
+    }
+
     int AddColorStop(const char *fieldName, float value, float r, float g, float b, float a) {
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
@@ -180,6 +186,15 @@ DECLARE_OBJECT_SERIALIZE();
         return pComponent->GetBinaryResource()->Reset();
     }
 
+    const char* GetStringValue(const char* fieldName){
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        return pComponent->GetStringValue();
+    }
+
     void SetBaseShape(BaseShape *pBaseShape) override;
 
     void DeleteKeyFrame(int frameId) override;
@@ -247,6 +262,13 @@ public:
         int fieldIdx = this->RegisterField(fieldName, FLOAT);
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
         pComponent->GetDefaultValueData()->floatValue = initValue;
+        return fieldIdx;
+    }
+
+    int RegisterStringValue(const char* fieldName, const char* defaultValue){
+        int fieldIdx = this->RegisterField(fieldName, STRING);
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        pComponent->GetDefaultValueData()->stringValue = defaultValue;
         return fieldIdx;
     }
 

@@ -12,7 +12,8 @@ enum PropertyCategory{
     colorStopArray, // Every color stop is a float->Color mapping entry.
     keyframeArray,
     subcomponentArray,
-    customField // Need to return a HTML div element to the inspector and inspector will draw it.
+    customField, // Need to return a HTML div element to the inspector and inspector will draw it.
+    stringValue
 }
 
 abstract class InterpolateOperator{
@@ -137,6 +138,26 @@ class InterpolateVector3Operator extends InterpolateOperator{
     }
 }
 
+class StringValueOperator extends InterpolateOperator{
+    getField(fieldName: string) {
+        return this.rawObj["GetStringValue"](fieldName)
+    }
+
+    isEqual(v1, v2) {
+        if(v1 == v2)
+            return true
+        return false
+    }
+
+    registerField(fieldName: string, initValue: string) {
+        this.rawObj["RegisterStringValue"](fieldName, initValue)
+    }
+
+    setField(fieldName: string, val: string) {
+        this.rawObj["SetStringValue"](fieldName, val)
+    }
+}
+
 function buildOperator(type, rawObj): InterpolateOperator{
     switch(type){ // TODO: Get rid of switch-case
         case PropertyCategory.interpolateFloat:
@@ -147,6 +168,8 @@ function buildOperator(type, rawObj): InterpolateOperator{
             return new InterpolateVector2Operator(rawObj)
         case PropertyCategory.interpolateVector3:
             return new InterpolateVector3Operator(rawObj)
+        case PropertyCategory.stringValue:
+            return new StringValueOperator(rawObj)
     }
 
     return null

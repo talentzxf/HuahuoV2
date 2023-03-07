@@ -1,7 +1,7 @@
 import {buildOperator} from "../PropertySheetBuilder";
 import {internalProcessComponent} from "./AbstractVariableHandler";
 
-class InterpolateVariableProcessor{
+class DefaultVariableProcessor{
     handleEntry(component, propertyEntry) {
         let operator = buildOperator(propertyEntry.type, component.rawObj)
         operator.registerField(propertyEntry["key"], propertyEntry["initValue"])
@@ -26,5 +26,5 @@ class InterpolateVariableProcessor{
     }
 }
 
-let interpolateVariableProcessor = new InterpolateVariableProcessor()
-export {interpolateVariableProcessor}
+let defaultVariableProcessor = new DefaultVariableProcessor()
+export {defaultVariableProcessor}
