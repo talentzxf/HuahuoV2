@@ -62,14 +62,10 @@ class ParticleShapeLoader {
         let context = this.hiddenCanvas.getContext("2d")
         context.drawImage(this.hiddenImage, 0, 0)
 
-        let particleShapeImageData = context.getImageData(0, 0, this.hiddenImage.width, this.hiddenImage.height)
+        let particleShapeImageData = context.getImageData(0, 0, MAX_PARTICLE_SHAPE_SIZE, MAX_PARTICLE_SHAPE_SIZE)
 
-        this._particleShapeData = huahuoEngine.ti.Vector.field(4, huahuoEngine.ti.i32, [this.hiddenImage.height, this.hiddenImage.width])
+        this._particleShapeSize.fromArray1D([this.hiddenImage.height, this.hiddenImage.width])
         this._particleShapeData.fromArray1D(particleShapeImageData.data)
-
-        huahuoEngine.ti.addToKernelScope({
-            particleShapeData: this._particleShapeData
-        })
     }
 }
 
