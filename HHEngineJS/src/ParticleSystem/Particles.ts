@@ -300,14 +300,14 @@ class Particles extends AbstractComponent {
                 (particleSize, particleColor, curFrameId, velocityDir, staticDir) => {
 
                     let center = [0.0, 0.0, 0]
-                    let eye = [0.5, 0.5, 0.0]
+                    let eye = [0.0, 0.0, 10.0]
                     let fov = 45
                     let view = ti.lookAt(eye, center, [0.0, 1.0, 0.0])
                     let proj = ti.perspective(fov, aspectRatio, 0.1, 1000)
                     let mvp = proj.matmul(view)
 
                     ti.clearColor(renderTarget, [0.1, 0.2, 0.3, 1])
-                    ti.useDepth(this.depth)
+                    ti.useDepth(depth)
 
                     // set up vertices of all the particles.
                     for(let i of range(maxNumbers) ){
@@ -330,7 +330,7 @@ class Particles extends AbstractComponent {
 
                     // Vertex shader
                     for(let v of ti.inputVertices(particle_vertices, particle_indices)){
-                        let pos = mvp.matmul(v.pos.concat(1.0))
+                        let pos = mvp.matmul(v.pos.concat([1.0]))
                         ti.outputPosition(pos)
                         ti.outputVertex(v)
                     }
