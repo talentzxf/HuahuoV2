@@ -302,11 +302,11 @@ class Particles extends AbstractComponent {
                     let center = [0.0, 0.0, 0]
                     let eye = [0.5, 0.5, 0.0]
                     let fov = 45
-                    let view = huahuoEngine.ti.lookAt(eye, center, [0.0, 1.0, 0.0])
-                    let proj = huahuoEngine.ti.perspective(fov, aspectRatio, 0.1, 1000)
+                    let view = ti.lookAt(eye, center, [0.0, 1.0, 0.0])
+                    let proj = ti.perspective(fov, aspectRatio, 0.1, 1000)
                     let mvp = proj.matmul(view)
 
-                    ti.clearColor(this.renderTarget, [0.1, 0.2, 0.3, 1])
+                    ti.clearColor(renderTarget, [0.1, 0.2, 0.3, 1])
                     ti.useDepth(this.depth)
 
                     // set up vertices of all the particles.
