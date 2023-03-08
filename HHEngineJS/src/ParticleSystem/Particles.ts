@@ -315,7 +315,7 @@ class Particles extends AbstractComponent {
                             let particlePosition = particles[i].position
                             let particleVelocityXY = particles[i].velocity.normalized().xy
 
-                            particle_vertices[4*i].pos = [particlePosition[0] - 0.5 * particleVelocityXY[0] , particlePosition[1] - 0.5 * particleVelocityXY[1], particlePosition[2]]
+                            particle_vertices[4*i].pos = [particlePosition[0] - 0.5 * particleVelocityXY[0] , particlePosition[1] + 0.5 * particleVelocityXY[1], particlePosition[2]]
                             particle_vertices[4*i + 1].pos = [particlePosition[0] + 0.5 * particleVelocityXY[0] , particlePosition[1] + 0.5 * particleVelocityXY[1], particlePosition[2]]
                             particle_vertices[4*i + 2].pos = [particlePosition[0] + 0.5 * particleVelocityXY[0] , particlePosition[1] - 0.5 * particleVelocityXY[1], particlePosition[2]]
                             particle_vertices[4*i + 3].pos = [particlePosition[0] - 0.5 * particleVelocityXY[0] , particlePosition[1] - 0.5 * particleVelocityXY[1], particlePosition[2]]
