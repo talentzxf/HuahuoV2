@@ -266,6 +266,35 @@ class Particles extends AbstractComponent {
         if (this._renderImageKernel == null) {
             let cType = huahuoEngine.ti.types.vector(ti.f32, 4)
 
+            let num_triangles = MAX_PARTICLE_COUNT * 2 // Each particle has two triangles.
+            let vertexType = huahuoEngine.ti.types.struct({
+                pos: huahuoEngine.ti.types.vector(ti.f32, 3)
+            });
+            let particle_vertices = huahuoEngine.ti.field(vertexType, [num_triangles * 2]) // Each particle has two triangles (4 vertices)
+            let particle_indices = huahuoEngine.ti.field(huahuoEngine.ti.i32, [num_triangles * 3]);
+
+            huahuoEngine.ti.addToKernelScope({
+                particle_count: MAX_PARTICLE_COUNT,
+                num_triangles,
+                particle_vertices,
+                particle_indices
+            })
+            let set_indices = huahuoEngine.ti.kernel(() => {
+                for (let i of ti.range(particle_count)) {
+                    // First triangle
+                    particle_indices[i * 6] = i * 4
+                    particle_indices[i * 6 + 1] = i * 4 + 1
+                    particle_indices[i * 6 + 2] = i * 4 + 2
+
+                    // Second triangle
+                    particle_indices[i * 6 + 3] = i * 4 + 2
+                    particle_indices[i * 6 + 4] = i * 4 + 3
+                    particle_indices[i * 6 + 5] = i * 4
+                }
+            })
+
+            set_indices()
+
             this._renderImageKernel = huahuoEngine.ti.kernel(
                 {particleColor: cType},
                 (particleSize, particleColor, curFrameId, velocityDir, staticDir) => {
@@ -280,7 +309,7 @@ class Particles extends AbstractComponent {
                             // TODO: https://www.geeksforgeeks.org/window-to-viewport-transformation-in-computer-graphics-with-implementation/
                             let centerWindowPosition = i32(projectedPosition - [viewPortXMin, viewPortYMin])
 
-                            if(particleShapeSize[0] <= 0 || particleShapeSize[0] <= 0) { // Draw circle
+                            if (particleShapeSize[0] <= 0 || particleShapeSize[0] <= 0) { // Draw circle
                                 let particleSizeSquare = f32(particleSize * particleSize / 4.0)
                                 for (let pixelIndex of ndrange(particleSize, particleSize)) {
                                     let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
@@ -290,7 +319,9 @@ class Particles extends AbstractComponent {
                                         }
                                     }
                                 }
-                            }else { // Draw shape from the particleShape image.
+                            } else { // Draw shape from the particleShape image.
+
+
                                 for (let pixelIndex of ndrange(particleSize, particleSize)) {
                                     let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
 
@@ -298,7 +329,7 @@ class Particles extends AbstractComponent {
                                     let particleVelocity = particles[i].velocity.xy
 
                                     // let angle = ti.atan2(particleVelocity[1], particleVelocity[0])
-                                    let angle = 30.0/180.0 * Math.PI
+                                    let angle = 30.0 / 180.0 * Math.PI
                                     let pixelAfterRotateX = pixelIndex[0] * ti.cos(angle) - pixelIndex[1] * ti.sin(angle)
                                     let pixelAfterRotateY = pixelIndex[0] * ti.sin(angle) + pixelIndex[1] * ti.cos(angle)
 
@@ -327,10 +358,10 @@ class Particles extends AbstractComponent {
 
         let velocityDir = 0
         let staticDir = 0
-        if(this.particleDirection.startsWith("velocity")){ // This means the dir is the same as the dir of the velocity.
+        if (this.particleDirection.startsWith("velocity")) { // This means the dir is the same as the dir of the velocity.
             let splittedDir = this.particleDirection.split("velocity")
             velocityDir = Number(splittedDir[1])
-        }else{
+        } else {
             staticDir = Number(this.particleDirection)
         }
 

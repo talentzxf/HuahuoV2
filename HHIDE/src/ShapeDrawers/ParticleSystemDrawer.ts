@@ -2,7 +2,7 @@ import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {SVGFiles} from "../Utilities/Svgs";
 import {Vector2} from "hhcommoncomponents";
 import {EventBus, EventNames} from "../Events/GlobalEvents";
-import {ParticleSystemJS, ParticleSystemRenderer} from "hhenginejs";
+import {ParticleSystemJS} from "hhenginejs";
 import {huahuoEngine} from "hhenginejs";
 
 class ParticleSystemDrawer extends BaseShapeDrawer {
