@@ -12,6 +12,9 @@ import {arrayPropertyDivGenerator} from "./ArrayPropertyDivGenerator";
 import {colorStopArrayPropertyDivGenerator} from "./ColorStopArrayPropertyDivGenerator";
 import {booleanPropertyDivGenerator} from "./BooleanPropertyDivGenerator";
 import {keyFramesPropertyDivGenerator} from "./KeyFramesPropertyDivGenerator";
+import {subComponentsDivGenerator} from "./SubComponentsDivGenerator";
+import {vector3PropertyGenerator} from "./Vector3PropertyDivGenerator";
+import {customFieldDivGenerator} from "./CustomFieldDivGenerator";
 
 // Avoid being imported twice.
 // TODO: Any less dirty approach ??
@@ -20,6 +23,7 @@ if(!window["IsTypesRegistered"]){
     RegisterDivGenerator(PropertyType.FLOAT, floatPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.BOOLEAN, booleanPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.VECTOR2, vector2PropertyGenerator)
+    RegisterDivGenerator(PropertyType.VECTOR3, vector3PropertyGenerator)
     RegisterDivGenerator(PropertyType.STRING, stringPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.BUTTON, buttonPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.GROUP, groupPropertyDivGenerator)
@@ -29,5 +33,7 @@ if(!window["IsTypesRegistered"]){
     RegisterDivGenerator(PropertyType.COMPONENT, componentPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.COLORSTOPARRAY, colorStopArrayPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.KEYFRAMES, keyFramesPropertyDivGenerator)
+    RegisterDivGenerator(PropertyType.SUBCOMPONENTARRAY, subComponentsDivGenerator)
+    RegisterDivGenerator(PropertyType.CUSTOMFIELD, customFieldDivGenerator)
     window["IsTypeRegistered"] = true
 }

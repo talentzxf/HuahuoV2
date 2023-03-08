@@ -81,6 +81,7 @@
     "AtEnd": "Set At End",
     "AtLength": "At Length",
     "Unfollow": "UnFollow",
+    "select": "Select",
     "property": {
       "growth": "growth",
       "targetShapeArray": "Target Shapes",
@@ -91,7 +92,19 @@
       "gradientColorArray": "Gradient Color Array",
       "centerPosition": "Center Position",
       "keyframes": "Key Frames",
-      "backgroundColor": "Background color"
+      "backgroundColor": "Background color",
+      "particleSystems": "Particles",
+      "activeParticleCount": "Active Particle Count",
+      "particleMass": "Particle Mass",
+      "particleSize": "Particle Size",
+      "particleColor": "Particle Color",
+      "gravity": "Gravity",
+      "lifeSpanRange": "Lifetime Range(seconds)",
+      "velocityMagnitudeRange": "Velocity Magnitude Range",
+      "velocityThetaRange": "Velocity Angle(xy) Range",
+      "velocityPhiRange": "Velocity Angle(xz) Range",
+      "particleShape": "Particle Shape",
+      "particleDirection": "Particle Direction"
     },
     "nail": {
       "isStatic": "Is Static"

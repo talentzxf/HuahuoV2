@@ -17,6 +17,7 @@ void CustomComponent::Transfer(TransferFunction &transfer) {
     TRANSFER(m_fieldNameFieldIndexMap);
     TRANSFER(m_fieldIndexFieldNameMap);
     TRANSFER(m_FrameStates);
+    TRANSFER(m_SubComponents);
 }
 
 CustomComponent *CustomComponent::CreateComponent() {

@@ -3,16 +3,31 @@ import "reflect-metadata"
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
 import {PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
 import {propertySheetFactory} from "./PropertySheetBuilderFactory"
-import {PropertyConfig, PropertyType} from "hhcommoncomponents";
+import {CustomFieldConfig, PropertyConfig, PropertyType} from "hhcommoncomponents";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {ComponentConfig} from "./ComponentConfig";
-import {interpolateVariableProcessor} from "./VariableHandlers/InterpolateVariableProcessor";
+import {defaultVariableProcessor} from "./VariableHandlers/DefaultVariableProcessor";
 import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
 import {colorStopArrayHandler} from "./VariableHandlers/ColorArrayProcessor";
+import {subComponentArrayHandler} from "./VariableHandlers/SubComponentArrayHandler";
+import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariableHandler";
+
+
+// Key is: className#fieldName
+// Value is the constructor of the divContent generator
+let customFieldContentDivGeneratorMap: Map<string, Function> = new Map()
+function registerCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string, constructor: Function){
+    let fieldFullName = className + "#" + fieldName
+    customFieldContentDivGeneratorMap.set(fieldFullName, constructor)
+}
+
+function getCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string): Function{
+    let fieldFullName = className + "#" + fieldName
+    return customFieldContentDivGeneratorMap.get(fieldFullName)
+}
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
-
 function getProperties(target): object[] {
     let properties: object[] = Reflect.getMetadata(metaDataKey, target)
     if (!properties) {
@@ -68,15 +83,18 @@ class AbstractComponent {
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
         if (properties) {
             properties.forEach(propertyEntry => {
-                if (propertyEntry.type == PropertyCategory.interpolateFloat
-                    || propertyEntry.type == PropertyCategory.interpolateColor
-                    || propertyEntry.type == PropertyCategory.interpolateVector2
-                    || propertyEntry.type == PropertyCategory.interpolateVector3) {
-                    interpolateVariableProcessor.handleEntry(this, propertyEntry)
-                } else if (propertyEntry.type == PropertyCategory.shapeArray) {
+                if (propertyEntry.type == PropertyCategory.shapeArray) {
                     shapeArrayHandler.handleEntry(this, propertyEntry)
                 } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
                     colorStopArrayHandler.handleEntry(this, propertyEntry)
+                } else if (propertyEntry.type == PropertyCategory.subcomponentArray) {
+                    // Only Components inherits GroupComponent can have subComponentArray. Cause SubComponentArray itself is a component.
+                    //@ts-ignore
+                    subComponentArrayHandler.handleEntry(this, propertyEntry)
+                } else if (propertyEntry.type == PropertyCategory.customField) {
+                    customFieldVariableHandler.handleEntry(this, propertyEntry)
+                } else{
+                    defaultVariableProcessor.handleEntry(this, propertyEntry)
                 }
             })
         }
@@ -91,9 +109,10 @@ class AbstractComponent {
     afterUpdate(force: boolean = false) {
     }
 
-    getCurrentFrameId(){
+    getCurrentFrameId() {
         return this.baseShape.getLayer().GetCurrentFrame()
     }
+
     getTypeName() {
         return this.rawObj.GetTypeName()
     }
@@ -103,10 +122,6 @@ class AbstractComponent {
     }
 
     getPropertySheet() {
-        const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
-        if (properties == null)
-            return null;
-
         let componentConfigSheet = {
             key: this.getTypeName(),
             type: PropertyType.COMPONENT,
@@ -115,17 +130,32 @@ class AbstractComponent {
             }
         }
 
-        for (let propertyMeta of properties) {
-            let propertySheetEntry = propertySheetFactory.createEntry(this, propertyMeta, this.valueChangeHandler)
-            if (propertySheetEntry != null) {
-                componentConfigSheet.config.children.push(propertySheetEntry)
+        const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
+        if (properties != null) {
+            for (let propertyMeta of properties) {
+                if (propertyMeta.type == PropertyCategory.customField) {
+                    if (propertyMeta.config == null || propertyMeta.config["contentDivGenerator"] == null) {
+
+                        let divGeneratorConstructor = getCustomFieldContentDivGeneratorConstructor(this.constructor.name, propertyMeta.key)
+
+                        // @ts-ignore
+                        let contentDivGenerator = new divGeneratorConstructor(this)
+                        propertyMeta.config = {
+                            fieldName: propertyMeta["key"],
+                            contentDivGenerator: contentDivGenerator
+                        } as CustomFieldConfig
+                    }
+                }
+                let propertySheetEntry = propertySheetFactory.createEntry(this, propertyMeta, this.valueChangeHandler)
+                if (propertySheetEntry != null) {
+                    componentConfigSheet.config.children.push(propertySheetEntry)
+                }
             }
         }
 
         let keyFramePropertySheet = propertySheetFactory.createEntryByNameAndCategory("keyframes", PropertyCategory.keyframeArray)
 
         keyFramePropertySheet["getter"] = this.getKeyFrames.bind(this)
-        keyFramePropertySheet["setter"] = this.insertKeyFrames.bind(this) // Same as other arrays, setter is alias of inserter.
         componentConfigSheet.config.children.push(keyFramePropertySheet)
 
         return componentConfigSheet
@@ -157,7 +187,7 @@ class AbstractComponent {
 
     }
 
-    setInvisible(){
+    setInvisible() {
 
     }
 
@@ -173,4 +203,5 @@ class AbstractComponent {
     }
 }
 
-export {AbstractComponent, PropertyValue, Component}
+
+export {AbstractComponent, PropertyValue, Component, registerCustomFieldContentDivGeneratorConstructor}

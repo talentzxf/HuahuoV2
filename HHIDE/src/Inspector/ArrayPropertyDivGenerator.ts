@@ -20,7 +20,11 @@ class ArrayPropertyDesc extends BasePropertyDesc{
         let addButton = document.createElement("button")
         addButton.innerText = "+"
         this.getTitleDiv().appendChild(addButton)
-        addButton.addEventListener("click", this.addEntry.bind(this))
+
+        let _this = this
+        addButton.addEventListener("click", ()=>{
+            _this.addEntry()
+        })
 
         this.arrayEntryDivs = document.createElement("div")
         this.contentDiv.appendChild(this.arrayEntryDivs)
@@ -29,17 +33,15 @@ class ArrayPropertyDesc extends BasePropertyDesc{
 
         let currentArray = property.getter()
         for(let entry of currentArray){
-            let desc = this.addEntry()
-            desc["onValueChanged"](entry)
+            let desc = this.addEntry(entry)
+            if(desc)
+                desc["onValueChanged"](entry)
         }
     }
 
-    addEntry(){
+    addEntry(entry?){
         let propertyDivGenerator = GetPropertyDivGenerator(this.elementType)
-        let propertyDesc = propertyDivGenerator.generatePropertyDesc({
-            getter: this.property.getter,
-            setter: this.property.setter
-        })
+        let propertyDesc = propertyDivGenerator.generatePropertyDesc(this.property)
 
         let generatedDiv = GenerateDiv(propertyDivGenerator, propertyDesc)
 
@@ -66,4 +68,4 @@ class ArrayPropertyDivGenerator extends BasePropertyDivGenerator{
 
 let arrayPropertyDivGenerator = new ArrayPropertyDivGenerator()
 
-export {arrayPropertyDivGenerator}
+export {arrayPropertyDivGenerator, ArrayPropertyDesc}

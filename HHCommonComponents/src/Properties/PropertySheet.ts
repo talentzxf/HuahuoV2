@@ -1,6 +1,6 @@
 import {PropertyConfig} from "./PropertyConfig";
 
-enum PropertyType{
+enum PropertyType {
     GROUP,
     PANEL,
     BOOLEAN,
@@ -14,10 +14,12 @@ enum PropertyType{
     ARRAY,
     COMPONENT,
     COLORSTOPARRAY,
-    KEYFRAMES
+    KEYFRAMES,
+    SUBCOMPONENTARRAY,
+    CUSTOMFIELD
 }
 
-class Property{
+class Property {
     key: string
     type: PropertyType
     component: any
@@ -30,24 +32,24 @@ class Property{
     config: PropertyConfig
 }
 
-class PropertySheet{
+class PropertySheet {
     protected properties: Array<Property> = new Array<Property>()
 
-    addProperty(property: Property){
+    addProperty(property: Property) {
         this.properties.push(property)
     }
 
-    getProperties(){
+    getProperties() {
         return this.properties
     }
 
-    getProperty(key: string){
-        for(let property of this.properties){
-            if(property.key == key)
+    getProperty(key: string) {
+        for (let property of this.properties) {
+            if (property.key == key)
                 return property
         }
         return null
     }
 }
 
-export {PropertySheet,Property,PropertyType}
+export {PropertySheet, Property, PropertyType}

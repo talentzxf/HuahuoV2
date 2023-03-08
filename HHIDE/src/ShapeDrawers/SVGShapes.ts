@@ -4,7 +4,7 @@ let svgShapes = [
         svg: "svgs/bus.svg"
     },
     {
-        name: "pipeapple",
+        name: "pineapple",
         svg: "svgs/ananas-fruit-pineapple-svgrepo-com.svg"
     },
     {

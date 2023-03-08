@@ -55,7 +55,6 @@ class Player{
             let elapsedTime = timeStamp - this.lastAnimateTime
 
             console.log("Elapsed time:" + elapsedTime)
-            console.log("Expected time:" + 1000.0/GlobalConfig.fps)
 
             if(this.lastAnimateTime < 0 || elapsedTime > 1000.0/GlobalConfig.fps){
                 let store = huahuoEngine.GetStoreById(this.storeId)

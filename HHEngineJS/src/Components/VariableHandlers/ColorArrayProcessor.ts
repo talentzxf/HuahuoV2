@@ -66,9 +66,6 @@ class ColorStopArrayProcessor {
 
                     return retIndex
                 },
-                setter: function (val) {         // This is just alias of the insert funtion.
-                    return component[inserterName](val)
-                },
                 deleter: function (val: ColorStop) {
                     component.rawObj.DeleteColorStop(fieldName, val.identifier)
                     if (component.baseShape)

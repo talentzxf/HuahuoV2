@@ -133,6 +133,8 @@ interface AbstractFrameState{
     long GetKeyFrameAtIndex(long idx);
     void DeleteKeyFrame(long frameId);
     boolean ReverseKeyFrame(long startFrameId, long endFrameId, long currentFrameId);
+
+    long GetSubComponentCount();
 };
 
 [NoDelete]
@@ -157,6 +159,15 @@ interface ColorStopArray{
 };
 
 [NoDelete]
+interface BinaryResource{
+    [Const] DOMString GetResourceName();
+    [Const] DOMString GetMimeType();
+    octet GetDataAtIndex(long index);
+    long GetDataSize();
+};
+
+
+[NoDelete]
 interface CustomComponent{
     static CustomComponent CreateComponent();
     long RegisterFloatValue([Const] DOMString fieldName, float initValue);
@@ -164,6 +175,15 @@ interface CustomComponent{
     long RegisterShapeArrayValue([Const] DOMString fieldName);
     long RegisterColorValue([Const] DOMString fieldName, float r, float g, float b, float a);
     long RegisterColorStopArrayValue([Const] DOMString fieldName);
+    long RegisterSubcomponentArray([Const] DOMString fieldName);
+    long RegisterBinaryResource([Const] DOMString fieldName);
+    long RegisterStringValue([Const] DOMString fieldName, [Const] DOMString defaultValue);
+
+    boolean IsFieldRegistered([Const] DOMString fieldName);
+
+    CustomComponent GetSubComponentByIdx(long idx);
+    CustomComponent GetSubComponentArrayByName([Const] DOMString fieldName);
+    void AddSubComponent(CustomComponent pSubComponent);
 
     void CreateShapeArrayValue([Const] DOMString fieldName);
     FieldShapeArray GetShapeArrayValueForWrite([Const] DOMString fieldName);
@@ -183,6 +203,12 @@ interface CustomComponent{
     long AddColorStop([Const] DOMString fieldName, float value);
     void UpdateColorStop([Const] DOMString fieldName, long colorStopIdentifier, float value, float r, float g, float b, float a);
     void DeleteColorStop([Const] DOMString fieldName, long colorStopIdentifier);
+
+    void SetBinaryResourceName([Const] DOMString fieldName, [Const] DOMString resourceName);
+    BinaryResource GetBinaryResource([Const] DOMString fieldName);
+
+    void SetStringValue([Const] DOMString fieldName, [Const] DOMString strValue);
+    [Const] DOMString GetStringValue([Const] DOMString fieldName);
 };
 
 CustomComponent implements AbstractFrameState;
@@ -315,11 +341,10 @@ interface AbstractMediaShape{
     octet GetDataAtIndex(long index);
     void LoadData(octet[] pData);
     long GetDataSize();
-    void SetData(octet[] pData, long dataSize);
-    void SetMimeType(DOMString type);
-    DOMString GetMimeType();
+    void SetData([Const] DOMString mimeType, octet[] pData, long dataSize);
+    [Const] DOMString GetMimeType();
     void SetFileName(DOMString fName);
-    DOMString GetFileName();
+    [Const] DOMString GetFileName();
 };
 
 [NoDelete]
@@ -381,4 +406,5 @@ interface HuaHuoEngine {
     BaseShape DuplicateShape(BaseShape shape);
     void DestroyShape(BaseShape shape);
 
+    void SetFileData([Const] DOMString fileName,[Const] DOMString mimeType, octet[] pData, long dataSize);
 };

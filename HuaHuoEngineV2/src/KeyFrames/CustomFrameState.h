@@ -19,8 +19,46 @@ enum CustomDataType{
     COLOR,
     SHAPEARRAY,
     COLORSTOPARRAY,
-    VECTOR3
+    VECTOR3,
+    BINARYRESOURCE,
+    STRING
 };
+
+class BinaryResource{
+public:
+    BinaryResource():mFileDataPointer(NULL){}
+
+    const char* GetResourceName(){
+        return mResourceName.c_str();
+    }
+
+    const char* GetMimeType();
+
+    void SetResourceName(std::string resourceName){
+        mResourceName = resourceName;
+    }
+
+    BinaryResource* Reset(){
+        mFileDataPointer = NULL;
+        return this;
+    }
+
+    UInt8 GetDataAtIndex(UInt32 index);
+    UInt32 GetDataSize();
+
+    DECLARE_SERIALIZE(BinaryResource);
+private:
+    std::vector<UInt8>& GetFileDataPointer();
+private:
+    std::string mResourceName;
+    std::vector<UInt8>* mFileDataPointer;
+};
+
+template<class TransferFunction>
+void BinaryResource::Transfer(TransferFunction& transfer)
+{
+    TRANSFER(mResourceName);
+}
 
 // Use union to save space.
 struct CustomData{
@@ -30,6 +68,8 @@ struct CustomData{
     FieldShapeArray shapeArrayValue;
     ColorRGBAf colorValue;
     ColorStopArray colorStopArray;
+    BinaryResource binaryResource;
+    std::string stringValue;
     CustomDataType dataType;
 
     DECLARE_SERIALIZE(CustomData);
@@ -53,6 +93,12 @@ template<class TransferFunction> void CustomData::Transfer(TransferFunction &tra
             break;
         case VECTOR3:
             TRANSFER(vector3Value);
+            break;
+        case BINARYRESOURCE:
+            TRANSFER(binaryResource);
+            break;
+        case STRING:
+            TRANSFER(stringValue);
             break;
     }
 }
@@ -91,6 +137,11 @@ public:
     void SetFloatValue(float value);
     void SetVector3Value(float x, float y, float z);
 
+    void SetBinaryResourceName(const char* resourceName);
+
+    void SetStringValue(const char* stringValue);
+
+    BinaryResource* GetBinaryResource();
 
     float GetFloatValue();
     Vector3f* GetVector3Value();
@@ -114,6 +165,8 @@ public:
     CustomData* GetDefaultValueData(){
         return &m_defaultValue;
     }
+
+    const char* GetStringValue();
 private:
     template <typename T> CustomDataKeyFrame* RecordFieldValue(int frameId, T value);
 

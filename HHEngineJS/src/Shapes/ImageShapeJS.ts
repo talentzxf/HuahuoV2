@@ -1,5 +1,4 @@
-import {BaseShapeJS} from "./BaseShapeJS";
-import {PropertyType, getMimeTypeFromDataURI, dataURItoBlob} from "hhcommoncomponents"
+import {PropertyType, dataURItoBlob} from "hhcommoncomponents"
 import {parseGIF, decompressFrames, ParsedFrame} from "gifuct-js";
 import {GlobalConfig} from "../GlobalConfig"
 import {AbstractMediaShapeJS} from "./AbstractMediaShapeJS";

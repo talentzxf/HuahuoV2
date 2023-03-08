@@ -1013,14 +1013,11 @@ void PersistentManager::ClearActiveNameSpace(ActiveNameSpaceType type)
 
 LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIndex(const SerializedObjectIdentifier& globalIdentifier)
 {
-    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
-
     // AutoLock autoLock(*this);
     LocalIdentifierInFileType localIdentifierInFile = globalIdentifier.localIdentifierInFile;
 
-    printf("Global identifier:%d\n", globalIdentifier.localIdentifierInFile);
+    printf("Global identifier:%lld\n", globalIdentifier.localIdentifierInFile);
     int localSerializedFileIndex;
-
 
     // Remap globalPathID to localPathID
     int activeNameSpace = GetActiveNameSpace(kWritingNameSpace);
@@ -1030,12 +1027,10 @@ LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIn
     IDRemap& globalToLocalNameSpace = m_GlobalToLocalNameSpace[activeNameSpace];
     IDRemap& localToGlobalNameSpace = m_LocalToGlobalNameSpace[activeNameSpace];
 
-
     IDRemap::iterator found = globalToLocalNameSpace.find(globalIdentifier.serializedFileIndex);
 
     if (found == globalToLocalNameSpace.end())
     {
-
         // SET_ALLOC_OWNER(m_MemoryLabel);
         Assert(activeNameSpace < (int)m_Streams.size());
         Assert(m_Streams[activeNameSpace].stream != NULL);
@@ -1050,7 +1045,6 @@ LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIn
 
         SerializedFile& serialize = *m_Streams[activeNameSpace].stream;
         printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
-
 
         FileIdentifier fileIdentifier = PathIDToFileIdentifierInternal(globalIdentifier.serializedFileIndex);
         printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
@@ -1091,7 +1085,6 @@ void PersistentManager::InstanceIDToLocalSerializedObjectIdentifier(InstanceID i
 {
     // PERSISTENT_MANAGER_AUTOLOCK2(autoLock, HuaHuoEngine::kMutexLock, NULL, &gIDRemappingProfiler);
 
-    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
     if (instanceID == InstanceID_None)
     {
         localIdentifier.localSerializedFileIndex = 0;

@@ -12,7 +12,7 @@ class KeyFramesPropertyDiv extends BasePropertyDesc{
     constructor(property) {
         super(property);
 
-        this.intArray = new HHIntArray(property.getter, property.setter, property.updater, property.deleter, this.titleDiv)
+        this.intArray = new HHIntArray(property.getter, property.inserter, property.updater, property.deleter, this.titleDiv)
         this.contentDiv.appendChild(this.intArray)
 
         let keyFrameChangedHandler = new Module.ScriptEventHandlerImpl()

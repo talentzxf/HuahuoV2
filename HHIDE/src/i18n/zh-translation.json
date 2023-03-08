@@ -81,6 +81,7 @@
     "AtEnd": "置到结束位置",
     "AtLength": "指定长度",
     "Unfollow": "不贴边",
+    "select": "选择",
     "property": {
       "growth": "生长系数",
       "targetShapeArray": "目标形状",
@@ -91,7 +92,19 @@
       "gradientColorArray": "径向渐变颜色",
       "centerPosition": "中心位置",
       "keyframes": "关键帧",
-      "backgroundColor": "背景颜色"
+      "backgroundColor": "背景颜色",
+      "particleSystems": "粒子",
+      "activeParticleCount": "粒子数",
+      "particleMass": "粒子质量",
+      "particleSize": "粒子大小",
+      "particleColor": "粒子颜色",
+      "gravity": "重力加速度",
+      "lifeSpanRange": "粒子寿命范围(秒)",
+      "velocityMagnitudeRange": "速率范围",
+      "velocityThetaRange": "速度角度(xy)范围",
+      "velocityPhiRange": "速度角度(xz)范围",
+      "particleShape": "粒子形状",
+      "particleDirection": "粒子朝向"
     },
     "nail": {
       "isStatic": "是否静态"
@@ -133,7 +146,7 @@
   "component": {
     "nothing": "未找到适配的组件!"
   },
-  "colorstops":{
+  "colorstops": {
     "pen": {
       "name": "颜色点编号: {{index}}"
     }

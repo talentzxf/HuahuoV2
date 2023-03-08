@@ -15,6 +15,7 @@
 #include <string>
 #include "Utilities/MemoryFileSystem.h"
 #include "Layer.h"
+#include "ResourceManager.h"
 
 extern std::string StoreFilePath;
 

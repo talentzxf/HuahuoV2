@@ -10,23 +10,24 @@
 
 // This is the cpp side of the user created components.
 // It might contain multiple CustomFrameState(s).
-class CustomComponent : public AbstractFrameState{
+class CustomComponent : public AbstractFrameState {
 public:
-    REGISTER_CLASS(CustomComponent);
-    DECLARE_OBJECT_SERIALIZE();
+REGISTER_CLASS(CustomComponent);
+
+DECLARE_OBJECT_SERIALIZE();
 
     CustomComponent(MemLabelId memLabelId, ObjectCreationMode creationMode)
-    : AbstractFrameState(memLabelId, creationMode){
+            : AbstractFrameState(memLabelId, creationMode) {
 
     }
 
-    Container& GetChildComponents(){
+    Container &GetFrameStates() {
         return m_FrameStates;
     }
 
-    const set<int> GetKeyFrameIds() override{
+    const set<int> GetKeyFrameIds() override {
         set<int> keyFrames;
-        for(auto frameState: m_FrameStates){
+        for (auto frameState: m_FrameStates) {
             auto frameStateKeyFrames = frameState.GetComponentPtr()->GetKeyFrameIds();
             keyFrames.insert(frameStateKeyFrames.begin(), frameStateKeyFrames.end());
         }
@@ -36,113 +37,162 @@ public:
 
     vector<KeyFrameIdentifier> GetKeyFrameIdentifiers() override;
 
-    virtual int GetMinFrameId() override{
+    virtual int GetMinFrameId() override {
         int minFrameId = MAX_FRAMES;
-        for(auto frameState: m_FrameStates){
-            minFrameId = min( minFrameId, frameState.GetComponentPtr()->GetMinFrameId());
+        for (auto frameState: m_FrameStates) {
+            minFrameId = min(minFrameId, frameState.GetComponentPtr()->GetMinFrameId());
         }
         return minFrameId;
     }
 
-    virtual int GetMaxFrameId() override{
+    virtual int GetMaxFrameId() override {
         int maxFrameId = -1;
-        for(auto frameState: m_FrameStates){
-            maxFrameId = max( maxFrameId, frameState.GetComponentPtr()->GetMaxFrameId());
+        for (auto frameState: m_FrameStates) {
+            maxFrameId = max(maxFrameId, frameState.GetComponentPtr()->GetMaxFrameId());
         }
         return maxFrameId;
     }
 
-    virtual void AddAnimationOffset(int offset) override{
-        for(auto frameState: m_FrameStates){
+    virtual void AddAnimationOffset(int offset) override {
+        for (auto frameState: m_FrameStates) {
             frameState.GetComponentPtr()->AddAnimationOffset(offset);
         }
     }
 
     bool Apply(int frameId) override;
 
-    void SetVector3Value(const char* fieldName, float x, float y, float z){
+    void SetBinaryResourceName(const char* fieldName, const char* resourceName){
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        pComponent->SetBinaryResourceName(resourceName);
+    }
+
+    void SetVector3Value(const char *fieldName, float x, float y, float z) {
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->SetVector3Value(x, y, z);
     }
 
-    void SetFloatValue(const char* fieldName, float value){
+    void SetFloatValue(const char *fieldName, float value) {
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->SetFloatValue(value);
     }
 
-    void SetColorValue(const char* fieldName, float r, float g, float b, float a){
+    void SetColorValue(const char *fieldName, float r, float g, float b, float a) {
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->SetColorValue(r, g, b, a);
     }
 
-    int AddColorStop(const char* fieldName, float value, float r, float g, float b, float a){
+    void SetStringValue(const char* fieldName, const char* strValue){
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        pComponent->SetStringValue(strValue);
+    }
+
+    int AddColorStop(const char *fieldName, float value, float r, float g, float b, float a) {
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->AddColorStop(value, r, g, b, a);
     }
 
-    int AddColorStop(const char* fieldName, float value){
+    int AddColorStop(const char *fieldName, float value) {
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->AddColorStop(value);
     }
 
-    void UpdateColorStop(const char* fieldName, int colorStopIdentifier, float value, float r, float g, float b, float a){
+    void
+    UpdateColorStop(const char *fieldName, int colorStopIdentifier, float value, float r, float g, float b, float a) {
         int idx = m_fieldNameFieldIndexMap[fieldName];
 
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->UpdateColorStop(colorStopIdentifier, value, r, g, b, a);
     }
 
-    void DeleteColorStop(const char* fieldName, int colorStopIdentifier){
+    void DeleteColorStop(const char *fieldName, int colorStopIdentifier) {
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->DeleteColorStop(colorStopIdentifier);
     }
 
-    void CreateShapeArrayValue(const char* fieldName){
+    void CreateShapeArrayValue(const char *fieldName) {
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->CreateShapeArrayValue();
     }
 
-    FieldShapeArray* GetShapeArrayValueForWrite(const char* fieldName){
+    FieldShapeArray *GetShapeArrayValueForWrite(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetShapeArrayValueForWrite();
     }
 
-    Vector3f* GetVector3Value(const char* fieldName){
+    Vector3f *GetVector3Value(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetVector3Value();
     }
 
-    float GetFloatValue(const char* fieldName){
+    float GetFloatValue(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return -1.0f;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetFloatValue();
     }
 
-    FieldShapeArray* GetShapeArrayValue(const char* fieldName){
+    FieldShapeArray *GetShapeArrayValue(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetShapeArrayValue();
     }
 
-    ColorRGBAf* GetColorValue(const char* fieldName){
+    ColorRGBAf *GetColorValue(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetColorValue();
     }
 
-    ColorStopArray* GetColorStopArray(const char* fieldName){
+    ColorStopArray *GetColorStopArray(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->GetColorStopArray();
+    }
+
+    BinaryResource *GetBinaryResource(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        return pComponent->GetBinaryResource()->Reset();
+    }
+
+    const char* GetStringValue(const char* fieldName){
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        return pComponent->GetStringValue();
     }
 
     void SetBaseShape(BaseShape *pBaseShape) override;
@@ -151,19 +201,48 @@ public:
 
     bool ReverseKeyFrame(int startFrameId, int endFrameId, int currentFrameId) override;
 
+    int GetSubComponentCount() {
+        return m_SubComponents.size();
+    }
+
+    CustomComponent *GetSubComponentByIdx(int idx) {
+        return (CustomComponent *) &(*m_SubComponents[idx].GetComponentPtr());
+    }
+
+    CustomComponent *GetSubComponentArrayByName(const char *fieldName) {
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        return (CustomComponent *) &(*m_FrameStates[idx].GetComponentPtr());
+    }
+
+    void AddSubComponent(CustomComponent *pSubComponent) {
+        std::vector<FrameStatePair>::iterator itr = std::find_if(m_SubComponents.begin(), m_SubComponents.end(),
+                                                                 [pSubComponent](FrameStatePair componentPtr) {
+                                                                     return componentPtr.GetComponentPtr().GetInstanceID() ==
+                                                                            pSubComponent->GetInstanceID();
+                                                                 });
+        if (itr != m_SubComponents.end()) // Already added, no need to add again.
+            return;
+
+        pSubComponent->SetBaseShape(this->GetBaseShape());
+        m_FrameStates.push_back(FrameStatePair::FromState(pSubComponent));
+        m_SubComponents.push_back(FrameStatePair::FromState(pSubComponent));
+
+        printf("Successfully added subcomponent with type:%s\n", pSubComponent->GetTypeName());
+    }
+
 private:
-    int RegisterField(const char* fieldName, CustomDataType dataType){
-        if(m_FrameStates.size() != m_fieldNameFieldIndexMap.size()){
+    int RegisterField(const char *fieldName, CustomDataType dataType) {
+        if (m_FrameStates.size() != m_fieldNameFieldIndexMap.size()) {
             Assert("Error, field dim mismatch!");
             return -1;
         }
 
-        if(!m_fieldNameFieldIndexMap.contains(fieldName)){
+        if (!m_fieldNameFieldIndexMap.contains(fieldName)) {
             int index = m_fieldNameFieldIndexMap.size();
             m_fieldNameFieldIndexMap[fieldName] = index;
             m_fieldIndexFieldNameMap[index] = fieldName;
 
-            CustomFrameState* pFrameState = CustomFrameState::CreateFrameState(dataType);
+            CustomFrameState *pFrameState = CustomFrameState::CreateFrameState(dataType);
             pFrameState->SetBaseShape(this->GetBaseShape());
             m_FrameStates.push_back(FrameStatePair::FromState(pFrameState));
 
@@ -179,43 +258,83 @@ public:
     int GetKeyFrameAtIndex(int idx) override;
 
 public:
-    int RegisterFloatValue(const char* fieldName, float initValue){
+    int RegisterFloatValue(const char *fieldName, float initValue) {
         int fieldIdx = this->RegisterField(fieldName, FLOAT);
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
         pComponent->GetDefaultValueData()->floatValue = initValue;
         return fieldIdx;
     }
 
-    int RegisterVector3Value(const char* fieldName, float x, float y, float z){
+    int RegisterStringValue(const char* fieldName, const char* defaultValue){
+        int fieldIdx = this->RegisterField(fieldName, STRING);
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        pComponent->GetDefaultValueData()->stringValue = defaultValue;
+        return fieldIdx;
+    }
+
+    int RegisterVector3Value(const char *fieldName, float x, float y, float z) {
         int fieldIdx = this->RegisterField(fieldName, VECTOR3);
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
         pComponent->GetDefaultValueData()->vector3Value = Vector3f(x, y, z);
         return fieldIdx;
     }
 
-    int RegisterColorValue(const char* fieldName, float r, float g, float b, float a){
+    int RegisterColorValue(const char *fieldName, float r, float g, float b, float a) {
         int fieldIdx = this->RegisterField(fieldName, COLOR);
-        CustomFrameState* pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
         ColorRGBAf initColor(r, g, b, a);
         pComponent->GetDefaultValueData()->colorValue = initColor;
         return fieldIdx;
     }
 
-    int RegisterColorStopArrayValue(const char* fieldName){
+    int RegisterColorStopArrayValue(const char *fieldName) {
         return this->RegisterField(fieldName, COLORSTOPARRAY);
     }
 
-    int RegisterShapeArrayValue(const char* fieldName){
+    int RegisterBinaryResource(const char* fieldName){
+        return this->RegisterField(fieldName, BINARYRESOURCE);
+    }
+
+    int RegisterShapeArrayValue(const char *fieldName) {
         return this->RegisterField(fieldName, SHAPEARRAY);
     }
 
-    static CustomComponent* CreateComponent();
+    int RegisterSubcomponentArray(const char *fieldName) { // TODO: Duplicate with RegisterField.
+        if (m_FrameStates.size() != m_fieldNameFieldIndexMap.size()) {
+            Assert("Error, field dim mismatch!");
+            return -1;
+        }
+
+        if (!m_fieldNameFieldIndexMap.contains(fieldName)) {
+            int index = m_fieldNameFieldIndexMap.size();
+            m_fieldNameFieldIndexMap[fieldName] = index;
+            m_fieldIndexFieldNameMap[index] = fieldName;
+
+            CustomComponent *pComponent = CreateComponent();
+            // This type name should correspond to the GroupComponent in the ts side.
+            pComponent->SetTypeName("GroupComponent");
+
+            this->AddSubComponent(pComponent);
+
+            return index;
+        }
+        printf("ERROR: Field: %s has already been registered.\n", fieldName);
+        return m_fieldNameFieldIndexMap[fieldName];
+    }
+
+    bool IsFieldRegistered(const char* fieldName){
+        return m_fieldNameFieldIndexMap.contains(fieldName);
+    }
+
+    static CustomComponent *CreateComponent();
 
 private:
     std::map<string, int> m_fieldNameFieldIndexMap;
     std::map<int, string> m_fieldIndexFieldNameMap;
 
     Container m_FrameStates; // All the frame states. Each field has one.
+
+    Container m_SubComponents; // All the subcomponent arrays. Each field has one.
 
     std::vector<int> keyFrameIdCache;
 };

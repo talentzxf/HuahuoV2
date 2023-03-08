@@ -10,7 +10,7 @@ class ColorStopArrayPropertyDiv extends BasePropertyDesc{
     constructor(property) {
         super(property);
 
-        this.colorStopArrayDiv = new HHColorStopArrayInput(property.getter, property.setter, property.updater, property.deleter)
+        this.colorStopArrayDiv = new HHColorStopArrayInput(property.getter, property.inserter, property.updater, property.deleter)
         this.contentDiv.appendChild(this.colorStopArrayDiv)
     }
 }

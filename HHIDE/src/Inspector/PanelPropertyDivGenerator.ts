@@ -14,14 +14,16 @@ class PanelPropertyDesc extends BasePropertyDesc{
 
         this.contentDiv.appendChild(panelPropertyDiv)
 
-        // TODO: Avoid duplication with Inspector
-        for(let childProperty of property.config.children){
-            let divGenerator = GetPropertyDivGenerator(childProperty.type)
-            let propertyDesc = divGenerator.generatePropertyDesc(childProperty)
+        if(property.config && property.config.children){
+            // TODO: Avoid duplication with Inspector
+            for(let childProperty of property.config.children){
+                let divGenerator = GetPropertyDivGenerator(childProperty.type)
+                let propertyDesc = divGenerator.generatePropertyDesc(childProperty)
 
-            let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
+                let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
 
-            this.contentDiv.appendChild(propertyDiv)
+                this.contentDiv.appendChild(propertyDiv)
+            }
         }
     }
     onValueChanged(val) {

@@ -55,8 +55,8 @@ static Object& ProduceClone(Object& object, TempRemapTable& remappedPtrs)
     if(clone->GetType()->IsDerivedFrom<CustomComponent>()){
         CustomComponent* originalComponent = (CustomComponent*)(&object);
         CustomComponent* clonedComponent = (CustomComponent*)(clone);
-        Container& baseShapeContainer = originalComponent->GetChildComponents();
-        Container& clonedContainer = clonedComponent->GetChildComponents();
+        Container& baseShapeContainer = originalComponent->GetFrameStates();
+        Container& clonedContainer = clonedComponent->GetFrameStates();
 
         clonedContainer.resize(baseShapeContainer.size());
         for (size_t i = 0; i < baseShapeContainer.size(); i++)
