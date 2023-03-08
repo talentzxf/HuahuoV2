@@ -299,60 +299,101 @@ class Particles extends AbstractComponent {
                 {particleColor: cType},
                 (particleSize, particleColor, curFrameId, velocityDir, staticDir) => {
 
-                    let viewPortXMin = -outputImageWidth / 2;
-                    let viewPortYMin = -outputImageHeight / 2;
-                    for (let i of range(maxNumbers)) {
-                        if (particleIsAlive(i, curFrameId)) {
-                            // projection. For simplicity, ignore z coordinate first.
-                            let projectedPosition = particles[i].position.xy
+                    let center = [0.0, 0.0, 0]
+                    let eye = [0.5, 0.5, 0.0]
+                    let fov = 45
+                    let view = huahuoEngine.ti.lookAt(eye, center, [0.0, 1.0, 0.0])
+                    let proj = huahuoEngine.ti.perspective(fov, aspectRatio, 0.1, 1000)
+                    let mvp = proj.matmul(view)
 
-                            // TODO: https://www.geeksforgeeks.org/window-to-viewport-transformation-in-computer-graphics-with-implementation/
-                            let centerWindowPosition = i32(projectedPosition - [viewPortXMin, viewPortYMin])
+                    ti.clearColor(this.renderTarget, [0.1, 0.2, 0.3, 1])
+                    ti.useDepth(this.depth)
 
-                            if (particleShapeSize[0] <= 0 || particleShapeSize[0] <= 0) { // Draw circle
-                                let particleSizeSquare = f32(particleSize * particleSize / 4.0)
-                                for (let pixelIndex of ndrange(particleSize, particleSize)) {
-                                    let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
-                                    if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare) {
-                                        if (windowPosition[0] >= 0 && windowPosition[0] <= outputImageWidth && windowPosition[1] >= 0 && windowPosition[1] <= outputImageHeight) {
-                                            outputImage[windowPosition] = particleColor
-                                        }
-                                    }
-                                }
-                            } else { // Draw shape from the particleShape image.
+                    // set up vertices of all the particles.
+                    for(let i of range(maxNumbers) ){
+                        if(particleIsAlive(i, curFrameId)){ //
+                            let particlePosition = particles[i].position
+                            let particleVelocityXY = particles[i].velocity.normalized().xy
 
+                            particle_vertices[4*i].pos = [particlePosition[0] - 0.5 * particleVelocityXY[0] , particlePosition[1] - 0.5 * particleVelocityXY[1], particlePosition[2]]
+                            particle_vertices[4*i + 1].pos = [particlePosition[0] + 0.5 * particleVelocityXY[0] , particlePosition[1] + 0.5 * particleVelocityXY[1], particlePosition[2]]
+                            particle_vertices[4*i + 2].pos = [particlePosition[0] + 0.5 * particleVelocityXY[0] , particlePosition[1] - 0.5 * particleVelocityXY[1], particlePosition[2]]
+                            particle_vertices[4*i + 3].pos = [particlePosition[0] - 0.5 * particleVelocityXY[0] , particlePosition[1] - 0.5 * particleVelocityXY[1], particlePosition[2]]
 
-                                for (let pixelIndex of ndrange(particleSize, particleSize)) {
-                                    let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
-
-                                    // TODO: Only consider x-y axis for now.
-                                    let particleVelocity = particles[i].velocity.xy
-
-                                    // let angle = ti.atan2(particleVelocity[1], particleVelocity[0])
-                                    let angle = 30.0 / 180.0 * Math.PI
-                                    let pixelAfterRotateX = pixelIndex[0] * ti.cos(angle) - pixelIndex[1] * ti.sin(angle)
-                                    let pixelAfterRotateY = pixelIndex[0] * ti.sin(angle) + pixelIndex[1] * ti.cos(angle)
-
-                                    let imgPositionX = i32(particleShapeSize[0] * pixelAfterRotateX / particleSize)
-                                    let imgPositionY = i32(particleShapeSize[1] * pixelAfterRotateY / particleSize)
-
-                                    let particleShapeColor = particleShapeData[particleShapeSize[1] - imgPositionY, imgPositionX]
-                                    if (particleShapeColor[3] > 0.0) {
-                                        outputImage[windowPosition] = particleColor
-
-                                        // TODO: How to do alpha blending??
-                                        // let alpha = particleShapeColor[3]
-                                        //
-                                        // // alpha * new + (1-alpha)*old
-                                        // let currentRGB = outputImage[windowPosition].rgb
-                                        // let newRGB = alpha * particleColor.rgb + (1.0 - alpha) * currentRGB
-                                        //
-                                        // outputImage[windowPosition] = [newRGB[0], newRGB[1], newRGB[2], alpha]
-                                    }
-                                }
-                            }
+                        }else{
+                            particle_vertices[4*i].pos = [0.0, 0.0, 0.0]
+                            particle_vertices[4*i + 1].pos = [0.0, 0.0, 0.0]
+                            particle_vertices[4*i + 2].pos = [0.0, 0.0, 0.0]
+                            particle_vertices[4*i + 3].pos = [0.0, 0.0, 0.0]
                         }
                     }
+
+                    // Vertex shader
+                    for(let v of ti.inputVertices(particle_vertices, particle_indices)){
+                        let pos = mvp.matmul(v.pos.concat(1.0))
+                        ti.outputPosition(pos)
+                        ti.outputVertex(v)
+                    }
+
+                    // Fragment shader
+                    for(let f of ti.inputFragments()){
+                        ti.outputColor(renderTarget, [1.0, 0.0, 1.0, 1.0])
+                    }
+
+                    // let viewPortXMin = -outputImageWidth / 2;
+                    // let viewPortYMin = -outputImageHeight / 2;
+                    // for (let i of range(maxNumbers)) {
+                    //     if (particleIsAlive(i, curFrameId)) {
+                    //         // projection. For simplicity, ignore z coordinate first.
+                    //         let projectedPosition = particles[i].position.xy
+                    //
+                    //         // TODO: https://www.geeksforgeeks.org/window-to-viewport-transformation-in-computer-graphics-with-implementation/
+                    //         let centerWindowPosition = i32(projectedPosition - [viewPortXMin, viewPortYMin])
+                    //
+                    //         if (particleShapeSize[0] <= 0 || particleShapeSize[0] <= 0) { // Draw circle
+                    //             let particleSizeSquare = f32(particleSize * particleSize / 4.0)
+                    //             for (let pixelIndex of ndrange(particleSize, particleSize)) {
+                    //                 let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
+                    //                 if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare) {
+                    //                     if (windowPosition[0] >= 0 && windowPosition[0] <= outputImageWidth && windowPosition[1] >= 0 && windowPosition[1] <= outputImageHeight) {
+                    //                         outputImage[windowPosition] = particleColor
+                    //                     }
+                    //                 }
+                    //             }
+                    //         } else { // Draw shape from the particleShape image.
+                    //
+                    //
+                    //             for (let pixelIndex of ndrange(particleSize, particleSize)) {
+                    //                 let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
+                    //
+                    //                 // TODO: Only consider x-y axis for now.
+                    //                 let particleVelocity = particles[i].velocity.xy
+                    //
+                    //                 // let angle = ti.atan2(particleVelocity[1], particleVelocity[0])
+                    //                 let angle = 30.0 / 180.0 * Math.PI
+                    //                 let pixelAfterRotateX = pixelIndex[0] * ti.cos(angle) - pixelIndex[1] * ti.sin(angle)
+                    //                 let pixelAfterRotateY = pixelIndex[0] * ti.sin(angle) + pixelIndex[1] * ti.cos(angle)
+                    //
+                    //                 let imgPositionX = i32(particleShapeSize[0] * pixelAfterRotateX / particleSize)
+                    //                 let imgPositionY = i32(particleShapeSize[1] * pixelAfterRotateY / particleSize)
+                    //
+                    //                 let particleShapeColor = particleShapeData[particleShapeSize[1] - imgPositionY, imgPositionX]
+                    //                 if (particleShapeColor[3] > 0.0) {
+                    //                     outputImage[windowPosition] = particleColor
+                    //
+                    //                     // TODO: How to do alpha blending??
+                    //                     // let alpha = particleShapeColor[3]
+                    //                     //
+                    //                     // // alpha * new + (1-alpha)*old
+                    //                     // let currentRGB = outputImage[windowPosition].rgb
+                    //                     // let newRGB = alpha * particleColor.rgb + (1.0 - alpha) * currentRGB
+                    //                     //
+                    //                     // outputImage[windowPosition] = [newRGB[0], newRGB[1], newRGB[2], alpha]
+                    //                 }
+                    //             }
+                    //         }
+                    //     }
+                    // }
                 })
         }
 

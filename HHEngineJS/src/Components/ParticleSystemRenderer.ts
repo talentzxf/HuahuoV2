@@ -20,6 +20,9 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
     htmlCanvas
     taichiCanvas
 
+    renderTarget
+    depth
+
     @PropertyValue(PropertyCategory.subcomponentArray, null, {subComponentTypeName: "Particles"} as SubComponentArrayProperty)
     particleSystems
 
@@ -52,7 +55,17 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
             this.htmlCanvas.height = heightInt
             this.htmlCanvas.style.width = widthInt + "px"
             this.htmlCanvas.style.height = heightInt + "px"
-            this.taichiCanvas = new huahuoEngine.ti.Canvas(this.htmlCanvas)
+            // this.taichiCanvas = new huahuoEngine.ti.Canvas(this.htmlCanvas)
+
+            this.renderTarget = huahuoEngine.ti.canvasTexture(this.htmlCanvas)
+            this.depth = huahuoEngine.ti.depthTexture([widthInt, heightInt])
+            let aspectRatio = widthInt/heightInt
+
+            huahuoEngine.ti.addToKernelScope({
+                renderTarget: this.renderTarget,
+                depth: this.depth,
+                aspectRatio: aspectRatio
+            })
 
             // document.body.appendChild(this.htmlCanvas)
             // this.htmlCanvas.style.position = "absolute"
@@ -92,7 +105,7 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
             particles.renderImage(currentFrameId)
         }
 
-        await this.taichiCanvas.setImage(this.outputImage)
+        // await this.taichiCanvas.setImage(this.outputImage)
         particleSystemRaster.clearAndDrawImage(this.htmlCanvas)
     }
 
