@@ -27,10 +27,10 @@ class Particles extends AbstractComponent {
     @PropertyValue(PropertyCategory.customField)
     particleShape
 
-    @PropertyValue(PropertyCategory.interpolateFloat, 10.0)
+    @PropertyValue(PropertyCategory.interpolateFloat, 1.0)
     particleSize
 
-    @PropertyValue(PropertyCategory.interpolateVector2, {x: 100.0, y: 300.0})
+    @PropertyValue(PropertyCategory.interpolateVector2, {x: 1.0, y: 3.0})
     velocityMagnitudeRange
 
     @PropertyValue(PropertyCategory.interpolateVector2, {x: 0.0, y: 360.0})
@@ -268,7 +268,8 @@ class Particles extends AbstractComponent {
 
             let num_triangles = MAX_PARTICLE_COUNT * 2 // Each particle has two triangles.
             let vertexType = huahuoEngine.ti.types.struct({
-                pos: huahuoEngine.ti.types.vector(ti.f32, 3)
+                pos: huahuoEngine.ti.types.vector(ti.f32, 3),
+                center: huahuoEngine.ti.types.vector(ti.f32, 3) // The center of the particle
             });
             let particle_vertices = huahuoEngine.ti.field(vertexType, [num_triangles * 2]) // Each particle has two triangles (4 vertices)
             let particle_indices = huahuoEngine.ti.field(huahuoEngine.ti.i32, [num_triangles * 3]);
@@ -299,6 +300,9 @@ class Particles extends AbstractComponent {
                 {particleColor: cType},
                 (particleSize, particleColor, curFrameId, velocityDir, staticDir) => {
 
+                    let invalidPosition = [-10000.0, -10000.0, -10000.0]
+                    let invalidColor = [0.0, 0.0, 0.0, 0.0]
+
                     let center = [0.0, 0.0, 0]
                     let eye = [0.0, 0.0, 10.0]
                     let fov = 45
@@ -309,22 +313,33 @@ class Particles extends AbstractComponent {
                     ti.clearColor(renderTarget, [0.0, 0.0, 0.0, 0.0])
                     ti.useDepth(depth)
 
+                    let halfParticleSize = particleSize * 0.5
                     // set up vertices of all the particles.
                     for(let i of range(maxNumbers) ){
                         if(particleIsAlive(i, curFrameId)){ //
                             let particlePosition = particles[i].position
-                            let particleVelocityXY = particles[i].velocity.normalized().xy
+                            // let particleVelocityXY = particles[i].velocity.normalized().xy
+                            let particleVelocityXY = [1.0, 1.0]
 
-                            particle_vertices[4*i].pos = [particlePosition[0] - 0.5 * particleVelocityXY[0] , particlePosition[1] + 0.5 * particleVelocityXY[1], particlePosition[2]]
-                            particle_vertices[4*i + 1].pos = [particlePosition[0] + 0.5 * particleVelocityXY[0] , particlePosition[1] + 0.5 * particleVelocityXY[1], particlePosition[2]]
-                            particle_vertices[4*i + 2].pos = [particlePosition[0] + 0.5 * particleVelocityXY[0] , particlePosition[1] - 0.5 * particleVelocityXY[1], particlePosition[2]]
-                            particle_vertices[4*i + 3].pos = [particlePosition[0] - 0.5 * particleVelocityXY[0] , particlePosition[1] - 0.5 * particleVelocityXY[1], particlePosition[2]]
+                            particle_vertices[4*i].pos = [particlePosition[0] - halfParticleSize * particleVelocityXY[0] , particlePosition[1] + halfParticleSize * particleVelocityXY[1], particlePosition[2]]
+                            particle_vertices[4*i + 1].pos = [particlePosition[0] + halfParticleSize * particleVelocityXY[0] , particlePosition[1] + halfParticleSize * particleVelocityXY[1], particlePosition[2]]
+                            particle_vertices[4*i + 2].pos = [particlePosition[0] + halfParticleSize * particleVelocityXY[0] , particlePosition[1] - halfParticleSize * particleVelocityXY[1], particlePosition[2]]
+                            particle_vertices[4*i + 3].pos = [particlePosition[0] - halfParticleSize * particleVelocityXY[0] , particlePosition[1] - halfParticleSize * particleVelocityXY[1], particlePosition[2]]
 
+                            particle_vertices[4*i].center = particlePosition.xyz
+                            particle_vertices[4*i + 1].center = particlePosition.xyz
+                            particle_vertices[4*i + 2].center = particlePosition.xyz
+                            particle_vertices[4*i + 3].center = particlePosition.xyz
                         }else{
-                            particle_vertices[4*i].pos = [-10000.0, -10000.0, -10000.0]
-                            particle_vertices[4*i + 1].pos = [-10000.0, -10000.0, -10000.0]
-                            particle_vertices[4*i + 2].pos = [-10000.0, -10000.0, -10000.0]
-                            particle_vertices[4*i + 3].pos = [-10000.0, -10000.0, -10000.0]
+                            particle_vertices[4*i].pos = invalidPosition
+                            particle_vertices[4*i + 1].pos = invalidPosition
+                            particle_vertices[4*i + 2].pos = invalidPosition
+                            particle_vertices[4*i + 3].pos = invalidPosition
+
+                            particle_vertices[4*i].center = invalidPosition
+                            particle_vertices[4*i + 1].center = invalidPosition
+                            particle_vertices[4*i + 2].center = invalidPosition
+                            particle_vertices[4*i + 3].center = invalidPosition
                         }
                     }
 
@@ -337,7 +352,16 @@ class Particles extends AbstractComponent {
 
                     // Fragment shader
                     for(let f of ti.inputFragments()){
-                        ti.outputColor(renderTarget, [1.0, 0.0, 1.0, 1.0])
+                        let particleSizeSquare = f32(particleSize * particleSize/4.0)
+
+                        // Draw a circle on the triangle
+                        let fragmentPos = f.pos
+                        let centerPos = f.center
+                        if((fragmentPos - centerPos).norm_sqr() <= particleSizeSquare){
+                            ti.outputColor(renderTarget, particleColor)
+                        }else{
+                            ti.outputColor(renderTarget, invalidColor)
+                        }
                     }
 
                     // let viewPortXMin = -outputImageWidth / 2;
