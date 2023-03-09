@@ -27,10 +27,10 @@ class Particles extends AbstractComponent {
     @PropertyValue(PropertyCategory.customField)
     particleShape
 
-    @PropertyValue(PropertyCategory.interpolateFloat, 1.0)
+    @PropertyValue(PropertyCategory.interpolateFloat, 0.5)
     particleSize
 
-    @PropertyValue(PropertyCategory.interpolateVector2, {x: 1.0, y: 3.0})
+    @PropertyValue(PropertyCategory.interpolateVector2, {x: 3.0, y: 5.0})
     velocityMagnitudeRange
 
     @PropertyValue(PropertyCategory.interpolateVector2, {x: 0.0, y: 360.0})
@@ -269,7 +269,8 @@ class Particles extends AbstractComponent {
             let num_triangles = MAX_PARTICLE_COUNT * 2 // Each particle has two triangles.
             let vertexType = huahuoEngine.ti.types.struct({
                 pos: huahuoEngine.ti.types.vector(ti.f32, 3),
-                center: huahuoEngine.ti.types.vector(ti.f32, 3) // The center of the particle
+                center: huahuoEngine.ti.types.vector(ti.f32, 3), // The center of the particle
+                texture_pos: ti.types.vector(ti.f32, 2),
             });
             let particle_vertices = huahuoEngine.ti.field(vertexType, [num_triangles * 2]) // Each particle has two triangles (4 vertices)
             let particle_indices = huahuoEngine.ti.field(huahuoEngine.ti.i32, [num_triangles * 3]);
@@ -301,7 +302,8 @@ class Particles extends AbstractComponent {
                 (particleSize, particleColor, curFrameId, velocityDir, staticDir) => {
 
                     let invalidPosition = [-10000.0, -10000.0, -10000.0]
-                    let invalidColor = [0.0, 0.0, 0.0, 0.0]
+
+                    let particleSizeSquare = f32(particleSize * particleSize/4.0)
 
                     let center = [0.0, 0.0, 0]
                     let eye = [0.0, 0.0, 10.0]
@@ -341,6 +343,11 @@ class Particles extends AbstractComponent {
                             particle_vertices[4*i + 2].center = invalidPosition
                             particle_vertices[4*i + 3].center = invalidPosition
                         }
+
+                        particle_vertices[4*i].texture_pos = [0.0, 0.0]
+                        particle_vertices[4*i + 1].texture_pos = [1.0, 0.0]
+                        particle_vertices[4*i + 2].texture_pos = [1.0, 1.0]
+                        particle_vertices[4*i + 3].texture_pos = [0.0, 1.0]
                     }
 
                     // Vertex shader
@@ -352,15 +359,19 @@ class Particles extends AbstractComponent {
 
                     // Fragment shader
                     for(let f of ti.inputFragments()){
-                        let particleSizeSquare = f32(particleSize * particleSize/4.0)
-
                         // Draw a circle on the triangle
                         let fragmentPos = f.pos
                         let centerPos = f.center
-                        if((fragmentPos - centerPos).norm_sqr() <= particleSizeSquare){
-                            ti.outputColor(renderTarget, particleColor)
+
+                        if(particleShapeSize[0] > 0 && particleShapeSize[1] > 0){
+                            let textureColor = ti.textureSample(particleShapeTexture, f.texture_pos)
+                            ti.outputColor(renderTarget, textureColor)
                         }else{
-                            ti.outputColor(renderTarget, invalidColor)
+                            if((fragmentPos - centerPos).norm_sqr() <= particleSizeSquare){
+                                ti.outputColor(renderTarget, particleColor)
+                            }else{
+                                ti.discard()
+                            }
                         }
                     }
 

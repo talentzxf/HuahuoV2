@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {huahuoEngine} from "../EngineAPI";
 
 const MAX_PARTICLE_SHAPE_SIZE = 1024
@@ -9,16 +10,28 @@ class ParticleShapeLoader {
 
     _particleShapeData
     _particleShapeSize
+    _particleShapeTexture
 
     constructor() {
         this._particleShapeSize = huahuoEngine.ti.field(huahuoEngine.ti.i32, [2])
         this._particleShapeSize.fromArray1D([0, 0])
 
-        this._particleShapeData = huahuoEngine.ti.Vector.field(4, huahuoEngine.ti.i32, [MAX_PARTICLE_SHAPE_SIZE, MAX_PARTICLE_SHAPE_SIZE])
+        this._particleShapeData = huahuoEngine.ti.Vector.field(4, huahuoEngine.ti.f32, [MAX_PARTICLE_SHAPE_SIZE, MAX_PARTICLE_SHAPE_SIZE])
+
+        this._particleShapeTexture = huahuoEngine.ti.texture(4, [256, 256])
         huahuoEngine.ti.addToKernelScope({
             particleShapeSize: this._particleShapeSize,
-            particleShapeData: this._particleShapeData
+            particleShapeData: this._particleShapeData,
+            particleShapeTexture: this._particleShapeTexture
         })
+
+        let testTexture = huahuoEngine.ti.kernel(()=>{
+            for(let I of ndrange(256, 256)){
+                ti.textureStore(particleShapeTexture, I, [1.0, 0.0, 0.0, 1.0])
+            }
+        })
+
+        testTexture()
     }
 
     setParticleShape(binaryResource) {
@@ -66,8 +79,22 @@ class ParticleShapeLoader {
 
         let particleShapeImageData = context.getImageData(0, 0, MAX_PARTICLE_SHAPE_SIZE, MAX_PARTICLE_SHAPE_SIZE)
 
-        this._particleShapeSize.fromArray1D([this.hiddenImage.height, this.hiddenImage.width])
+        this._particleShapeSize.fromArray1D([this.hiddenImage.width, this.hiddenImage.height])
         this._particleShapeData.fromArray1D(particleShapeImageData.data)
+
+        this._particleShapeTexture = huahuoEngine.ti.texture(4, [this.hiddenImage.width, this.hiddenImage.height])
+        huahuoEngine.ti.addToKernelScope({
+            particleShapeTexture: this._particleShapeTexture
+        })
+
+        let loadParticleTextureKernel = huahuoEngine.ti.kernel(()=>{
+            for(let I of ndrange(particleShapeSize[0], particleShapeSize[1])){
+                // ti.textureStore(particleShapeTexture, I, f32(particleShapeData[I]))
+                ti.textureStore(particleShapeTexture, I, [1.0, 1.0, 0.0, 1.0])
+            }
+        })
+
+        loadParticleTextureKernel()
     }
 }
 
