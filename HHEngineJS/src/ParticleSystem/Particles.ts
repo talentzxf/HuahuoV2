@@ -30,7 +30,7 @@ class Particles extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateFloat, 10.0)
     particleSize
 
-    @PropertyValue(PropertyCategory.interpolateVector2, {x: 300.0, y: 500.0})
+    @PropertyValue(PropertyCategory.interpolateVector2, {x: 100.0, y: 300.0})
     velocityMagnitudeRange
 
     @PropertyValue(PropertyCategory.interpolateVector2, {x: 0.0, y: 360.0})
@@ -57,7 +57,7 @@ class Particles extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateColor, {random: true})
     particleColor
 
-    @PropertyValue(PropertyCategory.interpolateVector3, {x: 0.0, y: -98, z: 0.0})
+    @PropertyValue(PropertyCategory.interpolateVector3, {x: 0.0, y: -9.8, z: 0.0})
     gravity
 
     maxNumbers = MAX_PARTICLE_COUNT // Preload MAX_PARTICLE_COUNT particles.
@@ -300,14 +300,14 @@ class Particles extends AbstractComponent {
                 (particleSize, particleColor, curFrameId, velocityDir, staticDir) => {
 
                     let center = [0.0, 0.0, 0]
-                    let eye = [0.5, 0.5, 0.0]
+                    let eye = [0.0, 0.0, 10.0]
                     let fov = 45
                     let view = ti.lookAt(eye, center, [0.0, 1.0, 0.0])
                     let proj = ti.perspective(fov, aspectRatio, 0.1, 1000)
                     let mvp = proj.matmul(view)
 
-                    ti.clearColor(renderTarget, [0.1, 0.2, 0.3, 1])
-                    ti.useDepth(this.depth)
+                    ti.clearColor(renderTarget, [0.0, 0.0, 0.0, 0.0])
+                    ti.useDepth(depth)
 
                     // set up vertices of all the particles.
                     for(let i of range(maxNumbers) ){
@@ -315,22 +315,22 @@ class Particles extends AbstractComponent {
                             let particlePosition = particles[i].position
                             let particleVelocityXY = particles[i].velocity.normalized().xy
 
-                            particle_vertices[4*i].pos = [particlePosition[0] - 0.5 * particleVelocityXY[0] , particlePosition[1] - 0.5 * particleVelocityXY[1], particlePosition[2]]
+                            particle_vertices[4*i].pos = [particlePosition[0] - 0.5 * particleVelocityXY[0] , particlePosition[1] + 0.5 * particleVelocityXY[1], particlePosition[2]]
                             particle_vertices[4*i + 1].pos = [particlePosition[0] + 0.5 * particleVelocityXY[0] , particlePosition[1] + 0.5 * particleVelocityXY[1], particlePosition[2]]
                             particle_vertices[4*i + 2].pos = [particlePosition[0] + 0.5 * particleVelocityXY[0] , particlePosition[1] - 0.5 * particleVelocityXY[1], particlePosition[2]]
                             particle_vertices[4*i + 3].pos = [particlePosition[0] - 0.5 * particleVelocityXY[0] , particlePosition[1] - 0.5 * particleVelocityXY[1], particlePosition[2]]
 
                         }else{
-                            particle_vertices[4*i].pos = [0.0, 0.0, 0.0]
-                            particle_vertices[4*i + 1].pos = [0.0, 0.0, 0.0]
-                            particle_vertices[4*i + 2].pos = [0.0, 0.0, 0.0]
-                            particle_vertices[4*i + 3].pos = [0.0, 0.0, 0.0]
+                            particle_vertices[4*i].pos = [-10000.0, -10000.0, -10000.0]
+                            particle_vertices[4*i + 1].pos = [-10000.0, -10000.0, -10000.0]
+                            particle_vertices[4*i + 2].pos = [-10000.0, -10000.0, -10000.0]
+                            particle_vertices[4*i + 3].pos = [-10000.0, -10000.0, -10000.0]
                         }
                     }
 
                     // Vertex shader
                     for(let v of ti.inputVertices(particle_vertices, particle_indices)){
-                        let pos = mvp.matmul(v.pos.concat(1.0))
+                        let pos = mvp.matmul(v.pos.concat([1.0]))
                         ti.outputPosition(pos)
                         ti.outputVertex(v)
                     }
