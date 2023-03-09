@@ -363,10 +363,13 @@ class Particles extends AbstractComponent {
                         let fragmentPos = f.pos
                         let centerPos = f.center
 
-                        if(particleShapeSize[0] > 0 && particleShapeSize[1] > 0){
+                        if(particleShapeSize[0] > 0 && particleShapeSize[1] > 0){ // Draw texture
                             let textureColor = ti.textureSample(particleShapeTexture, f.texture_pos)
-                            ti.outputColor(renderTarget, textureColor)
-                        }else{
+                            if(textureColor[3] > 0)
+                                ti.outputColor(renderTarget, particleColor)
+                            else
+                                ti.discard()
+                        }else{ // Draw circle.
                             if((fragmentPos - centerPos).norm_sqr() <= particleSizeSquare){
                                 ti.outputColor(renderTarget, particleColor)
                             }else{

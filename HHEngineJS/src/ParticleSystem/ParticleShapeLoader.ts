@@ -3,6 +3,8 @@ import {huahuoEngine} from "../EngineAPI";
 
 const MAX_PARTICLE_SHAPE_SIZE = 1024
 
+const PARTICLE_TEXTURE_SIZE = 256
+
 class ParticleShapeLoader {
     hiddenImage: HTMLImageElement
     hiddenCanvas: HTMLCanvasElement
@@ -22,12 +24,13 @@ class ParticleShapeLoader {
         huahuoEngine.ti.addToKernelScope({
             particleShapeSize: this._particleShapeSize,
             particleShapeData: this._particleShapeData,
-            particleShapeTexture: this._particleShapeTexture
+            particleShapeTexture: this._particleShapeTexture,
+            particleTextureSize: PARTICLE_TEXTURE_SIZE
         })
 
         let testTexture = huahuoEngine.ti.kernel(()=>{
-            for(let I of ndrange(256, 256)){
-                ti.textureStore(particleShapeTexture, I, [1.0, 0.0, 0.0, 1.0])
+            for(let I of ndrange(particleTextureSize, particleTextureSize)){
+                ti.textureStore(particleShapeTexture, I, [0.0, 0.0, 0.0, 0.0])
             }
         })
 
@@ -82,15 +85,12 @@ class ParticleShapeLoader {
         this._particleShapeSize.fromArray1D([this.hiddenImage.width, this.hiddenImage.height])
         this._particleShapeData.fromArray1D(particleShapeImageData.data)
 
-        this._particleShapeTexture = huahuoEngine.ti.texture(4, [this.hiddenImage.width, this.hiddenImage.height])
-        huahuoEngine.ti.addToKernelScope({
-            particleShapeTexture: this._particleShapeTexture
-        })
-
         let loadParticleTextureKernel = huahuoEngine.ti.kernel(()=>{
-            for(let I of ndrange(particleShapeSize[0], particleShapeSize[1])){
-                // ti.textureStore(particleShapeTexture, I, f32(particleShapeData[I]))
-                ti.textureStore(particleShapeTexture, I, [1.0, 1.0, 0.0, 1.0])
+            let xScale = particleShapeSize[0] / particleTextureSize
+            let yScale = particleShapeSize[1] / particleTextureSize
+            for(let I of ndrange(particleTextureSize, particleTextureSize)){
+                let mappedI = i32([ I[1] * xScale, I[0] * yScale])
+                ti.textureStore(particleShapeTexture, I, particleShapeData[mappedI])
             }
         })
 
