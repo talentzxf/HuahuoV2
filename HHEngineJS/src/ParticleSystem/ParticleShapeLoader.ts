@@ -62,11 +62,11 @@ class ParticleShapeLoader {
                     _this.hiddenImage.src = reader.result as string
                     _this.hiddenImage.onload = _this.onImageLoaded.bind(_this)
                 }
+
+                this.lastParticleShapeResourceName = binaryResource.GetResourceName()
             } else {
                 this._particleShapeSize.fromArray1D([0, 0])
             }
-
-            this.lastParticleShapeResourceName = binaryResource.GetResourceName()
         }
     }
 

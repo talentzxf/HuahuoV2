@@ -14,8 +14,8 @@ REGISTER_CLASS(ResourceManager);
 DECLARE_OBJECT_SERIALIZE();
 public:
     ResourceManager(MemLabelId label, ObjectCreationMode mode)
-            : Super(label, mode) {
-
+            : Super(label, mode), defaultMimePlaceHolder("unknown") {
+        printf("Resource manager created\n");
     }
 
     static ResourceManager *GetDefaultResourceManager();
@@ -27,10 +27,22 @@ public:
     bool RegisterFile(std::string &fileName);
 
     UInt32 GetDataSize(std::string &fileName) {
+        if(!mFileNameDataMap.contains(fileName)){
+            printf("ResourceManager: File:%s has not been registered yet during GetFileData\n", fileName.c_str());
+
+            return 0;
+        }
+
         return mFileNameDataMap[fileName].size();
     }
 
     std::string& GetMimeType(std::string &fileName){
+        if(!mFileNameDataMap.contains(fileName)){
+            printf("ResourceManager: File:%s has not been registered yet during GetFileData\n", fileName.c_str());
+
+            return defaultMimePlaceHolder;
+        }
+
         return mFileNameMimeMap[fileName];
     }
 
@@ -38,7 +50,7 @@ public:
         if(!mFileNameDataMap.contains(fileName)){
             printf("ResourceManager: File:%s has not been registered yet during GetFileData\n", fileName.c_str());
 
-            // TODO: Throw exception here.
+            return emptyDataPlaceHolder;
         }
         return mFileNameDataMap[fileName];
     }
@@ -50,6 +62,9 @@ public:
 private:
     std::map<std::string, vector<UInt8> > mFileNameDataMap;
     std::map<std::string, std::string> mFileNameMimeMap;
+
+    std::vector<UInt8> emptyDataPlaceHolder;
+    std::string defaultMimePlaceHolder;
 };
 
 ResourceManager *GetDefaultResourceManager();

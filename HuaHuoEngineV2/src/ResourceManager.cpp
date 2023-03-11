@@ -43,6 +43,7 @@ void ResourceManager::Transfer(TransferFunction &transfer) {
 }
 
 void ResourceManager::SetFileData(const char* fileName, const char* mimeType, UInt8* pData, UInt32 dataSize){
+    printf("Set file data with name:%s, mimeType:%s, length: %lld\n", fileName, mimeType, dataSize);
     std::string fileNameStr(fileName);
 
     if(!mFileNameDataMap.contains(fileName)){
