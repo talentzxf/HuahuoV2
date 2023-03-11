@@ -62,42 +62,63 @@ DECLARE_OBJECT_SERIALIZE();
     bool Apply(int frameId) override;
 
     void SetBinaryResourceName(const char* fieldName, const char* resourceName){
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->SetBinaryResourceName(resourceName);
     }
 
     void SetVector3Value(const char *fieldName, float x, float y, float z) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->SetVector3Value(x, y, z);
     }
 
     void SetFloatValue(const char *fieldName, float value) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->SetFloatValue(value);
     }
 
     void SetColorValue(const char *fieldName, float r, float g, float b, float a) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->SetColorValue(r, g, b, a);
     }
 
     void SetStringValue(const char* fieldName, const char* strValue){
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->SetStringValue(strValue);
     }
 
     int AddColorStop(const char *fieldName, float value, float r, float g, float b, float a) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return -1;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->AddColorStop(value, r, g, b, a);
     }
 
     int AddColorStop(const char *fieldName, float value) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return -1;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         return pComponent->AddColorStop(value);
@@ -105,6 +126,9 @@ DECLARE_OBJECT_SERIALIZE();
 
     void
     UpdateColorStop(const char *fieldName, int colorStopIdentifier, float value, float r, float g, float b, float a) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return ;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
 
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
@@ -112,12 +136,18 @@ DECLARE_OBJECT_SERIALIZE();
     }
 
     void DeleteColorStop(const char *fieldName, int colorStopIdentifier) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return ;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->DeleteColorStop(colorStopIdentifier);
     }
 
     void CreateShapeArrayValue(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return ;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->CreateShapeArrayValue();
@@ -210,6 +240,9 @@ DECLARE_OBJECT_SERIALIZE();
     }
 
     CustomComponent *GetSubComponentArrayByName(const char *fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return NULL;
+
         int idx = m_fieldNameFieldIndexMap[fieldName];
         return (CustomComponent *) &(*m_FrameStates[idx].GetComponentPtr());
     }

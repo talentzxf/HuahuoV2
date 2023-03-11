@@ -2,6 +2,7 @@ import {internalProcessComponent} from "./AbstractVariableHandler";
 import {AbstractComponent} from "../AbstractComponent";
 import {clzObjectFactory} from "../../CppClassObjectFactory";
 import {GroupComponent} from "../GroupComponent";
+import {IsValidWrappedObject} from "hhcommoncomponents";
 
 class FieldSubComponentArrayIterable {
     parentComponent: GroupComponent
@@ -32,8 +33,11 @@ class FieldSubComponentArrayIterable {
 class SubComponentArrayHandler {
     handleEntry(component: GroupComponent, propertyEntry) {
         let fieldName = propertyEntry["key"]
-        let fieldIdx = component.rawObj.RegisterSubcomponentArray(fieldName)
         let rawSubComponent = component.rawObj.GetSubComponentArrayByName(fieldName)
+        if(!IsValidWrappedObject(rawSubComponent)){
+            let componentIdx = component.rawObj.RegisterSubcomponentArray(fieldName)
+            rawSubComponent = component.rawObj.GetSubComponentArrayByName(fieldName)
+        }
 
         // Recreate the subcomponent
         let subComponentConstructor = clzObjectFactory.GetClassConstructor(rawSubComponent.GetTypeName())
