@@ -16,14 +16,6 @@ function LoadComponentForShape(shape:BaseShapeJS){
             let component = new componentConstructor(componentRawObj)
             // The component has already been persistented, no need to persistent again.
             shape.addComponent(component, false)
-
-            let subComponentCount = component.rawObj.GetSubComponentCount()
-            for(let subComponentIdx = 0 ; subComponentIdx < subComponentCount; subComponentIdx++){
-                let subComponentRawObj = component.rawObj.GetSubComponentByIdx(subComponentIdx)
-                let subComponentConstructor = clzObjectFactory.GetClassConstructor(subComponentRawObj.GetTypeName())
-                let subComponent = new subComponentConstructor(subComponentRawObj)
-                component.addSubComponent(subComponent)
-            }
         }
     }
 }

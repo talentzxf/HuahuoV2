@@ -1,5 +1,6 @@
 import {AbstractComponent, Component} from "./AbstractComponent";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
 /**
  * GroupComponent is a special Component. It's responsibility is to store other components.
@@ -7,6 +8,23 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 @Component({compatibleShapes: []})
 class GroupComponent extends AbstractComponent {
     private _subComponents: Array<AbstractComponent> // This array can't be inited in the constructor.
+
+    constructor(rawObj?) {
+        super(rawObj);
+
+        if(rawObj){
+            let subComponentCount = this.rawObj.GetSubComponentCount()
+            for(let subComponentIdx = 0 ; subComponentIdx < subComponentCount; subComponentIdx++){
+                let subComponentRawObj = this.rawObj.GetSubComponentByIdx(subComponentIdx)
+
+                if(this.getComponentByRawObj(subComponentRawObj) == null){
+                    let subComponentConstructor = clzObjectFactory.GetClassConstructor(subComponentRawObj.GetTypeName())
+                    let subComponent = new subComponentConstructor(subComponentRawObj)
+                    this.addSubComponent(subComponent)
+                }
+            }
+        }
+    }
 
     get subComponents(): Array<AbstractComponent>{
         if(this._subComponents == null){
