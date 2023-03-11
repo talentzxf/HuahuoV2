@@ -20,8 +20,17 @@ ResourceManager *GetDefaultResourceManager() {
 }
 
 void SetDefaultResourceManager(ResourceManager* resourceManager){
-    gDefaultResourceManager = resourceManager;
-    printf("Set Default object store manager\n");
+    if(gDefaultResourceManager){
+        // Merge the resource manager into the current resource manager
+
+        gDefaultResourceManager->Merge(resourceManager);
+
+        // Delete it, so it won't be persistent
+        DestroySingleObject(resourceManager);
+    }else{
+        gDefaultResourceManager = resourceManager;
+        printf("Set Default object store manager\n");
+    }
 }
 
 ResourceManager *ResourceManager::GetDefaultResourceManager() {
@@ -40,6 +49,11 @@ void ResourceManager::Transfer(TransferFunction &transfer) {
 
     TRANSFER(mFileNameDataMap);
     TRANSFER(mFileNameMimeMap);
+}
+
+void ResourceManager::Merge(ResourceManager *other) {
+    this->mFileNameDataMap.insert(other->mFileNameDataMap.begin(), other->mFileNameDataMap.end());
+    this->mFileNameMimeMap.insert(other->mFileNameMimeMap.begin(), other->mFileNameMimeMap.end());
 }
 
 void ResourceManager::SetFileData(const char* fileName, const char* mimeType, UInt8* pData, UInt32 dataSize){

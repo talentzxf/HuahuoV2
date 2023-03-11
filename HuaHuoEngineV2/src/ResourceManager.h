@@ -58,7 +58,9 @@ public:
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
 
     void SetFileData(const char* fileName, const char* mimeType, UInt8* pData, UInt32 dataSize);
-
+private:
+    void Merge(ResourceManager* other);
+    friend void SetDefaultResourceManager(ResourceManager* resourceManager);
 private:
     std::map<std::string, vector<UInt8> > mFileNameDataMap;
     std::map<std::string, std::string> mFileNameMimeMap;
