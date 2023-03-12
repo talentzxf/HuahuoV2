@@ -21,20 +21,14 @@ class ParticleShapeLoader {
         this._particleShapeData = huahuoEngine.ti.Vector.field(4, huahuoEngine.ti.f32, [MAX_PARTICLE_SHAPE_SIZE, MAX_PARTICLE_SHAPE_SIZE])
 
         this._particleShapeTexture = huahuoEngine.ti.texture(4, [256, 256])
-        huahuoEngine.ti.addToKernelScope({
-            particleShapeSize: this._particleShapeSize,
-            particleShapeData: this._particleShapeData,
-            particleShapeTexture: this._particleShapeTexture,
-            particleTextureSize: PARTICLE_TEXTURE_SIZE
-        })
 
-        let testTexture = huahuoEngine.ti.kernel(()=>{
+        let testTexture = huahuoEngine.ti.classKernel(this, (particleTextureSize)=>{
             for(let I of ndrange(particleTextureSize, particleTextureSize)){
-                ti.textureStore(particleShapeTexture, I, [0.0, 0.0, 0.0, 0.0])
+                ti.textureStore(this._particleShapeTexture, I, [0.0, 0.0, 0.0, 0.0])
             }
         })
 
-        testTexture()
+        testTexture(PARTICLE_TEXTURE_SIZE)
     }
 
     setParticleShape(binaryResource) {
@@ -85,16 +79,16 @@ class ParticleShapeLoader {
         this._particleShapeSize.fromArray1D([this.hiddenImage.width, this.hiddenImage.height])
         this._particleShapeData.fromArray1D(particleShapeImageData.data)
 
-        let loadParticleTextureKernel = huahuoEngine.ti.kernel(()=>{
-            let xScale = particleShapeSize[0] / particleTextureSize
-            let yScale = particleShapeSize[1] / particleTextureSize
+        let loadParticleTextureKernel = huahuoEngine.ti.classKernel(this, (particleTextureSize)=>{
+            let xScale = this._particleShapeSize[0] / particleTextureSize
+            let yScale = this._particleShapeSize[1] / particleTextureSize
             for(let I of ndrange(particleTextureSize, particleTextureSize)){
                 let mappedI = i32([ I[1] * xScale, I[0] * yScale])
-                ti.textureStore(particleShapeTexture, I, particleShapeData[mappedI])
+                ti.textureStore(this._particleShapeTexture, I, this._particleShapeData[mappedI])
             }
         })
 
-        loadParticleTextureKernel()
+        loadParticleTextureKernel(PARTICLE_TEXTURE_SIZE)
     }
 }
 

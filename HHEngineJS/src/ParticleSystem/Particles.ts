@@ -263,7 +263,7 @@ class Particles extends AbstractComponent {
     _particle_vertices
     _particle_indices
 
-    setupIndicesAndVertices(){
+    setupIndicesAndVertices() {
         let num_triangles = MAX_PARTICLE_COUNT * 2 // Each particle has two triangles.
         let vertexType = huahuoEngine.ti.types.struct({
             pos: huahuoEngine.ti.types.vector(ti.f32, 3),
@@ -295,10 +295,13 @@ class Particles extends AbstractComponent {
             this.setupIndicesAndVertices()
 
             let cType = huahuoEngine.ti.types.vector(ti.f32, 4)
+            let shapeSizeType = huahuoEngine.ti.template()
+            let textureType = huahuoEngine.ti.template()
+
             this._renderImageKernel = huahuoEngine.ti.classKernel(
                 this,
-                {particleColor: cType},
-                (particleSize, particleColor, curFrameId, velocityDir, staticDir) => {
+                {particleColor: cType, particleShapeSize: shapeSizeType, particleShapeTexture: textureType},
+                (particleSize, particleColor, curFrameId, particleShapeSize, particleShapeTexture, velocityDir, staticDir) => {
 
                     let invalidPosition = [-10000.0, -10000.0, -10000.0]
 
@@ -388,7 +391,7 @@ class Particles extends AbstractComponent {
             staticDir = Number(this.particleDirection)
         }
 
-        this._renderImageKernel(this.particleSize, ColorToArray(this.particleColor), curFrameId, velocityDir, staticDir)
+        this._renderImageKernel(this.particleSize, ColorToArray(this.particleColor), curFrameId, this.particleShapeLoader._particleShapeSize, this.particleShapeLoader._particleShapeTexture, velocityDir, staticDir)
 
         // // For debug purpose, get the position array back
         // this._particlePositions.toArray().then(function (val) {
