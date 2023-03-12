@@ -86,8 +86,6 @@ class Particles extends AbstractComponent {
         this._currentActiveParticleNumber = huahuoEngine.ti.field(ti.f32, [1])
 
         huahuoEngine.ti.addToKernelScope({
-            particles: this._particles,
-            currentActiveParticleNumber: this._currentActiveParticleNumber,
             maxNumbers: this.maxNumbers,
             PI: Math.PI
         })
@@ -159,40 +157,40 @@ class Particles extends AbstractComponent {
                 theta = theta * Math.PI / 180  // Convert degree to radian.
                 phi = phi * Math.PI / 180 // Convert degree to radian.
 
-                particles[i].velocity = 2.0 * [
+                this._particles[i].velocity = 2.0 * [
                     ti.cos(phi) * ti.cos(theta) * radius,
                     ti.cos(phi) * ti.sin(theta) * radius,
                     ti.sin(phi) * radius
                 ]
 
-                particles[i].position = [0.0, 0.0, 0.0]
+                this._particles[i].position = [0.0, 0.0, 0.0]
 
-                particles[i].status = 1
+                this._particles[i].status = 1
 
-                particles[i].bornFrameId = curFrameId
-                particles[i].lastUpdatedFrameId = curFrameId // Need to be updated anyways
-                particles[i].life = i32(life)
+                this._particles[i].bornFrameId = curFrameId
+                this._particles[i].lastUpdatedFrameId = curFrameId // Need to be updated anyways
+                this._particles[i].life = i32(life)
             }
 
             function particleIsAlive(i, curFrameId) {
-                return particles[i].status == 1 && particles[i].bornFrameId <= curFrameId && particles[i].bornFrameId + particles[i].life >= curFrameId
+                return this._particles[i].status == 1 && this._particles[i].bornFrameId <= curFrameId && this._particles[i].bornFrameId + this._particles[i].life >= curFrameId
             }
 
             huahuoEngine.ti.addToKernelScope({initParticle, particleIsAlive})
 
             let vType = huahuoEngine.ti.types.vector(ti.f32, 3)
 
-            this._updateParticleStatusesKernel = huahuoEngine.ti.kernel(
+            this._updateParticleStatusesKernel = huahuoEngine.ti.classKernel(this,
                 {velocityRange: vType, velocityThetaRange: vType, velocityPhiRange: vType},
                 (activeParticleCount, velocityRange, velocityThetaRange, velocityPhiRange, minLifeFrames, maxLifeFrames, curFrameId) => {
-                    let currentInactiveParticleNumber = maxNumbers - currentActiveParticleNumber[0]
-                    let tobeActivatedParticleNumber = activeParticleCount - currentActiveParticleNumber[0]
+                    let currentInactiveParticleNumber = maxNumbers - this._currentActiveParticleNumber[0]
+                    let tobeActivatedParticleNumber = activeParticleCount - this._currentActiveParticleNumber[0]
 
                     if (tobeActivatedParticleNumber > 0) {
                         let possibility = tobeActivatedParticleNumber / currentInactiveParticleNumber
 
                         for (let i of range(maxNumbers)) {
-                            if (particles[i].status == 0) {
+                            if (this._particles[i].status == 0) {
                                 let randomNumber = ti.random()
                                 if (randomNumber <= possibility) {
                                     initParticle(i, velocityRange, velocityThetaRange, velocityPhiRange, minLifeFrames + ti.random() * (maxLifeFrames - minLifeFrames), i32(curFrameId))
@@ -221,37 +219,37 @@ class Particles extends AbstractComponent {
         if (this._updateParticlesKernel == null) {
             let vType = huahuoEngine.ti.types.vector(ti.f32, 3)
 
-            this._updateParticlesKernel = huahuoEngine.ti.kernel(
+            this._updateParticlesKernel = huahuoEngine.ti.classKernel(this,
                 {gravity: vType},
                 (gravity, dt, curFrameId) => {
                     for (let i of range(maxNumbers)) {
                         // Ensure the particle is born in this frame
                         if (particleIsAlive(i, curFrameId)) {
                             let timeElapseDirection = 1
-                            if (curFrameId < particles[i].lastUpdatedFrameId) {
+                            if (curFrameId < this._particles[i].lastUpdatedFrameId) {
                                 timeElapseDirection = -1
                             }
 
                             let signedDt = timeElapseDirection * dt
 
-                            let curUpdatingFrameId = particles[i].lastUpdatedFrameId
+                            let curUpdatingFrameId = this._particles[i].lastUpdatedFrameId
 
                             while (curUpdatingFrameId != curFrameId) {
                                 // -----   Use implicit Euler to update position.   -----
-                                let nextVelocity = particles[i].velocity + signedDt * gravity
+                                let nextVelocity = this._particles[i].velocity + signedDt * gravity
 
-                                let possibleVelocity = (nextVelocity + particles[i].velocity) / 2.0
-                                particles[i].position = particles[i].position + possibleVelocity * signedDt
+                                let possibleVelocity = (nextVelocity + this._particles[i].velocity) / 2.0
+                                this._particles[i].position = this._particles[i].position + possibleVelocity * signedDt
 
                                 // Update the velocity
-                                particles[i].velocity = possibleVelocity
+                                this._particles[i].velocity = possibleVelocity
 
                                 curUpdatingFrameId += timeElapseDirection
                             }
 
-                            particles[i].lastUpdatedFrameId = i32(curFrameId)
+                            this._particles[i].lastUpdatedFrameId = i32(curFrameId)
                         } else {
-                            particles[i].status = 0
+                            this._particles[i].status = 0
                         }
                     }
                 })
@@ -320,7 +318,7 @@ class Particles extends AbstractComponent {
                     // set up vertices of all the particles.
                     for (let i of range(maxNumbers)) {
                         if (particleIsAlive(i, curFrameId)) { //
-                            let particlePosition = particles[i].position
+                            let particlePosition = this._particles[i].position
                             // let particleVelocityXY = particles[i].velocity.normalized().xy
                             let particleVelocityXY = [1.0, 1.0]
 
