@@ -111,9 +111,9 @@ class Particles extends AbstractComponent {
 
     propertyChanged() {
         if (this._invalidateAllParticlesKernel == null) {
-            this._invalidateAllParticlesKernel = huahuoEngine.ti.kernel(() => {
+            this._invalidateAllParticlesKernel = huahuoEngine.ti.classKernel(this, () => {
                 for (let i of range(maxNumbers)) {
-                    particles[i].status = 0
+                    this._particles[i].status = 0
                 }
             })
         }
@@ -137,12 +137,12 @@ class Particles extends AbstractComponent {
      */
     updateParticleStatuses(activeParticleCount, velocityRange, velocityThetaRange, velocityPhiRange, minLifeFrames, maxLifeFrames, currentFrameId) {
         if (this._updateParticleCountKernel == null) {
-            this._updateParticleCountKernel = huahuoEngine.ti.kernel(() => {
-                currentActiveParticleNumber[0] = 0
+            this._updateParticleCountKernel = huahuoEngine.ti.classKernel(this, () => {
+                this._currentActiveParticleNumber[0] = 0
                 let i = 0
                 while (i < maxNumbers) {  // while is not parallel. So no need to lock
-                    if (particles[i].status == 1) {
-                        currentActiveParticleNumber[0] += 1
+                    if (this._particles[i].status == 1) {
+                        this._currentActiveParticleNumber[0] += 1
                     }
                     i += 1
                 }
@@ -262,48 +262,49 @@ class Particles extends AbstractComponent {
 
     _renderImageKernel
 
+    _particle_vertices
+    _particle_indices
+
+    setupIndicesAndVertices(){
+        let num_triangles = MAX_PARTICLE_COUNT * 2 // Each particle has two triangles.
+        let vertexType = huahuoEngine.ti.types.struct({
+            pos: huahuoEngine.ti.types.vector(ti.f32, 3),
+            center: huahuoEngine.ti.types.vector(ti.f32, 3), // The center of the particle
+            texture_pos: ti.types.vector(ti.f32, 2),
+        });
+        this._particle_vertices = huahuoEngine.ti.field(vertexType, [num_triangles * 2]) // Each particle has two triangles (4 vertices)
+        this._particle_indices = huahuoEngine.ti.field(huahuoEngine.ti.i32, [num_triangles * 3]);
+
+        let set_indices = huahuoEngine.ti.classKernel(this, (particle_count) => {
+            for (let i of ti.range(particle_count)) {
+                // First triangle
+                this._particle_indices[i * 6] = i * 4
+                this._particle_indices[i * 6 + 1] = i * 4 + 1
+                this._particle_indices[i * 6 + 2] = i * 4 + 2
+
+                // Second triangle
+                this._particle_indices[i * 6 + 3] = i * 4 + 2
+                this._particle_indices[i * 6 + 4] = i * 4 + 3
+                this._particle_indices[i * 6 + 5] = i * 4
+            }
+        })
+
+        set_indices(MAX_PARTICLE_COUNT)
+    }
+
     renderImage(curFrameId) {
         if (this._renderImageKernel == null) {
+            this.setupIndicesAndVertices()
+
             let cType = huahuoEngine.ti.types.vector(ti.f32, 4)
-
-            let num_triangles = MAX_PARTICLE_COUNT * 2 // Each particle has two triangles.
-            let vertexType = huahuoEngine.ti.types.struct({
-                pos: huahuoEngine.ti.types.vector(ti.f32, 3),
-                center: huahuoEngine.ti.types.vector(ti.f32, 3), // The center of the particle
-                texture_pos: ti.types.vector(ti.f32, 2),
-            });
-            let particle_vertices = huahuoEngine.ti.field(vertexType, [num_triangles * 2]) // Each particle has two triangles (4 vertices)
-            let particle_indices = huahuoEngine.ti.field(huahuoEngine.ti.i32, [num_triangles * 3]);
-
-            huahuoEngine.ti.addToKernelScope({
-                particle_count: MAX_PARTICLE_COUNT,
-                num_triangles,
-                particle_vertices,
-                particle_indices
-            })
-            let set_indices = huahuoEngine.ti.kernel(() => {
-                for (let i of ti.range(particle_count)) {
-                    // First triangle
-                    particle_indices[i * 6] = i * 4
-                    particle_indices[i * 6 + 1] = i * 4 + 1
-                    particle_indices[i * 6 + 2] = i * 4 + 2
-
-                    // Second triangle
-                    particle_indices[i * 6 + 3] = i * 4 + 2
-                    particle_indices[i * 6 + 4] = i * 4 + 3
-                    particle_indices[i * 6 + 5] = i * 4
-                }
-            })
-
-            set_indices()
-
-            this._renderImageKernel = huahuoEngine.ti.kernel(
+            this._renderImageKernel = huahuoEngine.ti.classKernel(
+                this,
                 {particleColor: cType},
                 (particleSize, particleColor, curFrameId, velocityDir, staticDir) => {
 
                     let invalidPosition = [-10000.0, -10000.0, -10000.0]
 
-                    let particleSizeSquare = f32(particleSize * particleSize/4.0)
+                    let particleSizeSquare = f32(particleSize * particleSize / 4.0)
 
                     let center = [0.0, 0.0, 0]
                     let eye = [0.0, 0.0, 10.0]
@@ -317,121 +318,66 @@ class Particles extends AbstractComponent {
 
                     let halfParticleSize = particleSize * 0.5
                     // set up vertices of all the particles.
-                    for(let i of range(maxNumbers) ){
-                        if(particleIsAlive(i, curFrameId)){ //
+                    for (let i of range(maxNumbers)) {
+                        if (particleIsAlive(i, curFrameId)) { //
                             let particlePosition = particles[i].position
                             // let particleVelocityXY = particles[i].velocity.normalized().xy
                             let particleVelocityXY = [1.0, 1.0]
 
-                            particle_vertices[4*i].pos = [particlePosition[0] - halfParticleSize * particleVelocityXY[0] , particlePosition[1] + halfParticleSize * particleVelocityXY[1], particlePosition[2]]
-                            particle_vertices[4*i + 1].pos = [particlePosition[0] + halfParticleSize * particleVelocityXY[0] , particlePosition[1] + halfParticleSize * particleVelocityXY[1], particlePosition[2]]
-                            particle_vertices[4*i + 2].pos = [particlePosition[0] + halfParticleSize * particleVelocityXY[0] , particlePosition[1] - halfParticleSize * particleVelocityXY[1], particlePosition[2]]
-                            particle_vertices[4*i + 3].pos = [particlePosition[0] - halfParticleSize * particleVelocityXY[0] , particlePosition[1] - halfParticleSize * particleVelocityXY[1], particlePosition[2]]
+                            this._particle_vertices[4 * i].pos = [particlePosition[0] - halfParticleSize * particleVelocityXY[0], particlePosition[1] + halfParticleSize * particleVelocityXY[1], particlePosition[2]]
+                            this._particle_vertices[4 * i + 1].pos = [particlePosition[0] + halfParticleSize * particleVelocityXY[0], particlePosition[1] + halfParticleSize * particleVelocityXY[1], particlePosition[2]]
+                            this._particle_vertices[4 * i + 2].pos = [particlePosition[0] + halfParticleSize * particleVelocityXY[0], particlePosition[1] - halfParticleSize * particleVelocityXY[1], particlePosition[2]]
+                            this._particle_vertices[4 * i + 3].pos = [particlePosition[0] - halfParticleSize * particleVelocityXY[0], particlePosition[1] - halfParticleSize * particleVelocityXY[1], particlePosition[2]]
 
-                            particle_vertices[4*i].center = particlePosition.xyz
-                            particle_vertices[4*i + 1].center = particlePosition.xyz
-                            particle_vertices[4*i + 2].center = particlePosition.xyz
-                            particle_vertices[4*i + 3].center = particlePosition.xyz
-                        }else{
-                            particle_vertices[4*i].pos = invalidPosition
-                            particle_vertices[4*i + 1].pos = invalidPosition
-                            particle_vertices[4*i + 2].pos = invalidPosition
-                            particle_vertices[4*i + 3].pos = invalidPosition
+                            this._particle_vertices[4 * i].center = particlePosition.xyz
+                            this._particle_vertices[4 * i + 1].center = particlePosition.xyz
+                            this._particle_vertices[4 * i + 2].center = particlePosition.xyz
+                            this._particle_vertices[4 * i + 3].center = particlePosition.xyz
+                        } else {
+                            this._particle_vertices[4 * i].pos = invalidPosition
+                            this._particle_vertices[4 * i + 1].pos = invalidPosition
+                            this._particle_vertices[4 * i + 2].pos = invalidPosition
+                            this._particle_vertices[4 * i + 3].pos = invalidPosition
 
-                            particle_vertices[4*i].center = invalidPosition
-                            particle_vertices[4*i + 1].center = invalidPosition
-                            particle_vertices[4*i + 2].center = invalidPosition
-                            particle_vertices[4*i + 3].center = invalidPosition
+                            this._particle_vertices[4 * i].center = invalidPosition
+                            this._particle_vertices[4 * i + 1].center = invalidPosition
+                            this._particle_vertices[4 * i + 2].center = invalidPosition
+                            this._particle_vertices[4 * i + 3].center = invalidPosition
                         }
 
-                        particle_vertices[4*i].texture_pos = [0.0, 0.0]
-                        particle_vertices[4*i + 1].texture_pos = [1.0, 0.0]
-                        particle_vertices[4*i + 2].texture_pos = [1.0, 1.0]
-                        particle_vertices[4*i + 3].texture_pos = [0.0, 1.0]
+                        this._particle_vertices[4 * i].texture_pos = [0.0, 0.0]
+                        this._particle_vertices[4 * i + 1].texture_pos = [1.0, 0.0]
+                        this._particle_vertices[4 * i + 2].texture_pos = [1.0, 1.0]
+                        this._particle_vertices[4 * i + 3].texture_pos = [0.0, 1.0]
                     }
 
                     // Vertex shader
-                    for(let v of ti.inputVertices(particle_vertices, particle_indices)){
+                    for (let v of ti.inputVertices(this._particle_vertices, this._particle_indices)) {
                         let pos = mvp.matmul(v.pos.concat([1.0]))
                         ti.outputPosition(pos)
                         ti.outputVertex(v)
                     }
 
                     // Fragment shader
-                    for(let f of ti.inputFragments()){
+                    for (let f of ti.inputFragments()) {
                         // Draw a circle on the triangle
                         let fragmentPos = f.pos
                         let centerPos = f.center
 
-                        if(particleShapeSize[0] > 0 && particleShapeSize[1] > 0){ // Draw texture
+                        if (particleShapeSize[0] > 0 && particleShapeSize[1] > 0) { // Draw texture
                             let textureColor = ti.textureSample(particleShapeTexture, f.texture_pos)
-                            if(textureColor[3] > 0)
+                            if (textureColor[3] > 0)
                                 ti.outputColor(renderTarget, particleColor)
                             else
                                 ti.discard()
-                        }else{ // Draw circle.
-                            if((fragmentPos - centerPos).norm_sqr() <= particleSizeSquare){
+                        } else { // Draw circle.
+                            if ((fragmentPos - centerPos).norm_sqr() <= particleSizeSquare) {
                                 ti.outputColor(renderTarget, particleColor)
-                            }else{
+                            } else {
                                 ti.discard()
                             }
                         }
                     }
-
-                    // let viewPortXMin = -outputImageWidth / 2;
-                    // let viewPortYMin = -outputImageHeight / 2;
-                    // for (let i of range(maxNumbers)) {
-                    //     if (particleIsAlive(i, curFrameId)) {
-                    //         // projection. For simplicity, ignore z coordinate first.
-                    //         let projectedPosition = particles[i].position.xy
-                    //
-                    //         // TODO: https://www.geeksforgeeks.org/window-to-viewport-transformation-in-computer-graphics-with-implementation/
-                    //         let centerWindowPosition = i32(projectedPosition - [viewPortXMin, viewPortYMin])
-                    //
-                    //         if (particleShapeSize[0] <= 0 || particleShapeSize[0] <= 0) { // Draw circle
-                    //             let particleSizeSquare = f32(particleSize * particleSize / 4.0)
-                    //             for (let pixelIndex of ndrange(particleSize, particleSize)) {
-                    //                 let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
-                    //                 if ((f32(windowPosition) - f32(centerWindowPosition)).norm_sqr() <= particleSizeSquare) {
-                    //                     if (windowPosition[0] >= 0 && windowPosition[0] <= outputImageWidth && windowPosition[1] >= 0 && windowPosition[1] <= outputImageHeight) {
-                    //                         outputImage[windowPosition] = particleColor
-                    //                     }
-                    //                 }
-                    //             }
-                    //         } else { // Draw shape from the particleShape image.
-                    //
-                    //
-                    //             for (let pixelIndex of ndrange(particleSize, particleSize)) {
-                    //                 let windowPosition = i32(centerWindowPosition + pixelIndex - [particleSize / 2, particleSize / 2])
-                    //
-                    //                 // TODO: Only consider x-y axis for now.
-                    //                 let particleVelocity = particles[i].velocity.xy
-                    //
-                    //                 // let angle = ti.atan2(particleVelocity[1], particleVelocity[0])
-                    //                 let angle = 30.0 / 180.0 * Math.PI
-                    //                 let pixelAfterRotateX = pixelIndex[0] * ti.cos(angle) - pixelIndex[1] * ti.sin(angle)
-                    //                 let pixelAfterRotateY = pixelIndex[0] * ti.sin(angle) + pixelIndex[1] * ti.cos(angle)
-                    //
-                    //                 let imgPositionX = i32(particleShapeSize[0] * pixelAfterRotateX / particleSize)
-                    //                 let imgPositionY = i32(particleShapeSize[1] * pixelAfterRotateY / particleSize)
-                    //
-                    //                 let particleShapeColor = particleShapeData[particleShapeSize[1] - imgPositionY, imgPositionX]
-                    //                 if (particleShapeColor[3] > 0.0) {
-                    //                     outputImage[windowPosition] = particleColor
-                    //
-                    //                     // TODO: How to do alpha blending??
-                    //                     // let alpha = particleShapeColor[3]
-                    //                     //
-                    //                     // // alpha * new + (1-alpha)*old
-                    //                     // let currentRGB = outputImage[windowPosition].rgb
-                    //                     // let newRGB = alpha * particleColor.rgb + (1.0 - alpha) * currentRGB
-                    //                     //
-                    //                     // outputImage[windowPosition] = [newRGB[0], newRGB[1], newRGB[2], alpha]
-                    //                 }
-                    //             }
-                    //         }
-                    //     }
-                    // }
                 })
         }
 
