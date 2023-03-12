@@ -314,7 +314,7 @@ class Particles extends AbstractComponent {
                     let proj = ti.perspective(fov, aspectRatio, 0.1, 1000)
                     let mvp = proj.matmul(view)
 
-                    ti.clearColor(renderTarget, [0.0, 0.0, 0.0, 0.0])
+                    // ti.clearColor(renderTarget, [0.0, 0.0, 0.0, 0.0])
                     ti.useDepth(depth)
 
                     let halfParticleSize = particleSize * 0.5
