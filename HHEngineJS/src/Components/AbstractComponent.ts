@@ -136,6 +136,8 @@ class AbstractComponent {
                 if (propertyMeta.type == PropertyCategory.customField) {
                     if (propertyMeta.config == null || propertyMeta.config["contentDivGenerator"] == null) {
 
+                        propertyMeta = { ... propertyMeta } // Clone it to avoid affecting other objects. Shallow copy should be enough.
+
                         let divGeneratorConstructor = getCustomFieldContentDivGeneratorConstructor(this.constructor.name, propertyMeta.key)
 
                         // @ts-ignore
