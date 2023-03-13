@@ -80,16 +80,36 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator{
         if(property.config && property.config.isActive){
             let activateButtion = document.createElement("input")
             activateButtion.type = "button"
-            if(propertyConfig.isActive()){
+            if(property.config.isActive()){
                 activateButtion.value = i18n.t("Deactivate")
+                activateButtion.onclick = this.deActivateComponent(activateButtion, property).bind(this)
             }else{
                 activateButtion.value = i18n.t("Activate")
+                activateButtion.onclick = this.activateComponent(activateButtion, property).bind(this)
             }
 
             titleDiv.appendChild(activateButtion)
         }
 
         return propertyDesc
+    }
+
+    activateComponent(activateButton, property){
+        return function(evt: MouseEvent){
+            evt.stopPropagation()
+            property.config.enabler()
+            activateButton.value = i18n.t("Deactivate")
+            activateButton.onclick = this.deActivateComponent(activateButton, property).bind(this)
+        }.bind(this)
+    }
+
+    deActivateComponent(activateButton, property){
+        return function(evt: MouseEvent){
+            evt.stopPropagation()
+            property.config.disabler()
+            activateButton.value = i18n.t("Activate")
+            activateButton.onclick = this.activateComponent(activateButton, property).bind(this)
+        }.bind(this)
     }
 
     flexDirection(): string {

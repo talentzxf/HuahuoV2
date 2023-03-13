@@ -69,8 +69,9 @@ class AbstractComponent {
     propertySheetInited: boolean = false;
     shapeArrayFieldNames: Set<string> = new Set<string>()
 
-    @PropertyValue(PropertyCategory.boolean, false)
-    isActive
+    // Not sure why, but if we define variable here, will enter infinite loop.
+    // @PropertyValue(PropertyCategory.boolean, false)
+    // isActive
 
     private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
@@ -83,6 +84,7 @@ class AbstractComponent {
             this.rawObj = castObject(rawObj, Module["CustomComponent"])
         } else {
             this.rawObj = Module["CustomComponent"].prototype.CreateComponent()
+            this.rawObj.RegisterBooleanValue("isActive", true)
         }
 
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
@@ -134,13 +136,13 @@ class AbstractComponent {
             config: {
                 children: [],
                 enabler: ()=>{
-                    _this.isActive = true
+                    _this.rawObj.SetBooleanValue("isActive", true)
                 },
                 disabler: ()=>{
-                    _this.isActive = false
+                    _this.rawObj.SetBooleanValue("isActive", false)
                 },
                 isActive: ()=>{
-                    return _this.isActive
+                    return _this.rawObj.GetBooleanValue("isActive")
                 }
             }
         }

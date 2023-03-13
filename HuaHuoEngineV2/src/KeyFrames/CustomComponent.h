@@ -79,6 +79,15 @@ DECLARE_OBJECT_SERIALIZE();
         pComponent->SetVector3Value(x, y, z);
     }
 
+    void SetBooleanValue(const char *fieldName, float value) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return;
+
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        pComponent->SetBooleanValue(value);
+    }
+
     void SetFloatValue(const char *fieldName, float value) {
         if(!m_fieldNameFieldIndexMap.contains(fieldName))
             return;

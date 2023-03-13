@@ -192,6 +192,9 @@ interface CustomComponent{
     void SetVector3Value([Const] DOMString fieldName, float x, float y, float z);
     Vector3f GetVector3Value([Const] DOMString fieldName);
 
+    void SetBooleanValue([Const] DOMString fieldName, boolean value);
+    boolean GetBooleanValue([Const] DOMString fieldName);
+
     void SetFloatValue([Const] DOMString fieldName, float value);
     float GetFloatValue([Const] DOMString fieldName);
 
