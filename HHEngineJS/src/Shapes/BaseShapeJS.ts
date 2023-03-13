@@ -1181,7 +1181,9 @@ abstract class BaseShapeJS {
 
         // Execute after update of all components
         for (let component of this.customComponents) {
-            component.afterUpdate(force)
+            if(component.isComponentActive()){
+                component.afterUpdate(force)
+            }
         }
     }
 

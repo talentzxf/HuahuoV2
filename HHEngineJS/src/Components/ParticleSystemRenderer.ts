@@ -102,7 +102,8 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
         let currentFrameId = this.baseShape.getLayer().GetCurrentFrame()
 
         for (let particles of this.particleSystems) {
-            particles.renderImage(currentFrameId)
+            if(particles.isComponentActive())
+                particles.renderImage(currentFrameId)
         }
 
         // await this.taichiCanvas.setImage(this.outputImage)

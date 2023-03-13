@@ -84,7 +84,11 @@ class AbstractComponent {
             this.rawObj = castObject(rawObj, Module["CustomComponent"])
         } else {
             this.rawObj = Module["CustomComponent"].prototype.CreateComponent()
+        }
+
+        if (!this.rawObj.IsFieldRegistered("isActive")) {
             this.rawObj.RegisterBooleanValue("isActive", true)
+            this.enableComponent()
         }
 
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
@@ -128,6 +132,18 @@ class AbstractComponent {
 
     }
 
+    isComponentActive() {
+        return this.rawObj.GetBooleanValue("isActive")
+    }
+
+    disableComponent() {
+        this.rawObj.SetBooleanValue("isActive", false)
+    }
+
+    enableComponent() {
+        this.rawObj.SetBooleanValue("isActive", true)
+    }
+
     getPropertySheet() {
         let _this = this
         let componentConfigSheet = {
@@ -135,14 +151,14 @@ class AbstractComponent {
             type: PropertyType.COMPONENT,
             config: {
                 children: [],
-                enabler: ()=>{
-                    _this.rawObj.SetBooleanValue("isActive", true)
+                enabler: () => {
+                    _this.enableComponent()
                 },
-                disabler: ()=>{
-                    _this.rawObj.SetBooleanValue("isActive", false)
+                disabler: () => {
+                    _this.disableComponent()
                 },
-                isActive: ()=>{
-                    return _this.rawObj.GetBooleanValue("isActive")
+                isActive: () => {
+                    return _this.isComponentActive()
                 }
             }
         }

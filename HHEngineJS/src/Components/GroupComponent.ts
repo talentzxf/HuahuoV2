@@ -58,7 +58,8 @@ class GroupComponent extends AbstractComponent {
         super.afterUpdate(force);
 
         for (let subComponent of this.subComponents) {
-            subComponent.afterUpdate(force)
+            if(subComponent.isComponentActive())
+                subComponent.afterUpdate(force)
         }
     }
 }
