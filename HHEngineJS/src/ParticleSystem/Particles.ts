@@ -91,7 +91,7 @@ class Particles extends AbstractComponent {
         })
 
         // Handle the particle shape part, as it's a custom field. We have to handle everything by our selves.
-        if (rawObj == null) { // If this is a new object, register the field and init the value.
+        if (rawObj == null || !rawObj.IsFieldRegistered("particleShape")) { // If this is a new object, register the field and init the value.
             this.rawObj.RegisterBinaryResource("particleShape")
             this.rawObj.SetBinaryResourceName("particleShape", "") // Empty string is a placeholder.
         }

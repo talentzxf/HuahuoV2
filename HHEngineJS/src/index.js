@@ -27,6 +27,7 @@ import {isInheritedFromClzName} from "./CppClassObjectFactory";
 import {GeneratorComponent} from "./Components/GeneratorComponent";
 import {CurveGrowthComponent} from "./Components/CurveGrowthComponent";
 import {RadialGradientComponent} from "./Components/RadialGradientComponent";
+import {EventGraphComponent} from "./Components/EventGraphComponent";
 import {NailComponent} from "./Components/NailComponent";
 
 import "./Shapes/LoadShape"
@@ -89,6 +90,7 @@ export {
     ParticleSystemRenderer,
     Particles,
     NailComponent,
+    EventGraphComponent,
     ColorStop,
     getNailManager,
     isInheritedFromClzName,

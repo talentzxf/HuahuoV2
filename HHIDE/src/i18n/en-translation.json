@@ -37,6 +37,7 @@
   "CenterOf": "Center",
   "Activate": "Activate",
   "Deactivate": "Deactivate",
+  "editEventGraph": "Edit Event Graph",
   "contextmenu": {
     "sendToBack": "Send To Back",
     "bringToFront": "Bring to Front",

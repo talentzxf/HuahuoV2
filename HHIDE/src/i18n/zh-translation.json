@@ -37,6 +37,7 @@
   "CenterOf": "中心",
   "Activate": "激活组件",
   "Deactivate": "关闭组件",
+  "editEventGraph": "编辑事件逻辑图",
   "contextmenu": {
     "sendToBack": "放到下面",
     "bringToFront": "放到上面",

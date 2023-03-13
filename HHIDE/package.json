@@ -35,6 +35,7 @@
     "html-webpack-plugin": "^5.5.0",
     "jsdom": "^20.0.1",
     "jsdom-global": "^3.0.2",
+    "litegraph.js": "^0.7.12",
     "mocha": "^10.1.0",
     "properties-file": "^2.0.9",
     "resize-observer": "^1.0.4",
