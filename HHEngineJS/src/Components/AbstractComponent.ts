@@ -40,14 +40,15 @@ function getProperties(target): object[] {
     return properties
 }
 
-function PropertyValue(category: PropertyCategory, initValue = null, config?: PropertyConfig) {
+function PropertyValue(category: PropertyCategory, initValue = null, config?: PropertyConfig, hide: boolean = false) {
     return function (target: object, propertyKey: string) {
         let properties = getProperties(target)
         let propertyEntry: PropertyDef = {
             key: propertyKey,
             type: category,
             initValue: initValue,
-            config: config
+            config: config,
+            hide: hide
         }
         properties.push(propertyEntry)
     }
