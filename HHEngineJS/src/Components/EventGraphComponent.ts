@@ -7,7 +7,7 @@ class EventGraphComponent extends AbstractComponent{
     eventGraphJSON
 
     @PropertyValue(PropertyCategory.customField)
-    editEventGraph
+    eventGraph
 
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);

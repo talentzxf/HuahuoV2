@@ -37,7 +37,7 @@
   "CenterOf": "Center",
   "Activate": "Activate",
   "Deactivate": "Deactivate",
-  "editEventGraph": "Edit Event Graph",
+  "edit": "edit",
   "contextmenu": {
     "sendToBack": "Send To Back",
     "bringToFront": "Bring to Front",
@@ -107,7 +107,8 @@
       "velocityThetaRange": "Velocity Angle(xy) Range",
       "velocityPhiRange": "Velocity Angle(xz) Range",
       "particleShape": "Particle Shape",
-      "particleDirection": "Particle Direction"
+      "particleDirection": "Particle Direction",
+      "eventGraph": "Event Graph"
     },
     "nail": {
       "isStatic": "Is Static"

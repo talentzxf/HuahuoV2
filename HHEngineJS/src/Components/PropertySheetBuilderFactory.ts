@@ -32,10 +32,15 @@ class PropertySheetFactory {
         this.categoryTypeMap.set(PropertyCategory.stringValue, PropertyType.STRING)
     }
 
-    createEntryByNameAndCategory(propertyName, category: PropertyCategory) {
+    createEntryByNameAndCategory(propertyName, category: PropertyCategory, hide:boolean = false) {
         let propertyDef = {
             key: propertyPrefix + propertyName,
         }
+
+        if(hide){
+            propertyDef["hide"] = true
+        }
+
         let propertyType = this.categoryTypeMap.get(category)
         propertyDef["type"] = propertyType
         if (this.categoryElementTypeMap.has(category)) {
@@ -48,7 +53,7 @@ class PropertySheetFactory {
     createEntry(component, propertyMeta: PropertyDef, valueChangeHandler: ValueChangeHandler) {
         let fieldName = propertyMeta["key"]
 
-        let propertyDef = this.createEntryByNameAndCategory(propertyMeta["key"], propertyMeta.type)
+        let propertyDef = this.createEntryByNameAndCategory(propertyMeta["key"], propertyMeta.type, propertyMeta.hide)
 
         let isCustomField = propertyMeta.type == PropertyCategory.customField
         if (!isCustomField) {

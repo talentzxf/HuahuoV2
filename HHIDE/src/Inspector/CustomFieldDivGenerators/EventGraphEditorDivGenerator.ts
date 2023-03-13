@@ -13,11 +13,11 @@ class EventGraphEditorDivGenerator implements CustomFieldContentDivGenerator{
     generateDiv(property: Property){
         let button = document.createElement("input")
         button.type = "button"
-        button.innerText = i18n.t("editEventGraph")
+        button.value = i18n.t("edit")
 
         return button
     }
 }
 
-registerCustomFieldContentDivGeneratorConstructor(EventGraphComponent.name, "editEventGraph", EventGraphEditorDivGenerator)
+registerCustomFieldContentDivGeneratorConstructor(EventGraphComponent.name, "eventGraph", EventGraphEditorDivGenerator)
 export {EventGraphEditorDivGenerator}
