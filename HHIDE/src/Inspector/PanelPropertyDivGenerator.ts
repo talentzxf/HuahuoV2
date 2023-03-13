@@ -6,7 +6,7 @@ import {
 } from "./BasePropertyDivGenerator";
 import {Property} from "hhcommoncomponents";
 
-class PanelPropertyDesc extends BasePropertyDesc{
+class PanelPropertyDesc extends BasePropertyDesc {
     constructor(property: Property) {
         super(property);
 
@@ -14,31 +14,33 @@ class PanelPropertyDesc extends BasePropertyDesc{
 
         this.contentDiv.appendChild(panelPropertyDiv)
 
-        if(property.config && property.config.children){
+        if (property.config && property.config.children) {
             // TODO: Avoid duplication with Inspector
-            for(let childProperty of property.config.children){
-                if(childProperty.visible){ // Some properties are hidden.
-                    let divGenerator = GetPropertyDivGenerator(childProperty.type)
-                    let propertyDesc = divGenerator.generatePropertyDesc(childProperty)
-
-                    let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
-
-                    this.contentDiv.appendChild(propertyDiv)
+            for (let childProperty of property.config.children) {
+                if (childProperty.hide) { // Some properties are hidden.
+                    continue
                 }
+                let divGenerator = GetPropertyDivGenerator(childProperty.type)
+                let propertyDesc = divGenerator.generatePropertyDesc(childProperty)
+
+                let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
+
+                this.contentDiv.appendChild(propertyDiv)
             }
         }
     }
+
     onValueChanged(val) {
     }
 }
 
-class PanelPropertyDivGenerator extends BasePropertyDivGenerator{
+class PanelPropertyDivGenerator extends BasePropertyDivGenerator {
     generatePropertyDesc(property): BasePropertyDesc {
         return new PanelPropertyDesc(property);
     }
 }
 
-function makeDivUnselectable(div: HTMLElement){
+function makeDivUnselectable(div: HTMLElement) {
     div.style["-webkit-touch-callout"] = "none"
     div.style["-webkit-user-select"] = "none";
     div.style["-khtml-user-select"] = "none";
@@ -49,7 +51,8 @@ function makeDivUnselectable(div: HTMLElement){
 
 let visibleColor = "yellow"
 let invisibleColor = "gray"
-class ComponentPropertyDivGenerator extends BasePropertyDivGenerator{
+
+class ComponentPropertyDivGenerator extends BasePropertyDivGenerator {
     generatePropertyDesc(property): BasePropertyDesc {
         let propertyDesc = new PanelPropertyDesc(property);
 
@@ -63,15 +66,14 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator{
         let contentVisible = false
 
         titleDiv.setAttribute("isCollapsed", "false")
-        titleDiv.addEventListener("click", function(){
+        titleDiv.addEventListener("click", function () {
             contentVisible = !contentVisible
-            if(contentVisible){
+            if (contentVisible) {
                 titleDiv.style.background = invisibleColor
                 contentDiv.style.display = "none"
 
                 titleDiv.setAttribute("isCollapsed", "true")
-            }
-            else{
+            } else {
                 titleDiv.style.background = visibleColor
                 contentDiv.style.display = "block"
 
@@ -79,13 +81,13 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator{
             }
         })
 
-        if(property.config && property.config.isActive){
+        if (property.config && property.config.isActive) {
             let activateButtion = document.createElement("input")
             activateButtion.type = "button"
-            if(property.config.isActive()){
+            if (property.config.isActive()) {
                 activateButtion.value = i18n.t("Deactivate")
                 activateButtion.onclick = this.deActivateComponent(activateButtion, property).bind(this)
-            }else{
+            } else {
                 activateButtion.value = i18n.t("Activate")
                 activateButtion.onclick = this.activateComponent(activateButtion, property).bind(this)
             }
@@ -96,8 +98,8 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator{
         return propertyDesc
     }
 
-    activateComponent(activateButton, property){
-        return function(evt: MouseEvent){
+    activateComponent(activateButton, property) {
+        return function (evt: MouseEvent) {
             evt.stopPropagation()
             property.config.enabler()
             activateButton.value = i18n.t("Deactivate")
@@ -105,8 +107,8 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator{
         }.bind(this)
     }
 
-    deActivateComponent(activateButton, property){
-        return function(evt: MouseEvent){
+    deActivateComponent(activateButton, property) {
+        return function (evt: MouseEvent) {
             evt.stopPropagation()
             property.config.disabler()
             activateButton.value = i18n.t("Activate")

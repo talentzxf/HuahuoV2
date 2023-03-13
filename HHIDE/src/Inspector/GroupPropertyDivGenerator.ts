@@ -18,6 +18,8 @@ class GroupPropertyDesc extends BasePropertyDesc{
         let firstProperty = true
 
         for(let childProperty of property.config.children){
+            if(childProperty.hide)
+                continue
 
             let divGenerator = GetPropertyDivGenerator(childProperty.type)
             let propertyDesc = divGenerator.generatePropertyDesc(childProperty)

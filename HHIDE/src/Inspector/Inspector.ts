@@ -155,6 +155,9 @@ class Inspector extends HTMLElement{
             // Add collapse-all button.
             let properties = propertySheet.getProperties()
             for(let property of properties){
+                if(property.hide)
+                    continue;
+
                 let divGenerator = GetPropertyDivGenerator(property.type)
                 let propertyDesc = divGenerator.generatePropertyDesc(property)
 
