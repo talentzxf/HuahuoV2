@@ -127,11 +127,21 @@ class AbstractComponent {
     }
 
     getPropertySheet() {
+        let _this = this
         let componentConfigSheet = {
             key: this.getTypeName(),
             type: PropertyType.COMPONENT,
             config: {
-                children: []
+                children: [],
+                enabler: ()=>{
+                    _this.isActive = true
+                },
+                disabler: ()=>{
+                    _this.isActive = false
+                },
+                isActive: ()=>{
+                    return _this.isActive
+                }
             }
         }
 

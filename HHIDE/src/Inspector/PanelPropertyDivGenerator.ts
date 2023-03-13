@@ -77,6 +77,18 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator{
             }
         })
 
+        if(property.config && property.config.isActive){
+            let activateButtion = document.createElement("input")
+            activateButtion.type = "button"
+            if(propertyConfig.isActive()){
+                activateButtion.value = i18n.t("Deactivate")
+            }else{
+                activateButtion.value = i18n.t("Activate")
+            }
+
+            titleDiv.appendChild(activateButtion)
+        }
+
         return propertyDesc
     }
 

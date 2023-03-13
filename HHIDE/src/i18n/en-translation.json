@@ -35,6 +35,8 @@
   "ShapeSegmentMoveCommand": "MoveSegment",
   "ShapeHandlerMoveCommand": "MoveHandler",
   "CenterOf": "Center",
+  "Activate": "Activate",
+  "Deactivate": "Deactivate",
   "contextmenu": {
     "sendToBack": "Send To Back",
     "bringToFront": "Bring to Front",

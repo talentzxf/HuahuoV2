@@ -28,6 +28,13 @@ class SubComponentArrayProperty extends PropertyConfig {
     subComponentTypeName: string;
 }
 
-export {PropertyConfig, FloatPropertyConfig, ActionPropertyConfig, SubComponentArrayProperty, CustomFieldConfig, CustomFieldContentDivGenerator}
+class ComponentProperty extends PropertyConfig {
+    children: []
+    enabler: Function
+    disabler: Function
+    isActive: Function
+}
+
+export {PropertyConfig, FloatPropertyConfig, ActionPropertyConfig, SubComponentArrayProperty, CustomFieldConfig, CustomFieldContentDivGenerator, ComponentProperty}
 
 
