@@ -89,6 +89,12 @@ CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ra
             else
                 resultData.data.stringValue = k2.data.stringValue;
             break;
+        case BOOLEAN:
+            if (ratio < 1.0)
+                resultData.data.booleanValue = k1.data.booleanValue;
+            else
+                resultData.data.booleanValue = k2.data.booleanValue;
+            break;
     }
 
     resultData.data.dataType = k1.data.dataType;

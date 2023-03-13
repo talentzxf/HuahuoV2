@@ -16,18 +16,20 @@ import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariable
 // Key is: className#fieldName
 // Value is the constructor of the divContent generator
 let customFieldContentDivGeneratorMap: Map<string, Function> = new Map()
-function registerCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string, constructor: Function){
+
+function registerCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string, constructor: Function) {
     let fieldFullName = className + "#" + fieldName
     customFieldContentDivGeneratorMap.set(fieldFullName, constructor)
 }
 
-function getCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string): Function{
+function getCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string): Function {
     let fieldFullName = className + "#" + fieldName
     return customFieldContentDivGeneratorMap.get(fieldFullName)
 }
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
+
 function getProperties(target): object[] {
     let properties: object[] = Reflect.getMetadata(metaDataKey, target)
     if (!properties) {
@@ -67,6 +69,9 @@ class AbstractComponent {
     propertySheetInited: boolean = false;
     shapeArrayFieldNames: Set<string> = new Set<string>()
 
+    @PropertyValue(PropertyCategory.boolean, false)
+    isActive
+
     private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
     callHandlers(propertyName: string, val: any) {
@@ -93,7 +98,7 @@ class AbstractComponent {
                     subComponentArrayHandler.handleEntry(this, propertyEntry)
                 } else if (propertyEntry.type == PropertyCategory.customField) {
                     customFieldVariableHandler.handleEntry(this, propertyEntry)
-                } else{
+                } else {
                     defaultVariableProcessor.handleEntry(this, propertyEntry)
                 }
             })
@@ -136,7 +141,7 @@ class AbstractComponent {
                 if (propertyMeta.type == PropertyCategory.customField) {
                     if (propertyMeta.config == null || propertyMeta.config["contentDivGenerator"] == null) {
 
-                        propertyMeta = { ... propertyMeta } // Clone it to avoid affecting other objects. Shallow copy should be enough.
+                        propertyMeta = {...propertyMeta} // Clone it to avoid affecting other objects. Shallow copy should be enough.
 
                         let divGeneratorConstructor = getCustomFieldContentDivGeneratorConstructor(this.constructor.name, propertyMeta.key)
 

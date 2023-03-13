@@ -13,10 +13,11 @@ enum PropertyCategory{
     keyframeArray,
     subcomponentArray,
     customField, // Need to return a HTML div element to the inspector and inspector will draw it.
-    stringValue
+    stringValue,
+    boolean
 }
 
-abstract class InterpolateOperator{
+abstract class CppValueOperator{
     rawObj
     constructor(rawObj) {
         this.rawObj = rawObj
@@ -28,7 +29,25 @@ abstract class InterpolateOperator{
     abstract isEqual(v1, v2)
 }
 
-class InterpolateFloatOperator extends InterpolateOperator{
+class BooleanFloatOperator extends CppValueOperator{
+    getField(fieldName: string) {
+        return this.rawObj["GetBooleanValue"](fieldName);
+    }
+
+    registerField(fieldName: string, initValue) {
+        this.rawObj["RegisterBooleanValue"](fieldName, initValue);
+    }
+
+    setField(fieldName:string, val){
+        this.rawObj["SetBooleanValue"](fieldName, val)
+    }
+
+    isEqual(v1, v2) {
+        return v1 == v2
+    }
+}
+
+class InterpolateFloatOperator extends CppValueOperator{
     getField(fieldName) {
         return this.rawObj["GetFloatValue"](fieldName)
     }
@@ -46,7 +65,7 @@ class InterpolateFloatOperator extends InterpolateOperator{
     }
 }
 
-class InterpolateColorOperator extends InterpolateOperator{
+class InterpolateColorOperator extends CppValueOperator{
     getField(fieldName) {
         let cppColor = this.rawObj["GetColorValue"](fieldName)
         return new paper.Color(cppColor.r, cppColor.g, cppColor.b, cppColor.a)
@@ -77,7 +96,7 @@ class InterpolateColorOperator extends InterpolateOperator{
     }
 }
 
-class InterpolateVector2Operator extends InterpolateOperator{
+class InterpolateVector2Operator extends CppValueOperator{
     getField(fieldName: string) {
         return this.rawObj["GetVector3Value"](fieldName)
     }
@@ -107,7 +126,7 @@ class InterpolateVector2Operator extends InterpolateOperator{
     }
 }
 
-class InterpolateVector3Operator extends InterpolateOperator{
+class InterpolateVector3Operator extends CppValueOperator{
     getField(fieldName: string) {
         return this.rawObj["GetVector3Value"](fieldName)
     }
@@ -138,7 +157,7 @@ class InterpolateVector3Operator extends InterpolateOperator{
     }
 }
 
-class StringValueOperator extends InterpolateOperator{
+class StringValueOperator extends CppValueOperator{
     getField(fieldName: string) {
         return this.rawObj["GetStringValue"](fieldName)
     }
@@ -158,7 +177,7 @@ class StringValueOperator extends InterpolateOperator{
     }
 }
 
-function buildOperator(type, rawObj): InterpolateOperator{
+function buildOperator(type, rawObj): CppValueOperator{
     switch(type){ // TODO: Get rid of switch-case
         case PropertyCategory.interpolateFloat:
             return new InterpolateFloatOperator(rawObj)
@@ -170,6 +189,8 @@ function buildOperator(type, rawObj): InterpolateOperator{
             return new InterpolateVector3Operator(rawObj)
         case PropertyCategory.stringValue:
             return new StringValueOperator(rawObj)
+        case PropertyCategory.boolean:
+            return new BooleanFloatOperator(rawObj)
     }
 
     return null
