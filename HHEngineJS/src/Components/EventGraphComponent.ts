@@ -3,7 +3,7 @@ import {PropertyCategory} from "./PropertySheetBuilder";
 
 @Component()
 class EventGraphComponent extends AbstractComponent{
-    @PropertyValue(PropertyCategory.stringValue, {random: true})
+    @PropertyValue(PropertyCategory.stringValue, null, null, false)
     eventGraphJSON
 
     @PropertyValue(PropertyCategory.customField)

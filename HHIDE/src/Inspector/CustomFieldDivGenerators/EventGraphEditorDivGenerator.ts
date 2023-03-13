@@ -1,6 +1,5 @@
 import {CustomFieldContentDivGenerator} from "hhcommoncomponents";
 import {EventGraphComponent} from "hhenginejs";
-import {IconSelectDivGenerator} from "./IconSelectDivGenerator";
 import {registerCustomFieldContentDivGeneratorConstructor} from "hhenginejs";
 import {Property} from "hhcommoncomponents";
 
@@ -20,5 +19,5 @@ class EventGraphEditorDivGenerator implements CustomFieldContentDivGenerator{
     }
 }
 
-registerCustomFieldContentDivGeneratorConstructor(EventGraphComponent.name, "editEventGraph", IconSelectDivGenerator)
+registerCustomFieldContentDivGeneratorConstructor(EventGraphComponent.name, "editEventGraph", EventGraphEditorDivGenerator)
 export {EventGraphEditorDivGenerator}
