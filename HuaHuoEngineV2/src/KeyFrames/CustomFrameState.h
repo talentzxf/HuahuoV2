@@ -21,7 +21,8 @@ enum CustomDataType{
     COLORSTOPARRAY,
     VECTOR3,
     BINARYRESOURCE,
-    STRING
+    STRING,
+    BOOLEAN
 };
 
 class BinaryResource{
@@ -70,11 +71,13 @@ struct CustomData{
     ColorStopArray colorStopArray;
     BinaryResource binaryResource;
     std::string stringValue;
+    bool  booleanValue;
     CustomDataType dataType;
 
     DECLARE_SERIALIZE(CustomData);
 };
 
+// TODO: Refactor! (One of) The most ugly function in the whole system. :(
 template<class TransferFunction> void CustomData::Transfer(TransferFunction &transfer) {
     TRANSFER_ENUM(dataType);
 
@@ -99,6 +102,9 @@ template<class TransferFunction> void CustomData::Transfer(TransferFunction &tra
             break;
         case STRING:
             TRANSFER(stringValue);
+            break;
+        case BOOLEAN:
+            TRANSFER(booleanValue);
             break;
     }
 }
@@ -134,6 +140,7 @@ public:
     virtual bool Apply(int frameId) override;
 
 public:
+    void SetBooleanValue(bool value);
     void SetFloatValue(float value);
     void SetVector3Value(float x, float y, float z);
 
@@ -143,6 +150,7 @@ public:
 
     BinaryResource* GetBinaryResource();
 
+    bool GetBooleanValue();
     float GetFloatValue();
     Vector3f* GetVector3Value();
 

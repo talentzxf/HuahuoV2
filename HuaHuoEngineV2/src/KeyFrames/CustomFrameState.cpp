@@ -117,6 +117,19 @@ bool CustomFrameState::Apply(int frameId) {
     return false;
 }
 
+void CustomFrameState::SetBooleanValue(bool value) {
+    if (this->m_DataType != BOOLEAN) {
+        Assert("Data Type mismatch!");
+        return;
+    }
+
+    Layer *shapeLayer = GetBaseShape()->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+    CustomDataKeyFrame *pKeyFrame = this->RecordFieldValue(currentFrameId, value);
+    pKeyFrame->SetFrameState(this);
+    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
+}
+
 void CustomFrameState::SetFloatValue(float value) {
     if (this->m_DataType != FLOAT) {
         Assert("Data Type mismatch!");
@@ -160,6 +173,19 @@ void CustomFrameState::SetVector3Value(float x, float y, float z) {
     CustomDataKeyFrame *pKeyFrame = this->RecordFieldValue(currentFrameId, value);
     pKeyFrame->SetFrameState(this);
     shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
+}
+
+bool CustomFrameState::GetBooleanValue() {
+    if (this->m_DataType != BOOLEAN) {
+        Assert("Data Type mismatch!");
+        return false;
+    }
+
+    if (isValidFrame) {
+        return m_CurrentKeyFrame.data.booleanValue;
+    }
+
+    return this->m_defaultValue.booleanValue;
 }
 
 float CustomFrameState::GetFloatValue() {
@@ -417,6 +443,9 @@ CustomDataKeyFrame *CustomFrameState::RecordFieldValue(int frameId, T value) {
     } else if constexpr(std::is_same<T, std::string>()) {
         pKeyFrame->data.stringValue = value;
         pKeyFrame->data.dataType = STRING;
+    } else if constexpr(std::is_same<T, bool>()){
+        pKeyFrame->data.booleanValue = value;
+        pKeyFrame->data.dataType = BOOLEAN;
     }
 
     Apply(frameId);

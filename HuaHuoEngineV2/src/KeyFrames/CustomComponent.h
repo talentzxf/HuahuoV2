@@ -171,6 +171,15 @@ DECLARE_OBJECT_SERIALIZE();
         return pComponent->GetVector3Value();
     }
 
+    bool GetBooleanValue(const char* fieldName) {
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return false;
+
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        return pComponent->GetBooleanValue();
+    }
+
     float GetFloatValue(const char *fieldName) {
         if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
             return -1.0f;
@@ -291,6 +300,13 @@ public:
     int GetKeyFrameAtIndex(int idx) override;
 
 public:
+    int RegisterBooleanValue(const char *fieldName, bool initValue) {
+        int fieldIdx = this->RegisterField(fieldName, BOOLEAN);
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        pComponent->GetDefaultValueData()->booleanValue = initValue;
+        return fieldIdx;
+    }
+
     int RegisterFloatValue(const char *fieldName, float initValue) {
         int fieldIdx = this->RegisterField(fieldName, FLOAT);
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
