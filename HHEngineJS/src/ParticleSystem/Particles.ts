@@ -290,7 +290,10 @@ class Particles extends AbstractComponent {
         set_indices(MAX_PARTICLE_COUNT)
     }
 
-    renderImage(curFrameId) {
+    depth
+    renderTarget
+
+    renderImage(curFrameId, aspectRatio) {
         if (this._renderImageKernel == null) {
             this.setupIndicesAndVertices()
 
@@ -301,7 +304,7 @@ class Particles extends AbstractComponent {
             this._renderImageKernel = huahuoEngine.ti.classKernel(
                 this,
                 {particleColor: cType, particleShapeSize: shapeSizeType, particleShapeTexture: textureType},
-                (particleSize, particleColor, curFrameId, particleShapeSize, particleShapeTexture, velocityDir, staticDir) => {
+                (particleSize, particleColor, curFrameId, particleShapeSize, particleShapeTexture, velocityDir, staticDir, aspectRatio) => {
 
                     let invalidPosition = [-10000.0, -10000.0, -10000.0]
 
@@ -315,7 +318,7 @@ class Particles extends AbstractComponent {
                     let mvp = proj.matmul(view)
 
                     // ti.clearColor(renderTarget, [0.0, 0.0, 0.0, 0.0])
-                    ti.useDepth(depth)
+                    ti.useDepth(this.depth)
 
                     let halfParticleSize = particleSize * 0.5
                     // set up vertices of all the particles.
@@ -368,12 +371,12 @@ class Particles extends AbstractComponent {
                         if (particleShapeSize[0] > 0 && particleShapeSize[1] > 0) { // Draw texture
                             let textureColor = ti.textureSample(particleShapeTexture, f.texture_pos)
                             if (textureColor[3] > 0)
-                                ti.outputColor(renderTarget, particleColor)
+                                ti.outputColor(this.renderTarget, particleColor)
                             else
                                 ti.discard()
                         } else { // Draw circle.
                             if ((fragmentPos - centerPos).norm_sqr() <= particleSizeSquare) {
-                                ti.outputColor(renderTarget, particleColor)
+                                ti.outputColor(this.renderTarget, particleColor)
                             } else {
                                 ti.discard()
                             }
@@ -391,7 +394,9 @@ class Particles extends AbstractComponent {
             staticDir = Number(this.particleDirection)
         }
 
-        this._renderImageKernel(this.particleSize, ColorToArray(this.particleColor), curFrameId, this.particleShapeLoader._particleShapeSize, this.particleShapeLoader._particleShapeTexture, velocityDir, staticDir)
+        this._renderImageKernel(this.particleSize, ColorToArray(this.particleColor), curFrameId,
+            this.particleShapeLoader._particleShapeSize, this.particleShapeLoader._particleShapeTexture,
+            velocityDir, staticDir, aspectRatio)
 
         // // For debug purpose, get the position array back
         // this._particlePositions.toArray().then(function (val) {

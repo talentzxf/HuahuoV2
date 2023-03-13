@@ -23,6 +23,9 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
     renderTarget
     depth
 
+    outputImageWidth
+    outputImageHeight
+
     @PropertyValue(PropertyCategory.subcomponentArray, null, {subComponentTypeName: "Particles"} as SubComponentArrayProperty)
     particleSystems
 
@@ -33,16 +36,11 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
     }
 
     async initImage(width, height) {
-        let widthInt = Math.ceil(width)
-        let heightInt = Math.ceil(height)
 
-        this.outputImage = huahuoEngine.ti.Vector.field(4, ti.f32, [widthInt, heightInt])
+        this.outputImageWidth = Math.ceil(width)
+        this.outputImageHeight = Math.ceil(height)
 
-        huahuoEngine.ti.addToKernelScope({
-            outputImage: this.outputImage,
-            outputImageWidth: widthInt,
-            outputImageHeight: heightInt,
-        })
+        this.outputImage = huahuoEngine.ti.Vector.field(4, ti.f32, [this.outputImageWidth, this.outputImageHeight])
 
         if (this.renderKernel == null) {
             this.createRenderKernel()
@@ -51,20 +49,17 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
         if (this.taichiCanvas == null) {
             this.htmlCanvas = document.createElement("canvas")
 
-            this.htmlCanvas.width = widthInt
-            this.htmlCanvas.height = heightInt
-            this.htmlCanvas.style.width = widthInt + "px"
-            this.htmlCanvas.style.height = heightInt + "px"
+            this.htmlCanvas.width = this.outputImageWidth
+            this.htmlCanvas.height = this.outputImageHeight
+            this.htmlCanvas.style.width = this.outputImageWidth + "px"
+            this.htmlCanvas.style.height = this.outputImageHeight + "px"
             // this.taichiCanvas = new huahuoEngine.ti.Canvas(this.htmlCanvas)
 
             this.renderTarget = huahuoEngine.ti.canvasTexture(this.htmlCanvas)
-            this.depth = huahuoEngine.ti.depthTexture([widthInt, heightInt])
-            let aspectRatio = widthInt/heightInt
+            this.depth = huahuoEngine.ti.depthTexture([this.outputImageWidth, this.outputImageHeight])
 
             huahuoEngine.ti.addToKernelScope({
-                renderTarget: this.renderTarget,
-                depth: this.depth,
-                aspectRatio: aspectRatio
+                depth: this.depth
             })
 
             // document.body.appendChild(this.htmlCanvas)
@@ -101,9 +96,14 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
 
         let currentFrameId = this.baseShape.getLayer().GetCurrentFrame()
 
+        let aspectRatio = this.outputImageWidth / this.outputImageHeight
+
         for (let particles of this.particleSystems) {
-            if(particles.isComponentActive())
-                particles.renderImage(currentFrameId)
+            if (particles.isComponentActive()){
+                particles.depth = this.depth
+                particles.renderTarget = this.renderTarget
+                particles.renderImage(currentFrameId, aspectRatio)
+            }
         }
 
         // await this.taichiCanvas.setImage(this.outputImage)
@@ -111,11 +111,11 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
     }
 
     createRenderKernel() {
-        this.renderKernel = huahuoEngine.ti.kernel(() => {
+        this.renderKernel = huahuoEngine.ti.classKernel(this, () => {
 
-            let center = [outputImageWidth / 2.0, outputImageHeight / 2.0]
+            let center = [this.outputImageWidth / 2.0, this.outputImageHeight / 2.0]
 
-            for (let I of ndrange(i32(outputImageWidth), i32(outputImageHeight))) {
+            for (let I of ndrange(i32(this.outputImageWidth), i32(this.outputImageHeight))) {
                 // outputImage[I] = [random(), random(), random(), 1.0]
 
                 // let dist = (I - center).norm()
@@ -125,7 +125,7 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
                 //     outputImage[I] = [0.0, 0.0, 0.0, 0.0]
                 // }
 
-                outputImage[I] = [0.0, 0.0, 0.0, 0.0]
+                this.outputImage[I] = [0.0, 0.0, 0.0, 0.0]
             }
         })
     }
