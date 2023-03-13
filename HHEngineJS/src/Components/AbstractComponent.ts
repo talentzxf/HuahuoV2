@@ -40,7 +40,7 @@ function getProperties(target): object[] {
     return properties
 }
 
-function PropertyValue(category: PropertyCategory, initValue = null, config?: PropertyConfig, visible: boolean = true) {
+function PropertyValue(category: PropertyCategory, initValue = null, config?: PropertyConfig, hide: boolean = false) {
     return function (target: object, propertyKey: string) {
         let properties = getProperties(target)
         let propertyEntry: PropertyDef = {
@@ -48,7 +48,7 @@ function PropertyValue(category: PropertyCategory, initValue = null, config?: Pr
             type: category,
             initValue: initValue,
             config: config,
-            visible: visible
+            hide: hide
         }
         properties.push(propertyEntry)
     }

@@ -201,7 +201,7 @@ class PropertyDef{
     type: PropertyCategory
     config: object
     initValue: object|number
-    visible: boolean
+    hide: boolean = false
 }
 
 function capitalizeFirstLetter(str){
