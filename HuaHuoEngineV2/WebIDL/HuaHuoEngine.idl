@@ -178,7 +178,7 @@ interface CustomComponent{
     long RegisterSubcomponentArray([Const] DOMString fieldName);
     long RegisterBinaryResource([Const] DOMString fieldName);
     long RegisterStringValue([Const] DOMString fieldName, [Const] DOMString defaultValue);
-    long RegisterBooleanValue(const  DOMString fieldName, boolean initValue);
+    long RegisterBooleanValue([Const]  DOMString fieldName, boolean initValue);
     boolean IsFieldRegistered([Const] DOMString fieldName);
 
     CustomComponent GetSubComponentByIdx(long idx);
