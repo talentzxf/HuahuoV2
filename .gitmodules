@@ -3,3 +3,6 @@
 	url = https://github.com/talentzxf/taichi.js.git
 	branch = master
 	update = merge
+[submodule "Libs/litegraph.js"]
+	path = Libs/litegraph.js
+	url = git@github.com:talentzxf/litegraph.js.git
