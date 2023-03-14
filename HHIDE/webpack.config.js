@@ -63,6 +63,8 @@ let moduleExports = (env)=> {
                     {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
                     {from: "./svgs", to: "svgs"},
                     {from: "./src/i18n", to: "i18n"},
+                    {from:"./src/test_lgraph.html", to:"test_lgraph.html"},
+                    {from:"./src/static", to:"static"}
                 ],
             }),
             new FileManagerPlugin({
@@ -90,7 +92,7 @@ let moduleExports = (env)=> {
                 title: 'Development',
                 template: 'src/index.ejs',
                 // inject: false
-            }),
+            })
         ]
     };
 
