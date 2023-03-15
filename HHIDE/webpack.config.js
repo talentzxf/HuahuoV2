@@ -64,7 +64,9 @@ let moduleExports = (env)=> {
                     {from: "./svgs", to: "svgs"},
                     {from: "./src/i18n", to: "i18n"},
                     {from:"./src/test_lgraph.html", to:"test_lgraph.html"},
-                    {from:"./src/static", to:"static"}
+                    {from:"./static", to:"static"},
+                    {from:"../Libs/litegraph.js/build", to:"static"},
+                    {from:"../Libs/litegraph.js/css", to:"static"}
                 ],
             }),
             new FileManagerPlugin({
