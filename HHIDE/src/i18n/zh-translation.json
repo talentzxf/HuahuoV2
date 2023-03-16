@@ -38,6 +38,9 @@
   "Activate": "激活组件",
   "Deactivate": "关闭组件",
   "edit": "编辑",
+  "eventgraph": {
+    "resetScale": "重置缩放"
+  },
   "contextmenu": {
     "sendToBack": "放到下面",
     "bringToFront": "放到上面",

@@ -38,6 +38,9 @@
   "Activate": "Activate",
   "Deactivate": "Deactivate",
   "edit": "edit",
+  "eventgraph": {
+    "resetScale": "Reset Scale"
+  },
   "contextmenu": {
     "sendToBack": "Send To Back",
     "bringToFront": "Bring to Front",

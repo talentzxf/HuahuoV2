@@ -50,14 +50,26 @@ class EventGraphForm extends HTMLElement implements HHForm {
         canvas.style.height = CANVAS_HEIGHT + "px"
         form.appendChild(canvas)
 
+        let resetScaleButton = document.createElement("button")
+        resetScaleButton.innerText = i18n.t("eventgraph.resetScale")
+        resetScaleButton.style.width = "100px"
         this.appendChild(this.containerDiv)
 
         this.initLGraph(canvas)
+
+        let _this = this
+        resetScaleButton.onclick = function(e){
+            _this.lcanvas.ds.changeScale(1.0);
+            _this.graph.change()
+            e.preventDefault()
+        }
+
+        form.appendChild(resetScaleButton)
     }
 
     initLGraph(canvas: HTMLCanvasElement) {
         this.graph = new LGraph()
-        this.lcanvas = new LGraphCanvas(canvas, this.graph, {autoresize: true})
+        this.lcanvas = new LGraphCanvas(canvas, this.graph, {autoresize: false})
 
         var node_const = LiteGraph.createNode("basic/const");
         node_const.pos = [200, 200];
