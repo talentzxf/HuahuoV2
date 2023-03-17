@@ -68,7 +68,47 @@ class EventGraphForm extends HTMLElement implements HHForm {
     }
 
     eventListenerMenu(node, options, e, prev_menu, callback) {
-        
+        if (!this.lcanvas)
+            return
+
+        if (!this.graph)
+            return
+
+        let ref_window = this.lcanvas.getCanvasWindow()
+
+        let events = ["onFrameStart", "onFrameEnd"]
+
+        let entries = []
+
+        let _this = this
+        events.forEach((value) => {
+            let entry = {
+                value: "basic/string",
+                content: value,
+                has_submenu: false,
+                callback: function(value, event, mouseEvent, contextMenu){
+                    let first_event = contextMenu.getFirstEvent();
+                    let graph = _this.graph
+                    let lcanvas = _this.lcanvas
+                    graph.beforeChange()
+
+                    let node = LiteGraph.createNode(value.value)
+                    if(node){
+                        node.pos = lcanvas.convertEventToCanvasOffset(first_event)
+                        lcanvas.graph.add(node)
+                    }
+
+                    if(callback)
+                        callback(node)
+
+                    graph.afterChange()
+                }
+            }
+
+            entries.push(entry)
+        })
+
+        new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
     }
 
     initLGraph(canvas: HTMLCanvasElement) {
@@ -80,7 +120,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
             let options = [{
                 content: i18n.t("eventgraph.addEventListener"),
                 has_submenu: true,
-                callback: _this.eventListenerMenu
+                callback: _this.eventListenerMenu.bind(_this)
             }]
 
             return options
