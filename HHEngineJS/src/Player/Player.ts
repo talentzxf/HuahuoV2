@@ -1,7 +1,7 @@
 import {GlobalConfig} from "../GlobalConfig";
 import {huahuoEngine} from "../EngineAPI";
 import {LayerShapesManager} from "./LayerShapesManager";
-import {IsValidWrappedObject} from "hhcommoncomponents";
+import {IsValidWrappedObject, TriggerEvent} from "hhcommoncomponents";
 import {getNailManager} from '../IK/GetNailManager'
 
 class Player{
@@ -72,6 +72,7 @@ class Player{
         }
     }
 
+    @TriggerEvent()
     setFrameId(playFrameId){
         // Update time for all layers in the default store.
         let currentStore = huahuoEngine.GetStoreById(this.storeId)

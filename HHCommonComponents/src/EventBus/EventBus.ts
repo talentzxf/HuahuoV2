@@ -64,4 +64,16 @@ if(!window["eventBus"]){
     window["eventBus"] = eventBus
 }
 
-export {eventBus}
+function TriggerEvent(){
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor){
+        let originalMethod = descriptor.value
+        descriptor.value = function(...args:any[]){
+            eventBus.triggerEvent(target.constructor.name, propertyKey, args)
+
+            return originalMethod.app(this, args)
+        }
+    }
+}
+
+
+export {eventBus, TriggerEvent}

@@ -14,7 +14,7 @@ import {PropertySheet, Property, PropertyType} from "./Properties/PropertySheet"
 import {I18nHandler} from "./translation/I18nHandler";
 import "./i18ninitializer"
 import {HHToast} from "./Toast/Toast";
-import {eventBus} from "./EventBus/EventBus";
+import {eventBus, TriggerEvent} from "./EventBus/EventBus";
 import {mirrorPoint} from "./Math/MathFunctions";
 import {IsValidWrappedObject} from "./WrappedObjectUtils"
 import {CustomFieldConfig, CustomFieldContentDivGenerator} from "./Properties/PropertyConfig";
@@ -30,6 +30,7 @@ export {
     relaxRectangle, PropertySheet, Property, PropertyType, getMimeTypeFromDataURI,
     dataURItoBlob, HHToast, getFileNameFromGZip, eventBus, mirrorPoint,
     IsValidWrappedObject, getMethodsAndVariables,
-    CustomFieldContentDivGenerator, CustomFieldConfig
+    CustomFieldContentDivGenerator, CustomFieldConfig,
+    TriggerEvent
 }
 
