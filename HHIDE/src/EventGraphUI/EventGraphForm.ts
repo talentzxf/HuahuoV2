@@ -38,7 +38,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
             "</form>"
 
         let form = this.containerDiv.querySelector("form")
-        form.style.width = CANVAS_WIDTH*1.2 + "px"
+        form.style.width = CANVAS_WIDTH * 1.2 + "px"
 
         this.closeBtn = this.containerDiv.querySelector("#closeBtn")
         this.closeBtn.onclick = this.closeForm.bind(this)
@@ -58,7 +58,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         this.initLGraph(canvas)
 
         let _this = this
-        resetScaleButton.onclick = function(e){
+        resetScaleButton.onclick = function (e) {
             _this.lcanvas.ds.changeScale(1.0);
             _this.graph.change()
             e.preventDefault()
@@ -67,9 +67,24 @@ class EventGraphForm extends HTMLElement implements HHForm {
         form.appendChild(resetScaleButton)
     }
 
+    eventListenerMenu(node, options, e, prev_menu, callback) {
+        
+    }
+
     initLGraph(canvas: HTMLCanvasElement) {
         this.graph = new LGraph()
         this.lcanvas = new LGraphCanvas(canvas, this.graph, {autoresize: false})
+
+        let _this = this
+        this.lcanvas.getExtraMenuOptions = function () {
+            let options = [{
+                content: i18n.t("eventgraph.addEventListener"),
+                has_submenu: true,
+                callback: _this.eventListenerMenu
+            }]
+
+            return options
+        }
 
         var node_const = LiteGraph.createNode("basic/const");
         node_const.pos = [200, 200];

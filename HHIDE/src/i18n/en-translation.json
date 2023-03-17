@@ -39,7 +39,8 @@
   "Deactivate": "Deactivate",
   "edit": "edit",
   "eventgraph": {
-    "resetScale": "Reset Scale"
+    "resetScale": "Reset Scale",
+    "addEventListener" : "Add Event Receiver"
   },
   "contextmenu": {
     "sendToBack": "Send To Back",

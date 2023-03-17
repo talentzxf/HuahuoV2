@@ -39,7 +39,8 @@
   "Deactivate": "关闭组件",
   "edit": "编辑",
   "eventgraph": {
-    "resetScale": "重置缩放"
+    "resetScale": "重置缩放",
+    "addEventListener" : "监听事件"
   },
   "contextmenu": {
     "sendToBack": "放到下面",
