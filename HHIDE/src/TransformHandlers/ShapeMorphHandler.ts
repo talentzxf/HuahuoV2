@@ -1,6 +1,6 @@
 import {ShapeTranslateMorphBase} from "./ShapeTranslateMorphBase";
 import {paper, BaseShapeJS} from "hhenginejs";
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {PropertySheet, PropertyType} from "hhcommoncomponents"
 import {ShapeHandlerMoveCommand} from "../RedoUndo/ShapeHandlerMoveCommand";
 import {undoManager} from "../RedoUndo/UndoManager";
@@ -165,7 +165,7 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         // Show inspector
         let propertySheet: PropertySheet = new PropertySheet()
         this.setupPropertySheet(propertySheet)
-        EventBus.getInstance().emit(EventNames.OBJECTSELECTED, propertySheet, this.curSegment)
+        IDEEventBus.getInstance().emit(EventNames.OBJECTSELECTED, propertySheet, this.curSegment)
     }
 
     dragging(pos) {

@@ -1,7 +1,7 @@
 import {shapes} from "../ShapeDrawers/Shapes";
 import {CustomElement, Logger} from "hhcommoncomponents"
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 
 @CustomElement({
     selector: "hh-draw-toolbar"
@@ -37,8 +37,8 @@ class DrawToolBar extends HTMLElement {
                 this.defaultDrawer = shape;
         }
 
-        EventBus.getInstance().on(EventNames.DRAWSHAPEBEGINS, this.onDrawShapeBegins.bind(this))
-        EventBus.getInstance().on(EventNames.DRAWSHAPEENDS, this.onEndOfDrawingShape.bind(this))
+        IDEEventBus.getInstance().on(EventNames.DRAWSHAPEBEGINS, this.onDrawShapeBegins.bind(this))
+        IDEEventBus.getInstance().on(EventNames.DRAWSHAPEENDS, this.onEndOfDrawingShape.bind(this))
     }
 
     getSecondaryToolBar(): HTMLDivElement{

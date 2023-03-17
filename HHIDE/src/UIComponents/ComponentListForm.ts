@@ -2,7 +2,7 @@ import {CustomElement} from "hhcommoncomponents";
 import {HHForm} from "../Utilities/HHForm";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {huahuoEngine} from "hhenginejs";
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 
 @CustomElement({
     selector:"hh-component-list"
@@ -89,7 +89,7 @@ class ComponentListForm extends HTMLElement implements HHForm{
                     let newComponent = huahuoEngine.produceObject(componentName)
                     targetObj.addComponent(newComponent)
 
-                    EventBus.getInstance().emit(EventNames.COMPONENTADDED, targetObj)
+                    IDEEventBus.getInstance().emit(EventNames.COMPONENTADDED, targetObj)
                     _this.closeForm()
                 }
             }

@@ -5,6 +5,7 @@
 //
 
 import {eventBus} from "hhcommoncomponents"
+import {huahuoEngine} from "hhenginejs";
 
 enum EventNames{
     DRAWSHAPEBEGINS = 'drawShapeBegins',
@@ -16,22 +17,22 @@ enum EventNames{
     OBJECTDELETED = "objectDeleted"
 }
 
-class EventBus{
-    private static _instance:EventBus = null
+class IDEEventBus {
+    private static _instance:IDEEventBus = null
     private ideEventNameSpace: string= "IDE"
     public static getInstance(){
-        if(EventBus._instance == null)
-            EventBus._instance = new EventBus()
-        return EventBus._instance
+        if(IDEEventBus._instance == null)
+            IDEEventBus._instance = new IDEEventBus()
+        return IDEEventBus._instance
     }
 
     on(evtName: string, func){
-        eventBus.addEventHandler(this.ideEventNameSpace, evtName, func)
+        huahuoEngine.registerEventListener(this.ideEventNameSpace, evtName, func)
     }
 
     emit(evtName: string, ...param){
-        eventBus.triggerEvent(this.ideEventNameSpace, evtName, ...param)
+        eventBus.dispatchEvent(this.ideEventNameSpace, evtName, ...param)
     }
 }
 
-export {EventBus, EventNames}
+export {IDEEventBus, EventNames}

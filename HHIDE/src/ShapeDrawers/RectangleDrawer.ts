@@ -1,7 +1,7 @@
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {huahuoEngine, RectangleJS} from "hhenginejs"
 import {Vector2} from "hhcommoncomponents"
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 
 // This piece of code is almost the same as LineDrawer, maybe we should extract a common base class??
 class RectangleDrawer extends BaseShapeDrawer{
@@ -43,7 +43,7 @@ class RectangleDrawer extends BaseShapeDrawer{
         let _this = this
         huahuoEngine.ExecuteAfterInited(()=>{
             _this.isDrawing = false
-            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
+            IDEEventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
 
             _this.addShapeToCurrentLayer(_this.tempShape)
         })

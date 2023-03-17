@@ -2,7 +2,7 @@ import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {DrawToolBar} from "../UIComponents/DrawToolBar";
 import {huahuoEngine, SVGShapeJS} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {svgShapes} from "./SVGShapes";
 import axios from "axios";
 import {ImageShapeJS} from "hhenginejs";
@@ -68,7 +68,7 @@ class IconShapeDrawer extends BaseShapeDrawer{
 
         this.selectedImageElement.style.backgroundColor = "green"
 
-        EventBus.getInstance().emit(EventNames.DRAWSHAPEBEGINS, this)
+        IDEEventBus.getInstance().emit(EventNames.DRAWSHAPEBEGINS, this)
     }
 
     onMouseDown(evt: MouseEvent) {
@@ -101,7 +101,7 @@ class IconShapeDrawer extends BaseShapeDrawer{
         let _this = this
         huahuoEngine.ExecuteAfterInited(()=>{
             _this.isDrawing = false
-            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
+            IDEEventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
             _this.addShapeToCurrentLayer(_this.tempShape)
         })
     }

@@ -1,5 +1,5 @@
 import {Logger, Vector2} from "hhcommoncomponents";
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {huahuoEngine, renderEngine2D} from "hhenginejs"
 import {BaseShapeJS} from "hhenginejs";
 import {elementCreator} from "../SceneView/ElementCreator";
@@ -34,7 +34,7 @@ class BaseShapeDrawer{
         if(isSelected)
             this.isSelected = true
 
-        EventBus.getInstance().emit(EventNames.DRAWSHAPEBEGINS, this)
+        IDEEventBus.getInstance().emit(EventNames.DRAWSHAPEBEGINS, this)
     }
 
     onBeginToDrawShape(canvas: HTMLCanvasElement){

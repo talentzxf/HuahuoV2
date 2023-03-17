@@ -81,10 +81,10 @@ class EventGraphForm extends HTMLElement implements HHForm {
         let entries = []
 
         let _this = this
-        events.forEach((value) => {
+        events.forEach((stringValue) => {
             let entry = {
                 value: "basic/string",
-                content: value,
+                content: stringValue,
                 has_submenu: false,
                 callback: function(value, event, mouseEvent, contextMenu){
                     let first_event = contextMenu.getFirstEvent();

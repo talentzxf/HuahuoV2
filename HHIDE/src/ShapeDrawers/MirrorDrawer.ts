@@ -2,7 +2,7 @@ import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {SVGFiles} from "../Utilities/Svgs";
 import {Vector2} from "hhcommoncomponents";
 import {MirrorShapeJS, huahuoEngine} from "hhenginejs";
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {setPrompt} from "../init";
 
 // Maybe we should just add a mirror component in the lineshape ???
@@ -75,7 +75,7 @@ class MirrorDrawer extends BaseShapeDrawer {
         let _this = this
         huahuoEngine.ExecuteAfterInited(()=>{
             _this.isDrawing = false
-            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
+            IDEEventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
 
             _this.addShapeToCurrentLayer(_this.tempShape)
         })

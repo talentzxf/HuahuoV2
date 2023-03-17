@@ -6,7 +6,7 @@ import {shapeScaleHandler} from "../TransformHandlers/ShapeScaleHandler";
 import {ShapeTranslateMorphBase} from "../TransformHandlers/ShapeTranslateMorphBase";
 import {TransformHandlerMap} from "../TransformHandlers/TransformHandlerMap";
 import {shapeRotateHandler} from "../TransformHandlers/ShapeRotateHandler";
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {elementCreator} from "../SceneView/ElementCreator";
 import {HHContent} from "hhpanel"
 import {findParentContent} from "hhpanel";
@@ -147,7 +147,7 @@ class ShapeSelector extends BaseShapeDrawer {
                 _this.contextMenuInitedMap.set(_this.canvas, true)
             }
         })
-        EventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onShapeSelected.bind(this))
+        IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onShapeSelected.bind(this))
     }
 
     groupAsElement(){
@@ -194,7 +194,7 @@ class ShapeSelector extends BaseShapeDrawer {
             for (let shape of this.selectedShapes) {
                 objectDeleter.deleteShape(shape)
 
-                EventBus.getInstance().emit(EventNames.OBJECTDELETED, shape)
+                IDEEventBus.getInstance().emit(EventNames.OBJECTDELETED, shape)
             }
 
             this.clearSelection(false)
@@ -269,7 +269,7 @@ class ShapeSelector extends BaseShapeDrawer {
             }
         }
 
-        EventBus.getInstance().emit(EventNames.UNSELECTOBJECTS)
+        IDEEventBus.getInstance().emit(EventNames.UNSELECTOBJECTS)
         return false
     }
 
@@ -279,7 +279,7 @@ class ShapeSelector extends BaseShapeDrawer {
         selectedObj.update(true);
         this.selectedShapes.add(shape)
 
-        EventBus.getInstance().emit(EventNames.OBJECTSELECTED, selectedObj.getPropertySheet(), selectedObj)
+        IDEEventBus.getInstance().emit(EventNames.OBJECTSELECTED, selectedObj.getPropertySheet(), selectedObj)
 
         setPrompt(i18n.t("statusbar.selectShape", {shapeType: shape.getTypeName(), selectedShapeCount: this.selectedShapes.size}))
     }

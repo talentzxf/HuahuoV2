@@ -1,6 +1,6 @@
 import {CustomElement, Logger} from "hhcommoncomponents"
 import {renderEngine2D, huahuoEngine} from "hhenginejs"
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {HHTimeline} from "hhtimeline"
 import {ResizeObserver} from 'resize-observer';
@@ -83,8 +83,8 @@ class SceneView extends HTMLElement {
         let resizeObserver = new ResizeObserver(this.OnResize.bind(this))
         resizeObserver.observe(this.canvasContainer)
 
-        EventBus.getInstance().on(EventNames.DRAWSHAPEBEGINS, this.beginToDrawShape.bind(this))
-        EventBus.getInstance().on(EventNames.DRAWSHAPEENDS, this.endOfDrawingShape.bind(this))
+        IDEEventBus.getInstance().on(EventNames.DRAWSHAPEBEGINS, this.beginToDrawShape.bind(this))
+        IDEEventBus.getInstance().on(EventNames.DRAWSHAPEENDS, this.endOfDrawingShape.bind(this))
 
         this.canvas.addEventListener("mousedown", this.onMouseDown.bind(this))
         this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this))

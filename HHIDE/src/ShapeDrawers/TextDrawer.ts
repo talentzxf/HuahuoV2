@@ -2,7 +2,7 @@
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {TextShapeJS, huahuoEngine} from "hhenginejs"
 import {Vector2} from "hhcommoncomponents";
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 
 class TextDrawer extends BaseShapeDrawer{
     name = "Text"
@@ -48,7 +48,7 @@ class TextDrawer extends BaseShapeDrawer{
         let _this = this
         huahuoEngine.ExecuteAfterInited(()=>{
             _this.isDrawing = false
-            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
+            IDEEventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
 
             _this.addShapeToCurrentLayer(_this.textShape)
 

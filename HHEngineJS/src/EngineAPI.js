@@ -1,8 +1,7 @@
 import {Logger} from "hhcommoncomponents"
-import {engineEventManager} from "./EngineEvents/EngineEventManager";
 import {clzObjectFactory} from "./CppClassObjectFactory";
 import {getMimeTypeFromDataURI} from "hhcommoncomponents";
-import {dataURItoBlob} from "hhcommoncomponents";
+import {dataURItoBlob, eventBus} from "hhcommoncomponents";
 
 // @ts-ignore
 import * as ti from "taichi.js/dist/taichi"
@@ -156,12 +155,12 @@ class EngineAPI{
         return this.elementIdParentId[childId]
     }
 
-    registerEventListener(eventName, func){
-        engineEventManager.registerEventListener(eventName, func)
+    registerEventListener(namespace, eventName, func){
+        eventBus.addEventHandler(namespace, eventName, func)
     }
 
-    dispatchEvent(eventName, ...params){
-        engineEventManager.dispatchEvent(eventName, ...params)
+    dispatchEvent(namespace, eventName, ...params){
+        eventBus.triggerEvent(namespace, eventName, ...params)
     }
 
     DestroyShape(shape){

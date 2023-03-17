@@ -1,7 +1,7 @@
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {SVGFiles} from "../Utilities/Svgs";
 import {Vector2} from "hhcommoncomponents";
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {ParticleSystemJS} from "hhenginejs";
 import {huahuoEngine} from "hhenginejs";
 
@@ -46,7 +46,7 @@ class ParticleSystemDrawer extends BaseShapeDrawer {
 
         huahuoEngine.ExecuteAfterInited(()=>{
             this.isDrawing = false
-            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, this)
+            IDEEventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, this)
             _this.addShapeToCurrentLayer(_this.tempShape)
 
             let particleSystemRender = huahuoEngine.produceObject("ParticleSystemRenderer")

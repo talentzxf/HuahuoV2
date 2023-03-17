@@ -1,6 +1,6 @@
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {huahuoEngine, CurveShapeJS} from "hhenginejs";
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 
 class CurveDrawer extends BaseShapeDrawer {
     name = "Curve"
@@ -37,7 +37,7 @@ class CurveDrawer extends BaseShapeDrawer {
         huahuoEngine.ExecuteAfterInited(() => {
             _this.isDrawing = false
 
-            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
+            IDEEventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
             _this.addShapeToCurrentLayer(_this.curvePath)
         })
     }

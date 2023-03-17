@@ -1,6 +1,6 @@
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {fileLoader} from "../SceneView/FileLoader";
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {huahuoEngine} from "hhenginejs";
 
 class ImageSelector extends BaseShapeDrawer{
@@ -24,7 +24,7 @@ class ImageSelector extends BaseShapeDrawer{
         }
 
         huahuoEngine.ExecuteAfterInited(()=>{
-            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
+            IDEEventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
         })
     }
 }

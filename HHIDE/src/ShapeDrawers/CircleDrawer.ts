@@ -2,7 +2,7 @@ import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {CircleShapeJS} from "hhenginejs"
 import {huahuoEngine} from "hhenginejs"
 import {Vector2} from "hhcommoncomponents";
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {undoManager} from "../RedoUndo/UndoManager";
 import {CreateShapeCommand} from "../RedoUndo/CreateShapeCommand";
 
@@ -44,7 +44,7 @@ class CircleDrawer extends BaseShapeDrawer {
         let _this = this
         huahuoEngine.ExecuteAfterInited(() => {
             _this.isDrawing = false
-            EventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
+            IDEEventBus.getInstance().emit(EventNames.DRAWSHAPEENDS, _this)
             _this.addShapeToCurrentLayer(_this.tempShape)
         })
     }

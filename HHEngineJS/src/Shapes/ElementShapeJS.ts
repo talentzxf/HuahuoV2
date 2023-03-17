@@ -191,8 +191,9 @@ class ElementShapeJS extends BaseShapeJS {
         huahuoEngine.GetDefaultObjectStoreManager().GetStoreById(this.storeId).SyncLayersInfo()
     }
 
+    // TODO: This should only exist in HHIDE, should move to IDE.
     onEditElement() {
-        huahuoEngine.dispatchEvent("onEditElement", this)
+        huahuoEngine.dispatchEvent("HHEngine", "onEditElement", this)
     }
 
     afterWASMReady() {

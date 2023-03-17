@@ -1,5 +1,5 @@
 import {CustomElement, Logger, PropertySheet} from "hhcommoncomponents"
-import {EventBus, EventNames} from "../Events/GlobalEvents";
+import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {GenerateDiv, GetPropertyDivGenerator} from "./BasePropertyDivGenerator"
 import "./PropertyTypes"
 import {findParentSideBar, findParentPanel} from "hhpanel";
@@ -30,14 +30,14 @@ class Inspector extends HTMLElement{
         this.contentScrollerDiv.style.resize = "both"
         this.appendChild(this.contentScrollerDiv )
 
-        EventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
-        EventBus.getInstance().on(EventNames.UNSELECTOBJECTS, this.unselectObjects.bind(this))
+        IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
+        IDEEventBus.getInstance().on(EventNames.UNSELECTOBJECTS, this.unselectObjects.bind(this))
 
-        EventBus.getInstance().on(EventNames.COMPONENTADDED, this.componentAdded.bind(this))
+        IDEEventBus.getInstance().on(EventNames.COMPONENTADDED, this.componentAdded.bind(this))
 
-        EventBus.getInstance().on(EventNames.CELLCLICKED, this.timelineCellClicked.bind(this))
+        IDEEventBus.getInstance().on(EventNames.CELLCLICKED, this.timelineCellClicked.bind(this))
 
-        EventBus.getInstance().on(EventNames.OBJECTDELETED, this.objectDeleted.bind(this))
+        IDEEventBus.getInstance().on(EventNames.OBJECTDELETED, this.objectDeleted.bind(this))
 
         findParentSideBar(this).hide()
     }
