@@ -31,7 +31,7 @@ class IDEEventBus {
     }
 
     emit(evtName: string, ...param){
-        eventBus.dispatchEvent(this.ideEventNameSpace, evtName, ...param)
+        huahuoEngine.dispatchEvent(this.ideEventNameSpace, evtName, ...param)
     }
 }
 

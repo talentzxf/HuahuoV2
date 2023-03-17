@@ -45,8 +45,9 @@ class ContextMenu
             this.menuDiv = menuDiv
             document.body.appendChild(menuDiv)
 
+            let _this = this
             document.body.addEventListener("mouseup", ()=>{
-                this.menuDiv.style.display = "none"
+                _this.menuDiv.style.display = "none"
             })
 
             this.menuDiv.style.zIndex = "1000"
