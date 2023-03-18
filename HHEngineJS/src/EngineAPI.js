@@ -74,7 +74,9 @@ class EngineAPI{
         this.inited = true
         Logger.info("Engine inited!!!!!")
 
-        if(this.inited && this.taichiInited){
+        // Not sure why, but requestDevice of WebGPU always stuck??
+        // if(this.inited && this.taichiInited){
+        if(this.inited){
             this.PendingInitFunctions.forEach(func=>{
                 func();
             })

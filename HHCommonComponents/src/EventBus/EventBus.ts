@@ -1,3 +1,6 @@
+import {EventDef, getEvents} from "./EventEmitter";
+import {EventParameterTypes} from "./EventParameterTypes";
+
 class EventBusException{
     msg:string = "Unknoww Event Bus Exception"
     constructor(msg) {
@@ -10,12 +13,14 @@ class HHEventBus{
     maxHandlerId: number = 0
     handlerIdHandlerMap: Map<number, Function> = new Map()
     eventHandlerIdMap: Map<string, Set<number>> = new Map()
+    namespaceHandlerIdMap: Map<string, Set<number>> = new Map()
+
 
     private getFullEventName(namespace:string, evtName:string){
         return namespace + this.namespaceSeparator + evtName
     }
 
-    private registerEvent(namespace: string, evtName:string){
+    public registerEvent(namespace: string, evtName:string){
         if(evtName.indexOf(this.namespaceSeparator) != -1)
             throw new EventBusException("InvalidEventName:" + evtName)
 
@@ -24,6 +29,14 @@ class HHEventBus{
             return
 
         this.eventHandlerIdMap.set(fullEventName, new Set<number>())
+    }
+
+    getEvents(namespaces: string[]){
+        let eventNames = []
+        let _this = this
+        namespaces.forEach((namespace)=>{
+            _this.eventHandlerIdMap
+        })
     }
 
     addEventHandler(namespace: string, evtName: string, handler: Function): number{
@@ -66,6 +79,16 @@ if(!window["eventBus"]){
 
 function TriggerEvent(){
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor){
+        // Register the event
+        let events = getEvents(target)
+        let eventDef: EventDef = {
+            eventNameSpace: target.constructor.name,
+            eventName: propertyKey
+        }
+        events.push(eventDef)
+
+        eventBus.registerEvent(eventDef.eventNameSpace, eventDef.eventName)
+
         let originalMethod = descriptor.value
         descriptor.value = function(...args:any[]){
             eventBus.triggerEvent(target.constructor.name, propertyKey, args)
@@ -75,5 +98,11 @@ function TriggerEvent(){
     }
 }
 
+function EventOut(type: EventParameterTypes){
+    return function(target: Object, propertyKey: string | symbol, parameterIndex: number){
 
-export {eventBus, TriggerEvent}
+    }
+}
+
+
+export {eventBus, TriggerEvent, EventOut}
