@@ -1,5 +1,5 @@
 import {EventDef, getEvents} from "./EventEmitter";
-import {EventParameterTypes} from "./EventParameterTypes";
+import {EventParameterType} from "./EventParameterType";
 
 class EventBusException{
     msg:string = "Unknoww Event Bus Exception"
@@ -87,8 +87,6 @@ function TriggerEvent(){
         }
         events.push(eventDef)
 
-        eventBus.registerEvent(eventDef.eventNameSpace, eventDef.eventName)
-
         let originalMethod = descriptor.value
         descriptor.value = function(...args:any[]){
             eventBus.triggerEvent(target.constructor.name, propertyKey, args)
@@ -98,11 +96,51 @@ function TriggerEvent(){
     }
 }
 
-function EventOut(type: EventParameterTypes){
-    return function(target: Object, propertyKey: string | symbol, parameterIndex: number){
+const eventOutParameter = Symbol("eventOutParameter")
 
+class EventParamDef {
+    namespace: string
+    eventName: string
+    parameterName: string
+    parameterType: EventParameterType
+    paramIndex: number
+}
+
+function getParameterNameAtIdx(func: Function, paramIdx: number){
+    const funcStr = func.toString();
+    const paramNames = funcStr.slice(funcStr.indexOf('(') + 1, funcStr.indexOf(')')).match(/([^\s,]+)/g) || []
+    if(paramNames.length < paramIdx){
+        return null
+    }
+
+    return paramNames[paramIdx]
+}
+
+function getEventParams(target, functionName){
+    return Reflect.getOwnMetadata(eventOutParameter, target, functionName) || []
+}
+
+/**
+ *
+ * @param type
+ * @param name There's no convenient way to get the parameter name from the JS runtime. So pass this parameter. If not set, we will try to get it from the function, but that might fail.
+ * @constructor
+ */
+function EventOut(type: EventParameterType, name: string = null){
+    return function(target: Object, propertyKey: string | symbol, parameterIndex: number){
+        let existingParameters: EventParamDef[] = getEventParams(target, propertyKey)
+
+        let paramName = name || getParameterNameAtIdx(target[propertyKey], parameterIndex)
+        existingParameters.push({
+            namespace: target.constructor.name,
+            eventName: propertyKey as string,
+            paramIndex: parameterIndex,
+            parameterName: paramName,
+            parameterType: type
+        })
+        Reflect.defineMetadata(eventOutParameter, existingParameters, target, propertyKey)
     }
 }
 
 
-export {eventBus, TriggerEvent, EventOut}
+export {eventBus, TriggerEvent, EventOut, eventOutParameter, getEventParams}

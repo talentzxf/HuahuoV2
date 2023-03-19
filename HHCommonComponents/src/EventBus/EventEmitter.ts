@@ -1,3 +1,5 @@
+import {eventBus, eventOutParameter, getEventParams} from "./EventBus";
+
 const metaDataKey = Symbol("objectEvents")
 import "reflect-metadata"
 
@@ -17,7 +19,12 @@ function getEvents(target): object[] {
 }
 class EventEmitter{
     constructor() {
+        let events = getEvents(this)
+        events.forEach((eventDef: EventDef)=>{
+            eventBus.registerEvent(eventDef.eventNameSpace, eventDef.eventName)
 
+            let eventParams = getEventParams(this, eventDef.eventName)
+        })
     }
 }
 
