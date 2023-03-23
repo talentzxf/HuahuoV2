@@ -3,7 +3,6 @@ import {CustomElement} from "./CustomComponent";
 import {Logger} from "./Logger";
 import {Vector2} from "./Math/Vector2";
 import {EventOut} from "./EventBus/EventBus";
-import {EventParameterType} from "./EventBus/EventParameterType";
 import {EventEmitter} from "./EventBus/EventEmitter";
 
 import {
@@ -35,6 +34,6 @@ export {
     dataURItoBlob, HHToast, getFileNameFromGZip, eventBus, mirrorPoint,
     IsValidWrappedObject, getMethodsAndVariables,
     CustomFieldContentDivGenerator, CustomFieldConfig,
-    TriggerEvent, EventOut, EventParameterType, EventEmitter
+    TriggerEvent, EventOut, EventEmitter
 }
 

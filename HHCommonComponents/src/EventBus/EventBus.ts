@@ -99,7 +99,7 @@ function TriggerEvent(){
         descriptor.value = function(...args:any[]){
             eventBus.triggerEvent(target.constructor.name, propertyKey, args)
 
-            return originalMethod.app(this, args)
+            return originalMethod.apply(this, args)
         }
     }
 }
@@ -125,7 +125,7 @@ function getParameterNameAtIdx(func: Function, paramIdx: number){
 }
 
 function getEventParams(target, functionName){
-    return Reflect.getOwnMetadata(eventOutParameter, target, functionName) || []
+    return Reflect.getMetadata(eventOutParameter, target, functionName) || []
 }
 
 /**
