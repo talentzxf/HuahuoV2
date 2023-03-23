@@ -3,6 +3,7 @@ import {CustomElement} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {LGraph, LGraphCanvas, LiteGraph} from "litegraph.js";
 import {eventBus} from "hhcommoncomponents";
+import {getLiteGraphTypeFromPropertyType} from "./Utils"
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -83,7 +84,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         let _this = this
         events.forEach((stringValue) => {
             let entry = {
-                value: "basic/string",
+                value: "events/eventNode",
                 content: stringValue,
                 has_submenu: false,
                 callback: function(value, event, mouseEvent, contextMenu){
@@ -94,6 +95,12 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
                     let node = LiteGraph.createNode(value.value)
                     if(node){
+                        let paramDefs = eventBus.getEventParameters(stringValue) || []
+                        for(let paramDef of paramDefs){
+                            node.addOutput(paramDef.parameterName, getLiteGraphTypeFromPropertyType(paramDef.parameterType))
+                        }
+
+                        node.title = stringValue
                         node.pos = lcanvas.convertEventToCanvasOffset(first_event)
                         lcanvas.graph.add(node)
                     }
@@ -126,16 +133,16 @@ class EventGraphForm extends HTMLElement implements HHForm {
             return options
         }
 
-        var node_const = LiteGraph.createNode("basic/const");
-        node_const.pos = [200, 200];
-        this.graph.add(node_const);
-        node_const.setValue(4.5);
-
-        var node_watch = LiteGraph.createNode("basic/watch");
-        node_watch.pos = [700, 200];
-        this.graph.add(node_watch);
-
-        node_const.connect(0, node_watch, 0);
+        // var node_const = LiteGraph.createNode("basic/const");
+        // node_const.pos = [200, 200];
+        // this.graph.add(node_const);
+        // node_const.setValue(4.5);
+        //
+        // var node_watch = LiteGraph.createNode("basic/watch");
+        // node_watch.pos = [700, 200];
+        // this.graph.add(node_watch);
+        //
+        // node_const.connect(0, node_watch, 0);
 
         this.graph.start()
     }

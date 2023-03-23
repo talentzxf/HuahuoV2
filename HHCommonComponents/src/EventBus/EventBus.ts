@@ -1,5 +1,5 @@
 import {EventDef, getEvents} from "./EventEmitter";
-import {EventParameterType} from "./EventParameterType";
+import {PropertyType} from "../Properties/PropertySheet";
 
 class EventBusException{
     msg:string = "Unknoww Event Bus Exception"
@@ -43,12 +43,8 @@ class HHEventBus{
         }
     }
 
-    getEvents(namespaces: string[]){
-        let eventNames = []
-        let _this = this
-        namespaces.forEach((namespace)=>{
-            _this.eventHandlerIdMap
-        })
+    getEventParameters(fullEventName: string){
+        return this.eventHandlerParamArrayMap.get(fullEventName)
     }
 
     addEventHandler(namespace: string, evtName: string, handler: Function): number{
@@ -114,7 +110,7 @@ class EventParamDef {
     namespace: string
     eventName: string
     parameterName: string
-    parameterType: EventParameterType
+    parameterType: PropertyType
     paramIndex: number
 }
 
@@ -138,7 +134,7 @@ function getEventParams(target, functionName){
  * @param name There's no convenient way to get the parameter name from the JS runtime. So pass this parameter. If not set, we will try to get it from the function, but that might fail.
  * @constructor
  */
-function EventOut(type: EventParameterType, name: string = null){
+function EventOut(type: PropertyType, name: string = null){
     return function(target: Object, propertyKey: string | symbol, parameterIndex: number){
         let existingParameters: EventParamDef[] = getEventParams(target, propertyKey)
 
