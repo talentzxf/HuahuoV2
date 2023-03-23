@@ -9,7 +9,7 @@ class PropertySheetFactory {
     categoryElementTypeMap: Map<PropertyCategory, string> = new Map<PropertyCategory, string>()
 
     constructor() {
-        this.categoryTypeMap.set(PropertyCategory.interpolateFloat, PropertyType.FLOAT)
+        this.categoryTypeMap.set(PropertyCategory.interpolateFloat, PropertyType.NUMBER)
         this.categoryElementTypeMap.set(PropertyCategory.interpolateFloat, "range")
 
         this.categoryTypeMap.set(PropertyCategory.interpolateColor, PropertyType.COLOR)

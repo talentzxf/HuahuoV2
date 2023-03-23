@@ -4,6 +4,7 @@ import {Logger} from "./Logger";
 import {Vector2} from "./Math/Vector2";
 import {EventOut} from "./EventBus/EventBus";
 import {EventParameterType} from "./EventBus/EventParameterType";
+import {EventEmitter} from "./EventBus/EventEmitter";
 
 import {
     pointsNear,
@@ -34,6 +35,6 @@ export {
     dataURItoBlob, HHToast, getFileNameFromGZip, eventBus, mirrorPoint,
     IsValidWrappedObject, getMethodsAndVariables,
     CustomFieldContentDivGenerator, CustomFieldConfig,
-    TriggerEvent, EventOut, EventParameterType
+    TriggerEvent, EventOut, EventParameterType, EventEmitter
 }
 

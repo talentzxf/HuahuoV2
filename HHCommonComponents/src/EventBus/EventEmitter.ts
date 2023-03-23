@@ -18,12 +18,12 @@ function getEvents(target): object[] {
     return properties
 }
 class EventEmitter{
-    constructor() {
+    constructor(isGlobal = false) {
         let events = getEvents(this)
         events.forEach((eventDef: EventDef)=>{
-            eventBus.registerEvent(eventDef.eventNameSpace, eventDef.eventName)
-
             let eventParams = getEventParams(this, eventDef.eventName)
+
+            eventBus.registerEvent(eventDef.eventNameSpace, eventDef.eventName, isGlobal, eventParams)
         })
     }
 }

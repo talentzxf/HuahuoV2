@@ -7,7 +7,7 @@ enum PropertyType {
     STRING,
     VECTOR2,
     VECTOR3,
-    FLOAT,
+    NUMBER,
     COLOR,
     BUTTON,
     REFERENCE,

@@ -2,6 +2,7 @@ import {HHForm} from "../Utilities/HHForm";
 import {CustomElement} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {LGraph, LGraphCanvas, LiteGraph} from "litegraph.js";
+import {eventBus} from "hhcommoncomponents";
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -75,8 +76,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
             return
 
         let ref_window = this.lcanvas.getCanvasWindow()
-
-        let events = ["onFrameStart", "onFrameEnd"]
+        let events = eventBus.getAllGlobalEvents()
 
         let entries = []
 

@@ -20,7 +20,7 @@ import {customFieldDivGenerator} from "./CustomFieldDivGenerator";
 // TODO: Any less dirty approach ??
 if(!window["IsTypesRegistered"]){
     RegisterDivGenerator(PropertyType.COLOR, colorPropertyDivGenerator)
-    RegisterDivGenerator(PropertyType.FLOAT, floatPropertyDivGenerator)
+    RegisterDivGenerator(PropertyType.NUMBER, floatPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.BOOLEAN, booleanPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.VECTOR2, vector2PropertyGenerator)
     RegisterDivGenerator(PropertyType.VECTOR3, vector3PropertyGenerator)

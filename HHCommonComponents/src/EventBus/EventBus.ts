@@ -13,14 +13,19 @@ class HHEventBus{
     maxHandlerId: number = 0
     handlerIdHandlerMap: Map<number, Function> = new Map()
     eventHandlerIdMap: Map<string, Set<number>> = new Map()
+    eventHandlerParamArrayMap: Map<string, EventParamDef[]> = new Map()
     namespaceHandlerIdMap: Map<string, Set<number>> = new Map()
-
+    globalEvents: Array<string> = new Array()
 
     private getFullEventName(namespace:string, evtName:string){
         return namespace + this.namespaceSeparator + evtName
     }
 
-    public registerEvent(namespace: string, evtName:string){
+    public getAllGlobalEvents(){
+        return this.globalEvents
+    }
+
+    public registerEvent(namespace: string, evtName:string, isGlobal: boolean = false, params: EventParamDef[] = null){
         if(evtName.indexOf(this.namespaceSeparator) != -1)
             throw new EventBusException("InvalidEventName:" + evtName)
 
@@ -28,7 +33,14 @@ class HHEventBus{
         if(this.eventHandlerIdMap.has(fullEventName))
             return
 
+        if(isGlobal)
+            this.globalEvents.push(fullEventName)
+
         this.eventHandlerIdMap.set(fullEventName, new Set<number>())
+
+        if(params && params.length > 0){
+            this.eventHandlerParamArrayMap.set(fullEventName, params)
+        }
     }
 
     getEvents(namespaces: string[]){

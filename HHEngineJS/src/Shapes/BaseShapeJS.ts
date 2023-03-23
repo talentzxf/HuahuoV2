@@ -807,7 +807,7 @@ abstract class BaseShapeJS {
                                 },
                                 {
                                     key: "inspector.AtLength",
-                                    type: PropertyType.FLOAT,
+                                    type: PropertyType.NUMBER,
                                     getter: this.getFollowCurveLength.bind(this),
                                     setter: this.setFollowCurveLength.bind(this),
                                     registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("position", this.getFollowCurveLengthPotion.bind(this)),
@@ -834,7 +834,7 @@ abstract class BaseShapeJS {
 
         componentConfigSheet.config.children.push({
             key: "inspector.Rotation",
-            type: PropertyType.FLOAT,
+            type: PropertyType.NUMBER,
             getter: this.getRotation.bind(this),
             setter: this.setRotation.bind(this),
             registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("rotation"),
