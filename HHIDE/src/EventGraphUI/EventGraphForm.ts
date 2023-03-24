@@ -4,6 +4,7 @@ import {CSSUtils} from "../Utilities/CSSUtils";
 import {LGraph, LGraphCanvas, LiteGraph} from "litegraph.js";
 import {eventBus} from "hhcommoncomponents";
 import {getLiteGraphTypeFromPropertyType} from "./Utils"
+import {EventNode} from "./Nodes/EventNode";
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -100,7 +101,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                             node.addOutput(paramDef.parameterName, getLiteGraphTypeFromPropertyType(paramDef.parameterType))
                         }
 
-                        node.title = stringValue
+                        (node as EventNode).setFullEventName(stringValue)
                         node.pos = lcanvas.convertEventToCanvasOffset(first_event)
                         lcanvas.graph.add(node)
                     }

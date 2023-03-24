@@ -21,6 +21,14 @@ class HHEventBus{
         return namespace + this.namespaceSeparator + evtName
     }
 
+    public splitFullEventName(fullEventName: string){
+        let splittedEventName = fullEventName.split(this.namespaceSeparator)
+        return {
+            namespace: splittedEventName[0],
+            eventName: splittedEventName[1]
+        }
+    }
+
     public getAllGlobalEvents(){
         return this.globalEvents
     }
