@@ -146,7 +146,9 @@ class EventGraphForm extends HTMLElement implements HHForm {
         //
         // node_const.connect(0, node_watch, 0);
 
-        this.graph.start()
+        LiteGraph["release_link_on_empty_shows_menu"] = true
+
+        // this.graph.start()
     }
 
 }
