@@ -94,14 +94,15 @@ class EventGraphForm extends HTMLElement implements HHForm {
                     let lcanvas = _this.lcanvas
                     graph.beforeChange()
 
-                    let node = LiteGraph.createNode(value.value)
+                    let node = LiteGraph.createNode(value.value) as EventNode
                     if(node){
                         let paramDefs = eventBus.getEventParameters(stringValue) || []
                         for(let paramDef of paramDefs){
-                            node.addOutput(paramDef.parameterName, getLiteGraphTypeFromPropertyType(paramDef.parameterType))
+                            let outputSlot = node.addOutput(paramDef.parameterName, getLiteGraphTypeFromPropertyType(paramDef.parameterType))
+                            node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)
                         }
 
-                        (node as EventNode).setFullEventName(stringValue)
+                        node.setFullEventName(stringValue)
                         node.pos = lcanvas.convertEventToCanvasOffset(first_event)
                         lcanvas.graph.add(node)
                     }
