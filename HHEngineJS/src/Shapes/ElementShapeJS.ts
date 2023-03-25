@@ -3,6 +3,7 @@ import {huahuoEngine} from "../EngineAPI";
 import {LayerShapesManager} from "../Player/LayerShapesManager";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {PropertyType} from "hhcommoncomponents";
+import {ElementController} from "../Components/ElementController";
 
 let shapeName = "ElementShape"
 
@@ -23,7 +24,12 @@ class ElementShapeJS extends BaseShapeJS {
     layerFrameMap: Map<any, number> = new Map();
 
     constructor(rawObj) {
+        let needAddComponent = !rawObj
         super(rawObj);
+
+        if(needAddComponent){
+            this.addComponent(new ElementController())
+        }
 
         this.size = new paper.Point(100, 100)
 
@@ -93,7 +99,7 @@ class ElementShapeJS extends BaseShapeJS {
         let bornFrame = this.bornFrameId
         let maxFrames = huahuoEngine.getStoreMaxFrames(this.storeId)
 
-        return (currentFrame - bornFrame) % maxFrames
+        return ((currentFrame - bornFrame)*this.getPlaySpeed() + maxFrames) % maxFrames
     }
 
     saveLayerFrame(layer, frame) {
@@ -196,8 +202,20 @@ class ElementShapeJS extends BaseShapeJS {
         huahuoEngine.dispatchEvent("HHEngine", "onEditElement", this)
     }
 
+    _elementController = null
+
+    get elementController(){
+        if(this._elementController == null)
+            this._elementController = this.getComponentByTypeName("ElementController")
+        return this._elementController
+    }
+    getPlaySpeed(){
+        return this.elementController.playSpeed
+    }
+
     afterWASMReady() {
         super.afterWASMReady();
+        
         this.propertySheet.addProperty({
             key: "inspector.editElement",
             type: PropertyType.BUTTON,
