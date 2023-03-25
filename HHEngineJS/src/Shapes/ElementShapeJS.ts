@@ -27,7 +27,7 @@ class ElementShapeJS extends BaseShapeJS {
         let needAddComponent = !rawObj
         super(rawObj);
 
-        if(needAddComponent){
+        if (needAddComponent) {
             this.addComponent(new ElementController())
         }
 
@@ -99,7 +99,7 @@ class ElementShapeJS extends BaseShapeJS {
         let bornFrame = this.bornFrameId
         let maxFrames = huahuoEngine.getStoreMaxFrames(this.storeId)
 
-        return ((currentFrame - bornFrame)*this.getPlaySpeed() + maxFrames) % maxFrames
+        return (((currentFrame - bornFrame) * this.getPlaySpeed()) % maxFrames + maxFrames) % maxFrames
     }
 
     saveLayerFrame(layer, frame) {
@@ -204,18 +204,19 @@ class ElementShapeJS extends BaseShapeJS {
 
     _elementController = null
 
-    get elementController(){
-        if(this._elementController == null)
+    get elementController() {
+        if (this._elementController == null)
             this._elementController = this.getComponentByTypeName("ElementController")
         return this._elementController
     }
-    getPlaySpeed(){
+
+    getPlaySpeed() {
         return this.elementController.playSpeed
     }
 
     afterWASMReady() {
         super.afterWASMReady();
-        
+
         this.propertySheet.addProperty({
             key: "inspector.editElement",
             type: PropertyType.BUTTON,
