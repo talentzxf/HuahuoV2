@@ -68,6 +68,41 @@ class EventGraphForm extends HTMLElement implements HHForm {
         }
 
         form.appendChild(resetScaleButton)
+
+        this.addEventListener("mousedown", this.onMouseDown.bind(this))
+        this.addEventListener("mouseup", this.onMouseUp.bind(this))
+    }
+
+    isDragging:boolean = false
+    mouseX: number = -1
+    mouseY: number = -1
+    onMouseDown(e: MouseEvent){
+        this.isDragging = true
+
+        document.addEventListener("mousemove", this.onDrag.bind(this))
+
+        this.mouseX = e.clientX
+        this.mouseY = e.clientY
+    }
+
+    onDrag(e: MouseEvent){
+        if(this.isDragging && e.buttons == 1){ // Is dragging and left mouse is true.
+            let offsetX = e.clientX - this.mouseX
+            let offsetY = e.clientY - this.mouseY
+
+            this.style.left = this.offsetLeft + offsetX + "px"
+            this.style.top = this.offsetTop + offsetY + "px"
+            this.mouseX = e.clientX
+            this.mouseY = e.clientY
+        }
+    }
+
+    onMouseUp(){
+        this.isDragging = false
+        this.mouseX = -1
+        this.mouseY = -1
+
+        document.removeEventListener("mousemove", this.onDrag.bind(this))
     }
 
     eventListenerMenu(node, options, e, prev_menu, callback) {
