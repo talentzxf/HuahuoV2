@@ -20,6 +20,14 @@ class EventGraphForm extends HTMLElement implements HHForm {
     graph: LGraph
     lcanvas: LGraphCanvas
 
+    targetComponent
+    setTargetComponent(targetComponent){
+        this.targetComponent = targetComponent
+
+        // Get Actions from the baseShape.
+
+    }
+
     closeForm() {
         this.style.display = "none"
     }

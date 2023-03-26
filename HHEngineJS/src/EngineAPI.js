@@ -23,6 +23,8 @@ class EngineAPI{
 
     taichiInited = false
 
+    actionManager = new GraphActionManager()
+
     constructor() {
         Logger.info("Creating Engine API!!!!")
     }

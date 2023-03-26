@@ -11,7 +11,8 @@ import {
     getMimeTypeFromDataURI,
     dataURItoBlob,
     getFileNameFromGZip,
-    getMethodsAndVariables
+    getMethodsAndVariables,
+    getParameterNameAtIdx
 } from "./Utils";
 import {PropertySheet, Property, PropertyType} from "./Properties/PropertySheet"
 import {I18nHandler} from "./translation/I18nHandler";
@@ -34,6 +35,6 @@ export {
     dataURItoBlob, HHToast, getFileNameFromGZip, eventBus, mirrorPoint,
     IsValidWrappedObject, getMethodsAndVariables,
     CustomFieldContentDivGenerator, CustomFieldConfig,
-    TriggerEvent, EventOut, EventEmitter
+    TriggerEvent, EventOut, EventEmitter, getParameterNameAtIdx
 }
 

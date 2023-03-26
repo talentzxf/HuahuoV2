@@ -1,6 +1,16 @@
 import * as paper from "paper"
 import {HHToast} from "./Toast/Toast";
 
+function getParameterNameAtIdx(func: Function, paramIdx: number){
+    const funcStr = func.toString();
+    const paramNames = funcStr.slice(funcStr.indexOf('(') + 1, funcStr.indexOf(')')).match(/([^\s,]+)/g) || []
+    if(paramNames.length < paramIdx){
+        return null
+    }
+
+    return paramNames[paramIdx]
+}
+
 function pointsNear(p1:paper.Point, p2:paper.Point, margin:number){
     return p1.getDistance(p2) < margin
 }
@@ -77,4 +87,4 @@ const getMethodsAndVariables = (obj: any) => {
     return [...properties.keys()]
 }
 
-export {pointsNear,relaxRectangle, getMimeTypeFromDataURI, dataURItoBlob, getFileNameFromGZip, getMethodsAndVariables}
+export {pointsNear,relaxRectangle, getMimeTypeFromDataURI, dataURItoBlob, getFileNameFromGZip, getMethodsAndVariables, getParameterNameAtIdx}

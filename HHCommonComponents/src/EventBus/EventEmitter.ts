@@ -1,4 +1,4 @@
-import {eventBus, eventOutParameter, getEventParams} from "./EventBus";
+import {eventBus, getEventParams} from "./EventBus";
 
 const metaDataKey = Symbol("objectEvents")
 import "reflect-metadata"

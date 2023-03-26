@@ -13,14 +13,15 @@ class EventGraphEditorDivGenerator implements CustomFieldContentDivGenerator{
     }
 
     openGraphEditor(){
-        formManager.openForm(EventGraphForm)
+        let eventGraphForm = formManager.openForm(EventGraphForm) as EventGraphForm
+        eventGraphForm.setTargetComponent(this.targetComponent)
     }
 
     generateDiv(property: Property){
         let button = document.createElement("input")
         button.type = "button"
         button.value = i18n.t("edit")
-        button.onclick = this.openGraphEditor
+        button.onclick = this.openGraphEditor.bind(this)
 
         return button
     }

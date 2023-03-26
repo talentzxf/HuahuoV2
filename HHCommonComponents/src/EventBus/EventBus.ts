@@ -1,5 +1,6 @@
 import {EventDef, getEvents} from "./EventEmitter";
 import {PropertyType} from "../Properties/PropertySheet";
+import {getParameterNameAtIdx} from "../Utils";
 
 class EventBusException{
     msg:string = "Unknoww Event Bus Exception"
@@ -120,16 +121,6 @@ class EventParamDef {
     parameterName: string
     parameterType: PropertyType
     paramIndex: number
-}
-
-function getParameterNameAtIdx(func: Function, paramIdx: number){
-    const funcStr = func.toString();
-    const paramNames = funcStr.slice(funcStr.indexOf('(') + 1, funcStr.indexOf(')')).match(/([^\s,]+)/g) || []
-    if(paramNames.length < paramIdx){
-        return null
-    }
-
-    return paramNames[paramIdx]
 }
 
 function getEventParams(target, functionName){
