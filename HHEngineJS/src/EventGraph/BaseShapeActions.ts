@@ -3,8 +3,8 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {PropertyType} from "hhcommoncomponents"
 
 class BaseShapeActions extends AbstractGraphAction{
-    targetShape
-    constructor(targetShape) {
+    targetShape:BaseShapeJS
+    constructor(targetShape: BaseShapeJS) {
         super();
 
         this.targetShape = targetShape
@@ -20,3 +20,5 @@ class BaseShapeActions extends AbstractGraphAction{
     }
 
 }
+
+export {BaseShapeActions }

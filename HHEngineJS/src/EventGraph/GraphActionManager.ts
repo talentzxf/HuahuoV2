@@ -76,7 +76,4 @@ abstract class AbstractGraphAction {
     }
 }
 
-class GraphActionManager {
-}
-
-export {GraphActionManager, AbstractGraphAction, ActionDef, ActionParam, GraphAction}
+export {AbstractGraphAction, ActionDef, ActionParam, GraphAction}
