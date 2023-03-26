@@ -20,6 +20,7 @@ import {ParticleSystemJS} from "./Shapes/ParticleSystemJS";
 import {ParticleSystemRenderer} from "./Components/ParticleSystemRenderer";
 import {Particles} from "./ParticleSystem/Particles";
 import {registerCustomFieldContentDivGeneratorConstructor} from "./Components/AbstractComponent"
+import {BaseShapeActions} from "./EventGraph/BaseShapeActions";
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 
@@ -94,5 +95,6 @@ export {
     ColorStop,
     getNailManager,
     isInheritedFromClzName,
-    registerCustomFieldContentDivGeneratorConstructor
+    registerCustomFieldContentDivGeneratorConstructor,
+    BaseShapeActions
 }

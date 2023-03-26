@@ -56,6 +56,10 @@ class HHEventBus{
         return this.eventHandlerParamArrayMap.get(fullEventName)
     }
 
+    removeEventHandler(namespace: string, evtName: string, handlerId: number){
+        throw "Not Implemented!!!"
+    }
+
     addEventHandler(namespace: string, evtName: string, handler: Function): number{
         let fullEventName = this.getFullEventName(namespace, evtName)
         if(!this.eventHandlerIdMap.has(fullEventName)){

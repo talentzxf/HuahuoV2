@@ -5,6 +5,8 @@ import {LGraph, LGraphCanvas, LiteGraph} from "litegraph.js";
 import {eventBus} from "hhcommoncomponents";
 import {getLiteGraphTypeFromPropertyType} from "./Utils"
 import {EventNode} from "./Nodes/EventNode";
+import {BaseShapeActions, ActionDef} from "hhenginejs";
+import {ActionNode} from "./Nodes/ActionNode";
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -21,11 +23,14 @@ class EventGraphForm extends HTMLElement implements HHForm {
     lcanvas: LGraphCanvas
 
     targetComponent
-    setTargetComponent(targetComponent){
+
+    baseShapeActions: BaseShapeActions
+
+    setTargetComponent(targetComponent) {
         this.targetComponent = targetComponent
 
         // Get Actions from the baseShape.
-
+        this.baseShapeActions = new BaseShapeActions(this.targetComponent.baseShape)
     }
 
     closeForm() {
@@ -81,10 +86,11 @@ class EventGraphForm extends HTMLElement implements HHForm {
         this.addEventListener("mouseup", this.onMouseUp.bind(this))
     }
 
-    isDragging:boolean = false
+    isDragging: boolean = false
     mouseX: number = -1
     mouseY: number = -1
-    onMouseDown(e: MouseEvent){
+
+    onMouseDown(e: MouseEvent) {
         this.isDragging = true
 
         document.addEventListener("mousemove", this.onDrag.bind(this))
@@ -93,8 +99,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
         this.mouseY = e.clientY
     }
 
-    onDrag(e: MouseEvent){
-        if(this.isDragging && e.buttons == 1){ // Is dragging and left mouse is true.
+    onDrag(e: MouseEvent) {
+        if (this.isDragging && e.buttons == 1) { // Is dragging and left mouse is true.
             let offsetX = e.clientX - this.mouseX
             let offsetY = e.clientY - this.mouseY
 
@@ -105,12 +111,64 @@ class EventGraphForm extends HTMLElement implements HHForm {
         }
     }
 
-    onMouseUp(){
+    onMouseUp() {
         this.isDragging = false
         this.mouseX = -1
         this.mouseY = -1
 
         document.removeEventListener("mousemove", this.onDrag.bind(this))
+    }
+
+    actionListenerMenu(node, options, e, prev_menu, callback){
+        if (!this.lcanvas)
+            return
+
+        if (!this.graph)
+            return
+
+        if(!this.baseShapeActions)
+            return
+
+        let ref_window = this.lcanvas.getCanvasWindow()
+
+        let _this = this
+        let actionDefs = this.baseShapeActions.getActionDefs()
+        let entries = []
+        actionDefs.forEach((actionDef) => {
+            let entry = {
+                value: "actions/actionNode",
+                content: actionDef.actionName,
+                has_submenu: false,
+                callback: function (value, event, mouseEvent, contextMenu) {
+                    let first_event = contextMenu.getFirstEvent();
+                    let graph = _this.graph
+                    let lcanvas = _this.lcanvas
+                    graph.beforeChange()
+
+                    let node = LiteGraph.createNode(value.value) as ActionNode
+                    if (node) {
+                        let paramDefs = actionDef.paramDefs
+                        for (let paramDef of paramDefs) {
+                            let outputSlot = node.addOutput(paramDef.parameterName, getLiteGraphTypeFromPropertyType(paramDef.parameterType))
+                            node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)
+                        }
+
+                        node.setActionName(actionDef.actionName)
+                        node.pos = lcanvas.convertEventToCanvasOffset(first_event)
+                        lcanvas.graph.add(node)
+                    }
+
+                    if (callback)
+                        callback(node)
+
+                    graph.afterChange()
+                }
+            }
+
+            entries.push(entry)
+        })
+
+        new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
     }
 
     eventListenerMenu(node, options, e, prev_menu, callback) {
@@ -121,6 +179,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
             return
 
         let ref_window = this.lcanvas.getCanvasWindow()
+
+        // Build up events
         let events = eventBus.getAllGlobalEvents()
 
         let entries = []
@@ -131,16 +191,16 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 value: "events/eventNode",
                 content: stringValue,
                 has_submenu: false,
-                callback: function(value, event, mouseEvent, contextMenu){
+                callback: function (value, event, mouseEvent, contextMenu) {
                     let first_event = contextMenu.getFirstEvent();
                     let graph = _this.graph
                     let lcanvas = _this.lcanvas
                     graph.beforeChange()
 
                     let node = LiteGraph.createNode(value.value) as EventNode
-                    if(node){
+                    if (node) {
                         let paramDefs = eventBus.getEventParameters(stringValue) || []
-                        for(let paramDef of paramDefs){
+                        for (let paramDef of paramDefs) {
                             let outputSlot = node.addOutput(paramDef.parameterName, getLiteGraphTypeFromPropertyType(paramDef.parameterType))
                             node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)
                         }
@@ -150,7 +210,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                         lcanvas.graph.add(node)
                     }
 
-                    if(callback)
+                    if (callback)
                         callback(node)
 
                     graph.afterChange()
@@ -169,11 +229,18 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         let _this = this
         this.lcanvas.getExtraMenuOptions = function () {
-            let options = [{
-                content: i18n.t("eventgraph.addEventListener"),
-                has_submenu: true,
-                callback: _this.eventListenerMenu.bind(_this)
-            }]
+            let options = [
+                {
+                    content: i18n.t("eventgraph.addEventListener"),
+                    has_submenu: true,
+                    callback: _this.eventListenerMenu.bind(_this)
+                },
+                {
+                    content: i18n.t("eventgraph.addGraphAction"),
+                    has_submenu: true,
+                    callback: _this.actionListenerMenu.bind(_this)
+                }
+            ]
 
             return options
         }

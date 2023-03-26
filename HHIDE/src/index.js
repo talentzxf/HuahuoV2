@@ -21,6 +21,7 @@ import {IconSelectDivGenerator} from "./Inspector/CustomFieldDivGenerators/IconS
 import {EventGraphEditorDivGenerator} from "./Inspector/CustomFieldDivGenerators/EventGraphEditorDivGenerator"
 import {SelectIconForm} from "./Inspector/CustomFieldDivGenerators/SelectIconForm";
 import {EventNode} from "./EventGraphUI/Nodes/EventNode";
+import {ActionNode} from "./EventGraphUI/Nodes/ActionNode";
 
 // Input components
 import {HHFloatInput} from "./Inspector/InputComponents/HHFloatInput";

@@ -10,10 +10,6 @@ class BaseShapeActions extends AbstractGraphAction{
         this.targetShape = targetShape
     }
 
-    getActionDefs(): ActionDef[] {
-        return [];
-    }
-
     @GraphAction()
     rotateShape(@ActionParam(PropertyType.NUMBER) degree){
         this.targetShape.rotateAroundPivot(degree)
