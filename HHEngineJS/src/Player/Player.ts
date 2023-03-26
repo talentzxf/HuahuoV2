@@ -1,9 +1,9 @@
 import {GlobalConfig} from "../GlobalConfig";
 import {huahuoEngine} from "../EngineAPI";
 import {LayerShapesManager} from "./LayerShapesManager";
-import {IsValidWrappedObject, TriggerEvent} from "hhcommoncomponents";
+import {IsValidWrappedObject, GraphEvent} from "hhcommoncomponents";
 import {getNailManager} from '../IK/GetNailManager'
-import {EventOut} from "hhcommoncomponents";
+import {EventParam} from "hhcommoncomponents";
 import {PropertyType, EventEmitter} from "hhcommoncomponents";
 
 class Player extends EventEmitter{
@@ -75,8 +75,8 @@ class Player extends EventEmitter{
         }
     }
 
-    @TriggerEvent()
-    setFrameId(@EventOut(PropertyType.NUMBER) playFrameId){
+    @GraphEvent()
+    setFrameId(@EventParam(PropertyType.NUMBER) playFrameId){
         // Update time for all layers in the default store.
         let currentStore = huahuoEngine.GetStoreById(this.storeId)
 

@@ -94,7 +94,7 @@ if(!window["eventBus"]){
     window["eventBus"] = eventBus
 }
 
-function TriggerEvent(){
+function GraphEvent(){
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor){
         // Register the event
         let events = getEvents(target)
@@ -113,7 +113,7 @@ function TriggerEvent(){
     }
 }
 
-const eventOutParameter = Symbol("eventOutParameter")
+const eventParameterSymbol = Symbol("eventParameter")
 
 class EventParamDef {
     namespace: string
@@ -124,7 +124,7 @@ class EventParamDef {
 }
 
 function getEventParams(target, functionName){
-    return Reflect.getMetadata(eventOutParameter, target, functionName) || []
+    return Reflect.getMetadata(eventParameterSymbol, target, functionName) || []
 }
 
 /**
@@ -133,7 +133,7 @@ function getEventParams(target, functionName){
  * @param name There's no convenient way to get the parameter name from the JS runtime. So pass this parameter. If not set, we will try to get it from the function, but that might fail.
  * @constructor
  */
-function EventOut(type: PropertyType, name: string = null){
+function EventParam(type: PropertyType, name: string = null){
     return function(target: Object, propertyKey: string | symbol, parameterIndex: number){
         let existingParameters: EventParamDef[] = getEventParams(target, propertyKey)
 
@@ -145,9 +145,9 @@ function EventOut(type: PropertyType, name: string = null){
             parameterName: paramName,
             parameterType: type
         })
-        Reflect.defineMetadata(eventOutParameter, existingParameters, target, propertyKey)
+        Reflect.defineMetadata(eventParameterSymbol, existingParameters, target, propertyKey)
     }
 }
 
 
-export {eventBus, TriggerEvent, EventOut, eventOutParameter, getEventParams}
+export {eventBus, GraphEvent, EventParam, getEventParams}

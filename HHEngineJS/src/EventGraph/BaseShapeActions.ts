@@ -1,4 +1,4 @@
-import {AbstractGraphAction, ActionDef, GraphAction} from "./GraphActionManager";
+import {AbstractGraphAction, ActionDef, ActionParam, GraphAction} from "./GraphActionManager";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {PropertyType} from "hhcommoncomponents"
 
@@ -15,7 +15,7 @@ class BaseShapeActions extends AbstractGraphAction{
     }
 
     @GraphAction()
-    rotateShape(@GraphParam(PropertyType.NUMBER) degree){
+    rotateShape(@ActionParam(PropertyType.NUMBER) degree){
         this.targetShape.rotateAroundPivot(degree)
     }
 
