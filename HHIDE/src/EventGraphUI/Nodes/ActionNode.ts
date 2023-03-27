@@ -13,6 +13,10 @@ class ActionNode extends LGraphNode {
         this.title = actionName
     }
 
+    onAction(action, param){
+        console.log("Something happened!")
+    }
+
     paramIdxOutputSlotMap = new Map
     addParameterIndexSlotMap(paramIdx, outputSlot) {
         this.paramIdxOutputSlotMap.set(paramIdx, outputSlot)

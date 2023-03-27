@@ -110,9 +110,9 @@ function GraphEvent(){
 
         let originalMethod = descriptor.value
         descriptor.value = function(...args:any[]){
+            let executeResult = originalMethod.apply(this, args)
             eventBus.triggerEvent(target.constructor.name, propertyKey, args)
-
-            return originalMethod.apply(this, args)
+            return executeResult
         }
     }
 }
