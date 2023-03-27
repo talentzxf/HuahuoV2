@@ -34,6 +34,10 @@ class HHEventBus{
         return this.globalEvents
     }
 
+    public getAllEvents(){
+        return this.eventHandlerIdMap.keys()
+    }
+
     public registerEvent(namespace: string, evtName:string, isGlobal: boolean = false, params: EventParamDef[] = null){
         if(evtName.indexOf(this.namespaceSeparator) != -1)
             throw new EventBusException("InvalidEventName:" + evtName)
@@ -104,7 +108,8 @@ function GraphEvent(){
         let events = getEvents(target)
         let eventDef: EventDef = {
             eventNameSpace: target.constructor.name,
-            eventName: propertyKey
+            eventName: propertyKey,
+            target: target
         }
         events.push(eventDef)
 
@@ -154,4 +159,4 @@ function EventParam(type: PropertyType, name: string = null){
 }
 
 
-export {eventBus, GraphEvent, EventParam, getEventParams}
+export {eventBus, HHEventBus, GraphEvent, EventParam, getEventParams}

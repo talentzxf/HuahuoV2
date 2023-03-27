@@ -7,6 +7,7 @@ import {getLiteGraphTypeFromPropertyType} from "./Utils"
 import {EventNode} from "./Nodes/EventNode";
 import {BaseShapeActions, ActionDef} from "hhenginejs";
 import {ActionNode} from "./Nodes/ActionNode";
+import {BaseShapeEvents} from "hhenginejs/dist/src/EventGraph/BaseShapeEvents";
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -184,6 +185,10 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         // Build up events
         let events = eventBus.getAllGlobalEvents()
+
+        let localEvents = this.targetComponent.getEvent(this.targetComponent.baseShape).getEvents()
+
+        events.push(localEvents)
 
         let entries = []
 
