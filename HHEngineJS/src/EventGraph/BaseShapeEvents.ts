@@ -11,6 +11,10 @@ class BaseShapeEvents extends EventEmitter{
 
         let paperItem = this.targetShape.paperItem
         paperItem.onMouseMove = this.onMouseMove.bind(this)
+
+        paperItem.onMouseDown = this.onMouseDown.bind(this)
+
+        paperItem.onMouseEnter = this.onMouseEnter.bind(this)
     }
 
     @GraphEvent()
@@ -21,6 +25,14 @@ class BaseShapeEvents extends EventEmitter{
     onMouseMove(evt: MouseEvent){
         console.log("MouseMove")
         this.mouseMoveEvent(evt.point.x, evt.point.y)
+    }
+
+    onMouseDown(evt: MouseEvent){
+        console.log("OnMouseDown")
+    }
+
+    onMouseEnter(evt: MouseEvent){
+        console.log("OnMouseEnter")
     }
 }
 

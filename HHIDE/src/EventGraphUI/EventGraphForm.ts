@@ -188,7 +188,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         let localEvents = this.targetComponent.getEvent(this.targetComponent.baseShape).getEvents()
 
-        events.push(localEvents)
+        for(let eventName of localEvents)
+            events.push(eventName)
 
         let entries = []
 
