@@ -19,7 +19,7 @@ class BaseShapeActions extends AbstractGraphAction{
     }
 
     execute(){
-        this.targetShape.rotateAroundPivot(this.rotation)
+        this.targetShape.rotateAroundPivot(this.rotation, false)
     }
 }
 
