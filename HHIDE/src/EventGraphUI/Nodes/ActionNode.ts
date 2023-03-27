@@ -40,8 +40,8 @@ class ActionNode extends LGraphNode {
 
         let func = this.actionTarget[this.actionName]
         if(func)
-            func(...callBackParams)
-        
+            func.apply(this.actionTarget, callBackParams)
+
         let executedSlotId = this.findOutputSlot(this.executedSlot.name)
         if( executedSlotId >= 0){
             // Trigger output slot
