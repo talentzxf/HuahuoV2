@@ -3,6 +3,8 @@ import {LGraphNode, LiteGraph} from "litegraph.js";
 class ActionNode extends LGraphNode {
     title = "ActionNode"
 
+    actionName = null
+
     actionTarget
 
     executedSlot
@@ -18,18 +20,42 @@ class ActionNode extends LGraphNode {
 
     setActionName(actionName){
         this.title = actionName
+        this.actionName = actionName
     }
 
     onAction(action, param){
         console.log("Something happened!")
 
-        // Trigger output slot
-        this.triggerSlot(this.executedSlot.slot_index, null, null)
+        let callBackParams = []
+
+        for(let paramIdx = 0 ; paramIdx <= this.maxParamIdx; paramIdx++){
+            let slot = this.paramIdxSlotMap.get(paramIdx)
+            if(slot){
+                let inputData = this.getInputDataByName(slot.name)
+                callBackParams.push(inputData)
+            }else{
+                callBackParams.push(null)
+            }
+        }
+
+        let func = this.actionTarget[this.actionName]
+        if(func)
+            func(...callBackParams)
+        
+        let executedSlotId = this.findOutputSlot(this.executedSlot.name)
+        if( executedSlotId >= 0){
+            // Trigger output slot
+            this.triggerSlot(executedSlotId, null, null)
+        }
     }
 
-    paramIdxOutputSlotMap = new Map
+    maxParamIdx = -1 // -1 means no parameter.
+    paramIdxSlotMap = new Map
     addParameterIndexSlotMap(paramIdx, outputSlot) {
-        this.paramIdxOutputSlotMap.set(paramIdx, outputSlot)
+        this.paramIdxSlotMap.set(paramIdx, outputSlot)
+        if(paramIdx > this.maxParamIdx){
+            this.maxParamIdx = paramIdx
+        }
     }
 }
 

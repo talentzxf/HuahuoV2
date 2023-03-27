@@ -33,7 +33,10 @@ class EventNode extends LGraphNode {
             for (let paramIdx = 0; paramIdx < params.length; paramIdx++) {
                 let slot = _this.paramIdxOutputSlotMap.get(paramIdx)
                 if (slot) {
-                    _this.setOutputData(slot.slot_index, params[paramIdx]);
+                    let slotIdx = _this.findOutputSlot(slot.name)
+                    if(slotIdx >= 0){
+                        _this.setOutputData(slotIdx, params[paramIdx]);
+                    }
                 }
             }
             _this.triggerSlot(0, null, null)

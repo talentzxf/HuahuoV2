@@ -149,7 +149,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                     if (node) {
                         let paramDefs = actionDef.paramDefs
                         for (let paramDef of paramDefs) {
-                            let outputSlot = node.addInput(paramDef.paramName, getLiteGraphTypeFromPropertyType(paramDef.parameterType))
+                            let outputSlot = node.addInput(paramDef.paramName, getLiteGraphTypeFromPropertyType(paramDef.paramType))
                             node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)
                         }
 
