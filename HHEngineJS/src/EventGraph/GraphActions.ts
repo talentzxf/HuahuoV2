@@ -74,6 +74,8 @@ abstract class AbstractGraphAction {
             actionDef.paramDefs = actionParams
         })
     }
+
+    abstract execute()
 }
 
 export {AbstractGraphAction, ActionDef, ActionParam, GraphAction}

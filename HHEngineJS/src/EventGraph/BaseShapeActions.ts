@@ -4,6 +4,9 @@ import {PropertyType} from "hhcommoncomponents"
 
 class BaseShapeActions extends AbstractGraphAction{
     targetShape:BaseShapeJS
+
+    rotation = 0
+
     constructor(targetShape: BaseShapeJS) {
         super();
 
@@ -12,9 +15,12 @@ class BaseShapeActions extends AbstractGraphAction{
 
     @GraphAction()
     rotateShape(@ActionParam(PropertyType.NUMBER) degree){
-        this.targetShape.rotateAroundPivot(degree)
+        this.rotation += degree
     }
 
+    execute(){
+        this.targetShape.rotateAroundPivot(this.rotation)
+    }
 }
 
 export {BaseShapeActions }

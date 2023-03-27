@@ -307,14 +307,16 @@ abstract class BaseShapeJS {
         this.valueChangeHandler.callHandlers("index", this.paperItem.index)
     }
 
-    rotateAroundPivot(angle: number) {
+    rotateAroundPivot(angle: number, persist: boolean = true) {
         let zeroP = new paper.Point(0, 0)
         this.paperItem.rotate(angle, this.pivotPosition)
 
-        let newRotationDegree = this.rawObj.GetRotation() + angle
-        this.rawObj.SetRotation(newRotationDegree)
+        if(persist){
+            let newRotationDegree = this.rawObj.GetRotation() + angle
+            this.rawObj.SetRotation(newRotationDegree)
 
-        this.valueChangeHandler.callHandlers("rotation", newRotationDegree)
+            this.valueChangeHandler.callHandlers("rotation", newRotationDegree)
+        }
     }
 
     // The method can only be called after the shape has been created.

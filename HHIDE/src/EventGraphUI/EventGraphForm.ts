@@ -30,7 +30,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         this.targetComponent = targetComponent
 
         // Get Actions from the baseShape.
-        this.baseShapeActions = new BaseShapeActions(this.targetComponent.baseShape)
+        this.baseShapeActions = this.targetComponent.getAction(this.targetComponent.baseShape)
     }
 
     closeForm() {
