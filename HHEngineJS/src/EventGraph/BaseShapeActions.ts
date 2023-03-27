@@ -1,4 +1,4 @@
-import {AbstractGraphAction, ActionDef, ActionParam, GraphAction} from "./GraphActionManager";
+import {AbstractGraphAction, ActionDef, ActionParam, GraphAction} from "./GraphActions";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {PropertyType} from "hhcommoncomponents"
 

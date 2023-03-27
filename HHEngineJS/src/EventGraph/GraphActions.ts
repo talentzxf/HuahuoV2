@@ -71,7 +71,7 @@ abstract class AbstractGraphAction {
 
         actions.forEach((actionDef: ActionDef) => {
             let actionParams = getActionParams(this, actionDef.actionName)
-            actionDef.paramDefs.push(actionParams)
+            actionDef.paramDefs = actionParams
         })
     }
 }
