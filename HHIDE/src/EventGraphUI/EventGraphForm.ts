@@ -156,6 +156,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
                         node.setActionName(actionDef.actionName)
                         node.pos = lcanvas.convertEventToCanvasOffset(first_event)
                         lcanvas.graph.add(node)
+
+                        node.setActionTarget(_this.baseShapeActions)
                     }
 
                     if (callback)
