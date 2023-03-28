@@ -29,8 +29,11 @@ class EventGraphComponent extends AbstractComponent{
         super(rawObj);
 
         this.graph = new LGraph()
-        if(this.eventGraphJSON && this.eventGraphJSON.length > 0)
-            this.graph.load(this.eventGraphJSON)
+        if(this.eventGraphJSON && this.eventGraphJSON.length > 0){
+            let data = JSON.parse(this.eventGraphJSON)
+            this.graph.configure(data)
+        }
+
 
         this.graph.start()
         this.graph["onAfterChange"] = this.saveGraph.bind(this)
