@@ -237,11 +237,10 @@ class EventGraphForm extends HTMLElement implements HHForm {
                                 graph.afterChange()
                             }
                         }
-
                         eventEntries.push(eventEntry)
-
-                        new LiteGraph.ContextMenu(eventEntries, {event: e, parentMenu: contextMenu}, ref_window)
                     })
+
+                    new LiteGraph.ContextMenu(eventEntries, {event: e, parentMenu: contextMenu}, ref_window)
                 }
             }
 
