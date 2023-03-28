@@ -1,5 +1,5 @@
 import {LGraphNode, LiteGraph} from "litegraph.js";
-import {eventBus} from "hhcommoncomponents";
+import {eventBus} from "HHCommonComponents";
 
 class EventNode extends LGraphNode {
     title = "EventNode"

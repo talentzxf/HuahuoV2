@@ -21,7 +21,8 @@
     "uuid": "^8.3.2",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2",
-    "taichi.js" : "file:../Libs/taichi.js"
+    "taichi.js" : "file:../Libs/taichi.js",
+    "litegraph.js" : "file:../Libs/litegraph.js"
   },
   "peerDependencies": {
     "hhcommoncomponents": "file:../HHCommonComponents"

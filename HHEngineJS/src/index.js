@@ -21,8 +21,11 @@ import {ParticleSystemRenderer} from "./Components/ParticleSystemRenderer";
 import {Particles} from "./ParticleSystem/Particles";
 import {registerCustomFieldContentDivGeneratorConstructor} from "./Components/AbstractComponent"
 import {BaseShapeActions} from "./EventGraph/BaseShapeActions";
+import {EventNode} from "./EventGraph/Nodes/EventNode";
+import {ActionNode} from "./EventGraph/Nodes/ActionNode";
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
+import {LGraphCanvas, LiteGraph} from "litegraph.js";
 
 // All non-default components
 import {GeneratorComponent} from "./Components/GeneratorComponent";
@@ -49,7 +52,7 @@ if (Module.IsWASMInited && Module.IsWASMInited()) {
     }
 }
 
-if(!window["taichiInitBegun"]){
+if (!window["taichiInitBegun"]) {
     window["taichiInitBegun"] = true
 
 //     // This is just because StackBlitz has some weird handling of external scripts.
@@ -96,5 +99,9 @@ export {
     getNailManager,
     isInheritedFromClzName,
     registerCustomFieldContentDivGeneratorConstructor,
-    BaseShapeActions
+    BaseShapeActions,
+    EventNode,
+    ActionNode,
+    LGraphCanvas,
+    LiteGraph
 }

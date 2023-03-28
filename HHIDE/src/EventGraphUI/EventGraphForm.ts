@@ -1,13 +1,11 @@
 import {HHForm} from "../Utilities/HHForm";
 import {CustomElement} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
-import {LGraph, LGraphCanvas, LiteGraph} from "litegraph.js";
 import {eventBus} from "hhcommoncomponents";
 import {getLiteGraphTypeFromPropertyType} from "./Utils"
-import {EventNode} from "./Nodes/EventNode";
-import {BaseShapeActions, ActionDef} from "hhenginejs";
-import {ActionNode} from "./Nodes/ActionNode";
-import {BaseShapeEvents} from "hhenginejs/dist/src/EventGraph/BaseShapeEvents";
+import {EventNode, ActionNode} from "hhenginejs";
+import {BaseShapeActions} from "hhenginejs";
+import {LGraphCanvas, LiteGraph} from "hhenginejs";
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -16,11 +14,12 @@ let CANVAS_HEIGHT = 600
     selector: "hh-event-graph-form"
 })
 class EventGraphForm extends HTMLElement implements HHForm {
+    canvas: HTMLCanvasElement
+
     selector: string;
     containerDiv: HTMLDivElement
     closeBtn: HTMLDivElement
 
-    graph: LGraph
     lcanvas: LGraphCanvas
 
     targetComponent
@@ -32,6 +31,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         // Get Actions from the baseShape.
         this.baseShapeActions = this.targetComponent.getAction(this.targetComponent.baseShape)
+
+        this.initLGraph(this.canvas)
     }
 
     closeForm() {
@@ -60,24 +61,22 @@ class EventGraphForm extends HTMLElement implements HHForm {
         this.closeBtn = this.containerDiv.querySelector("#closeBtn")
         this.closeBtn.onclick = this.closeForm.bind(this)
 
-        let canvas = document.createElement("canvas")
-        canvas.width = CANVAS_WIDTH
-        canvas.height = CANVAS_HEIGHT
-        canvas.style.width = CANVAS_WIDTH + "px"
-        canvas.style.height = CANVAS_HEIGHT + "px"
-        form.appendChild(canvas)
+        this.canvas = document.createElement("canvas")
+        this.canvas.width = CANVAS_WIDTH
+        this.canvas.height = CANVAS_HEIGHT
+        this.canvas.style.width = CANVAS_WIDTH + "px"
+        this.canvas.style.height = CANVAS_HEIGHT + "px"
+        form.appendChild(this.canvas)
 
         let resetScaleButton = document.createElement("button")
         resetScaleButton.innerText = i18n.t("eventgraph.resetScale")
         resetScaleButton.style.width = "100px"
         this.appendChild(this.containerDiv)
 
-        this.initLGraph(canvas)
-
         let _this = this
         resetScaleButton.onclick = function (e) {
             _this.lcanvas.ds.changeScale(1.0);
-            _this.graph.change()
+            _this.lcanvas.graph.change()
             e.preventDefault()
         }
 
@@ -124,7 +123,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         if (!this.lcanvas)
             return
 
-        if (!this.graph)
+        if (!this.lcanvas.graph)
             return
 
         if(!this.baseShapeActions)
@@ -142,7 +141,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 has_submenu: false,
                 callback: function (value, event, mouseEvent, contextMenu) {
                     let first_event = contextMenu.getFirstEvent();
-                    let graph = _this.graph
+                    let graph = _this.lcanvas.graph
                     let lcanvas = _this.lcanvas
                     graph.beforeChange()
 
@@ -178,7 +177,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         if (!this.lcanvas)
             return
 
-        if (!this.graph)
+        if (!this.lcanvas.graph)
             return
 
         let ref_window = this.lcanvas.getCanvasWindow()
@@ -201,7 +200,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 has_submenu: false,
                 callback: function (value, event, mouseEvent, contextMenu) {
                     let first_event = contextMenu.getFirstEvent();
-                    let graph = _this.graph
+                    let graph = _this.lcanvas.graph
                     let lcanvas = _this.lcanvas
                     graph.beforeChange()
 
@@ -232,8 +231,9 @@ class EventGraphForm extends HTMLElement implements HHForm {
     }
 
     initLGraph(canvas: HTMLCanvasElement) {
-        this.graph = new LGraph()
-        this.lcanvas = new LGraphCanvas(canvas, this.graph, {autoresize: false})
+        let graph = this.targetComponent.getGraph()
+
+        this.lcanvas = new LGraphCanvas(canvas, graph, {autoresize: false})
 
         let _this = this
         this.lcanvas.getExtraMenuOptions = function () {
@@ -266,7 +266,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         LiteGraph["release_link_on_empty_shows_menu"] = true
 
-        this.graph.start()
+        graph.start()
     }
 
 }
