@@ -22,7 +22,9 @@ class EventGraphComponent extends AbstractComponent{
     eventEmitters: Map<BaseShapeJS, BaseShapeEvents> = new Map
 
     saveGraph(){
-        this.eventGraphJSON = JSON.stringify(this.graph.serialize())
+        let graphString = JSON.stringify(this.graph.serialize())
+        if(this.eventGraphJSON != graphString)
+            this.eventGraphJSON = graphString
     }
 
     constructor(rawObj?) {
