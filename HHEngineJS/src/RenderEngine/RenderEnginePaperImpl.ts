@@ -198,6 +198,7 @@ class RenderEnginePaperJs implements RenderEngine2D {
         canvasView.translate(offset)
         canvasView.translate(new paper.Point(currentX / ratio, currentY / ratio))
 
+        // @ts-ignore
         canvasView.setViewSize(width, height)
     }
 

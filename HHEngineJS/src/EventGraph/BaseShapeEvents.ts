@@ -10,29 +10,31 @@ class BaseShapeEvents extends EventEmitter{
         this.targetShape = targetShape
 
         let paperItem = this.targetShape.paperItem
-        paperItem.onMouseMove = this.onMouseMove.bind(this)
 
-        paperItem.onMouseDown = this.onMouseDown.bind(this)
+        let mouseEvents = ["onMouseMove", "onMouseDown", "onMouseLeave", "onMouseEnter"]
+        let _this = this
 
-        paperItem.onMouseEnter = this.onMouseEnter.bind(this)
+        for(let mouseEvent of mouseEvents){
+            paperItem[mouseEvent] = (evt:MouseEvent)=>{
+                _this[mouseEvent](evt.point.x, evt.point.y)
+            }
+        }
     }
 
     @GraphEvent()
-    mouseMoveEvent(@EventParam(PropertyType.NUMBER) mouseX, @EventParam(PropertyType.NUMBER) mouseY){
-
+    onMouseMove(@EventParam(PropertyType.NUMBER) mouseX, @EventParam(PropertyType.NUMBER) mouseY){
     }
 
-    onMouseMove(evt: MouseEvent){
-        console.log("MouseMove")
-        this.mouseMoveEvent(evt.point.x, evt.point.y)
+    @GraphEvent()
+    onMouseDown(@EventParam(PropertyType.NUMBER) mouseX, @EventParam(PropertyType.NUMBER) mouseY){
     }
 
-    onMouseDown(evt: MouseEvent){
-        console.log("OnMouseDown")
+    @GraphEvent()
+    onMouseLeave(@EventParam(PropertyType.NUMBER) mouseX, @EventParam(PropertyType.NUMBER) mouseY){
     }
 
-    onMouseEnter(evt: MouseEvent){
-        console.log("OnMouseEnter")
+    @GraphEvent()
+    onMouseEnter(@EventParam(PropertyType.NUMBER) mouseX, @EventParam(PropertyType.NUMBER) mouseY){
     }
 }
 
