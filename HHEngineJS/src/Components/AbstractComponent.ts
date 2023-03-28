@@ -139,10 +139,16 @@ class AbstractComponent {
 
     disableComponent() {
         this.rawObj.SetBooleanValue("isActive", false)
+
+        if(this.baseShape)
+            this.baseShape.afterUpdate(true)
     }
 
     enableComponent() {
         this.rawObj.SetBooleanValue("isActive", true)
+
+        if(this.baseShape)
+            this.baseShape.afterUpdate(true)
     }
 
     getPropertySheet() {
