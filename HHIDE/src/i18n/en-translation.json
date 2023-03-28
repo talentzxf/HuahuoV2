@@ -40,7 +40,8 @@
   "edit": "edit",
   "eventgraph": {
     "resetScale": "Reset Scale",
-    "addEventListener" : "Add Event Receiver"
+    "addEventListener" : "Add Event Receiver",
+    "addGraphAction": "Add Graph Action"
   },
   "contextmenu": {
     "sendToBack": "Send To Back",

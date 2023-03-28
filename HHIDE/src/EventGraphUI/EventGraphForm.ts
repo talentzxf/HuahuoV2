@@ -2,7 +2,7 @@ import {HHForm} from "../Utilities/HHForm";
 import {CustomElement} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {eventBus} from "hhcommoncomponents";
-import {getLiteGraphTypeFromPropertyType} from "./Utils"
+import {getEventCategoryMap, getLiteGraphTypeFromPropertyType} from "./Utils"
 import {EventNode, ActionNode} from "hhenginejs";
 import {BaseShapeActions} from "hhenginejs";
 import {LGraphCanvas, LiteGraph} from "hhenginejs";
@@ -173,6 +173,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
         new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
     }
 
+
+
     eventListenerMenu(node, options, e, prev_menu, callback) {
         if (!this.lcanvas)
             return
@@ -190,37 +192,53 @@ class EventGraphForm extends HTMLElement implements HHForm {
         for(let eventName of localEvents)
             events.push(eventName)
 
+        let namespaces = getEventCategoryMap(events)
+
         let entries = []
 
         let _this = this
-        events.forEach((stringValue) => {
+        events.forEach((namespace, eventNameSet) => {
             let entry = {
-                value: "events/eventNode",
-                content: stringValue,
-                has_submenu: false,
+                value: namespace,
+                content: namespace,
+                has_submenu: true,
                 callback: function (value, event, mouseEvent, contextMenu) {
-                    let first_event = contextMenu.getFirstEvent();
-                    let graph = _this.lcanvas.graph
-                    let lcanvas = _this.lcanvas
-                    graph.beforeChange()
+                    eventNameSet.forEach((eventName)=>{
 
-                    let node = LiteGraph.createNode(value.value) as EventNode
-                    if (node) {
-                        let paramDefs = eventBus.getEventParameters(stringValue) || []
-                        for (let paramDef of paramDefs) {
-                            let outputSlot = node.addOutput(paramDef.parameterName, getLiteGraphTypeFromPropertyType(paramDef.parameterType))
-                            node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)
+                        let eventEntry = {
+                            value: "events/eventNode",
+                            content: eventName,
+                            has_submenu: false,
+                            callback: function(value, event, mouseEvent, contextMenu){
+                                let fullEventName = eventBus.getFullEventName(namespace, eventName)
+
+                                let first_event = contextMenu.getFirstEvent();
+                                let graph = _this.lcanvas.graph
+                                let lcanvas = _this.lcanvas
+                                graph.beforeChange()
+
+                                let node = LiteGraph.createNode(value.value) as EventNode
+                                if (node) {
+                                    let paramDefs = eventBus.getEventParameters(fullEventName) || []
+                                    for (let paramDef of paramDefs) {
+                                        let outputSlot = node.addOutput(paramDef.parameterName, getLiteGraphTypeFromPropertyType(paramDef.parameterType))
+                                        node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)
+                                    }
+
+                                    node.setFullEventName(fullEventName)
+                                    node.pos = lcanvas.convertEventToCanvasOffset(first_event)
+                                    lcanvas.graph.add(node)
+                                }
+
+                                if (callback)
+                                    callback(node)
+
+                                graph.afterChange()
+                            }
                         }
 
-                        node.setFullEventName(stringValue)
-                        node.pos = lcanvas.convertEventToCanvasOffset(first_event)
-                        lcanvas.graph.add(node)
-                    }
-
-                    if (callback)
-                        callback(node)
-
-                    graph.afterChange()
+                        entries.push(eventEntry)
+                    })
                 }
             }
 

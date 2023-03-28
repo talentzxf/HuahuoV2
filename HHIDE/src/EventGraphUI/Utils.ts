@@ -1,8 +1,8 @@
-import {PropertyType} from "hhcommoncomponents";
+import {PropertyType, eventBus} from "hhcommoncomponents";
 
-function getLiteGraphTypeFromPropertyType(propertyType: PropertyType){
+function getLiteGraphTypeFromPropertyType(propertyType: PropertyType) {
     let returnType = ""
-    switch(propertyType){
+    switch (propertyType) {
         case PropertyType.NUMBER:
             returnType = "number"
             break;
@@ -17,4 +17,17 @@ function getLiteGraphTypeFromPropertyType(propertyType: PropertyType){
     return returnType
 }
 
-export {getLiteGraphTypeFromPropertyType}
+function getEventCategoryMap(eventsFullNames): Map<string, Set<string>> {
+    let eventCategoryMap: Map<string, Set<string>> = new Map // From Namespace to event name map.
+    for (let eventFullName of eventsFullNames) {
+        let eventNameInfo = eventBus.splitFullEventName(eventFullName)
+        if (!eventCategoryMap.has(eventNameInfo.namespace)) {
+            eventCategoryMap.set(eventNameInfo.namespace, new Set<string>())
+        }
+        eventCategoryMap.get(eventNameInfo.namespace).add(eventNameInfo.eventName)
+    }
+
+    return eventCategoryMap
+}
+
+export {getLiteGraphTypeFromPropertyType, getEventCategoryMap}

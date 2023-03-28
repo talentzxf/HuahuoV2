@@ -40,7 +40,8 @@
   "edit": "编辑",
   "eventgraph": {
     "resetScale": "重置缩放",
-    "addEventListener" : "监听事件"
+    "addEventListener" : "监听事件",
+    "addGraphAction": "添加动作"
   },
   "contextmenu": {
     "sendToBack": "放到下面",
