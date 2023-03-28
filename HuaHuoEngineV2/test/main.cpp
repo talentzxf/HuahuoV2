@@ -168,8 +168,8 @@ void testShapeStore() {
     fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath), length, 1, fp);
     fclose(fp);
 
-    std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo_project (44)\\0Gp3iuAmyG1678541779");
-    // std::string filenamestr = std::string("mem://") + filename;
+    // std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo_project (44)\\0Gp3iuAmyG1678541779");
+    std::string filenamestr = std::string("mem://") + filename;
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
     vector<UInt8> imgData = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
@@ -603,6 +603,11 @@ void testReadFromFile() {
 
     Assert(particleSystem != NULL);
     Assert(velocity != NULL);
+
+    customComponent->RegisterStringValue("eventGraphJson", "");
+    customComponent->SetStringValue("eventGraphJson", "Test");
+    const char* string = customComponent->GetStringValue("eventGraphJson");
+    Assert(string != NULL);
 }
 
 int main() {

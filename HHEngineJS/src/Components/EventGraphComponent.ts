@@ -7,7 +7,7 @@ import {LGraph} from "litegraph.js";
 
 @Component()
 class EventGraphComponent extends AbstractComponent{
-    @PropertyValue(PropertyCategory.stringValue, null, null, true)
+    @PropertyValue(PropertyCategory.stringValue, "", null, true)
     eventGraphJSON
 
     // This corresponds to the button editing the event graph.
