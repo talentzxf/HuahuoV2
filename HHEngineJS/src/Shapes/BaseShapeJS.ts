@@ -1199,7 +1199,8 @@ abstract class BaseShapeJS {
 
     update(force: boolean = false) {
         let currentFrame = this.getLayer().GetCurrentFrame()
-        if (force || currentFrame != this.lastRenderFrame) {
+        // if (force || currentFrame != this.lastRenderFrame) { // TODO: Because of event graph, we might still need to update here.
+        {
             totallyUpdated++
             // console.log("Totally updated:" + totallyUpdated)
 
