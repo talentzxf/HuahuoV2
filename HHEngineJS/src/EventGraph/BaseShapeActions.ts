@@ -15,7 +15,7 @@ class BaseShapeActions extends AbstractGraphAction{
 
     @GraphAction()
     rotateShape(@ActionParam(PropertyType.NUMBER) degree){
-        this.rotation += degree
+        this.rotation = degree
     }
 
     execute(){
