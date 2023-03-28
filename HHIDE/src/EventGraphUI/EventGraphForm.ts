@@ -197,14 +197,15 @@ class EventGraphForm extends HTMLElement implements HHForm {
         let entries = []
 
         let _this = this
-        events.forEach((namespace, eventNameSet) => {
+        namespaces.forEach((eventNameSet, namespace) => {
             let entry = {
                 value: namespace,
                 content: namespace,
                 has_submenu: true,
                 callback: function (value, event, mouseEvent, contextMenu) {
-                    eventNameSet.forEach((eventName)=>{
+                    let eventEntries = []
 
+                    eventNameSet.forEach((eventName)=>{
                         let eventEntry = {
                             value: "events/eventNode",
                             content: eventName,
@@ -237,7 +238,9 @@ class EventGraphForm extends HTMLElement implements HHForm {
                             }
                         }
 
-                        entries.push(eventEntry)
+                        eventEntries.push(eventEntry)
+
+                        new LiteGraph.ContextMenu(eventEntries, {event: e, parentMenu: contextMenu}, ref_window)
                     })
                 }
             }
