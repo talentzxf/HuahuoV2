@@ -21,9 +21,20 @@ class EventGraphComponent extends AbstractComponent{
 
     eventEmitters: Map<BaseShapeJS, BaseShapeEvents> = new Map
 
+    saveGraph(){
+        this.eventGraphJSON = this.graph.serialize()
+    }
+
+    constructor(rawObj?) {
+        super(rawObj);
+
+        this.graph = new LGraph()
+        this.graph.load(this.eventGraphJSON)
+        this.graph.start()
+        this.graph["onAfterChange"] = this.saveGraph.bind(this)
+    }
+
     getGraph(){
-        if(this.graph == null)
-            this.graph = new LGraph()
         return this.graph
     }
 

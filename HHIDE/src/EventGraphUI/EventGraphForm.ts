@@ -233,40 +233,41 @@ class EventGraphForm extends HTMLElement implements HHForm {
     initLGraph(canvas: HTMLCanvasElement) {
         let graph = this.targetComponent.getGraph()
 
-        this.lcanvas = new LGraphCanvas(canvas, graph, {autoresize: false})
+        if(this.lcanvas == null){
+            this.lcanvas = new LGraphCanvas(canvas, graph, {autoresize: false})
+            let _this = this
+            this.lcanvas.getExtraMenuOptions = function () {
+                let options = [
+                    {
+                        content: i18n.t("eventgraph.addEventListener"),
+                        has_submenu: true,
+                        callback: _this.eventListenerMenu.bind(_this)
+                    },
+                    {
+                        content: i18n.t("eventgraph.addGraphAction"),
+                        has_submenu: true,
+                        callback: _this.actionListenerMenu.bind(_this)
+                    }
+                ]
 
-        let _this = this
-        this.lcanvas.getExtraMenuOptions = function () {
-            let options = [
-                {
-                    content: i18n.t("eventgraph.addEventListener"),
-                    has_submenu: true,
-                    callback: _this.eventListenerMenu.bind(_this)
-                },
-                {
-                    content: i18n.t("eventgraph.addGraphAction"),
-                    has_submenu: true,
-                    callback: _this.actionListenerMenu.bind(_this)
-                }
-            ]
+                return options
+            }
 
-            return options
+            // var node_const = LiteGraph.createNode("basic/const");
+            // node_const.pos = [200, 200];
+            // this.graph.add(node_const);
+            // node_const.setValue(4.5);
+            //
+            // var node_watch = LiteGraph.createNode("basic/watch");
+            // node_watch.pos = [700, 200];
+            // this.graph.add(node_watch);
+            //
+            // node_const.connect(0, node_watch, 0);
+
+            LiteGraph["release_link_on_empty_shows_menu"] = true
         }
-
-        // var node_const = LiteGraph.createNode("basic/const");
-        // node_const.pos = [200, 200];
-        // this.graph.add(node_const);
-        // node_const.setValue(4.5);
-        //
-        // var node_watch = LiteGraph.createNode("basic/watch");
-        // node_watch.pos = [700, 200];
-        // this.graph.add(node_watch);
-        //
-        // node_const.connect(0, node_watch, 0);
-
-        LiteGraph["release_link_on_empty_shows_menu"] = true
-
-        graph.start()
+        else
+            this.lcanvas.setGraph(graph)
     }
 
 }
