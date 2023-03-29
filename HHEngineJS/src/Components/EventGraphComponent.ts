@@ -7,8 +7,8 @@ import {LGraph} from "litegraph.js";
 import {EventEmitter} from "hhcommoncomponents";
 import {EventNode} from "../EventGraph/Nodes/EventNode";
 
-@Component()
-class EventGraphComponent extends AbstractComponent{
+@Component({cppClassName: "EventGraphComponent"})
+class EventGraphComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.stringValue, "", null, true)
     eventGraphJSON
 
@@ -22,17 +22,17 @@ class EventGraphComponent extends AbstractComponent{
     graph: LGraph
 
     // TODO: Need persist of following arrays.
-    actions:Map<BaseShapeJS, BaseShapeActions> = new Map
+    actions: Map<BaseShapeJS, BaseShapeActions> = new Map
 
     eventEmitters: Map<BaseShapeJS, BaseShapeEvents> = new Map
 
-    saveGraph(){
+    saveGraph() {
         let graphString = JSON.stringify(this.graph.serialize())
-        if(this.eventGraphJSON != graphString)
+        if (this.eventGraphJSON != graphString)
             this.eventGraphJSON = graphString
 
         let eventNodes = this.graph.findNodesByType(EventNode.name)
-        for(let node of eventNodes){
+        for (let node of eventNodes) {
             let eventNode = node as EventNode
             let eventNodeId = eventNode.id
             let targetEventBus = eventNode.getTargetEventBus()
@@ -42,11 +42,11 @@ class EventGraphComponent extends AbstractComponent{
     }
 
     constructor(rawObj?) {
-        let needLoad = rawObj?true:false;
+        let needLoad = rawObj ? true : false;
         super(rawObj);
 
         this.graph = new LGraph()
-        if(this.eventGraphJSON && this.eventGraphJSON.length > 0){
+        if (this.eventGraphJSON && this.eventGraphJSON.length > 0) {
             let data = JSON.parse(this.eventGraphJSON)
             this.graph.configure(data)
         }
@@ -54,30 +54,30 @@ class EventGraphComponent extends AbstractComponent{
         this.graph.start()
         this.graph["onAfterChange"] = this.saveGraph.bind(this)
 
-        if(needLoad){
+        if (needLoad) {
             // Init the listened objects.
-            for(let shape of this.listenedObjects){
+            for (let shape of this.listenedObjects) {
                 this.getAction(shape)
             }
         }
     }
 
-    getGraph(){
+    getGraph() {
         return this.graph
     }
 
-    getAction(baseShape: BaseShapeJS){
-        if(!this.actions.has(baseShape)){
+    getAction(baseShape: BaseShapeJS) {
+        if (!this.actions.has(baseShape)) {
             this.actions.set(baseShape, new BaseShapeActions(baseShape))
         }
         return this.actions.get(baseShape)
     }
 
-    getEvent(baseShape: BaseShapeJS): EventEmitter{
-        if(!this["containsListenedObjects"](baseShape))
+    getEvent(baseShape: BaseShapeJS): EventEmitter {
+        if (!this["containsListenedObjects"](baseShape))
             this["insertListenedObjects"](baseShape)
 
-        if(!this.eventEmitters.has(baseShape)){
+        if (!this.eventEmitters.has(baseShape)) {
             this.eventEmitters.set(baseShape, new BaseShapeEvents(baseShape))
         }
         return this.eventEmitters.get(baseShape)
@@ -86,7 +86,9 @@ class EventGraphComponent extends AbstractComponent{
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
-        this.actions.forEach(action=>{action.execute()})
+        this.actions.forEach(action => {
+            action.execute()
+        })
     }
 }
 

@@ -140,6 +140,7 @@ list(APPEND CPPFILES src/Shapes/NailShape.cpp)
 list(APPEND CPPFILES src/KeyFrames/KeyFrame.cpp)
 list(APPEND CPPFILES src/Shapes/ParticleSystem.cpp)
 list(APPEND CPPFILES src/ResourceManager.cpp)
+list(APPEND CPPFILES src/KeyFrames/EventGraphComponent.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)

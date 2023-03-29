@@ -218,6 +218,13 @@ interface CustomComponent{
 CustomComponent implements AbstractFrameState;
 
 [NoDelete]
+interface EventGraphComponent{
+    BaseShape GetShapeByNodeId(long nodeId);
+    void AddNodeIdShapeMap(long nodeId, BaseShape shape);
+};
+EventGraphComponent implements CustomComponent;
+
+[NoDelete]
 interface ShapeFollowCurveFrameState{
     void RecordTargetShape(long frameId, BaseShape targetCurve);
     void RecordLengthRatio(long frameId, float lengthRatio);
