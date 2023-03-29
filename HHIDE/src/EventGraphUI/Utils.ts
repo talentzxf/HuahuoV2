@@ -1,4 +1,4 @@
-import {PropertyType, eventBus} from "hhcommoncomponents";
+import {PropertyType, splitFullEventName} from "hhcommoncomponents";
 
 function getLiteGraphTypeFromPropertyType(propertyType: PropertyType) {
     let returnType = ""
@@ -17,15 +17,20 @@ function getLiteGraphTypeFromPropertyType(propertyType: PropertyType) {
     return returnType
 }
 
-function getEventCategoryMap(eventsFullNames): Map<string, Set<string>> {
-    let eventCategoryMap: Map<string, Set<string>> = new Map // From Namespace to event name map.
-    for (let eventFullName of eventsFullNames) {
-        let eventNameInfo = eventBus.splitFullEventName(eventFullName)
+function getEventCategoryMap(eventsFullNames): Map<string, Set<object>> {
+    let eventCategoryMap: Map<string, Set<object>> = new Map // From Namespace to event name map.
+
+    eventsFullNames.forEach((eventBus, eventFullName)=>{
+        let eventNameInfo = splitFullEventName(eventFullName)
         if (!eventCategoryMap.has(eventNameInfo.namespace)) {
-            eventCategoryMap.set(eventNameInfo.namespace, new Set<string>())
+            eventCategoryMap.set(eventNameInfo.namespace, new Set<object>())
         }
-        eventCategoryMap.get(eventNameInfo.namespace).add(eventNameInfo.eventName)
-    }
+
+        eventCategoryMap.get(eventNameInfo.namespace).add({
+            eventName: eventNameInfo.eventName,
+            eventBus: eventBus
+        })
+    })
 
     return eventCategoryMap
 }

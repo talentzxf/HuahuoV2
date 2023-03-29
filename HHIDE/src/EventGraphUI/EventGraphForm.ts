@@ -1,11 +1,12 @@
 import {HHForm} from "../Utilities/HHForm";
 import {CustomElement} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
-import {eventBus} from "hhcommoncomponents";
+import {getFullEventName} from "hhcommoncomponents";
 import {getEventCategoryMap, getLiteGraphTypeFromPropertyType} from "./Utils"
 import {EventNode, ActionNode} from "hhenginejs";
 import {BaseShapeActions} from "hhenginejs";
 import {LGraphCanvas, LiteGraph} from "hhenginejs";
+import {huahuoEngine} from "hhenginejs";
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -184,20 +185,27 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         let ref_window = this.lcanvas.getCanvasWindow()
 
+        let eventNameEventBusMap = new Map
+
+        let playerEventBus = huahuoEngine.getActivePlayer().getEventBus()
         // Build up events
-        let events = eventBus.getAllGlobalEvents()
+        let events = playerEventBus.getAllEvents()
+        for(let eventName of events){
+            eventNameEventBusMap.set(eventName, playerEventBus)
+        }
 
         let localEvents = this.targetComponent.getEvent(this.targetComponent.baseShape).getEvents()
 
-        for(let eventName of localEvents)
-            events.push(eventName)
+        for(let eventName of localEvents){
+            eventNameEventBusMap.set(eventName, this.targetComponent.getEvent(this.targetComponent.baseShape).getEventBus())
+        }
 
-        let namespaces = getEventCategoryMap(events)
+        let namespaceCategories = getEventCategoryMap(eventNameEventBusMap)
 
         let entries = []
 
         let _this = this
-        namespaces.forEach((eventNameSet, namespace) => {
+        namespaceCategories.forEach((eventObjects, namespace) => {
             let entry = {
                 value: namespace,
                 content: namespace,
@@ -205,13 +213,13 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 callback: function (value, event, mouseEvent, contextMenu) {
                     let eventEntries = []
 
-                    eventNameSet.forEach((eventName)=>{
+                    eventObjects.forEach((eventObject: object)=>{
                         let eventEntry = {
                             value: "events/eventNode",
-                            content: eventName,
+                            content: eventObject["eventName"],
                             has_submenu: false,
                             callback: function(value, event, mouseEvent, contextMenu){
-                                let fullEventName = eventBus.getFullEventName(namespace, eventName)
+                                let fullEventName = getFullEventName(namespace, eventObject["eventName"])
 
                                 let first_event = contextMenu.getFirstEvent();
                                 let graph = _this.lcanvas.graph
@@ -220,13 +228,13 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
                                 let node = LiteGraph.createNode(value.value) as EventNode
                                 if (node) {
-                                    let paramDefs = eventBus.getEventParameters(fullEventName) || []
+                                    let paramDefs = eventObject["eventBus"].getEventParameters(fullEventName) || []
                                     for (let paramDef of paramDefs) {
                                         let outputSlot = node.addOutput(paramDef.parameterName, getLiteGraphTypeFromPropertyType(paramDef.parameterType))
                                         node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)
                                     }
 
-                                    node.setFullEventName(fullEventName)
+                                    node.setupEvent(eventObject["eventBus"], fullEventName)
                                     node.pos = lcanvas.convertEventToCanvasOffset(first_event)
                                     lcanvas.graph.add(node)
                                 }

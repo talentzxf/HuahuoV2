@@ -9,45 +9,39 @@ class EventBusException{
     }
 }
 
+const namespaceSeparator = ":"
+
+function getFullEventName(namespace:string, evtName:string){
+    return namespace + namespaceSeparator + evtName
+}
+
+function splitFullEventName(fullEventName: string){
+    let splittedEventName = fullEventName.split(namespaceSeparator)
+    return {
+        namespace: splittedEventName[0],
+        eventName: splittedEventName[1]
+    }
+}
+
 class HHEventBus{
-    private namespaceSeparator = ":"
+
     maxHandlerId: number = 0
     handlerIdHandlerMap: Map<number, Function> = new Map()
     eventHandlerIdMap: Map<string, Set<number>> = new Map()
     eventHandlerParamArrayMap: Map<string, EventParamDef[]> = new Map()
     namespaceHandlerIdMap: Map<string, Set<number>> = new Map()
-    globalEvents: Array<string> = new Array()
-
-    private getFullEventName(namespace:string, evtName:string){
-        return namespace + this.namespaceSeparator + evtName
-    }
-
-    public splitFullEventName(fullEventName: string){
-        let splittedEventName = fullEventName.split(this.namespaceSeparator)
-        return {
-            namespace: splittedEventName[0],
-            eventName: splittedEventName[1]
-        }
-    }
-
-    public getAllGlobalEvents(){
-        return this.globalEvents
-    }
 
     public getAllEvents(){
         return this.eventHandlerIdMap.keys()
     }
 
-    public registerEvent(namespace: string, evtName:string, isGlobal: boolean = false, params: EventParamDef[] = null){
-        if(evtName.indexOf(this.namespaceSeparator) != -1)
+    public registerEvent(namespace: string, evtName:string, params: EventParamDef[] = null){
+        if(evtName.indexOf(namespaceSeparator) != -1)
             throw new EventBusException("InvalidEventName:" + evtName)
 
-        let fullEventName = this.getFullEventName(namespace, evtName)
+        let fullEventName = getFullEventName(namespace, evtName)
         if(this.eventHandlerIdMap.has(fullEventName))
             return
-
-        if(isGlobal)
-            this.globalEvents.push(fullEventName)
 
         this.eventHandlerIdMap.set(fullEventName, new Set<number>())
 
@@ -65,7 +59,7 @@ class HHEventBus{
     }
 
     addEventHandler(namespace: string, evtName: string, handler: Function): number{
-        let fullEventName = this.getFullEventName(namespace, evtName)
+        let fullEventName = getFullEventName(namespace, evtName)
         if(!this.eventHandlerIdMap.has(fullEventName)){
             this.registerEvent(namespace, evtName)
         }
@@ -79,7 +73,7 @@ class HHEventBus{
     }
 
     triggerEvent(namespace: string, evtName: string, ...evtParams){
-        let fullEventName = this.getFullEventName(namespace, evtName)
+        let fullEventName = getFullEventName(namespace, evtName)
         if(!this.eventHandlerIdMap.has(fullEventName)){
             return
         }
@@ -116,7 +110,7 @@ function GraphEvent(){
         let originalMethod = descriptor.value
         descriptor.value = function(...args:any[]){
             let executeResult = originalMethod.apply(this, args)
-            eventBus.triggerEvent(target.constructor.name, propertyKey, args)
+            this.getEventBus().triggerEvent(target.constructor.name, propertyKey, args)
             return executeResult
         }
     }
@@ -159,4 +153,4 @@ function EventParam(type: PropertyType, name: string = null){
 }
 
 
-export {eventBus, HHEventBus, GraphEvent, EventParam, getEventParams}
+export {eventBus, HHEventBus, GraphEvent, EventParam, getEventParams, getFullEventName, splitFullEventName}

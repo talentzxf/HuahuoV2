@@ -4,6 +4,7 @@ import {BaseShapeActions} from "../EventGraph/BaseShapeActions";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {BaseShapeEvents} from "../EventGraph/BaseShapeEvents";
 import {LGraph} from "litegraph.js";
+import {EventEmitter} from "hhcommoncomponents";
 
 @Component()
 class EventGraphComponent extends AbstractComponent{
@@ -62,7 +63,7 @@ class EventGraphComponent extends AbstractComponent{
         return this.actions.get(baseShape)
     }
 
-    getEvent(baseShape: BaseShapeJS){
+    getEvent(baseShape: BaseShapeJS): EventEmitter{
         if(!this["containsListenedObjects"](baseShape))
             this["insertListenedObjects"](baseShape)
 

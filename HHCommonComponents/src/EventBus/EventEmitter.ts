@@ -21,16 +21,18 @@ function getEvents(target): object[] {
 class EventEmitter{
     eventBus: HHEventBus = new HHEventBus()
 
-    constructor(isGlobal = false) {
+    constructor() {
         let events = getEvents(this)
         events.forEach((eventDef: EventDef)=>{
             let eventParams = getEventParams(this, eventDef.eventName)
 
-            let targetEventBus = isGlobal?eventBus: this.eventBus
-
             // The event is registered with the event emitter.
-            targetEventBus.registerEvent(eventDef.eventNameSpace, eventDef.eventName, isGlobal, eventParams)
+            this.eventBus.registerEvent(eventDef.eventNameSpace, eventDef.eventName, eventParams)
         })
+    }
+
+    getEventBus(){
+        return this.eventBus
     }
 
     getEvents(){

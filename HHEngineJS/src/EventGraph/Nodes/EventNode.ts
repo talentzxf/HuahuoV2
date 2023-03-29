@@ -1,5 +1,5 @@
 import {LGraphNode, LiteGraph, SerializedLGraphNode} from "litegraph.js";
-import {eventBus} from "HHCommonComponents";
+import {splitFullEventName} from "HHCommonComponents";
 
 class EventNode extends LGraphNode {
     title = "EventNode"
@@ -29,16 +29,16 @@ class EventNode extends LGraphNode {
     }
 
     // TODO: The event bus might not be the global one.
-    setFullEventName(fullEventName: string) {
-        let eventNameMeta = eventBus.splitFullEventName(fullEventName)
+    setupEvent(targetEventBus, fullEventName: string) {
+        let eventNameMeta = splitFullEventName(fullEventName)
         if (this.properties.fullEventName && this.currentEventHandler > 0) {
-            eventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, this.currentEventHandler)
+            targetEventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, this.currentEventHandler)
         }
 
         this.properties.fullEventName = fullEventName
         this.title = fullEventName
         let _this = this
-        this.currentEventHandler = eventBus.addEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, (params) => {
+        this.currentEventHandler = targetEventBus.addEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, (params) => {
             console.log(params)
             for (let paramIdx = 0; paramIdx < params.length; paramIdx++) {
                 let slot = _this.getParamMap().get(paramIdx)
@@ -55,10 +55,11 @@ class EventNode extends LGraphNode {
         })
     }
 
+    // This function will be called after s/l from file.
     onConfigure(o: SerializedLGraphNode) {
         console.log("on Node configured")
 
-        this.setFullEventName(this.properties.fullEventName)
+        // this.setupEvent(this.properties.fullEventName)
     }
 }
 
