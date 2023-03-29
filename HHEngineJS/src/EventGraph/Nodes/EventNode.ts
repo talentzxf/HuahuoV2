@@ -1,12 +1,14 @@
-import {LGraphNode, LiteGraph} from "litegraph.js";
+import {LGraphNode, LiteGraph, SerializedLGraphNode} from "litegraph.js";
 import {eventBus} from "HHCommonComponents";
 
 class EventNode extends LGraphNode {
     title = "EventNode"
     desc = "Triggers if event happens"
-    fullEventName = null
 
-    paramIdxOutputSlotMap = new Map
+    properties = {
+        fullEventName: null,
+        paramIdxOutputSlotMap: null
+    }
 
     currentEventHandler = -1
 
@@ -16,25 +18,33 @@ class EventNode extends LGraphNode {
     }
 
     addParameterIndexSlotMap(paramIdx, outputSlot) {
-        this.paramIdxOutputSlotMap.set(paramIdx, outputSlot)
+        this.getParamMap().set(paramIdx, outputSlot)
     }
 
+    getParamMap(){
+        if (this.properties.paramIdxOutputSlotMap == null) {
+            this.properties.paramIdxOutputSlotMap = new Map
+        }
+        return this.properties.paramIdxOutputSlotMap
+    }
+
+    // TODO: The event bus might not be the global one.
     setFullEventName(fullEventName: string) {
         let eventNameMeta = eventBus.splitFullEventName(fullEventName)
-        if (this.fullEventName && this.currentEventHandler > 0) {
+        if (this.properties.fullEventName && this.currentEventHandler > 0) {
             eventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, this.currentEventHandler)
         }
 
-        this.fullEventName = fullEventName
+        this.properties.fullEventName = fullEventName
         this.title = fullEventName
         let _this = this
         this.currentEventHandler = eventBus.addEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, (params) => {
             console.log(params)
             for (let paramIdx = 0; paramIdx < params.length; paramIdx++) {
-                let slot = _this.paramIdxOutputSlotMap.get(paramIdx)
+                let slot = _this.getParamMap().get(paramIdx)
                 if (slot) {
                     let slotIdx = _this.findOutputSlot(slot.name)
-                    if(slotIdx >= 0){
+                    if (slotIdx >= 0) {
                         _this.setOutputData(slotIdx, params[paramIdx]);
                     }
                 }
@@ -43,6 +53,12 @@ class EventNode extends LGraphNode {
             _this.setDirtyCanvas(true, true)
             _this.graph.afterChange()
         })
+    }
+
+    onConfigure(o: SerializedLGraphNode) {
+        console.log("on Node configured")
+
+        this.setFullEventName(this.properties.fullEventName)
     }
 }
 

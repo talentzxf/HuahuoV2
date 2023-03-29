@@ -139,6 +139,7 @@ interface AbstractFrameState{
 
 [NoDelete]
 interface FieldShapeArray{
+    boolean ContainShape(BaseShape shape);
     long GetShapeCount();
     BaseShape GetShape(long idx);
     void InsertShape(BaseShape shape);

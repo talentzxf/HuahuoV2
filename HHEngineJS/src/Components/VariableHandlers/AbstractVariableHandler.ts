@@ -7,6 +7,7 @@ class VariableHandlerConfig {
     updater?: Function
     inserter?: Function
     deleter?: Function
+    contains?: Function
 
     isVariableEqual?:Function = function(val1, val2){
         return val1 == val2
@@ -47,6 +48,11 @@ function internalProcessComponent(component: AbstractComponent, fieldName: strin
     if (config.inserter) {
         let inserterName = "insert" + capitalizeFirstLetter(fieldName)
         component[inserterName] = config.inserter.bind(component)
+    }
+
+    if (config.contains){
+        let containsName = "contains" + capitalizeFirstLetter(fieldName)
+        component[containsName] = config.contains.bind(component)
     }
 
     if (config.updater) {

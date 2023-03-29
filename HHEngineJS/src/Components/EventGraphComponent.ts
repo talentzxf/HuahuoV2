@@ -14,6 +14,9 @@ class EventGraphComponent extends AbstractComponent{
     @PropertyValue(PropertyCategory.customField)
     eventGraph
 
+    @PropertyValue(PropertyCategory.shapeArray, null, null, true)
+    listenedObjects
+
     graph: LGraph
 
     // TODO: Need persist of following arrays.
@@ -28,6 +31,7 @@ class EventGraphComponent extends AbstractComponent{
     }
 
     constructor(rawObj?) {
+        let needLoad = rawObj?true:false;
         super(rawObj);
 
         this.graph = new LGraph()
@@ -38,6 +42,13 @@ class EventGraphComponent extends AbstractComponent{
 
         this.graph.start()
         this.graph["onAfterChange"] = this.saveGraph.bind(this)
+
+        if(needLoad){
+            // Init the listened objects.
+            for(let shape of this.listenedObjects){
+                this.getAction(shape)
+            }
+        }
     }
 
     getGraph(){
@@ -52,6 +63,9 @@ class EventGraphComponent extends AbstractComponent{
     }
 
     getEvent(baseShape: BaseShapeJS){
+        if(!this["containsListenedObjects"](baseShape))
+            this["insertListenedObjects"](baseShape)
+
         if(!this.eventEmitters.has(baseShape)){
             this.eventEmitters.set(baseShape, new BaseShapeEvents(baseShape))
         }

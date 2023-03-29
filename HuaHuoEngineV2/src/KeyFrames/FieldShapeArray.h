@@ -27,6 +27,14 @@ public:
         return shapeArray[idx];
     }
 
+    bool ContainShape(BaseShape* shapePtr){
+        for(BaseShape* shape: this->shapeArray){
+            if(shape->GetInstanceID() == shapePtr->GetInstanceID())
+                return true;
+        }
+        return false;
+    }
+
     void InsertShape(BaseShape* shapePtr);
 
     void DeleteShape(BaseShape* shapePtr);

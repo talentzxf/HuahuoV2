@@ -41,6 +41,13 @@ class ShapeArrayHandler {
             getter: () => {
                 return new FieldShapeArrayIterable(component.rawObj.GetShapeArrayValue(fieldName))
             },
+            contains: (val: BaseShapeJS) => {
+                if (!IsValidWrappedObject(component.rawObj.GetShapeArrayValue(fieldName))) {
+                    return false
+                }
+
+                return component.rawObj.GetShapeArrayValue(fieldName).ContainShape(val.getRawShape())
+            },
             inserter: (val: BaseShapeJS) => {
                 if (!IsValidWrappedObject(component.rawObj.GetShapeArrayValue(fieldName))) {
                     component.rawObj.CreateShapeArrayValue(fieldName)
