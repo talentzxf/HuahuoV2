@@ -35,9 +35,11 @@ class EventGraphComponent extends AbstractComponent {
         for (let node of eventNodes) {
             let eventNode = node as EventNode
             let eventNodeId = eventNode.id
-            let targetEventBus = eventNode.getTargetEventBus()
+            let targetEventEmitter = eventNode.getTargetEventEmitter()
 
-            this.rawObj
+            // TODO: What if the emitter is the player??????
+            if(targetEventEmitter.rawObj)
+                this.rawObj.AddNodeIdShapeMap(eventNodeId, targetEventEmitter.rawObj)
         }
     }
 
@@ -57,7 +59,7 @@ class EventGraphComponent extends AbstractComponent {
         if (needLoad) {
             // Init the listened objects.
             for (let shape of this.listenedObjects) {
-                this.getAction(shape)
+                this.getEvent(shape)
             }
         }
     }

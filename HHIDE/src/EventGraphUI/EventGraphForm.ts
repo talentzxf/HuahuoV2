@@ -187,17 +187,17 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         let eventNameEventBusMap = new Map
 
-        let playerEventBus = huahuoEngine.getActivePlayer().getEventBus()
+        let player = huahuoEngine.getActivePlayer()
         // Build up events
-        let events = playerEventBus.getAllEvents()
+        let events = player.getAllEvents().getAllEvents()
         for(let eventName of events){
-            eventNameEventBusMap.set(eventName, playerEventBus)
+            eventNameEventBusMap.set(eventName, player)
         }
 
         let localEvents = this.targetComponent.getEvent(this.targetComponent.baseShape).getEvents()
 
         for(let eventName of localEvents){
-            eventNameEventBusMap.set(eventName, this.targetComponent.getEvent(this.targetComponent.baseShape).getEventBus())
+            eventNameEventBusMap.set(eventName, this.targetComponent.getEvent(this.targetComponent.baseShape))
         }
 
         let namespaceCategories = getEventCategoryMap(eventNameEventBusMap)
@@ -228,13 +228,13 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
                                 let node = LiteGraph.createNode(value.value) as EventNode
                                 if (node) {
-                                    let paramDefs = eventObject["eventBus"].getEventParameters(fullEventName) || []
+                                    let paramDefs = eventObject["eventEmitter"].getEventBus().getEventParameters(fullEventName) || []
                                     for (let paramDef of paramDefs) {
                                         let outputSlot = node.addOutput(paramDef.parameterName, getLiteGraphTypeFromPropertyType(paramDef.parameterType))
                                         node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)
                                     }
 
-                                    node.setupEvent(eventObject["eventBus"], fullEventName)
+                                    node.setupEvent(eventObject["eventEmitter"], fullEventName)
                                     node.pos = lcanvas.convertEventToCanvasOffset(first_event)
                                     lcanvas.graph.add(node)
                                 }

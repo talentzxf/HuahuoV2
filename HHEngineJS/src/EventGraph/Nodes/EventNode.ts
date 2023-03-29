@@ -12,7 +12,7 @@ class EventNode extends LGraphNode {
 
     currentEventHandler = -1
 
-    targetEventBus
+    targetEventEmitter
 
     constructor() {
         super();
@@ -30,13 +30,15 @@ class EventNode extends LGraphNode {
         return this.properties.paramIdxOutputSlotMap
     }
 
-    getTargetEventBus(){
-        return this.targetEventBus
+    getTargetEventEmitter(){
+        return this.targetEventEmitter
     }
 
     // TODO: The event bus might not be the global one.
-    setupEvent(targetEventBus, fullEventName: string) {
-        this.targetEventBus = targetEventBus
+    setupEvent(targetEventEmitter, fullEventName: string) {
+        this.targetEventEmitter = targetEventEmitter
+
+        let targetEventBus = targetEventEmitter.getEventBus()
 
         let eventNameMeta = splitFullEventName(fullEventName)
         if (this.properties.fullEventName && this.currentEventHandler > 0) {

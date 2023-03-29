@@ -20,7 +20,7 @@ function getLiteGraphTypeFromPropertyType(propertyType: PropertyType) {
 function getEventCategoryMap(eventsFullNames): Map<string, Set<object>> {
     let eventCategoryMap: Map<string, Set<object>> = new Map // From Namespace to event name map.
 
-    eventsFullNames.forEach((eventBus, eventFullName)=>{
+    eventsFullNames.forEach((eventEmitter, eventFullName)=>{
         let eventNameInfo = splitFullEventName(eventFullName)
         if (!eventCategoryMap.has(eventNameInfo.namespace)) {
             eventCategoryMap.set(eventNameInfo.namespace, new Set<object>())
@@ -28,7 +28,7 @@ function getEventCategoryMap(eventsFullNames): Map<string, Set<object>> {
 
         eventCategoryMap.get(eventNameInfo.namespace).add({
             eventName: eventNameInfo.eventName,
-            eventBus: eventBus
+            eventEmitter: eventEmitter
         })
     })
 
