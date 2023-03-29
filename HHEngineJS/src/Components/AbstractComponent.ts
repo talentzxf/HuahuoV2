@@ -81,10 +81,12 @@ class AbstractComponent {
     }
 
     constructor(rawObj?) {
+        let cppClzName = clzObjectFactory.getCppClassName(this.constructor.name)
+
         if (rawObj) {
-            this.rawObj = castObject(rawObj, Module["CustomComponent"])
+            this.rawObj = castObject(rawObj, Module[cppClzName])
         } else {
-            this.rawObj = Module["CustomComponent"].prototype.CreateComponent()
+            this.rawObj = Module[cppClzName].prototype.CreateComponent()
         }
 
         if (!this.rawObj.IsFieldRegistered("isActive")) {

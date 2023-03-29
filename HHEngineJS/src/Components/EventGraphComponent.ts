@@ -5,6 +5,7 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {BaseShapeEvents} from "../EventGraph/BaseShapeEvents";
 import {LGraph} from "litegraph.js";
 import {EventEmitter} from "hhcommoncomponents";
+import {EventNode} from "../EventGraph/Nodes/EventNode";
 
 @Component()
 class EventGraphComponent extends AbstractComponent{
@@ -29,6 +30,15 @@ class EventGraphComponent extends AbstractComponent{
         let graphString = JSON.stringify(this.graph.serialize())
         if(this.eventGraphJSON != graphString)
             this.eventGraphJSON = graphString
+
+        let eventNodes = this.graph.findNodesByType(EventNode.name)
+        for(let node of eventNodes){
+            let eventNode = node as EventNode
+            let eventNodeId = eventNode.id
+            let targetEventBus = eventNode.getTargetEventBus()
+
+            this.rawObj
+        }
     }
 
     constructor(rawObj?) {

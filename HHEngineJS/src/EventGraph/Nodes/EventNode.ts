@@ -12,6 +12,8 @@ class EventNode extends LGraphNode {
 
     currentEventHandler = -1
 
+    targetEventBus
+
     constructor() {
         super();
         this.addOutput("Execute", LiteGraph.EVENT)
@@ -28,8 +30,14 @@ class EventNode extends LGraphNode {
         return this.properties.paramIdxOutputSlotMap
     }
 
+    getTargetEventBus(){
+        return this.targetEventBus
+    }
+
     // TODO: The event bus might not be the global one.
     setupEvent(targetEventBus, fullEventName: string) {
+        this.targetEventBus = targetEventBus
+
         let eventNameMeta = splitFullEventName(fullEventName)
         if (this.properties.fullEventName && this.currentEventHandler > 0) {
             targetEventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, this.currentEventHandler)

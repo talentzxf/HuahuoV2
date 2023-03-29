@@ -24,6 +24,10 @@ class CppClassObjectFactory{
         return this.clzNameConstructorMap.get(clzName)
     }
 
+    getCppClassName(jsClzName: string){
+        return this.componentNameComponentPropertyMap.get(jsClzName).cppClassName
+    }
+
     getAllCompatibleComponents(targetObj){
         let returnComponentNames = []
         this.componentNameComponentPropertyMap.forEach((componentConfig, componentTypeName)=>{
