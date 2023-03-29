@@ -25,7 +25,10 @@ class CppClassObjectFactory{
     }
 
     getCppClassName(jsClzName: string){
-        return this.componentNameComponentPropertyMap.get(jsClzName).cppClassName
+        let componentConfig = this.componentNameComponentPropertyMap.get(jsClzName)
+        if(componentConfig.cppClassName)
+            return componentConfig.cppClassName
+        return "CustomComponent"
     }
 
     getAllCompatibleComponents(targetObj){
