@@ -96,7 +96,7 @@ if(!window["eventBus"]){
     window["eventBus"] = eventBus
 }
 
-function GraphEvent(){
+function GraphEvent(isGlobal: boolean = false){
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor){
         // Register the event
         let events = getEvents(target)
@@ -111,6 +111,9 @@ function GraphEvent(){
         descriptor.value = function(...args:any[]){
             let executeResult = originalMethod.apply(this, args)
             this.getEventBus().triggerEvent(target.constructor.name, propertyKey, args)
+
+            if(isGlobal) // If this is a global event, trigger the event in the global namespace.
+                eventBus.triggerEvent(target.constructor.name, propertyKey, args)
             return executeResult
         }
     }

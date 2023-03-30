@@ -2,12 +2,11 @@ import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {BaseShapeActions} from "../EventGraph/BaseShapeActions";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
-import {BaseShapeEvents} from "../EventGraph/BaseShapeEvents";
 import {LGraph} from "litegraph.js";
-import {EventEmitter} from "hhcommoncomponents";
-import {EventNode} from "../EventGraph/Nodes/EventNode";
+import {huahuoEngine} from "../EngineAPI";
+import {eventBus} from "hhcommoncomponents";
 
-@Component({cppClassName: "EventGraphComponent"})
+@Component({compatibleShapes: ["BaseShapeJS"], cppClassName: "EventGraphComponent"})
 class EventGraphComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.stringValue, "", null, true)
     eventGraphJSON
@@ -16,31 +15,31 @@ class EventGraphComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.customField)
     eventGraph
 
-    @PropertyValue(PropertyCategory.shapeArray, null, null, true)
-    listenedObjects
+    actions: Map<BaseShapeJS, BaseShapeActions> = new Map
 
     graph: LGraph
 
-    // TODO: Need persist of following arrays.
-    actions: Map<BaseShapeJS, BaseShapeActions> = new Map
+    // If shape is null, this node is listening to global event.
+    linkNodeWithTarget(nodeId: number, shape: BaseShapeJS){
+        if(shape != null)
+            this.rawObj.AddNodeIdShapeMap(nodeId, shape.getRawShape())
+        else
+            this.rawObj.AddNodeIdShapeMap(nodeId, null)
+    }
 
-    eventEmitters: Map<BaseShapeJS, BaseShapeEvents> = new Map
+    getEventBus(nodeId: number){
+        let rawObj = this.rawObj.GetShapeByNodeId(nodeId)
+        if(rawObj == null)
+            return eventBus
+
+        let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
+        return huahuoEngine.getEvent(baseShapeObj).getEventBus()
+    }
 
     saveGraph() {
         let graphString = JSON.stringify(this.graph.serialize())
         if (this.eventGraphJSON != graphString)
             this.eventGraphJSON = graphString
-
-        let eventNodes = this.graph.findNodesByType(EventNode.name)
-        for (let node of eventNodes) {
-            let eventNode = node as EventNode
-            let eventNodeId = eventNode.id
-            let targetEventEmitter = eventNode.getTargetEventEmitter()
-
-            // TODO: What if the emitter is the player??????
-            if(targetEventEmitter.rawObj)
-                this.rawObj.AddNodeIdShapeMap(eventNodeId, targetEventEmitter.rawObj)
-        }
     }
 
     constructor(rawObj?) {
@@ -55,34 +54,17 @@ class EventGraphComponent extends AbstractComponent {
 
         this.graph.start()
         this.graph["onAfterChange"] = this.saveGraph.bind(this)
-
-        if (needLoad) {
-            // Init the listened objects.
-            for (let shape of this.listenedObjects) {
-                this.getEvent(shape)
-            }
-        }
     }
 
     getGraph() {
         return this.graph
     }
 
-    getAction(baseShape: BaseShapeJS) {
-        if (!this.actions.has(baseShape)) {
+    getAction(baseShape: BaseShapeJS){
+        if(!this.actions.has(baseShape)){
             this.actions.set(baseShape, new BaseShapeActions(baseShape))
         }
         return this.actions.get(baseShape)
-    }
-
-    getEvent(baseShape: BaseShapeJS): EventEmitter {
-        if (!this["containsListenedObjects"](baseShape))
-            this["insertListenedObjects"](baseShape)
-
-        if (!this.eventEmitters.has(baseShape)) {
-            this.eventEmitters.set(baseShape, new BaseShapeEvents(baseShape))
-        }
-        return this.eventEmitters.get(baseShape)
     }
 
     override afterUpdate(force: boolean = false) {

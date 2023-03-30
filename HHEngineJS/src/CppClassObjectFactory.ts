@@ -26,7 +26,7 @@ class CppClassObjectFactory{
 
     getCppClassName(jsClzName: string){
         let componentConfig = this.componentNameComponentPropertyMap.get(jsClzName)
-        if(componentConfig.cppClassName)
+        if(componentConfig != null && componentConfig.cppClassName)
             return componentConfig.cppClassName
         return "CustomComponent"
     }

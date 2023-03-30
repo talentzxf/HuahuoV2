@@ -5,6 +5,8 @@ import {dataURItoBlob, eventBus} from "hhcommoncomponents";
 
 // @ts-ignore
 import * as ti from "taichi.js/dist/taichi"
+import {BaseShapeEvents} from "./EventGraph/BaseShapeEvents";
+import {BaseShapeActions} from "./EventGraph/BaseShapeActions";
 // import * as ti from "taichi.js/dist/taichi.dev"
 
 class EngineAPI{
@@ -22,6 +24,15 @@ class EngineAPI{
     hasShape = false
 
     taichiInited = false
+
+    eventEmitterCache = new Map
+    actionCache = new Map
+
+    getEvent(shape){
+        if(!this.eventEmitterCache.has(shape))
+            this.eventEmitterCache.set(shape, new BaseShapeEvents(shape))
+        return this.eventEmitterCache.get(shape)
+    }
 
     constructor() {
         Logger.info("Creating Engine API!!!!")

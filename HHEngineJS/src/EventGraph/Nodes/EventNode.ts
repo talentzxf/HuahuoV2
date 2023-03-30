@@ -1,7 +1,10 @@
-import {LGraphNode, LiteGraph, SerializedLGraphNode} from "litegraph.js";
+import {LiteGraph, SerializedLGraphNode} from "litegraph.js";
 import {splitFullEventName} from "HHCommonComponents";
+import {AbstractNode} from "./AbstractNode";
+import {huahuoEngine} from "../../EngineAPI";
+import {eventBus} from "hhcommoncomponents";
 
-class EventNode extends LGraphNode {
+class EventNode extends AbstractNode {
     title = "EventNode"
     desc = "Triggers if event happens"
 
@@ -11,8 +14,6 @@ class EventNode extends LGraphNode {
     }
 
     currentEventHandler = -1
-
-    targetEventEmitter
 
     constructor() {
         super();
@@ -30,15 +31,10 @@ class EventNode extends LGraphNode {
         return this.properties.paramIdxOutputSlotMap
     }
 
-    getTargetEventEmitter(){
-        return this.targetEventEmitter
-    }
-
     // TODO: The event bus might not be the global one.
-    setupEvent(targetEventEmitter, fullEventName: string) {
-        this.targetEventEmitter = targetEventEmitter
+    setupEvent(fullEventName: string) {
 
-        let targetEventBus = targetEventEmitter.getEventBus()
+        let targetEventBus = this.getEventGraphComponent().getEventBus(this.id)
 
         let eventNameMeta = splitFullEventName(fullEventName)
         if (this.properties.fullEventName && this.currentEventHandler > 0) {

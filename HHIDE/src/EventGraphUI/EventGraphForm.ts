@@ -4,7 +4,6 @@ import {CSSUtils} from "../Utilities/CSSUtils";
 import {getFullEventName} from "hhcommoncomponents";
 import {getEventCategoryMap, getLiteGraphTypeFromPropertyType} from "./Utils"
 import {EventNode, ActionNode} from "hhenginejs";
-import {BaseShapeActions} from "hhenginejs";
 import {LGraphCanvas, LiteGraph} from "hhenginejs";
 import {huahuoEngine} from "hhenginejs";
 
@@ -25,13 +24,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
     targetComponent
 
-    baseShapeActions: BaseShapeActions
-
     setTargetComponent(targetComponent) {
         this.targetComponent = targetComponent
-
-        // Get Actions from the baseShape.
-        this.baseShapeActions = this.targetComponent.getAction(this.targetComponent.baseShape)
 
         this.initLGraph(this.canvas)
     }
@@ -127,13 +121,11 @@ class EventGraphForm extends HTMLElement implements HHForm {
         if (!this.lcanvas.graph)
             return
 
-        if(!this.baseShapeActions)
-            return
-
         let ref_window = this.lcanvas.getCanvasWindow()
 
+        let baseShape = this.targetComponent.baseShape
         let _this = this
-        let actionDefs = this.baseShapeActions.getActionDefs()
+        let actionDefs = huahuoEngine.getAction(baseShape).getActionDefs()
         let entries = []
         actionDefs.forEach((actionDef) => {
             let entry = {
@@ -154,11 +146,11 @@ class EventGraphForm extends HTMLElement implements HHForm {
                             node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)
                         }
 
-                        node.setActionName(actionDef.actionName)
                         node.pos = lcanvas.convertEventToCanvasOffset(first_event)
                         lcanvas.graph.add(node)
 
-                        node.setActionTarget(_this.baseShapeActions)
+                        node.setEventGraphComponent(_this.targetComponent)
+                        node.setActionName(actionDef.actionName)
                     }
 
                     if (callback)
@@ -185,19 +177,21 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         let ref_window = this.lcanvas.getCanvasWindow()
 
+        // Map from the event name to the object that triggers the event.
+        // If the value is null, the event is triggered in global eventBus.
         let eventNameEventBusMap = new Map
 
         let player = huahuoEngine.getActivePlayer()
         // Build up events
         let events = player.getAllEvents().getAllEvents()
         for(let eventName of events){
-            eventNameEventBusMap.set(eventName, player)
+            eventNameEventBusMap.set(eventName, null)
         }
 
-        let localEvents = this.targetComponent.getEvent(this.targetComponent.baseShape).getEvents()
+        let localEvents = huahuoEngine.getEvent(this.targetComponent.baseShape).getEvents()
 
         for(let eventName of localEvents){
-            eventNameEventBusMap.set(eventName, this.targetComponent.getEvent(this.targetComponent.baseShape))
+            eventNameEventBusMap.set(eventName, this.targetComponent.baseShape)
         }
 
         let namespaceCategories = getEventCategoryMap(eventNameEventBusMap)
@@ -234,9 +228,13 @@ class EventGraphForm extends HTMLElement implements HHForm {
                                         node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)
                                     }
 
-                                    node.setupEvent(eventObject["eventEmitter"], fullEventName)
                                     node.pos = lcanvas.convertEventToCanvasOffset(first_event)
                                     lcanvas.graph.add(node)
+
+                                    _this.targetComponent.linkNodeWithTarget(node.id, eventObject["eventSource"])
+                                    node.setEventGraphComponent(_this.targetComponent)
+
+                                    node.setupEvent(fullEventName)
                                 }
 
                                 if (callback)

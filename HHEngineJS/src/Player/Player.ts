@@ -75,7 +75,7 @@ class Player extends EventEmitter{
         }
     }
 
-    @GraphEvent()
+    @GraphEvent(true)
     setFrameId(@EventParam(PropertyType.NUMBER) playFrameId){
         // Update time for all layers in the default store.
         let currentStore = huahuoEngine.GetStoreById(this.storeId)
