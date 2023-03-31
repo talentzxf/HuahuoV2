@@ -50,7 +50,7 @@ class GeneratorComponent extends AbstractComponent {
                     let rawObj = targetShape.rawObj
                     duplicatedShape = LoadShapeFromCppShape(rawObj, false, false)
                     duplicatedShape.update(true)
-                    
+
                     duplicatedShape.isSelectable = function(){
                         return false
                     }

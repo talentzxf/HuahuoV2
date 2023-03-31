@@ -47,7 +47,8 @@ class ContextMenu
 
             let _this = this
             document.body.addEventListener("mouseup", ()=>{
-                _this.menuDiv.style.display = "none"
+                if(_this.menuDiv)
+                    _this.menuDiv.style.display = "none"
             })
 
             this.menuDiv.style.zIndex = "1000"
