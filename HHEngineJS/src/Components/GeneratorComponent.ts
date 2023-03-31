@@ -49,6 +49,8 @@ class GeneratorComponent extends AbstractComponent {
                 if(mirageShapeArray.length <= index){
                     let rawObj = targetShape.rawObj
                     duplicatedShape = LoadShapeFromCppShape(rawObj, false, false)
+                    duplicatedShape.update(true)
+                    
                     duplicatedShape.isSelectable = function(){
                         return false
                     }
