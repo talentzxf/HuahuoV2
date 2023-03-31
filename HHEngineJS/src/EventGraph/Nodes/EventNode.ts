@@ -8,7 +8,7 @@ class EventNode extends AbstractNode {
 
     properties = {
         fullEventName: null,
-        paramIdxOutputSlotMap: null
+        paramIdxOutputSlotMap: {}
     }
 
     currentEventHandler = -1
@@ -19,13 +19,10 @@ class EventNode extends AbstractNode {
     }
 
     addParameterIndexSlotMap(paramIdx, outputSlot) {
-        this.getParamMap().set(paramIdx, outputSlot)
+        this.getParamMap()[paramIdx] = outputSlot
     }
 
     getParamMap() {
-        if (this.properties.paramIdxOutputSlotMap == null) {
-            this.properties.paramIdxOutputSlotMap = new Map
-        }
         return this.properties.paramIdxOutputSlotMap
     }
 
@@ -45,7 +42,7 @@ class EventNode extends AbstractNode {
         this.currentEventHandler = targetEventBus.addEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, (params) => {
             console.log(params)
             for (let paramIdx = 0; paramIdx < params.length; paramIdx++) {
-                let slot = _this.getParamMap().get(paramIdx)
+                let slot = _this.getParamMap()[paramIdx]
                 if (slot) {
                     let slotIdx = _this.findOutputSlot(slot.name)
                     if (slotIdx >= 0) {

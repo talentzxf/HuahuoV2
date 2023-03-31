@@ -4,9 +4,13 @@ import {AbstractNode} from "./AbstractNode";
 class ActionNode extends AbstractNode {
     title = "ActionNode"
 
-    actionName = null
-
     executedSlot
+
+    properties = {
+        actionName: "unknownAction",
+        paramIdxSlotMap: {},
+        maxParamIdx: -1 // -1 means no parameter.
+    }
 
 
     constructor() {
@@ -17,7 +21,7 @@ class ActionNode extends AbstractNode {
 
     setActionName(actionName) {
         this.title = actionName
-        this.actionName = actionName
+        this.properties.actionName = actionName
     }
 
     onAction(action, param) {
@@ -25,8 +29,8 @@ class ActionNode extends AbstractNode {
 
         let callBackParams = []
 
-        for (let paramIdx = 0; paramIdx <= this.maxParamIdx; paramIdx++) {
-            let slot = this.paramIdxSlotMap.get(paramIdx)
+        for (let paramIdx = 0; paramIdx <= this.properties.maxParamIdx; paramIdx++) {
+            let slot = this.properties.paramIdxSlotMap[paramIdx]
             if (slot) {
                 let inputData = this.getInputDataByName(slot.name)
                 callBackParams.push(inputData)
@@ -37,7 +41,7 @@ class ActionNode extends AbstractNode {
 
         let actionTarget = this.getEventGraphComponent().getActionTarget(this.id)
 
-        let func = actionTarget[this.actionName]
+        let func = actionTarget[this.properties.actionName]
         if (func)
             func.apply(actionTarget, callBackParams)
 
@@ -48,13 +52,10 @@ class ActionNode extends AbstractNode {
         }
     }
 
-    maxParamIdx = -1 // -1 means no parameter.
-    paramIdxSlotMap = new Map
-
     addParameterIndexSlotMap(paramIdx, outputSlot) {
-        this.paramIdxSlotMap.set(paramIdx, outputSlot)
-        if (paramIdx > this.maxParamIdx) {
-            this.maxParamIdx = paramIdx
+        this.properties.paramIdxSlotMap[paramIdx] = outputSlot
+        if (paramIdx > this.properties.maxParamIdx) {
+            this.properties.maxParamIdx = paramIdx
         }
     }
 

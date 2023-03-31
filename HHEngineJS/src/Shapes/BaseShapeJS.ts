@@ -1013,9 +1013,19 @@ abstract class BaseShapeJS {
         }
     }
 
-    duringUpdate(force: boolean = false) {
+    executeAfterPaperItemReady(func){
+        if(this.paperItem){
+            func(this.paperItem)
+        }else{
+            this.registerValueChangeHandler("paperItemReady")(func)
+        }
+    }
+
+    preparePaperItem(force: boolean = false) {
         if (!this.paperItem) {
             this.createShape()
+
+            this.callHandlers("paperItemReady", this.paperItem)
         }
     }
 
@@ -1205,7 +1215,7 @@ abstract class BaseShapeJS {
             // console.log("Totally updated:" + totallyUpdated)
 
             this.beforeUpdate(true)
-            this.duringUpdate(true)
+            this.preparePaperItem(true)
 
             if (!this.rawObj.IsVisible()) {
                 this.paperItem.visible = false

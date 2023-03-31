@@ -9,16 +9,17 @@ class BaseShapeEvents extends EventEmitter{
         super();
         this.targetShape = targetShape
 
-        let paperItem = this.targetShape.paperItem
-
-        let mouseEvents = ["onMouseMove", "onMouseDown", "onMouseLeave", "onMouseEnter"]
         let _this = this
 
-        for(let mouseEvent of mouseEvents){
-            paperItem[mouseEvent] = (evt:MouseEvent)=>{
-                _this[mouseEvent](evt.point.x, evt.point.y)
+        this.targetShape.executeAfterPaperItemReady((paperItem)=>{
+            let mouseEvents = ["onMouseMove", "onMouseDown", "onMouseLeave", "onMouseEnter"]
+
+            for(let mouseEvent of mouseEvents){
+                paperItem[mouseEvent] = (evt:MouseEvent)=>{
+                    _this[mouseEvent](evt.point.x, evt.point.y)
+                }
             }
-        }
+        })
     }
 
     @GraphEvent()

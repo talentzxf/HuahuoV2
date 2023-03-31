@@ -114,8 +114,8 @@ class ElementShapeJS extends BaseShapeJS {
         }
     }
 
-    override duringUpdate(force: boolean = false) {
-        super.duringUpdate(force)
+    override preparePaperItem(force: boolean = false) {
+        super.preparePaperItem(force)
 
         let defaultStoreManager = huahuoEngine.GetDefaultObjectStoreManager()
         let previousStoreIdx = defaultStoreManager.GetCurrentStore().GetStoreId();
