@@ -34,6 +34,10 @@ class EngineAPI{
         return this.eventEmitterCache.get(shape)
     }
 
+    getEventBus(shape){
+        return this.getEvent(shape).getEventBus()
+    }
+
     constructor() {
         Logger.info("Creating Engine API!!!!")
     }

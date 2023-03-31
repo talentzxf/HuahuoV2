@@ -20,10 +20,14 @@ void CustomComponent::Transfer(TransferFunction &transfer) {
     TRANSFER(m_SubComponents);
 }
 
-CustomComponent *CustomComponent::CreateComponent() {
-    CustomComponent *producedComponent = Object::Produce<CustomComponent>();
-    GetPersistentManagerPtr()->MakeObjectPersistent(producedComponent->GetInstanceID(), StoreFilePath);
-    return producedComponent;
+CustomComponent *CustomComponent::CreateComponent(const char* componentTypeName){
+    const HuaHuo::Type *shapeType = HuaHuo::Type::FindTypeByName(componentTypeName);
+    if (shapeType == NULL || !shapeType->IsDerivedFrom<CustomComponent>()) {
+        return NULL;
+    }
+
+    CustomComponent *component = (CustomComponent *) Object::Produce(shapeType);
+    return component;
 }
 
 bool CustomComponent::Apply(int frameId) {

@@ -125,7 +125,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         let baseShape = this.targetComponent.baseShape
         let _this = this
-        let actionDefs = huahuoEngine.getAction(baseShape).getActionDefs()
+        let actionDefs = this.targetComponent.getAction(baseShape).getActionDefs()
+
         let entries = []
         actionDefs.forEach((actionDef) => {
             let entry = {
@@ -149,6 +150,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
                         node.pos = lcanvas.convertEventToCanvasOffset(first_event)
                         lcanvas.graph.add(node)
 
+                        // TODO: Whatif we need to perform action on another object?
+                        _this.targetComponent.linkNodeWithTarget(node.id, baseShape)
                         node.setEventGraphComponent(_this.targetComponent)
                         node.setActionName(actionDef.actionName)
                     }
@@ -183,7 +186,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         let player = huahuoEngine.getActivePlayer()
         // Build up events
-        let events = player.getAllEvents().getAllEvents()
+        let events = player.getEventBus().getAllEvents()
         for(let eventName of events){
             eventNameEventBusMap.set(eventName, null)
         }
@@ -222,7 +225,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
                                 let node = LiteGraph.createNode(value.value) as EventNode
                                 if (node) {
-                                    let paramDefs = eventObject["eventEmitter"].getEventBus().getEventParameters(fullEventName) || []
+                                    let paramDefs = huahuoEngine.getEventBus(eventObject["eventSource"]).getEventParameters(fullEventName) || []
                                     for (let paramDef of paramDefs) {
                                         let outputSlot = node.addOutput(paramDef.parameterName, getLiteGraphTypeFromPropertyType(paramDef.parameterType))
                                         node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)

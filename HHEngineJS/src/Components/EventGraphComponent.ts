@@ -27,6 +27,13 @@ class EventGraphComponent extends AbstractComponent {
             this.rawObj.AddNodeIdShapeMap(nodeId, null)
     }
 
+    getActionTarget(nodeId: number){
+        let rawObj = this.rawObj.GetShapeByNodeId(nodeId)
+        let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
+
+        return this.getAction(baseShapeObj)
+    }
+
     getEventBus(nodeId: number){
         let rawObj = this.rawObj.GetShapeByNodeId(nodeId)
         if(rawObj == null)

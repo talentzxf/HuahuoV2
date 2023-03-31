@@ -170,7 +170,7 @@ interface BinaryResource{
 
 [NoDelete]
 interface CustomComponent{
-    static CustomComponent CreateComponent();
+    static CustomComponent CreateComponent([Const] DOMString componentName);
     long RegisterFloatValue([Const] DOMString fieldName, float initValue);
     long RegisterVector3Value([Const] DOMString fieldName, float x, float y, float z);
     long RegisterShapeArrayValue([Const] DOMString fieldName);

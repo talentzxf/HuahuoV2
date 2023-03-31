@@ -368,7 +368,7 @@ public:
             m_fieldNameFieldIndexMap[fieldName] = index;
             m_fieldIndexFieldNameMap[index] = fieldName;
 
-            CustomComponent *pComponent = CreateComponent();
+            CustomComponent *pComponent = CreateComponent("CustomComponent");
             // This type name should correspond to the GroupComponent in the ts side.
             pComponent->SetTypeName("GroupComponent");
 
@@ -384,7 +384,7 @@ public:
         return m_fieldNameFieldIndexMap.contains(fieldName);
     }
 
-    static CustomComponent *CreateComponent();
+    static CustomComponent *CreateComponent(const char* componentTypeName);
 
 private:
     std::map<string, int> m_fieldNameFieldIndexMap;
