@@ -109,7 +109,6 @@ class LayerShapesManager {
                 let shape = null
                 if (!shapes.has(baseShape.ptr)) { // TODO: This is duplicated with LoadShape.ts.
                     let jsShape = LoadShapeFromCppShape(baseShape)
-                    shapes.set(baseShape.ptr, jsShape)
                     if (parent)
                         jsShape.setParent(parent)
                     shape = jsShape

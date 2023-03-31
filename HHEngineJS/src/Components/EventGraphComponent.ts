@@ -64,16 +64,18 @@ class EventGraphComponent extends AbstractComponent {
         this.graph.start()
         this.graph["onAfterChange"] = this.saveGraph.bind(this)
 
-        let eventNodes = this.graph.findNodesByType(EventNode.name)
-        for(let node of eventNodes){
-            let eventNode = node as EventNode
-            eventNode.setEventGraphComponent(this)
-            eventNode.setupEvent(eventNode.properties.fullEventName)
-        }
+        if(needLoad){
+            let eventNodes = this.graph.findNodesByType(EventNode.getType())
+            for(let node of eventNodes){
+                let eventNode = node as EventNode
+                eventNode.setEventGraphComponent(this)
+                eventNode.setupEvent(eventNode.properties.fullEventName)
+            }
 
-        let actionNodes = this.graph.findNodesByType(ActionNode.name)
-        for(let actionNode of actionNodes){
-            (actionNode as ActionNode).setEventGraphComponent(this)
+            let actionNodes = this.graph.findNodesByType(ActionNode.getType())
+            for(let actionNode of actionNodes){
+                (actionNode as ActionNode).setEventGraphComponent(this)
+            }
         }
     }
 

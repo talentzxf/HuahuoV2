@@ -20,14 +20,21 @@ function LoadComponentForShape(shape:BaseShapeJS){
     }
 }
 
-function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true){
+function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true, addToLayer: boolean = true){
     let shapeConstructor = clzObjectFactory.GetClassConstructor(rawShapeObj.GetTypeName())
     let jsShape = shapeConstructor(rawShapeObj)
 
+    if(addToLayer){
+        let layer = jsShape.getLayer()
+        huahuoEngine.getActivePlayer().getLayerShapes(layer).set(jsShape.getRawShape().ptr, jsShape)
+    }
+
+    // TODO: Whatif there're dependencies across components?
     // Create all the component wrapper in the JS side.
     LoadComponentForShape(jsShape)
 
-    jsShape.awakeFromLoad()
+    if(awake)
+        jsShape.awakeFromLoad()
     return jsShape
 }
 
@@ -73,9 +80,7 @@ huahuoEngine.ExecuteAfterInited(() => {
 
         // Convention: Cpp class name is the JS class name.
         // TODO: Create a map of the shapename->JS class name mapping.
-        let jsShape = LoadShapeFromCppShape(baseShape)
-        let layer = jsShape.getLayer()
-        huahuoEngine.getActivePlayer().getLayerShapes(layer).set(jsShape.getRawShape().ptr, jsShape)
+        LoadShapeFromCppShape(baseShape)
     }
 
     huahuoEngine.GetInstance().RegisterEvent(eventName, baseShapeOnLoadHandler)

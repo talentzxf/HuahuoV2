@@ -10,6 +10,9 @@ class AbstractNode extends LGraphNode{
         return this.eventGraphComponent
     }
 
+    static getType(): string{
+        return "unknowNode"
+    }
 }
 
 export {AbstractNode}

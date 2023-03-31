@@ -57,7 +57,11 @@ class ActionNode extends AbstractNode {
             this.maxParamIdx = paramIdx
         }
     }
+
+    static getType(): string {
+        return "actions/actionNode"
+    }
 }
 
-LiteGraph.registerNodeType("actions/actionNode", ActionNode)
+LiteGraph.registerNodeType(ActionNode.getType(), ActionNode)
 export {ActionNode}

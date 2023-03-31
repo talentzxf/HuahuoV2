@@ -61,7 +61,7 @@ class MirrorComponent extends AbstractComponent {
 
         let rawObj = shape.rawObj
 
-        let duplicatedShape = LoadShapeFromCppShape(rawObj)
+        let duplicatedShape = LoadShapeFromCppShape(rawObj, true, false)
         duplicatedShape.setSelectedMeta(this.baseShape)
 
         duplicatedShape.isMirage = true

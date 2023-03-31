@@ -1,8 +1,6 @@
 import {LiteGraph, SerializedLGraphNode} from "litegraph.js";
 import {splitFullEventName} from "HHCommonComponents";
 import {AbstractNode} from "./AbstractNode";
-import {huahuoEngine} from "../../EngineAPI";
-import {eventBus} from "hhcommoncomponents";
 
 class EventNode extends AbstractNode {
     title = "EventNode"
@@ -24,7 +22,7 @@ class EventNode extends AbstractNode {
         this.getParamMap().set(paramIdx, outputSlot)
     }
 
-    getParamMap(){
+    getParamMap() {
         if (this.properties.paramIdxOutputSlotMap == null) {
             this.properties.paramIdxOutputSlotMap = new Map
         }
@@ -67,8 +65,12 @@ class EventNode extends AbstractNode {
 
         // this.setupEvent(this.properties.fullEventName)
     }
+
+    static getType(): string {
+        return "events/eventNode"
+    }
 }
 
-LiteGraph.registerNodeType("events/eventNode", EventNode)
+LiteGraph.registerNodeType(EventNode.getType(), EventNode)
 
 export {EventNode}
