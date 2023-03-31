@@ -27,6 +27,7 @@ CustomComponent *CustomComponent::CreateComponent(const char* componentTypeName)
     }
 
     CustomComponent *component = (CustomComponent *) Object::Produce(shapeType);
+    GetPersistentManagerPtr()->MakeObjectPersistent(component->GetInstanceID(), StoreFilePath);
     return component;
 }
 
