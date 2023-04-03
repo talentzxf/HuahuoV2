@@ -737,7 +737,8 @@ abstract class BaseShapeJS {
     afterWASMReady() {
         this.shapeFollowCurveFrameState = castObject(this.rawObj.GetFrameStateByTypeName("ShapeFollowCurveFrameState"), Module["ShapeFollowCurveFrameState"])
 
-        this.rawObj = castObject(this.rawObj, Module[this.getShapeName()]);
+        if(Module[this.getShapeName()]) // If the shape exists in cpp side, do the cast. Otherwise, use default BaseShape.
+            this.rawObj = castObject(this.rawObj, Module[this.getShapeName()]);
 
         this.shapeCenterSelector = new ShapeCenterSelector(this)
 

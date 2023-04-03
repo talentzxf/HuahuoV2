@@ -110,6 +110,7 @@ public:
         , mIndex(-1)
         , mIsVisible(true)
         , mRecordTransformationOfKeyFrame(true)
+        , mTypeName("")
     {
         AddFrameStateByName("ShapeTransformFrameState");
         AddFrameStateByName("ShapeSegmentFrameState");
@@ -191,7 +192,7 @@ public:
     Layer* GetLayer(bool assignDefaultIfNotExist = true);
 
     virtual const char* GetTypeName(){
-        return "Unknown";
+        return mTypeName.c_str();
     }
 
     float GetRotation(){
@@ -312,6 +313,7 @@ public:
 
 private:
     KeyFrame& GetKeyFrameFromCache(int idx);
+    std::string mTypeName;
 };
 
 template<class T> inline

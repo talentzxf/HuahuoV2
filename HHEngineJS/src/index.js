@@ -23,6 +23,7 @@ import {registerCustomFieldContentDivGeneratorConstructor} from "./Components/Ab
 import {BaseShapeActions} from "./EventGraph/BaseShapeActions";
 import {EventNode} from "./EventGraph/Nodes/EventNode";
 import {ActionNode} from "./EventGraph/Nodes/ActionNode";
+import {StarMirrorShapeJS} from "./Shapes/StarMirrorShapeJS";
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 import {LGraphCanvas, LiteGraph} from "litegraph.js";
@@ -103,5 +104,6 @@ export {
     EventNode,
     ActionNode,
     LGraphCanvas,
-    LiteGraph
+    LiteGraph,
+    StarMirrorShapeJS
 }

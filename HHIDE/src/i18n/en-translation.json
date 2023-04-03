@@ -60,7 +60,8 @@
     "selectedSegment": "Selected a segment, press Shift to move it vertically/horizontally",
     "rotateShape": "Rotating a shape, press Shift to gap rotate by 10",
     "drawLine": "Drawing line, press Shift to draw vertical/horizontal line",
-    "drawMirror": "Drawing mirror, press Shift to draw vertical/horizontal mirror"
+    "drawMirror": "Drawing mirror, press Shift to draw vertical/horizontal mirror",
+    "drawStarMirror": "Drawing central symmetric mirror"
   },
   "inspector": {
     "BornFrame": "Born Frame",

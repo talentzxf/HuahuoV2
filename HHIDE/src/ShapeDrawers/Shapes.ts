@@ -10,6 +10,7 @@ import {MirrorDrawer} from "./MirrorDrawer";
 import {IconShapeDrawer} from "./IconShapeDrawer";
 import {NailDrawer} from "./NailDrawer";
 import {ParticleSystemDrawer} from "./ParticleSystemDrawer";
+import {StarMirrorDrawer} from "./StarMirrorDrawer";
 
 let shapes = [
     new ShapeSelector(),
@@ -19,6 +20,7 @@ let shapes = [
     new CurveDrawer(),
     new TextDrawer(),
     new MirrorDrawer(),
+    new StarMirrorDrawer(),
     new AudioClipSelector(),
     new ImageSelector(),
     new IconShapeDrawer(),

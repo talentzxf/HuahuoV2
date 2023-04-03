@@ -17,6 +17,7 @@ INSTANTIATE_TEMPLATE_TRANSFER(BaseShape);
 template<class TransferFunction>
 void BaseShape::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
+    TRANSFER(mTypeName);
     TRANSFER(mShapeName);
     TRANSFER(mBornFrameId);
     TRANSFER(mIndex);
@@ -61,11 +62,14 @@ void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
 
 BaseShape *BaseShape::CreateShape(const char *shapeName) {
     const HuaHuo::Type *shapeType = HuaHuo::Type::FindTypeByName(shapeName);
-    if (shapeType == NULL || !shapeType->IsDerivedFrom<BaseShape>()) {
-        return NULL;
+    BaseShape *baseShape = NULL;
+    if (shapeType != NULL && shapeType->IsDerivedFrom<BaseShape>()) {
+         baseShape = (BaseShape *) Object::Produce(shapeType);
+    } else {
+        baseShape = (BaseShape *) Object::Produce<BaseShape>();
+        baseShape->mTypeName = shapeName;
     }
 
-    BaseShape *baseShape = (BaseShape *) Object::Produce(shapeType);
     return baseShape;
 }
 

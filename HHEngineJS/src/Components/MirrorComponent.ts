@@ -10,7 +10,6 @@ class MirrorComponent extends AbstractComponent {
 
     @PropertyValue(PropertyCategory.shapeArray)
     targetShapeArray
-
     targetShapeMirroredShapeMap: Map<number, BaseShapeJS> = new Map<number, BaseShapeJS>()
 
     paperShapeGroup: paper.Group
@@ -148,8 +147,6 @@ class MirrorComponent extends AbstractComponent {
 
             let newPosition = mirroredZero.add(offset)
             this.paperShapeGroup.position = newPosition
-
-            // this.paperShapeGroup.scaling = new paper.Point(0.0, -1.0)
 
             if (this.targetShapeArray) {
                 // Check if all target shapes are mirrored
