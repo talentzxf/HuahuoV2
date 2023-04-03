@@ -1,5 +1,4 @@
 import {PropertyType, getParameterNameAtIdx} from "hhcommoncomponents";
-import {getEventParams} from "hhcommoncomponents/dist/src/EventBus/EventBus";
 
 const graphActionSymbol = Symbol("graphAction")
 

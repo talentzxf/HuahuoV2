@@ -3,6 +3,7 @@ import {Property} from "hhcommoncomponents";
 import {BaseShapeJS} from "hhenginejs"
 import {sceneViewManager} from "../SceneView/SceneViewManager";
 import {ShapePicker} from "../ShapeDrawers/ShapePicker";
+import {HHToast} from "hhcommoncomponents";
 
 class ReferencePropertyDesc extends BasePropertyDesc{
 
@@ -47,12 +48,16 @@ class ReferencePropertyDesc extends BasePropertyDesc{
     }
 
     onShapePicked(selectedShape:BaseShapeJS){
-        this.onValueChanged(selectedShape)
-        this.property.inserter(selectedShape) // Callback the inserter
+        // Callback the inserter
+        if(this.property.inserter(selectedShape)){
+            this.onValueChanged(selectedShape)
 
-        let currentFocusedSceneView = sceneViewManager.getFocusedSceneView()
-        currentFocusedSceneView.resetDefaultShapeDrawer()
-        currentFocusedSceneView.endOfDrawingShape(this.shapePicker)
+            let currentFocusedSceneView = sceneViewManager.getFocusedSceneView()
+            currentFocusedSceneView.resetDefaultShapeDrawer()
+            currentFocusedSceneView.endOfDrawingShape(this.shapePicker)
+        }else{
+            HHToast.warn(i18n.t("toast.cantSelectSelf"))
+        }
     }
 
     onEntryAdded() {

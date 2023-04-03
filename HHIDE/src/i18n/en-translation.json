@@ -137,7 +137,8 @@
     "insufficientColorStop": "Can't delete the color stop. At least two color stops needed.",
     "insufficientKeyFrames": "Can't delete the keyframe. At least two keyframes needed",
     "nailDuplicated": "Duplicated nail, the shape has already been bound with another nail",
-    "nailMirageError": "Nail can't bind mirage."
+    "nailMirageError": "Nail can't bind mirage.",
+    "cantSelectSelf": "Can't select myself"
   },
   "hint": {
     "saveLocal": "Save project to local",

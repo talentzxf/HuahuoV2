@@ -49,6 +49,9 @@ class ShapeArrayHandler {
                 return component.rawObj.GetShapeArrayValue(fieldName).ContainShape(val.getRawShape())
             },
             inserter: (val: BaseShapeJS) => {
+                if(val == component.baseShape) // This will cause stack overflow.
+                    return false
+
                 if (!IsValidWrappedObject(component.rawObj.GetShapeArrayValue(fieldName))) {
                     component.rawObj.CreateShapeArrayValue(fieldName)
                 }
@@ -58,6 +61,8 @@ class ShapeArrayHandler {
                 if (component.baseShape)
                     component.baseShape.update(true)
                 component.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
+
+                return true
             },
             deleter: (val) => {
                 component.rawObj.GetShapeArrayValue(fieldName).DeleteShape(val)

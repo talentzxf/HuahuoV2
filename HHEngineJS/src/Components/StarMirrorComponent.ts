@@ -4,7 +4,7 @@ import {createDuplication} from "./MirrorComponent";
 import * as paper from "paper";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {BaseShapeActions} from "../EventGraph/BaseShapeActions";
-import {FloatPropertyConfig} from "hhcommoncomponents/dist/src/Properties/PropertyConfig";
+import {FloatPropertyConfig} from "hhcommoncomponents";
 
 @Component({compatibleShapes:["StarMirrorShapeJS"], maxCount:1})
 class StarMirrorComponent extends AbstractComponent{

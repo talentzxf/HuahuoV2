@@ -1,5 +1,4 @@
 import {PropertyType, Property, Logger} from "hhcommoncomponents"
-import {HHEventBus} from "hhcommoncomponents/dist/src/EventBus/EventBus";
 
 abstract class BasePropertyDesc{
     contentDiv: HTMLDivElement
