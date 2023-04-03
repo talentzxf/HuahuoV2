@@ -6,9 +6,6 @@ declare var Module:any
 class KeyFramesPropertyDiv extends BasePropertyDesc{
     intArray: HHIntArray
 
-    onValueChanged(val) {
-    }
-
     constructor(property) {
         super(property);
 

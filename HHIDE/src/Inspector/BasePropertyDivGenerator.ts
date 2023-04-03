@@ -1,4 +1,5 @@
 import {PropertyType, Property, Logger} from "hhcommoncomponents"
+import {HHEventBus} from "hhcommoncomponents/dist/src/EventBus/EventBus";
 
 abstract class BasePropertyDesc{
     contentDiv: HTMLDivElement
@@ -7,7 +8,14 @@ abstract class BasePropertyDesc{
     setter: Function
     handlerId: number
 
-    abstract onValueChanged(val)
+    onValueChanged(val){
+
+    }
+
+    // Called if this is a entry of an Array and when it's added
+    onEntryAdded(){
+
+    }
 
     protected constructor(property) {
         this.property = property

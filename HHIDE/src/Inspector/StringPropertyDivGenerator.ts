@@ -26,9 +26,6 @@ class StringPropertyDesc extends BasePropertyDesc{
         let newValue = this.input.value
         this.property.setter(newValue)
     }
-
-    onValueChanged(val) {
-    }
 }
 
 class StringPropertyDivGenerator extends BasePropertyDivGenerator{

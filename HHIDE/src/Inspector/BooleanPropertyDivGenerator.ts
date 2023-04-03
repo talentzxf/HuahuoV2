@@ -6,9 +6,6 @@ class BooleanPropertyDesc extends BasePropertyDesc{
     setter
 
     checkBox: HTMLInputElement
-    onValueChanged(val) {
-    }
-
     constructor(property: Property) {
         super(property);
         this.checkBox = document.createElement("input")

@@ -74,9 +74,6 @@ class GroupPropertyDesc extends BasePropertyDesc{
         this.createTabs(groupPropertyDiv, property)
         this.contentDiv.appendChild(groupPropertyDiv)
     }
-
-    onValueChanged(val) {
-    }
 }
 
 class GroupPropertyDivGenerator extends BasePropertyDivGenerator{

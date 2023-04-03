@@ -12,9 +12,6 @@ class SubComponentsPropertyDesc extends ArrayPropertyDesc {
         super(property);
     }
 
-    onValueChanged(val) {
-    }
-
     addEntry(componentEntry?): BasePropertyDesc {
         let subComponentTypeName = this.property.config.subComponentTypeName
 

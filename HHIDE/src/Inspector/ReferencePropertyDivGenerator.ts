@@ -55,6 +55,11 @@ class ReferencePropertyDesc extends BasePropertyDesc{
         currentFocusedSceneView.endOfDrawingShape(this.shapePicker)
     }
 
+    onEntryAdded() {
+        super.onEntryAdded();
+        this.beginToPickupShape()
+    }
+
     onValueChanged(val) {
         if(val == null)
             return;

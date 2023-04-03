@@ -14,9 +14,6 @@ class ButtonPropertyDesc extends BasePropertyDesc{
     getTitleDiv(): HTMLElement {
         return null;
     }
-
-    onValueChanged(val) {
-    }
 }
 
 class ButtonPropertyDivGenerator extends BasePropertyDivGenerator{

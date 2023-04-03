@@ -29,9 +29,6 @@ class PanelPropertyDesc extends BasePropertyDesc {
             }
         }
     }
-
-    onValueChanged(val) {
-    }
 }
 
 class PanelPropertyDivGenerator extends BasePropertyDivGenerator {

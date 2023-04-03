@@ -47,14 +47,12 @@ class ArrayPropertyDesc extends BasePropertyDesc{
 
         this.arrayEntryDivs.appendChild(generatedDiv)
 
+        propertyDesc.onEntryAdded()
+
         return propertyDesc
 
     }
-
-    onValueChanged(val) {
-    }
 }
-
 
 class ArrayPropertyDivGenerator extends BasePropertyDivGenerator{
     generatePropertyDesc(property): BasePropertyDesc {

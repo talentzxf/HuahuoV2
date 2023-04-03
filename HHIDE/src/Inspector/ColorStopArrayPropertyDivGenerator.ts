@@ -3,10 +3,6 @@ import {HHColorStopArrayInput} from "./InputComponents/HHColorStopArray";
 
 class ColorStopArrayPropertyDiv extends BasePropertyDesc{
     colorStopArrayDiv: HHColorStopArrayInput
-
-    onValueChanged(val) {
-    }
-
     constructor(property) {
         super(property);
 
