@@ -96,6 +96,8 @@ abstract class BaseShapeJS {
 
     get pivotPosition(): paper.Point {
         if (!this.followCurve) {
+            if(this.action.isPositionValid)
+                return this.action.position
             return this.rawObj.GetGlobalPivotPosition()
         }
 
