@@ -8,8 +8,17 @@ import {BaseShapeActions} from "../EventGraph/BaseShapeActions";
 
 class ClonedShapeEntry{
     shape: BaseShapeJS
+    targetShape: BaseShapeJS
     center: paper.Point
     angle: number
+}
+
+function updateEntry(entry: ClonedShapeEntry){
+    let originalPosition = entry.targetShape.position
+    let targetPosition = originalPosition.rotate(entry.angle, entry.center)
+
+    entry.shape.getAction().setPosition(targetPosition.x, targetPosition.y)
+    entry.shape.update()
 }
 
 @Component({compatibleShapes:["StarMirrorShapeJS"], maxCount:1})
@@ -55,6 +64,7 @@ class StarMirrorComponent extends AbstractComponent{
 
             this.mirroredShapeShapeEntryMap.set(duplicatedShape, {
                 shape: duplicatedShape,
+                targetShape:targetShape,
                 center: centerPosition,
                 angle: currentAngle
             })
@@ -90,7 +100,8 @@ class StarMirrorComponent extends AbstractComponent{
                         }
 
                         for(let mirroredShape of this.getMirroredShapeSet(targetShape.rawObj.ptr)){
-
+                            let cloneShapeEntry = this.mirroredShapeShapeEntryMap.get(mirroredShape)
+                            updateEntry(cloneShapeEntry)
                         }
                     }
                 }
