@@ -114,7 +114,8 @@
       "velocityPhiRange": "速度角度(xz)范围",
       "particleShape": "粒子形状",
       "particleDirection": "粒子朝向",
-      "eventGraph": "事件逻辑图"
+      "eventGraph": "事件逻辑图",
+      "starMirrorInterval": "中心对称间隔"
     },
     "nail": {
       "isStatic": "是否静态"

@@ -114,7 +114,8 @@
       "velocityPhiRange": "Velocity Angle(xz) Range",
       "particleShape": "Particle Shape",
       "particleDirection": "Particle Direction",
-      "eventGraph": "Event Graph"
+      "eventGraph": "Event Graph",
+      "starMirrorInterval": "Star Mirror Interval"
     },
     "nail": {
       "isStatic": "Is Static"

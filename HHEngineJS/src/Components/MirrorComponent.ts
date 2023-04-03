@@ -5,6 +5,32 @@ import {mirrorPoint} from "hhcommoncomponents";
 import * as paper from "paper"
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 
+function createDuplication(targetShape, baseShape){
+    /*
+    let duplicatedShape = targetShape.duplicate()
+    // Move the position to the target position.
+    duplicatedShape.position = mirrorPoint(duplicatedShape.position,
+        this.p1, this.p2)
+
+    duplicatedShape.setSelectedMeta(this.baseShape)
+    duplicatedShape.setIsMovable(false)
+    return duplicatedShape
+     */
+
+    let rawObj = targetShape.rawObj
+
+    let duplicatedShape = LoadShapeFromCppShape(rawObj, true, false)
+    duplicatedShape.setSelectedMeta(baseShape)
+
+    duplicatedShape.isMirage = true
+
+    duplicatedShape.registerValueChangeHandler("*")(()=>{
+        targetShape.update(true) // update the original shape.
+    })
+
+    return duplicatedShape
+}
+
 @Component({compatibleShapes:["MirrorShapeJS"], maxCount:1})
 class MirrorComponent extends AbstractComponent {
 
@@ -46,36 +72,8 @@ class MirrorComponent extends AbstractComponent {
         }
     }
 
-    private _createDuplication(shape){
-        /*
-        let duplicatedShape = targetShape.duplicate()
-        // Move the position to the target position.
-        duplicatedShape.position = mirrorPoint(duplicatedShape.position,
-            this.p1, this.p2)
-
-        duplicatedShape.setSelectedMeta(this.baseShape)
-        duplicatedShape.setIsMovable(false)
-        return duplicatedShape
-         */
-
-        let rawObj = shape.rawObj
-
-        let duplicatedShape = LoadShapeFromCppShape(rawObj, true, false)
-        duplicatedShape.setSelectedMeta(this.baseShape)
-
-        duplicatedShape.isMirage = true
-
-        duplicatedShape.registerValueChangeHandler("*")(()=>{
-            shape.update(true) // update the original shape.
-        })
-
-        this.paperShapeGroup.addChild(duplicatedShape.paperItem)
-
-        return duplicatedShape
-    }
-
-    createDuplication(shape){
-        let duplicatedShape = this._createDuplication(shape)
+    duplicateShape(shape){
+        let duplicatedShape = createDuplication(shape, this.baseShape)
         this.targetShapeMirroredShapeMap.set(shape.rawObj.ptr, duplicatedShape)
 
         this.paperShapeGroup.addChild(duplicatedShape.paperItem)
@@ -153,13 +151,13 @@ class MirrorComponent extends AbstractComponent {
                 for (let targetShape of this.targetShapeArray) {
                     if(targetShape != null){ // Target shape might be null if the target shape has not been loaded yet.
                         if (!this.targetShapeMirroredShapeMap.has(targetShape.rawObj.ptr)) {
-                            this.createDuplication(targetShape)
+                            this.duplicateShape(targetShape)
                         }
 
                         let duplicatedShape = this.targetShapeMirroredShapeMap.get(targetShape.rawObj.ptr)
                         if(duplicatedShape.getBornStoreId() != this.baseShape.getBornStoreId()){
                             duplicatedShape.removePaperObj()
-                            duplicatedShape = this.createDuplication(targetShape)
+                            duplicatedShape = this.duplicateShape(targetShape)
                         }
 
                         duplicatedShape.paperShape.visible = targetShape.paperShape.visible
@@ -186,4 +184,4 @@ class MirrorComponent extends AbstractComponent {
     }
 }
 
-export {MirrorComponent}
+export {MirrorComponent, createDuplication}
