@@ -2,7 +2,7 @@ import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {NailShapeJS} from "../Shapes/NailShapeJS";
 import {PropertyCategory} from "./PropertySheetBuilder";
 
-@Component({compatibleShapes: ["BaseSolidShape"], maxCount: 1})
+@Component({compatibleShapes: ["BaseSolidShape"], maxCount: 1, canBeFound: false})
 class NailComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.shapeArray) // It should actually be NailShape array. But as NailShape is actually also BaseShape, so it's fine.
     nails

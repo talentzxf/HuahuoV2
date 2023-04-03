@@ -17,8 +17,6 @@ class EventGraphComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.customField)
     eventGraph
 
-    actions: Map<BaseShapeJS, BaseShapeActions> = new Map
-
     graph: LGraph
 
     // If shape is null, this node is listening to global event.
@@ -33,7 +31,7 @@ class EventGraphComponent extends AbstractComponent {
         let rawObj = this.rawObj.GetShapeByNodeId(nodeId)
         let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
 
-        return this.getAction(baseShapeObj)
+        return baseShapeObj.getAction()
     }
 
     getEventBus(nodeId: number){
@@ -81,21 +79,6 @@ class EventGraphComponent extends AbstractComponent {
 
     getGraph() {
         return this.graph
-    }
-
-    getAction(baseShape: BaseShapeJS){
-        if(!this.actions.has(baseShape)){
-            this.actions.set(baseShape, new BaseShapeActions(baseShape))
-        }
-        return this.actions.get(baseShape)
-    }
-
-    override afterUpdate(force: boolean = false) {
-        super.afterUpdate(force);
-
-        this.actions.forEach(action => {
-            action.execute()
-        })
     }
 }
 

@@ -6,6 +6,7 @@ class BaseShapeActions extends AbstractGraphAction{
     targetShape:BaseShapeJS
 
     rotation = 0
+    isRotationValid:boolean = false
 
     constructor(targetShape: BaseShapeJS) {
         super();
@@ -14,12 +15,16 @@ class BaseShapeActions extends AbstractGraphAction{
     }
 
     @GraphAction()
-    rotateShape(@ActionParam(PropertyType.NUMBER) degree){
-        this.rotation = degree
+    resetRotation(){
+        this.rotation = 0.0
+        this.isRotationValid = false
     }
 
-    execute(){
-        this.targetShape.rotateAroundPivot(this.rotation, false)
+    @GraphAction()
+    rotateShape(@ActionParam(PropertyType.NUMBER) degree){
+        this.rotation += degree
+
+        this.isRotationValid = true
     }
 }
 

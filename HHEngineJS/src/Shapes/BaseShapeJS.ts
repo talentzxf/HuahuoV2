@@ -5,6 +5,7 @@ import * as paper from "paper";
 import {ShapeCenterSelector} from "./ShapeCenterSelector";
 import {ValueChangeHandler} from "./ValueChangeHandler";
 import {AbstractComponent} from "../Components/AbstractComponent";
+import {BaseShapeActions} from "../EventGraph/BaseShapeActions";
 
 let BASIC_COMPONENTS = "BasicComponents"
 
@@ -61,6 +62,13 @@ abstract class BaseShapeJS {
     private lastRenderFrame = -1
 
     private followCurveEventRegistered = false
+
+    // Purpose of action is to store temporary results during system running. All the status in the action won't be persisted.
+    private action: BaseShapeActions = new BaseShapeActions(this)
+
+    public getAction(){
+        return this.action
+    }
 
     set isTransformationPermanent(isPermanent: boolean) {
         this.rawObj.SetRecordTransformationOfKeyFrame(isPermanent)
@@ -229,6 +237,8 @@ abstract class BaseShapeJS {
     }
 
     get rotation(): number {
+        if(this.action.isRotationValid)
+            return this.action.rotation
         return this.rawObj.GetRotation()
     }
 
@@ -1151,7 +1161,7 @@ abstract class BaseShapeJS {
 
     updatePositionAndRotation() {
         // Reset the rotation.
-        this.paperItem.rotation = this.rawObj.GetRotation();
+        this.paperItem.rotation = this.rotation;
 
         this.paperItem.scaling = new paper.Point(1.0, 1.0)
 
@@ -1160,7 +1170,7 @@ abstract class BaseShapeJS {
         let globalPivotPosition = this.pivotPosition
         let localPivotPosition = this.rawObj.GetLocalPivotPosition()
 
-        let radian = this.rawObj.GetRotation() / 180 * Math.PI
+        let radian = this.rotation / 180 * Math.PI
 
         let shapeZero = this.backCalculateZeroPoint(localPivotPosition, globalPivotPosition, -radian)
 
@@ -1174,7 +1184,7 @@ abstract class BaseShapeJS {
         this.applySegments()
 
         // Reset the rotation.
-        this.paperItem.rotation = this.rawObj.GetRotation();
+        this.paperItem.rotation = this.rotation;
 
         if (this._isUpdatePos) {
             this.updatePositionAndRotation()
