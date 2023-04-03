@@ -37,7 +37,8 @@ class CppClassObjectFactory{
             let isCompatible = true
             if(componentConfig){
                 let isCompatibleWithShape = false
-                if(componentConfig.canBeFound && componentConfig.compatibleShapes && componentConfig.compatibleShapes.length > 0){
+                let canBeFound = componentConfig.hasOwnProperty("canBeFound")?componentConfig.canBeFound: true
+                if(canBeFound && componentConfig.compatibleShapes && componentConfig.compatibleShapes.length > 0){
                     for(let shapeName of componentConfig.compatibleShapes){
                         if(isInheritedFromClzName(targetObj, shapeName)){
                             isCompatibleWithShape = true
