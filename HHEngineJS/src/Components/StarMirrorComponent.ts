@@ -76,7 +76,10 @@ class StarMirrorComponent extends AbstractComponent{
             }
 
             targetShape.registerValueChangeHandler("*")(()=>{
-                duplicatedShape.update(true)
+                for(let shape of _this.getMirroredShapeSet(targetShape.getRawShape().ptr)){
+                    let entry = _this.mirroredShapeShapeEntryMap.get(shape)
+                    updateEntry(entry)
+                }
             })
 
             currentAngle += this.starMirrorInterval
