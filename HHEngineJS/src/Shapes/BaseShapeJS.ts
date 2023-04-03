@@ -367,11 +367,7 @@ abstract class BaseShapeJS {
     }
 
     set position(val: paper.Point) {
-        if (!this._isMirage)
-            this.setParentLocalPosition(val)
-        else {
-            this.paperShape.position = val
-        }
+        this.setParentLocalPosition(val)
     }
 
     set scaling(val: paper.Point) {

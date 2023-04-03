@@ -125,6 +125,10 @@ class Inspector extends HTMLElement{
         let parentContainer = findParentSideBar(this)
         let titleBarHeight = parentContainer.querySelector(".title_tabs").offsetHeight
         let parentHeight = parentContainer.clientHeight - titleBarHeight;
+        if(parentHeight == 0){
+            parentHeight = 500 // Restore to default height.
+        }
+
         this.contentScrollerDiv.style.height = (parentHeight) + "px"
 
         while(this.contentScrollerDiv.firstChild){
