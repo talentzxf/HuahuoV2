@@ -30,6 +30,8 @@ function updateEntry(entry: ClonedShapeEntry){
 
         parentGroup.rotate(entry.angle, entry.centerObject.position)
         entry.shape.update()
+
+        entry.shape.paperShape.visible = entry.targetShape.paperShape.visible
     }else{
         entry.shape.hide()
     }
@@ -136,6 +138,23 @@ class StarMirrorComponent extends AbstractComponent{
             if(this.targetShapeArray){
                 for(let targetShape of this.targetShapeArray){
                     if(targetShape != null){
+                        let needCleanUp = false
+                        for(let mirroredShape of this.getMirroredShapeArray(targetShape)){
+                            // The shape has been moved to another store.
+                            // Recreate all the mirages.
+                            if(mirroredShape.getBornStoreId() != this.baseShape.getBornStoreId()){
+                                needCleanUp = true
+                            }
+                        }
+
+                        if(needCleanUp){
+                            for(let mirroredShape of this.getMirroredShapeArray(targetShape)){
+                                this.mirroredShapeShapeEntryMap.delete(mirroredShape)
+                                mirroredShape.removePaperObj()
+                            }
+                            this.targetShapeMirroredShapeSetMap.set(targetShape.getRawShape().ptr, new Array())
+                        }
+                        
                         this.updateMirroredShapeArray(targetShape)
 
                         for(let mirroredShape of this.getMirroredShapeArray(targetShape)){
@@ -146,6 +165,18 @@ class StarMirrorComponent extends AbstractComponent{
                 }
             }
         }
+    }
+
+    override cleanUp() {
+        super.cleanUp();
+        for(let [mirroredShape, entry] of this.mirroredShapeShapeEntryMap){
+            mirroredShape.removePaperObj()
+        }
+
+        this.paperShapeGroup.remove()
+
+        this.mirroredShapeShapeEntryMap = new Map
+        this.targetShapeMirroredShapeSetMap = new Map
     }
 }
 
