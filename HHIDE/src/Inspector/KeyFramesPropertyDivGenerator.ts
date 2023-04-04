@@ -1,13 +1,16 @@
 import {BasePropertyDesc, BasePropertyDivGenerator} from "./BasePropertyDivGenerator";
 import {HHIntArray} from "./InputComponents/HHIntArray";
-import {huahuoEngine} from "hhenginejs";
+import {huahuoEngine, BaseShapeJS} from "hhenginejs";
 declare var Module:any
 
 class KeyFramesPropertyDiv extends BasePropertyDesc{
     intArray: HHIntArray
 
+    targetObject: BaseShapeJS
     constructor(property) {
         super(property);
+
+        this.targetObject = property.targetObject
 
         this.intArray = new HHIntArray(property.getter, property.inserter, property.updater, property.deleter, this.titleDiv)
         this.contentDiv.appendChild(this.intArray)
@@ -18,7 +21,9 @@ class KeyFramesPropertyDiv extends BasePropertyDesc{
     }
 
     onKeyFrameChanged(){
-        this.intArray.refresh()
+        if(huahuoEngine.isValidShape(this.targetObject)){
+            this.intArray.refresh()
+        }
     }
 }
 

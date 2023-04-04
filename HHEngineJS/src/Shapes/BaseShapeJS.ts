@@ -866,12 +866,6 @@ abstract class BaseShapeJS {
             }
         })
 
-        // componentConfigSheet.config.children.push({
-        //     key:"inspector.property.keyframes",
-        //     type: PropertyType.KEYFRAMES,
-        //     getter: this.getTransformKeyFrames.bind(this),
-        //     setter: this.insertTransformKeyFrame.bind(this)
-        // })
         this.propertySheet.addProperty(componentConfigSheet)
     }
 
@@ -907,7 +901,8 @@ abstract class BaseShapeJS {
                     for (let componentName of basicComponents) {
                         _this.updateComponentKeyFrame(componentName).bind(_this)(type, params)
                     }
-                }
+                },
+                targetObject: this
             }
         } else {
             return {
@@ -916,13 +911,15 @@ abstract class BaseShapeJS {
                 getter: this.getComponentKeyFrames(componentName).bind(this),
                 setter: this.insertComponentKeyFrame(componentName).bind(this),
                 deleter: this.deleteComponentKeyFrame(componentName).bind(this),
-                updater: this.updateComponentKeyFrame(componentName).bind(this)
+                updater: this.updateComponentKeyFrame(componentName).bind(this),
+                targetObject: this
             }
         }
     }
 
     updateComponentKeyFrame(componentName) {
         let _this = this
+
         let frameStateRawObj = this.rawObj.GetFrameStateByTypeName(componentName)
 
         return function (type: string, params: object) {

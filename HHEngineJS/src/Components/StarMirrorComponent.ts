@@ -18,6 +18,8 @@ function updateEntry(entry: ClonedShapeEntry){
     // let targetPosition = originalPosition.rotate(entry.angle, entry.center)
     //
     // entry.shape.getAction().setPosition(targetPosition.x, targetPosition.y)
+    let parentGroup = entry.shape.paperShape.parent
+    parentGroup.rotate(entry.angle, entry.center)
     entry.shape.update()
 }
 
@@ -73,7 +75,6 @@ class StarMirrorComponent extends AbstractComponent{
             parentGroup.applyMatrix = false
             parentGroup.data.meta = this.baseShape
             parentGroup.addChild(duplicatedShape.paperItem)
-            parentGroup.rotate(currentAngle, centerPosition)
 
             this.paperShapeGroup.addChild(parentGroup)
             let _this = this

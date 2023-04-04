@@ -23,7 +23,7 @@ class Property {
     key: string
     type: PropertyType
     component: any
-    setter?: Function // Setter will be used as inserter if the property is an array.
+    setter?: Function
     getter?: Function
     updater?: Function // updater and deleter are used if the property is an array.
     deleter?: Function

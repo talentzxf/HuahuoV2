@@ -6,7 +6,7 @@ import {dataURItoBlob, eventBus} from "hhcommoncomponents";
 // @ts-ignore
 import * as ti from "taichi.js/dist/taichi"
 import {BaseShapeEvents} from "./EventGraph/BaseShapeEvents";
-import {BaseShapeActions} from "./EventGraph/BaseShapeActions";
+import {IsValidWrappedObject} from "hhcommoncomponents";
 // import * as ti from "taichi.js/dist/taichi.dev"
 
 class EngineAPI{
@@ -27,6 +27,12 @@ class EngineAPI{
 
     eventEmitterCache = new Map
     actionCache = new Map
+
+    deletedShapePtrs = new Set
+
+    isPtrDeleted(shapePtr){
+        return this.deletedShapePtrs.has(shapePtr)
+    }
 
     getEvent(shape){
         if(!this.eventEmitterCache.has(shape))
@@ -173,15 +179,31 @@ class EngineAPI{
     }
 
     registerEventListener(namespace, eventName, func){
-        eventBus.addEventHandler(namespace, eventName, func)
+        return eventBus.addEventHandler(namespace, eventName, func)
+    }
+
+    unregisterEventListener(namespace, eventName, handlerId){
+        eventBus.removeEventHandler(namespace, eventName, handlerId)
     }
 
     dispatchEvent(namespace, eventName, ...params){
         eventBus.triggerEvent(namespace, eventName, ...params)
     }
 
-    DestroyShape(shape){
-        this.cppEngine.DestroyShape(shape)
+    isValidShape(shape){
+        if(!IsValidWrappedObject(shape.rawObj))
+            return false
+        if(this.isPtrDeleted(shape.rawObj.ptr))
+            return false
+
+        return true
+    }
+
+    DestroyShape(rawShape){
+        if(!this.isPtrDeleted(rawShape.ptr)){
+            this.deletedShapePtrs.add(rawShape.ptr)
+            this.cppEngine.DestroyShape(rawShape)
+        }
     }
 
     getProjectWidth(){
