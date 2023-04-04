@@ -66,7 +66,7 @@ abstract class BaseShapeJS {
     // Purpose of action is to store temporary results during system running. All the status in the action won't be persisted.
     private action: BaseShapeActions = new BaseShapeActions(this)
 
-    public getAction(){
+    public getAction() {
         return this.action
     }
 
@@ -96,7 +96,7 @@ abstract class BaseShapeJS {
 
     get pivotPosition(): paper.Point {
         if (!this.followCurve) {
-            if(this.action.isPositionValid)
+            if (this.action.isPositionValid)
                 return this.action.position
             return this.rawObj.GetGlobalPivotPosition()
         }
@@ -239,7 +239,7 @@ abstract class BaseShapeJS {
     }
 
     get rotation(): number {
-        if(this.action.isRotationValid)
+        if (this.action.isRotationValid)
             return this.action.rotation
         return this.rawObj.GetRotation()
     }
@@ -323,7 +323,7 @@ abstract class BaseShapeJS {
         let zeroP = new paper.Point(0, 0)
         this.paperItem.rotate(angle, this.pivotPosition)
 
-        if(persist){
+        if (persist) {
             let newRotationDegree = this.rawObj.GetRotation() + angle
             this.rawObj.SetRotation(newRotationDegree)
 
@@ -735,7 +735,7 @@ abstract class BaseShapeJS {
     afterWASMReady() {
         this.shapeFollowCurveFrameState = castObject(this.rawObj.GetFrameStateByTypeName("ShapeFollowCurveFrameState"), Module["ShapeFollowCurveFrameState"])
 
-        if(Module[this.getShapeName()]) // If the shape exists in cpp side, do the cast. Otherwise, use default BaseShape.
+        if (Module[this.getShapeName()]) // If the shape exists in cpp side, do the cast. Otherwise, use default BaseShape.
             this.rawObj = castObject(this.rawObj, Module[this.getShapeName()]);
 
         this.shapeCenterSelector = new ShapeCenterSelector(this)
@@ -871,9 +871,7 @@ abstract class BaseShapeJS {
     }
 
     getComponentConfigSheet(componentName) {
-
         let _this = this
-
         if (componentName == BASIC_COMPONENTS) {
             return {
                 key: "inspector." + componentName,
@@ -903,7 +901,7 @@ abstract class BaseShapeJS {
                         _this.updateComponentKeyFrame(componentName).bind(_this)(type, params)
                     }
                 },
-                targetObject: this
+                targetObject: _this
             }
         } else {
             return {
@@ -913,7 +911,7 @@ abstract class BaseShapeJS {
                 setter: this.insertComponentKeyFrame(componentName).bind(this),
                 deleter: this.deleteComponentKeyFrame(componentName).bind(this),
                 updater: this.updateComponentKeyFrame(componentName).bind(this),
-                targetObject: this
+                targetObject: _this
             }
         }
     }
@@ -1020,10 +1018,10 @@ abstract class BaseShapeJS {
         }
     }
 
-    executeAfterPaperItemReady(func){
-        if(this.paperItem){
+    executeAfterPaperItemReady(func) {
+        if (this.paperItem) {
             func(this.paperItem)
-        }else{
+        } else {
             this.registerValueChangeHandler("paperItemReady")(func)
         }
     }
@@ -1200,7 +1198,7 @@ abstract class BaseShapeJS {
 
         // Execute after update of all components
         for (let component of this.customComponents) {
-            if(component.isComponentActive()){
+            if (component.isComponentActive()) {
                 component.afterUpdate(force)
             }
         }

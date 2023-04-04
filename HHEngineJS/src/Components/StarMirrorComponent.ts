@@ -19,6 +19,13 @@ function updateEntry(entry: ClonedShapeEntry){
     //
     // entry.shape.getAction().setPosition(targetPosition.x, targetPosition.y)
     let parentGroup = entry.shape.paperShape.parent
+
+    parentGroup.rotation = 0.0
+
+    let pointZeroPosition = parentGroup.localToGlobal(new paper.Point(0,0))
+    parentGroup.position.x -= pointZeroPosition.x
+    parentGroup.position.y -= pointZeroPosition.y
+    
     parentGroup.rotate(entry.angle, entry.center)
     entry.shape.update()
 }
@@ -29,7 +36,7 @@ class StarMirrorComponent extends AbstractComponent{
     @PropertyValue(PropertyCategory.shapeArray)
     targetShapeArray
 
-    @PropertyValue(PropertyCategory.interpolateFloat, 120.0, {min: 1.0, max: 359.0, step: 1.0} as FloatPropertyConfig)
+    @PropertyValue(PropertyCategory.interpolateFloat, 100.0, {min: 1.0, max: 359.0, step: 1.0} as FloatPropertyConfig)
     starMirrorInterval
 
     targetShapeMirroredShapeSetMap: Map<number, Set<BaseShapeJS>> = new Map<number, Set<BaseShapeJS>>()
