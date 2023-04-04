@@ -207,6 +207,8 @@ class AbstractComponent {
 
         keyFramePropertySheet["getter"] = this.getKeyFrames.bind(this)
         keyFramePropertySheet["targetObject"] = this.baseShape
+        keyFramePropertySheet["deleter"] = this.baseShape.deleteComponentKeyFrame(this.getTypeName()).bind(this.baseShape)
+
         componentConfigSheet.config.children.push(keyFramePropertySheet)
 
         return componentConfigSheet

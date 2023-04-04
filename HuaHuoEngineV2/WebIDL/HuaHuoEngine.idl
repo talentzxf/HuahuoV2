@@ -280,6 +280,7 @@ interface BaseShape{
     void SetIndex(long index);
     long GetBornFrameId();
 
+    void SyncBornFrameIdWithComponents();
     void RefreshKeyFrameCache();
     long GetKeyFrameCount();
     long GetKeyFrameAtIdx(long idx);

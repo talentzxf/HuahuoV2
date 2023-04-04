@@ -244,8 +244,15 @@ AbstractFrameState *BaseShape::AddFrameStateByName(const char *frameStateName) {
 }
 
 AbstractFrameState *BaseShape::GetFrameStateByTypeName(const char *frameStateName) {
-    const HuaHuo::Type *componentType = HuaHuo::Type::FindTypeByName(frameStateName);
-    return QueryFrameStateByType(componentType);
+//    const HuaHuo::Type *componentType = HuaHuo::Type::FindTypeByName(frameStateName);
+//    return QueryFrameStateByType(componentType);
+
+    for(auto frameStateItr = mFrameStates.begin(); frameStateItr != mFrameStates.end(); frameStateItr++){
+        if(strcmp(frameStateItr->GetComponentPtr()->GetTypeName(), frameStateName) == 0)
+            return frameStateItr->GetComponentPtr();
+    }
+
+    return NULL;
 }
 
 template<class TransferFunction>

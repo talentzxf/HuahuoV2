@@ -270,6 +270,21 @@ public:
 
     void AddAnimationOffset(int offset);
 
+    // If one keyframe is deleted, we need to set the born frame as the smallest of all it's compnents.
+    void SyncBornFrameIdWithComponents(){
+        int smallestFrameId = MAX_FRAMES;
+        for (Container::const_iterator i = mFrameStates.begin(); i != mFrameStates.end(); ++i) {
+            int curMinFrameId = i->GetComponentPtr()->GetMinFrameId();
+            if(curMinFrameId < smallestFrameId){
+                smallestFrameId = curMinFrameId;
+            }
+        }
+
+        if(this->mBornFrameId < smallestFrameId){
+            this->SetBornFrameId(smallestFrameId);
+        }
+    }
+
     void RefreshKeyFrameCache(){
         Container::const_iterator end = mFrameStates.end();
 
@@ -289,6 +304,7 @@ public:
 
         mKeyFrameCache.clear();
 
+        int smallestKeyFrameId = -1;
         for(KeyFrameIdentifier keyFrameIdentifier: allKeyFrames){
             mKeyFrameCache.push_back(keyFrameIdentifier);
         }

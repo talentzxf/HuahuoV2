@@ -960,6 +960,8 @@ abstract class BaseShapeJS {
             let component = _this.rawObj.GetFrameStateByTypeName(componentName)
             component.DeleteKeyFrame(frameId)
 
+            _this.rawObj.SyncBornFrameIdWithComponents()
+
             _this.update(true)
         }
     }

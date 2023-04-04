@@ -31,7 +31,8 @@ function updateEntry(entry: ClonedShapeEntry){
         parentGroup.rotate(entry.angle, entry.centerObject.position)
         entry.shape.update()
 
-        entry.shape.paperShape.visible = entry.targetShape.paperShape.visible
+        if(entry.targetShape && entry.targetShape.paperShape)
+            entry.shape.paperShape.visible = entry.targetShape.paperShape.visible
     }else{
         entry.shape.hide()
     }
