@@ -265,7 +265,7 @@ class HHIntArray extends HTMLElement implements RefreshableComponent {
 
     onKeyUp(evt: KeyboardEvent) {
         if (evt.code == "Delete") {
-            if (this.timelinePointers.length <= 2) {
+            if (this.timelinePointers.length <= 1) {
                 HHToast.warn(i18n.t("toast.insufficientKeyFrames"))
             } else {
                 let tobeDeletedPointer = this.selectedPointer
