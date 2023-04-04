@@ -49,9 +49,9 @@ class EventGraphComponent extends AbstractComponent {
             this.eventGraphJSON = graphString
     }
 
-    constructor(rawObj?) {
+    constructor(rawObj?, isMirage:boolean = false) {
         let needLoad = rawObj ? true : false;
-        super(rawObj);
+        super(rawObj, isMirage);
 
         this.graph = new LGraph()
         if (this.eventGraphJSON && this.eventGraphJSON.length > 0) {

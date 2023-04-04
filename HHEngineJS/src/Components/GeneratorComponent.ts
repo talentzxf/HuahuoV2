@@ -17,8 +17,8 @@ class GeneratorComponent extends AbstractComponent {
 
     paperShapeGroup: paper.Group
 
-    constructor(rawObj?) {
-        super(rawObj);
+    constructor(rawObj?, isMirage = false) {
+        super(rawObj, isMirage);
 
         this.paperShapeGroup = new paper.Group()
         this.paperShapeGroup.applyMatrix = false

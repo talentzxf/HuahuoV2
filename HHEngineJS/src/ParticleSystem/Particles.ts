@@ -68,8 +68,8 @@ class Particles extends AbstractComponent {
     // This buffer is only used for IDE. During runtime, no need to have this one.
     frameDataBuffers
 
-    constructor(rawObj?) {
-        super(rawObj)
+    constructor(rawObj?, isMirage = false) {
+        super(rawObj, isMirage)
 
         let particleType = huahuoEngine.ti.types.struct({
             velocity: huahuoEngine.ti.types.vector(huahuoEngine.ti.f32, 3),

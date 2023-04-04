@@ -9,8 +9,8 @@ import {clzObjectFactory} from "../CppClassObjectFactory";
 class GroupComponent extends AbstractComponent {
     private _subComponents: Array<AbstractComponent> // This array can't be inited in the constructor.
 
-    constructor(rawObj?) {
-        super(rawObj);
+    constructor(rawObj?, isMirage = false) {
+        super(rawObj, isMirage);
 
         if(rawObj){
             let subComponentCount = this.rawObj.GetSubComponentCount()

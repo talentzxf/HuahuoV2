@@ -4,7 +4,7 @@ import {BaseShapeJS} from "./BaseShapeJS";
 
 declare var Module: any;
 
-function LoadComponentForShape(shape:BaseShapeJS){
+function LoadComponentForShape(shape:BaseShapeJS, isMirage: boolean){
     let baseShape = shape.getRawShape()
 
     // Create all the component wrapper in the JS side.
@@ -13,14 +13,14 @@ function LoadComponentForShape(shape:BaseShapeJS){
         let componentRawObj = baseShape.GetFrameState(idx)
         let componentConstructor = clzObjectFactory.GetClassConstructor(componentRawObj.GetTypeName())
         if(componentConstructor){
-            let component = new componentConstructor(componentRawObj)
+            let component = new componentConstructor(componentRawObj, isMirage)
             // The component has already been persistented, no need to persistent again.
             shape.addComponent(component, false)
         }
     }
 }
 
-function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true, addToLayer: boolean = true){
+function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true, addToLayer: boolean = true, isMirage: boolean = false){
     let shapeConstructor = clzObjectFactory.GetClassConstructor(rawShapeObj.GetTypeName())
     let jsShape = shapeConstructor(rawShapeObj)
 
@@ -29,9 +29,11 @@ function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true, addToLayer: b
         huahuoEngine.getActivePlayer().getLayerShapes(layer).set(jsShape.getRawShape().ptr, jsShape)
     }
 
+    jsShape.isMirage = isMirage
+
     // TODO: Whatif there're dependencies across components?
     // Create all the component wrapper in the JS side.
-    LoadComponentForShape(jsShape)
+    LoadComponentForShape(jsShape, isMirage)
 
     if(awake)
         jsShape.awakeFromLoad()

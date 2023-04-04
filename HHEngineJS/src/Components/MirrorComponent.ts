@@ -19,10 +19,8 @@ function createDuplication(targetShape, baseShape){
 
     let rawObj = targetShape.rawObj
 
-    let duplicatedShape = LoadShapeFromCppShape(rawObj, true, false)
+    let duplicatedShape = LoadShapeFromCppShape(rawObj, true, false, true)
     duplicatedShape.setSelectedMeta(baseShape)
-
-    duplicatedShape.isMirage = true
 
     duplicatedShape.registerValueChangeHandler("*")(()=>{
         targetShape.update(true) // update the original shape.
@@ -42,8 +40,8 @@ class MirrorComponent extends AbstractComponent {
     p1: paper.Point
     p2: paper.Point
 
-    constructor(rawObj?) {
-        super(rawObj)
+    constructor(rawObj?, isMirage = false) {
+        super(rawObj, isMirage)
 
         this.paperShapeGroup = new paper.Group()
         this.paperShapeGroup.applyMatrix = false

@@ -22,7 +22,9 @@ class DefaultVariableProcessor{
             }
         })
 
-        component[fieldName] = component[fieldName] // Get the variable and save to ensure first frame is recorded in Cpp side.
+        // This is a mirage, no need to store.
+        if(!component.isMirage)
+            component[fieldName] = component[fieldName] // Get the variable and save to ensure first frame is recorded in Cpp side.
     }
 }
 

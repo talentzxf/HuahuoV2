@@ -11,6 +11,7 @@ class ClonedShapeEntry{
     targetShape: BaseShapeJS
     centerObject: BaseShapeJS
     angle: number
+    isUsing: boolean
 }
 
 function updateEntry(entry: ClonedShapeEntry){
@@ -18,16 +19,21 @@ function updateEntry(entry: ClonedShapeEntry){
     // let targetPosition = originalPosition.rotate(entry.angle, entry.center)
     //
     // entry.shape.getAction().setPosition(targetPosition.x, targetPosition.y)
-    let parentGroup = entry.shape.paperShape.parent
+    if(entry.isUsing){
+        let parentGroup = entry.shape.paperShape.parent
 
-    parentGroup.rotation = 0.0
+        parentGroup.rotation = 0.0
 
-    let pointZeroPosition = parentGroup.localToGlobal(new paper.Point(0,0))
-    parentGroup.position.x -= pointZeroPosition.x
-    parentGroup.position.y -= pointZeroPosition.y
+        let pointZeroPosition = parentGroup.localToGlobal(new paper.Point(0,0))
+        parentGroup.position.x -= pointZeroPosition.x
+        parentGroup.position.y -= pointZeroPosition.y
 
-    parentGroup.rotate(entry.angle, entry.centerObject.position)
-    entry.shape.update()
+        parentGroup.rotate(entry.angle, entry.centerObject.position)
+        entry.shape.update()
+    }else{
+        entry.shape.hide()
+    }
+
 }
 
 @Component({compatibleShapes:["StarMirrorShapeJS"], maxCount:1})
@@ -39,46 +45,66 @@ class StarMirrorComponent extends AbstractComponent{
     @PropertyValue(PropertyCategory.interpolateFloat, 100.0, {min: 1.0, max: 359.0, step: 1.0} as FloatPropertyConfig)
     starMirrorInterval
 
-    targetShapeMirroredShapeSetMap: Map<number, Set<BaseShapeJS>> = new Map<number, Set<BaseShapeJS>>()
+    targetShapeMirroredShapeSetMap: Map<number, Array<BaseShapeJS>> = new Map<number, Array<BaseShapeJS>>()
     mirroredShapeShapeEntryMap: Map<BaseShapeJS, ClonedShapeEntry> = new Map
 
     paperShapeGroup: paper.Group
 
-    constructor(rawObj?) {
-        super(rawObj);
+    constructor(rawObj?, isMirage = false) {
+        super(rawObj, isMirage);
 
         this.paperShapeGroup = new paper.Group()
         this.paperShapeGroup.applyMatrix = false
         this.paperShapeGroup.data.meta = this.baseShape
     }
 
-    getMirroredShapeSet(rawPtr: number):Set<BaseShapeJS>{
+    getMirroredShapeArray(rawPtr: number):Array<BaseShapeJS>{
         if(!this.targetShapeMirroredShapeSetMap.has(rawPtr)){
-            this.targetShapeMirroredShapeSetMap.set(rawPtr, new Set<BaseShapeJS>())
+            this.targetShapeMirroredShapeSetMap.set(rawPtr, new Array<BaseShapeJS>())
         }
 
         return this.targetShapeMirroredShapeSetMap.get(rawPtr)
     }
 
-    duplicateShapes(targetShape){
+    updateMirroredShapeArray(targetShape){
         let currentAngle = this.starMirrorInterval
+        let mirroredShapeCount = Math.ceil(360 / this.starMirrorInterval) - 1
+        let mirroredShapeArray = this.getMirroredShapeArray(targetShape.rawObj.ptr)
 
-        while(currentAngle < 360){
+        let currentShapeCount = mirroredShapeArray.length
+        for(let currentShapeId = currentShapeCount ; currentShapeId < mirroredShapeCount; currentShapeId++){
             let duplicatedShape = createDuplication(targetShape, this.baseShape)
+            mirroredShapeArray.push(duplicatedShape)
+            this.mirroredShapeShapeEntryMap.set(duplicatedShape, {
+                shape: duplicatedShape,
+                targetShape: targetShape,
+                centerObject: this.baseShape,
+                angle: 0.0,
+                isUsing: false
+            })
+        }
 
-            this.getMirroredShapeSet(targetShape.rawObj.ptr).add(duplicatedShape)
+        for(let currentShapeId = mirroredShapeCount; currentShapeId < currentShapeCount; currentShapeId++){
+            let duplicatedShape = mirroredShapeArray[currentShapeId]
+            this.mirroredShapeShapeEntryMap.get(duplicatedShape).isUsing = false
+        }
 
+        let currentShapeId = 0
+        while(currentAngle < 360){
+            let duplicatedShape = mirroredShapeArray[currentShapeId]
+            currentShapeId++
             this.mirroredShapeShapeEntryMap.set(duplicatedShape, {
                 shape: duplicatedShape,
                 targetShape:targetShape,
                 centerObject: this.baseShape,
-                angle: currentAngle
+                angle: currentAngle,
+                isUsing: true
             })
 
             let parentGroup = new paper.Group()
             parentGroup.applyMatrix = false
             parentGroup.data.meta = this.baseShape
-            parentGroup.addChild(duplicatedShape.paperItem)
+            parentGroup.addChild(duplicatedShape.paperShape)
 
             this.paperShapeGroup.addChild(parentGroup)
             let _this = this
@@ -87,7 +113,7 @@ class StarMirrorComponent extends AbstractComponent{
             }
 
             targetShape.registerValueChangeHandler("*")(()=>{
-                for(let shape of _this.getMirroredShapeSet(targetShape.getRawShape().ptr)){
+                for(let shape of _this.getMirroredShapeArray(targetShape.getRawShape().ptr)){
                     let entry = _this.mirroredShapeShapeEntryMap.get(shape)
                     updateEntry(entry)
                 }
@@ -109,11 +135,9 @@ class StarMirrorComponent extends AbstractComponent{
             if(this.targetShapeArray){
                 for(let targetShape of this.targetShapeArray){
                     if(targetShape != null){
-                        if(!this.targetShapeMirroredShapeSetMap.has(targetShape.rawObj.ptr)){
-                            this.duplicateShapes(targetShape)
-                        }
+                        this.updateMirroredShapeArray(targetShape)
 
-                        for(let mirroredShape of this.getMirroredShapeSet(targetShape.rawObj.ptr)){
+                        for(let mirroredShape of this.getMirroredShapeArray(targetShape.rawObj.ptr)){
                             let cloneShapeEntry = this.mirroredShapeShapeEntryMap.get(mirroredShape)
                             updateEntry(cloneShapeEntry)
                         }

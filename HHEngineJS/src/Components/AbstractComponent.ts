@@ -70,6 +70,9 @@ class AbstractComponent {
     propertySheetInited: boolean = false;
     shapeArrayFieldNames: Set<string> = new Set<string>()
 
+    // If this component belongs to a mirage shape, it should also be mirage.
+    isMirage: boolean = false
+
     // Not sure why, but if we define variable here, will enter infinite loop.
     // @PropertyValue(PropertyCategory.boolean, false)
     // isActive
@@ -80,7 +83,9 @@ class AbstractComponent {
         this.valueChangeHandler.callHandlers(propertyName, val)
     }
 
-    constructor(rawObj?) {
+    constructor(rawObj?, isMirage = false) {
+        this.isMirage = isMirage
+
         let cppClzName = clzObjectFactory.getCppClassName(this.constructor.name)
 
         if (!rawObj) {
