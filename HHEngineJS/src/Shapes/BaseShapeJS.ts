@@ -858,6 +858,7 @@ abstract class BaseShapeJS {
         componentConfigSheet.config.children.push({
             key: "inspector.property.keyframes",
             type: PropertyType.GROUP,
+            targetObject: this,
             config: {
                 children: [
                     transformFrameStateSheet,

@@ -158,6 +158,7 @@ class AbstractComponent {
         let componentConfigSheet = {
             key: this.getTypeName(),
             type: PropertyType.COMPONENT,
+            targetObject: this.baseShape,
             config: {
                 children: [],
                 enabler: () => {
@@ -200,6 +201,7 @@ class AbstractComponent {
         let keyFramePropertySheet = propertySheetFactory.createEntryByNameAndCategory("keyframes", PropertyCategory.keyframeArray)
 
         keyFramePropertySheet["getter"] = this.getKeyFrames.bind(this)
+        keyFramePropertySheet["targetObject"] = this.baseShape
         componentConfigSheet.config.children.push(keyFramePropertySheet)
 
         return componentConfigSheet

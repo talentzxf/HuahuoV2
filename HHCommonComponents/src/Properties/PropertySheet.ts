@@ -29,6 +29,7 @@ class Property {
     deleter?: Function
     registerValueChangeFunc?: Function
     unregisterValueChangeFunc?: Function
+    targetObject?: object
     config: PropertyConfig
 }
 
