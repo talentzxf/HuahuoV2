@@ -58,9 +58,18 @@ class StarMirrorComponent extends AbstractComponent{
         this.paperShapeGroup.data.meta = this.baseShape
     }
 
-    getMirroredShapeArray(rawPtr: number):Array<BaseShapeJS>{
+    getMirroredShapeArray(targetShape: BaseShapeJS):Array<BaseShapeJS>{
+        let rawPtr = targetShape.getRawShape().ptr
+
         if(!this.targetShapeMirroredShapeSetMap.has(rawPtr)){
             this.targetShapeMirroredShapeSetMap.set(rawPtr, new Array<BaseShapeJS>())
+            let _this = this
+            targetShape.registerValueChangeHandler("*")(()=>{
+                for(let shape of _this.getMirroredShapeArray(targetShape)){
+                    let entry = _this.mirroredShapeShapeEntryMap.get(shape)
+                    updateEntry(entry)
+                }
+            })
         }
 
         return this.targetShapeMirroredShapeSetMap.get(rawPtr)
@@ -69,7 +78,7 @@ class StarMirrorComponent extends AbstractComponent{
     updateMirroredShapeArray(targetShape){
         let currentAngle = this.starMirrorInterval
         let mirroredShapeCount = Math.ceil(360 / this.starMirrorInterval) - 1
-        let mirroredShapeArray = this.getMirroredShapeArray(targetShape.rawObj.ptr)
+        let mirroredShapeArray = this.getMirroredShapeArray(targetShape)
 
         let currentShapeCount = mirroredShapeArray.length
         for(let currentShapeId = currentShapeCount ; currentShapeId < mirroredShapeCount; currentShapeId++){
@@ -111,14 +120,6 @@ class StarMirrorComponent extends AbstractComponent{
             duplicatedShape.getParent = function(){
                 return _this.baseShape.getParent()
             }
-
-            targetShape.registerValueChangeHandler("*")(()=>{
-                for(let shape of _this.getMirroredShapeArray(targetShape.getRawShape().ptr)){
-                    let entry = _this.mirroredShapeShapeEntryMap.get(shape)
-                    updateEntry(entry)
-                }
-            })
-
             currentAngle += this.starMirrorInterval
         }
 
@@ -137,7 +138,7 @@ class StarMirrorComponent extends AbstractComponent{
                     if(targetShape != null){
                         this.updateMirroredShapeArray(targetShape)
 
-                        for(let mirroredShape of this.getMirroredShapeArray(targetShape.rawObj.ptr)){
+                        for(let mirroredShape of this.getMirroredShapeArray(targetShape)){
                             let cloneShapeEntry = this.mirroredShapeShapeEntryMap.get(mirroredShape)
                             updateEntry(cloneShapeEntry)
                         }
