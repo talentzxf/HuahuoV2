@@ -24,7 +24,7 @@ function updateEntry(entry: ClonedShapeEntry){
 
         parentGroup.rotation = 0.0
 
-        let pointZeroPosition = parentGroup.localToGlobal(new paper.Point(0,0))
+        let pointZeroPosition = parentGroup.localToParent(new paper.Point(0,0))
         parentGroup.position.x -= pointZeroPosition.x
         parentGroup.position.y -= pointZeroPosition.y
 
@@ -154,7 +154,7 @@ class StarMirrorComponent extends AbstractComponent{
                             }
                             this.targetShapeMirroredShapeSetMap.set(targetShape.getRawShape().ptr, new Array())
                         }
-                        
+
                         this.updateMirroredShapeArray(targetShape)
 
                         for(let mirroredShape of this.getMirroredShapeArray(targetShape)){
@@ -177,6 +177,16 @@ class StarMirrorComponent extends AbstractComponent{
 
         this.mirroredShapeShapeEntryMap = new Map
         this.targetShapeMirroredShapeSetMap = new Map
+    }
+
+    setInvisible() {
+        super.setInvisible();
+
+        for(let [mirroredShape, entry] of this.mirroredShapeShapeEntryMap){
+            mirroredShape.paperShape.visible = false
+            mirroredShape.selected = false
+        }
+
     }
 }
 
