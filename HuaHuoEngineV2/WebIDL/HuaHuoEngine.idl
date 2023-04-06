@@ -139,7 +139,6 @@ interface AbstractFrameState{
     long GetKeyFrameAtIndex(long idx);
     void DeleteKeyFrame(long frameId);
 
-    KeyFrameCurve GetKeyFrameCurve();
     boolean ReverseKeyFrame(long startFrameId, long endFrameId, long currentFrameId);
 
     long GetSubComponentCount();
@@ -221,16 +220,18 @@ interface CustomComponent{
 
     void SetStringValue([Const] DOMString fieldName, [Const] DOMString strValue);
     [Const] DOMString GetStringValue([Const] DOMString fieldName);
+
+    KeyFrameCurve GetKeyFrameCurve([Const] DOMString fieldName);
 };
 
 CustomComponent implements AbstractFrameState;
 
 [NoDelete]
 interface KeyFrameCurvePoint{
-    attribute float value;
-    attribute long frameId;
-    attribute Vector2f handleIn;
-    attribute Vector2f handleOut;
+    float GetValue();
+    long GetFrameId();
+    Vector2f GetHandleIn();
+    Vector2f GetHandleOut();
 };
 
 [NoDelete]

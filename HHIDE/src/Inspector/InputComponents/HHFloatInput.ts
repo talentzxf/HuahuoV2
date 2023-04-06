@@ -7,13 +7,16 @@ import {HHCurveInput} from "./HHCurveInput";
 class HHFloatInput extends HTMLElement implements RefreshableComponent{
     getter: Function
     setter: Function
+    keyFrameCurveGetter: Function
+
     curveButton: HTMLButtonElement
     curveInput: HHCurveInput
 
     inputElement: HTMLInputElement
-    constructor(getter, setter, type:string = "number") {
+    constructor(getter, setter, keyFrameCurveGetter, type:string = "number") {
         super();
 
+        this.keyFrameCurveGetter = keyFrameCurveGetter
         this.getter = getter
         this.setter = setter
 

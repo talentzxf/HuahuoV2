@@ -13,7 +13,7 @@ class FloatPropertyDesc extends BasePropertyDesc{
             type = property.config.elementType
         }
 
-        this.hhFloatInput = new HHFloatInput(property.getter, property.setter, type)
+        this.hhFloatInput = new HHFloatInput(property.getter, property.setter, property.getKeyFrameCurve, type)
 
         if(property.config){
             if(property.config.min != null)
