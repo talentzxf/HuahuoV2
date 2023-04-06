@@ -26,7 +26,6 @@ class EngineAPI{
     taichiInited = false
 
     eventEmitterCache = new Map
-    actionCache = new Map
 
     deletedShapePtrs = new Set
 

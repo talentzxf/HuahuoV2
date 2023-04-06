@@ -14,7 +14,8 @@ enum EventNames{
     UNSELECTOBJECTS = "unselectObjects",
     COMPONENTADDED = "componentAdded",
     CELLCLICKED = "cellClicked",
-    OBJECTDELETED = "objectDeleted"
+    OBJECTDELETED = "objectDeleted",
+    FILELOADED = "fileLoaded"
 }
 
 class IDEEventBus {

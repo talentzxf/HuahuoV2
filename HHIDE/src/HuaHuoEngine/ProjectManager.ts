@@ -5,6 +5,7 @@ import {api} from "../RESTApis/RestApi";
 import {gzipSync, gunzipSync} from "fflate"
 import {SceneView} from "../SceneView/SceneView";
 import {saveAs} from 'file-saver';
+import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 
 declare var Module: any
 
@@ -19,6 +20,8 @@ class ProjectManager {
             let arrayBuffer = e.target.result
 
             _this.loadFromArrayBuffer(arrayBuffer)
+
+            IDEEventBus.getInstance().emit(EventNames.FILELOADED, fName)
         }
         reader.readAsArrayBuffer(file)
     }

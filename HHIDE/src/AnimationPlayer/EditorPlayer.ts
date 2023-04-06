@@ -41,6 +41,8 @@ class EditorPlayer extends Player {
             let maxFrameIdUpdatedHandler = new Module.ScriptEventHandlerImpl()
             maxFrameIdUpdatedHandler.handleEvent = _this.onMaxFrameUpdated.bind(_this)
             huahuoEngine.GetInstance().RegisterEvent("OnMaxFrameIdUpdated", maxFrameIdUpdatedHandler)
+
+            IDEEventBus.getInstance().on(EventNames.FILELOADED, _this.onFileLoaded.bind(_this))
         })
     }
 
@@ -116,6 +118,10 @@ class EditorPlayer extends Player {
         }
 
         this.timeline.redrawCanvas()
+    }
+
+    onFileLoaded(fileName: string){
+        this.onMaxFrameUpdated()
     }
 }
 
