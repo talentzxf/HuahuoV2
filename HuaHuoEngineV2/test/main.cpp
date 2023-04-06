@@ -503,7 +503,7 @@ void testReadFromFile() {
     pLayer->SetCurrentFrame(0);
     bool shapeIsVisible = circleShape->IsVisible();
 
-    CustomComponent *customComponent = CustomComponent::CreateComponent();
+    CustomComponent *customComponent = CustomComponent::CreateComponent("CustomComponent");
     customComponent->SetName("CurveGrowth");
 
     customComponent->RegisterFloatValue("growth", 1.0f);

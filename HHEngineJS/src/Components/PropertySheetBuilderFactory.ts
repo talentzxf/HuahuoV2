@@ -90,6 +90,12 @@ class PropertySheetFactory {
         propertyDef["registerValueChangeFunc"] = valueChangeHandler.registerValueChangeHandler(fieldName)
         propertyDef["unregisterValueChangeFunc"] = valueChangeHandler.unregisterValueChangeHandler(fieldName)
 
+        if(propertyMeta.type == PropertyCategory.interpolateFloat){
+            propertyDef["getKeyFrameCurve"] = ()=>{
+                component.getKeyFrameCurve(fieldName)
+            }
+        }
+
         return propertyDef
     }
 }

@@ -12,6 +12,7 @@
 #include "KeyFrame.h"
 #include "Serialize/SerializationCaching/BlockMemoryCacheWriter.h"
 #include "Serialize/SerializationCaching/MemoryCacherReadBlocks.h"
+#include "KeyFrameCurve.h"
 
 class BaseShape;
 
@@ -64,6 +65,8 @@ public:
 
         return typeName.c_str();
     }
+
+
 
     virtual int GetKeyFrameCount() = 0;
 

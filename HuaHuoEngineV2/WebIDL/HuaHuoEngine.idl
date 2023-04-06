@@ -102,6 +102,12 @@ interface ShapeLoadedEventArgs{
 };
 
 [NoDelete]
+interface Vector2f{
+    attribute float x;
+    attribute float y;
+};
+
+[NoDelete]
 interface Vector3f{
     attribute float x;
     attribute float y;
@@ -132,6 +138,8 @@ interface AbstractFrameState{
     long GetKeyFrameCount();
     long GetKeyFrameAtIndex(long idx);
     void DeleteKeyFrame(long frameId);
+
+    KeyFrameCurve GetKeyFrameCurve();
     boolean ReverseKeyFrame(long startFrameId, long endFrameId, long currentFrameId);
 
     long GetSubComponentCount();
@@ -216,6 +224,20 @@ interface CustomComponent{
 };
 
 CustomComponent implements AbstractFrameState;
+
+[NoDelete]
+interface KeyFrameCurvePoint{
+    attribute float value;
+    attribute long frameId;
+    attribute Vector2f handleIn;
+    attribute Vector2f handleOut;
+};
+
+[NoDelete]
+interface KeyFrameCurve{
+    long GetTotalPoints();
+    KeyFrameCurvePoint GetKeyFrameCurvePoint(long idx);
+};
 
 [NoDelete]
 interface EventGraphComponent{

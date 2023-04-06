@@ -5,6 +5,7 @@
 #include "Logging/LogAssert.h"
 #include "FloatConversion.h"
 #include "Serialize/SerializationMetaFlags.h"
+#include "Serialize/SerializeUtility.h"
 
 // Data-only struct for icalls
 // C++ classes below a certain size (8bytes?) are passed incorrectly for icalls
@@ -19,7 +20,7 @@ class Vector2f
 public:
     float x, y;
 
-    //DEFINE_GET_TYPESTRING_IS_ANIMATION_CHANNEL(Vector2f)
+    DEFINE_GET_TYPESTRING_IS_ANIMATION_CHANNEL(Vector2f)
     template<class TransferFunction> void Transfer(TransferFunction& transfer);
 
     Vector2f() {}  // Default ctor is intentionally empty for performance reasons

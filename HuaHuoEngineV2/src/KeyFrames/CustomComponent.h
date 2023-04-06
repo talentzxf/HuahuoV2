@@ -386,6 +386,15 @@ public:
 
     static CustomComponent *CreateComponent(const char* componentTypeName);
 
+    KeyFrameCurve* GetKeyFrameCurve(const char* fieldName){
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return NULL;
+
+        int fieldIdx = m_fieldNameFieldIndexMap.contains(fieldName);
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        return pComponent->GetKeyFrameCurve();
+    }
+
 private:
     std::map<string, int> m_fieldNameFieldIndexMap;
     std::map<int, string> m_fieldIndexFieldNameMap;

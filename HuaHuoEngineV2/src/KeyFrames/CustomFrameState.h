@@ -139,6 +139,14 @@ public:
     virtual bool Apply();
     virtual bool Apply(int frameId) override;
 
+    virtual KeyFrameCurve* GetKeyFrameCurve(){
+        if(m_DataType == FLOAT)
+            return &mKeyFrameCurve;
+
+        printf("Can only get curve for number values\n");
+        return NULL;
+    }
+
 public:
     void SetBooleanValue(bool value);
     void SetFloatValue(float value);
@@ -175,12 +183,17 @@ public:
     }
 
     const char* GetStringValue();
+
+    void AddAnimationOffset(int offset) override;
+
 private:
     template <typename T> CustomDataKeyFrame* RecordFieldValue(int frameId, T value);
 
     CustomDataKeyFrame* GetColorStopArrayKeyFrame(int currentFrameId);
 
 private:
+    KeyFrameCurve mKeyFrameCurve;
+
     CustomDataType m_DataType;
     CustomData m_defaultValue;
     CustomDataKeyFrame m_CurrentKeyFrame;

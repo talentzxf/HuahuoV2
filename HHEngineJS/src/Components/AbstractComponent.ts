@@ -254,6 +254,10 @@ class AbstractComponent {
             }
         }
     }
+
+    getKeyFrameCurve(fieldName){
+        return this.rawObj.GetKeyFrameCurve(fieldName)
+    }
 }
 
 

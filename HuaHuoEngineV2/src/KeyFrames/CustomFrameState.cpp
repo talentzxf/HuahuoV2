@@ -48,6 +48,7 @@ void CustomFrameState::Transfer(TransferFunction &transfer) {
     AbstractFrameStateWithKeyType::Transfer(transfer);
     TRANSFER_ENUM(m_DataType);
     TRANSFER(m_defaultValue);
+    TRANSFER(mKeyFrameCurve);
 }
 
 CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ratio) {
@@ -465,5 +466,9 @@ CustomFrameState *CustomFrameState::CreateFrameState(CustomDataType dataType) {
     printf("Creating component at path:%s\n", StoreFilePath.c_str());
     GetPersistentManagerPtr()->MakeObjectPersistent(producedFrameState->GetInstanceID(), StoreFilePath);
     return producedFrameState;
+}
+
+void CustomFrameState::AddAnimationOffset(int offset) {
+    AbstractFrameStateWithKeyType::AddAnimationOffset(offset);
 }
 
