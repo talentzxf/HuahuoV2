@@ -1,35 +1,42 @@
 import {CustomElement} from "hhcommoncomponents";
 
 @CustomElement({
-    selector: "hh-float-input",
-    extends: "input"
+    selector: "hh-float-input"
 })
-class HHFloatInput extends HTMLInputElement implements RefreshableComponent{
+class HHFloatInput extends HTMLElement implements RefreshableComponent{
     getter: Function
     setter: Function
 
+    inputElement: HTMLInputElement
     constructor(getter, setter, type:string = "number") {
         super();
 
         this.getter = getter
         this.setter = setter
 
-        this.style.width = "50px"
-        this.type = type
-        this.addEventListener("change", this.inputValueChanged.bind(this))
+        this.inputElement = document.createElement("input")
+        this.inputElement.type = type
+
+        this.inputElement.style.width = "50px"
+        this.inputElement.addEventListener("change", this.inputValueChanged.bind(this))
+        this.appendChild(this.inputElement)
     }
 
     inputValueChanged(){
         if(this.setter)
-            this.setter(Number(this.value))
+            this.setter(Number(this.inputElement.value))
     }
 
     connectedCallback(){
         this.refresh()
+
+        let curveButton = document.createElement("button")
+        curveButton.innerHTML = "V"
+        this.appendChild(curveButton)
     }
 
     refresh(){
-        this.value = this.getter()
+        this.inputElement.value = this.getter()
     }
 }
 

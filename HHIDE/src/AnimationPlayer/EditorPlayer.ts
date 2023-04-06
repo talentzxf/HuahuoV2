@@ -82,7 +82,7 @@ class EditorPlayer extends Player {
         // let frameId = keyframeChangedArgs.GetFrameId()
 
         // Check if this event belongs to this EditorPlayer.
-        if (this.sceneView.storeId == layer.GetObjectStore().GetStoreId(){
+        if (this.sceneView.storeId == layer.GetObjectStore().GetStoreId()){
             let maxFrameId = layer.GetObjectStore().GetMaxFrameId()
             if (maxFrameId >= 0) {
                 this.timeline.setMaxCellId(maxFrameId + 1)
