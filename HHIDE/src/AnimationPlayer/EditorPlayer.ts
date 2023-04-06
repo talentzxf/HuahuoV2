@@ -7,9 +7,9 @@ import {undoManager} from "../RedoUndo/UndoManager";
 import {SetFrameIdCommand} from "../RedoUndo/SetFrameIdCommand";
 import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 
-declare var Module:any;
+declare var Module: any;
 
-class EditorPlayer extends Player{
+class EditorPlayer extends Player {
 
     timeline: HHTimeLine = null
     sceneView: SceneView = null
@@ -23,7 +23,7 @@ class EditorPlayer extends Player{
         this.timeline.addEventListener(TimelineEventNames.TRACKCELLCLICKED, this.onSetFrameTime.bind(this))
 
         let _this = this
-        huahuoEngine.ExecuteAfterInited(()=>{
+        huahuoEngine.ExecuteAfterInited(() => {
             let keyFrameChangedHandler = new Module.ScriptEventHandlerImpl()
             keyFrameChangedHandler.handleEvent = _this.onKeyFrameChanged.bind(_this)
 
@@ -44,7 +44,7 @@ class EditorPlayer extends Player{
         })
     }
 
-    onSetFrameTime(e){
+    onSetFrameTime(e) {
         sceneViewManager.focusSceneView(this.sceneView)
 
         // Set current store
@@ -57,14 +57,14 @@ class EditorPlayer extends Player{
 
         let prevTime = e.detail.prevTime
         let prevFrameId = Math.floor(prevTime * GlobalConfig.fps)
-        if(prevFrameId != frameId)
-            undoManager.PushCommand( new SetFrameIdCommand(this.sceneView.animationPlayer, prevFrameId, frameId) )
+        if (prevFrameId != frameId)
+            undoManager.PushCommand(new SetFrameIdCommand(this.sceneView.animationPlayer, prevFrameId, frameId))
     }
 
-    setFrameId(playFrameId, force = false){
-        if(sceneViewManager.getFocusedSceneView() != this.sceneView && force == false){
+    setFrameId(playFrameId, force = false) {
+        if (sceneViewManager.getFocusedSceneView() != this.sceneView && force == false) {
             this.stopPlay() // Lost focus, stop play
-        }else{
+        } else {
             super.setFrameId(playFrameId)
 
             playFrameId += 0.5  // Force to start at 1 for better visualization
@@ -74,28 +74,31 @@ class EditorPlayer extends Player{
         }
     }
 
-    onKeyFrameChanged(args){
+    onKeyFrameChanged(args) {
         let keyframeChangedArgs = Module.wrapPointer(args, Module.KeyFrameChangedEventHandlerArgs)
         let layer = keyframeChangedArgs.GetLayer()
         // let frameId = keyframeChangedArgs.GetFrameId()
 
-        let maxFrameId = layer.GetObjectStore().GetMaxFrameId()
-        if(maxFrameId >= 0){
-            this.timeline.setMaxCellId(maxFrameId + 1)
-        }
+        // Check if this event belongs to this EditorPlayer.
+        if (this.sceneView.storeId == layer.GetObjectStore().GetStoreId(){
+            let maxFrameId = layer.GetObjectStore().GetMaxFrameId()
+            if (maxFrameId >= 0) {
+                this.timeline.setMaxCellId(maxFrameId + 1)
+            }
 
-        // this.timeline.redrawCell(layer, frameId)
-        this.timeline.redrawCanvas()
+            // this.timeline.redrawCell(layer, frameId)
+            this.timeline.redrawCanvas()
+        }
     }
 
-    onLayerUpdated(args){
+    onLayerUpdated(args) {
         let layerUpdatedArgs = Module.wrapPointer(args, Module.LayerUpdatedEventHandlerArgs)
         let layer = layerUpdatedArgs.GetLayer()
 
         this.layerShapesManager.updateLayerShapes(layer)
     }
 
-    onShapeRemoved(args){
+    onShapeRemoved(args) {
         let shapeRemovedArgs = Module.wrapPointer(args, Module.ShapeRemovedEventHandlerArgs)
         let layer = shapeRemovedArgs.GetLayer()
         let obj = shapeRemovedArgs.GetShape()
@@ -104,11 +107,11 @@ class EditorPlayer extends Player{
     }
 
 
-    onMaxFrameUpdated(){
+    onMaxFrameUpdated() {
         let storeId = this.sceneView.storeId
         let store = huahuoEngine.GetStoreById(storeId)
         let maxFrameId = store.GetMaxFrameId()
-        if(maxFrameId >= 0){
+        if (maxFrameId >= 0) {
             this.timeline.setMaxCellId(maxFrameId + 1)
         }
 
