@@ -13,7 +13,7 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
     curveInput: HHCurveInput
 
     inputElement: HTMLInputElement
-    constructor(getter, setter, keyFrameCurveGetter, type:string = "number") {
+    constructor(getter, setter, keyFrameCurveGetter = null, type:string = "number") {
         super();
 
         this.keyFrameCurveGetter = keyFrameCurveGetter
