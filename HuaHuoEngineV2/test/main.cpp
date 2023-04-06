@@ -610,6 +610,17 @@ void testReadFromFile() {
     Assert(string != NULL);
 }
 
+void testKeyFrameCurve(){
+    KeyFrameCurve keyFrameCurve;
+    keyFrameCurve.AddValue(1.0, 1);
+    keyFrameCurve.AddValue(2.0, 10);
+    keyFrameCurve.AddValue(3.0, 5);
+
+    Assert(keyFrameCurve.GetKeyFrameCurvePoint(0)->frameId == 1);
+    Assert(keyFrameCurve.GetKeyFrameCurvePoint(1)->frameId == 5);
+    Assert(keyFrameCurve.GetKeyFrameCurvePoint(2)->frameId == 10);
+}
+
 int main() {
     HuaHuoEngine::InitEngine();
 
@@ -624,6 +635,8 @@ int main() {
     testSegmentKeyFrames();
     testCloneObject();
     testDelete();
+
+    testKeyFrameCurve();
 
     testMultipleStores();
     return 0;

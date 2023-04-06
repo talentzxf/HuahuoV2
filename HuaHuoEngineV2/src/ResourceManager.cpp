@@ -23,6 +23,9 @@ void SetDefaultResourceManager(ResourceManager* resourceManager){
     if(gDefaultResourceManager){
         // Merge the resource manager into the current resource manager
 
+        if(gDefaultResourceManager == resourceManager)
+            return;
+
         gDefaultResourceManager->Merge(resourceManager);
 
         // Delete it, so it won't be persistent

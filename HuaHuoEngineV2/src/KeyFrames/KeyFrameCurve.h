@@ -42,6 +42,21 @@ public:
         return &mCurvePoints[idx];
     }
 
+    void AddValue(float value, int frameId){
+        KeyFrameCurvePoint curvePoint;
+        curvePoint.value = value;
+        curvePoint.frameId = frameId;
+
+        // Find the approporiate position to insert.
+        // TODO: User binary search
+        auto curPointItr = std::lower_bound(mCurvePoints.begin(), mCurvePoints.end(), frameId, [](const KeyFrameCurvePoint& p1, int frameId)
+        {
+            return p1.frameId < frameId;
+        });
+
+        mCurvePoints.insert(curPointItr, curvePoint);
+    }
+
 private:
     std::vector<KeyFrameCurvePoint> mCurvePoints;
 };
