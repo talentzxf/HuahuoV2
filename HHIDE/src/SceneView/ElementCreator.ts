@@ -1,13 +1,12 @@
 import {SceneView} from "./SceneView";
 import {findParentContent, findParentPanel} from "hhpanel";
 import {HHPanel} from "hhpanel";
-import {HHToast, Logger} from "hhcommoncomponents";
+import {HHToast} from "hhcommoncomponents";
 import {huahuoEngine, ElementShapeJS, paper} from "hhenginejs"
 import {HHContent, PanelEventNames} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
 import {BaseShapeJS} from "hhenginejs";
-import {formManager} from "../Utilities/FormManager";
-
+import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 class ElementCreator {
     sceneView: SceneView
     sceneViewPanel: HHPanel
@@ -135,6 +134,9 @@ class ElementCreator {
                 panel.selectTab(title.tabIndex)
             }
         }
+
+        // After element window opened, hide the inspector to avoid confusion.
+        IDEEventBus.getInstance().emit(EventNames.UNSELECTOBJECTS)
     }
 
     onNewElement(openElementTab: boolean = true) {
