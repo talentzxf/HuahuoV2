@@ -27,13 +27,15 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
         this.inputElement.addEventListener("change", this.inputValueChanged.bind(this))
         this.appendChild(this.inputElement)
 
-        this.curveButton = document.createElement("button")
-        this.appendChild(this.curveButton)
+        if(this.keyFrameCurveGetter){
+            this.curveButton = document.createElement("button")
+            this.appendChild(this.curveButton)
 
-        this.curveInput = new HHCurveInput()
-        this.appendChild(this.curveInput)
+            this.curveInput = new HHCurveInput(this.keyFrameCurveGetter)
+            this.appendChild(this.curveInput)
 
-        this.hideCurveInput()
+            this.hideCurveInput()
+        }
     }
 
     get value(){
@@ -66,15 +68,20 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
     }
 
     hideCurveInput(){
-        this.curveInput.style.display = "none"
-        this.curveButton.innerText = "V"
-        this.curveButton.onclick = this.showCurveInput.bind(this)
+        if(this.keyFrameCurveGetter){
+            this.curveInput.style.display = "none"
+            this.curveButton.innerText = "V"
+            this.curveButton.onclick = this.showCurveInput.bind(this)
+        }
     }
 
     showCurveInput(){
-        this.curveInput.style.display = "block"
-        this.curveButton.innerText = "^"
-        this.curveButton.onclick = this.hideCurveInput.bind(this)
+        if(this.keyFrameCurveGetter){
+            this.curveInput.style.display = "block"
+            this.curveButton.innerText = "^"
+            this.curveButton.onclick = this.hideCurveInput.bind(this)
+            this.curveInput.refresh()
+        }
     }
 
     refresh(){

@@ -95,7 +95,7 @@ class PropertySheetFactory {
                 propertyDef["config"] = {}
             }
             propertyDef["config"]["getKeyFrameCurve"] = ()=>{
-                component.getKeyFrameCurve(fieldName)
+                return component.getKeyFrameCurve(fieldName)
             }
         }
 
