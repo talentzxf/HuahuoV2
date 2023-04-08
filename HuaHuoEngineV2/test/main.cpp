@@ -608,6 +608,9 @@ void testReadFromFile() {
     customComponent->SetStringValue("eventGraphJson", "Test");
     const char* string = customComponent->GetStringValue("eventGraphJson");
     Assert(string != NULL);
+
+    KeyFrameCurve* pCurve = customComponent->GetKeyFrameCurve("growth");
+    Assert(pCurve != NULL && pCurve->GetTotalPoints() != 0);
 }
 
 void testKeyFrameCurve(){
@@ -616,9 +619,9 @@ void testKeyFrameCurve(){
     keyFrameCurve.AddValue(2.0, 10);
     keyFrameCurve.AddValue(3.0, 5);
 
-    Assert(keyFrameCurve.GetKeyFrameCurvePoint(0)->frameId == 1);
-    Assert(keyFrameCurve.GetKeyFrameCurvePoint(1)->frameId == 5);
-    Assert(keyFrameCurve.GetKeyFrameCurvePoint(2)->frameId == 10);
+    Assert(keyFrameCurve.GetKeyFrameCurvePoint(0)->GetFrameId() == 1);
+    Assert(keyFrameCurve.GetKeyFrameCurvePoint(1)->GetFrameId() == 5);
+    Assert(keyFrameCurve.GetKeyFrameCurvePoint(2)->GetFrameId() == 10);
 }
 
 int main() {

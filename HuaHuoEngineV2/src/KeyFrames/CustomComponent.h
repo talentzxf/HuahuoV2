@@ -390,7 +390,7 @@ public:
         if(!m_fieldNameFieldIndexMap.contains(fieldName))
             return NULL;
 
-        int fieldIdx = m_fieldNameFieldIndexMap.contains(fieldName);
+        int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
         return pComponent->GetKeyFrameCurve();
     }
