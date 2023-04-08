@@ -16,7 +16,6 @@ class HHCurveInput extends HTMLElement {
 
         this.canvas = document.createElement("canvas")
         this.ctx = this.canvas.getContext("2d")
-        this.ctx.globalCompositeOperation = "destination-over"
         this.ctx.fillStyle = "lightgray"
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
 
@@ -40,7 +39,7 @@ class HHCurveInput extends HTMLElement {
 
         let totalPoints = curve.GetTotalPoints()
         for (let pointIdx = 0; pointIdx < totalPoints; pointIdx++) {
-            let curvePoint = curve.GetKeyFrameCurvePoint[pointIdx]
+            let curvePoint = curve.GetKeyFrameCurvePoint(pointIdx)
             let value = curvePoint.GetValue()
             let frameId = curvePoint.GetFrameId()
 
@@ -58,10 +57,12 @@ class HHCurveInput extends HTMLElement {
         let x = [0.9 * canvasWidth, 0.1 * canvasHeight]
         let y = [0.1 * canvasWidth, 0.9 * canvasHeight]
         this.ctx.beginPath()
-        this.ctx.moveTo(origin[0], origin[1])
-        this.ctx.lineTo(x[0], x[1])
-        this.ctx.moveTo(origin[0], origin[1])
-        this.ctx.lineTo(y[0], y[1])
+        this.ctx.moveTo(origin[0], canvasHeight - origin[1])
+        this.ctx.lineTo(x[0], canvasHeight - x[1])
+        this.ctx.moveTo(origin[0], canvasHeight - origin[1])
+        this.ctx.lineTo(y[0], canvasHeight - y[1])
+
+        this.ctx.strokeStyle = "green"
         this.ctx.stroke()
     }
 
