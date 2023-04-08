@@ -13,7 +13,9 @@ class FloatPropertyDesc extends BasePropertyDesc{
             type = property.config.elementType
         }
 
-        this.hhFloatInput = new HHFloatInput(property.getter, property.setter, property.config.getKeyFrameCurve, type)
+        let getFramecurveFunc = property.config?property.config.getKeyFrameCurve:null
+
+        this.hhFloatInput = new HHFloatInput(property.getter, property.setter, getFramecurveFunc, type)
 
         if(property.config){
             if(property.config.min != null)

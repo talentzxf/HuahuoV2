@@ -91,6 +91,9 @@ class PropertySheetFactory {
         propertyDef["unregisterValueChangeFunc"] = valueChangeHandler.unregisterValueChangeHandler(fieldName)
 
         if(propertyMeta.type == PropertyCategory.interpolateFloat){
+            if(!propertyDef.hasOwnProperty("config") || propertyDef["config"] == null){
+                propertyDef["config"] = {}
+            }
             propertyDef["config"]["getKeyFrameCurve"] = ()=>{
                 component.getKeyFrameCurve(fieldName)
             }
