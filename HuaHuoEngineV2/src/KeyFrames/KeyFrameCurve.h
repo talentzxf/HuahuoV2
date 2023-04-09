@@ -73,18 +73,21 @@ public:
     }
 
     void AddValue(float value, int frameId) {
-        KeyFrameCurvePoint curvePoint;
-        curvePoint.SetValue(value);
-        curvePoint.SetFrameId(frameId);
-
-        // Find the approporiate position to insert.
+        // Find the approporiate position to update or insert.
         // TODO: User binary search
         auto curPointItr = std::lower_bound(mCurvePoints.begin(), mCurvePoints.end(), frameId,
                                             [](KeyFrameCurvePoint p1, int frameId) {
                                                 return p1.GetFrameId() < frameId;
                                             });
 
-        mCurvePoints.insert(curPointItr, curvePoint);
+        if(curPointItr != mCurvePoints.end() && curPointItr->GetFrameId() == frameId){
+            curPointItr->SetValue(value);
+        }else{
+            KeyFrameCurvePoint curvePoint;
+            curvePoint.SetValue(value);
+            curvePoint.SetFrameId(frameId);
+            mCurvePoints.insert(curPointItr, curvePoint);
+        }
     }
 
 private:

@@ -618,6 +618,7 @@ void testKeyFrameCurve(){
     keyFrameCurve.AddValue(1.0, 1);
     keyFrameCurve.AddValue(2.0, 10);
     keyFrameCurve.AddValue(3.0, 5);
+    keyFrameCurve.AddValue(4.0, 10);
 
     Assert(keyFrameCurve.GetKeyFrameCurvePoint(0)->GetFrameId() == 1);
     Assert(keyFrameCurve.GetKeyFrameCurvePoint(1)->GetFrameId() == 5);

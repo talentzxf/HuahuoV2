@@ -1,5 +1,6 @@
 import {CustomElement} from "hhcommoncomponents";
-class ViewPort{
+
+class ViewPort {
     canvasWidth
     canvasHeight
 
@@ -10,26 +11,22 @@ class ViewPort{
     viewYMin
     viewXMax
     viewYMax
-    origin
+    leftDown
 
-    get viewXSpan(){
-        if(this.viewXMax == this.viewXMin)
-            return 1
+    get viewXSpan() {
         return this.viewXMax - this.viewXMin
     }
 
-    get viewYSpan(){
-        if(this.viewYMin == this.viewYMax)
-            return 1;
+    get viewYSpan() {
         return this.viewYMax - this.viewYMin
     }
 
-    viewToCanvas(x, y){
-        let xScale = this.viewXSpan/this.viewWidth
-        let yScale = this.viewYSpan/this.viewHeight
+    viewToCanvas(x, y) {
+        let xScale = this.viewWidth / this.viewXSpan
+        let yScale = this.viewHeight / this.viewYSpan
 
-        let canvasX = this.origin[0] + x * xScale
-        let canvasY = this.canvasHeight - (this.origin[1] + y * yScale)
+        let canvasX = this.leftDown[0] + (x - this.viewXMin) * xScale
+        let canvasY = this.leftDown[1] - (y - this.viewYMin) * yScale
 
         return [canvasX, canvasY]
     }
@@ -52,8 +49,6 @@ class HHCurveInput extends HTMLElement {
 
         this.canvas = document.createElement("canvas")
         this.ctx = this.canvas.getContext("2d")
-        this.ctx.fillStyle = "lightgray"
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
 
         this.appendChild(this.canvas)
     }
@@ -64,7 +59,7 @@ class HHCurveInput extends HTMLElement {
 
     refresh() {
         let curve = this.keyFrameCurveGetter()
-        if(curve == null)
+        if (curve == null)
             return
 
         let minValue = Number.MAX_VALUE
@@ -88,6 +83,19 @@ class HHCurveInput extends HTMLElement {
             points.push(curvePoint)
         }
 
+        // Clear background
+        this.ctx.fillStyle = "lightgray"
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+
+        // Add some offset to avoid 0/0
+        if (minFrameId == maxFrameId) {
+            maxFrameId = minFrameId + 1
+        }
+
+        if (minValue == maxValue) {
+            maxValue = minValue + 1
+        }
+
         // Draw the coordinate
         this.viewPort.canvasWidth = this.canvas.width
         this.viewPort.canvasHeight = this.canvas.height
@@ -97,12 +105,12 @@ class HHCurveInput extends HTMLElement {
         this.viewPort.viewXMax = maxFrameId
         this.viewPort.viewYMin = minValue
         this.viewPort.viewYMax = maxValue
-        this.viewPort.origin = [0.1 * this.canvas.width, 0.1 * this.canvas.height]
+        this.viewPort.leftDown = [0.05 * this.canvas.width, 0.95 * this.canvas.height]
 
-        let canvasOrigin = this.viewPort.viewToCanvas(0, 0)
+        let canvasOrigin = this.viewPort.viewToCanvas(minFrameId, minValue)
 
-        let xMax = this.viewPort.viewToCanvas(maxFrameId,0)
-        let yMax = this.viewPort.viewToCanvas(0, maxValue)
+        let xMax = this.viewPort.viewToCanvas(maxFrameId, minValue)
+        let yMax = this.viewPort.viewToCanvas(minFrameId, maxValue)
 
         this.ctx.beginPath()
         this.ctx.moveTo(canvasOrigin[0], canvasOrigin[1])
@@ -114,8 +122,15 @@ class HHCurveInput extends HTMLElement {
         this.ctx.stroke()
 
         // Draw lines
-        for(let point of points){
+        for (let point of points) {
+            let frameId = point.GetFrameId() + 1
+            let value = point.GetValue()
 
+            this.ctx.beginPath()
+            let canvasPoint = this.viewPort.viewToCanvas(frameId, value)
+            this.ctx.arc(canvasPoint[0], canvasPoint[1], 1, 0 ,2 * Math.PI, true)
+            this.ctx.strokeStyle = "blue"
+            this.ctx.stroke()
         }
     }
 

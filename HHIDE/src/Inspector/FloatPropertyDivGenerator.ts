@@ -33,6 +33,8 @@ class FloatPropertyDesc extends BasePropertyDesc{
 
     onValueChanged(val) {
         this.hhFloatInput.value = val
+
+        this.hhFloatInput.refresh()
     }
 }
 

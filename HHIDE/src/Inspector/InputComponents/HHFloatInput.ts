@@ -86,6 +86,10 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
 
     refresh(){
         this.inputElement.value = this.getter()
+
+        if(this.curveInput){
+            this.curveInput.refresh()
+        }
     }
 }
 
