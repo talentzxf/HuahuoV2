@@ -121,6 +121,9 @@ class HHCurveInput extends HTMLElement {
         this.ctx.strokeStyle = "green"
         this.ctx.stroke()
 
+        this.ctx.font = "10px serif"
+        this.ctx.fillStyle = "black"
+
         // Draw lines
         for (let point of points) {
             let frameId = point.GetFrameId() + 1
@@ -128,9 +131,24 @@ class HHCurveInput extends HTMLElement {
 
             this.ctx.beginPath()
             let canvasPoint = this.viewPort.viewToCanvas(frameId, value)
-            this.ctx.arc(canvasPoint[0], canvasPoint[1], 3, 0 ,2 * Math.PI, true)
+            this.ctx.arc(canvasPoint[0], canvasPoint[1], 3, 0, 2 * Math.PI, true)
             this.ctx.fillStyle = "blue"
             this.ctx.fill()
+
+            // Draw X-Axis text.
+            let position = this.viewPort.viewToCanvas(frameId, minValue)
+            let string = String(frameId)
+            let textRect = this.ctx.measureText(string)
+
+            let actualHeight = textRect.actualBoundingBoxAscent + textRect.actualBoundingBoxDescent;
+            this.ctx.fillText(string, position[0] - textRect.width/2.0, position[1] + actualHeight + 5)
+
+            // Draw Y-Axis text.
+            position = this.viewPort.viewToCanvas(minFrameId, value)
+            string = String(value)
+            textRect = this.ctx.measureText(string)
+            actualHeight = textRect.actualBoundingBoxAscent + textRect.actualBoundingBoxDescent;
+            this.ctx.fillText(string, position[0] - textRect.width - 5, position[1] + actualHeight/2.0)
         }
     }
 
