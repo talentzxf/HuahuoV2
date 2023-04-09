@@ -99,13 +99,13 @@ class HHCurveInput extends HTMLElement {
         // Draw the coordinate
         this.viewPort.canvasWidth = this.canvas.width
         this.viewPort.canvasHeight = this.canvas.height
-        this.viewPort.viewWidth = 0.9 * this.canvas.width
-        this.viewPort.viewHeight = 0.9 * this.canvas.height
+        this.viewPort.viewWidth = 0.8 * this.canvas.width
+        this.viewPort.viewHeight = 0.8 * this.canvas.height
         this.viewPort.viewXMin = minFrameId
         this.viewPort.viewXMax = maxFrameId
         this.viewPort.viewYMin = minValue
         this.viewPort.viewYMax = maxValue
-        this.viewPort.leftDown = [0.05 * this.canvas.width, 0.95 * this.canvas.height]
+        this.viewPort.leftDown = [0.05 * this.canvas.width, 0.9 * this.canvas.height]
 
         let canvasOrigin = this.viewPort.viewToCanvas(minFrameId, minValue)
 
@@ -128,9 +128,9 @@ class HHCurveInput extends HTMLElement {
 
             this.ctx.beginPath()
             let canvasPoint = this.viewPort.viewToCanvas(frameId, value)
-            this.ctx.arc(canvasPoint[0], canvasPoint[1], 1, 0 ,2 * Math.PI, true)
-            this.ctx.strokeStyle = "blue"
-            this.ctx.stroke()
+            this.ctx.arc(canvasPoint[0], canvasPoint[1], 3, 0 ,2 * Math.PI, true)
+            this.ctx.fillStyle = "blue"
+            this.ctx.fill()
         }
     }
 
