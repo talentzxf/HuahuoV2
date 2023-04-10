@@ -1,5 +1,17 @@
 import {CustomElement} from "hhcommoncomponents";
 import {ContextMenu} from "hhcommoncomponents";
+import {Vector2} from "hhcommoncomponents";
+import {paper} from "hhenginejs"
+
+declare class KeyFrameCurvePoint {
+    GetValue(): number
+
+    GetFrameId(): number
+
+    GetHandleIn(): Vector2
+
+    GetHandleOut(): Vector2
+}
 
 class ViewPort {
     canvasWidth
@@ -22,6 +34,11 @@ class ViewPort {
         return this.viewYMax - this.viewYMin
     }
 
+    viewPointToCanvasPoint(p){
+        let [x,y] = this.viewToCanvas(p.x, p.y)
+        return new paper.Point(x, y)
+    }
+
     viewToCanvas(x, y) {
         let xScale = this.viewWidth / this.viewXSpan
         let yScale = this.viewHeight / this.viewYSpan
@@ -33,29 +50,43 @@ class ViewPort {
     }
 }
 
-class ViewPoint {
-    frameId: number
-    value: number
-    radius: number
+class AxisSystem {
+    originPoint: paper.Point = new paper.Point(0, 0)
+    originCircle
+    xAxisLine
+    yAxisLine
+
     viewPort: ViewPort
-
-    // Cache the canvasPosition to avoid multiple calculations.
-    canvasPosition: number[]
-
-    constructor(frameId: number, value: number, radius: number, viewPort: ViewPort) {
-        this.frameId = frameId
-        this.value = value
-        this.radius = radius
+    constructor(viewPort: ViewPort) {
         this.viewPort = viewPort
+        // this.originCircle = new paper.Path.Circle(this.originPoint, 10)
+        // this.originCircle.applyMatrix = false
+        // this.originCircle.fillColor = new paper.Color("yellow")
 
-        this.canvasPosition = this.viewPort.viewToCanvas(this.frameId, this.value)
+        let xAxis = new paper.Point(0, 0)
+        let yAxis = new paper.Point(0, 0)
+        this.xAxisLine = new paper.Path.Line(this.originPoint, xAxis)
+        this.yAxisLine = new paper.Path.Line(this.originPoint, yAxis)
+
+        this.xAxisLine.strokeColor = new paper.Color("black")
+        this.yAxisLine.strokeColor = new paper.Color("black")
     }
 
-    contains(canvasX, canvasY) {
-        let distSquare = Math.pow(canvasX - this.canvasPosition[0], 2) + Math.pow(canvasY - this.canvasPosition[1], 2)
-        if (distSquare <= this.radius * this.radius)
-            return true
-        return false
+    setOriginPosition(x, y) {
+        this.originPoint.x = x
+        this.originPoint.y = y
+
+        this.originCircle.position = this.viewPort.viewPointToCanvasPoint(this.originPoint)
+    }
+
+    setXLength(xLength) {
+        this.xAxisLine.segments[0].setPoint(this.viewPort.viewPointToCanvasPoint(this.originPoint))
+        this.xAxisLine.segments[1].setPoint(this.viewPort.viewPointToCanvasPoint(new paper.Point(this.originPoint.x + xLength, this.originPoint.y)))
+    }
+
+    setYLength(yLength) {
+        this.yAxisLine.segments[0].setPoint(this.viewPort.viewPointToCanvasPoint(this.originPoint))
+        this.yAxisLine.segments[1].setPoint(this.viewPort.viewPointToCanvasPoint(new paper.Point(this.originPoint.x, this.originPoint.y + yLength)))
     }
 }
 
@@ -68,20 +99,22 @@ class HHCurveInput extends HTMLElement {
 
     infoPrompt: HTMLDivElement
 
-    keyFrameCurveGetter: Function
-    viewPort: ViewPort = new ViewPort()
-
-    viewPoints: ViewPoint[]
+    projectId: number = -1
 
     infoPromptContextMenu: ContextMenu = new ContextMenu
+
+    bgRectangle
+
+    viewPort: ViewPort = new ViewPort()
+
+    keyFrameCurveGetter: Function
+
+    axisSystem: AxisSystem
 
     constructor(keyFrameCurveGetter) {
         super();
 
         this.keyFrameCurveGetter = keyFrameCurveGetter
-
-        this.canvas = document.createElement("canvas")
-        this.ctx = this.canvas.getContext("2d")
 
         this.infoPrompt = document.createElement("div")
         this.infoPrompt.style.position = "absolute"
@@ -90,13 +123,13 @@ class HHCurveInput extends HTMLElement {
         this.appendChild(this.infoPrompt)
         this.hideInfoPrompt()
 
-        this.canvas.onmousemove = this.onMouseMove.bind(this)
-        this.canvas.onmousedown = this.onMouseDown.bind(this)
-
-        this.appendChild(this.canvas)
-
         // Make the position as relative, so infoPrompt can regard HHCurveInput as it's nearest positioned ancestor. https://www.w3.org/TR/css-position-3/
         this.style.position = "relative"
+
+        this.canvas = document.createElement("canvas")
+        this.canvas.onmousemove = this.onMouseMove.bind(this)
+        this.canvas.onmousedown = this.onMouseDown.bind(this)
+        this.appendChild(this.canvas)
     }
 
     hideInfoPrompt() {
@@ -111,69 +144,106 @@ class HHCurveInput extends HTMLElement {
         this.refresh()
     }
 
-    hitSomething(canvasX, canvasY, hitCallback, nohitCallback: Function = null){
-        let somethingHitMouse = false;
-        for (let viewPoint of this.viewPoints) {
-            if (viewPoint.contains(canvasX, canvasY)) {
-                hitCallback(viewPoint)
-                somethingHitMouse = true;
-            }
-        }
-
-        if (!somethingHitMouse) {
-            if(nohitCallback)
-                nohitCallback()
-        }
-    }
+    // hitSomething(canvasX, canvasY, hitCallback, nohitCallback: Function = null) {
+    //     let somethingHitMouse = false;
+    //     for (let viewPoint of this.viewPoints) {
+    //         if (viewPoint.contains(canvasX, canvasY)) {
+    //             hitCallback(viewPoint)
+    //             somethingHitMouse = true;
+    //         }
+    //     }
+    //
+    //     if (!somethingHitMouse) {
+    //         if (nohitCallback)
+    //             nohitCallback()
+    //     }
+    // }
 
     onMouseMove(e: MouseEvent) {
-        let _this = this
-        this.hitSomething(e.offsetX, e.offsetY, (viewPoint: ViewPoint)=>{
-            // TODO: i18n
-            this.infoPrompt.innerText = i18n.t("inspector.CurveInputPrompt", {
-                frameId: viewPoint.frameId,
-                value: viewPoint.value
-            })
-
-            _this.showInfoPrompt()
-
-            let offsetX = e.offsetX
-            let offsetY = e.offsetY
-
-            // Check if over the current right border.
-            let toolTipBorder = this.infoPrompt.getBoundingClientRect()
-            let currentInputBorder = this.getBoundingClientRect()
-            if(offsetX + toolTipBorder.width > currentInputBorder.width){
-                offsetX -= toolTipBorder.width;
-            }
-
-            this.infoPrompt.style.left = offsetX + "px"
-            this.infoPrompt.style.top = offsetY + "px"
-        }, ()=>{
-            _this.hideInfoPrompt()
-        })
+        // let _this = this
+        // this.hitSomething(e.offsetX, e.offsetY, (viewPoint: ViewPoint) => {
+        //     // TODO: i18n
+        //     this.infoPrompt.innerText = i18n.t("inspector.CurveInputPrompt", {
+        //         frameId: viewPoint.frameId,
+        //         value: viewPoint.value
+        //     })
+        //
+        //     _this.showInfoPrompt()
+        //
+        //     let offsetX = e.offsetX
+        //     let offsetY = e.offsetY
+        //
+        //     // Check if over the current right border.
+        //     let toolTipBorder = this.infoPrompt.getBoundingClientRect()
+        //     let currentInputBorder = this.getBoundingClientRect()
+        //     if (offsetX + toolTipBorder.width > currentInputBorder.width) {
+        //         offsetX -= toolTipBorder.width;
+        //     }
+        //
+        //     this.infoPrompt.style.left = offsetX + "px"
+        //     this.infoPrompt.style.top = offsetY + "px"
+        // }, () => {
+        //     _this.hideInfoPrompt()
+        // })
     }
 
-    onMouseDown(evt: MouseEvent){
-        let _this = this
-        this.hitSomething(evt.offsetX, evt.offsetY, (viewPoint: ViewPoint)=>{
-            _this.infoPromptContextMenu.setItems([
-                {
-                    itemName: i18n.t("inspector.Smooth"),
-                    onclick: ()=>{
+    onMouseDown(evt: MouseEvent) {
+        // let _this = this
+        // this.hitSomething(evt.offsetX, evt.offsetY, (viewPoint: ViewPoint) => {
+        //     _this.infoPromptContextMenu.setItems([
+        //         {
+        //             itemName: i18n.t("inspector.Smooth"),
+        //             onclick: () => {
+        //                 // Smooth of Bezier is complicated. Write a very simple one here.
+        //                 // TODO: https://www.particleincell.com/2012/bezier-splines/
+        //
+        //                 viewPoint.setHandleIn(1.0, 1.0)
+        //                 viewPoint.setHandleOut(-1.0, -1.0)
+        //
+        //             }
+        //         },
+        //         {
+        //             itemName: i18n.t("inspector.Sharpen"),
+        //             onclick: () => {
+        //
+        //             }
+        //         },
+        //     ])
+        //
+        //     _this.infoPromptContextMenu.onContextMenu(evt)
+        // })
+    }
 
-                    }
-                },
-                {
-                    itemName: i18n.t("inspector.Sharpen"),
-                    onclick: ()=>{
+    activatePaperProject() {
+        if (this.projectId < 0) {
+            paper.setup(this.canvas)
+            this.projectId = paper.project.index
 
-                    }
-                },
-            ])
+            this.bgRectangle = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(this.canvas.width, this.canvas.height))
+            this.bgRectangle.fillColor = new paper.Color("lightgray")
 
-            _this.infoPromptContextMenu.onContextMenu(evt)
-        })
+            let contentLayer = new paper.Layer()
+            paper.project.addLayer(contentLayer)
+            contentLayer.applyMatrix = false
+            contentLayer.activate()
+
+            // Draw axis system.
+            this.axisSystem = new AxisSystem(this.viewPort)
+        }
+
+        paper.projects[this.projectId].activate()
+    }
+
+    circleCache:paper.Path[] = []
+    getPaperCircle(idx: number){
+        for(let curIdx = this.circleCache.length; curIdx <= idx; curIdx++){
+            let newCircle = new paper.Path.Circle(new paper.Point(0,0), 10)
+            newCircle.applyMatrix = false
+            newCircle.fillColor = new paper.Color("yellow")
+            this.circleCache.push(newCircle)
+        }
+
+        return this.circleCache[idx]
     }
 
     refresh() {
@@ -202,10 +272,6 @@ class HHCurveInput extends HTMLElement {
             points.push(curvePoint)
         }
 
-        // Clear background
-        this.ctx.fillStyle = "lightgray"
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
-
         // Add some offset to avoid 0/0
         if (minFrameId == maxFrameId) {
             maxFrameId = minFrameId + 1
@@ -215,7 +281,7 @@ class HHCurveInput extends HTMLElement {
             maxValue = minValue + 1
         }
 
-        // Draw the coordinate
+        // Setup port.
         this.viewPort.canvasWidth = this.canvas.width
         this.viewPort.canvasHeight = this.canvas.height
         this.viewPort.viewWidth = 0.8 * this.canvas.width
@@ -226,55 +292,27 @@ class HHCurveInput extends HTMLElement {
         this.viewPort.viewYMax = maxValue
         this.viewPort.leftDown = [0.05 * this.canvas.width, 0.9 * this.canvas.height]
 
-        let canvasOrigin = this.viewPort.viewToCanvas(minFrameId, minValue)
+        let previousProject = paper.project
+        try {
+            this.activatePaperProject()
 
-        let xMax = this.viewPort.viewToCanvas(maxFrameId, minValue)
-        let yMax = this.viewPort.viewToCanvas(minFrameId, maxValue)
+            this.axisSystem.setOriginPosition(minFrameId, minValue)
+            this.axisSystem.setXLength(maxFrameId - minFrameId)
+            this.axisSystem.setYLength(maxValue - minValue)
 
-        this.ctx.beginPath()
-        this.ctx.moveTo(canvasOrigin[0], canvasOrigin[1])
-        this.ctx.lineTo(xMax[0], xMax[1])
-        this.ctx.moveTo(canvasOrigin[0], canvasOrigin[1])
-        this.ctx.lineTo(yMax[0], yMax[1])
+            let pointIdx = 0
+            for(let point of points){
+                let frameId = point.GetFrameId() + 1
+                let value = point.GetValue()
 
-        this.ctx.strokeStyle = "green"
-        this.ctx.stroke()
+                let circle:paper.Path = this.getPaperCircle(pointIdx)
 
-        this.ctx.font = "10px serif"
-        this.ctx.fillStyle = "black"
+                circle.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, value))
+                pointIdx++
+            }
 
-        this.viewPoints = []
-
-        let radius = 3
-
-        // Draw lines
-        for (let point of points) {
-            let frameId = point.GetFrameId() + 1
-            let value = point.GetValue()
-
-            this.ctx.beginPath()
-            let canvasPoint = this.viewPort.viewToCanvas(frameId, value)
-
-            this.ctx.arc(canvasPoint[0], canvasPoint[1], radius, 0, 2 * Math.PI, true)
-            this.ctx.fillStyle = "blue"
-            this.ctx.fill()
-
-            this.viewPoints.push(new ViewPoint(frameId, value, radius, this.viewPort))
-
-            // Draw X-Axis text.
-            let position = this.viewPort.viewToCanvas(frameId, minValue)
-            let string = String(frameId)
-            let textRect = this.ctx.measureText(string)
-
-            let actualHeight = textRect.actualBoundingBoxAscent + textRect.actualBoundingBoxDescent;
-            this.ctx.fillText(string, position[0] - textRect.width / 2.0, position[1] + actualHeight + 5)
-
-            // Draw Y-Axis text.
-            position = this.viewPort.viewToCanvas(minFrameId, value)
-            string = String(value)
-            textRect = this.ctx.measureText(string)
-            actualHeight = textRect.actualBoundingBoxAscent + textRect.actualBoundingBoxDescent;
-            this.ctx.fillText(string, position[0] - textRect.width - 5, position[1] + actualHeight / 2.0)
+        } finally {
+            previousProject.activate()
         }
     }
 
