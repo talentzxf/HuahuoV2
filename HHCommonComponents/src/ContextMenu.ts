@@ -18,7 +18,10 @@ class ContextMenu
     setItems(items:MenuItem[]){
         this.items = items
 
-        this.menuDiv = null
+        if(this.menuDiv != null){
+            this.menuDiv.remove()
+            this.menuDiv = null
+        }
     }
 
     constructMenuDiv(){

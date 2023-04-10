@@ -65,6 +65,8 @@
   },
   "inspector": {
     "CurveInputPrompt": "关键帧:{{frameId}}, 值:{{value}}",
+    "Smooth": "平滑特征点",
+    "Sharpen": "尖锐化特征点",
     "BornFrame": "出生帧",
     "BasicComponents": "基本变换",
     "ShapeFollowCurveFrameState": "贴边",

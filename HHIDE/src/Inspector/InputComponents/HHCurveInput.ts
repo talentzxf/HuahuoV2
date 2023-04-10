@@ -1,4 +1,5 @@
 import {CustomElement} from "hhcommoncomponents";
+import {ContextMenu} from "hhcommoncomponents";
 
 class ViewPort {
     canvasWidth
@@ -72,6 +73,8 @@ class HHCurveInput extends HTMLElement {
 
     viewPoints: ViewPoint[]
 
+    infoPromptContextMenu: ContextMenu = new ContextMenu
+
     constructor(keyFrameCurveGetter) {
         super();
 
@@ -88,6 +91,7 @@ class HHCurveInput extends HTMLElement {
         this.hideInfoPrompt()
 
         this.canvas.onmousemove = this.onMouseMove.bind(this)
+        this.canvas.onmousedown = this.onMouseDown.bind(this)
 
         this.appendChild(this.canvas)
 
@@ -107,38 +111,69 @@ class HHCurveInput extends HTMLElement {
         this.refresh()
     }
 
-    onMouseMove(e: MouseEvent) {
+    hitSomething(canvasX, canvasY, hitCallback, nohitCallback: Function = null){
         let somethingHitMouse = false;
         for (let viewPoint of this.viewPoints) {
-            if (viewPoint.contains(e.offsetX, e.offsetY)) {
-
-                // TODO: i18n
-                this.infoPrompt.innerText = i18n.t("inspector.CurveInputPrompt", {
-                    frameId: viewPoint.frameId,
-                    value: viewPoint.value
-                })
-
-                this.showInfoPrompt()
-
-                let offsetX = e.offsetX
-                let offsetY = e.offsetY
-                // Check if over the current right border.
-                let toolTipBorder = this.infoPrompt.getBoundingClientRect()
-                let currentInputBorder = this.getBoundingClientRect()
-                if(offsetX + toolTipBorder.width > currentInputBorder.width){
-                    offsetX -= toolTipBorder.width;
-                }
-
-                this.infoPrompt.style.left = offsetX + "px"
-                this.infoPrompt.style.top = offsetY + "px"
-
+            if (viewPoint.contains(canvasX, canvasY)) {
+                hitCallback(viewPoint)
                 somethingHitMouse = true;
             }
         }
 
         if (!somethingHitMouse) {
-            this.hideInfoPrompt()
+            if(nohitCallback)
+                nohitCallback()
         }
+    }
+
+    onMouseMove(e: MouseEvent) {
+        let _this = this
+        this.hitSomething(e.offsetX, e.offsetY, (viewPoint: ViewPoint)=>{
+            // TODO: i18n
+            this.infoPrompt.innerText = i18n.t("inspector.CurveInputPrompt", {
+                frameId: viewPoint.frameId,
+                value: viewPoint.value
+            })
+
+            _this.showInfoPrompt()
+
+            let offsetX = e.offsetX
+            let offsetY = e.offsetY
+
+            // Check if over the current right border.
+            let toolTipBorder = this.infoPrompt.getBoundingClientRect()
+            let currentInputBorder = this.getBoundingClientRect()
+            if(offsetX + toolTipBorder.width > currentInputBorder.width){
+                offsetX -= toolTipBorder.width;
+            }
+
+            this.infoPrompt.style.left = offsetX + "px"
+            this.infoPrompt.style.top = offsetY + "px"
+        }, ()=>{
+            _this.hideInfoPrompt()
+        })
+    }
+
+    onMouseDown(evt: MouseEvent){
+        let _this = this
+        this.hitSomething(evt.offsetX, evt.offsetY, (viewPoint: ViewPoint)=>{
+            _this.infoPromptContextMenu.setItems([
+                {
+                    itemName: i18n.t("inspector.Smooth"),
+                    onclick: ()=>{
+
+                    }
+                },
+                {
+                    itemName: i18n.t("inspector.Sharpen"),
+                    onclick: ()=>{
+
+                    }
+                },
+            ])
+
+            _this.infoPromptContextMenu.onContextMenu(evt)
+        })
     }
 
     refresh() {
