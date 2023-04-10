@@ -32,6 +32,32 @@ class ViewPort {
     }
 }
 
+class ViewPoint {
+    frameId: number
+    value: number
+    radius: number
+    viewPort: ViewPort
+
+    // Cache the canvasPosition to avoid multiple calculations.
+    canvasPosition: number[]
+
+    constructor(frameId: number, value: number, radius: number, viewPort: ViewPort) {
+        this.frameId = frameId
+        this.value = value
+        this.radius = radius
+        this.viewPort = viewPort
+
+        this.canvasPosition = this.viewPort.viewToCanvas(this.frameId, this.value)
+    }
+
+    contains(canvasX, canvasY) {
+        let distSquare = Math.pow(canvasX - this.canvasPosition[0], 2) + Math.pow(canvasY - this.canvasPosition[1], 2)
+        if (distSquare <= this.radius * this.radius)
+            return true
+        return false
+    }
+}
+
 @CustomElement({
     selector: "hh-curve-input"
 })
@@ -39,8 +65,12 @@ class HHCurveInput extends HTMLElement {
     canvas: HTMLCanvasElement
     ctx: CanvasRenderingContext2D
 
+    infoPrompt: HTMLDivElement
+
     keyFrameCurveGetter: Function
     viewPort: ViewPort = new ViewPort()
+
+    viewPoints: ViewPoint[]
 
     constructor(keyFrameCurveGetter) {
         super();
@@ -50,11 +80,52 @@ class HHCurveInput extends HTMLElement {
         this.canvas = document.createElement("canvas")
         this.ctx = this.canvas.getContext("2d")
 
+        this.infoPrompt = document.createElement("div")
+        this.infoPrompt.style.position = "absolute"
+        this.appendChild(this.infoPrompt)
+        this.hideInfoPrompt()
+
+        this.canvas.onmousemove = this.onMouseMove.bind(this)
+
         this.appendChild(this.canvas)
+
+        // Make the position as relative, so infoPrompt can regard HHCurveInput as it's nearest positioned ancestor. https://www.w3.org/TR/css-position-3/
+        this.style.position = "relative"
+    }
+
+    hideInfoPrompt() {
+        this.infoPrompt.style.display = "none"
+    }
+
+    showInfoPrompt() {
+        this.infoPrompt.style.display = "block"
     }
 
     connectedCallback() {
         this.refresh()
+    }
+
+    onMouseMove(e: MouseEvent) {
+        let somethingHitMouse = false;
+        for (let viewPoint of this.viewPoints) {
+            if (viewPoint.contains(e.offsetX, e.offsetY)) {
+
+                // TODO: i18n
+                this.infoPrompt.innerText = i18n.t("inspector.CurveInputPrompt", {
+                    frameId: viewPoint.frameId,
+                    value: viewPoint.value
+                })
+
+                this.infoPrompt.style.left = e.offsetX + "px"
+                this.infoPrompt.style.top = e.offsetY + "px"
+                this.showInfoPrompt()
+                somethingHitMouse = true;
+            }
+        }
+
+        if (!somethingHitMouse) {
+            this.hideInfoPrompt()
+        }
     }
 
     refresh() {
@@ -124,6 +195,10 @@ class HHCurveInput extends HTMLElement {
         this.ctx.font = "10px serif"
         this.ctx.fillStyle = "black"
 
+        this.viewPoints = []
+
+        let radius = 3
+
         // Draw lines
         for (let point of points) {
             let frameId = point.GetFrameId() + 1
@@ -131,9 +206,12 @@ class HHCurveInput extends HTMLElement {
 
             this.ctx.beginPath()
             let canvasPoint = this.viewPort.viewToCanvas(frameId, value)
-            this.ctx.arc(canvasPoint[0], canvasPoint[1], 3, 0, 2 * Math.PI, true)
+
+            this.ctx.arc(canvasPoint[0], canvasPoint[1], radius, 0, 2 * Math.PI, true)
             this.ctx.fillStyle = "blue"
             this.ctx.fill()
+
+            this.viewPoints.push(new ViewPoint(frameId, value, radius, this.viewPort))
 
             // Draw X-Axis text.
             let position = this.viewPort.viewToCanvas(frameId, minValue)
@@ -141,14 +219,14 @@ class HHCurveInput extends HTMLElement {
             let textRect = this.ctx.measureText(string)
 
             let actualHeight = textRect.actualBoundingBoxAscent + textRect.actualBoundingBoxDescent;
-            this.ctx.fillText(string, position[0] - textRect.width/2.0, position[1] + actualHeight + 5)
+            this.ctx.fillText(string, position[0] - textRect.width / 2.0, position[1] + actualHeight + 5)
 
             // Draw Y-Axis text.
             position = this.viewPort.viewToCanvas(minFrameId, value)
             string = String(value)
             textRect = this.ctx.measureText(string)
             actualHeight = textRect.actualBoundingBoxAscent + textRect.actualBoundingBoxDescent;
-            this.ctx.fillText(string, position[0] - textRect.width - 5, position[1] + actualHeight/2.0)
+            this.ctx.fillText(string, position[0] - textRect.width - 5, position[1] + actualHeight / 2.0)
         }
     }
 

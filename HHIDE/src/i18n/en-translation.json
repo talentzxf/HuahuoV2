@@ -64,6 +64,7 @@
     "drawStarMirror": "Drawing central symmetric mirror"
   },
   "inspector": {
+    "CurveInputPrompt": "FrameId:{{frameId}, value:{{value}}",
     "BornFrame": "Born Frame",
     "BasicComponents": "Basic Transforms",
     "ShapeFollowCurveFrameState": "Follow Path",
