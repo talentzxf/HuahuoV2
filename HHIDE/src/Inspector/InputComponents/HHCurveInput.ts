@@ -82,6 +82,8 @@ class HHCurveInput extends HTMLElement {
 
         this.infoPrompt = document.createElement("div")
         this.infoPrompt.style.position = "absolute"
+        this.infoPrompt.className = "tooltip-text"
+
         this.appendChild(this.infoPrompt)
         this.hideInfoPrompt()
 
@@ -116,8 +118,17 @@ class HHCurveInput extends HTMLElement {
                     value: viewPoint.value
                 })
 
-                this.infoPrompt.style.left = e.offsetX + "px"
-                this.infoPrompt.style.top = e.offsetY + "px"
+                let offsetX = e.offsetX
+                let offsetY = e.offsetY
+                // Check if over the current right border.
+                let toolTipBorder = this.infoPrompt.getBoundingClientRect()
+                let currentInputBorder = this.getBoundingClientRect()
+                if(toolTipBorder.right > currentInputBorder.right){
+                    offsetX -= toolTipBorder.width;
+                }
+
+                this.infoPrompt.style.left = offsetX + "px"
+                this.infoPrompt.style.top = offsetY + "px"
                 this.showInfoPrompt()
                 somethingHitMouse = true;
             }
