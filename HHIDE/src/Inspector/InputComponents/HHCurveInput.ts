@@ -118,18 +118,20 @@ class HHCurveInput extends HTMLElement {
                     value: viewPoint.value
                 })
 
+                this.showInfoPrompt()
+
                 let offsetX = e.offsetX
                 let offsetY = e.offsetY
                 // Check if over the current right border.
                 let toolTipBorder = this.infoPrompt.getBoundingClientRect()
                 let currentInputBorder = this.getBoundingClientRect()
-                if(toolTipBorder.right > currentInputBorder.right){
+                if(offsetX + toolTipBorder.width > currentInputBorder.width){
                     offsetX -= toolTipBorder.width;
                 }
 
                 this.infoPrompt.style.left = offsetX + "px"
                 this.infoPrompt.style.top = offsetY + "px"
-                this.showInfoPrompt()
+
                 somethingHitMouse = true;
             }
         }
