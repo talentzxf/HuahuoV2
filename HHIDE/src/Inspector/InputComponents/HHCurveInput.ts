@@ -164,6 +164,8 @@ class HHCurveInput extends HTMLElement {
         paper.projects[this.projectId].activate()
     }
 
+    keyFrameCurvePath: paper.Path
+
     xAxisTextCache: paper.PointText[] = []
     yAxisTextCache: paper.PointText[] = []
     textSize = 15
@@ -281,6 +283,14 @@ class HHCurveInput extends HTMLElement {
             this.axisSystem.setXLength(maxFrameId - minFrameId)
             this.axisSystem.setYLength(maxValue - minValue)
 
+            if(this.keyFrameCurvePath){
+                this.keyFrameCurvePath.remove()
+            }
+
+            this.keyFrameCurvePath = new paper.Path()
+            this.keyFrameCurvePath.strokeColor = new paper.Color("black")
+            this.keyFrameCurvePath.strokeWidth = 3
+
             let pointIdx = 0
             for (let point of points) {
                 let frameId = point.GetFrameId() + 1
@@ -288,7 +298,10 @@ class HHCurveInput extends HTMLElement {
 
                 let circle: paper.Path = this.getPaperCircle(pointIdx)
 
-                circle.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, value))
+                let keyFramePoint = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, value))
+                this.keyFrameCurvePath.add(keyFramePoint)
+
+                circle.position = keyFramePoint
                 circle.data = {
                     rawObj: point
                 }
