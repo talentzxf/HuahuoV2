@@ -4,8 +4,12 @@ import {Vector2} from "hhcommoncomponents";
 import {paper} from "hhenginejs"
 import {TransformHandlerMap} from "../../TransformHandlers/TransformHandlerMap";
 import {BaseShapeDrawer} from "../../ShapeDrawers/BaseShapeDrawer";
-import {ShapeTranslateMorphBase} from "../../TransformHandlers/ShapeTranslateMorphBase";
-import {BaseShapeJS} from "hhenginejs"
+import {
+    shapeHandlerMoveHandler,
+    shapeInsertSegmentHandler,
+    shapeMorphHandler,
+    ShapeMorphHandler
+} from "../../TransformHandlers/ShapeMorphHandler";
 
 let eps = 0.001
 class MovableCurve {
@@ -102,6 +106,11 @@ class ViewPort {
         return this.viewYMax - this.viewYMin
     }
 
+    getXOffsetForFrame(frameId: number){
+        let xScale = this.viewWidth / this.viewXSpan
+        return this.leftDown[0] + (frameId - this.viewXMin) * xScale
+    }
+
     viewPointToCanvasPoint(p) {
         let [x, y] = this.viewToCanvas(p.x, p.y)
         return new paper.Point(x, y)
@@ -180,11 +189,18 @@ class HHCurveInput extends HTMLElement {
 
     axisSystem: AxisSystem
     hitOptions = {}
-    transformHandlerMap: TransformHandlerMap
-    transformHandler: ShapeTranslateMorphBase = null
+    transformHandlerMap: { }
+    transformHandler: ShapeMorphHandler = null
 
     constructor(keyFrameCurveGetter) {
         super();
+
+        this.transformHandlerMap =  {
+            "segment": shapeMorphHandler,
+            "handle-in": shapeHandlerMoveHandler,
+            "handle-out": shapeHandlerMoveHandler,
+            "stroke" : shapeInsertSegmentHandler,
+        }
 
         this.keyFrameCurveGetter = keyFrameCurveGetter
 
@@ -208,8 +224,6 @@ class HHCurveInput extends HTMLElement {
             handles: true,
             tolerance: 5
         }
-
-        this.transformHandlerMap = new TransformHandlerMap()
 
         this.canvas.onmousedown = this.onMouseDown.bind(this)
         this.canvas.onmousemove = this.onMouseMove.bind(this)
@@ -237,12 +251,40 @@ class HHCurveInput extends HTMLElement {
 
             let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
             if (this.transformHandler && this.transformHandler.getIsDragging()) {
+                let curSegment:paper.Segment = this.transformHandler.getCurSegment()
+                let index = curSegment.index
+
+                let curve = this.keyFrameCurveGetter()
+                if (curve == null)
+                    return
+
+                let curPoint = curve.GetKeyFrameCurvePoint(index)
+
+                let totalPointCount = curve.GetTotalPoints()
+
+                let isFirstPoint = index == 0
+                let isLastPoint = index == totalPointCount - 1
+
+                let curFrameId = curPoint.GetFrameId()
+
+                let lastFrameId = curFrameId - 1
+                let nextFrameId = curFrameId + 1
+                let lastFrameXOffset = this.viewPort.getXOffsetForFrame(lastFrameId)
+                let nextFrameXOffset = this.viewPort.getXOffsetForFrame(nextFrameId)
+
+                // Can only be dragged within FrameRange.
                 this.transformHandler.dragging(pos)
             }
         } finally {
             previousProject.activate()
         }
+    }
 
+    getHandler(type){
+        if(this.transformHandlerMap.hasOwnProperty(type)){
+            return this.transformHandlerMap[type]
+        }
+        return null
     }
 
     // A simplified version of ShapeSelector logic.
@@ -260,7 +302,7 @@ class HHCurveInput extends HTMLElement {
                 let hitResult = paper.project.hitTest(pos, this.hitOptions)
                 if (hitResult && hitResult.item == this.keyFrameCurvePath) {
                     this.keyFrameCurvePath.selected = true
-                    this.transformHandler = this.transformHandlerMap.getHandler(hitResult.type)
+                    this.transformHandler = this.getHandler(hitResult.type)
                     if (this.transformHandler) {
                         let objects = new Set() // Because setTarget need to receive a Set.
                         objects.add(new MovableCurve(this.keyFrameCurvePath))
@@ -269,7 +311,7 @@ class HHCurveInput extends HTMLElement {
                     }
                 } else {
                     this.keyFrameCurvePath.selected = false
-                    this.transformHandler = TransformHandlerMap.defaultTransformHandler
+                    this.transformHandler = null
                 }
             }
         } finally {

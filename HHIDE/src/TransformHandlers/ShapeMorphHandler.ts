@@ -26,6 +26,10 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         document.body.addEventListener("keyup", this.onKeyUp.bind(this))
     }
 
+    getCurSegment(){
+        return this.curSegment
+    }
+
     onKeyDown(e: KeyboardEvent) {
         if (e.shiftKey) {
             this.pressingShift = true
@@ -263,4 +267,4 @@ class ShapeInsertSegmentHandler extends ShapeMorphHandler {
 let shapeHandlerMoveHandler = new ShapeHandlerMoveHandler()
 let shapeMorphHandler = new ShapeMorphHandler()
 let shapeInsertSegmentHandler = new ShapeInsertSegmentHandler()
-export {shapeMorphHandler, shapeHandlerMoveHandler, shapeInsertSegmentHandler}
+export {shapeMorphHandler, shapeHandlerMoveHandler, shapeInsertSegmentHandler, ShapeMorphHandler}
