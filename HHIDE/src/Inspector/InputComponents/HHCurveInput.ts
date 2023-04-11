@@ -2,6 +2,9 @@ import {CustomElement} from "hhcommoncomponents";
 import {ContextMenu} from "hhcommoncomponents";
 import {Vector2} from "hhcommoncomponents";
 import {paper} from "hhenginejs"
+import {TransformHandlerMap} from "../../TransformHandlers/TransformHandlerMap";
+import {BaseShapeDrawer} from "../../ShapeDrawers/BaseShapeDrawer";
+import {ShapeTranslateMorphBase} from "../../TransformHandlers/ShapeTranslateMorphBase";
 
 declare class KeyFrameCurvePoint {
     GetValue(): number
@@ -111,7 +114,9 @@ class HHCurveInput extends HTMLElement {
     keyFrameCurveGetter: Function
 
     axisSystem: AxisSystem
-    hitOptions: {}
+    hitOptions = {}
+    transformHandlerMap: TransformHandlerMap
+    transformHandler: ShapeTranslateMorphBase = null
 
     constructor(keyFrameCurveGetter) {
         super();
@@ -130,6 +135,45 @@ class HHCurveInput extends HTMLElement {
 
         this.canvas = document.createElement("canvas")
         this.appendChild(this.canvas)
+
+        this.hitOptions = {
+            segments: true,
+            stroke: true,
+            fill: true,
+            handles: true,
+            tolerance: 5
+        }
+
+        this.transformHandlerMap = new TransformHandlerMap()
+
+        this.canvas.onmousedown = this.onMouseDown.bind(this)
+    }
+
+    // A simplified version of ShapeSelector logic.
+    onMouseDown(evt: MouseEvent) {
+        if (evt.buttons != 1)
+            return
+
+        let previousProject = paper.project
+        try {
+            this.activatePaperProject()
+            let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+            if (this.transformHandler) {
+                this.transformHandler.beginMove(pos)
+            } else {
+                let hitResultArray = paper.project.hitTestAll(pos, this.hitOptions)
+                for (let hitResult of hitResultArray) {
+                    if (hitResult && hitResult.item == this.keyFrameCurvePath) {
+                        this.keyFrameCurvePath.selected = true
+                    } else {
+                        this.keyFrameCurvePath.selected = false
+                    }
+                }
+            }
+        }
+        finally {
+            previousProject.activate()
+        }
     }
 
     hideInfoPrompt() {
@@ -283,11 +327,15 @@ class HHCurveInput extends HTMLElement {
             this.axisSystem.setXLength(maxFrameId - minFrameId)
             this.axisSystem.setYLength(maxValue - minValue)
 
-            if(this.keyFrameCurvePath){
+            if (this.keyFrameCurvePath) {
                 this.keyFrameCurvePath.remove()
             }
 
-            this.keyFrameCurvePath = new paper.Path()
+            this.keyFrameCurvePath = new paper.Path({
+                segments: [],
+                strokeColor: 'black',
+                fullySelected: true
+            })
             this.keyFrameCurvePath.strokeColor = new paper.Color("black")
             this.keyFrameCurvePath.strokeWidth = 3
 
