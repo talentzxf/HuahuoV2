@@ -76,7 +76,7 @@ class AxisSystem {
         this.originPoint.x = x
         this.originPoint.y = y
 
-        this.originCircle.position = this.viewPort.viewPointToCanvasPoint(this.originPoint)
+        // this.originCircle.position = this.viewPort.viewPointToCanvasPoint(this.originPoint)
     }
 
     setXLength(xLength) {
@@ -234,12 +234,27 @@ class HHCurveInput extends HTMLElement {
         paper.projects[this.projectId].activate()
     }
 
+    xAxisTextCache:paper.PointText[] = []
+    textSize = 15
+    getAxisTextFromCache(textCache:paper.Point[], idx: number){
+        for(let curIdx = textCache.length; curIdx <= idx; curIdx++){
+            let newPointText = new paper.PointText(new paper.Point(0,0))
+            newPointText.justification = "center";
+            newPointText.fillColor = new paper.Color("black")
+            newPointText.content = "UnSet"
+            newPointText.fontSize = this.textSize + "px"
+            textCache.push(newPointText)
+        }
+
+        return textCache[idx]
+    }
+
     circleCache:paper.Path[] = []
     getPaperCircle(idx: number){
         for(let curIdx = this.circleCache.length; curIdx <= idx; curIdx++){
-            let newCircle = new paper.Path.Circle(new paper.Point(0,0), 10)
+            let newCircle = new paper.Path.Circle(new paper.Point(0,0), 5)
             newCircle.applyMatrix = false
-            newCircle.fillColor = new paper.Color("yellow")
+            newCircle.fillColor = new paper.Color("blue")
             this.circleCache.push(newCircle)
         }
 
@@ -285,12 +300,12 @@ class HHCurveInput extends HTMLElement {
         this.viewPort.canvasWidth = this.canvas.width
         this.viewPort.canvasHeight = this.canvas.height
         this.viewPort.viewWidth = 0.8 * this.canvas.width
-        this.viewPort.viewHeight = 0.8 * this.canvas.height
+        this.viewPort.viewHeight = 0.75 * this.canvas.height
         this.viewPort.viewXMin = minFrameId
         this.viewPort.viewXMax = maxFrameId
         this.viewPort.viewYMin = minValue
         this.viewPort.viewYMax = maxValue
-        this.viewPort.leftDown = [0.05 * this.canvas.width, 0.9 * this.canvas.height]
+        this.viewPort.leftDown = [0.05 * this.canvas.width, 0.8 * this.canvas.height]
 
         let previousProject = paper.project
         try {
@@ -308,6 +323,11 @@ class HHCurveInput extends HTMLElement {
                 let circle:paper.Path = this.getPaperCircle(pointIdx)
 
                 circle.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, value))
+                // Write x-axis labels.
+                let xAxisLabel:paper.PointText = this.getAxisTextFromCache(this.xAxisTextCache, pointIdx)
+                xAxisLabel.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, minValue)).add(new paper.Point(0, this.textSize))
+                xAxisLabel.content = String(frameId)
+
                 pointIdx++
             }
 
