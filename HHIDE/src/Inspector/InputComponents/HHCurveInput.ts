@@ -5,6 +5,71 @@ import {paper} from "hhenginejs"
 import {TransformHandlerMap} from "../../TransformHandlers/TransformHandlerMap";
 import {BaseShapeDrawer} from "../../ShapeDrawers/BaseShapeDrawer";
 import {ShapeTranslateMorphBase} from "../../TransformHandlers/ShapeTranslateMorphBase";
+import {BaseShapeJS} from "hhenginejs"
+
+let eps = 0.001
+class MovableCurve {
+    private paperShape: paper.Path
+
+    constructor(paperObj: paper.Path) {
+        this.paperShape = paperObj
+    }
+
+    isMovable() {
+        return true
+    }
+
+    isSegmentSeletable(){
+        return true
+    }
+
+    globalToLocal(point){
+        return this.paperShape.globalToLocal(point)
+    }
+
+    setSegmentProperty(idx, property, value){
+        let segment = this.paperShape.segments[idx]
+        let currentValue = this.paperShape.segments[idx][property]
+
+        if (Math.abs(currentValue - value) < eps)
+            return
+        this.paperShape.segments[idx][property] = value
+    }
+
+    getOffsetOf(point: paper.Point){
+        return this.paperShape.getOffsetOf(point)
+    }
+
+    divideAt(offset: number){
+        return this.paperShape.divideAt(offset)
+    }
+
+    insertSegment(localPos: paper.Point){
+    }
+
+    getNearestPoint(point: paper.Point){
+        return this.paperShape.getNearestPoint(point)
+    }
+
+    // Save the information for Ctrl-Z
+    getFrameIdSegmentsBuffer(){
+
+    }
+
+    // This will be executed during Ctrl-Z
+    restoreFrameSegmentsBuffer(previouslySavedSegmentsBuffer){
+
+    }
+
+    // TODO: Store the result
+    store(){
+
+    }
+
+    update(){
+
+    }
+}
 
 declare class KeyFrameCurvePoint {
     GetValue(): number
@@ -147,6 +212,37 @@ class HHCurveInput extends HTMLElement {
         this.transformHandlerMap = new TransformHandlerMap()
 
         this.canvas.onmousedown = this.onMouseDown.bind(this)
+        this.canvas.onmousemove = this.onMouseMove.bind(this)
+        this.canvas.onmouseup = this.onMouseUp.bind(this)
+    }
+
+    onMouseUp(evt: MouseEvent) {
+        if (this.transformHandler) {
+            let previousProject = paper.project
+            try {
+                this.activatePaperProject()
+                this.transformHandler.endMove()
+            } finally {
+                previousProject.activate()
+            }
+
+            this.transformHandler = null
+        }
+    }
+
+    onMouseMove(evt: MouseEvent) {
+        let previousProject = paper.project
+        try {
+            this.activatePaperProject()
+
+            let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+            if (this.transformHandler && this.transformHandler.getIsDragging()) {
+                this.transformHandler.dragging(pos)
+            }
+        } finally {
+            previousProject.activate()
+        }
+
     }
 
     // A simplified version of ShapeSelector logic.
@@ -159,19 +255,24 @@ class HHCurveInput extends HTMLElement {
             this.activatePaperProject()
             let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
             if (this.transformHandler) {
-                this.transformHandler.beginMove(pos)
+                this.transformHandler.beginMove(pos, null, false)
             } else {
-                let hitResultArray = paper.project.hitTestAll(pos, this.hitOptions)
-                for (let hitResult of hitResultArray) {
-                    if (hitResult && hitResult.item == this.keyFrameCurvePath) {
-                        this.keyFrameCurvePath.selected = true
-                    } else {
-                        this.keyFrameCurvePath.selected = false
+                let hitResult = paper.project.hitTest(pos, this.hitOptions)
+                if (hitResult && hitResult.item == this.keyFrameCurvePath) {
+                    this.keyFrameCurvePath.selected = true
+                    this.transformHandler = this.transformHandlerMap.getHandler(hitResult.type)
+                    if (this.transformHandler) {
+                        let objects = new Set() // Because setTarget need to receive a Set.
+                        objects.add(new MovableCurve(this.keyFrameCurvePath))
+                        this.transformHandler.setTarget(objects)
+                        this.transformHandler.beginMove(pos, hitResult, false)
                     }
+                } else {
+                    this.keyFrameCurvePath.selected = false
+                    this.transformHandler = TransformHandlerMap.defaultTransformHandler
                 }
             }
-        }
-        finally {
+        } finally {
             previousProject.activate()
         }
     }
@@ -333,8 +434,7 @@ class HHCurveInput extends HTMLElement {
 
             this.keyFrameCurvePath = new paper.Path({
                 segments: [],
-                strokeColor: 'black',
-                fullySelected: true
+                strokeColor: 'black'
             })
             this.keyFrameCurvePath.strokeColor = new paper.Color("black")
             this.keyFrameCurvePath.strokeWidth = 3
@@ -367,6 +467,7 @@ class HHCurveInput extends HTMLElement {
                 pointIdx++
             }
 
+            this.keyFrameCurvePath.bringToFront()
         } finally {
             previousProject.activate()
         }

@@ -17,7 +17,7 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
 
     protected pressingShift: boolean = false
 
-    private valueChangeHandler:ValueChangeHandler = new ValueChangeHandler()
+    private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
     constructor() {
         super();
@@ -26,25 +26,25 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         document.body.addEventListener("keyup", this.onKeyUp.bind(this))
     }
 
-    onKeyDown(e:KeyboardEvent){
-        if(e.shiftKey){
+    onKeyDown(e: KeyboardEvent) {
+        if (e.shiftKey) {
             this.pressingShift = true
         }
     }
 
-    onKeyUp(e:KeyboardEvent){
-        if(!e.shiftKey){
+    onKeyUp(e: KeyboardEvent) {
+        if (!e.shiftKey) {
             this.pressingShift = false
         }
     }
 
     setSegment(hitSegment: paper.Segment) {
-        if(this.curSegment){
+        if (this.curSegment) {
             this.curSegment.selected = false
             this.curSegment.handleIn.selected = false
             this.curSegment.handleOut.selected = false
         }
-        
+
         this.curSegment = hitSegment
         this.curSegmentStartPos = this.curSegment.point.clone()
 
@@ -54,36 +54,38 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
 
     }
 
-    beginMove(startPos, hitResult = null) {
+    beginMove(startPos, hitResult = null, showInspector: boolean = true) {
         if (this.curObjs.size != 1) {
             throw "Can't morph multiple objects!!!"
         }
 
         this.targetShape = this.curObjs.values().next().value // There's only one object in the set, get it.
 
-        if(!this.targetShape.isSegmentSeletable())
+        if (!this.targetShape.isSegmentSeletable())
             return
 
         super.beginMove(startPos);
 
-        if (hitResult != null && hitResult.segment != null){
+        if (hitResult != null && hitResult.segment != null) {
             this.setSegment(hitResult.segment)
-            this.showInspector()
+
+            if(showInspector)
+                this.showInspector()
         }
 
         setPrompt(i18n.t("statusbar.selectedSegment"))
     }
 
-    getPropertyGetter(propertyName:string){
+    getPropertyGetter(propertyName: string) {
         let _this = this
-        return function(){
+        return function () {
             return _this.curSegment[propertyName]
         }
     }
 
-    getPropertySetter(propertyName:string){
+    getPropertySetter(propertyName: string) {
         let _this = this
-        return function(x,y){
+        return function (x, y) {
             _this.curSegment[propertyName].x = x
             _this.curSegment[propertyName].y = y
 
@@ -92,15 +94,15 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         }
     }
 
-    registerValueChangeHandler(propertyName:string){
+    registerValueChangeHandler(propertyName: string) {
         return this.valueChangeHandler.registerValueChangeHandler(propertyName)
     }
 
-    unregisterValueChangeHandler(propertyName: string){
+    unregisterValueChangeHandler(propertyName: string) {
         return this.valueChangeHandler.unregisterValueChangeHandler(propertyName)
     }
 
-    protected setupPropertySheet(propertySheet: PropertySheet){
+    protected setupPropertySheet(propertySheet: PropertySheet) {
         propertySheet.addProperty(
             {
                 key: "point",
@@ -132,7 +134,7 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         propertySheet.addProperty({
             key: "Smooth",
             type: PropertyType.BUTTON,
-            config:{
+            config: {
                 action: this.smoothSegment.bind(this)
             }
         })
@@ -140,13 +142,13 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         propertySheet.addProperty({
             key: "Sharpen",
             type: PropertyType.BUTTON,
-            config:{
+            config: {
                 action: this.sharpenSegment.bind(this)
             }
         })
     }
 
-    sharpenSegment(){
+    sharpenSegment() {
         this.curSegment.handleIn = 0
         this.curSegment.handleOut = 0
 
@@ -154,14 +156,14 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         this.targetShape.store({position: true, segments: true})
     }
 
-    smoothSegment(){
+    smoothSegment() {
         this.curSegment.smooth()
 
         // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
         this.targetShape.store({position: true, segments: true})
     }
 
-    protected showInspector(){
+    protected showInspector() {
         // Show inspector
         let propertySheet: PropertySheet = new PropertySheet()
         this.setupPropertySheet(propertySheet)
@@ -176,10 +178,10 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
             let localPos = this.targetShape.globalToLocal(posPoint)
             let offset = localPos.subtract(localStart)
 
-            if(this.pressingShift){
-                if(Math.abs(offset.x) > Math.abs(offset.y)){
+            if (this.pressingShift) {
+                if (Math.abs(offset.x) > Math.abs(offset.y)) {
                     offset.y = 0.0
-                }else{
+                } else {
                     offset.x = 0.0
                 }
             }
@@ -219,10 +221,10 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
             let localPos = this.targetShape.globalToLocal(posPoint)
             let offset = localPos.subtract(localStart)
 
-            if(this.pressingShift){
-                if(Math.abs(offset.x) > Math.abs(offset.y)){
+            if (this.pressingShift) {
+                if (Math.abs(offset.x) > Math.abs(offset.y)) {
                     offset.y = 0.0
-                }else{
+                } else {
                     offset.x = 0.0
                 }
             }
@@ -233,7 +235,7 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
             shapeSegmentMoveCommand.DoCommand()
             undoManager.PushCommand(shapeSegmentMoveCommand)
 
-            if(this.valueChangeHandlerMap.get(this.targetHandleName)){
+            if (this.valueChangeHandlerMap.get(this.targetHandleName)) {
                 this.valueChangeHandlerMap.get(this.targetHandleName)(this.curSegment[this.targetHandleName])
             }
         }
@@ -241,10 +243,10 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
 }
 
 class ShapeInsertSegmentHandler extends ShapeMorphHandler {
-    beginMove(startPos) {
+    beginMove(startPos, hitResult = null, showInspector: boolean = true) {
         super.beginMove(startPos);
 
-        if(!this.targetShape.isSegmentSeletable())
+        if (!this.targetShape.isSegmentSeletable())
             return
 
         let shapeSegmentInsertCommand = new ShapeSegmentInsertCommand(this.targetShape, startPos)
@@ -253,7 +255,8 @@ class ShapeInsertSegmentHandler extends ShapeMorphHandler {
 
         undoManager.PushCommand(shapeSegmentInsertCommand)
 
-        this.showInspector()
+        if(showInspector)
+            this.showInspector()
     }
 }
 
