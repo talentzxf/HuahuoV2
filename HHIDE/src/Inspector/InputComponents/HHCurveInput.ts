@@ -34,8 +34,8 @@ class ViewPort {
         return this.viewYMax - this.viewYMin
     }
 
-    viewPointToCanvasPoint(p){
-        let [x,y] = this.viewToCanvas(p.x, p.y)
+    viewPointToCanvasPoint(p) {
+        let [x, y] = this.viewToCanvas(p.x, p.y)
         return new paper.Point(x, y)
     }
 
@@ -57,6 +57,7 @@ class AxisSystem {
     yAxisLine
 
     viewPort: ViewPort
+
     constructor(viewPort: ViewPort) {
         this.viewPort = viewPort
         // this.originCircle = new paper.Path.Circle(this.originPoint, 10)
@@ -110,6 +111,7 @@ class HHCurveInput extends HTMLElement {
     keyFrameCurveGetter: Function
 
     axisSystem: AxisSystem
+    hitOptions: {}
 
     constructor(keyFrameCurveGetter) {
         super();
@@ -127,8 +129,6 @@ class HHCurveInput extends HTMLElement {
         this.style.position = "relative"
 
         this.canvas = document.createElement("canvas")
-        this.canvas.onmousemove = this.onMouseMove.bind(this)
-        this.canvas.onmousedown = this.onMouseDown.bind(this)
         this.appendChild(this.canvas)
     }
 
@@ -142,76 +142,6 @@ class HHCurveInput extends HTMLElement {
 
     connectedCallback() {
         this.refresh()
-    }
-
-    // hitSomething(canvasX, canvasY, hitCallback, nohitCallback: Function = null) {
-    //     let somethingHitMouse = false;
-    //     for (let viewPoint of this.viewPoints) {
-    //         if (viewPoint.contains(canvasX, canvasY)) {
-    //             hitCallback(viewPoint)
-    //             somethingHitMouse = true;
-    //         }
-    //     }
-    //
-    //     if (!somethingHitMouse) {
-    //         if (nohitCallback)
-    //             nohitCallback()
-    //     }
-    // }
-
-    onMouseMove(e: MouseEvent) {
-        // let _this = this
-        // this.hitSomething(e.offsetX, e.offsetY, (viewPoint: ViewPoint) => {
-        //     // TODO: i18n
-        //     this.infoPrompt.innerText = i18n.t("inspector.CurveInputPrompt", {
-        //         frameId: viewPoint.frameId,
-        //         value: viewPoint.value
-        //     })
-        //
-        //     _this.showInfoPrompt()
-        //
-        //     let offsetX = e.offsetX
-        //     let offsetY = e.offsetY
-        //
-        //     // Check if over the current right border.
-        //     let toolTipBorder = this.infoPrompt.getBoundingClientRect()
-        //     let currentInputBorder = this.getBoundingClientRect()
-        //     if (offsetX + toolTipBorder.width > currentInputBorder.width) {
-        //         offsetX -= toolTipBorder.width;
-        //     }
-        //
-        //     this.infoPrompt.style.left = offsetX + "px"
-        //     this.infoPrompt.style.top = offsetY + "px"
-        // }, () => {
-        //     _this.hideInfoPrompt()
-        // })
-    }
-
-    onMouseDown(evt: MouseEvent) {
-        // let _this = this
-        // this.hitSomething(evt.offsetX, evt.offsetY, (viewPoint: ViewPoint) => {
-        //     _this.infoPromptContextMenu.setItems([
-        //         {
-        //             itemName: i18n.t("inspector.Smooth"),
-        //             onclick: () => {
-        //                 // Smooth of Bezier is complicated. Write a very simple one here.
-        //                 // TODO: https://www.particleincell.com/2012/bezier-splines/
-        //
-        //                 viewPoint.setHandleIn(1.0, 1.0)
-        //                 viewPoint.setHandleOut(-1.0, -1.0)
-        //
-        //             }
-        //         },
-        //         {
-        //             itemName: i18n.t("inspector.Sharpen"),
-        //             onclick: () => {
-        //
-        //             }
-        //         },
-        //     ])
-        //
-        //     _this.infoPromptContextMenu.onContextMenu(evt)
-        // })
     }
 
     activatePaperProject() {
@@ -234,11 +164,13 @@ class HHCurveInput extends HTMLElement {
         paper.projects[this.projectId].activate()
     }
 
-    xAxisTextCache:paper.PointText[] = []
+    xAxisTextCache: paper.PointText[] = []
+    yAxisTextCache: paper.PointText[] = []
     textSize = 15
-    getAxisTextFromCache(textCache:paper.Point[], idx: number){
-        for(let curIdx = textCache.length; curIdx <= idx; curIdx++){
-            let newPointText = new paper.PointText(new paper.Point(0,0))
+
+    getAxisTextFromCache(textCache: paper.Point[], idx: number) {
+        for (let curIdx = textCache.length; curIdx <= idx; curIdx++) {
+            let newPointText = new paper.PointText(new paper.Point(0, 0))
             newPointText.justification = "center";
             newPointText.fillColor = new paper.Color("black")
             newPointText.content = "UnSet"
@@ -249,12 +181,46 @@ class HHCurveInput extends HTMLElement {
         return textCache[idx]
     }
 
-    circleCache:paper.Path[] = []
-    getPaperCircle(idx: number){
-        for(let curIdx = this.circleCache.length; curIdx <= idx; curIdx++){
-            let newCircle = new paper.Path.Circle(new paper.Point(0,0), 5)
+    onMouseEnterCircle(evt: paper.MouseEvent) {
+        let circle: paper.Item = evt.target
+        if (circle.data != null && circle.data.hasOwnProperty("rawObj")) {
+            let rawObj = circle.data["rawObj"]
+
+            this.infoPrompt.innerText = i18n.t("inspector.CurveInputPrompt", {
+                frameId: rawObj.GetFrameId(),
+                value: rawObj.GetValue()
+            })
+            this.showInfoPrompt()
+
+            // Convert to view coordinate
+            let offsetX = evt.point.x
+            let offsetY = evt.point.y
+
+            // Check if over the current right border.
+            let toolTipBorder = this.infoPrompt.getBoundingClientRect()
+            let currentInputBorder = this.getBoundingClientRect()
+            if (offsetX + toolTipBorder.width > currentInputBorder.width) {
+                offsetX -= toolTipBorder.width;
+            }
+
+            this.infoPrompt.style.left = offsetX + "px"
+            this.infoPrompt.style.top = offsetY + "px"
+        }
+    }
+
+    onMouseLeaveCircle(evt: Event) {
+        this.hideInfoPrompt()
+    }
+
+    circleCache: paper.Path[] = []
+
+    getPaperCircle(idx: number) {
+        for (let curIdx = this.circleCache.length; curIdx <= idx; curIdx++) {
+            let newCircle = new paper.Path.Circle(new paper.Point(0, 0), 5)
             newCircle.applyMatrix = false
             newCircle.fillColor = new paper.Color("blue")
+            newCircle.onMouseEnter = this.onMouseEnterCircle.bind(this)
+            newCircle.onMouseLeave = this.onMouseLeaveCircle.bind(this)
             this.circleCache.push(newCircle)
         }
 
@@ -305,7 +271,7 @@ class HHCurveInput extends HTMLElement {
         this.viewPort.viewXMax = maxFrameId
         this.viewPort.viewYMin = minValue
         this.viewPort.viewYMax = maxValue
-        this.viewPort.leftDown = [0.05 * this.canvas.width, 0.8 * this.canvas.height]
+        this.viewPort.leftDown = [0.1 * this.canvas.width, 0.8 * this.canvas.height]
 
         let previousProject = paper.project
         try {
@@ -316,17 +282,26 @@ class HHCurveInput extends HTMLElement {
             this.axisSystem.setYLength(maxValue - minValue)
 
             let pointIdx = 0
-            for(let point of points){
+            for (let point of points) {
                 let frameId = point.GetFrameId() + 1
                 let value = point.GetValue()
 
-                let circle:paper.Path = this.getPaperCircle(pointIdx)
+                let circle: paper.Path = this.getPaperCircle(pointIdx)
 
                 circle.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, value))
+                circle.data = {
+                    rawObj: point
+                }
+
                 // Write x-axis labels.
-                let xAxisLabel:paper.PointText = this.getAxisTextFromCache(this.xAxisTextCache, pointIdx)
+                let xAxisLabel: paper.PointText = this.getAxisTextFromCache(this.xAxisTextCache, pointIdx)
                 xAxisLabel.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, minValue)).add(new paper.Point(0, this.textSize))
                 xAxisLabel.content = String(frameId)
+
+                // Write y-axis labels.
+                let yAxisLabel: paper.PointText = this.getAxisTextFromCache(this.yAxisTextCache, pointIdx)
+                yAxisLabel.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(minFrameId, value)).subtract(new paper.Point(this.textSize, 0))
+                yAxisLabel.content = parseFloat(value.toFixed(2)).toString()
 
                 pointIdx++
             }
