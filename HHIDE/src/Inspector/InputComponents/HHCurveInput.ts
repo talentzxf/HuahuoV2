@@ -208,6 +208,8 @@ class HHCurveInput extends HTMLElement {
         this.infoPrompt = document.createElement("div")
         this.infoPrompt.style.position = "absolute"
         this.infoPrompt.className = "tooltip-text"
+        this.infoPrompt.onmousedown = (evt)=>{evt.preventDefault()}
+        this.infoPrompt.oncontextmenu = (evt)=>{evt.preventDefault()}
 
         this.appendChild(this.infoPrompt)
         this.hideInfoPrompt()
@@ -226,6 +228,11 @@ class HHCurveInput extends HTMLElement {
             tolerance: 5
         }
 
+        let _this = this
+        this.onmousedown = (evt: MouseEvent)=>{
+            _this.hideInfoPrompt()
+        }
+
         this.canvas.onmousedown = this.onMouseDown.bind(this)
         this.canvas.onmousemove = this.onMouseMove.bind(this)
         this.canvas.onmouseup = this.onMouseUp.bind(this)
@@ -233,16 +240,92 @@ class HHCurveInput extends HTMLElement {
     }
 
     @switchPaperProject
-    onContextMenu(e: PointerEvent) {
-        e.preventDefault()
+    onContextMenu(evt: PointerEvent) {
+        evt.preventDefault()
+        let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+        let hitResult = paper.project.hitTest(pos, {
+            segments: true,
+            stroke: false,
+            fill: false,
+            handles: false,
+            tolerance: 5
+        }) // Only check segments
 
+        if(hitResult && hitResult.segment){
+            let segment = hitResult.segment
+            let index = hitResult.segment.index
+            let _this = this
+            this.infoPromptContextMenu.setItems([
+                {
+                    itemName: i18n.t("inspector.Smooth"),
+                    onclick: () => {
+                        segment.smooth()
+                    }
+                },
+                {
+                    itemName: i18n.t("inspector.Sharpen"),
+                    onclick: () => {
+                        segment.handleIn = 0
+                        segment.handleOut = 0
+                    }
+                }
+            ])
 
+            this.infoPromptContextMenu.onContextMenu(evt)
+        }
     }
 
     @switchPaperProject
     onMouseUp(evt: MouseEvent) {
-        this.transformHandler.endMove()
-        this.transformHandler = null
+        if(this.transformHandler){
+            this.transformHandler.endMove()
+            this.transformHandler = null
+        }
+    }
+
+    adjustDraggingPoint(curve, index, pos, mouseOffsetX){
+        let curPoint = curve.GetKeyFrameCurvePoint(index)
+
+        let totalPointCount = curve.GetTotalPoints()
+
+        let isFirstPoint = index == 0
+        let isLastPoint = index == totalPointCount - 1
+
+        let curFrameId = curPoint.GetFrameId() + 1 // In the view side, always +1
+
+        let lastFrameId = curFrameId - 1
+        let nextFrameId = curFrameId + 1
+        let lastFrameXOffset = this.viewPort.getXOffsetForFrame(lastFrameId)
+        let curFrameXOffset = this.viewPort.getXOffsetForFrame(curFrameId)
+        let nextFrameXOffset = this.viewPort.getXOffsetForFrame(nextFrameId)
+
+        let minDistStatus = 0 // -1 - lastFrame.  0 - currentFrame.  1 - nextFrame
+        let curDistantce = Math.abs(curFrameXOffset - mouseOffsetX)
+        let lastFrameDistance = Math.abs(lastFrameXOffset - mouseOffsetX)
+        let nextFrameDistance = Math.abs(nextFrameXOffset - mouseOffsetX)
+
+        let minDistance = curDistantce
+        if (lastFrameDistance < minDistance) {
+            minDistance = lastFrameDistance
+            minDistStatus = -1
+        }
+
+        if (nextFrameDistance < minDistance) {
+            minDistance = nextFrameDistance
+            minDistStatus = 1
+        }
+
+        switch (minDistStatus) {
+            case -1:
+                pos.x = lastFrameXOffset
+                break;
+            case 0:
+                pos.x = curFrameXOffset
+                break;
+            case 1:
+                pos.x = nextFrameXOffset
+                break;
+        }
     }
 
     @switchPaperProject
@@ -256,48 +339,9 @@ class HHCurveInput extends HTMLElement {
             if (curve == null)
                 return
 
-            let curPoint = curve.GetKeyFrameCurvePoint(index)
+            if(this.transformHandler == shapeMorphHandler) // Only shape morph handler need to stick to frame.
+                this.adjustDraggingPoint(curve, index, pos, evt.offsetX)
 
-            let totalPointCount = curve.GetTotalPoints()
-
-            let isFirstPoint = index == 0
-            let isLastPoint = index == totalPointCount - 1
-
-            let curFrameId = curPoint.GetFrameId() + 1 // In the view side, always +1
-
-            let lastFrameId = curFrameId - 1
-            let nextFrameId = curFrameId + 1
-            let lastFrameXOffset = this.viewPort.getXOffsetForFrame(lastFrameId)
-            let curFrameXOffset = this.viewPort.getXOffsetForFrame(curFrameId)
-            let nextFrameXOffset = this.viewPort.getXOffsetForFrame(nextFrameId)
-
-            let minDistStatus = 0 // -1 - lastFrame.  0 - currentFrame.  1 - nextFrame
-            let curDistantce = Math.abs(curFrameXOffset - evt.offsetX)
-            let lastFrameDistance = Math.abs(lastFrameXOffset - evt.offsetX)
-            let nextFrameDistance = Math.abs(nextFrameXOffset - evt.offsetX)
-
-            let minDistance = curDistantce
-            if (lastFrameDistance < minDistance) {
-                minDistance = lastFrameDistance
-                minDistStatus = -1
-            }
-
-            if (nextFrameDistance < minDistance) {
-                minDistance = nextFrameDistance
-                minDistStatus = 1
-            }
-
-            switch (minDistStatus) {
-                case -1:
-                    pos.x = lastFrameXOffset
-                    break;
-                case 0:
-                    pos.x = curFrameXOffset
-                    break;
-                case 1:
-                    pos.x = nextFrameXOffset
-                    break;
-            }
 
             // Can only be dragged within FrameRange.
             this.transformHandler.dragging(pos)
@@ -397,7 +441,7 @@ class HHCurveInput extends HTMLElement {
         if (circle.data != null && circle.data.hasOwnProperty("rawObj")) {
             let rawObj = circle.data["rawObj"]
 
-            this.infoPrompt.innerText = i18n.t("inspector.CurveInputPrompt", {
+            this.infoPrompt.innerHTML = i18n.t("inspector.CurveInputPrompt", {
                 frameId: rawObj.GetFrameId(),
                 value: rawObj.GetValue()
             })

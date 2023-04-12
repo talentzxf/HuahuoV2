@@ -207,8 +207,11 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
 
     valueChangeHandlerMap: Map<string, Function> = new Map<string, Function>()
 
-    beginMove(startPos, hitResult) {
-        super.beginMove(startPos, hitResult);
+    beginMove(startPos, hitResult, showInspector:boolean = true) {
+        super.beginMove(startPos, hitResult, showInspector);
+        if(hitResult == null)
+            return
+
         if (hitResult.type == "handle-in")
             this.targetHandleName = "handleIn"
         else
