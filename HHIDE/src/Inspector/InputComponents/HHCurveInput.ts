@@ -104,7 +104,7 @@ class HHCurveInput extends HTMLElement {
     onContextMenu(evt: PointerEvent) {
         evt.preventDefault()
         let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
-        let hitResult = paper.project.hitTest(pos, {
+        let hitResultArray = paper.project.hitTestAll(pos, {
             segments: true,
             stroke: false,
             fill: false,
@@ -112,27 +112,30 @@ class HHCurveInput extends HTMLElement {
             tolerance: 5
         }) // Only check segments
 
-        if (hitResult && hitResult.segment) {
-            let segment = hitResult.segment
-            let index = hitResult.segment.index
-            let _this = this
-            this.infoPromptContextMenu.setItems([
-                {
-                    itemName: i18n.t("inspector.Smooth"),
-                    onclick: () => {
-                        segment.smooth()
+        for (let hitResult of hitResultArray) {
+            if (hitResult && hitResult.segment && hitResult.segment.path == this.keyFrameCurvePath) {
+                let segment = hitResult.segment
+                let index = hitResult.segment.index
+                let _this = this
+                this.infoPromptContextMenu.setItems([
+                    {
+                        itemName: i18n.t("inspector.Smooth"),
+                        onclick: () => {
+                            segment.smooth()
+                        }
+                    },
+                    {
+                        itemName: i18n.t("inspector.Sharpen"),
+                        onclick: () => {
+                            segment.handleIn = 0
+                            segment.handleOut = 0
+                        }
                     }
-                },
-                {
-                    itemName: i18n.t("inspector.Sharpen"),
-                    onclick: () => {
-                        segment.handleIn = 0
-                        segment.handleOut = 0
-                    }
-                }
-            ])
+                ])
 
-            this.infoPromptContextMenu.onContextMenu(evt)
+                this.infoPromptContextMenu.onContextMenu(evt)
+                break
+            }
         }
     }
 
@@ -144,6 +147,7 @@ class HHCurveInput extends HTMLElement {
         }
     }
 
+    // This function has side effect, it will change x of pos.
     adjustDraggingPoint(curve, index, pos, mouseOffsetX) {
         let curPoint = curve.GetKeyFrameCurvePoint(index)
 
@@ -201,11 +205,11 @@ class HHCurveInput extends HTMLElement {
                 return
 
             if (this.transformHandler == shapeMorphHandler) // Only shape morph handler need to stick to frame.
+            {
                 this.adjustDraggingPoint(curve, index, pos, evt.offsetX)
-
-            let [newFrameId, newValue] = this.viewPort.canvasPointToViewPoint(pos.x, pos.y)
-
-            this.showKeyFrameValueIndicator(newFrameId, newValue)
+                let [newFrameId, newValue] = this.viewPort.canvasPointToViewPoint(pos.x, pos.y)
+                this.showKeyFrameValueIndicator(newFrameId, newValue)
+            }
 
             // Can only be dragged within FrameRange.
             this.transformHandler.dragging(pos)
@@ -232,27 +236,34 @@ class HHCurveInput extends HTMLElement {
         if (this.transformHandler) {
             this.transformHandler.beginMove(pos, null, false)
         } else {
-            let hitResult = paper.project.hitTest(pos, this.hitOptions)
-            if (hitResult && hitResult.item == this.keyFrameCurvePath) {
-                this.keyFrameCurvePath.selected = true
-                this.transformHandler = this.getHandler(hitResult.type)
-                if (this.transformHandler) {
-                    let objects = new Set() // Because setTarget need to receive a Set.
-                    objects.add(new MovableCurve(this.keyFrameCurvePath))
-                    this.transformHandler.setTarget(objects)
-                    this.transformHandler.beginMove(pos, hitResult, false)
+            let hitSomething = false
+            let hitResultArray = paper.project.hitTestAll(pos, this.hitOptions)
+            for (let hitResult of hitResultArray) {
+                if (hitResult && hitResult.item == this.keyFrameCurvePath) {
+                    hitSomething = true
+                    this.keyFrameCurvePath.selected = true
+                    this.transformHandler = this.getHandler(hitResult.type)
+                    if (this.transformHandler) {
+                        let objects = new Set() // Because setTarget need to receive a Set.
+                        objects.add(new MovableCurve(this.keyFrameCurvePath))
+                        this.transformHandler.setTarget(objects)
+                        this.transformHandler.beginMove(pos, hitResult, false)
 
-                    if (hitResult.segment) {
-                        let index = hitResult.segment.index
-                        let curve = this.keyFrameCurveGetter()
-                        let curvePoint = curve.GetKeyFrameCurvePoint(index)
-                        let frameIdx = curvePoint.GetFrameId() + 1
-                        let value = curvePoint.GetValue()
+                        if (hitResult.segment) {
+                            let index = hitResult.segment.index
+                            let curve = this.keyFrameCurveGetter()
+                            let curvePoint = curve.GetKeyFrameCurvePoint(index)
+                            let frameIdx = curvePoint.GetFrameId() + 1
+                            let value = curvePoint.GetValue()
 
-                        this.showKeyFrameValueIndicator(frameIdx, value)
+                            this.showKeyFrameValueIndicator(frameIdx, value)
+                        }
                     }
+                    break;
                 }
-            } else {
+            }
+
+            if (!hitSomething) {
                 this.keyFrameCurvePath.selected = false
                 this.transformHandler = null
             }
