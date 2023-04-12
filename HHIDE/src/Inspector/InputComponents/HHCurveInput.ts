@@ -2,7 +2,6 @@ import {CustomElement} from "hhcommoncomponents";
 import {ContextMenu} from "hhcommoncomponents";
 import {Vector2} from "hhcommoncomponents";
 import {paper} from "hhenginejs"
-import {TransformHandlerMap} from "../../TransformHandlers/TransformHandlerMap";
 import {BaseShapeDrawer} from "../../ShapeDrawers/BaseShapeDrawer";
 import {
     shapeHandlerMoveHandler,
@@ -10,8 +9,10 @@ import {
     shapeMorphHandler,
     ShapeMorphHandler
 } from "../../TransformHandlers/ShapeMorphHandler";
+import {switchPaperProject} from "./Utils";
 
 let eps = 0.001
+
 class MovableCurve {
     private paperShape: paper.Path
 
@@ -23,15 +24,15 @@ class MovableCurve {
         return true
     }
 
-    isSegmentSeletable(){
+    isSegmentSeletable() {
         return true
     }
 
-    globalToLocal(point){
+    globalToLocal(point) {
         return this.paperShape.globalToLocal(point)
     }
 
-    setSegmentProperty(idx, property, value){
+    setSegmentProperty(idx, property, value) {
         let segment = this.paperShape.segments[idx]
         let currentValue = this.paperShape.segments[idx][property]
 
@@ -40,37 +41,37 @@ class MovableCurve {
         this.paperShape.segments[idx][property] = value
     }
 
-    getOffsetOf(point: paper.Point){
+    getOffsetOf(point: paper.Point) {
         return this.paperShape.getOffsetOf(point)
     }
 
-    divideAt(offset: number){
+    divideAt(offset: number) {
         return this.paperShape.divideAt(offset)
     }
 
-    insertSegment(localPos: paper.Point){
+    insertSegment(localPos: paper.Point) {
     }
 
-    getNearestPoint(point: paper.Point){
+    getNearestPoint(point: paper.Point) {
         return this.paperShape.getNearestPoint(point)
     }
 
     // Save the information for Ctrl-Z
-    getFrameIdSegmentsBuffer(){
+    getFrameIdSegmentsBuffer() {
 
     }
 
     // This will be executed during Ctrl-Z
-    restoreFrameSegmentsBuffer(previouslySavedSegmentsBuffer){
+    restoreFrameSegmentsBuffer(previouslySavedSegmentsBuffer) {
 
     }
 
     // TODO: Store the result
-    store(){
+    store() {
 
     }
 
-    update(){
+    update() {
 
     }
 }
@@ -106,7 +107,7 @@ class ViewPort {
         return this.viewYMax - this.viewYMin
     }
 
-    getXOffsetForFrame(frameId: number){
+    getXOffsetForFrame(frameId: number) {
         let xScale = this.viewWidth / this.viewXSpan
         return this.leftDown[0] + (frameId - this.viewXMin) * xScale
     }
@@ -189,17 +190,17 @@ class HHCurveInput extends HTMLElement {
 
     axisSystem: AxisSystem
     hitOptions = {}
-    transformHandlerMap: { }
+    transformHandlerMap: {}
     transformHandler: ShapeMorphHandler = null
 
     constructor(keyFrameCurveGetter) {
         super();
 
-        this.transformHandlerMap =  {
+        this.transformHandlerMap = {
             "segment": shapeMorphHandler,
             "handle-in": shapeHandlerMoveHandler,
             "handle-out": shapeHandlerMoveHandler,
-            "stroke" : shapeInsertSegmentHandler,
+            "stroke": shapeInsertSegmentHandler,
         }
 
         this.keyFrameCurveGetter = keyFrameCurveGetter
@@ -228,94 +229,115 @@ class HHCurveInput extends HTMLElement {
         this.canvas.onmousedown = this.onMouseDown.bind(this)
         this.canvas.onmousemove = this.onMouseMove.bind(this)
         this.canvas.onmouseup = this.onMouseUp.bind(this)
+        this.canvas.oncontextmenu = this.onContextMenu.bind(this)
     }
 
+    @switchPaperProject
+    onContextMenu(e: PointerEvent) {
+        e.preventDefault()
+
+
+    }
+
+    @switchPaperProject
     onMouseUp(evt: MouseEvent) {
-        if (this.transformHandler) {
-            let previousProject = paper.project
-            try {
-                this.activatePaperProject()
-                this.transformHandler.endMove()
-            } finally {
-                previousProject.activate()
-            }
-
-            this.transformHandler = null
-        }
+        this.transformHandler.endMove()
+        this.transformHandler = null
     }
 
+    @switchPaperProject
     onMouseMove(evt: MouseEvent) {
-        let previousProject = paper.project
-        try {
-            this.activatePaperProject()
+        let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+        if (this.transformHandler && this.transformHandler.getIsDragging()) {
+            let curSegment: paper.Segment = this.transformHandler.getCurSegment()
+            let index = curSegment.index
 
-            let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
-            if (this.transformHandler && this.transformHandler.getIsDragging()) {
-                let curSegment:paper.Segment = this.transformHandler.getCurSegment()
-                let index = curSegment.index
+            let curve = this.keyFrameCurveGetter()
+            if (curve == null)
+                return
 
-                let curve = this.keyFrameCurveGetter()
-                if (curve == null)
-                    return
+            let curPoint = curve.GetKeyFrameCurvePoint(index)
 
-                let curPoint = curve.GetKeyFrameCurvePoint(index)
+            let totalPointCount = curve.GetTotalPoints()
 
-                let totalPointCount = curve.GetTotalPoints()
+            let isFirstPoint = index == 0
+            let isLastPoint = index == totalPointCount - 1
 
-                let isFirstPoint = index == 0
-                let isLastPoint = index == totalPointCount - 1
+            let curFrameId = curPoint.GetFrameId() + 1 // In the view side, always +1
 
-                let curFrameId = curPoint.GetFrameId()
+            let lastFrameId = curFrameId - 1
+            let nextFrameId = curFrameId + 1
+            let lastFrameXOffset = this.viewPort.getXOffsetForFrame(lastFrameId)
+            let curFrameXOffset = this.viewPort.getXOffsetForFrame(curFrameId)
+            let nextFrameXOffset = this.viewPort.getXOffsetForFrame(nextFrameId)
 
-                let lastFrameId = curFrameId - 1
-                let nextFrameId = curFrameId + 1
-                let lastFrameXOffset = this.viewPort.getXOffsetForFrame(lastFrameId)
-                let nextFrameXOffset = this.viewPort.getXOffsetForFrame(nextFrameId)
+            let minDistStatus = 0 // -1 - lastFrame.  0 - currentFrame.  1 - nextFrame
+            let curDistantce = Math.abs(curFrameXOffset - evt.offsetX)
+            let lastFrameDistance = Math.abs(lastFrameXOffset - evt.offsetX)
+            let nextFrameDistance = Math.abs(nextFrameXOffset - evt.offsetX)
 
-                // Can only be dragged within FrameRange.
-                this.transformHandler.dragging(pos)
+            let minDistance = curDistantce
+            if (lastFrameDistance < minDistance) {
+                minDistance = lastFrameDistance
+                minDistStatus = -1
             }
-        } finally {
-            previousProject.activate()
+
+            if (nextFrameDistance < minDistance) {
+                minDistance = nextFrameDistance
+                minDistStatus = 1
+            }
+
+            switch (minDistStatus) {
+                case -1:
+                    pos.x = lastFrameXOffset
+                    break;
+                case 0:
+                    pos.x = curFrameXOffset
+                    break;
+                case 1:
+                    pos.x = nextFrameXOffset
+                    break;
+            }
+
+            // Can only be dragged within FrameRange.
+            this.transformHandler.dragging(pos)
         }
     }
 
-    getHandler(type){
-        if(this.transformHandlerMap.hasOwnProperty(type)){
+    getHandler(type) {
+        if (this.transformHandlerMap.hasOwnProperty(type)) {
             return this.transformHandlerMap[type]
         }
         return null
     }
 
+
     // A simplified version of ShapeSelector logic.
+    @switchPaperProject
     onMouseDown(evt: MouseEvent) {
         if (evt.buttons != 1)
             return
 
-        let previousProject = paper.project
-        try {
-            this.activatePaperProject()
-            let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
-            if (this.transformHandler) {
-                this.transformHandler.beginMove(pos, null, false)
-            } else {
-                let hitResult = paper.project.hitTest(pos, this.hitOptions)
-                if (hitResult && hitResult.item == this.keyFrameCurvePath) {
-                    this.keyFrameCurvePath.selected = true
-                    this.transformHandler = this.getHandler(hitResult.type)
-                    if (this.transformHandler) {
-                        let objects = new Set() // Because setTarget need to receive a Set.
-                        objects.add(new MovableCurve(this.keyFrameCurvePath))
-                        this.transformHandler.setTarget(objects)
-                        this.transformHandler.beginMove(pos, hitResult, false)
-                    }
-                } else {
-                    this.keyFrameCurvePath.selected = false
-                    this.transformHandler = null
+        this.hideInfoPrompt()
+
+        let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
+        if (this.transformHandler) {
+            this.transformHandler.beginMove(pos, null, false)
+        } else {
+            let hitResult = paper.project.hitTest(pos, this.hitOptions)
+            if (hitResult && hitResult.item == this.keyFrameCurvePath) {
+                this.keyFrameCurvePath.selected = true
+                this.transformHandler = this.getHandler(hitResult.type)
+                if (this.transformHandler) {
+                    let objects = new Set() // Because setTarget need to receive a Set.
+                    objects.add(new MovableCurve(this.keyFrameCurvePath))
+                    this.transformHandler.setTarget(objects)
+                    this.transformHandler.beginMove(pos, hitResult, false)
                 }
+            } else {
+                this.keyFrameCurvePath.selected = false
+                this.transformHandler = null
             }
-        } finally {
-            previousProject.activate()
         }
     }
 
@@ -416,6 +438,7 @@ class HHCurveInput extends HTMLElement {
         return this.circleCache[idx]
     }
 
+    @switchPaperProject
     refresh() {
         let curve = this.keyFrameCurveGetter()
         if (curve == null)
@@ -462,57 +485,51 @@ class HHCurveInput extends HTMLElement {
         this.viewPort.viewYMax = maxValue
         this.viewPort.leftDown = [0.1 * this.canvas.width, 0.8 * this.canvas.height]
 
-        let previousProject = paper.project
-        try {
-            this.activatePaperProject()
 
-            this.axisSystem.setOriginPosition(minFrameId, minValue)
-            this.axisSystem.setXLength(maxFrameId - minFrameId)
-            this.axisSystem.setYLength(maxValue - minValue)
+        this.axisSystem.setOriginPosition(minFrameId, minValue)
+        this.axisSystem.setXLength(maxFrameId - minFrameId)
+        this.axisSystem.setYLength(maxValue - minValue)
 
-            if (this.keyFrameCurvePath) {
-                this.keyFrameCurvePath.remove()
-            }
-
-            this.keyFrameCurvePath = new paper.Path({
-                segments: [],
-                strokeColor: 'black'
-            })
-            this.keyFrameCurvePath.strokeColor = new paper.Color("black")
-            this.keyFrameCurvePath.strokeWidth = 3
-
-            let pointIdx = 0
-            for (let point of points) {
-                let frameId = point.GetFrameId() + 1
-                let value = point.GetValue()
-
-                let circle: paper.Path = this.getPaperCircle(pointIdx)
-
-                let keyFramePoint = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, value))
-                this.keyFrameCurvePath.add(keyFramePoint)
-
-                circle.position = keyFramePoint
-                circle.data = {
-                    rawObj: point
-                }
-
-                // Write x-axis labels.
-                let xAxisLabel: paper.PointText = this.getAxisTextFromCache(this.xAxisTextCache, pointIdx)
-                xAxisLabel.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, minValue)).add(new paper.Point(0, this.textSize))
-                xAxisLabel.content = String(frameId)
-
-                // Write y-axis labels.
-                let yAxisLabel: paper.PointText = this.getAxisTextFromCache(this.yAxisTextCache, pointIdx)
-                yAxisLabel.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(minFrameId, value)).subtract(new paper.Point(this.textSize, 0))
-                yAxisLabel.content = parseFloat(value.toFixed(2)).toString()
-
-                pointIdx++
-            }
-
-            this.keyFrameCurvePath.bringToFront()
-        } finally {
-            previousProject.activate()
+        if (this.keyFrameCurvePath) {
+            this.keyFrameCurvePath.remove()
         }
+
+        this.keyFrameCurvePath = new paper.Path({
+            segments: [],
+            strokeColor: 'black'
+        })
+        this.keyFrameCurvePath.strokeColor = new paper.Color("black")
+        this.keyFrameCurvePath.strokeWidth = 3
+
+        let pointIdx = 0
+        for (let point of points) {
+            let frameId = point.GetFrameId() + 1
+            let value = point.GetValue()
+
+            let circle: paper.Path = this.getPaperCircle(pointIdx)
+
+            let keyFramePoint = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, value))
+            this.keyFrameCurvePath.add(keyFramePoint)
+
+            circle.position = keyFramePoint
+            circle.data = {
+                rawObj: point
+            }
+
+            // Write x-axis labels.
+            let xAxisLabel: paper.PointText = this.getAxisTextFromCache(this.xAxisTextCache, pointIdx)
+            xAxisLabel.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, minValue)).add(new paper.Point(0, this.textSize))
+            xAxisLabel.content = String(frameId)
+
+            // Write y-axis labels.
+            let yAxisLabel: paper.PointText = this.getAxisTextFromCache(this.yAxisTextCache, pointIdx)
+            yAxisLabel.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(minFrameId, value)).subtract(new paper.Point(this.textSize, 0))
+            yAxisLabel.content = parseFloat(value.toFixed(2)).toString()
+
+            pointIdx++
+        }
+
+        this.keyFrameCurvePath.bringToFront()
     }
 
 }
