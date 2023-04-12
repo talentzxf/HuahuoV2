@@ -1,3 +1,5 @@
+import {paper} from "hhenginejs"
+
 const penWidth = 10
 const penHeight = 10
 const penCapHeight = 10
@@ -5,7 +7,7 @@ const penCapHeight = 10
 const unselectedPenCapColor = new paper.Color("lightgray")
 const selectedPenCapColor = new paper.Color("black")
 
-function createPenShape(){
+function createPenShape() {
     let penGroup = new paper.Group()
     let penBody = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(penWidth, penHeight))
 
@@ -25,4 +27,18 @@ function createPenShape(){
     return [penGroup, penBody, penCap]
 }
 
-export {createPenShape, selectedPenCapColor, unselectedPenCapColor}
+function switchPaperProject(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    let originalMethod = descriptor.value
+    descriptor.value = function () {
+        let previousProject = paper.project
+        try {
+            this.activatePaperProject()
+
+            originalMethod.apply(this, arguments)
+        } finally {
+            previousProject.activate()
+        }
+    }
+}
+
+export {createPenShape, selectedPenCapColor, unselectedPenCapColor, switchPaperProject}

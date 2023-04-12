@@ -50,6 +50,9 @@ class HHSideBar extends HTMLElement implements MovableElement {
         this.content = this.querySelector("hh-sidebar-content") as HHContent
         let title = this.content.getAttribute("title") || "No Title"
 
+        // Remove the title to prevent unneeded tooltip.
+        this.content.removeAttribute("title")
+
         this.titleBar = document.createElement("div") as HTMLDivElement
 
         let titleSpan = document.createElement("span")

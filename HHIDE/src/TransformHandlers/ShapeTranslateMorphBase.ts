@@ -20,7 +20,7 @@ class ShapeTranslateMorphBase{
         }
     }
 
-    beginMove(startPos: Vector2, hitResult = null){
+    beginMove(startPos: Vector2, hitResult = null, showInspector: boolean = true){
         this.startPos = startPos
         this.isDragging = true
     }
