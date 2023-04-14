@@ -273,18 +273,29 @@ class HHCurveInput extends HTMLElement {
     horizontalLine: paper.Path
     verticalLine: paper.Path
 
+    frameValueIndicatorTextX: paper.PointText
+    frameValueIndicatorTextY: paper.PointText
+
+    frameValueIndicatorGroup: paper.Group
+
     showKeyFrameValueIndicator(frameId: number, value: number) {
-        let canvasPoint = this.viewPort.viewToCanvas(frameId, value)
+        if (this.frameValueIndicatorGroup == null) {
+            this.frameValueIndicatorGroup = new paper.Group()
+        }
+
         if (this.horizontalLine == null) {
             this.horizontalLine = new paper.Path.Line(new paper.Point(0, 0), new paper.Point(1, 1))
             this.horizontalLine.strokeColor = new paper.Color("red")
             this.horizontalLine.dashArray = [10, 4]
+
+            this.frameValueIndicatorGroup.addChild(this.horizontalLine)
         }
 
         if (this.verticalLine == null) {
             this.verticalLine = new paper.Path.Line(new paper.Point(0, 0), new paper.Point(1, 1))
             this.verticalLine.strokeColor = new paper.Color("red")
             this.verticalLine.dashArray = [10, 4]
+            this.frameValueIndicatorGroup.addChild(this.verticalLine)
         }
 
         this.horizontalLine.segments[0].point = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, value))
@@ -292,6 +303,27 @@ class HHCurveInput extends HTMLElement {
 
         this.verticalLine.segments[0].point = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, value))
         this.verticalLine.segments[1].point = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, this.minValue))
+
+        if (this.frameValueIndicatorTextX == null) {
+            this.frameValueIndicatorTextX = this.createPointText()
+            this.frameValueIndicatorGroup.addChild(this.frameValueIndicatorTextX)
+        }
+        this.frameValueIndicatorTextX.content = parseFloat(frameId.toFixed(0)).toString()
+        this.frameValueIndicatorTextX.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, this.minValue)).add(new paper.Point(0, this.textSize))
+
+        if (this.frameValueIndicatorTextY == null) {
+            this.frameValueIndicatorTextY = this.createPointText()
+            this.frameValueIndicatorGroup.addChild(this.frameValueIndicatorTextY)
+        }
+        this.frameValueIndicatorTextY.content = parseFloat(value.toFixed(2)).toString()
+        this.frameValueIndicatorTextY.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(this.minFrameId, value)).subtract(new paper.Point(this.textSize, 0))
+
+        this.frameValueIndicatorGroup.visible = true
+    }
+
+    hideKeyFrameValueIndicator() {
+        if(this.frameValueIndicatorGroup)
+            this.frameValueIndicatorGroup.visible = false
     }
 
     hideInfoPrompt() {
@@ -332,14 +364,18 @@ class HHCurveInput extends HTMLElement {
     yAxisTextCache: paper.PointText[] = []
     textSize = 15
 
+    createPointText() {
+        let pointText = new paper.PointText(new paper.Point(0, 0))
+        pointText.justification = "center";
+        pointText.fillColor = new paper.Color("black")
+        pointText.content = "UnSet"
+        pointText.fontSize = this.textSize + "px"
+        return pointText
+    }
+
     getAxisTextFromCache(textCache: paper.Point[], idx: number) {
         for (let curIdx = textCache.length; curIdx <= idx; curIdx++) {
-            let newPointText = new paper.PointText(new paper.Point(0, 0))
-            newPointText.justification = "center";
-            newPointText.fillColor = new paper.Color("black")
-            newPointText.content = "UnSet"
-            newPointText.fontSize = this.textSize + "px"
-            textCache.push(newPointText)
+            textCache.push(this.createPointText())
         }
 
         return textCache[idx]
@@ -396,6 +432,8 @@ class HHCurveInput extends HTMLElement {
         let curve = this.keyFrameCurveGetter()
         if (curve == null)
             return
+
+        this.hideKeyFrameValueIndicator()
 
         let points = []
         let totalPoints = curve.GetTotalPoints()
