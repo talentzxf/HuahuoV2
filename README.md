@@ -13,6 +13,6 @@ Build:
 7. npm run start
 
 TODOs:
-    1. Onion skin view.
-    2. Bone Animation
-    3. AIGC !!!!
+1. Onion skin view.
+2. Bone Animation
+3. AIGC !!!!
