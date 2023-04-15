@@ -90,10 +90,6 @@ class HHCurveInput extends HTMLElement {
         this.canvas.style.width = defaultCanvasWidth + "px"
         this.canvas.style.height = defaultCanvasHeight + "px"
 
-        this.canvas.onresize = ()=>{
-            console.log("Why resize>>>")
-        }
-
         this.appendChild(this.canvas)
 
         this.hitOptions = {
@@ -168,39 +164,21 @@ class HHCurveInput extends HTMLElement {
 
         let curFrameId = curPoint.GetFrameId() + 1 // In the view side, always +1
 
-        let lastFrameId = curFrameId - 1
-        let nextFrameId = curFrameId + 1
-        let lastFrameXOffset = this.viewPort.getXOffsetForFrame(lastFrameId)
-        let curFrameXOffset = this.viewPort.getXOffsetForFrame(curFrameId)
-        let nextFrameXOffset = this.viewPort.getXOffsetForFrame(nextFrameId)
+        let leftBoundFrameId = 1 // FrameId can't be smaller than 0
+        let rightBoundFrameId = Number.MAX_VALUE
 
-        let minDistStatus = 0 // -1 - lastFrame.  0 - currentFrame.  1 - nextFrame
-        let curDistantce = Math.abs(curFrameXOffset - mouseOffsetX)
-        let lastFrameDistance = Math.abs(lastFrameXOffset - mouseOffsetX)
-        let nextFrameDistance = Math.abs(nextFrameXOffset - mouseOffsetX)
-
-        let minDistance = curDistantce
-        if (lastFrameDistance < minDistance) {
-            minDistance = lastFrameDistance
-            minDistStatus = -1
+        if(!isFirstPoint){
+            let prevPoint = curve.GetKeyFrameCurvePoint(index - 1)
+            leftBoundFrameId = prevPoint.GetFrameId() + 1
         }
 
-        if (nextFrameDistance < minDistance) {
-            minDistance = nextFrameDistance
-            minDistStatus = 1
+        if(!isLastPoint){
+            let nextPoint = curve.GetKeyFrameCurvePoint(index + 1)
+            rightBoundFrameId = nextPoint.GetFrameId() + 1
         }
 
-        switch (minDistStatus) {
-            case -1:
-                pos.x = lastFrameXOffset
-                break;
-            case 0:
-                pos.x = curFrameXOffset
-                break;
-            case 1:
-                pos.x = nextFrameXOffset
-                break;
-        }
+        pos.x = Math.clamp(mouseOffsetX, this.viewPort.getXOffsetForFrame(leftBoundFrameId), this.viewPort.getXOffsetForFrame(rightBoundFrameId))
+
     }
 
     @switchPaperProject
@@ -317,6 +295,8 @@ class HHCurveInput extends HTMLElement {
         if (this.frameValueIndicatorTextX == null) {
             this.frameValueIndicatorTextX = this.createPointText()
             this.frameValueIndicatorGroup.addChild(this.frameValueIndicatorTextX)
+
+            this.frameValueIndicatorTextX.fontSize = this.smallTextSize
         }
         this.frameValueIndicatorTextX.content = parseFloat(frameId.toFixed(0)).toString()
         this.frameValueIndicatorTextX.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, this.minValue)).add(new paper.Point(0, this.textSize))
@@ -373,6 +353,7 @@ class HHCurveInput extends HTMLElement {
     xAxisTextCache: paper.PointText[] = []
     yAxisTextCache: paper.PointText[] = []
     textSize = 15
+    smallTextSize = 10
 
     createPointText() {
         let pointText = new paper.PointText(new paper.Point(0, 0))
@@ -397,7 +378,7 @@ class HHCurveInput extends HTMLElement {
             let rawObj = circle.data["rawObj"]
 
             this.infoPrompt.innerHTML = i18n.t("inspector.CurveInputPrompt", {
-                frameId: rawObj.GetFrameId(),
+                frameId: rawObj.GetFrameId() + 1,
                 value: rawObj.GetValue()
             })
             this.showInfoPrompt()
