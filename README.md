@@ -4,7 +4,7 @@ Continue investigate the possibility to build web-ide
 Please visit: www.huahuo.online.
 
 Build:
-1. Install emscripten
+1. Install emscripten (https://github.com/emscripten-core/emscripten) Note: Very complicated!
 2. cd HuahuEngineV2
 3. ./build.sh
 4. cd ..
