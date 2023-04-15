@@ -13,8 +13,6 @@ import {switchPaperProject} from "./Utils";
 import {ViewPort} from "./ViewPort";
 import {MovableCurve} from "./MovableCurve";
 import {AxisSystem} from "./AxisSystem";
-
-
 declare class KeyFrameCurvePoint {
     GetValue(): number
 
@@ -24,6 +22,9 @@ declare class KeyFrameCurvePoint {
 
     GetHandleOut(): Vector2
 }
+
+const defaultCanvasWidth = 300
+const defaultCanvasHeight = 150
 
 @CustomElement({
     selector: "hh-curve-input"
@@ -84,6 +85,15 @@ class HHCurveInput extends HTMLElement {
         this.style.position = "relative"
 
         this.canvas = document.createElement("canvas")
+        this.canvas.width = defaultCanvasWidth
+        this.canvas.height = defaultCanvasHeight
+        this.canvas.style.width = defaultCanvasWidth + "px"
+        this.canvas.style.height = defaultCanvasHeight + "px"
+
+        this.canvas.onresize = ()=>{
+            console.log("Why resize>>>")
+        }
+
         this.appendChild(this.canvas)
 
         this.hitOptions = {
@@ -460,15 +470,15 @@ class HHCurveInput extends HTMLElement {
         }
 
         // Setup port.
-        this.viewPort.canvasWidth = this.canvas.width
-        this.viewPort.canvasHeight = this.canvas.height
-        this.viewPort.viewWidth = 0.8 * this.canvas.width
-        this.viewPort.viewHeight = 0.75 * this.canvas.height
+        this.viewPort.canvasWidth = defaultCanvasWidth
+        this.viewPort.canvasHeight = defaultCanvasHeight
+        this.viewPort.viewWidth = 0.8 * defaultCanvasWidth
+        this.viewPort.viewHeight = 0.75 * defaultCanvasHeight
         this.viewPort.viewXMin = this.minFrameId
         this.viewPort.viewXMax = this.maxFrameId
         this.viewPort.viewYMin = this.minValue
         this.viewPort.viewYMax = this.maxValue
-        this.viewPort.leftDown = [0.1 * this.canvas.width, 0.8 * this.canvas.height]
+        this.viewPort.leftDown = [0.1 * defaultCanvasWidth, 0.8 * defaultCanvasHeight]
 
 
         this.axisSystem.setOriginPosition(this.minFrameId, this.minValue)
