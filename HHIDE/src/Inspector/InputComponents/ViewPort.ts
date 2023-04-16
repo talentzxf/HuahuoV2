@@ -35,6 +35,11 @@ class ViewPort {
         return new paper.Point(x, y)
     }
 
+    getValueFromYOffset(yoffset: number){
+        let yScale = this.viewHeight / this.viewYSpan
+        return this.viewYMin + (this.leftDown[1] - yoffset)/yScale
+    }
+
     viewToCanvas(x, y) {
         let xScale = this.viewWidth / this.viewXSpan
         let yScale = this.viewHeight / this.viewYSpan

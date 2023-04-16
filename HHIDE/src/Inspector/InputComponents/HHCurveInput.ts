@@ -154,7 +154,7 @@ class HHCurveInput extends HTMLElement {
     }
 
     // This function has side effect, it will change x of pos.
-    adjustDraggingPoint(curve, index, pos, mouseOffsetX) {
+    adjustDraggingPoint(curve, index, pos) {
         let curPoint = curve.GetKeyFrameCurvePoint(index)
 
         let totalPointCount = curve.GetTotalPoints()
@@ -177,11 +177,14 @@ class HHCurveInput extends HTMLElement {
             rightBoundFrameId = nextPoint.GetFrameId()
         }
 
-        let possibleX = Math.clamp(mouseOffsetX, this.viewPort.getXOffsetForFrame(leftBoundFrameId), this.viewPort.getXOffsetForFrame(rightBoundFrameId))
+        let possibleX = Math.clamp(pos.x, this.viewPort.getXOffsetForFrame(leftBoundFrameId), this.viewPort.getXOffsetForFrame(rightBoundFrameId))
 
         // Round to frameId xoffset
         let frameId = this.viewPort.getFrameIdFromXOffset(possibleX)
         pos.x = this.viewPort.getXOffsetForFrame(frameId)
+
+        let value = this.viewPort.getValueFromYOffset(pos.y)
+
     }
 
     @switchPaperProject
@@ -197,7 +200,7 @@ class HHCurveInput extends HTMLElement {
 
             if (this.transformHandler == shapeMorphHandler) // Only shape morph handler need to stick to frame.
             {
-                this.adjustDraggingPoint(curve, index, pos, evt.offsetX)
+                this.adjustDraggingPoint(curve, index, pos)
                 let [newFrameId, newValue] = this.viewPort.canvasPointToViewPoint(pos.x, pos.y)
                 this.showKeyFrameValueIndicator(newFrameId, newValue)
             }
