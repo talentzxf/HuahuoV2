@@ -169,16 +169,19 @@ class HHCurveInput extends HTMLElement {
 
         if(!isFirstPoint){
             let prevPoint = curve.GetKeyFrameCurvePoint(index - 1)
-            leftBoundFrameId = prevPoint.GetFrameId() + 1
+            leftBoundFrameId = prevPoint.GetFrameId() + 2
         }
 
         if(!isLastPoint){
             let nextPoint = curve.GetKeyFrameCurvePoint(index + 1)
-            rightBoundFrameId = nextPoint.GetFrameId() + 1
+            rightBoundFrameId = nextPoint.GetFrameId()
         }
 
-        pos.x = Math.clamp(mouseOffsetX, this.viewPort.getXOffsetForFrame(leftBoundFrameId), this.viewPort.getXOffsetForFrame(rightBoundFrameId))
+        let possibleX = Math.clamp(mouseOffsetX, this.viewPort.getXOffsetForFrame(leftBoundFrameId), this.viewPort.getXOffsetForFrame(rightBoundFrameId))
 
+        // Round to frameId xoffset
+        let frameId = this.viewPort.getFrameIdFromXOffset(possibleX)
+        pos.x = this.viewPort.getXOffsetForFrame(frameId)
     }
 
     @switchPaperProject
@@ -299,7 +302,7 @@ class HHCurveInput extends HTMLElement {
             this.frameValueIndicatorTextX.fontSize = this.smallTextSize
         }
         this.frameValueIndicatorTextX.content = parseFloat(frameId.toFixed(0)).toString()
-        this.frameValueIndicatorTextX.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, this.minValue)).add(new paper.Point(0, this.textSize))
+        this.frameValueIndicatorTextX.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, this.minValue)).subtract(new paper.Point(0, this.textSize))
 
         if (this.frameValueIndicatorTextY == null) {
             this.frameValueIndicatorTextY = this.createPointText()

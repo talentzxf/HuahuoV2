@@ -24,6 +24,12 @@ class ViewPort {
         return this.leftDown[0] + (frameId - this.viewXMin) * xScale
     }
 
+    getFrameIdFromXOffset(xoffset: number){
+        let xScale = this.viewWidth / this.viewXSpan
+
+        return Math.ceil((xoffset - this.leftDown[0])/xScale + this.viewXMin)
+    }
+
     viewPointToCanvasPoint(p) {
         let [x, y] = this.viewToCanvas(p.x, p.y)
         return new paper.Point(x, y)
