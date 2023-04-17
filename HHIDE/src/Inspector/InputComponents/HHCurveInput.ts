@@ -200,14 +200,18 @@ class HHCurveInput extends HTMLElement {
             if (this.transformHandler == shapeMorphHandler) // Only shape morph handler need to stick to frame.
             {
                 this.adjustDraggingPoint(curve, index, pos)
-                let [newFrameId, newValue] = this.viewPort.canvasPointToViewPoint(pos.x, pos.y)
-                this.showKeyFrameValueIndicator(newFrameId, newValue)
             }
 
             this.transformHandler.dragging(pos)
 
             // After dragging, refresh the UI. As there might be some change in the boundary.
             this.refreshViewPort()
+
+            if (this.transformHandler == shapeMorphHandler) // Only shape morph handler need to stick to frame.
+            {
+                let [newFrameId, newValue] = this.viewPort.canvasPointToViewPoint(pos.x, pos.y)
+                this.showKeyFrameValueIndicator(newFrameId, newValue)
+            }
         }
     }
 
@@ -376,6 +380,7 @@ class HHCurveInput extends HTMLElement {
             textCache.push(this.createPointText())
         }
 
+        textCache[idx].visible = true
         return textCache[idx]
     }
 
@@ -431,7 +436,7 @@ class HHCurveInput extends HTMLElement {
         this._updateMinMaxFrameIdValue(this.keyFrameCurvePath.segments.length, (segmentIdx)=>{
             let segment = this.keyFrameCurvePath.segments[segmentIdx]
             let frameIdAndValue = this.viewPort.canvasPointToViewPoint(segment.point.x, segment.point.y)
-            frameIdAndValue[0] = Math.floor(frameIdAndValue[0])
+            frameIdAndValue[0] = Math.round(frameIdAndValue[0])
 
             segmentFrameIdAndValues.push(frameIdAndValue)
             return frameIdAndValue
@@ -442,10 +447,10 @@ class HHCurveInput extends HTMLElement {
         for (let segment of this.keyFrameCurvePath.segments) {
             let segmentIdx = segment.index
             let segmentFrameIdAndValue = segmentFrameIdAndValues[segmentIdx]
-
-            let frameId = Math.floor(segmentFrameIdAndValue[0])
-            let value = segmentFrameIdAndValue[1]
             segment.point = this.viewPort.viewPointToCanvasPoint(new paper.Point(segmentFrameIdAndValue[0], segmentFrameIdAndValue[1]))
+
+            let [frameId, value] = this.viewPort.canvasPointToViewPoint(segment.point.x, segment.point.y)
+            frameId = Math.round(frameId)
 
             // Write x-axis labels.
             let xAxisLabel: paper.PointText = this.getAxisTextFromCache(this.xAxisTextCache, segmentIdx)
@@ -500,6 +505,15 @@ class HHCurveInput extends HTMLElement {
     }
 
     setupViewPort(){
+        // Hide text caches.
+        for(let text of this.xAxisTextCache){
+            text.visible = false
+        }
+
+        for(let text of this.yAxisTextCache){
+            text.visible = false
+        }
+
         // Setup port.
         this.viewPort.canvasWidth = defaultCanvasWidth
         this.viewPort.canvasHeight = defaultCanvasHeight
