@@ -206,7 +206,7 @@ class HHCurveInput extends HTMLElement {
 
             this.transformHandler.dragging(pos)
 
-            // After dragging, refresh the UI. As there might be some change in the boundries.
+            // After dragging, refresh the UI. As there might be some change in the boundary.
             this.refreshViewPort()
         }
     }
@@ -427,36 +427,15 @@ class HHCurveInput extends HTMLElement {
 
 
     refreshViewPort() {
-        // TODO: Duplicate with getPointsAndUpdateMinMaxFrameIdValue !!!
-        this.minValue = Number.MAX_VALUE
-        this.maxValue = -Number.MAX_VALUE
-        this.minFrameId = Number.MAX_VALUE
-        this.maxFrameId = -Number.MAX_VALUE
-
-        // Save current segments points.
         let segmentFrameIdAndValues = []
-        for (let segment of this.keyFrameCurvePath.segments) {
+        this._updateMinMaxFrameIdValue(this.keyFrameCurvePath.segments.length, (segmentIdx)=>{
+            let segment = this.keyFrameCurvePath.segments[segmentIdx]
             let frameIdAndValue = this.viewPort.canvasPointToViewPoint(segment.point.x, segment.point.y)
             frameIdAndValue[0] = Math.floor(frameIdAndValue[0])
+
             segmentFrameIdAndValues.push(frameIdAndValue)
-
-            let frameId = frameIdAndValue[0]
-            let value = frameIdAndValue[1]
-
-            this.minValue = Math.min(this.minValue, value)
-            this.maxValue = Math.max(this.maxValue, value)
-            this.minFrameId = Math.min(this.minFrameId, frameId)
-            this.maxFrameId = Math.max(this.maxFrameId, frameId)
-        }
-
-        // Add some offset to avoid 0/0
-        if (this.minFrameId == this.maxFrameId) {
-            this.maxFrameId = this.minFrameId + 1
-        }
-
-        if (this.minValue == this.maxValue) {
-            this.maxValue = this.minValue + 1
-        }
+            return frameIdAndValue
+        })
 
         // Setup port.
         this.viewPort.canvasWidth = defaultCanvasWidth
@@ -493,24 +472,20 @@ class HHCurveInput extends HTMLElement {
         }
     }
 
-    getPointsAndUpdateMinMaxFrameIdValue(curve) {
+    // What a dirty function !!!
+    _updateMinMaxFrameIdValue(totalPoints, getPointFunc){
         this.minValue = Number.MAX_VALUE
         this.maxValue = -Number.MAX_VALUE
         this.minFrameId = Number.MAX_VALUE
         this.maxFrameId = -Number.MAX_VALUE
-        let points = []
-        let totalPoints = curve.GetTotalPoints()
+
         for (let pointIdx = 0; pointIdx < totalPoints; pointIdx++) {
-            let curvePoint = curve.GetKeyFrameCurvePoint(pointIdx)
-            let value = curvePoint.GetValue()
-            let frameId = curvePoint.GetFrameId() + 1 // In Cpp side, frameId starts from 0. But when shown, frameId starts from 1.
+            let [frameId, value] = getPointFunc(pointIdx)
 
             this.minValue = Math.min(this.minValue, value)
             this.maxValue = Math.max(this.maxValue, value)
             this.minFrameId = Math.min(this.minFrameId, frameId)
             this.maxFrameId = Math.max(this.maxFrameId, frameId)
-
-            points.push(curvePoint)
         }
 
         // Add some offset to avoid 0/0
@@ -521,6 +496,19 @@ class HHCurveInput extends HTMLElement {
         if (this.minValue == this.maxValue) {
             this.maxValue = this.minValue + 1
         }
+    }
+
+    getPointsAndUpdateMinMaxFrameIdValue(curve) {
+        let totalPoints = curve.GetTotalPoints()
+        let points = []
+        this._updateMinMaxFrameIdValue(totalPoints, (pointIdx)=>{
+            let curvePoint = curve.GetKeyFrameCurvePoint(pointIdx)
+            let value = curvePoint.GetValue()
+            let frameId = curvePoint.GetFrameId() + 1 // In Cpp side, frameId starts from 0. But when shown, frameId starts from 1.
+
+            points.push(curvePoint)
+            return [frameId, value]
+        })
         return points
     }
 
