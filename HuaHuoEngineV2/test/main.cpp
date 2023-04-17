@@ -619,10 +619,34 @@ void testKeyFrameCurve(){
     keyFrameCurve.AddValue(2.0, 10);
     keyFrameCurve.AddValue(3.0, 5);
     keyFrameCurve.AddValue(4.0, 10);
+    keyFrameCurve.AddValue(120.0, 120.0);
 
     Assert(keyFrameCurve.GetKeyFrameCurvePoint(0)->GetFrameId() == 1);
     Assert(keyFrameCurve.GetKeyFrameCurvePoint(1)->GetFrameId() == 5);
     Assert(keyFrameCurve.GetKeyFrameCurvePoint(2)->GetFrameId() == 10);
+
+    const char* fieldName = "thickness";
+
+    Layer* layer = GetDefaultObjectStoreManager()->GetCurrentStore()->CreateLayer("Hahahaha");
+    CircleShape *circleShape = (CircleShape *) BaseShape::CreateShape("CircleShape");
+
+    CustomComponent *customComponent = CustomComponent::CreateComponent("CustomComponent");
+    circleShape->AddFrameState(customComponent);
+    customComponent->RegisterFloatValue(fieldName, 1.0f);
+    layer->SetCurrentFrame(0);
+    customComponent->SetFloatValue(fieldName, 0.0f);
+    layer->SetCurrentFrame(100);
+    customComponent->SetFloatValue(fieldName, 100.0f);
+    layer->SetCurrentFrame(200);
+    customComponent->SetFloatValue(fieldName, 200.0f);
+    layer->SetCurrentFrame(300);
+    customComponent->SetFloatValue(fieldName, 300.0f);
+
+    KeyFrameCurve* keyFrameCurve1 = customComponent->GetKeyFrameCurve(fieldName);
+    Assert(keyFrameCurve1->GetTotalPoints() == 4);
+
+    layer->SetCurrentFrame(400);
+    keyFrameCurve1->SetValueByIndex(3, 400, 400);
 }
 
 int main() {

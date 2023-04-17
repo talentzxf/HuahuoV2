@@ -147,8 +147,8 @@ void CustomFrameState::SetFloatValueByIndex(int index, int frameId, float value)
     KeyFrameArray& keyFrameArray = GetKeyFrames();
     if(keyFrameArray[index].GetKeyFrame().GetFrameId() != frameId){
         needUpdateKeyFrame = true;
-        Layer *shapeLayer = GetBaseShape()->GetLayer();
-        shapeLayer->DeleteKeyFrame(&keyFrameArray[index].GetKeyFrame());
+
+        this->DeleteKeyFrame(keyFrameArray[index].GetKeyFrame().GetFrameId());
     }
     keyFrameArray[index].GetKeyFrame().SetFrameId(frameId);
     keyFrameArray[index].data.floatValue = value;

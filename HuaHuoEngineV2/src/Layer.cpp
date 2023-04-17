@@ -132,10 +132,6 @@ void Layer::DeleteKeyFrame(KeyFrame *keyFrame) {
     if (keyFrames.contains(frameId) && frameState != NULL) {
         KeyFrameIdentifierSet &keyFrameSet = keyFrames[frameId];
 
-        for(int keyFrameObjectIdentifier : keyFrameSet){
-            KeyFrame &keyFrameObject = GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameObjectIdentifier);
-        }
-
         std::erase_if(keyFrameSet, [keyFrame, frameState](const int keyFrameIdentifier) {
             KeyFrame &keyFrameObject = GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameIdentifier);
             if (keyFrameObject.GetFrameState() == NULL || !keyFrameObject.GetFrameState()->IsValid())
@@ -148,9 +144,6 @@ void Layer::DeleteKeyFrame(KeyFrame *keyFrame) {
             return false;
         });
 
-        for(int keyFrameObjectIdentifier : keyFrameSet){
-            KeyFrame &keyFrameObject = GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameObjectIdentifier);
-        }
         if (keyFrameSet.size() == 0) {
             keyFrames.erase(frameId);
         }
