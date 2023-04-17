@@ -231,9 +231,6 @@ class HHCurveInput extends HTMLElement {
 
             this.transformHandler.dragging(pos)
 
-            // After dragging, refresh the UI. As there might be some change in the boundary.
-            this.refreshViewPort()
-
             if (this.transformHandler == this.getHandler("segment")) // Only shape morph handler need to stick to frame.
             {
                 let [newFrameId, newValue] = this.viewPort.canvasPointToViewPoint(pos.x, pos.y)
@@ -459,41 +456,7 @@ class HHCurveInput extends HTMLElement {
 
         return this.circleCache[idx]
     }
-
-
-    refreshViewPort() {
-        let segmentFrameIdAndValues = []
-        this._updateMinMaxFrameIdValue(this.keyFrameCurvePath.segments.length, (segmentIdx) => {
-            let segment = this.keyFrameCurvePath.segments[segmentIdx]
-            let frameIdAndValue = this.viewPort.canvasPointToViewPoint(segment.point.x, segment.point.y)
-            frameIdAndValue[0] = Math.round(frameIdAndValue[0])
-
-            segmentFrameIdAndValues.push(frameIdAndValue)
-            return frameIdAndValue
-        })
-
-        this.setupViewPort()
-
-        for (let segment of this.keyFrameCurvePath.segments) {
-            let segmentIdx = segment.index
-            let segmentFrameIdAndValue = segmentFrameIdAndValues[segmentIdx]
-            segment.point = this.viewPort.viewPointToCanvasPoint(new paper.Point(segmentFrameIdAndValue[0], segmentFrameIdAndValue[1]))
-
-            let [frameId, value] = this.viewPort.canvasPointToViewPoint(segment.point.x, segment.point.y)
-            frameId = Math.round(frameId)
-
-            // Write x-axis labels.
-            let xAxisLabel: paper.PointText = this.getAxisTextFromCache(this.xAxisTextCache, segmentIdx)
-            xAxisLabel.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, this.minValue)).add(new paper.Point(0, this.textSize))
-            xAxisLabel.content = String(frameId)
-
-            // Write y-axis labels.
-            let yAxisLabel: paper.PointText = this.getAxisTextFromCache(this.yAxisTextCache, segmentIdx)
-            yAxisLabel.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(this.minFrameId, value)).subtract(new paper.Point(this.textSize, 0))
-            yAxisLabel.content = parseFloat(value.toFixed(2)).toString()
-        }
-    }
-
+    
     // What a dirty function !!!
     _updateMinMaxFrameIdValue(totalPoints, getPointFunc) {
         this.minValue = Number.MAX_VALUE
