@@ -132,7 +132,7 @@ class HHCurveInput extends HTMLElement {
 
         let index = segment.index
         let curve = this.keyFrameCurveGetter()
-        curve.SetValue(frameId, value)
+        curve.SetValue(frameId - 1, value)
     }
 
     @switchPaperProject

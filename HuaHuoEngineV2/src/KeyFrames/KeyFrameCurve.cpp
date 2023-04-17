@@ -12,11 +12,15 @@ void KeyFrameCurve::SetFrameState(CustomFrameState *frameState) {
 
 void KeyFrameCurve::SetValue(int frameId, float value){
     if(mFrameState->GetBaseShape()->GetLayer()->GetCurrentFrame() != frameId) {
+        printf("Object Frame Id: %d, setFrameId: %d\n", mFrameState->GetBaseShape()->GetLayer()->GetCurrentFrame(), frameId);
+        printf("FrameId doesn't match!!!");
         throw "FrameId doesn't match!!!!";
     }
 
-    AddValue(frameId, value);
-    if(mFrameState->IsValid()){
+    if(mFrameState->GetInstanceID() != InstanceID_None){
+        printf("Setting value:%f for this frame state\n", value);
         mFrameState->SetFloatValue(value);
+    }else{
+        printf("Frame state is not valid\n");
     }
 }
