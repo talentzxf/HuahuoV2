@@ -13,6 +13,7 @@ import {switchPaperProject} from "./Utils";
 import {ViewPort} from "./ViewPort";
 import {MovableCurve} from "./MovableCurve";
 import {AxisSystem} from "./AxisSystem";
+
 declare class KeyFrameCurvePoint {
     GetValue(): number
 
@@ -167,12 +168,12 @@ class HHCurveInput extends HTMLElement {
         let leftBoundFrameId = 1 // FrameId can't be smaller than 0
         let rightBoundFrameId = Number.MAX_VALUE
 
-        if(!isFirstPoint){
+        if (!isFirstPoint) {
             let prevPoint = curve.GetKeyFrameCurvePoint(index - 1)
             leftBoundFrameId = prevPoint.GetFrameId() + 2
         }
 
-        if(!isLastPoint){
+        if (!isLastPoint) {
             let nextPoint = curve.GetKeyFrameCurvePoint(index + 1)
             rightBoundFrameId = nextPoint.GetFrameId()
         }
@@ -183,9 +184,6 @@ class HHCurveInput extends HTMLElement {
 
         // Round to frameId xoffset
         pos.x = this.viewPort.getXOffsetForFrame(possibleFrameId)
-
-        let value = this.viewPort.getValueFromYOffset(pos.y)
-
     }
 
     @switchPaperProject
@@ -206,8 +204,10 @@ class HHCurveInput extends HTMLElement {
                 this.showKeyFrameValueIndicator(newFrameId, newValue)
             }
 
-            // Can only be dragged within FrameRange.
             this.transformHandler.dragging(pos)
+
+            // After dragging, refresh the UI. As there might be some change in the boundries.
+            this.refreshViewPort()
         }
     }
 
@@ -319,7 +319,7 @@ class HHCurveInput extends HTMLElement {
     }
 
     hideKeyFrameValueIndicator() {
-        if(this.frameValueIndicatorGroup)
+        if (this.frameValueIndicatorGroup)
             this.frameValueIndicatorGroup.visible = false
     }
 
@@ -425,14 +425,79 @@ class HHCurveInput extends HTMLElement {
         return this.circleCache[idx]
     }
 
-    @switchPaperProject
-    refresh() {
-        let curve = this.keyFrameCurveGetter()
-        if (curve == null)
-            return
 
-        this.hideKeyFrameValueIndicator()
+    refreshViewPort() {
+        // TODO: Duplicate with getPointsAndUpdateMinMaxFrameIdValue !!!
+        this.minValue = Number.MAX_VALUE
+        this.maxValue = -Number.MAX_VALUE
+        this.minFrameId = Number.MAX_VALUE
+        this.maxFrameId = -Number.MAX_VALUE
 
+        // Save current segments points.
+        let segmentFrameIdAndValues = []
+        for (let segment of this.keyFrameCurvePath.segments) {
+            let frameIdAndValue = this.viewPort.canvasPointToViewPoint(segment.point.x, segment.point.y)
+            frameIdAndValue[0] = Math.floor(frameIdAndValue[0])
+            segmentFrameIdAndValues.push(frameIdAndValue)
+
+            let frameId = frameIdAndValue[0]
+            let value = frameIdAndValue[1]
+
+            this.minValue = Math.min(this.minValue, value)
+            this.maxValue = Math.max(this.maxValue, value)
+            this.minFrameId = Math.min(this.minFrameId, frameId)
+            this.maxFrameId = Math.max(this.maxFrameId, frameId)
+        }
+
+        // Add some offset to avoid 0/0
+        if (this.minFrameId == this.maxFrameId) {
+            this.maxFrameId = this.minFrameId + 1
+        }
+
+        if (this.minValue == this.maxValue) {
+            this.maxValue = this.minValue + 1
+        }
+
+        // Setup port.
+        this.viewPort.canvasWidth = defaultCanvasWidth
+        this.viewPort.canvasHeight = defaultCanvasHeight
+        this.viewPort.viewWidth = 0.8 * defaultCanvasWidth
+        this.viewPort.viewHeight = 0.75 * defaultCanvasHeight
+        this.viewPort.viewXMin = this.minFrameId
+        this.viewPort.viewXMax = this.maxFrameId
+        this.viewPort.viewYMin = this.minValue
+        this.viewPort.viewYMax = this.maxValue
+        this.viewPort.leftDown = [0.1 * defaultCanvasWidth, 0.8 * defaultCanvasHeight]
+
+        this.axisSystem.setOriginPosition(this.minFrameId, this.minValue)
+        this.axisSystem.setXLength(this.maxFrameId - this.minFrameId)
+        this.axisSystem.setYLength(this.maxValue - this.minValue)
+
+        for (let segment of this.keyFrameCurvePath.segments) {
+            let segmentIdx = segment.index
+            let segmentFrameIdAndValue = segmentFrameIdAndValues[segmentIdx]
+
+            let frameId = Math.floor(segmentFrameIdAndValue[0])
+            let value = segmentFrameIdAndValue[1]
+            segment.point = this.viewPort.viewPointToCanvasPoint(new paper.Point(segmentFrameIdAndValue[0], segmentFrameIdAndValue[1]))
+
+            // Write x-axis labels.
+            let xAxisLabel: paper.PointText = this.getAxisTextFromCache(this.xAxisTextCache, segmentIdx)
+            xAxisLabel.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, this.minValue)).add(new paper.Point(0, this.textSize))
+            xAxisLabel.content = String(frameId)
+
+            // Write y-axis labels.
+            let yAxisLabel: paper.PointText = this.getAxisTextFromCache(this.yAxisTextCache, segmentIdx)
+            yAxisLabel.position = this.viewPort.viewPointToCanvasPoint(new paper.Point(this.minFrameId, value)).subtract(new paper.Point(this.textSize, 0))
+            yAxisLabel.content = parseFloat(value.toFixed(2)).toString()
+        }
+    }
+
+    getPointsAndUpdateMinMaxFrameIdValue(curve) {
+        this.minValue = Number.MAX_VALUE
+        this.maxValue = -Number.MAX_VALUE
+        this.minFrameId = Number.MAX_VALUE
+        this.maxFrameId = -Number.MAX_VALUE
         let points = []
         let totalPoints = curve.GetTotalPoints()
         for (let pointIdx = 0; pointIdx < totalPoints; pointIdx++) {
@@ -456,6 +521,17 @@ class HHCurveInput extends HTMLElement {
         if (this.minValue == this.maxValue) {
             this.maxValue = this.minValue + 1
         }
+        return points
+    }
+
+    @switchPaperProject
+    refresh() {
+        let curve = this.keyFrameCurveGetter()
+        if (curve == null)
+            return
+
+        let points = this.getPointsAndUpdateMinMaxFrameIdValue(curve)
+        this.hideKeyFrameValueIndicator()
 
         // Setup port.
         this.viewPort.canvasWidth = defaultCanvasWidth
