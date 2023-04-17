@@ -27,7 +27,7 @@ class ViewPort {
     getFrameIdFromXOffset(xoffset: number){
         let xScale = this.viewWidth / this.viewXSpan
 
-        return Math.ceil((xoffset - this.leftDown[0])/xScale + this.viewXMin)
+        return Math.floor((xoffset - this.leftDown[0])/xScale + this.viewXMin)
     }
 
     viewPointToCanvasPoint(p) {

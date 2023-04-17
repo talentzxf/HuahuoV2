@@ -177,11 +177,12 @@ class HHCurveInput extends HTMLElement {
             rightBoundFrameId = nextPoint.GetFrameId()
         }
 
-        let possibleX = Math.clamp(pos.x, this.viewPort.getXOffsetForFrame(leftBoundFrameId), this.viewPort.getXOffsetForFrame(rightBoundFrameId))
+        let nowFrameId = this.viewPort.getFrameIdFromXOffset(pos.x)
+
+        let possibleFrameId = Math.clamp(nowFrameId, leftBoundFrameId, rightBoundFrameId)
 
         // Round to frameId xoffset
-        let frameId = this.viewPort.getFrameIdFromXOffset(possibleX)
-        pos.x = this.viewPort.getXOffsetForFrame(frameId)
+        pos.x = this.viewPort.getXOffsetForFrame(possibleFrameId)
 
         let value = this.viewPort.getValueFromYOffset(pos.y)
 
