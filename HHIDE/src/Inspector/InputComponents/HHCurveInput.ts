@@ -13,7 +13,6 @@ import {ViewPort} from "./ViewPort";
 import {MovableCurve} from "./MovableCurve";
 import {AxisSystem} from "./AxisSystem";
 import {huahuoEngine} from "hhenginejs";
-import {frame} from "web3modal/dist/providers/connectors";
 
 declare class KeyFrameCurvePoint {
     GetValue(): number
@@ -69,6 +68,7 @@ class HHCurveInput extends HTMLElement {
         }
 
         this.transformHandlerMap["stroke"].registerValueChangeHandler("insertSegment")(this.insertSegment.bind(this))
+        this.transformHandlerMap["stroke"].registerValueChangeHandler("point")(this.moveSegment.bind(this))
         this.transformHandlerMap["segment"].registerValueChangeHandler("point")(this.moveSegment.bind(this))
 
         this.keyFrameCurveGetter = keyFrameCurveGetter
@@ -224,14 +224,16 @@ class HHCurveInput extends HTMLElement {
             if (curve == null)
                 return
 
-            if (this.transformHandler == this.getHandler("segment")) // Only shape morph handler need to stick to frame.
+            if (this.transformHandler == this.getHandler("segment")
+            || this.transformHandler == this.getHandler("stroke")) // Only shape morph handler need to stick to frame.
             {
                 this.adjustDraggingPoint(curve, index, pos)
             }
 
             this.transformHandler.dragging(pos)
 
-            if (this.transformHandler == this.getHandler("segment")) // Only shape morph handler need to stick to frame.
+            if (this.transformHandler == this.getHandler("segment")
+            || this.transformHandler == this.getHandler("stroke")) // Only shape morph handler need to stick to frame.
             {
                 let [newFrameId, newValue] = this.viewPort.canvasPointToViewPoint(pos.x, pos.y)
                 this.showKeyFrameValueIndicator(newFrameId, newValue)
@@ -456,7 +458,7 @@ class HHCurveInput extends HTMLElement {
 
         return this.circleCache[idx]
     }
-    
+
     // What a dirty function !!!
     _updateMinMaxFrameIdValue(totalPoints, getPointFunc) {
         this.minValue = Number.MAX_VALUE
