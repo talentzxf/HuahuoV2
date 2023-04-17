@@ -13,6 +13,7 @@ import {ViewPort} from "./ViewPort";
 import {MovableCurve} from "./MovableCurve";
 import {AxisSystem} from "./AxisSystem";
 import {huahuoEngine} from "hhenginejs";
+import {frame} from "web3modal/dist/providers/connectors";
 
 declare class KeyFrameCurvePoint {
     GetValue(): number
@@ -67,8 +68,8 @@ class HHCurveInput extends HTMLElement {
             "stroke": new ShapeInsertSegmentHandler(),
         }
 
-        this.transformHandlerMap["stroke"].registerValueChangeHandler("insertSegment", this.insertSegment.bind(this))
-        this.transformHandlerMap["segment"].registerValueChangeHandler("point", this.moveSegment.bind(this))
+        this.transformHandlerMap["stroke"].registerValueChangeHandler("insertSegment")(this.insertSegment.bind(this))
+        this.transformHandlerMap["segment"].registerValueChangeHandler("point")(this.moveSegment.bind(this))
 
         this.keyFrameCurveGetter = keyFrameCurveGetter
 
@@ -110,12 +111,28 @@ class HHCurveInput extends HTMLElement {
         this.oncontextmenu = this.onContextMenu.bind(this)
     }
 
-    insertSegment(segment){
+    insertSegment(segment) {
         console.log("Segment inserted")
+        let point = segment.point
+        let [frameId, value] = this.viewPort.canvasPointToViewPoint(point.x, point.y)
+        frameId = Math.round(frameId)
+
+        huahuoEngine.getActivePlayer().setFrameId(frameId - 1) // View frame is always +1 of actual frame.
     }
 
-    moveSegment(segment){
+    moveSegment(segment) {
         console.log("Segment moved")
+
+        let point = segment.point
+        let [frameId, value] = this.viewPort.canvasPointToViewPoint(point.x, point.y)
+
+        frameId = Math.round(frameId)
+
+        huahuoEngine.getActivePlayer().setFrameId(frameId - 1) // View frame is always +1 of actual frame.
+
+        let index = segment.index
+        let curve = this.keyFrameCurveGetter()
+        curve.SetValue(frameId, value)
     }
 
     @switchPaperProject
@@ -447,7 +464,7 @@ class HHCurveInput extends HTMLElement {
 
     refreshViewPort() {
         let segmentFrameIdAndValues = []
-        this._updateMinMaxFrameIdValue(this.keyFrameCurvePath.segments.length, (segmentIdx)=>{
+        this._updateMinMaxFrameIdValue(this.keyFrameCurvePath.segments.length, (segmentIdx) => {
             let segment = this.keyFrameCurvePath.segments[segmentIdx]
             let frameIdAndValue = this.viewPort.canvasPointToViewPoint(segment.point.x, segment.point.y)
             frameIdAndValue[0] = Math.round(frameIdAndValue[0])
@@ -479,7 +496,7 @@ class HHCurveInput extends HTMLElement {
     }
 
     // What a dirty function !!!
-    _updateMinMaxFrameIdValue(totalPoints, getPointFunc){
+    _updateMinMaxFrameIdValue(totalPoints, getPointFunc) {
         this.minValue = Number.MAX_VALUE
         this.maxValue = -Number.MAX_VALUE
         this.minFrameId = Number.MAX_VALUE
@@ -507,7 +524,7 @@ class HHCurveInput extends HTMLElement {
     getPointsAndUpdateMinMaxFrameIdValue(curve) {
         let totalPoints = curve.GetTotalPoints()
         let points = []
-        this._updateMinMaxFrameIdValue(totalPoints, (pointIdx)=>{
+        this._updateMinMaxFrameIdValue(totalPoints, (pointIdx) => {
             let curvePoint = curve.GetKeyFrameCurvePoint(pointIdx)
             let value = curvePoint.GetValue()
             let frameId = curvePoint.GetFrameId() + 1 // In Cpp side, frameId starts from 0. But when shown, frameId starts from 1.
@@ -518,13 +535,13 @@ class HHCurveInput extends HTMLElement {
         return points
     }
 
-    setupViewPort(){
+    setupViewPort() {
         // Hide text caches.
-        for(let text of this.xAxisTextCache){
+        for (let text of this.xAxisTextCache) {
             text.visible = false
         }
 
-        for(let text of this.yAxisTextCache){
+        for (let text of this.yAxisTextCache) {
             text.visible = false
         }
 
@@ -577,9 +594,9 @@ class HHCurveInput extends HTMLElement {
             let circle: paper.Path = this.getPaperCircle(pointIdx)
 
             let keyFramePoint = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, value))
-            if(this.keyFrameCurvePath.segments.length <= pointIdx){
+            if (this.keyFrameCurvePath.segments.length <= pointIdx) {
                 this.keyFrameCurvePath.add(keyFramePoint)
-            }else{
+            } else {
                 this.keyFrameCurvePath.segments[pointIdx].point = keyFramePoint
             }
 

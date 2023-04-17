@@ -7,6 +7,7 @@
 
 #include "Math/Vector2f.h"
 #include "Serialize/SerializeUtility.h"
+#include "BaseClasses/PPtr.h"
 #include <vector>
 
 class KeyFrameCurvePoint {
@@ -58,9 +59,12 @@ inline void KeyFrameCurvePoint::Transfer(TransferFunction &t) {
     t.Transfer(handleOut, "handleOut");
 }
 
+class CustomFrameState;
 class KeyFrameCurve {
 public:
     DECLARE_SERIALIZE_NO_PPTR(KeyFrameCurve);
+
+    void SetFrameState(CustomFrameState* frameState);
 
     size_t GetTotalPoints() {
         return mCurvePoints.size();
@@ -72,7 +76,7 @@ public:
         return &mCurvePoints[idx];
     }
 
-    void AddValue(float value, int frameId) {
+    void AddValue(int frameId, float value) {
         // Find the approporiate position to update or insert.
         // TODO: User binary search
         auto curPointItr = std::lower_bound(mCurvePoints.begin(), mCurvePoints.end(), frameId,
@@ -90,7 +94,11 @@ public:
         }
     }
 
+    void SetValue(int frameId, float value);
+
+
 private:
+    PPtr<CustomFrameState> mFrameState;
     std::vector<KeyFrameCurvePoint> mCurvePoints;
 };
 
@@ -98,6 +106,7 @@ template<class TransferFunction>
 inline void KeyFrameCurve::Transfer(TransferFunction &t) {
     t.AddMetaFlag(kTransferUsingFlowMappingStyle);
     t.Transfer(mCurvePoints, "mCurvePoints");
+    t.Transfer(mFrameState, "mFrameState");
 }
 
 #endif //HUAHUOENGINEV2_KEYFRAMECURVE_H

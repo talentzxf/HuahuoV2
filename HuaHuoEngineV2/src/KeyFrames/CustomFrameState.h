@@ -133,7 +133,7 @@ class CustomFrameState: public AbstractFrameStateWithKeyType<CustomDataKeyFrame>
 public:
     CustomFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
     : AbstractFrameStateWithKeyType<CustomDataKeyFrame>(memLabelId, creationMode){
-
+        mKeyFrameCurve.SetFrameState(this);
     }
 
     virtual bool Apply();

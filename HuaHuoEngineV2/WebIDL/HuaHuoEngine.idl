@@ -238,6 +238,7 @@ interface KeyFrameCurvePoint{
 interface KeyFrameCurve{
     long GetTotalPoints();
     KeyFrameCurvePoint GetKeyFrameCurvePoint(long idx);
+    void SetValue(int frameId, float value);
 };
 
 [NoDelete]

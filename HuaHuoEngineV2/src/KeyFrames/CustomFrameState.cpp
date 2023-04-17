@@ -149,7 +149,7 @@ void CustomFrameState::SetFloatValue(float value) {
     pKeyFrame->SetFrameState(this);
     shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 
-    mKeyFrameCurve.AddValue(value, currentFrameId);
+    mKeyFrameCurve.AddValue(currentFrameId, value);
 }
 
 void CustomFrameState::SetBinaryResourceName(const char *resourceName) {
