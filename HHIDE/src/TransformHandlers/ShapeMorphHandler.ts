@@ -17,7 +17,7 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
 
     protected pressingShift: boolean = false
 
-    private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
+    protected valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
     constructor() {
         super();
@@ -89,9 +89,9 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
 
     getPropertySetter(propertyName: string) {
         let _this = this
-        return function (x, y) {
-            _this.curSegment[propertyName].x = x
-            _this.curSegment[propertyName].y = y
+        return function (point) {
+            _this.curSegment[propertyName].x = point.x
+            _this.curSegment[propertyName].y = point.y
 
             // After morph, the position of the shape might be shifted, so we need to store the new position in the Cpp side.
             this.targetShape.store({position: true, segments: true})
@@ -107,13 +107,19 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
     }
 
     protected setupPropertySheet(propertySheet: PropertySheet) {
+        let _this = this
+
         propertySheet.addProperty(
             {
                 key: "point",
                 type: PropertyType.VECTOR2,
                 getter: this.getPropertyGetter("point").bind(this),
                 setter: this.getPropertySetter("point").bind(this),
-                registerValueChangeFunc: this.registerValueChangeHandler("point"),
+                registerValueChangeFunc: (func)=>{
+                    _this.registerValueChangeHandler("point")((segment)=>{
+                        func(segment.point)
+                    })
+                },
                 unregisterValueChangeFunc: this.unregisterValueChangeHandler("point")
             })
 
@@ -196,7 +202,7 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
             shapeSegmentMoveCommand.DoCommand()
             undoManager.PushCommand(shapeSegmentMoveCommand)
 
-            this.valueChangeHandler.callHandlers("point", this.curSegment.point)
+            this.valueChangeHandler.callHandlers("point", this.curSegment)
         }
     }
 }
@@ -264,10 +270,13 @@ class ShapeInsertSegmentHandler extends ShapeMorphHandler {
 
         if(showInspector)
             this.showInspector()
+
+        this.valueChangeHandler.callHandlers("insertSegment", this.curSegment)
     }
 }
 
 let shapeHandlerMoveHandler = new ShapeHandlerMoveHandler()
 let shapeMorphHandler = new ShapeMorphHandler()
 let shapeInsertSegmentHandler = new ShapeInsertSegmentHandler()
-export {shapeMorphHandler, shapeHandlerMoveHandler, shapeInsertSegmentHandler, ShapeMorphHandler}
+export {shapeMorphHandler, shapeHandlerMoveHandler, shapeInsertSegmentHandler,
+    ShapeMorphHandler, ShapeInsertSegmentHandler, ShapeHandlerMoveHandler}

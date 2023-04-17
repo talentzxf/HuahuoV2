@@ -4,10 +4,9 @@ import {Vector2} from "hhcommoncomponents";
 import {paper} from "hhenginejs"
 import {BaseShapeDrawer} from "../../ShapeDrawers/BaseShapeDrawer";
 import {
-    shapeHandlerMoveHandler,
-    shapeInsertSegmentHandler,
-    shapeMorphHandler,
-    ShapeMorphHandler
+    ShapeHandlerMoveHandler,
+    ShapeMorphHandler,
+    ShapeInsertSegmentHandler
 } from "../../TransformHandlers/ShapeMorphHandler";
 import {switchPaperProject} from "./Utils";
 import {ViewPort} from "./ViewPort";
@@ -62,11 +61,14 @@ class HHCurveInput extends HTMLElement {
         super();
 
         this.transformHandlerMap = {
-            "segment": shapeMorphHandler,
-            "handle-in": shapeHandlerMoveHandler,
-            "handle-out": shapeHandlerMoveHandler,
-            "stroke": shapeInsertSegmentHandler,
+            "segment": new ShapeMorphHandler(),
+            "handle-in": new ShapeHandlerMoveHandler(),
+            "handle-out": new ShapeHandlerMoveHandler(),
+            "stroke": new ShapeInsertSegmentHandler(),
         }
+
+        this.transformHandlerMap["stroke"].registerValueChangeHandler("insertSegment", this.insertSegment.bind(this))
+        this.transformHandlerMap["segment"].registerValueChangeHandler("point", this.moveSegment.bind(this))
 
         this.keyFrameCurveGetter = keyFrameCurveGetter
 
@@ -106,6 +108,14 @@ class HHCurveInput extends HTMLElement {
         this.onmousemove = this.onMouseMove.bind(this)
         this.onmouseup = this.onMouseUp.bind(this)
         this.oncontextmenu = this.onContextMenu.bind(this)
+    }
+
+    insertSegment(segment){
+        console.log("Segment inserted")
+    }
+
+    moveSegment(segment){
+        console.log("Segment moved")
     }
 
     @switchPaperProject
@@ -198,7 +208,7 @@ class HHCurveInput extends HTMLElement {
             if (curve == null)
                 return
 
-            if (this.transformHandler == shapeMorphHandler) // Only shape morph handler need to stick to frame.
+            if (this.transformHandler == this.getHandler("segment")) // Only shape morph handler need to stick to frame.
             {
                 this.adjustDraggingPoint(curve, index, pos)
             }
@@ -208,7 +218,7 @@ class HHCurveInput extends HTMLElement {
             // After dragging, refresh the UI. As there might be some change in the boundary.
             this.refreshViewPort()
 
-            if (this.transformHandler == shapeMorphHandler) // Only shape morph handler need to stick to frame.
+            if (this.transformHandler == this.getHandler("segment")) // Only shape morph handler need to stick to frame.
             {
                 let [newFrameId, newValue] = this.viewPort.canvasPointToViewPoint(pos.x, pos.y)
                 this.showKeyFrameValueIndicator(newFrameId, newValue)
@@ -245,7 +255,7 @@ class HHCurveInput extends HTMLElement {
                     this.transformHandler = this.getHandler(hitResult.type)
                     if (this.transformHandler) {
                         let objects = new Set() // Because setTarget need to receive a Set.
-                        objects.add(new MovableCurve(this.keyFrameCurvePath))
+                        objects.add(this.movableCurve)
                         this.transformHandler.setTarget(objects)
                         this.transformHandler.beginMove(pos, hitResult, false)
 
@@ -535,6 +545,8 @@ class HHCurveInput extends HTMLElement {
         this.axisSystem.setYLength(this.maxValue - this.minValue)
     }
 
+    movableCurve: MovableCurve
+
     @switchPaperProject
     refresh() {
         let curve = this.keyFrameCurveGetter()
@@ -553,6 +565,8 @@ class HHCurveInput extends HTMLElement {
             })
             this.keyFrameCurvePath.strokeColor = new paper.Color("black")
             this.keyFrameCurvePath.strokeWidth = 3
+
+            this.movableCurve = new MovableCurve(this.keyFrameCurvePath)
         }
 
         let pointIdx = 0
