@@ -13,6 +13,7 @@ import {switchPaperProject} from "./Utils";
 import {ViewPort} from "./ViewPort";
 import {MovableCurve} from "./MovableCurve";
 import {AxisSystem} from "./AxisSystem";
+import {huahuoEngine} from "hhenginejs";
 
 declare class KeyFrameCurvePoint {
     GetValue(): number
@@ -256,6 +257,9 @@ class HHCurveInput extends HTMLElement {
                             let value = curvePoint.GetValue()
 
                             this.showKeyFrameValueIndicator(frameIdx, value)
+
+                            // Switch player to that frameId
+                            huahuoEngine.getActivePlayer().setFrameId(curvePoint.GetFrameId())
                         }
                     }
                     break;
@@ -542,16 +546,14 @@ class HHCurveInput extends HTMLElement {
 
         this.setupViewPort()
 
-        if (this.keyFrameCurvePath) {
-            this.keyFrameCurvePath.remove()
+        if (this.keyFrameCurvePath == null) {
+            this.keyFrameCurvePath = new paper.Path({
+                segments: [],
+                strokeColor: 'black'
+            })
+            this.keyFrameCurvePath.strokeColor = new paper.Color("black")
+            this.keyFrameCurvePath.strokeWidth = 3
         }
-
-        this.keyFrameCurvePath = new paper.Path({
-            segments: [],
-            strokeColor: 'black'
-        })
-        this.keyFrameCurvePath.strokeColor = new paper.Color("black")
-        this.keyFrameCurvePath.strokeWidth = 3
 
         let pointIdx = 0
         for (let point of points) {
@@ -561,7 +563,11 @@ class HHCurveInput extends HTMLElement {
             let circle: paper.Path = this.getPaperCircle(pointIdx)
 
             let keyFramePoint = this.viewPort.viewPointToCanvasPoint(new paper.Point(frameId, value))
-            this.keyFrameCurvePath.add(keyFramePoint)
+            if(this.keyFrameCurvePath.segments.length <= pointIdx){
+                this.keyFrameCurvePath.add(keyFramePoint)
+            }else{
+                this.keyFrameCurvePath.segments[pointIdx].point = keyFramePoint
+            }
 
             circle.position = keyFramePoint
             circle.data = {
