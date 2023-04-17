@@ -437,20 +437,7 @@ class HHCurveInput extends HTMLElement {
             return frameIdAndValue
         })
 
-        // Setup port.
-        this.viewPort.canvasWidth = defaultCanvasWidth
-        this.viewPort.canvasHeight = defaultCanvasHeight
-        this.viewPort.viewWidth = 0.8 * defaultCanvasWidth
-        this.viewPort.viewHeight = 0.75 * defaultCanvasHeight
-        this.viewPort.viewXMin = this.minFrameId
-        this.viewPort.viewXMax = this.maxFrameId
-        this.viewPort.viewYMin = this.minValue
-        this.viewPort.viewYMax = this.maxValue
-        this.viewPort.leftDown = [0.1 * defaultCanvasWidth, 0.8 * defaultCanvasHeight]
-
-        this.axisSystem.setOriginPosition(this.minFrameId, this.minValue)
-        this.axisSystem.setXLength(this.maxFrameId - this.minFrameId)
-        this.axisSystem.setYLength(this.maxValue - this.minValue)
+        this.setupViewPort()
 
         for (let segment of this.keyFrameCurvePath.segments) {
             let segmentIdx = segment.index
@@ -512,15 +499,7 @@ class HHCurveInput extends HTMLElement {
         return points
     }
 
-    @switchPaperProject
-    refresh() {
-        let curve = this.keyFrameCurveGetter()
-        if (curve == null)
-            return
-
-        let points = this.getPointsAndUpdateMinMaxFrameIdValue(curve)
-        this.hideKeyFrameValueIndicator()
-
+    setupViewPort(){
         // Setup port.
         this.viewPort.canvasWidth = defaultCanvasWidth
         this.viewPort.canvasHeight = defaultCanvasHeight
@@ -536,6 +515,18 @@ class HHCurveInput extends HTMLElement {
         this.axisSystem.setOriginPosition(this.minFrameId, this.minValue)
         this.axisSystem.setXLength(this.maxFrameId - this.minFrameId)
         this.axisSystem.setYLength(this.maxValue - this.minValue)
+    }
+
+    @switchPaperProject
+    refresh() {
+        let curve = this.keyFrameCurveGetter()
+        if (curve == null)
+            return
+
+        let points = this.getPointsAndUpdateMinMaxFrameIdValue(curve)
+        this.hideKeyFrameValueIndicator()
+
+        this.setupViewPort()
 
         if (this.keyFrameCurvePath) {
             this.keyFrameCurvePath.remove()
