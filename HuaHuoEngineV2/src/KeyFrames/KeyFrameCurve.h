@@ -95,7 +95,7 @@ public:
     }
 
     void SetValue(int frameId, float value);
-
+    void SetValueByIndex(int index, int frameId, float value);
 
 private:
     PPtr<CustomFrameState> mFrameState;

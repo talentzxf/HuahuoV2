@@ -137,6 +137,28 @@ void CustomFrameState::SetBooleanValue(bool value) {
     shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 }
 
+void CustomFrameState::SetFloatValueByIndex(int index, int frameId, float value) {
+    if (this->m_DataType != FLOAT) {
+        Assert("Data Type mismatch!");
+        return;
+    }
+
+    bool needUpdateKeyFrame = false;
+    KeyFrameArray& keyFrameArray = GetKeyFrames();
+    if(keyFrameArray[index].GetKeyFrame().GetFrameId() != frameId){
+        needUpdateKeyFrame = true;
+        Layer *shapeLayer = GetBaseShape()->GetLayer();
+        shapeLayer->DeleteKeyFrame(&keyFrameArray[index].GetKeyFrame());
+    }
+    keyFrameArray[index].GetKeyFrame().SetFrameId(frameId);
+    keyFrameArray[index].data.floatValue = value;
+
+    if(needUpdateKeyFrame){
+        Layer *shapeLayer = GetBaseShape()->GetLayer();
+        shapeLayer->AddKeyFrame(&keyFrameArray[index].GetKeyFrame());
+    }
+}
+
 void CustomFrameState::SetFloatValue(float value) {
     if (this->m_DataType != FLOAT) {
         Assert("Data Type mismatch!");

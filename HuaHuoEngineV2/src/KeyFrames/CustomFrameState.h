@@ -133,21 +133,25 @@ class CustomFrameState: public AbstractFrameStateWithKeyType<CustomDataKeyFrame>
 public:
     CustomFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
     : AbstractFrameStateWithKeyType<CustomDataKeyFrame>(memLabelId, creationMode){
-        mKeyFrameCurve.SetFrameState(this);
     }
 
     virtual bool Apply();
     virtual bool Apply(int frameId) override;
 
     virtual KeyFrameCurve* GetKeyFrameCurve(){
-        if(m_DataType == FLOAT)
+        if(m_DataType == FLOAT){
+            mKeyFrameCurve.SetFrameState(this);
             return &mKeyFrameCurve;
+        }
 
         printf("Can only get curve for number values\n");
         return NULL;
     }
 
 public:
+    // This is used during dragging of the value in the keyFrameCurve.
+    void SetFloatValueByIndex(int index, int frameId, float value);
+
     void SetBooleanValue(bool value);
     void SetFloatValue(float value);
     void SetVector3Value(float x, float y, float z);

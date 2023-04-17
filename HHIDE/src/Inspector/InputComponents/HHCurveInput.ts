@@ -116,8 +116,9 @@ class HHCurveInput extends HTMLElement {
         let point = segment.point
         let [frameId, value] = this.viewPort.canvasPointToViewPoint(point.x, point.y)
         frameId = Math.round(frameId)
-
         huahuoEngine.getActivePlayer().setFrameId(frameId - 1) // View frame is always +1 of actual frame.
+        let curve = this.keyFrameCurveGetter()
+        curve.SetValue(frameId - 1, value)
     }
 
     moveSegment(segment) {
@@ -129,10 +130,8 @@ class HHCurveInput extends HTMLElement {
         frameId = Math.round(frameId)
 
         huahuoEngine.getActivePlayer().setFrameId(frameId - 1) // View frame is always +1 of actual frame.
-
-        let index = segment.index
         let curve = this.keyFrameCurveGetter()
-        curve.SetValue(frameId - 1, value)
+        curve.SetValueByIndex(segment.index, frameId - 1, value)
     }
 
     @switchPaperProject
