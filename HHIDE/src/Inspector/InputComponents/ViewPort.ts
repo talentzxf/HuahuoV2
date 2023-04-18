@@ -54,6 +54,11 @@ class ViewPort {
         let xScale = this.viewWidth / this.viewXSpan
         let yScale = this.viewHeight / this.viewYSpan
 
+        console.log("this.viewWidth:" + this.viewWidth)
+        console.log("this.viewHeight:" + this.viewHeight)
+        console.log("this.viewXSpan:" + this.viewXSpan)
+        console.log("this.viewYSpan:" + this.viewYSpan)
+
         let viewPointX = this.viewXMin + (canvasX - this.leftDown[0])/xScale
         let viewPointY = this.viewYMin + (this.leftDown[1] - canvasY)/yScale
 

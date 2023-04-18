@@ -125,7 +125,10 @@ class HHCurveInput extends HTMLElement {
         console.log("Segment moved")
 
         let point = segment.point
+        console.log("Pos:" + point.x + "," + point.y)
         let [frameId, value] = this.viewPort.canvasPointToViewPoint(point.x, point.y)
+
+        console.log("Segment move FrameId:" + frameId)
 
         frameId = Math.round(frameId)
 
@@ -215,6 +218,12 @@ class HHCurveInput extends HTMLElement {
 
     @switchPaperProject
     onMouseMove(evt: MouseEvent) {
+        if(evt.target != this.canvas){ // Only handle events from canvas. Ignore all events not belong to me.
+            return;
+        }
+
+        console.log("Mouse evt.offsetX:" + evt.offsetX)
+
         let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         if (this.transformHandler && this.transformHandler.getIsDragging()) {
             let curSegment: paper.Segment = this.transformHandler.getCurSegment()
@@ -227,7 +236,9 @@ class HHCurveInput extends HTMLElement {
             if (this.transformHandler == this.getHandler("segment")
             || this.transformHandler == this.getHandler("stroke")) // Only shape morph handler need to stick to frame.
             {
+                console.log("Before pos.x:" + pos.x)
                 this.adjustDraggingPoint(curve, index, pos)
+                console.log("After pos.x:" + pos.x)
             }
 
             this.transformHandler.dragging(pos)
@@ -420,7 +431,7 @@ class HHCurveInput extends HTMLElement {
 
             this.infoPrompt.innerHTML = i18n.t("inspector.CurveInputPrompt", {
                 frameId: rawObj.GetFrameId() + 1,
-                value: rawObj.GetValue()
+                value: parseFloat(rawObj.GetValue().toFixed(2)).toString()
             })
             this.showInfoPrompt()
 
@@ -513,13 +524,12 @@ class HHCurveInput extends HTMLElement {
         this.viewPort.canvasWidth = defaultCanvasWidth
         this.viewPort.canvasHeight = defaultCanvasHeight
         this.viewPort.viewWidth = 0.8 * defaultCanvasWidth
-        this.viewPort.viewHeight = 0.75 * defaultCanvasHeight
+        this.viewPort.viewHeight = 0.7 * defaultCanvasHeight
         this.viewPort.viewXMin = this.minFrameId
         this.viewPort.viewXMax = this.maxFrameId
         this.viewPort.viewYMin = this.minValue
         this.viewPort.viewYMax = this.maxValue
         this.viewPort.leftDown = [0.1 * defaultCanvasWidth, 0.8 * defaultCanvasHeight]
-
 
         this.axisSystem.setOriginPosition(this.minFrameId, this.minValue)
         this.axisSystem.setXLength(this.maxFrameId - this.minFrameId)

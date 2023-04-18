@@ -647,6 +647,11 @@ void testKeyFrameCurve(){
 
     layer->SetCurrentFrame(400);
     keyFrameCurve1->SetValueByIndex(3, 400, 400);
+
+    bool isKeyFrame = layer->IsKeyFrame(300);
+    Assert(isKeyFrame == false);
+    isKeyFrame = layer->IsKeyFrame(400);
+    Assert(isKeyFrame == true);
 }
 
 int main() {
