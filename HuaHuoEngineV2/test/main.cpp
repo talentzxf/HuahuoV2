@@ -652,6 +652,9 @@ void testKeyFrameCurve(){
     Assert(isKeyFrame == false);
     isKeyFrame = layer->IsKeyFrame(400);
     Assert(isKeyFrame == true);
+    customComponent->Apply(400);
+    float value = customComponent->GetFloatValue(fieldName);
+    Assert(value == 400);
 }
 
 int main() {

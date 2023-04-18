@@ -76,9 +76,9 @@ vector<KeyFrameIdentifier> CustomComponent::GetKeyFrameIdentifiers() {
     return returnKeyFrameIdentifiers;
 }
 
-void CustomComponent::DeleteKeyFrame(int frameId) {
+void CustomComponent::DeleteKeyFrame(int frameId, bool notifyFrontEnd) {
     for(auto frameState : m_FrameStates){
-        frameState.GetComponentPtr()->DeleteKeyFrame(frameId);
+        frameState.GetComponentPtr()->DeleteKeyFrame(frameId, notifyFrontEnd);
     }
 }
 

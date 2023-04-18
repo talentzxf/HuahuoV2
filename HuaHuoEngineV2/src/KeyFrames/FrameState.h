@@ -72,7 +72,7 @@ public:
 
     virtual int GetKeyFrameAtIndex(int idx) = 0;
 
-    virtual void DeleteKeyFrame(int keyFrameId) = 0;
+    virtual void DeleteKeyFrame(int keyFrameId, bool notifyFrontEnd = true) = 0;
 
     virtual bool ReverseKeyFrame(int startFrameId, int endFrameId, int currentFrameId) = 0;
 
@@ -83,7 +83,7 @@ public:
     }
 
 protected:
-    void DeleteKeyFrameInternal(KeyFrame *keyFrame);
+    void DeleteKeyFrameInternal(KeyFrame *keyFrame, bool notifyFrontEnd = true);
 
 protected:
     std::string typeName;
@@ -212,7 +212,7 @@ public:
         return true;
     }
 
-    virtual void DeleteKeyFrame(int frameId) override {
+    virtual void DeleteKeyFrame(int frameId, bool notifyFrontEnd) override {
         std::vector<T> &keyframes = m_KeyFrames.GetKeyFrames();
         int targetIdx = -1;
         for (int keyframeIdx = 0; keyframeIdx < keyframes.size(); keyframeIdx++) {
@@ -225,8 +225,10 @@ public:
         if (targetIdx >= 0) {
             KeyFrame *tobeDeletedKeyFrame = &keyframes[targetIdx].GetKeyFrame();
             keyframes.erase(keyframes.begin() + targetIdx);
-            AbstractFrameState::DeleteKeyFrameInternal(tobeDeletedKeyFrame);
-            this->Apply(frameId);
+            AbstractFrameState::DeleteKeyFrameInternal(tobeDeletedKeyFrame, notifyFrontEnd);
+
+            if(notifyFrontEnd)
+                this->Apply(frameId);
         } else {
             printf("Doesn't found the frameId:%d\n", frameId);
         }

@@ -126,7 +126,7 @@ void Layer::AddKeyFrame(KeyFrame *keyFrame) {
     GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
 }
 
-void Layer::DeleteKeyFrame(KeyFrame *keyFrame) {
+void Layer::DeleteKeyFrame(KeyFrame *keyFrame, bool notifyFrontEnd) {
     int frameId = keyFrame->GetFrameId();
     AbstractFrameState *frameState = keyFrame->GetFrameState();
     if (keyFrames.contains(frameId) && frameState != NULL) {
@@ -156,8 +156,10 @@ void Layer::DeleteKeyFrame(KeyFrame *keyFrame) {
         this->GetObjectStore()->SyncLayersInfo();
     }
 
-    KeyFrameChangedEventHandlerArgs args(this, frameId);
-    GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
+    if(notifyFrontEnd){
+        KeyFrameChangedEventHandlerArgs args(this, frameId);
+        GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
+    }
 }
 
 void Layer::SetObjectStore(const ObjectStore *store) {

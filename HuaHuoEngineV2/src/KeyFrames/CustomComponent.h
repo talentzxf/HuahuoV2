@@ -245,7 +245,7 @@ DECLARE_OBJECT_SERIALIZE();
 
     void SetBaseShape(BaseShape *pBaseShape) override;
 
-    void DeleteKeyFrame(int frameId) override;
+    void DeleteKeyFrame(int frameId, bool notifyFrontEnd = true) override;
 
     bool ReverseKeyFrame(int startFrameId, int endFrameId, int currentFrameId) override;
 

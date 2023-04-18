@@ -145,17 +145,20 @@ void CustomFrameState::SetFloatValueByIndex(int index, int frameId, float value)
 
     bool needUpdateKeyFrame = false;
     KeyFrameArray& keyFrameArray = GetKeyFrames();
-    if(keyFrameArray[index].GetKeyFrame().GetFrameId() != frameId){
+
+    // Shallow copy
+    CustomDataKeyFrame targetKeyFrame = keyFrameArray[index];
+    if(targetKeyFrame.GetKeyFrame().GetFrameId() != frameId){
         needUpdateKeyFrame = true;
 
-        this->DeleteKeyFrame(keyFrameArray[index].GetKeyFrame().GetFrameId());
+        this->DeleteKeyFrame(targetKeyFrame.GetKeyFrame().GetFrameId(), false);
     }
-    keyFrameArray[index].GetKeyFrame().SetFrameId(frameId);
-    keyFrameArray[index].data.floatValue = value;
+    targetKeyFrame.GetKeyFrame().SetFrameId(frameId);
+    targetKeyFrame.data.floatValue = value;
 
     if(needUpdateKeyFrame){
         Layer *shapeLayer = GetBaseShape()->GetLayer();
-        shapeLayer->AddKeyFrame(&keyFrameArray[index].GetKeyFrame());
+        shapeLayer->AddKeyFrame(&targetKeyFrame.GetKeyFrame());
     }
 }
 
