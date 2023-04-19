@@ -304,6 +304,8 @@ private:
     }
 
 public:
+    // This function will also clear and rebuild the keyFrameIdCache.
+    // TODO: Rename it so that caller knows this function will clear and rebuild the keyFrameIdCache??
     int GetKeyFrameCount() override;
 
     int GetKeyFrameAtIndex(int idx) override;

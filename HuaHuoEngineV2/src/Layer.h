@@ -172,6 +172,10 @@ public:
 
     void SyncInfo();
 
+    void MoveKeyFrameToKeyFrameId(KeyFrameIdentifier keyFrameIdentifier, int beforeFrameId, int afterFrameId);
+private:
+    bool InternalDeleteKeyFrame(KeyFrame* keyFrame);
+
 private:
     // Frame Id-- starting from 0.
     int currentFrameId;

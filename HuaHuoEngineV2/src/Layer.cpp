@@ -90,6 +90,17 @@ void Layer::SetIsVisible(bool isVisible) {
     GetScriptEventManager()->TriggerEvent("OnLayerUpdated", &args);
 }
 
+void Layer::MoveKeyFrameToKeyFrameId(KeyFrameIdentifier keyFrameIdentifier, int beforeFrameId, int afterFrameId) {
+    KeyFrame* keyFrame = &GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameIdentifier);
+    if(keyFrame->GetFrameId() != beforeFrameId)
+        return;
+
+    if(InternalDeleteKeyFrame(keyFrame)){
+        keyFrame->SetFrameId(afterFrameId);
+        AddKeyFrame(keyFrame);
+    }
+}
+
 void Layer::AddKeyFrame(KeyFrame *keyFrame) {
     int frameId = keyFrame->GetFrameId();
     AbstractFrameState *frameState = keyFrame->GetFrameState();
@@ -126,7 +137,7 @@ void Layer::AddKeyFrame(KeyFrame *keyFrame) {
     GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
 }
 
-void Layer::DeleteKeyFrame(KeyFrame *keyFrame, bool notifyFrontEnd) {
+bool Layer::InternalDeleteKeyFrame(KeyFrame* keyFrame) {
     int frameId = keyFrame->GetFrameId();
     AbstractFrameState *frameState = keyFrame->GetFrameState();
     if (keyFrames.contains(frameId) && frameState != NULL) {
@@ -147,7 +158,15 @@ void Layer::DeleteKeyFrame(KeyFrame *keyFrame, bool notifyFrontEnd) {
         if (keyFrameSet.size() == 0) {
             keyFrames.erase(frameId);
         }
+        return true;
     }
+
+    return false;
+}
+
+void Layer::DeleteKeyFrame(KeyFrame *keyFrame, bool notifyFrontEnd) {
+
+    InternalDeleteKeyFrame(keyFrame);
 
     BaseShape *shape = keyFrame->GetBaseShape();
     shape->RefreshKeyFrameCache();
@@ -157,7 +176,7 @@ void Layer::DeleteKeyFrame(KeyFrame *keyFrame, bool notifyFrontEnd) {
     }
 
     if(notifyFrontEnd){
-        KeyFrameChangedEventHandlerArgs args(this, frameId);
+        KeyFrameChangedEventHandlerArgs args(this, keyFrame->GetFrameId());
         GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
     }
 }
