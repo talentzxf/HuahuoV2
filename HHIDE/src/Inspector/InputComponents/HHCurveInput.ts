@@ -538,6 +538,8 @@ class HHCurveInput extends HTMLElement {
 
     movableCurve: MovableCurve
 
+    currentFrameIndicator: paper.Path
+
     @switchPaperProject
     refresh() {
         let curve = this.keyFrameCurveGetter()
@@ -593,6 +595,18 @@ class HHCurveInput extends HTMLElement {
         }
 
         this.keyFrameCurvePath.bringToFront()
+
+        if(this.currentFrameIndicator == null){
+            this.currentFrameIndicator = new paper.Path.Line(new paper.Point(0, 0), new paper.Point(1, 1))
+            this.currentFrameIndicator.strokeColor = new paper.Color("red")
+        }
+
+        let currentFrameId = huahuoEngine.getActivePlayer().currentlyPlayingFrameId + 1 // When displayed, always +1.
+
+        let xOffset = this.viewPort.getXOffsetForFrame(currentFrameId)
+
+        this.currentFrameIndicator.segments[0].point = new paper.Point(xOffset, 0)
+        this.currentFrameIndicator.segments[1].point = new paper.Point(xOffset, defaultCanvasHeight)
     }
 
 }
