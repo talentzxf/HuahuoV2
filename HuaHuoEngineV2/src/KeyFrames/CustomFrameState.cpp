@@ -143,24 +143,23 @@ void CustomFrameState::SetFloatValueByIndex(int index, int frameId, float value)
         return;
     }
 
-    KeyFrameArray& keyFrameArray = GetKeyFrames();
+    KeyFrameArray &keyFrameArray = GetKeyFrames();
 
     int beforeFrameId = keyFrameArray[index].GetFrameId();
 
-    CustomDataKeyFrame& targetKeyFrame = keyFrameArray[index];
-    Layer* layer = targetKeyFrame.GetBaseShape()->GetLayer(false);
-    if(layer){
-        if(beforeFrameId != frameId){ // Move the keyframe object in layer's keyFrame map.
-            if(layer){
-                layer->MoveKeyFrameToKeyFrameId(targetKeyFrame.GetKeyFrame().GetKeyFrameIdentifier(), beforeFrameId, frameId);
-            }
+    CustomDataKeyFrame &targetKeyFrame = keyFrameArray[index];
+    Layer *layer = targetKeyFrame.GetBaseShape()->GetLayer(false);
+    if (layer) {
+        if (beforeFrameId != frameId && layer) { // Move the keyframe object in layer's keyFrame map.
+            layer->MoveKeyFrameToKeyFrameId(targetKeyFrame.GetKeyFrame().GetKeyFrameIdentifier(), beforeFrameId,
+                                            frameId);
         }
     }
 
     targetKeyFrame.GetKeyFrame().SetFrameId(frameId);
     targetKeyFrame.data.floatValue = value;
 
-    if(layer){
+    if (layer) {
         targetKeyFrame.GetKeyFrame().GetFrameState()->Apply(layer->GetCurrentFrame());
     }
 }
@@ -251,13 +250,13 @@ Vector3f *CustomFrameState::GetVector3Value() {
     return &m_defaultValue.vector3Value;
 }
 
-const char* CustomFrameState::GetStringValue() {
-    if(this->m_DataType != STRING){
+const char *CustomFrameState::GetStringValue() {
+    if (this->m_DataType != STRING) {
         Assert("Data Type mismatch!");
         return NULL;
     }
 
-    if(isValidFrame) {
+    if (isValidFrame) {
         return m_CurrentKeyFrame.data.stringValue.c_str();
     }
 
@@ -480,7 +479,7 @@ CustomDataKeyFrame *CustomFrameState::RecordFieldValue(int frameId, T value) {
     } else if constexpr(std::is_same<T, std::string>()) {
         pKeyFrame->data.stringValue = value;
         pKeyFrame->data.dataType = STRING;
-    } else if constexpr(std::is_same<T, bool>()){
+    } else if constexpr(std::is_same<T, bool>()) {
         pKeyFrame->data.booleanValue = value;
         pKeyFrame->data.dataType = BOOLEAN;
     }
