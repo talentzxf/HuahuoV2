@@ -609,7 +609,7 @@ void testReadFromFile() {
     const char* string = customComponent->GetStringValue("eventGraphJson");
     Assert(string != NULL);
 
-    KeyFrameCurve* pCurve = customComponent->GetKeyFrameCurve("growth");
+    KeyFrameCurve* pCurve = customComponent->GetFloatKeyFrameCurve("growth");
     Assert(pCurve != NULL && pCurve->GetTotalPoints() != 0);
 }
 
@@ -642,7 +642,7 @@ void testKeyFrameCurve(){
     layer->SetCurrentFrame(300);
     customComponent->SetFloatValue(fieldName, 300.0f);
 
-    KeyFrameCurve* keyFrameCurve1 = customComponent->GetKeyFrameCurve(fieldName);
+    KeyFrameCurve* keyFrameCurve1 = customComponent->GetFloatKeyFrameCurve(fieldName);
     Assert(keyFrameCurve1->GetTotalPoints() == 4);
 
     layer->SetCurrentFrame(400);

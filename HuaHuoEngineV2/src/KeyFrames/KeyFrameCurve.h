@@ -9,6 +9,7 @@
 #include "Serialize/SerializeUtility.h"
 #include "BaseClasses/PPtr.h"
 #include <vector>
+#include <functional>
 
 class KeyFrameCurvePoint {
 public:
@@ -59,12 +60,20 @@ inline void KeyFrameCurvePoint::Transfer(TransferFunction &t) {
     t.Transfer(handleOut, "handleOut");
 }
 
+//typedef void (*SetValueCallBackFunc)(int frameId, float value);
+//typedef void (*SetValueByIndexCallbackFunc)(int index, int frameId, float value);
+
+typedef std::function<void(int, float)> SetValueCallBackFunc;
+typedef std::function<void(int, int, float)> SetValueByIndexCallbackFunc;
+
 class CustomFrameState;
 class KeyFrameCurve {
 public:
     DECLARE_SERIALIZE_NO_PPTR(KeyFrameCurve);
 
-    void SetFrameState(CustomFrameState* frameState);
+    void SetCallBacks(SetValueCallBackFunc setValueCallBackFunc){
+        this->setValueCallBackFunc = setValueCallBackFunc;
+    }
 
     size_t GetTotalPoints() {
         return mCurvePoints.size();
@@ -98,7 +107,8 @@ public:
     void SetValueByIndex(int index, int frameId, float value);
 
 private:
-    PPtr<CustomFrameState> mFrameState;
+    SetValueCallBackFunc setValueCallBackFunc;
+    SetValueByIndexCallbackFunc setValueByIndexCallbackFunc;
     std::vector<KeyFrameCurvePoint> mCurvePoints;
 };
 
@@ -106,7 +116,6 @@ template<class TransferFunction>
 inline void KeyFrameCurve::Transfer(TransferFunction &t) {
     t.AddMetaFlag(kTransferUsingFlowMappingStyle);
     t.Transfer(mCurvePoints, "mCurvePoints");
-    t.Transfer(mFrameState, "mFrameState");
 }
 
 #endif //HUAHUOENGINEV2_KEYFRAMECURVE_H

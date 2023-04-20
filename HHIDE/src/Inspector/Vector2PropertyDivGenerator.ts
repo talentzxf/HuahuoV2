@@ -1,5 +1,5 @@
 import {BasePropertyDesc, BasePropertyDivGenerator} from "./BasePropertyDivGenerator";
-import {Property, Vector2} from "hhcommoncomponents"
+import {Property} from "hhcommoncomponents"
 import {HHVector2Input} from "./InputComponents/HHVector2Input";
 
 class Vector2PropertyDesc extends BasePropertyDesc{
@@ -11,7 +11,7 @@ class Vector2PropertyDesc extends BasePropertyDesc{
 
     constructor(property: Property) {
         super(property)
-        this.vector2Input = new HHVector2Input(property.getter, property.setter)
+        this.vector2Input = new HHVector2Input(property.getter, property.setter, property.config.)
         this.contentDiv.appendChild(this.vector2Input)
     }
 }

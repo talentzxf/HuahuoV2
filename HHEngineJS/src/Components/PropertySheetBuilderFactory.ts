@@ -99,6 +99,15 @@ class PropertySheetFactory {
             }
         }
 
+        if(propertyMeta.type == PropertyCategory.interpolateVector2){
+            if(!propertyDef.hasOwnProperty("config") || propertyDef["config"] == null){
+                propertyDef["config"] = {}
+            }
+            propertyDef["config"]["getKeyFrameCurves"] = ()=>{
+                return component.getVector2KeyFrameCurves(fieldName)
+            }
+        }
+
         return propertyDef
     }
 }

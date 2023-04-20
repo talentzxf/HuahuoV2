@@ -256,7 +256,11 @@ class AbstractComponent {
     }
 
     getKeyFrameCurve(fieldName){
-        return this.rawObj.GetKeyFrameCurve(fieldName)
+        return this.rawObj.GetFloatKeyFrameCurve(fieldName)
+    }
+
+    getVector2KeyFrameCurves(fieldName){
+        return [this.rawObj.GetVectorKeyFrameCurve(fieldName, 0), this.rawObj.GetVectorKeyFrameCurve(fieldName, 1)]
     }
 }
 

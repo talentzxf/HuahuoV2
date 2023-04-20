@@ -388,13 +388,13 @@ public:
 
     static CustomComponent *CreateComponent(const char* componentTypeName);
 
-    KeyFrameCurve* GetKeyFrameCurve(const char* fieldName){
+    KeyFrameCurve* GetFloatKeyFrameCurve(const char* fieldName){
         if(!m_fieldNameFieldIndexMap.contains(fieldName))
             return NULL;
 
         int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
-        return pComponent->GetKeyFrameCurve();
+        return pComponent->GetFloatKeyFrameCurve();
     }
 
 private:

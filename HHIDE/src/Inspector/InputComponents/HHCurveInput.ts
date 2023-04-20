@@ -222,8 +222,6 @@ class HHCurveInput extends HTMLElement {
             return;
         }
 
-        console.log("Mouse evt.offsetX:" + evt.offsetX)
-
         let pos = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         if (this.transformHandler && this.transformHandler.getIsDragging()) {
             let curSegment: paper.Segment = this.transformHandler.getCurSegment()

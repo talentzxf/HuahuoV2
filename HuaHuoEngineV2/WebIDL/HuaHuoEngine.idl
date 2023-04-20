@@ -221,7 +221,8 @@ interface CustomComponent{
     void SetStringValue([Const] DOMString fieldName, [Const] DOMString strValue);
     [Const] DOMString GetStringValue([Const] DOMString fieldName);
 
-    KeyFrameCurve GetKeyFrameCurve([Const] DOMString fieldName);
+    KeyFrameCurve GetFloatKeyFrameCurve([Const] DOMString fieldName);
+    KeyFrameCurve GetVectorKeyFrameCurve([Const] DOMString fieldName, long index);
 };
 
 CustomComponent implements AbstractFrameState;

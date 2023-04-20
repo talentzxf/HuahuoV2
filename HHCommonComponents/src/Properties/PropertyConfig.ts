@@ -18,6 +18,11 @@ class FloatPropertyConfig extends PropertyConfig {
     min ?: number = 0.0 // Only number fields need this.
     max ?: number = 1.0
     step ?: number = 0.01
+    getKeyFrameCurve?: Function = null
+}
+
+class Vector2PropertyConfig extends PropertyConfig {
+    getKeyFrameCurves?: Function[] = null
 }
 
 class ActionPropertyConfig extends PropertyConfig {

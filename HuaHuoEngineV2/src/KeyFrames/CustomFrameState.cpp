@@ -49,6 +49,7 @@ void CustomFrameState::Transfer(TransferFunction &transfer) {
     TRANSFER_ENUM(m_DataType);
     TRANSFER(m_defaultValue);
     TRANSFER(mKeyFrameCurve);
+    TRANSFER(mKeyFrameCurves);
 }
 
 CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ratio) {
@@ -179,6 +180,28 @@ void CustomFrameState::SetFloatValue(float value) {
     mKeyFrameCurve.AddValue(currentFrameId, value);
 }
 
+void CustomFrameState::SetVector3Value(float x, float y, float z) {
+    if (this->m_DataType != VECTOR3) {
+        Assert("Data Type mismatch!");
+        return;
+    }
+
+    Layer *shapeLayer = GetBaseShape()->GetLayer();
+    int currentFrameId = shapeLayer->GetCurrentFrame();
+    Vector3f value(x, y, z);
+    CustomDataKeyFrame *pKeyFrame = this->RecordFieldValue(currentFrameId, value);
+    pKeyFrame->SetFrameState(this);
+    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
+
+    if (mKeyFrameCurves.size() != 3) {
+        mKeyFrameCurves.reserve(3);
+    }
+
+    mKeyFrameCurves[0].AddValue(currentFrameId, x);
+    mKeyFrameCurves[1].AddValue(currentFrameId, y);
+    mKeyFrameCurves[1].AddValue(currentFrameId, z);
+}
+
 void CustomFrameState::SetBinaryResourceName(const char *resourceName) {
     if (this->m_DataType != BINARYRESOURCE) {
         Assert("Data Type mismatch!");
@@ -193,20 +216,6 @@ void CustomFrameState::SetBinaryResourceName(const char *resourceName) {
 
     Apply(currentFrameId);
 
-    pKeyFrame->SetFrameState(this);
-    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
-}
-
-void CustomFrameState::SetVector3Value(float x, float y, float z) {
-    if (this->m_DataType != VECTOR3) {
-        Assert("Data Type mismatch!");
-        return;
-    }
-
-    Layer *shapeLayer = GetBaseShape()->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
-    Vector3f value(x, y, z);
-    CustomDataKeyFrame *pKeyFrame = this->RecordFieldValue(currentFrameId, value);
     pKeyFrame->SetFrameState(this);
     shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 }
@@ -261,6 +270,78 @@ const char *CustomFrameState::GetStringValue() {
     }
 
     return m_defaultValue.stringValue.c_str();
+}
+
+KeyFrameCurve *CustomFrameState::GetFloatKeyFrameCurve() {
+    if (m_DataType == FLOAT) {
+        mKeyFrameCurve.SetCallBacks([this](int frameId, float value) {
+            if (this->GetBaseShape()->GetLayer()->GetCurrentFrame() != frameId) {
+                printf("Object Frame Id: %d, setFrameId: %d\n", this->GetBaseShape()->GetLayer()->GetCurrentFrame(),
+                       frameId);
+                printf("FrameId doesn't match!!!");
+                throw "FrameId doesn't match!!!!";
+            }
+
+            if (this->GetInstanceID() != InstanceID_None) {
+                printf("Setting value:%f for this frame state\n", value);
+                this->SetFloatValue(value);
+            } else {
+                printf("Frame State is not set for the key frame curve.\n");
+                throw "Frame State is not set???";
+            }
+        });
+        return &mKeyFrameCurve;
+    }
+
+    printf("Can only get curve for number values\n");
+    return NULL;
+}
+
+void VerifyFrameIdAndSetValue(CustomFrameState* pFrameState, int frameId, float value, SetValueFunction setValueFunction){
+    if (pFrameState->GetBaseShape()->GetLayer()->GetCurrentFrame() != frameId) {
+        printf("Object Frame Id: %d, setFrameId: %d\n", pFrameState->GetBaseShape()->GetLayer()->GetCurrentFrame(),
+               frameId);
+        printf("FrameId doesn't match!!!");
+        throw "FrameId doesn't match!!!!";
+    }
+
+    if (pFrameState->GetInstanceID() != InstanceID_None) {
+
+
+    } else {
+        printf("Frame State is not set for the key frame curve.\n");
+        throw "Frame State is not set???";
+    }
+}
+
+KeyFrameCurve *CustomFrameState::GetVectorKeyFrameCurve(int index) {
+    if (index < 3 && m_DataType == VECTOR3) {
+        mKeyFrameCurves[index].SetCallBacks([this, index](int frameId, float value) {
+            VerifyFrameIdAndSetValue(this, frameId, [value](value){
+                printf("Setting value:%f for this frame state\n", value);
+                Vector3f *currentValue = pFrameState->GetVector3Value();
+                float x = currentValue->x;
+                float y = currentValue->y;
+                float z = currentValue->z;
+
+                switch (index) { //Foolish!!!!
+                    case 0:
+                        pFrameState->SetVector3Value(value, y, z);
+                        break;
+                    case 1:
+                        pFrameState->SetVector3Value(x, value, z);
+                        break;
+                    case 2:
+                        pFrameState->SetVector3Value(x, y, value);
+                        break;
+                }
+            });
+        });
+        return &mKeyFrameCurves[index];
+    }
+
+    printf("Can only get curve for number values\n");
+    return NULL;
 }
 
 

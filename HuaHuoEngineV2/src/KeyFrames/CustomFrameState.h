@@ -138,15 +138,9 @@ public:
     virtual bool Apply();
     virtual bool Apply(int frameId) override;
 
-    virtual KeyFrameCurve* GetKeyFrameCurve(){
-        if(m_DataType == FLOAT){
-            mKeyFrameCurve.SetFrameState(this);
-            return &mKeyFrameCurve;
-        }
+    virtual KeyFrameCurve* GetVectorKeyFrameCurve(int index);
 
-        printf("Can only get curve for number values\n");
-        return NULL;
-    }
+    virtual KeyFrameCurve* GetFloatKeyFrameCurve();
 
 public:
     // This is used during dragging of the value in the keyFrameCurve.
@@ -196,7 +190,11 @@ private:
     CustomDataKeyFrame* GetColorStopArrayKeyFrame(int currentFrameId);
 
 private:
+    // In case this is just one float value, use this curve.
     KeyFrameCurve mKeyFrameCurve;
+
+    // In case this is a vector of float value, use this array.
+    std::vector<KeyFrameCurve> mKeyFrameCurves;
 
     CustomDataType m_DataType;
     CustomData m_defaultValue;
