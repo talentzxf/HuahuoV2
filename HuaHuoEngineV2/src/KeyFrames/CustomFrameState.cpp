@@ -272,32 +272,7 @@ const char *CustomFrameState::GetStringValue() {
     return m_defaultValue.stringValue.c_str();
 }
 
-KeyFrameCurve *CustomFrameState::GetFloatKeyFrameCurve() {
-    if (m_DataType == FLOAT) {
-        mKeyFrameCurve.SetCallBacks([this](int frameId, float value) {
-            if (this->GetBaseShape()->GetLayer()->GetCurrentFrame() != frameId) {
-                printf("Object Frame Id: %d, setFrameId: %d\n", this->GetBaseShape()->GetLayer()->GetCurrentFrame(),
-                       frameId);
-                printf("FrameId doesn't match!!!");
-                throw "FrameId doesn't match!!!!";
-            }
-
-            if (this->GetInstanceID() != InstanceID_None) {
-                printf("Setting value:%f for this frame state\n", value);
-                this->SetFloatValue(value);
-            } else {
-                printf("Frame State is not set for the key frame curve.\n");
-                throw "Frame State is not set???";
-            }
-        });
-        return &mKeyFrameCurve;
-    }
-
-    printf("Can only get curve for number values\n");
-    return NULL;
-}
-
-void VerifyFrameIdAndSetValue(CustomFrameState* pFrameState, int frameId, float value, SetValueFunction setValueFunction){
+void VerifyFrameIdAndSetValue(CustomFrameState* pFrameState, int frameId, std::function<void()> setValueFunction){
     if (pFrameState->GetBaseShape()->GetLayer()->GetCurrentFrame() != frameId) {
         printf("Object Frame Id: %d, setFrameId: %d\n", pFrameState->GetBaseShape()->GetLayer()->GetCurrentFrame(),
                frameId);
@@ -306,33 +281,59 @@ void VerifyFrameIdAndSetValue(CustomFrameState* pFrameState, int frameId, float 
     }
 
     if (pFrameState->GetInstanceID() != InstanceID_None) {
-
-
+        setValueFunction();
     } else {
         printf("Frame State is not set for the key frame curve.\n");
         throw "Frame State is not set???";
     }
 }
 
+KeyFrameCurve *CustomFrameState::GetFloatKeyFrameCurve() {
+    if (m_DataType == FLOAT) {
+        mKeyFrameCurve.SetCallBacks([this](int frameId, float value) {
+            VerifyFrameIdAndSetValue(this, frameId, [this, frameId, value](){
+                if (this->GetBaseShape()->GetLayer()->GetCurrentFrame() != frameId) {
+                    printf("Object Frame Id: %d, setFrameId: %d\n", this->GetBaseShape()->GetLayer()->GetCurrentFrame(),
+                           frameId);
+                    printf("FrameId doesn't match!!!");
+                    throw "FrameId doesn't match!!!!";
+                }
+
+                if (this->GetInstanceID() != InstanceID_None) {
+                    printf("Setting value:%f for this frame state\n", value);
+                    this->SetFloatValue(value);
+                } else {
+                    printf("Frame State is not set for the key frame curve.\n");
+                    throw "Frame State is not set???";
+                }
+            });
+        });
+        return &mKeyFrameCurve;
+    }
+
+    printf("Can only get curve for number values\n");
+    return NULL;
+}
+
 KeyFrameCurve *CustomFrameState::GetVectorKeyFrameCurve(int index) {
     if (index < 3 && m_DataType == VECTOR3) {
         mKeyFrameCurves[index].SetCallBacks([this, index](int frameId, float value) {
-            VerifyFrameIdAndSetValue(this, frameId, [value](value){
+            VerifyFrameIdAndSetValue(this, frameId, [this, index, value](){
                 printf("Setting value:%f for this frame state\n", value);
-                Vector3f *currentValue = pFrameState->GetVector3Value();
+                Vector3f *currentValue = this->GetVector3Value();
                 float x = currentValue->x;
                 float y = currentValue->y;
                 float z = currentValue->z;
 
                 switch (index) { //Foolish!!!!
                     case 0:
-                        pFrameState->SetVector3Value(value, y, z);
+                        this->SetVector3Value(value, y, z);
                         break;
                     case 1:
-                        pFrameState->SetVector3Value(x, value, z);
+                        this->SetVector3Value(x, value, z);
                         break;
                     case 2:
-                        pFrameState->SetVector3Value(x, y, value);
+                        this->SetVector3Value(x, y, value);
                         break;
                 }
             });
