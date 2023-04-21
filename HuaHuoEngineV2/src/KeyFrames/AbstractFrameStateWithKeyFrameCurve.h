@@ -16,7 +16,7 @@ public:
     }
 
 protected:
-    KeyFrameCurve *GetVectorKeyFrameCurve(int index);
+    KeyFrameCurve *GetVectorKeyFrameCurve(int indexOfVector);
 
     KeyFrameCurve *GetFloatKeyFrameCurve();
 
@@ -78,21 +78,26 @@ KeyFrameCurve *AbstractFrameStateWithKeyFrameCurve<T>::GetFloatKeyFrameCurve() {
         VerifyFrameIdAndSetValue(this, frameId, [this, value]() {
             this->SetFloatValue(value);
         });
+    },
+    [this](int index, int frameId, float value){
+        VerifyFrameIdAndSetValue(this, frameId, [this, index, frameId, value](){
+            this->SetFloatValueByIndex(index, frameId, value);
+        });
     });
     return &mKeyFrameCurve;
 }
 
 template<class T>
-KeyFrameCurve *AbstractFrameStateWithKeyFrameCurve<T>::GetVectorKeyFrameCurve(int index) {
-    mKeyFrameCurves[index].SetCallBacks([this, index](int frameId, float value) {
-        VerifyFrameIdAndSetValue(this, frameId, [this, index, value]() {
+KeyFrameCurve *AbstractFrameStateWithKeyFrameCurve<T>::GetVectorKeyFrameCurve(int indexOfVector) {
+    mKeyFrameCurves[indexOfVector].SetCallBacks([this, indexOfVector](int frameId, float value) {
+        VerifyFrameIdAndSetValue(this, frameId, [this, indexOfVector, value]() {
             printf("Setting value:%f for this frame state\n", value);
             Vector3f *currentValue = this->GetVector3Value();
             float x = currentValue->x;
             float y = currentValue->y;
             float z = currentValue->z;
 
-            switch (index) { //Foolish!!!!
+            switch (indexOfVector) { //Foolish!!!!
                 case 0:
                     this->SetVector3Value(value, y, z);
                     break;
@@ -104,6 +109,10 @@ KeyFrameCurve *AbstractFrameStateWithKeyFrameCurve<T>::GetVectorKeyFrameCurve(in
                     break;
             }
         });
+    },
+    [this, indexOfVector](int index, int frameId, float value){
+        VerifyFrameIdAndSetValue(this, frameId, [this, indexOfVector, index, frameId, value](){
+        this->SetVectorValueByIndex(index, indexOfVector, frameId, value);
     });
     return &mKeyFrameCurves[index];
 }

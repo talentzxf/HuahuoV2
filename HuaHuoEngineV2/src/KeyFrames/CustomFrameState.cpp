@@ -181,6 +181,33 @@ void CustomFrameState::SetFloatValueByIndex(int index, int frameId, float value)
     }
 }
 
+void CustomFrameState::SetVectorValueByIndex(int index, int vectorCoordinate, int frameId, float value){
+    if (this->m_DataType != VECTOR3) {
+        Assert("Data Type mismatch!");
+        return;
+    }
+
+    KeyFrameArray &keyFrameArray = GetKeyFrames();
+
+    int beforeFrameId = keyFrameArray[index].GetFrameId();
+
+    CustomDataKeyFrame &targetKeyFrame = keyFrameArray[index];
+    Layer *layer = targetKeyFrame.GetBaseShape()->GetLayer(false);
+    if (layer) {
+        if (beforeFrameId != frameId && layer) { // Move the keyframe object in layer's keyFrame map.
+            layer->MoveKeyFrameToKeyFrameId(targetKeyFrame.GetKeyFrame().GetKeyFrameIdentifier(), beforeFrameId,
+                                            frameId);
+        }
+    }
+
+    targetKeyFrame.GetKeyFrame().SetFrameId(frameId);
+    targetKeyFrame.data. = value;
+
+    if (layer) {
+        targetKeyFrame.GetKeyFrame().GetFrameState()->Apply(layer->GetCurrentFrame());
+    }
+}
+
 void CustomFrameState::SetFloatValue(float value) {
     if (this->m_DataType != FLOAT) {
         Assert("Data Type mismatch!");

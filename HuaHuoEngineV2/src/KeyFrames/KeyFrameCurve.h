@@ -60,9 +60,6 @@ inline void KeyFrameCurvePoint::Transfer(TransferFunction &t) {
     t.Transfer(handleOut, "handleOut");
 }
 
-//typedef void (*SetValueCallBackFunc)(int frameId, float value);
-//typedef void (*SetValueByIndexCallbackFunc)(int index, int frameId, float value);
-
 typedef std::function<void(int, float)> SetValueCallBackFunc;
 typedef std::function<void(int, int, float)> SetValueByIndexCallbackFunc;
 
@@ -70,8 +67,9 @@ class KeyFrameCurve {
 public:
     DECLARE_SERIALIZE_NO_PPTR(KeyFrameCurve);
 
-    void SetCallBacks(SetValueCallBackFunc setValueCallBackFunc){
+    void SetCallBacks(SetValueCallBackFunc setValueCallBackFunc, SetValueByIndexCallbackFunc setValueByIndexCallbackFunc){
         this->setValueCallBackFunc = setValueCallBackFunc;
+        this->setValueByIndexCallbackFunc = setValueByIndexCallbackFunc;
     }
 
     size_t GetTotalPoints() {
