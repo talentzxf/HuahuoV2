@@ -139,7 +139,6 @@ public:
     virtual bool Apply();
     virtual bool Apply(int frameId) override;
 
-protected:
     KeyFrameCurve *GetVectorKeyFrameCurve(int index);
 
     KeyFrameCurve *GetFloatKeyFrameCurve();
