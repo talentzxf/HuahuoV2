@@ -148,8 +148,8 @@ public:
     void SetFloatValueByIndex(int index, int frameId, float value);
 
     void SetBooleanValue(bool value);
-    void SetFloatValue(float value);
-    void SetVector3Value(float x, float y, float z);
+    void SetFloatValue(float value) override;
+    void SetVector3Value(float x, float y, float z) override;
 
     void SetBinaryResourceName(const char* resourceName);
 
@@ -158,8 +158,8 @@ public:
     BinaryResource* GetBinaryResource();
 
     bool GetBooleanValue();
-    float GetFloatValue();
-    Vector3f* GetVector3Value();
+    float GetFloatValue() override;
+    Vector3f* GetVector3Value() override;
 
     void SetColorValue(float r, float g, float b, float a);
     int AddColorStop(float value);

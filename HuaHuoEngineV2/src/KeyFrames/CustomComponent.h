@@ -397,6 +397,15 @@ public:
         return pComponent->GetFloatKeyFrameCurve();
     }
 
+    KeyFrameCurve* GetVectorKeyFrameCurve(const char* fieldName, int index){
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return NULL;
+
+        int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        return pComponent->GetVectorKeyFrameCurve(index);
+    }
+
 private:
     std::map<string, int> m_fieldNameFieldIndexMap;
     std::map<int, string> m_fieldIndexFieldNameMap;
