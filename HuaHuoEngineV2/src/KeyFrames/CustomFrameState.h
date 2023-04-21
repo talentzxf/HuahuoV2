@@ -11,6 +11,7 @@
 #include "FrameState.h"
 #include "FieldShapeArray.h"
 #include "ColorStop.h"
+#include "AbstractFrameStateWithKeyFrameCurve.h"
 
 class BaseShape;
 
@@ -127,20 +128,21 @@ template <class TransferFunction> void CustomDataKeyFrame::Transfer(TransferFunc
 
 CustomDataKeyFrame Lerp(CustomDataKeyFrame& k1, CustomDataKeyFrame& k2, float ratio);
 
-class CustomFrameState: public AbstractFrameStateWithKeyType<CustomDataKeyFrame>{
+class CustomFrameState: public AbstractFrameStateWithKeyFrameCurve<CustomDataKeyFrame>{
     REGISTER_CLASS(CustomFrameState);
     DECLARE_OBJECT_SERIALIZE()
 public:
     CustomFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
-    : AbstractFrameStateWithKeyType<CustomDataKeyFrame>(memLabelId, creationMode){
+    : AbstractFrameStateWithKeyFrameCurve<CustomDataKeyFrame>(memLabelId, creationMode){
     }
 
     virtual bool Apply();
     virtual bool Apply(int frameId) override;
 
-    virtual KeyFrameCurve* GetVectorKeyFrameCurve(int index);
+protected:
+    KeyFrameCurve *GetVectorKeyFrameCurve(int index);
 
-    virtual KeyFrameCurve* GetFloatKeyFrameCurve();
+    KeyFrameCurve *GetFloatKeyFrameCurve();
 
 public:
     // This is used during dragging of the value in the keyFrameCurve.
@@ -190,12 +192,6 @@ private:
     CustomDataKeyFrame* GetColorStopArrayKeyFrame(int currentFrameId);
 
 private:
-    // In case this is just one float value, use this curve.
-    KeyFrameCurve mKeyFrameCurve;
-
-    // In case this is a vector of float value, use this array.
-    std::vector<KeyFrameCurve> mKeyFrameCurves;
-
     CustomDataType m_DataType;
     CustomData m_defaultValue;
     CustomDataKeyFrame m_CurrentKeyFrame;

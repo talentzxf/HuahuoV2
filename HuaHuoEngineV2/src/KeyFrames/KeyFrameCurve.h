@@ -66,7 +66,6 @@ inline void KeyFrameCurvePoint::Transfer(TransferFunction &t) {
 typedef std::function<void(int, float)> SetValueCallBackFunc;
 typedef std::function<void(int, int, float)> SetValueByIndexCallbackFunc;
 
-class CustomFrameState;
 class KeyFrameCurve {
 public:
     DECLARE_SERIALIZE_NO_PPTR(KeyFrameCurve);

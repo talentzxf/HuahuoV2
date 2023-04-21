@@ -142,6 +142,7 @@ list(APPEND CPPFILES src/Shapes/ParticleSystem.cpp)
 list(APPEND CPPFILES src/ResourceManager.cpp)
 list(APPEND CPPFILES src/KeyFrames/EventGraphComponent.cpp)
 list(APPEND CPPFILES src/KeyFrames/KeyFrameCurve.cpp)
+list(APPEND CPPFILES src/KeyFrames/AbstractFrameStateWithKeyFrameCurve.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)
