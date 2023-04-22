@@ -783,14 +783,14 @@ abstract class BaseShapeJS {
                         getter: this.getPosition.bind(this),
                         setter: this.setPosition.bind(this),
                         registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("position"),
-                        unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position")
-                        // config: {
-                        //     getKeyFrameCurves: ()=>{
-                        //         let component = _this.getComponentByTypeName("ShapeTransformFrameState")
-                        //
-                        //         return [component.rawObj.GetVectorKeyFrameCurve(fieldName, 0), component.GetVectorKeyFrameCurve(fieldName, 1)]
-                        //     }
-                        // }
+                        unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position"),
+                        config: {
+                            getKeyFrameCurves: ()=>{
+                                let component = _this.getComponentByTypeName("ShapeTransformFrameState")
+
+                                return [component.rawObj.GetVectorKeyFrameCurve(fieldName, 0), component.GetVectorKeyFrameCurve(fieldName, 1)]
+                            }
+                        }
                     },
                     {
                         key: "inspector.FollowPath",
