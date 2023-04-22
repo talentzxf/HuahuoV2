@@ -45,6 +45,8 @@ protected:
     virtual void SetFloatValue(float value) = 0;
     virtual Vector3f* GetVector3Value() =0;
     virtual void SetVector3Value(float x, float y, float z) = 0;
+    virtual void SetFloatValueByIndex(int index, int frameId, float value) =0;
+    virtual void SetVectorValueByIndex(int index, int indexOfVector, int frameId, float value) = 0;
 
 private:
     // In case this is just one float value, use this curve.
@@ -110,11 +112,13 @@ KeyFrameCurve *AbstractFrameStateWithKeyFrameCurve<T>::GetVectorKeyFrameCurve(in
             }
         });
     },
-    [this, indexOfVector](int index, int frameId, float value){
-        VerifyFrameIdAndSetValue(this, frameId, [this, indexOfVector, index, frameId, value](){
-        this->SetVectorValueByIndex(index, indexOfVector, frameId, value);
+    [this, indexOfVector](int index, int frameId, float value) {
+        VerifyFrameIdAndSetValue(this, frameId, [this, indexOfVector, index, frameId, value]() {
+            this->SetVectorValueByIndex(index, indexOfVector, frameId, value);
+        });
     });
-    return &mKeyFrameCurves[index];
+
+    return &mKeyFrameCurves[indexOfVector];
 }
 
 #endif //HUAHUOENGINEV2_ABSTRACTFRAMESTATEWITHKEYFRAMECURVE_H

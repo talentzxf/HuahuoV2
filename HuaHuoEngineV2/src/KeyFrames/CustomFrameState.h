@@ -145,8 +145,8 @@ public:
 
 public:
     // This is used during dragging of the value in the keyFrameCurve.
-    void SetFloatValueByIndex(int index, int frameId, float value);
-    void SetVectorValueByIndex(int index, int vectorCoordinate, int frameId, float value);
+    void SetFloatValueByIndex(int index, int frameId, float value) override;
+    void SetVectorValueByIndex(int index, int vectorCoordinate, int frameId, float value) override;
 
     void SetBooleanValue(bool value);
     void SetFloatValue(float value) override;

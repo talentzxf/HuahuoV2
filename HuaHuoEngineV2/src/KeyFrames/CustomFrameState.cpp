@@ -201,7 +201,21 @@ void CustomFrameState::SetVectorValueByIndex(int index, int vectorCoordinate, in
     }
 
     targetKeyFrame.GetKeyFrame().SetFrameId(frameId);
-    targetKeyFrame.data. = value;
+    Vector3f currentValue = targetKeyFrame.data.vector3Value;
+    // Foolish switch
+    switch(vectorCoordinate){
+        case 0:
+            currentValue.x = value;
+            break;
+        case 1:
+            currentValue.y = value;
+            break;
+        case 2:
+            currentValue.z = value;
+            break;
+    }
+
+    targetKeyFrame.data.vector3Value = currentValue;
 
     if (layer) {
         targetKeyFrame.GetKeyFrame().GetFrameState()->Apply(layer->GetCurrentFrame());
