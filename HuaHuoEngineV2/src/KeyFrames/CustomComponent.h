@@ -7,6 +7,7 @@
 
 #include "FrameState.h"
 #include "CustomFrameState.h"
+#include "KeyFrames/FrameStateContainer.h"
 
 // This is the cpp side of the user created components.
 // It might contain multiple CustomFrameState(s).

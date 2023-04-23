@@ -9,7 +9,7 @@ import {BaseShapeActions} from "../EventGraph/BaseShapeActions";
 
 let BASIC_COMPONENTS = "BasicComponents"
 
-let basicComponents = ["ShapeTransformFrameState", "ShapeSegmentFrameState"]
+let basicComponents = ["ShapeTransformComponent", "ShapeSegmentFrameState"]
 
 declare function castObject(obj: any, clz: any): any;
 
@@ -898,7 +898,7 @@ abstract class BaseShapeJS {
 
                     return keyFrames
                 },
-                setter: this.insertComponentKeyFrame("ShapeTransformFrameState").bind(this), // How to handle setter??
+                setter: this.insertComponentKeyFrame("ShapeTransformComponent").bind(this), // How to handle setter??
                 deleter: (frameId) => {
                     for (let componentName of basicComponents) {
                         _this.deleteComponentKeyFrame(componentName).bind(_this)(frameId)

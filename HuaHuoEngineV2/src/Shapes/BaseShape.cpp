@@ -50,10 +50,16 @@ void BaseShape::TransferFrameStates(TransferFunction &transfer) {
 }
 
 void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
-    if (this->mLayer !=
-        NULL) { // When the shape is loaded, it's layer has not been loaded yet. It's possible as this might be a shape within another element.
+    Super::AwakeFromLoad(awakeMode);
+    if (this->mLayer != NULL) { // When the shape is loaded, it's layer has not been loaded yet. It's possible as this might be a shape within another element.
         int frameId = this->GetLayer()->GetCurrentFrame();
         Apply(frameId);
+    }
+
+    if(awakeMode == kInstantiateOrCreateFromCodeAwakeFromLoad){ // Awake all it's components.
+        for(FrameStatePair& abstractFrameStatePair: this->mFrameStates){
+            abstractFrameStatePair.GetComponentPtr()->AwakeFromLoad(awakeMode);
+        }
     }
 
     ShapeLoadedEventArgs args(this);
@@ -69,6 +75,8 @@ BaseShape *BaseShape::CreateShape(const char *shapeName) {
         baseShape = (BaseShape *) Object::Produce<BaseShape>();
         baseShape->mTypeName = shapeName;
     }
+
+    baseShape->AwakeFromLoad(kInstantiateOrCreateFromCodeAwakeFromLoad);
 
     return baseShape;
 }
@@ -112,7 +120,7 @@ void BaseShape::SetLocalPivotPosition(float x, float y, float z) {
     Layer *shapeLayer = GetLayer();
 
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    ShapeTransformFrameState &frameState = GetFrameState<ShapeTransformFrameState>();
+    ShapeTransformComponent &frameState = GetFrameState<ShapeTransformComponent>();
     TransformKeyFrame *pFrame = frameState.RecordLocalPivotPosition(currentFrameId, x, y, z);
 
     shapeLayer->AddKeyFrame(&pFrame->GetKeyFrame());
@@ -139,11 +147,11 @@ void BaseShape::SetGlobalPivotPosition(float x, float y, float z) {
     if (this->mRecordTransformationOfKeyFrame) {
         Layer *shapeLayer = GetLayer();
         int currentFrameId = shapeLayer->GetCurrentFrame();
-        ShapeTransformFrameState &frameState = GetFrameState<ShapeTransformFrameState>();
+        ShapeTransformComponent &frameState = GetFrameState<ShapeTransformComponent>();
         TransformKeyFrame *transformKeyFrame = frameState.RecordGlobalPivotPosition(currentFrameId, x, y, z);
         shapeLayer->AddKeyFrame(&transformKeyFrame->GetKeyFrame());
     } else { // Just update it temporarily
-        GetFrameState<ShapeTransformFrameState>().UpdateTemporaryPosition(x, y, z);
+        GetFrameState<ShapeTransformComponent>().UpdateTemporaryPosition(x, y, z);
     }
 }
 
@@ -153,25 +161,25 @@ void BaseShape::SetRotation(float rotation) {
         Layer *shapeLayer = GetLayer();
 
         int currentFrameId = shapeLayer->GetCurrentFrame();
-        ShapeTransformFrameState &frameState = GetFrameState<ShapeTransformFrameState>();
+        ShapeTransformComponent &frameState = GetFrameState<ShapeTransformComponent>();
         TransformKeyFrame *transformKeyFrame = frameState.RecordRotation(currentFrameId, rotation);
 
         shapeLayer->AddKeyFrame(&transformKeyFrame->GetKeyFrame());
     } else {
-        GetFrameState<ShapeTransformFrameState>().UpdateTemporaryRotation(rotation);
+        GetFrameState<ShapeTransformComponent>().UpdateTemporaryRotation(rotation);
     }
 }
 
 void BaseShape::SetScale(float xScale, float yScale, float zScale) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
-    ShapeTransformFrameState &frameState = GetFrameState<ShapeTransformFrameState>();
+    ShapeTransformComponent &frameState = GetFrameState<ShapeTransformComponent>();
     TransformKeyFrame *transformKeyFrame = frameState.RecordScale(currentFrameId, xScale, yScale, zScale);
     shapeLayer->AddKeyFrame(&transformKeyFrame->GetKeyFrame());
 }
 
 Vector3f *BaseShape::GetScale() {
-    return GetFrameState<ShapeTransformFrameState>().GetScale();
+    return GetFrameState<ShapeTransformComponent>().GetScale();
 }
 
 bool BaseShape::IsVisibleInFrame(SInt32 frameId) {

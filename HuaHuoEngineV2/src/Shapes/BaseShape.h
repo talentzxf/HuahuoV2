@@ -8,13 +8,14 @@
 #include "Math/Vector3f.h"
 #include "Math/Color.h"
 #include "Export/Events/ScriptEventManager.h"
-#include "KeyFrames/ShapeTransformFrameState.h"
+#include "KeyFrames/ShapeTransformComponent.h"
 #include "BaseClasses/PPtr.h"
 #include "Serialize/PersistentManager.h"
 #include "KeyFrames/ShapeSegmentFrameState.h"
 #include "BaseClasses/ImmediatePtr.h"
 #include "KeyFrames/KeyFrame.h"
 #include <algorithm>
+#include "KeyFrames/FrameStateContainer.h"
 
 extern const int MAX_FRAMES;
 
@@ -32,25 +33,6 @@ public:
 private:
     BaseShape* m_BaseShape;
 };
-
-struct FrameStatePair
-{
-    FrameStatePair() {}
-
-    static FrameStatePair FromState(AbstractFrameState* component);
-    DECLARE_SERIALIZE(FrameStatePair);
-
-    inline RuntimeTypeIndex const GetTypeIndex() const { return typeIndex; }
-    inline ImmediatePtr<AbstractFrameState> const& GetComponentPtr() const { return component; }
-
-    void SetComponentPtr(AbstractFrameState* const ptr);
-
-private:
-    RuntimeTypeIndex typeIndex;
-    ImmediatePtr<AbstractFrameState> component;
-};
-
-typedef std::vector<FrameStatePair>    Container;
 
 class Layer;
 class BaseShape : public Object{
@@ -112,7 +94,7 @@ public:
         , mRecordTransformationOfKeyFrame(true)
         , mTypeName("")
     {
-        AddFrameStateByName("ShapeTransformFrameState");
+        AddFrameStateByName("ShapeTransformComponent");
         AddFrameStateByName("ShapeSegmentFrameState");
         AddFrameStateByName("ShapeFollowCurveFrameState");
     }
@@ -196,7 +178,7 @@ public:
     }
 
     float GetRotation(){
-        return GetFrameState<ShapeTransformFrameState>().GetRotation();
+        return GetFrameState<ShapeTransformComponent>().GetRotation();
     }
 
     virtual void Apply(int frameId){
@@ -238,11 +220,11 @@ public:
     }
 
     Vector3f* GetLocalPivotPosition(){
-        return GetFrameState<ShapeTransformFrameState>().GetLocalPivotPosition();
+        return GetFrameState<ShapeTransformComponent>().GetLocalPivotPosition();
     }
 
     Vector3f* GetGlobalPivotPosition(){
-        return GetFrameState<ShapeTransformFrameState>().GetGlobalPivotPosition();
+        return GetFrameState<ShapeTransformComponent>().GetGlobalPivotPosition();
     }
 
     int GetSegmentKeyFrameCount(){

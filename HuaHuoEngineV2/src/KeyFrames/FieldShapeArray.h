@@ -5,9 +5,10 @@
 #ifndef HUAHUOENGINEV2_FIELDSHAPEARRAY_H
 #define HUAHUOENGINEV2_FIELDSHAPEARRAY_H
 
-#include "Shapes/BaseShape.h"
 #include <vector>
+#include "BaseClasses/PPtr.h"
 
+class BaseShape;
 class CustomFrameState;
 
 typedef vector<PPtr<BaseShape>> ShapeArray;
@@ -27,13 +28,7 @@ public:
         return shapeArray[idx];
     }
 
-    bool ContainShape(BaseShape* shapePtr){
-        for(BaseShape* shape: this->shapeArray){
-            if(shape->GetInstanceID() == shapePtr->GetInstanceID())
-                return true;
-        }
-        return false;
-    }
+    bool ContainShape(BaseShape* shapePtr);
 
     void InsertShape(BaseShape* shapePtr);
 

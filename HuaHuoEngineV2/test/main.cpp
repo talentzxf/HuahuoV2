@@ -20,7 +20,7 @@
 #include "Utilities/MemoryFileSystem.h"
 #include "Shapes/CircleShape.h"
 #include "KeyFrames/FrameState.h"
-#include "KeyFrames/ShapeTransformFrameState.h"
+#include "KeyFrames/ShapeTransformComponent.h"
 #include "KeyFrames/ShapeFollowCurveFrameState.h"
 #include "Shapes/RectangleShape.h"
 #include "CloneObject.h"
@@ -390,13 +390,13 @@ void testCloneObject() {
     Vector3f *curPosition = clonedRectangle->GetGlobalPivotPosition();
     Assert(curPosition != NULL);
 
-    ShapeTransformFrameState *shapeTransformFrameState = (ShapeTransformFrameState *) clonedRectangle->GetFrameStateByTypeName(
-            "ShapeTransformFrameState");
+    ShapeTransformComponent *shapeTransform = (ShapeTransformComponent *) clonedRectangle->GetFrameStateByTypeName(
+            "ShapeTransformComponent");
 
-    int keyFrameCount = shapeTransformFrameState->GetKeyFrameCount();
+    int keyFrameCount = shapeTransform->GetKeyFrameCount();
 
     for (int i = 0; i < keyFrameCount; i++) {
-        int frameId = shapeTransformFrameState->GetKeyFrameAtIndex(i);
+        int frameId = shapeTransform->GetKeyFrameAtIndex(i);
         Assert(frameId >= 0);
     }
 
