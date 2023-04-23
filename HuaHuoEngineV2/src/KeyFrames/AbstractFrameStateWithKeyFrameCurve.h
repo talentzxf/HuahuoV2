@@ -44,7 +44,7 @@ protected:
     virtual float GetFloatValue() = 0;
     virtual void SetFloatValue(float value) = 0;
     virtual Vector3f* GetVector3Value() =0;
-    virtual void SetVector3Value(float x, float y, float z) = 0;
+    virtual AbstractKeyFrameData * SetVector3Value(float x, float y, float z) = 0;
     virtual void SetFloatValueByIndex(int index, int frameId, float value) =0;
     virtual void SetVectorValueByIndex(int index, int indexOfVector, int frameId, float value) = 0;
 

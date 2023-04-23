@@ -75,27 +75,19 @@ public:
 //    virtual bool Apply(int frameId) override;
 
     Vector3f* GetLocalPivotPosition(){
-        if(isValidFrame)
-            return &m_CurrentTransformData.localPivotPosition;
-        return NULL;
+        return this->GetVector3Value("localPivotPosition");
     }
 
     Vector3f* GetGlobalPivotPosition(){
-        if(isValidFrame)
-            return &m_CurrentTransformData.globalPivotPosition;
-        return NULL;
+        return this->GetVector3Value("globalPivotPosition");
     }
 
     Vector3f* GetScale(){
-        if(isValidFrame)
-            return &m_CurrentTransformData.scale;
-        return NULL;
+        return this->GetVector3Value("scale");
     }
 
     float GetRotation(){
-        if(isValidFrame)
-            return m_CurrentTransformData.rotation;
-        return 0.0f;
+        return this->GetFloatValue("rotation");
     }
 
 //    TransformKeyFrame* RecordLocalPivotPosition(int frameId, float x, float y, float z);
@@ -104,6 +96,10 @@ public:
 //    TransformKeyFrame* RecordScale(int frameId, float xScale, float yScale, float zScale);
 //
 //    TransformKeyFrame* RecordRotation(int frameId, float rotation);
+
+    AbstractKeyFrameData * RecordLocalPivotPosition(int frameId, float x, float y, float z){
+        return this->SetVector3Value("localPivotPosition", x, y, z);
+    }
     friend class BaseShape;
 
 //    void UpdateTemporaryPosition(float x, float y, float z){

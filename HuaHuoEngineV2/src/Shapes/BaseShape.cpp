@@ -121,7 +121,7 @@ void BaseShape::SetLocalPivotPosition(float x, float y, float z) {
 
     int currentFrameId = shapeLayer->GetCurrentFrame();
     ShapeTransformComponent &frameState = GetFrameState<ShapeTransformComponent>();
-    TransformKeyFrame *pFrame = frameState.RecordLocalPivotPosition(currentFrameId, x, y, z);
+    AbstractKeyFrameData *pFrame = frameState.RecordLocalPivotPosition(currentFrameId, x, y, z);
 
     shapeLayer->AddKeyFrame(&pFrame->GetKeyFrame());
 }

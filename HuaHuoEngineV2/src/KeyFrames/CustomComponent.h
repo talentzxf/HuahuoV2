@@ -71,13 +71,13 @@ DECLARE_OBJECT_SERIALIZE();
         pComponent->SetBinaryResourceName(resourceName);
     }
 
-    void SetVector3Value(const char *fieldName, float x, float y, float z) {
+    AbstractKeyFrameData* SetVector3Value(const char *fieldName, float x, float y, float z) {
         if(!m_fieldNameFieldIndexMap.contains(fieldName))
-            return;
+            return NULL;
 
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
-        pComponent->SetVector3Value(x, y, z);
+        return pComponent->SetVector3Value(x, y, z);
     }
 
     void SetBooleanValue(const char *fieldName, float value) {
