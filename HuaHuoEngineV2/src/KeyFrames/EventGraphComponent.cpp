@@ -3,6 +3,7 @@
 //
 
 #include "EventGraphComponent.h"
+#include "Shapes/BaseShape.h"
 
 IMPLEMENT_REGISTER_CLASS(EventGraphComponent, 10026);
 
@@ -15,4 +16,10 @@ void EventGraphComponent::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
 
     TRANSFER(m_ListenerNodeShapeMap);
+}
+
+BaseShape *EventGraphComponent::GetShapeByNodeId(int nodeId) {
+    if (!m_ListenerNodeShapeMap.contains(nodeId))
+        return NULL;
+    return m_ListenerNodeShapeMap[nodeId];
 }

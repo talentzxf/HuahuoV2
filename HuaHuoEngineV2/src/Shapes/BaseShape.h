@@ -80,7 +80,6 @@ private:
     // The flag indicates whether we need to "really" update global position in key frames.
     // In some cases, the position are just temporary, we don't need to update it permanently.
     bool mRecordTransformationOfKeyFrame;
-
 private:
     AbstractFrameState* ProduceFrameStateByType(const HuaHuo::Type* type);
     template<class TransferFunction> void TransferFrameStates(TransferFunction& transfer);
@@ -91,7 +90,6 @@ public:
         , mBornFrameId(-1)
         , mIndex(-1)
         , mIsVisible(true)
-        , mRecordTransformationOfKeyFrame(true)
         , mTypeName("")
     {
         AddFrameStateByName("ShapeTransformComponent");

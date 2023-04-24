@@ -28,3 +28,10 @@ bool FieldShapeArray::ContainShape(BaseShape *shapePtr) {
     }
     return false;
 }
+
+BaseShape *FieldShapeArray::GetShape(int idx) {
+    if (idx >= shapeArray.size())
+        return NULL;
+
+    return shapeArray[idx];
+}

@@ -19,11 +19,7 @@ DECLARE_OBJECT_SERIALIZE();
 
     }
 
-    BaseShape* GetShapeByNodeId(int nodeId){
-        if(!m_ListenerNodeShapeMap.contains(nodeId))
-            return NULL;
-        return m_ListenerNodeShapeMap[nodeId];
-    }
+    BaseShape* GetShapeByNodeId(int nodeId);
 
     void AddNodeIdShapeMap(int nodeId, BaseShape* shape){
         m_ListenerNodeShapeMap[nodeId] = shape;

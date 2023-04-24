@@ -27,7 +27,7 @@ template<class TransferFunction> void ShapeFollowCurveData::Transfer(TransferFun
 
 ShapeFollowCurveData Lerp(ShapeFollowCurveData& k1, ShapeFollowCurveData& k2, float ratio);
 
-struct ShapeFollowCurveKeyFrame: public AbstractKeyFrameData{
+struct ShapeFollowCurveKeyFrame: public AbstractKeyFrame{
     ShapeFollowCurveData followCurveData;
 
     DECLARE_SERIALIZE(TransformKeyFrame)
@@ -38,7 +38,7 @@ struct ShapeFollowCurveKeyFrame: public AbstractKeyFrameData{
 };
 
 template<class TransferFunction> void ShapeFollowCurveKeyFrame::Transfer(TransferFunction &transfer){
-    AbstractKeyFrameData::Transfer(transfer);
+    AbstractKeyFrame::Transfer(transfer);
     TRANSFER(followCurveData);
 }
 

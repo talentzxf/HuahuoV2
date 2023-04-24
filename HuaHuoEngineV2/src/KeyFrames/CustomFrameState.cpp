@@ -222,10 +222,10 @@ void CustomFrameState::SetVectorValueByIndex(int index, int vectorCoordinate, in
     }
 }
 
-void CustomFrameState::SetFloatValue(float value) {
+AbstractKeyFrame * CustomFrameState::SetFloatValue(float value) {
     if (this->m_DataType != FLOAT) {
         Assert("Data Type mismatch!");
-        return;
+        return NULL;
     }
 
     Layer *shapeLayer = GetBaseShape()->GetLayer();
@@ -235,9 +235,11 @@ void CustomFrameState::SetFloatValue(float value) {
     shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
 
     AddFloatCurveValue(currentFrameId, value);
+
+    return pKeyFrame;
 }
 
-CustomDataKeyFrame * CustomFrameState::SetVector3Value(float x, float y, float z) {
+AbstractKeyFrame * CustomFrameState::SetVector3Value(float x, float y, float z) {
     if (this->m_DataType != VECTOR3) {
         Assert("Data Type mismatch!");
         return NULL;

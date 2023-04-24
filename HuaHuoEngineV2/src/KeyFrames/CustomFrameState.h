@@ -111,7 +111,7 @@ template<class TransferFunction> void CustomData::Transfer(TransferFunction &tra
 }
 
 
-class CustomDataKeyFrame: public AbstractKeyFrameData{
+class CustomDataKeyFrame: public AbstractKeyFrame{
 public:
     CustomData data;
 
@@ -122,7 +122,7 @@ public:
 };
 
 template <class TransferFunction> void CustomDataKeyFrame::Transfer(TransferFunction &transfer) {
-    AbstractKeyFrameData::Transfer(transfer);
+    AbstractKeyFrame::Transfer(transfer);
     TRANSFER(data);
 }
 
@@ -149,8 +149,8 @@ public:
     void SetVectorValueByIndex(int index, int vectorCoordinate, int frameId, float value) override;
 
     void SetBooleanValue(bool value);
-    void SetFloatValue(float value) override;
-    CustomDataKeyFrame * SetVector3Value(float x, float y, float z) override;
+    AbstractKeyFrame * SetFloatValue(float value) override;
+    AbstractKeyFrame * SetVector3Value(float x, float y, float z) override;
 
     void SetBinaryResourceName(const char* resourceName);
 

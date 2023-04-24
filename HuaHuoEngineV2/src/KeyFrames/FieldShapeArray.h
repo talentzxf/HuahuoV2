@@ -21,12 +21,7 @@ public:
         return shapeArray.size();
     }
 
-    BaseShape* GetShape(int idx){
-        if(idx >= shapeArray.size())
-            return NULL;
-
-        return shapeArray[idx];
-    }
+    BaseShape* GetShape(int idx);
 
     bool ContainShape(BaseShape* shapePtr);
 

@@ -3,6 +3,9 @@
 //
 
 #include "CustomComponent.h"
+#include "Serialize/PersistentManager.h"
+
+extern std::string StoreFilePath;
 
 IMPLEMENT_REGISTER_CLASS(CustomComponent, 10018);
 

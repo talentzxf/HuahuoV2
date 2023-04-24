@@ -36,7 +36,7 @@
 //
 //TransformData Lerp(TransformData& k1, TransformData& k2, float ratio);
 //
-//struct TransformKeyFrame: public AbstractKeyFrameData{
+//struct TransformKeyFrame: public AbstractKeyFrame{
 //    DECLARE_SERIALIZE_OPTIMIZE_TRANSFER(TransformKeyFrame)
 //
 //    TransformData frameData;
@@ -47,7 +47,7 @@
 //};
 
 //template<class TransferFunction> void TransformKeyFrame::Transfer(TransferFunction &transfer){
-//    AbstractKeyFrameData::Transfer(transfer);
+//    AbstractKeyFrame::Transfer(transfer);
 //    TRANSFER(frameData);
 //}
 
@@ -56,7 +56,7 @@ class ShapeTransformComponent : public CustomComponent {
     DECLARE_OBJECT_SERIALIZE();
 public:
     ShapeTransformComponent(MemLabelId memLabelId, ObjectCreationMode creationMode)
-            :CustomComponent(memLabelId, creationMode)
+            :CustomComponent(memLabelId, creationMode), returnTemporary(false)
     {
 
     }
@@ -72,13 +72,18 @@ public:
             this->RegisterVector3Value("globalPivotPosition", 0.0f, 0.0f, 0.0f);
     }
 
-//    virtual bool Apply(int frameId) override;
+    virtual bool Apply(int frameId) override{
+        returnTemporary = false;
+        return Super::Apply(frameId);
+    }
 
     Vector3f* GetLocalPivotPosition(){
         return this->GetVector3Value("localPivotPosition");
     }
 
     Vector3f* GetGlobalPivotPosition(){
+        if(returnTemporary)
+            return &this->globalPivotPosition;
         return this->GetVector3Value("globalPivotPosition");
     }
 
@@ -87,33 +92,46 @@ public:
     }
 
     float GetRotation(){
+        if(returnTemporary)
+            return this->rotation;
         return this->GetFloatValue("rotation");
     }
 
-//    TransformKeyFrame* RecordLocalPivotPosition(int frameId, float x, float y, float z);
-//    TransformKeyFrame* RecordGlobalPivotPosition(int frameId, float x, float y, float z);
-//
-//    TransformKeyFrame* RecordScale(int frameId, float xScale, float yScale, float zScale);
-//
-//    TransformKeyFrame* RecordRotation(int frameId, float rotation);
-
-    AbstractKeyFrameData * RecordLocalPivotPosition(int frameId, float x, float y, float z){
+    AbstractKeyFrame * RecordLocalPivotPosition(int frameId, float x, float y, float z){
         return this->SetVector3Value("localPivotPosition", x, y, z);
     }
+
+    AbstractKeyFrame * RecordGlobalPivotPosition(int frameId, float x, float y, float z){
+        return this->SetVector3Value("globalPivotPosition", x, y, z);
+    }
+
+    AbstractKeyFrame * RecordRotation(int frameId, float rotation){
+        return this->SetFloatValue("rotation", rotation);
+    }
+
+    AbstractKeyFrame* RecordScale(int frameId, float xScale, float yScale, float zScale){
+        return this->SetVector3Value("scale", xScale, yScale, zScale);
+    }
+
     friend class BaseShape;
 
-//    void UpdateTemporaryPosition(float x, float y, float z){
-//        m_CurrentTransformData.globalPivotPosition.x = x;
-//        m_CurrentTransformData.globalPivotPosition.y = y;
-//        m_CurrentTransformData.globalPivotPosition.z = z;
-//    }
-//
-//    void UpdateTemporaryRotation(float rotation){
-//        m_CurrentTransformData.rotation = rotation;
-//    }
-//
-//private:
-//    TransformData m_CurrentTransformData;
+    void UpdateTemporaryPosition(float x, float y, float z){
+        globalPivotPosition.x = x;
+        globalPivotPosition.y = y;
+        globalPivotPosition.z = z;
+        returnTemporary = true;
+    }
+
+    void UpdateTemporaryRotation(float rotation){
+        this->rotation = rotation;
+        returnTemporary = true;
+    }
+
+private:
+    // TODO: Move all these ugly logic to TS side.
+    bool returnTemporary;
+    Vector3f globalPivotPosition;
+    float rotation;
 };
 
 

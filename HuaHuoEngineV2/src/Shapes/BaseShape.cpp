@@ -121,7 +121,7 @@ void BaseShape::SetLocalPivotPosition(float x, float y, float z) {
 
     int currentFrameId = shapeLayer->GetCurrentFrame();
     ShapeTransformComponent &frameState = GetFrameState<ShapeTransformComponent>();
-    AbstractKeyFrameData *pFrame = frameState.RecordLocalPivotPosition(currentFrameId, x, y, z);
+    AbstractKeyFrame *pFrame = frameState.RecordLocalPivotPosition(currentFrameId, x, y, z);
 
     shapeLayer->AddKeyFrame(&pFrame->GetKeyFrame());
 }
@@ -148,7 +148,7 @@ void BaseShape::SetGlobalPivotPosition(float x, float y, float z) {
         Layer *shapeLayer = GetLayer();
         int currentFrameId = shapeLayer->GetCurrentFrame();
         ShapeTransformComponent &frameState = GetFrameState<ShapeTransformComponent>();
-        TransformKeyFrame *transformKeyFrame = frameState.RecordGlobalPivotPosition(currentFrameId, x, y, z);
+        AbstractKeyFrame *transformKeyFrame = frameState.RecordGlobalPivotPosition(currentFrameId, x, y, z);
         shapeLayer->AddKeyFrame(&transformKeyFrame->GetKeyFrame());
     } else { // Just update it temporarily
         GetFrameState<ShapeTransformComponent>().UpdateTemporaryPosition(x, y, z);
@@ -162,7 +162,7 @@ void BaseShape::SetRotation(float rotation) {
 
         int currentFrameId = shapeLayer->GetCurrentFrame();
         ShapeTransformComponent &frameState = GetFrameState<ShapeTransformComponent>();
-        TransformKeyFrame *transformKeyFrame = frameState.RecordRotation(currentFrameId, rotation);
+        AbstractKeyFrame *transformKeyFrame = frameState.RecordRotation(currentFrameId, rotation);
 
         shapeLayer->AddKeyFrame(&transformKeyFrame->GetKeyFrame());
     } else {
@@ -174,7 +174,7 @@ void BaseShape::SetScale(float xScale, float yScale, float zScale) {
     Layer *shapeLayer = GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     ShapeTransformComponent &frameState = GetFrameState<ShapeTransformComponent>();
-    TransformKeyFrame *transformKeyFrame = frameState.RecordScale(currentFrameId, xScale, yScale, zScale);
+    AbstractKeyFrame *transformKeyFrame = frameState.RecordScale(currentFrameId, xScale, yScale, zScale);
     shapeLayer->AddKeyFrame(&transformKeyFrame->GetKeyFrame());
 }
 

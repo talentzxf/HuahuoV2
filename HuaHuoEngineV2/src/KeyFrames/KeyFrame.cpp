@@ -5,7 +5,7 @@
 #include "ObjectStore.h"
 #include "KeyFrame.h"
 
-KeyFrame &AbstractKeyFrameData::GetKeyFrame() {
+KeyFrame &AbstractKeyFrame::GetKeyFrame() {
     if (this->keyFrameId <= 0) {
         this->keyFrameId = GetDefaultObjectStoreManager()->ProduceKeyFrame();
     }
