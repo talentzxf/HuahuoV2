@@ -384,6 +384,8 @@ void testCloneObject() {
     Vector3f* position = rectangleShape->GetGlobalPivotPosition();
     Assert(*position == Vector3f(10, 10, 11));
 
+    Vector3f* scale = rectangleShape->GetScale();
+
     currentLayer->SetCurrentFrame(10);
     rectangleShape->SetGlobalPivotPosition(100, 100, 100);
     currentLayer->AddShapeInternal(rectangleShape);
