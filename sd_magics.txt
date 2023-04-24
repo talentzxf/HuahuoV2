@@ -1,0 +1,17 @@
+# Base models:
+
+wget -O revAnimated_v11.safetensors "https://civitai-prod-settled.5ac0637cfd0766c97916cefa3764fbdf.r2.cloudflarestorage.com/63217/model/rev11c.t2c3.safetensors?X-Amz-Expires=86400&response-content-disposition=attachment%3B%20filename%3D%22revAnimated_v11.safetensors%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=2fea663d76bd24a496545da373d610fc/20230424/us-east-1/s3/aws4_request&X-Amz-Date=20230424T113040Z&X-Amz-SignedHeaders=host&X-Amz-Signature=d7f99e1973f9332347e3cd947c46f68c8b6bdea8055e395708e4a15048143764"
+
+wget -O anyorangemixAnything_453A1B.safetensors "https://civitai-prod-settled.5ac0637cfd0766c97916cefa3764fbdf.r2.cloudflarestorage.com/695306/model/anyorangemix453A1B.Ww7R.safetensors?X-Amz-Expires=86400&response-content-disposition=attachment%3B%20filename%3D%22anyorangemixAnything_453A1B.safetensors%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=2fea663d76bd24a496545da373d610fc/20230424/us-east-1/s3/aws4_request&X-Amz-Date=20230424T114149Z&X-Amz-SignedHeaders=host&X-Amz-Signature=d469c3fe4ec1916739ade495a6afcdff988829b02c99ab2d75d24da46356ffbf"
+
+wget -O abyssorangemix2_Hard.safetensors
+"https://civitai-prod-settled.5ac0637cfd0766c97916cefa3764fbdf.r2.cloudflarestorage.com/3068/training-images/abyssorangemix2Hard.kwbI.safetensors?X-Amz-Expires=86400&response-content-disposition=attachment%3B%20filename%3D%22abyssorangemix2_Hard.safetensors%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=2fea663d76bd24a496545da373d610fc/20230424/us-east-1/s3/aws4_request&X-Amz-Date=20230424T114308Z&X-Amz-SignedHeaders=host&X-Amz-Signature=83069b6df41192c5495962d250da1ffb72cf729182c5f67925c7eb9c6245de5e"
+
+# Loras:
+
+wget -O blindbox_V1Mix.safetensors
+"https://civitai-delivery-worker-prod-2023-04-01.5ac0637cfd0766c97916cefa3764fbdf.r2.cloudflarestorage.com/266262/model/blindboxV1Mix.vlCr.safetensors?X-Amz-Expires=86400&response-content-disposition=attachment%3B%20filename%3D%22blindbox_V1Mix.safetensors%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=2fea663d76bd24a496545da373d610fc/20230424/us-east-1/s3/aws4_request&X-Amz-Date=20230424T113140Z&X-Amz-SignedHeaders=host&X-Amz-Signature=2321db8edb75d9055547b2c8116fb2f3d60b6d15d355b6a3e6ae13efd0944d83"
+
+wget -O figmaAnimeFigures_figma.safetensors
+"https://civitai-prod-settled.5ac0637cfd0766c97916cefa3764fbdf.r2.cloudflarestorage.com/97343/model/figma.Buq9.safetensors?X-Amz-Expires=86400&response-content-disposition=attachment%3B%20filename%3D%22figmaAnimeFigures_figma.safetensors%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=2fea663d76bd24a496545da373d610fc/20230424/us-east-1/s3/aws4_request&X-Amz-Date=20230424T113319Z&X-Amz-SignedHeaders=host&X-Amz-Signature=4e6dcfcf9849cd42aed41e07506d41feea62d764619023c536a8e1954ea26ae8"
+
