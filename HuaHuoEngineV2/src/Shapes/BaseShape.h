@@ -90,6 +90,7 @@ public:
         , mBornFrameId(-1)
         , mIndex(-1)
         , mIsVisible(true)
+        , mRecordTransformationOfKeyFrame(true)
         , mTypeName("")
     {
         AddFrameStateByName("ShapeTransformComponent");

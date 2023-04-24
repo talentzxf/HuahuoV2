@@ -26,7 +26,7 @@ protected:
 
     void SetVectorKeyFrameCurveValue(int frameId, float x, float y, float z) {
         if (mKeyFrameCurves.size() != 3) {
-            mKeyFrameCurves.reserve(3);
+            mKeyFrameCurves.resize(3);
         }
 
         mKeyFrameCurves[0].AddValue(frameId, x);

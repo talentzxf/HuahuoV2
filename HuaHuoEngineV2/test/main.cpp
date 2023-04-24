@@ -130,7 +130,11 @@ void testShapeStore() {
     circleShape->SetRadius(1.0);
 
     circleShape->SetGlobalPivotPosition(100, 100, 100);
-    Vector3f *vector3F = circleShape->GetGlobalPivotPosition();
+    Vector3f *vector3f = circleShape->GetGlobalPivotPosition();
+
+    int currentFrame = circleShape->GetLayer()->GetCurrentFrame();
+    circleShape->GetLayer()->SetCurrentFrame(currentFrame);
+    vector3f = circleShape->GetGlobalPivotPosition();
 
     circleShape->RefreshKeyFrameCache();
     int keyFrameCount = circleShape->GetKeyFrameCount();
@@ -377,6 +381,8 @@ void testCloneObject() {
     rectangleShape->SetEndPoint(3, 3, 3);
 
     rectangleShape->SetGlobalPivotPosition(10, 10, 10);
+    Vector3f* position = rectangleShape->GetGlobalPivotPosition();
+    Assert(*position == Vector3f(10, 10, 11));
 
     currentLayer->SetCurrentFrame(10);
     rectangleShape->SetGlobalPivotPosition(100, 100, 100);
