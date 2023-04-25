@@ -174,7 +174,9 @@ DECLARE_OBJECT_SERIALIZE();
 
     Vector3f *GetVector3Value(const char *fieldName) {
         if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+        {
             return NULL;
+        }
 
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
@@ -315,6 +317,7 @@ public:
     int RegisterBooleanValue(const char *fieldName, bool initValue) {
         int fieldIdx = this->RegisterField(fieldName, BOOLEAN);
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        pComponent->GetDefaultValueData()->dataType = BOOLEAN;
         pComponent->GetDefaultValueData()->booleanValue = initValue;
         return fieldIdx;
     }
@@ -322,6 +325,7 @@ public:
     int RegisterFloatValue(const char *fieldName, float initValue) {
         int fieldIdx = this->RegisterField(fieldName, FLOAT);
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        pComponent->GetDefaultValueData()->dataType = FLOAT;
         pComponent->GetDefaultValueData()->floatValue = initValue;
         return fieldIdx;
     }
@@ -329,6 +333,7 @@ public:
     int RegisterStringValue(const char* fieldName, const char* defaultValue){
         int fieldIdx = this->RegisterField(fieldName, STRING);
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        pComponent->GetDefaultValueData()->dataType = STRING;
         pComponent->GetDefaultValueData()->stringValue = defaultValue;
         return fieldIdx;
     }
@@ -337,6 +342,9 @@ public:
         int fieldIdx = this->RegisterField(fieldName, VECTOR3);
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
         pComponent->GetDefaultValueData()->vector3Value = Vector3f(x, y, z);
+
+        pComponent->GetDefaultValueData()->dataType = VECTOR3;
+        Vector3f& defaultValue = pComponent->GetDefaultValueData()->vector3Value;
         return fieldIdx;
     }
 
@@ -344,6 +352,7 @@ public:
         int fieldIdx = this->RegisterField(fieldName, COLOR);
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
         ColorRGBAf initColor(r, g, b, a);
+        pComponent->GetDefaultValueData()->dataType = COLOR;
         pComponent->GetDefaultValueData()->colorValue = initColor;
         return fieldIdx;
     }
@@ -417,6 +426,5 @@ private:
 
     std::vector<int> keyFrameIdCache;
 };
-
 
 #endif //HUAHUOENGINEV2_CUSTOMCOMPONENT_H

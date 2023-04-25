@@ -13,6 +13,7 @@ class AbstractFrameStateWithKeyFrameCurve : public AbstractFrameStateWithKeyType
 public:
     AbstractFrameStateWithKeyFrameCurve(MemLabelId memLabelId, ObjectCreationMode creationMode)
             : AbstractFrameStateWithKeyType<T>(memLabelId, creationMode) {
+        mKeyFrameCurves.resize(3);
     }
 
 protected:
@@ -25,10 +26,6 @@ protected:
     }
 
     void SetVectorKeyFrameCurveValue(int frameId, float x, float y, float z) {
-        if (mKeyFrameCurves.size() != 3) {
-            mKeyFrameCurves.resize(3);
-        }
-
         mKeyFrameCurves[0].AddValue(frameId, x);
         mKeyFrameCurves[1].AddValue(frameId, y);
         mKeyFrameCurves[2].AddValue(frameId, z);

@@ -11,7 +11,9 @@ class Vector2PropertyDesc extends BasePropertyDesc{
 
     constructor(property: Property) {
         super(property)
-        this.vector2Input = new HHVector2Input(property.getter, property.setter, property?.config?.getKeyFrameCurves)
+
+        let keyFrameCurves = property?.config?.getKeyFrameCurves()
+        this.vector2Input = new HHVector2Input(property.getter, property.setter, keyFrameCurves)
         this.contentDiv.appendChild(this.vector2Input)
     }
 }

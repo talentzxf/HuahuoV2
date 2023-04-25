@@ -377,6 +377,10 @@ void testCloneObject() {
     Layer *currentLayer = objectStoreManager->GetCurrentStore()->GetCurrentLayer();
 
     RectangleShape *rectangleShape = (RectangleShape *) BaseShape::CreateShape("RectangleShape");
+
+    ShapeTransformComponent* pTransformComponent = (ShapeTransformComponent*) rectangleShape->GetFrameStateByTypeName("ShapeTransformComponent");
+    KeyFrameCurve* xCurve = pTransformComponent->GetVectorKeyFrameCurve("globalPivotPosition", 0);
+
     rectangleShape->SetStartPoint(2, 2, 2);
     rectangleShape->SetEndPoint(3, 3, 3);
 
