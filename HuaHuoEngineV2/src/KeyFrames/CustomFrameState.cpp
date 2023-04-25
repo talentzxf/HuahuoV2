@@ -137,7 +137,9 @@ void CustomFrameState::SetBooleanValue(bool value) {
 }
 
 KeyFrameCurve * CustomFrameState::GetVectorKeyFrameCurve(int index) {
+    printf("GetVectorKeyFrameCurve: %s %d\n", __FILE__, __LINE__);
     if(m_DataType == VECTOR3 && index < 3 && index >= 0){
+        printf("GetVectorKeyFrameCurve: %s %d\n", __FILE__, __LINE__);
         return AbstractFrameStateWithKeyFrameCurve<CustomDataKeyFrame>::GetVectorKeyFrameCurve(index);
     }
 

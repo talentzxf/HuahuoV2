@@ -62,14 +62,29 @@ public:
     }
 
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override{
-        if(!this->IsFieldRegistered("scale"))
+        printf("ShapeTransformComponent AwakeFromLoad: %s %d\n", __FILE__, __LINE__);
+        if(!this->IsFieldRegistered("scale")){
+            printf("ShapeTransformComponent AwakeFromLoad: %s %d\n", __FILE__, __LINE__);
             this->RegisterVector3Value("scale", 1.0, 1.0, 1.0);
-        if(!this->IsFieldRegistered("rotation"))
+        }
+
+        if(!this->IsFieldRegistered("rotation")){
+            printf("ShapeTransformComponent AwakeFromLoad: %s %d\n", __FILE__, __LINE__);
             this->RegisterFloatValue("rotation", 0.0);
-        if(!this->IsFieldRegistered("localPivotPosition"))
+        }
+
+        if(!this->IsFieldRegistered("localPivotPosition")){
+            printf("ShapeTransformComponent AwakeFromLoad: %s %d\n", __FILE__, __LINE__);
             this->RegisterVector3Value("localPivotPosition", 0.0f, 0.0f, 0.0f);
-        if(!this->IsFieldRegistered("globalPivotPosition"))
+        }
+
+        if(!this->IsFieldRegistered("globalPivotPosition")){
+            printf("ShapeTransformComponent AwakeFromLoad: %s %d\n", __FILE__, __LINE__);
             this->RegisterVector3Value("globalPivotPosition", 0.0f, 0.0f, 0.0f);
+        }
+
+        printf("ShapeTransformComponent AwakeFromLoad: %s %d\n", __FILE__, __LINE__);
+        // printf("Field size: %d\n", m_fieldNameFieldIndexMap.size());
     }
 
     virtual bool Apply(int frameId) override{

@@ -88,6 +88,8 @@ KeyFrameCurve *AbstractFrameStateWithKeyFrameCurve<T>::GetFloatKeyFrameCurve() {
 
 template<class T>
 KeyFrameCurve *AbstractFrameStateWithKeyFrameCurve<T>::GetVectorKeyFrameCurve(int indexOfVector) {
+    printf("GetVectorKeyFrameCurve: %s %d\n", __FILE__, __LINE__);
+
     mKeyFrameCurves[indexOfVector].SetCallBacks([this, indexOfVector](int frameId, float value) {
         VerifyFrameIdAndSetValue(this, frameId, [this, indexOfVector, value]() {
             printf("Setting value:%f for this frame state\n", value);
@@ -115,6 +117,7 @@ KeyFrameCurve *AbstractFrameStateWithKeyFrameCurve<T>::GetVectorKeyFrameCurve(in
         });
     });
 
+    printf("GetVectorKeyFrameCurve: %s %d\n", __FILE__, __LINE__);
     return &mKeyFrameCurves[indexOfVector];
 }
 

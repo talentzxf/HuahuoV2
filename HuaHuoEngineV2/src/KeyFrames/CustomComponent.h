@@ -408,11 +408,22 @@ public:
     }
 
     KeyFrameCurve* GetVectorKeyFrameCurve(const char* fieldName, int index){
+        printf("GetVectorKeyFrameCurve: %s %d\n", __FILE__, __LINE__);
         if(!m_fieldNameFieldIndexMap.contains(fieldName))
+        {
+            printf("GetVectorKeyFrameCurve: %s %d\n", __FILE__, __LINE__);
+            printf("Field size: %d\n", m_fieldNameFieldIndexMap.size());
+
+            for(auto const& x: m_fieldNameFieldIndexMap){
+                printf("\tField:%s\n", x.first.c_str());
+            }
             return NULL;
+        }
 
         int fieldIdx = m_fieldNameFieldIndexMap[fieldName];
+        printf("GetVectorKeyFrameCurve: %s %d\n", __FILE__, __LINE__);
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+        printf("GetVectorKeyFrameCurve: %s %d\n", __FILE__, __LINE__);
         return pComponent->GetVectorKeyFrameCurve(index);
     }
 
