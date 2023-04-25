@@ -15,3 +15,7 @@ wget -O blindbox_V1Mix.safetensors
 wget -O figmaAnimeFigures_figma.safetensors
 "https://civitai-prod-settled.5ac0637cfd0766c97916cefa3764fbdf.r2.cloudflarestorage.com/97343/model/figma.Buq9.safetensors?X-Amz-Expires=86400&response-content-disposition=attachment%3B%20filename%3D%22figmaAnimeFigures_figma.safetensors%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=2fea663d76bd24a496545da373d610fc/20230424/us-east-1/s3/aws4_request&X-Amz-Date=20230424T113319Z&X-Amz-SignedHeaders=host&X-Amz-Signature=4e6dcfcf9849cd42aed41e07506d41feea62d764619023c536a8e1954ea26ae8"
 
+
+#Prompts:
+(masterpiece),(best quality),(ultra-detailed), (full body:1.2),princess,chibi,cute,(floating city:1.2),black long hair, red eyes, earring,(china dress), choker,(magic:1.5),(Night),(folded),(spread legs:1.2),lace legwear,(sitting on desk),,kneeling,seductive posture, red lips,A sleek black coffee table sits in front of the carousel park and a few decorative items are placed on the shelves,(beautiful detailed face), (beautiful detailed eyes),
+ <lora:blindboxV1Mix.vlCr:1>
