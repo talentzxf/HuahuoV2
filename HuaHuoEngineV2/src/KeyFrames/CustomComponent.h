@@ -412,7 +412,7 @@ public:
         if(!m_fieldNameFieldIndexMap.contains(fieldName))
         {
             printf("GetVectorKeyFrameCurve: %s %d\n", __FILE__, __LINE__);
-            printf("Field size: %d\n", m_fieldNameFieldIndexMap.size());
+            printf("Field count: %d\n", GetFieldCount());
 
             for(auto const& x: m_fieldNameFieldIndexMap){
                 printf("\tField:%s\n", x.first.c_str());
@@ -425,6 +425,19 @@ public:
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
         printf("GetVectorKeyFrameCurve: %s %d\n", __FILE__, __LINE__);
         return pComponent->GetVectorKeyFrameCurve(index);
+    }
+
+    int GetFieldCount(){
+        return m_fieldNameFieldIndexMap.size();
+    }
+
+    std::vector<std::string> GetFieldNames(){
+        vector<std::string> returnVector;
+        for(auto const& x: m_fieldNameFieldIndexMap){
+            returnVector.push_back(x.first);
+        }
+
+        return returnVector;
     }
 
 private:

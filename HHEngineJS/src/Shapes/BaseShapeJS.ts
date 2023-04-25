@@ -785,12 +785,11 @@ abstract class BaseShapeJS {
                         registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("position"),
                         unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position"),
                         config: {
-                            getKeyFrameCurves: ()=>{
-                                let frameStatePtr = _this.rawObj.GetFrameStateByTypeName("ShapeTransformComponent")
-                                let componentRawObj = Module.wrapPointer(frameStatePtr, Module.CustomComponent)
+                            getKeyFrameCurves: () => {
+                                let transformCompoennt = _this.rawObj.GetTransform()
 
-                                return [componentRawObj.GetVectorKeyFrameCurve("globalPivotPosition", 0),
-                                        componentRawObj.GetVectorKeyFrameCurve("globalPivotPosition", 1)]
+                                return [transformCompoennt.GetVectorKeyFrameCurve("globalPivotPosition", 0),
+                                    transformCompoennt.GetVectorKeyFrameCurve("globalPivotPosition", 1)]
                             }
                         }
                     },

@@ -506,6 +506,9 @@ void testReadFromFile() {
 
     GetDefaultObjectStoreManager()->GetCurrentStore()->CreateLayer("asdfasdfasdfasdf");
     CircleShape *circleShape = (CircleShape *) BaseShape::CreateShape("CircleShape");
+    ShapeTransformComponent* transformComponent = (ShapeTransformComponent*)circleShape->GetFrameStateByTypeName("ShapeTransformComponent");
+    transformComponent->GetFieldCount();
+
     circleShape->SetRadius(10.0f);
     circleShape->SetCenter(0.0, 1.0, 2.0);
     circleShape->SetBornFrameId(10);

@@ -22,8 +22,8 @@ class HHVector2Input extends HTMLElement implements RefreshableComponent {
         this.setter = setter
 
         if (keyFrameCurveGetters?.length == 2) {
-            this.xKeyFrameCurveGetter = keyFrameCurveGetters[0]
-            this.yKeyFrameCurveGetter = keyFrameCurveGetters[1]
+            this.xKeyFrameCurveGetter = ()=>{ return keyFrameCurveGetters[0] }
+            this.yKeyFrameCurveGetter = ()=>{ return keyFrameCurveGetters[1] }
         }
 
         let _this = this

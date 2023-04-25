@@ -81,6 +81,10 @@ BaseShape *BaseShape::CreateShape(const char *shapeName) {
     return baseShape;
 }
 
+ShapeTransformComponent* BaseShape::GetTransform(){
+    return &this->GetFrameState<ShapeTransformComponent>();
+}
+
 // TODO: This logic is not good. Explicit is better than implicit!!!!
 Layer *BaseShape::GetLayer(bool assignDefaultIfNotExist) {
     if (assignDefaultIfNotExist) {

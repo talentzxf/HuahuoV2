@@ -84,7 +84,12 @@ public:
         }
 
         printf("ShapeTransformComponent AwakeFromLoad: %s %d\n", __FILE__, __LINE__);
-        // printf("Field size: %d\n", m_fieldNameFieldIndexMap.size());
+
+        printf("ShapeTransformComponent AwakeFromLoad: Field count : %d\n", GetFieldCount());
+        std::vector<std::string> fieldNames = GetFieldNames();
+        for(auto name:fieldNames){
+            printf("ShapeTransformComponent AwakeFromLoad: Field name: %s\n", name.c_str());
+        }
     }
 
     virtual bool Apply(int frameId) override{

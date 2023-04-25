@@ -242,6 +242,8 @@ public:
         return this->mIndex;
     }
 
+    ShapeTransformComponent* GetTransform();
+
     virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
     static BaseShape* CreateShape(const char* shapeName);
 
