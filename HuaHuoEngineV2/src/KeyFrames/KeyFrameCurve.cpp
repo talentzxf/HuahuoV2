@@ -3,8 +3,6 @@
 //
 
 #include "KeyFrameCurve.h"
-#include "CustomComponent.h"
-#include "Layer.h"
 
 void KeyFrameCurve::SetValue(int frameId, float value){
     if(setValueCallBackFunc){

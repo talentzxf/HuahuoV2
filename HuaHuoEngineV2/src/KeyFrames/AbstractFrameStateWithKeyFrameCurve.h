@@ -22,13 +22,13 @@ protected:
     KeyFrameCurve *GetFloatKeyFrameCurve();
 
     void AddFloatCurveValue(int frameId, float value) {
-        mKeyFrameCurve.AddValue(frameId, value);
+        mKeyFrameCurve.SetCurveValue(frameId, value);
     }
 
     void SetVectorKeyFrameCurveValue(int frameId, float x, float y, float z) {
-        mKeyFrameCurves[0].AddValue(frameId, x);
-        mKeyFrameCurves[1].AddValue(frameId, y);
-        mKeyFrameCurves[2].AddValue(frameId, z);
+        mKeyFrameCurves[0].SetCurveValue(frameId, x);
+        mKeyFrameCurves[1].SetCurveValue(frameId, y);
+        mKeyFrameCurves[2].SetCurveValue(frameId, z);
     }
 
     template<class TransferFunction>
@@ -88,11 +88,8 @@ KeyFrameCurve *AbstractFrameStateWithKeyFrameCurve<T>::GetFloatKeyFrameCurve() {
 
 template<class T>
 KeyFrameCurve *AbstractFrameStateWithKeyFrameCurve<T>::GetVectorKeyFrameCurve(int indexOfVector) {
-    printf("GetVectorKeyFrameCurve: %s %d\n", __FILE__, __LINE__);
-
     mKeyFrameCurves[indexOfVector].SetCallBacks([this, indexOfVector](int frameId, float value) {
         VerifyFrameIdAndSetValue(this, frameId, [this, indexOfVector, value]() {
-            printf("Setting value:%f for this frame state\n", value);
             Vector3f *currentValue = this->GetVector3Value();
             float x = currentValue->x;
             float y = currentValue->y;

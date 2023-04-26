@@ -380,6 +380,10 @@ void testCloneObject() {
 
     ShapeTransformComponent* pTransformComponent = (ShapeTransformComponent*) rectangleShape->GetFrameStateByTypeName("ShapeTransformComponent");
     KeyFrameCurve* xCurve = pTransformComponent->GetVectorKeyFrameCurve("globalPivotPosition", 0);
+    KeyFrameCurve* yCurve = pTransformComponent->GetVectorKeyFrameCurve("globalPivotPosition", 1);
+
+    currentLayer->SetCurrentFrame(10);
+    xCurve->SetValue(10, 100.0f);
 
     rectangleShape->SetStartPoint(2, 2, 2);
     rectangleShape->SetEndPoint(3, 3, 3);
@@ -629,11 +633,11 @@ void testReadFromFile() {
 
 void testKeyFrameCurve(){
     KeyFrameCurve keyFrameCurve;
-    keyFrameCurve.AddValue(1.0, 1);
-    keyFrameCurve.AddValue(2.0, 10);
-    keyFrameCurve.AddValue(3.0, 5);
-    keyFrameCurve.AddValue(4.0, 10);
-    keyFrameCurve.AddValue(120.0, 120.0);
+    keyFrameCurve.SetCurveValue(1.0, 1);
+    keyFrameCurve.SetCurveValue(2.0, 10);
+    keyFrameCurve.SetCurveValue(3.0, 5);
+    keyFrameCurve.SetCurveValue(4.0, 10);
+    keyFrameCurve.SetCurveValue(120.0, 120.0);
 
     Assert(keyFrameCurve.GetKeyFrameCurvePoint(0)->GetFrameId() == 1);
     Assert(keyFrameCurve.GetKeyFrameCurvePoint(1)->GetFrameId() == 5);

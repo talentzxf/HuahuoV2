@@ -82,7 +82,8 @@ public:
         return &mCurvePoints[idx];
     }
 
-    void AddValue(int frameId, float value) {
+    // This function only set the curve value. Won't touch the underlying component field value.
+    void SetCurveValue(int frameId, float value) {
         // Find the approporiate position to update or insert.
         // TODO: User binary search
         auto curPointItr = std::lower_bound(mCurvePoints.begin(), mCurvePoints.end(), frameId,
