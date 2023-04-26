@@ -385,6 +385,9 @@ void testCloneObject() {
     currentLayer->SetCurrentFrame(10);
     xCurve->SetValue(10, 100.0f);
 
+    currentLayer->SetCurrentFrame(20);
+    xCurve->SetValueByIndex(0, 20, 1000.0f);
+
     rectangleShape->SetStartPoint(2, 2, 2);
     rectangleShape->SetEndPoint(3, 3, 3);
 
