@@ -62,33 +62,20 @@ public:
     }
 
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override{
-        printf("ShapeTransformComponent AwakeFromLoad: %s %d\n", __FILE__, __LINE__);
         if(!this->IsFieldRegistered("scale")){
-            printf("ShapeTransformComponent AwakeFromLoad: %s %d\n", __FILE__, __LINE__);
             this->RegisterVector3Value("scale", 1.0, 1.0, 1.0);
         }
 
         if(!this->IsFieldRegistered("rotation")){
-            printf("ShapeTransformComponent AwakeFromLoad: %s %d\n", __FILE__, __LINE__);
             this->RegisterFloatValue("rotation", 0.0);
         }
 
         if(!this->IsFieldRegistered("localPivotPosition")){
-            printf("ShapeTransformComponent AwakeFromLoad: %s %d\n", __FILE__, __LINE__);
             this->RegisterVector3Value("localPivotPosition", 0.0f, 0.0f, 0.0f);
         }
 
         if(!this->IsFieldRegistered("globalPivotPosition")){
-            printf("ShapeTransformComponent AwakeFromLoad: %s %d\n", __FILE__, __LINE__);
             this->RegisterVector3Value("globalPivotPosition", 0.0f, 0.0f, 0.0f);
-        }
-
-        printf("ShapeTransformComponent AwakeFromLoad: %s %d\n", __FILE__, __LINE__);
-
-        printf("ShapeTransformComponent AwakeFromLoad: Field count : %d\n", GetFieldCount());
-        std::vector<std::string> fieldNames = GetFieldNames();
-        for(auto name:fieldNames){
-            printf("ShapeTransformComponent AwakeFromLoad: Field name: %s\n", name.c_str());
         }
     }
 
