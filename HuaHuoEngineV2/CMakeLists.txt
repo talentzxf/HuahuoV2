@@ -143,6 +143,9 @@ list(APPEND CPPFILES src/ResourceManager.cpp)
 list(APPEND CPPFILES src/KeyFrames/EventGraphComponent.cpp)
 list(APPEND CPPFILES src/KeyFrames/KeyFrameCurve.cpp)
 list(APPEND CPPFILES src/KeyFrames/AbstractFrameStateWithKeyFrameCurve.cpp)
+list(APPEND CPPFILES Runtime/Serialize/TypeTree.cpp)
+list(APPEND CPPFILES Runtime/Serialize/TypeTreeCache.cpp )
+list(APPEND CPPFILES Runtime/Serialize/TransferFunctions/GenerateTypeTreeTransfer.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)
@@ -179,7 +182,7 @@ else ()
 #    add_compile_definitions(PLATFORM_WIN=1)
     include_directories(PlatformDependent/Win/External/baselib/builds/Include)
 
-    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp src/KeyFrames/FrameStateContainer.h)
+    add_executable(TestHuaHuoEngine ${CPPFILES} test/main.cpp)
 
     target_link_libraries(TestHuaHuoEngine ${ALL_LIBS})
 endif ()
