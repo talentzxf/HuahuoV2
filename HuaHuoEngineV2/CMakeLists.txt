@@ -146,6 +146,8 @@ list(APPEND CPPFILES src/KeyFrames/AbstractFrameStateWithKeyFrameCurve.cpp)
 list(APPEND CPPFILES Runtime/Serialize/TypeTree.cpp)
 list(APPEND CPPFILES Runtime/Serialize/TypeTreeCache.cpp )
 list(APPEND CPPFILES Runtime/Serialize/TransferFunctions/GenerateTypeTreeTransfer.cpp)
+list(APPEND CPPFILES Runtime/Serialize/TypeTreeQueries.cpp)
+list(APPEND CPPFILES Runtime/Utilities/HashFunctions/city.cpp)
 
 if(${HuaHuoEditor} MATCHES "ON")
     list(APPEND CPPFILES Runtime/Editor/SceneInspector.cpp)
