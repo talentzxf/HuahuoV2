@@ -116,9 +116,12 @@ public:
         SInt16 m_ScriptTypeIndex;
 
 
-#if SUPPORT_SERIALIZED_TYPETREES
+
         const TypeTree* m_OldType;  // Type load from file.
         int m_Equals;              // Are old type and new type equal.
+
+#if SUPPORT_SERIALIZED_TYPETREES
+
 
         typedef vector_set<SInt32> TypeDependencies;
 
@@ -159,13 +162,14 @@ public:
             return m_OldTypeHash;
         }
 
-#if SUPPORT_SERIALIZED_TYPETREES
         const TypeTree* GetOldType() const { return m_OldType; }
-        void SetOldType(const TypeTree* t);
 
+        void SetOldType(const TypeTree* t);
         enum { kEqual = 0, kNotEqual = 1, kNotCompared = -1 };
+
         int GetEqualState() const { return m_Equals; }
 
+#if SUPPORT_SERIALIZED_TYPETREES
 
     #if !UNITY_EXTERNAL_TOOL || SUPPORT_SERIALIZE_WRITE  // this an odd way of expression it, but basicaly: player or editor.
         UInt64 GetTypeTreeCacheId();
@@ -237,7 +241,7 @@ public:
 
     // Writes an object with id to the file.
     // Writing to a stream which includes objects with an older typetree version is not possible and false will be returned
-    void WriteObject(Object& object, LocalIdentifierInFileType fileID /*,SInt16 scriptTypeIndex, const BuildUsageTag& buildUsage, const GlobalBuildData& globalBuildData*/);
+    void WriteObject(Object& object, LocalIdentifierInFileType fileID ,SInt16 scriptTypeIndex/*, const BuildUsageTag& buildUsage, const GlobalBuildData& globalBuildData*/);
 
     bool FinishWriting(size_t* outDataOffset = NULL);
 
@@ -297,6 +301,8 @@ void WriteHeaderCache(const T& t, std::vector<UInt8>& vec)
     if (kSwap)
         SwapEndianBytes(dst);
 }
+
+bool TypeNeedsRemappingToNewTypeForBuild(const HuaHuo::Type* type);
 
 
 #endif //HUAHUOENGINE_SERIALIZEDFILE_H

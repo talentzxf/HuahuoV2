@@ -1657,8 +1657,8 @@ int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, con
                 continue;
         }
 
-//        // Extract script type index for monobehaviours
-//        SInt16 scriptTypeIndex = -1;
+        // Extract script type index for monobehaviours
+        SInt16 scriptTypeIndex = -1;
 //        scriptLocalIdentifier = GetScriptLocalIdentifier(o);
 //        if (scriptLocalIdentifier.localIdentifierInFile != 0)
 //        {
@@ -1692,7 +1692,7 @@ int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, con
         else
 #endif
         {
-            tempSerialize->WriteObject(*o, localIdentifierInFile); //, scriptTypeIndex, writeData[i].buildUsage, globalBuildData);
+            tempSerialize->WriteObject(*o, localIdentifierInFile, scriptTypeIndex);//, writeData[i].buildUsage, globalBuildData);
         }
 
         writeInfo.locations[i].offset = tempSerialize->GetByteStart(localIdentifierInFile);

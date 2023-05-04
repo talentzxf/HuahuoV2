@@ -7,11 +7,15 @@
 
 #include "TypeTree.h"
 #include "TypeSystem/Object.h"
+#include "Utilities/Hash128.h"
 
 namespace TypeTreeQueries
 {
     TypeTree::Signature GenerateTypeTreeSignature(TransferInstructionFlags flags, const Object &object);
     int GetTypeChildrenCount(const TypeTreeIterator& type);
+
+    /// Calculates a hash from the sub tree rotted at typeTree
+    Hash128 HashTypeTree(const TypeTreeIterator& type);
 }
 
 #endif //HUAHUOENGINEV2_TYPETREEQUERIES_H

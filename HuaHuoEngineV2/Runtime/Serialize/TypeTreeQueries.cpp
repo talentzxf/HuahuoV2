@@ -4,6 +4,7 @@
 
 #include "TypeTreeQueries.h"
 #include "Utilities/HashFunctions.h"
+#include "Utilities/MdFourGenerator.h"
 
 
 namespace TypeTreeQueries
@@ -34,4 +35,27 @@ namespace TypeTreeQueries
             ++c;
         return c;
     }
+
+    void HashTypeTree(MdFourGenerator& gen, const TypeTreeIterator& type)
+    {
+        gen.Feed(type.Type().c_str(), type.Type().strlen());
+        gen.Feed(type.Name().c_str(), type.Name().strlen());
+        gen.Feed(type->m_ByteSize);
+        gen.Feed(type->m_TypeFlags);
+        gen.Feed(type->m_Version);
+        gen.Feed(type->m_MetaFlag & kAlignBytesFlag);
+
+        for (TypeTreeIterator i = type.Children(); !i.IsNull(); i = i.Next())
+        {
+            HashTypeTree(gen, i);
+        }
+    }
+
+    Hash128 HashTypeTree(const TypeTreeIterator& type)
+    {
+        MdFourGenerator gen;
+        HashTypeTree(gen, type);
+        return gen.Finish();
+    }
+
 }

@@ -11,6 +11,8 @@
 #include "Utilities/Utility.h"
 #include "Utilities/File.h"
 #include "Serialize/SerializationCaching/MemoryCacherReadBlocks.h"
+#include "TypeTreeCache.h"
+#include "TypeTreeQueries.h"
 
 const char* kAssetBundleVersionNumber = "2";
 
@@ -61,6 +63,42 @@ struct SerializedFileHeader
     }
 };
 
+static const PersistentTypeID RemapPersistentTypeIDToNewPersistentTypeID(PersistentTypeID oldPersistentID, bool remapForBuildStripping)
+{
+    if (oldPersistentID < 0)
+        return static_cast<PersistentTypeID>(HuaHuo::Type::UndefinedPersistentTypeID);
+
+//    if (remapForBuildStripping || !UNITY_EDITOR)
+//    {
+//        core::hash_map<PersistentTypeID, PersistentTypeID>::const_iterator result = SerializedFileManager::s_RuntimeRemap.find(oldPersistentID);
+//        if (result != SerializedFileManager::s_RuntimeRemap.end())
+//        {
+//            return result->second;
+//        }
+//    }
+//#if UNITY_EDITOR
+//    else
+//    {
+//        core::hash_map<PersistentTypeID, PersistentTypeID>::const_iterator result = SerializedFileManager::s_EditorRemap.find(oldPersistentID);
+//        if (result != SerializedFileManager::s_EditorRemap.end())
+//        {
+//            return result->second;
+//        }
+//    }
+//#endif
+
+    return oldPersistentID;
+}
+
+bool TypeNeedsRemappingToNewTypeForBuild(const HuaHuo::Type* type)
+{
+    if (type == NULL)
+        return false;
+
+    PersistentTypeID typeID = type->GetPersistentTypeID();
+    return RemapPersistentTypeIDToNewPersistentTypeID(typeID, true) != typeID;
+}
+
 static void OutOfBoundsReadingError(const HuaHuo::Type* unityType, size_t expected, size_t was, Object& object)
 {
     printf_console("Out of bound!!!!\n");
@@ -103,6 +141,13 @@ SerializedFile::SerializedType::~SerializedType()
 #if SUPPORT_SERIALIZED_TYPETREES
     UNITY_DELETE(m_OldType, kMemTypeTree);
 #endif
+}
+
+void SerializedFile::SerializedType::SetOldType(const TypeTree* t)
+{
+    Assert(m_OldType == NULL);
+    Assert(m_Equals == kNotCompared);
+    m_OldType = t;
 }
 
 
@@ -406,15 +451,15 @@ static SInt32 FindOrCreateSerializedTypeForUnityType(SerializedFile::TypeVector&
 
     if (originalTypeId >= 0 && serializedTypes[originalTypeId].GetOldTypeHash() != serializedTypes[serializedTypes.size() - 1].GetOldTypeHash())
     {
-#if SUPPORT_SERIALIZED_TYPETREES
+// #if SUPPORT_SERIALIZED_TYPETREES
         if (serializedTypes[originalTypeId].GetOldType() != NULL)
         {
-            TypeTree* typeTreeCopy = UNITY_NEW(TypeTree, kMemTypeTree);
+            TypeTree* typeTreeCopy = HUAHUO_NEW(TypeTree, kMemTypeTree);
             *typeTreeCopy = *serializedTypes[originalTypeId].GetOldType();
 
             serializedTypes[serializedTypes.size() - 1].SetOldType(typeTreeCopy);
         }
-#endif // SUPPORT_SERIALIZED_TYPETREES
+// #endif // SUPPORT_SERIALIZED_TYPETREES
         serializedTypes[serializedTypes.size() - 1].SetOldTypeHash(serializedTypes[originalTypeId].GetOldTypeHash());
     }
 
@@ -933,7 +978,7 @@ bool SerializedFile::IsAvailable(LocalIdentifierInFileType id) const
     return true;
 }
 
-void SerializedFile::WriteObject(Object& object, LocalIdentifierInFileType fileID/*, SInt16 scriptTypeIndex, const BuildUsageTag& buildUsage, const GlobalBuildData& globalBuildData*/)
+void SerializedFile::WriteObject(Object& object, LocalIdentifierInFileType fileID, SInt16 scriptTypeIndex/*, const BuildUsageTag& buildUsage, const GlobalBuildData& globalBuildData*/)
 {
     Assert(m_CachedWriter != NULL);
             SET_ALLOC_OWNER(m_MemLabel);
@@ -949,22 +994,22 @@ void SerializedFile::WriteObject(Object& object, LocalIdentifierInFileType fileI
     SInt32 typeID = -1;
 
 
-//    if (!IsTextFile())
-//    {
-//        // Native C++ object typetrees share typetree by class id
-//        bool perObjectTypeTree = object.GetNeedsPerObjectTypeTree(); // || buildUsage.strippedPrefabObject;
-//        if (!perObjectTypeTree)
-//        {
-//            // typeID = FindOrCreateSerializedTypeForUnityType(m_Types, objectType, buildUsage.strippedPrefabObject, scriptTypeIndex);
-//            typeID = FindOrCreateSerializedTypeForUnityType(m_Types, objectType, false, 0);// , scriptTypeIndex);
-//            SerializedType& serializedType = m_Types[typeID];
-//            if (serializedType.GetOldType() == NULL)
-//            {
-//                TypeTree* typeTree = UNITY_NEW(TypeTree, kMemTypeTree);
-//                TypeTreeCache::GetTypeTree(&object, mask | kDontRequireAllMetaFlags, *typeTree);
-//                serializedType.SetOldType(typeTree);
-//
-//                Hash128 tempHash;
+    if (!IsTextFile())
+    {
+        // Native C++ object typetrees share typetree by class id
+        bool perObjectTypeTree = object.GetNeedsPerObjectTypeTree(); // || buildUsage.strippedPrefabObject;
+        if (!perObjectTypeTree)
+        {
+            // typeID = FindOrCreateSerializedTypeForUnityType(m_Types, objectType, buildUsage.strippedPrefabObject, scriptTypeIndex);
+            typeID = FindOrCreateSerializedTypeForUnityType(m_Types, objectType, false, 0, scriptTypeIndex);
+            SerializedType& serializedType = m_Types[typeID];
+            if (serializedType.GetOldType() == NULL)
+            {
+                TypeTree* typeTree = HUAHUO_NEW(TypeTree, kMemTypeTree);
+                TypeTreeCache::GetTypeTree(&object, mask | kDontRequireAllMetaFlags, *typeTree);
+                serializedType.SetOldType(typeTree);
+
+                Hash128 tempHash;
 //                if ((mask & kBuildPlayerOnlySerializeBuildProperties) != 0 && TypeNeedsRemappingToNewTypeForBuild(objectType))
 //                {
 //                    SetObjectLockForWrite();
@@ -972,22 +1017,22 @@ void SerializedFile::WriteObject(Object& object, LocalIdentifierInFileType fileI
 //                    ReleaseObjectLock();
 //                }
 //                else
-//                {
-//                    tempHash = TypeTreeQueries::HashTypeTree(typeTree->Root());
-//                }
-//
-//                serializedType.SetOldTypeHash(tempHash);
-//                serializedType.m_ScriptTypeIndex = scriptTypeIndex;
-//            }
-//        }
-//            // Scripted objects we search the registered typetrees for duplicates and share
-//            // or otherwise allocate a new typetree.
-//        else
-//        {
-//            Hash128 scriptID;
-//            Hash128 typeHash;
-//
-//            TypeTree* typeTree = UNITY_NEW(TypeTree, kMemTypeTree);
+                {
+                    tempHash = TypeTreeQueries::HashTypeTree(typeTree->Root());
+                }
+
+                serializedType.SetOldTypeHash(tempHash);
+                serializedType.m_ScriptTypeIndex = scriptTypeIndex;
+            }
+        }
+            // Scripted objects we search the registered typetrees for duplicates and share
+            // or otherwise allocate a new typetree.
+        else
+        {
+            Hash128 scriptID;
+            Hash128 typeHash;
+
+            TypeTree* typeTree = HUAHUO_NEW(TypeTree, kMemTypeTree);
 //            if (buildUsage.strippedPrefabObject)
 //            {
 //                // As strippedPrefabObject is only used when writing scene, so we just generate the hash from the type tree
@@ -996,11 +1041,11 @@ void SerializedFile::WriteObject(Object& object, LocalIdentifierInFileType fileI
 //                typeHash = TypeTreeQueries::HashTypeTree(typeTree->Root());
 //            }
 //            else
-//            {
-//                TypeTreeCache::GetTypeTree(&object, mask | kDontRequireAllMetaFlags, *typeTree);
-//
-//                // For now, only IManagedObjectHost has per-object type tree: assert to make sure the typeHash is generated correctly
-//                // if anyone introduces a new type which has per-object type tree.
+            {
+                TypeTreeCache::GetTypeTree(&object, mask | kDontRequireAllMetaFlags, *typeTree);
+
+                // For now, only IManagedObjectHost has per-object type tree: assert to make sure the typeHash is generated correctly
+                // if anyone introduces a new type which has per-object type tree.
 //                Assert(IManagedObjectHost::IsObjectsTypeAHost(&object));
 //                MonoScript* script = IManagedObjectHost::GetManagedReference(object)->GetScript();
 //                if (script != NULL)
@@ -1008,44 +1053,45 @@ void SerializedFile::WriteObject(Object& object, LocalIdentifierInFileType fileI
 //                    scriptID = script->GenerateScriptID();
 //                    typeHash = script->GetPropertiesHash(); // Generate the script hash in exactly same way as when we generate the script hashes for BuildSettings.
 //                }
-//            }
-//
-//            if (typeID < 0)
-//            {
-//                // Find the type id if there is one matches.
-//                for (int i = 0; i < m_Types.size(); ++i)
-//                {
-//                    const SerializedType& serializedType = m_Types[i];
-//
-//                    if (serializedType.GetPersistentTypeID() != objectPersistentTypeID)
-//                        continue;
-//
+            }
+
+            if (typeID < 0)
+            {
+                // Find the type id if there is one matches.
+                for (int i = 0; i < m_Types.size(); ++i)
+                {
+                    const SerializedType& serializedType = m_Types[i];
+
+                    if (serializedType.GetPersistentTypeID() != objectPersistentTypeID)
+                        continue;
+
 //                    if (serializedType.GetOldTypeHash().IsValid() && serializedType.GetOldTypeHash() == typeHash && serializedType.IsStripped() == buildUsage.strippedPrefabObject && serializedType.GetScriptTypeIndex() == scriptTypeIndex)
 //                    {
 //                        typeID = i;
-//                        UNITY_DELETE(typeTree, kMemTypeTree);
+//                        HUAHUO_DELETE(typeTree, kMemTypeTree);
 //                        break;
 //                    }
-//                }
-//            }
-//
-//            // If no, generate a new type id and set the type tree and type tree hash.
-//            if (typeID < 0)
-//            {
-//                typeID = m_Types.size();
-//                m_Types.push_back(SerializedType(objectType, buildUsage.strippedPrefabObject));
-//                SerializedType& serializedType = m_Types[typeID];
-//
-//                if (m_EnableTypeTree)
-//                    serializedType.SetOldType(typeTree);
-//                else
-//                    UNITY_DELETE(typeTree, kMemTypeTree);
-//
-//                serializedType.SetOldTypeHash(typeHash);
-//                serializedType.SetScriptID(scriptID);
-//                serializedType.m_ScriptTypeIndex = scriptTypeIndex;
-//            }
-//
+                }
+            }
+
+            // If no, generate a new type id and set the type tree and type tree hash.
+            if (typeID < 0)
+            {
+                typeID = m_Types.size();
+                // m_Types.push_back(SerializedType(objectType, buildUsage.strippedPrefabObject));
+                m_Types.push_back(SerializedType(objectType, false));
+                SerializedType& serializedType = m_Types[typeID];
+
+                if (m_EnableTypeTree)
+                    serializedType.SetOldType(typeTree);
+                else
+                    HUAHUO_DELETE(typeTree, kMemTypeTree);
+
+                serializedType.SetOldTypeHash(typeHash);
+                serializedType.SetScriptID(scriptID);
+                serializedType.m_ScriptTypeIndex = scriptTypeIndex;
+            }
+
 //            // For IManagedObjectHost, register all type trees of the ManagedReferences
 //            if (IManagedObjectHost::IsObjectsTypeAHost(object))
 //            {
@@ -1061,9 +1107,9 @@ void SerializedFile::WriteObject(Object& object, LocalIdentifierInFileType fileI
 //                    AddSerializedTypeForManagedReference(typeID, buildUsage.strippedPrefabObject, ::scripting_object_get_class(j), mask);
 //                }
 //            }
-//        }
-//    }
-//    else
+        }
+    }
+    else
     {
         typeID = FindOrCreateSerializedTypeForUnityType(m_Types, objectType, false, /* buildUsage.strippedPrefabObject, scriptTypeIndex*/ 0);
         // AssertMsg(m_Types[typeID].GetScriptTypeIndex() == scriptTypeIndex, "Type has not the requested ScriptTypeIndex.");
