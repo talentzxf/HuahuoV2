@@ -875,9 +875,9 @@ SerializedFile::SerializedFile(MemLabelRef label)
         , m_Externals(label)
 //        , m_Types(label)
 //        , m_ScriptTypes(label)
-#if SUPPORT_SERIALIZED_TYPETREES && !UNITY_EXTERNAL_TOOL
-, m_RefTypePool(nullptr)
-#endif
+//#if SUPPORT_SERIALIZED_TYPETREES && !UNITY_EXTERNAL_TOOL
+    , m_RefTypePool(nullptr)
+//#endif
 {
 //    m_MemoryStream = false;
 //    m_HasErrors = false;
@@ -1512,7 +1512,22 @@ bool SerializedFile::GetProduceData(LocalIdentifierInFileType fileID, const HuaH
     return true;
 }
 
-void SerializedFile::ReadObject(LocalIdentifierInFileType fileID, ObjectCreationMode mode, bool isPersistent/*, const TypeTree** oldTypeTree*/, bool* safeLoaded, Object& object)
+void SerializedFile::BuildRefTypePoolIfRelevant()
+{
+    if (m_RefTypePool != nullptr || m_RefTypes.size() == 0)
+        return;
+
+    m_RefTypePool = TypeTree::Pool::CreatePool();
+
+    for (SInt32 i = 0; i < m_RefTypes.size(); i++)
+    {
+        auto& refType = m_RefTypes[i];
+        m_RefTypePool->Add(refType.GetTypeTreeCacheId(), *refType.GetOldType());
+    }
+}
+
+
+void SerializedFile::ReadObject(LocalIdentifierInFileType fileID, ObjectCreationMode mode, bool isPersistent, const TypeTree** oldTypeTree, bool* safeLoaded, Object& object)
 {
     //  printf_console("Reading instance: %d fileID: %d filePtr: %d\n", instanceId, fileID, this);
 
@@ -1530,7 +1545,7 @@ void SerializedFile::ReadObject(LocalIdentifierInFileType fileID, ObjectCreation
 
     CLEAR_ALLOC_OWNER;
 
-#if SUPPORT_SERIALIZED_TYPETREES
+// #if SUPPORT_SERIALIZED_TYPETREES
     Assert(object.GetType() == m_Types[info.typeID].GetType());
     SerializedType& serializedType = m_Types[info.typeID];
     if (m_EnableTypeTree && !IsTextFile())
@@ -1571,7 +1586,7 @@ void SerializedFile::ReadObject(LocalIdentifierInFileType fileID, ObjectCreation
         }
         Assert(!perClassTypeTree || serializedType.GetEqualState() != SerializedType::kNotCompared);
     }
-#endif
+// #endif
 
     TransferInstructionFlags options = kReadWriteFromSerializedFile | m_Options;
     if (ShouldSwapEndian())
@@ -1595,7 +1610,7 @@ void SerializedFile::ReadObject(LocalIdentifierInFileType fileID, ObjectCreation
         size_t byteStart = info.byteStart + m_ReadOffset;
 
         // Fill object with data
-#if SUPPORT_SERIALIZED_TYPETREES
+// #if SUPPORT_SERIALIZED_TYPETREES
         if (serializedType.GetOldType() != NULL && (serializedType.GetEqualState() != SerializedType::kEqual || ShouldSwapEndian()))
         {
             BuildRefTypePoolIfRelevant();
@@ -1605,7 +1620,7 @@ void SerializedFile::ReadObject(LocalIdentifierInFileType fileID, ObjectCreation
             oldType.SetReferencedTypes(m_RefTypePool, false);
 
             CachedReader& cache = readStream.Init(oldType.Root(), byteStart, info.byteSize, options);
-            cache.InitRead(*m_ReadFile, byteStart.Cast<size_t>(), info.byteSize);
+            cache.InitRead(*m_ReadFile, byteStart, info.byteSize);
             Assert(m_ResourceImageGroup.resourceImages[0] == NULL);
 
             object.Reset();
@@ -1626,13 +1641,13 @@ void SerializedFile::ReadObject(LocalIdentifierInFileType fileID, ObjectCreation
             }
 
             size_t position = cache.End();
-            if (position - byteStart.Cast<size_t>() > info.byteSize)
+            if (position - byteStart > info.byteSize)
                 OutOfBoundsReadingError(serializedType.GetType(), info.byteSize, position - byteStart.Cast<size_t>(), object);
 
             *safeLoaded = true;
         }
         else
-#endif
+// #endif
         {
             // We will read up that object - no need to call Reset as we will construct it fully
             object.SetResetCalledInternal();
@@ -1824,4 +1839,30 @@ bool SerializedFile::SerializedType::ReadType(SerializedFileFormatVersion versio
 
     return true;
 #undef READ_HEADER_CHECKED_RETURN_ON_ERROR
+}
+
+void SerializedFile::SerializedType::CompareAgainstNewType(Object& object, TypeVector &refTypesPool, TransferInstructionFlags options)
+{
+    Assert(m_Equals == kNotCompared);
+
+    // Compare object's type
+    TypeTree newerType;
+    TypeTreeCache::GetTypeTree(&object, options, newerType);
+    if (m_OldType != NULL && TypeTreeQueries::IsStreamedBinaryCompatible(m_OldType->Root(), newerType.Root()))
+    {
+        SInt32 dependenciesCount = m_TypeDependencies.size();
+        for (SInt32 i = 0; i < dependenciesCount; ++i)
+        {
+            auto & refType = refTypesPool[m_TypeDependencies[i]];
+            TypeTreeCache::GetTypeTree(refType.m_KlassName, refType.m_NameSpace, refType.m_AsmName, options, newerType);
+            if (refType.m_OldType == NULL || !TypeTreeQueries::IsStreamedBinaryCompatible(refType.m_OldType->Root(), newerType.Root()))
+            {
+                m_Equals = kNotEqual;
+                return;
+            }
+        }
+        m_Equals = kEqual;
+    }
+    else
+        m_Equals = kNotEqual;
 }

@@ -120,15 +120,17 @@ public:
         const TypeTree* m_OldType;  // Type load from file.
         int m_Equals;              // Are old type and new type equal.
 
-#if SUPPORT_SERIALIZED_TYPETREES
-
-
-        typedef vector_set<SInt32> TypeDependencies;
+        typedef std::vector<std::set<SInt32>> TypeDependencies;
 
         // When a SerializedType instance is describing a UnityEngine.Object type:
         //  This is the collection of all the types that where found to be referenced by fields that are marked as [SerializeRefence].
         // (the scope of the list if the whole file and not limited to a single entry in the file)
         TypeDependencies m_TypeDependencies;
+
+#if SUPPORT_SERIALIZED_TYPETREES
+
+
+
 
         // Only used for Referenced types
         core::string m_KlassName;
@@ -169,15 +171,13 @@ public:
 
         int GetEqualState() const { return m_Equals; }
 
+        void CompareAgainstNewType(Object& object, TypeVector &refTypesPool, TransferInstructionFlags options);
+
 #if SUPPORT_SERIALIZED_TYPETREES
 
     #if !UNITY_EXTERNAL_TOOL || SUPPORT_SERIALIZE_WRITE  // this an odd way of expression it, but basicaly: player or editor.
         UInt64 GetTypeTreeCacheId();
 #endif
-
-    #if !UNITY_EXTERNAL_TOOL
-        void CompareAgainstNewType(Object& object, TypeVector &refTypesPool, TransferInstructionFlags options);
-    #endif
 
     #if SUPPORT_SERIALIZE_WRITE
         void SetFQN(ScriptingClassPtr klass);
@@ -228,7 +228,7 @@ public:
     template<bool kSwap> void BuildMetadataSection(std::vector<UInt8>& cache, size_t dataOffsetInFile);
     template<bool kSwap> bool WriteHeader(std::vector<UInt8>& cache, size_t* outDataOffset = NULL);
 
-    void ReadObject(LocalIdentifierInFileType fileID, ObjectCreationMode mode, bool isPersistent/*, const TypeTree** oldTypeTree*/, bool* safeLoaded, Object& object);
+    void ReadObject(LocalIdentifierInFileType fileID, ObjectCreationMode mode, bool isPersistent, const TypeTree** oldTypeTree, bool* safeLoaded, Object& object);
 
     // Extract all data necessary to produce the object
     bool GetProduceData(LocalIdentifierInFileType fileID, const HuaHuo::Type*& type, LocalSerializedObjectIdentifier& scriptTypeReference, MemLabelId& label);
@@ -246,6 +246,7 @@ public:
     bool FinishWriting(size_t* outDataOffset = NULL);
 
     enum { kSectionAlignment = 16 };
+
 private:
     void FinalizeInitCommon(TransferInstructionFlags options);
 
@@ -253,7 +254,9 @@ private:
     SerializedFileLoadError FinalizeInitWrite(TransferInstructionFlags options);
 
     template<bool kSwap> bool ReadMetadata(SerializedFileFormatVersion version, size_t dataOffset, UInt8 const* data, size_t length, size_t dataFileSize);
+    void BuildRefTypePoolIfRelevant();
 
+    TypeTree::Pool * m_RefTypePool;
     MemLabelId                          m_MemLabel;
 
     UInt8                               m_FileEndianess;

@@ -658,11 +658,11 @@ Object* PersistentManager::ReadAndActivateObjectThreaded(InstanceID instanceID, 
 
     // Find file id in stream and read the object
     SetActiveNameSpace(identifier.serializedFileIndex);
-//    const TypeTree* oldType;
+    const TypeTree* oldType;
     bool didTypeTreeChange;
-//
+
     Object& targetObject = *awakeData->object;
-    stream->ReadObject(identifier.localIdentifierInFile, kCreateObjectFromNonMainThread, isPersistent, /*&oldType,*/ &didTypeTreeChange, targetObject);
+    stream->ReadObject(identifier.localIdentifierInFile, kCreateObjectFromNonMainThread, isPersistent, &oldType, &didTypeTreeChange, targetObject);
 
     ClearActiveNameSpace();
 

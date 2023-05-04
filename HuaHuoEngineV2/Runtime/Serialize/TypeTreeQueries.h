@@ -11,6 +11,8 @@
 
 namespace TypeTreeQueries
 {
+    bool IsStreamedBinaryCompatible(const TypeTreeIterator& lhs, const TypeTreeIterator& rhs);
+
     TypeTree::Signature GenerateTypeTreeSignature(TransferInstructionFlags flags, const Object &object);
     int GetTypeChildrenCount(const TypeTreeIterator& type);
 
