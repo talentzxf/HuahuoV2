@@ -7,9 +7,15 @@
 
 #include "Serialize/SerializationMetaFlags.h"
 
-extern const char * kTransferNameIdentifierBase;
+extern const char *kTransferNameIdentifierBase;
+
 class TransferBase {
 public:
+    TransferBase()
+            : m_ReferenceFromIDCache(NULL) {
+
+    }
+
     void AddMetaFlag(int /*mask*/) {}
 
 
@@ -30,12 +36,14 @@ public:
 
     /// Internal function. Should only be called from SerializeTraits
     template<class T>
-    void TransferBasicData(T&) {}
+    void TransferBasicData(T &) {}
 
     bool IsReading() { return false; }
+
     bool IsReadingPPtr() { return false; }
 
     bool IsWriting() { return false; }
+
     bool IsWritingPPtr() { return false; }
 
     /// @name Versioning
@@ -49,19 +57,19 @@ public:
 
     /// Get the TransferInstructionFlags.
     /// Commonly used to special case transfer functions for specific operations.
-    TransferInstructionFlags GetFlags() const  { return m_Flags; }
+    TransferInstructionFlags GetFlags() const { return m_Flags; }
 
-    bool NeedsInstanceIDRemapping()          { return m_Flags & kReadWriteFromSerializedFile; }
+    bool NeedsInstanceIDRemapping() { return m_Flags & kReadWriteFromSerializedFile; }
 
     /// Deprecated: use IsVersionSmallerOrEqual instead.
     bool IsOldVersion(int /*version*/) { return false; }
+
     bool IsCurrentVersion() { return true; }
 
     /// Are we serializing data for use by the player.
     /// This includes reading/writing/generating typetrees. And can be when creating data from the editor for player or when simply reading/writing data in the player.
     /// Commonly used to not serialize data that does not exist in the player.
-    bool IsSerializingForGameRelease()
-    {
+    bool IsSerializingForGameRelease() {
 #if HUAHUO_EDITOR
         return m_Flags & kSerializeGameRelease;
 #else
@@ -71,9 +79,11 @@ public:
 
     /// Is this a RemapPPtrTransfer backend. Commonly used to do very specialized code when generating dependencies using RemapPPtrTransfer.
     bool IsRemapPPtrTransfer() { return false; }
+
 protected:
-    TransferInstructionFlags          m_Flags;
-    void*                             m_UserData;
+    TransferInstructionFlags m_Flags;
+    void *m_UserData;
+    void *m_ReferenceFromIDCache;
 };
 
 

@@ -18,6 +18,8 @@ namespace TypeTreeQueries
 
     /// Calculates a hash from the sub tree rotted at typeTree
     Hash128 HashTypeTree(const TypeTreeIterator& type);
+
+    TypeTree::Signature GenerateTypeTreeSignature(const std::string & className, const std::string & ns, const std::string & asmx);
 }
 
 #endif //HUAHUOENGINEV2_TYPETREEQUERIES_H

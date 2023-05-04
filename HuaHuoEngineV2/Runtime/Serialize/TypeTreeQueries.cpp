@@ -80,4 +80,17 @@ namespace TypeTreeQueries
         return gen.Finish();
     }
 
+    // Using asm/ns/class seperately because safe binary read may not have access to the ScriptingClassPtr (missing/renamed class)
+    // but the hash key must remain unchanged since it's how it will find it from the list of type trees it was provided with by the caller.
+    // NOTE: !!! make sure that the className has properly been constructed, in particular for nested classes.
+    //           See Runtime\Mono\SerializationBackend_DirectMemoryAccess\SerializationCommands\ManagedObjectReference.h : ScriptingClassConverter::ToFullFQN
+    TypeTree::Signature GenerateTypeTreeSignature(const std::string & className, const std::string & ns, const std::string & asmx)
+    {
+        UInt64 hash = ::ComputeHash64(asmx.c_str(), asmx.length());
+        hash = ::ComputeHash64(ns.c_str(), ns.length(), hash);
+        hash = ::ComputeHash64(className.c_str(), className.length(), hash);
+
+        return hash;
+    }
+
 }

@@ -127,6 +127,8 @@ public:
         // (the scope of the list if the whole file and not limited to a single entry in the file)
         TypeDependencies m_TypeDependencies;
 
+        TypeTree::Signature m_TypeTreeCacheId; // does not get serialized and most not in case hashing function changes
+
 #if SUPPORT_SERIALIZED_TYPETREES
 
 
@@ -137,7 +139,7 @@ public:
         core::string m_NameSpace;
         core::string m_AsmName;
 #if !UNITY_EXTERNAL_TOOL
-        TypeTree::Signature m_TypeTreeCacheId; // does not get serialized and most not in case hashing function changes
+
 #endif
 #endif
     public:
@@ -172,13 +174,8 @@ public:
         int GetEqualState() const { return m_Equals; }
 
         void CompareAgainstNewType(Object& object, TypeVector &refTypesPool, TransferInstructionFlags options);
-
-#if SUPPORT_SERIALIZED_TYPETREES
-
-    #if !UNITY_EXTERNAL_TOOL || SUPPORT_SERIALIZE_WRITE  // this an odd way of expression it, but basicaly: player or editor.
         UInt64 GetTypeTreeCacheId();
-#endif
-
+#if SUPPORT_SERIALIZED_TYPETREES
     #if SUPPORT_SERIALIZE_WRITE
         void SetFQN(ScriptingClassPtr klass);
         void SetTypeTreeCacheId(UInt64 id) { m_TypeTreeCacheId = id; }

@@ -13,6 +13,7 @@
 #include "Serialize/SerializationCaching/MemoryCacherReadBlocks.h"
 #include "TypeTreeCache.h"
 #include "TypeTreeQueries.h"
+#include "Serialize/TransferFunctions/SafeBinaryRead.h"
 
 const char* kAssetBundleVersionNumber = "2";
 
@@ -244,12 +245,10 @@ SerializedFile::SerializedType::SerializedType(const HuaHuo::Type* unityType, bo
         , m_IsStrippedType(isStrippedType)
         , m_PerClassTypeTree(true)
         , m_ScriptTypeIndex(scriptTypeIdx)
+        , m_TypeTreeCacheId(0)
 #if SUPPORT_SERIALIZED_TYPETREES
 , m_OldType(NULL)
     , m_Equals(kNotCompared)
-    #if !UNITY_EXTERNAL_TOOL || SUPPORT_SERIALIZE_WRITE  // this an odd way of expression it, but basicaly: player or editor.
-    , m_TypeTreeCacheId(0)
-    #endif
 #endif
 {
 }
@@ -1526,6 +1525,13 @@ void SerializedFile::BuildRefTypePoolIfRelevant()
     }
 }
 
+UInt64 SerializedFile::SerializedType::GetTypeTreeCacheId()
+{
+    if (m_TypeTreeCacheId == 0)
+        m_TypeTreeCacheId = TypeTreeQueries::GenerateTypeTreeSignature("HuaHuoEngine", "GlobalSerializedFile", "Global");
+
+    return m_TypeTreeCacheId;
+}
 
 void SerializedFile::ReadObject(LocalIdentifierInFileType fileID, ObjectCreationMode mode, bool isPersistent, const TypeTree** oldTypeTree, bool* safeLoaded, Object& object)
 {
