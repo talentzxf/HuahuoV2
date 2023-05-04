@@ -2,10 +2,12 @@
 // Created by VincentZhang on 2023-04-27.
 //
 
+#include "TypeTreeQueries.h"
 #include "TypeTree.h"
 #include "Serialize/SwapEndianBytes.h"
 #include "Utilities/Word.h"
 #include "Containers/CommonString.h"
+#include "Containers/CommonStringTable.h"
 
 
 #if ENABLE_PERFORMANCE_TESTS
@@ -512,7 +514,7 @@ void TypeTreeShareableData::SetByteOffset(size_t nodeIndex, UInt32 offset)
 {
     Assert(!IsReadOnly());
     if (nodeIndex >= m_ByteOffsets.size())
-        m_ByteOffsets.resize_initialized(nodeIndex + 1, TypeTree::kByteOffsetUnset, kDoubleOnResize);
+        m_ByteOffsets.resize(nodeIndex + 1, TypeTree::kByteOffsetUnset);
     m_ByteOffsets[nodeIndex] = offset;
 }
 

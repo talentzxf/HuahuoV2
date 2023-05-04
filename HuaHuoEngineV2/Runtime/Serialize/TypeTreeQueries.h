@@ -11,6 +11,7 @@
 namespace TypeTreeQueries
 {
     TypeTree::Signature GenerateTypeTreeSignature(TransferInstructionFlags flags, const Object &object);
+    int GetTypeChildrenCount(const TypeTreeIterator& type);
 }
 
 #endif //HUAHUOENGINEV2_TYPETREEQUERIES_H

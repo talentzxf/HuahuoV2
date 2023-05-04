@@ -8,6 +8,7 @@
 #include "Serialize/TransferFunctions/GenerateTypeTreeTransfer.h"
 #include "TypeTreeQueries.h"
 #include "Utilities/RegisterRuntimeInitializeAndCleanup.h"
+#include "GfxDevice/utilities/GfxDoubleCache.h"
 
 
 // from TransferScriptingObjectImpl
@@ -49,7 +50,10 @@ namespace TypeTreeCache
 //    GfxDoubleCacheDefaultEmptyDeletedGenerator<UInt64>,
 //    kMemTypeTreeId>
 //            TypeTreeCacheCollection;
-//    static TypeTreeCacheCollection s_Cache(kMemTypeTree, false);
+
+    typedef std::map<UInt64, CachedTypeTreeData> TypeTreeCacheCollection;
+    // static TypeTreeCacheCollection s_Cache(kMemTypeTree, false);
+    static TypeTreeCacheCollection s_Cache;
 
     static CachedTypeTreeData s_InvalidCacheItem(0);
     bool GetTypeTree(const Object *object, TransferInstructionFlags flags, TypeTree& outTypeTree)
@@ -61,7 +65,7 @@ namespace TypeTreeCache
         }
 
         UInt64 key = TypeTreeQueries::GenerateTypeTreeSignature(flags, *object);
-        const CachedTypeTreeData& cachedTT = s_Cache.Find(key, s_InvalidCacheItem);
+        const CachedTypeTreeData& cachedTT = s_Cache[key]; (key, s_InvalidCacheItem);
         if (!cachedTT.invalid)
         {
             outTypeTree = TypeTree(cachedTT.data, kMemTypeTree);
@@ -93,7 +97,7 @@ namespace TypeTreeCache
             ctt.flags = flags;
             ctt.data = outTypeTree.GetData();
             ctt.data->Retain();
-            s_Cache.Set(key, ctt);
+            s_Cache[key] = ctt;
             return true;
         }
         else

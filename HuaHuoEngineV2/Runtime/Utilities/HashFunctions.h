@@ -71,15 +71,9 @@ FORCE_INLINE UInt32 ComputeHash32(const void* data, size_t dataSize, size_t seed
 
 // Compute a 64 bit hash.
 // Implementation: CityHash64.
-UInt64 ComputeHash64(const void* data, size_t dataSize)
-{
-    return CityHash64((const char*)data, dataSize);
-}
+UInt64 ComputeHash64(const void* data, size_t dataSize);
 
-UInt64 ComputeHash64(const void* data, size_t dataSize, UInt64 seed)
-{
-    return CityHash64WithSeed((const char*)data, dataSize, seed);
-}
+UInt64 ComputeHash64(const void* data, size_t dataSize, UInt64 seed);
 
 // Compute a 128 bit hash.
 // Implementation: SpookyHash V2.

@@ -3,20 +3,26 @@
 //
 #include "HashFunctions.h"
 
-void ComputeHash128(const void* data, size_t dataSize, UInt64 inSeedOutHash[2])
-{
+void ComputeHash128(const void *data, size_t dataSize, UInt64 inSeedOutHash[2]) {
     SpookyHash::Hash128(data, dataSize, &inSeedOutHash[0], &inSeedOutHash[1]);
 }
 
 // Note that the hash is in-out parameter! Acts as a seed on input, and filled with hashed value on output.
-void ComputeHash128(const void* data, size_t dataSize, Hash128& inSeedOutHash)
-{
+void ComputeHash128(const void *data, size_t dataSize, Hash128 &inSeedOutHash) {
     ComputeHash128(data, dataSize, inSeedOutHash.hashData.u64);
 }
 
-Hash128 ComputeHash128(const void* data, size_t dataSize)
-{
+Hash128 ComputeHash128(const void *data, size_t dataSize) {
     Hash128 h;
     ComputeHash128(data, dataSize, h);
     return h;
+}
+
+UInt64 ComputeHash64(const void *data, size_t dataSize) {
+    return CityHash64((const char *) data, dataSize);
+}
+
+UInt64 ComputeHash64(const void* data, size_t dataSize, UInt64 seed)
+{
+    return CityHash64WithSeed((const char*)data, dataSize, seed);
 }
