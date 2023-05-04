@@ -15,6 +15,7 @@
 #include "Internal/CoreMacros.h"
 #include "Serialize/TransferFunctions/RemapPPtrTransfer.h"
 #include "Serialize/TransferFunctions/GenerateTypeTreeTransfer.h"
+#include "Serialize/TransferFunctions/SafeBinaryRead.h"
 
 enum AwakeFromLoadMode
 {
@@ -227,6 +228,7 @@ public:
     virtual void VirtualRedirectTransfer(StreamedBinaryRead&)   { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
     virtual void VirtualRedirectTransfer(RemapPPtrTransfer&)           { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
     virtual void VirtualRedirectTransfer(GenerateTypeTreeTransfer&)    { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
+    virtual void VirtualRedirectTransfer(SafeBinaryRead&)      { AssertString(Format("Serialization not implemented for type %s", GetTypeName())); }
 
     /// Get and set the name
     virtual char const* GetName() const { return ""; }

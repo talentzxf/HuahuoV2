@@ -21,5 +21,10 @@ namespace HuaHuo
     {
         return reinterpret_cast<const Type*>(TypeManager::Get().PersistentTypeIDToRTTI(id));
     }
+
+    void Type::FindAllDerivedClasses(std::vector<const Type*>& result, TypeFilterOptions options) const
+    {
+        TypeManager::Get().FindAllRTTIDerivedTypes(&m_internal, reinterpret_cast<std::vector<const RTTI*>&>(result), options == kOnlyNonAbstract);
+    }
 }
 

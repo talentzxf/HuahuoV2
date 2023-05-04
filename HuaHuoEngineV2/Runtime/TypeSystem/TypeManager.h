@@ -78,6 +78,8 @@ public:
     const RTTI* GetDeserializationRTTIStubForPersistentTypeID(PersistentTypeID typeID);
 
     const RTTI* PersistentTypeIDToRTTI(PersistentTypeID persistentTypeID) const;
+
+    void FindAllRTTIDerivedTypes(const RTTI* baseType, std::vector<const RTTI*>& derivedTypes, bool onlyNonAbstract) const;
 private:
     class Builder;
 

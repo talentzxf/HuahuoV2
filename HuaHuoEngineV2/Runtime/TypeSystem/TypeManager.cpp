@@ -317,3 +317,25 @@ const RTTI* TypeManager::PersistentTypeIDToRTTI(PersistentTypeID id) const
         return NULL;
     return i->second;
 }
+
+void TypeManager::FindAllRTTIDerivedTypes(const RTTI* baseType, std::vector<const RTTI*>& derivedTypes, bool onlyNonAbstract) const
+{
+    const UInt32 typeIndexBegin = baseType->derivedFromInfo.typeIndex;
+    const UInt32 typeIndexEnd = baseType->derivedFromInfo.typeIndex + baseType->derivedFromInfo.descendantCount;
+
+    derivedTypes.reserve(baseType->derivedFromInfo.descendantCount);
+    if (onlyNonAbstract)
+    {
+        for (UInt32 typeIndex = typeIndexBegin; typeIndex < typeIndexEnd; ++typeIndex)
+        {
+            const RTTI* type = m_RuntimeTypes.Types[typeIndex];
+            if (!type->isAbstract)
+                derivedTypes.push_back(m_RuntimeTypes.Types[typeIndex]);
+        }
+    }
+    else
+    {
+        for (UInt32 typeIndex = typeIndexBegin; typeIndex < typeIndexEnd; ++typeIndex)
+            derivedTypes.push_back(m_RuntimeTypes.Types[typeIndex]);
+    }
+}

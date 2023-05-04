@@ -13,6 +13,7 @@
 #include "Utilities/dynamic_block_array.h"
 #include "TypeSystem/Object.h"
 #include "Utilities/vector_map.h"
+#include "Utilities/vector_set.h"
 #include "SerializedFileLoadError.h"
 #include "SwapEndianBytes.h"
 
@@ -120,7 +121,7 @@ public:
         const TypeTree* m_OldType;  // Type load from file.
         int m_Equals;              // Are old type and new type equal.
 
-        typedef std::vector<std::set<SInt32>> TypeDependencies;
+        typedef vector_set<SInt32> TypeDependencies;
 
         // When a SerializedType instance is describing a UnityEngine.Object type:
         //  This is the collection of all the types that where found to be referenced by fields that are marked as [SerializeRefence].
@@ -129,19 +130,11 @@ public:
 
         TypeTree::Signature m_TypeTreeCacheId; // does not get serialized and most not in case hashing function changes
 
-#if SUPPORT_SERIALIZED_TYPETREES
-
-
-
-
         // Only used for Referenced types
-        core::string m_KlassName;
-        core::string m_NameSpace;
-        core::string m_AsmName;
-#if !UNITY_EXTERNAL_TOOL
+        std::string m_KlassName;
+        std::string m_NameSpace;
+        std::string m_AsmName;
 
-#endif
-#endif
     public:
         SerializedType(const HuaHuo::Type* type, bool isStrippedType, SInt16 scriptTypeIdx = -1);
         ~SerializedType();

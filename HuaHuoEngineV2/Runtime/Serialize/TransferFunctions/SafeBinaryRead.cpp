@@ -3,6 +3,9 @@
 #include "Utilities/StringComparison.h"
 #include "GfxDevice/utilities/GfxDoubleCache.h"
 #include "Serialize/TypeTreeQueries.h"
+#include "Utilities/CRC.h"
+#include "TransferNameConversions.h"
+#include "Serialize/SerializeReferenceLabels.h"
 
 #define LOG_MISSING_VARIBALES 0
 

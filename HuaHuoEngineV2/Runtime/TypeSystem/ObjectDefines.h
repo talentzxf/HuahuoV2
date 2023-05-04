@@ -219,12 +219,14 @@ class MISSING_SEMICOLON_AFTER_IMPLEMENT_REGISTER_CLASS_MACRO
         virtual void VirtualRedirectTransfer (GenerateTypeTreeTransfer& transfer) override; \
         virtual void VirtualRedirectTransfer (StreamedBinaryRead& transfer) override; \
         virtual void VirtualRedirectTransfer (StreamedBinaryWrite& transfer) override;\
-        virtual void VirtualRedirectTransfer (RemapPPtrTransfer& transfer) override; \
+        virtual void VirtualRedirectTransfer (RemapPPtrTransfer& transfer) override;     \
+        virtual void VirtualRedirectTransfer (SafeBinaryRead& transfer) override; \
     public: \
         class MISSING_SEMICOLON_AFTER_DECLARE_OBJECT_SERIALIZE; /* semicolon will be removed in the near future */
 
 #define INSTANTIATE_TEMPLATE_TRANSFER_WITH_DECL(FULL_TYPENAME_, DECL_, FUNCTION_NAME_, FUNCTION_RETURN_TYPE_) \
-    template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(GenerateTypeTreeTransfer& transfer); \
+    template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(GenerateTypeTreeTransfer& transfer);  \
+    template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(SafeBinaryRead& transfer); \
     template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(StreamedBinaryRead& transfer); \
     template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(StreamedBinaryWrite& transfer); \
     template DECL_ FUNCTION_RETURN_TYPE_ FULL_TYPENAME_::FUNCTION_NAME_(RemapPPtrTransfer& transfer); \
@@ -232,7 +234,8 @@ class MISSING_SEMICOLON_AFTER_IMPLEMENT_REGISTER_CLASS_MACRO
 
 #define IMPLEMENT_OBJECT_SERIALIZE_WITH_DECL(PREFIX_, DECL_) \
     DECL_ void PREFIX_ VirtualRedirectTransfer (GenerateTypeTreeTransfer& transfer)     { transfer.TransferBase (*this); } \
-    DECL_ void PREFIX_ VirtualRedirectTransfer (StreamedBinaryRead& transfer)    { /*SET_ALLOC_OWNER(GetMemoryLabel());*/ transfer.TransferBase (*this); } \
+    DECL_ void PREFIX_ VirtualRedirectTransfer (SafeBinaryRead& transfer)               { SET_ALLOC_OWNER(GetMemoryLabel()); transfer.TransferBase (*this); }\
+    DECL_ void PREFIX_ VirtualRedirectTransfer (StreamedBinaryRead& transfer)    { SET_ALLOC_OWNER(GetMemoryLabel()); transfer.TransferBase (*this); } \
     DECL_ void PREFIX_ VirtualRedirectTransfer (StreamedBinaryWrite& transfer)   { transfer.TransferBase (*this); } \
     DECL_ void PREFIX_ VirtualRedirectTransfer (RemapPPtrTransfer& transfer)            { transfer.TransferBase (*this); }\
     class MISSING_SEMICOLON_AFTER_IMPLEMENT_OBJECT_SERIALIZE; /* semicolon will be removed in the near future */

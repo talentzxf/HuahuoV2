@@ -1528,7 +1528,7 @@ void SerializedFile::BuildRefTypePoolIfRelevant()
 UInt64 SerializedFile::SerializedType::GetTypeTreeCacheId()
 {
     if (m_TypeTreeCacheId == 0)
-        m_TypeTreeCacheId = TypeTreeQueries::GenerateTypeTreeSignature("HuaHuoEngine", "GlobalSerializedFile", "Global");
+        m_TypeTreeCacheId = TypeTreeQueries::GenerateTypeTreeSignature(m_KlassName, m_NameSpace, m_AsmName);
 
     return m_TypeTreeCacheId;
 }
@@ -1648,7 +1648,7 @@ void SerializedFile::ReadObject(LocalIdentifierInFileType fileID, ObjectCreation
 
             size_t position = cache.End();
             if (position - byteStart > info.byteSize)
-                OutOfBoundsReadingError(serializedType.GetType(), info.byteSize, position - byteStart.Cast<size_t>(), object);
+                OutOfBoundsReadingError(serializedType.GetType(), info.byteSize, position - byteStart, object);
 
             *safeLoaded = true;
         }
