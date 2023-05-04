@@ -5,6 +5,7 @@
 #include "TypeTree.h"
 #include "Serialize/SwapEndianBytes.h"
 #include "Utilities/Word.h"
+#include "Containers/CommonString.h"
 
 
 #if ENABLE_PERFORMANCE_TESTS
@@ -178,7 +179,7 @@ TypeTreeIterator TypeTreeIterator::FindChild(std::string name) const
 // Extract the actual string pointer from an offset value
 static const char* CalculateString(UInt32 offset, const char* stringBuffer)
 {
-    return ((offset & TypeTree::kCommonStringBit) ? Unity::CommonString::BufferBegin : stringBuffer)
+    return ((offset & TypeTree::kCommonStringBit) ? HuaHuo::CommonString::BufferBegin : stringBuffer)
            + (offset & TypeTree::kStringOffsetMask);
 }
 
@@ -241,7 +242,7 @@ TypeTree::TypeTree(MemLabelRef label)
         : m_ReferencedTypes(nullptr)
         , m_PoolOwned(false)
 {
-    m_Data = UNITY_NEW(TypeTreeShareableData, label)(label);  // no need to Retain(), NEW does it.
+    m_Data = HUAHUO_NEW(TypeTreeShareableData, label)(label);  // no need to Retain(), NEW does it.
 }
 
 TypeTree::TypeTree(TypeTreeShareableData * sharedType, MemLabelRef label)
@@ -482,7 +483,7 @@ void TypeTreeShareableData::CreateString(UInt32 & strOffset, const char* content
     const char* str = GetCommonStringTable().FindCommonString(content, strlen(content));
     if (str != NULL)
     {
-        strOffset = MakeStringOffset(str - Unity::CommonString::BufferBegin, true);
+        strOffset = MakeStringOffset(str - HuaHuo::CommonString::BufferBegin, true);
         return;
     }
 
@@ -765,9 +766,9 @@ namespace TypeTreeIO
 
         const char* str = CalculateString(type, NULL);
         if (str == CommonString(SInt32))
-            type = MakeStringOffset(SerializeTraits<SInt32>::GetTypeString() - Unity::CommonString::BufferBegin, true);
+            type = MakeStringOffset(SerializeTraits<SInt32>::GetTypeString() - HuaHuo::CommonString::BufferBegin, true);
         else if (str == CommonString(UInt32))
-            type = MakeStringOffset(SerializeTraits<UInt32>::GetTypeString() - Unity::CommonString::BufferBegin, true);
+            type = MakeStringOffset(SerializeTraits<UInt32>::GetTypeString() - HuaHuo::CommonString::BufferBegin, true);
     }
 
     template<bool kSwap>
