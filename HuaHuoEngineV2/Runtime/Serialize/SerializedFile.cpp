@@ -18,6 +18,9 @@
 const char* kAssetBundleVersionNumber = "2";
 
 
+const PersistentTypeID kMonoBehaviourPersistentID = 114;
+const PersistentTypeID kScriptedImporterPersistentID = 0x7C90B5B3;
+
 static const int kPreallocateFront = 4096;
 
 struct SerializedFileHeader32
@@ -177,9 +180,9 @@ LocalIdentifierInFileType SerializedFile::GetHighestID() const
 void SerializedFile::FinalizeInitCommon(TransferInstructionFlags options)
 {
     m_Options = options;
-#if SUPPORT_SERIALIZE_WRITE
+// #if SUPPORT_SERIALIZE_WRITE
     m_EnableTypeTree = (m_Options & kDisableWriteTypeTree) == 0;
-#endif
+// #endif
 #if !UNITY_EDITOR
     m_Options |= kSerializeGameRelease;
 #endif
@@ -526,11 +529,10 @@ bool SerializedFile::ReadMetadata(SerializedFileFormatVersion version, size_t da
 //        }
 //    }
 
-    // m_EnableTypeTree = SUPPORT_SERIALIZED_TYPETREES;
-//    m_EnableTypeTree = false;
-//
-//    if (version >= SerializedFileFormatVersion::kHasTypeTreeHashes)
-//        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_EnableTypeTree);
+     m_EnableTypeTree = 1;
+
+    if (version >= SerializedFileFormatVersion::kHasTypeTreeHashes)
+        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_EnableTypeTree);
 
     // Read number of types.
     SInt32 typeCount = 0;
@@ -1225,7 +1227,7 @@ void SerializedFile::BuildMetadataSection(std::vector<UInt8>& cache, size_t data
 
     WriteHeaderCache<kSwap>(version, cache);
 //    WriteHeaderCache<kSwap>(static_cast<UInt32>(m_TargetPlatform.platform), cache);
-//    WriteHeaderCache<kSwap>(m_EnableTypeTree, cache);
+    WriteHeaderCache<kSwap>(m_EnableTypeTree, cache);
 
     // Write number of type info.
     SInt32 typeCount = m_Types.size();
@@ -1350,35 +1352,35 @@ void SerializedFile::SerializedType::WriteType(TypeVector & referencedTypesPool,
 //        WriteHeaderCache<kSwap>(m_ScriptID.hashData.u32[3], cache);
 //    }
 
-//    WriteHeaderCache<kSwap>(m_OldTypeHash.hashData.u32[0], cache);
-//    WriteHeaderCache<kSwap>(m_OldTypeHash.hashData.u32[1], cache);
-//    WriteHeaderCache<kSwap>(m_OldTypeHash.hashData.u32[2], cache);
-//    WriteHeaderCache<kSwap>(m_OldTypeHash.hashData.u32[3], cache);
+    WriteHeaderCache<kSwap>(m_OldTypeHash.hashData.u32[0], cache);
+    WriteHeaderCache<kSwap>(m_OldTypeHash.hashData.u32[1], cache);
+    WriteHeaderCache<kSwap>(m_OldTypeHash.hashData.u32[2], cache);
+    WriteHeaderCache<kSwap>(m_OldTypeHash.hashData.u32[3], cache);
 
-//    if (enableTypeTree)
-//    {
-//        TypeTreeIO::WriteTypeTree(*m_OldType, cache, kSwap);
-//
-//        if (kIsAReferencedType)
-//        {
-//            WriteHeaderCache<kSwap>(m_KlassName, cache);
-//            WriteHeaderCache<kSwap>(m_NameSpace, cache);
-//            WriteHeaderCache<kSwap>(m_AsmName, cache);
-//        }
-//        else
-//        {
-//            // only write dependencies for Object types (MonoBehaviour and the like)
-//            SInt32 dependenciesCount = m_TypeDependencies.size();
-//            WriteHeaderCache<kSwap>(dependenciesCount, cache);
-//            if (dependenciesCount > 0)
-//            {
-//                size_t writeSize = sizeof(SInt32) * dependenciesCount;
-//                cache.resize_uninitialized(cache.size() + writeSize);
-//                UInt32* dst = (UInt32*)(cache.data() + cache.size() - writeSize);
-//                std::memcpy(dst, &*m_TypeDependencies.begin(), writeSize);
-//            }
-//        }
-//    }
+    if (enableTypeTree)
+    {
+        TypeTreeIO::WriteTypeTree(*m_OldType, cache, kSwap);
+
+        if (kIsAReferencedType)
+        {
+            WriteHeaderCache<kSwap>(m_KlassName, cache);
+            WriteHeaderCache<kSwap>(m_NameSpace, cache);
+            WriteHeaderCache<kSwap>(m_AsmName, cache);
+        }
+        else
+        {
+            // only write dependencies for Object types (MonoBehaviour and the like)
+            SInt32 dependenciesCount = m_TypeDependencies.size();
+            WriteHeaderCache<kSwap>(dependenciesCount, cache);
+            if (dependenciesCount > 0)
+            {
+                size_t writeSize = sizeof(SInt32) * dependenciesCount;
+                cache.resize(cache.size() + writeSize);
+                UInt32* dst = (UInt32*)(cache.data() + cache.size() - writeSize);
+                std::memcpy(dst, &*m_TypeDependencies.begin(), writeSize);
+            }
+        }
+    }
 }
 
 template<bool kSwap>
@@ -1768,28 +1770,27 @@ bool SerializedFile::SerializedType::ReadType(SerializedFileFormatVersion versio
             READ_HEADER_CHECKED_RETURN_ON_ERROR(m_ScriptID.hashData.u32[2]);
             READ_HEADER_CHECKED_RETURN_ON_ERROR(m_ScriptID.hashData.u32[3]);
         }
-#if SUPPORT_SERIALIZED_TYPETREES
-            else if (persistentTypeID == kScriptedImporterPersistentID)
+// #if SUPPORT_SERIALIZED_TYPETREES
+        else if (persistentTypeID == kScriptedImporterPersistentID)
         {
             // This is a patch to recover from bug 1025425, where scripted importers were not getting their
             // script id stored in the meta: this forces SafeBinaryRead to be used in case script has changed.
             m_Equals = kNotEqual;
         }
-#endif
-        // VZ: If we support typetree later, we should enable this part.
-//        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[0]);
-//        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[1]);
-//        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[2]);
-//        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[3]);
+// #endif
+        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[0]);
+        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[1]);
+        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[2]);
+        READ_HEADER_CHECKED_RETURN_ON_ERROR(m_OldTypeHash.hashData.u32[3]);
     }
 
-#if SUPPORT_SERIALIZED_TYPETREES
+// #if SUPPORT_SERIALIZED_TYPETREES
     if (enableTypeTree)
     {
-        TypeTree* typeTree = UNITY_NEW(TypeTree, kMemTypeTree)(kMemTypeTree);
+        TypeTree* typeTree = HUAHUO_NEW(TypeTree, kMemTypeTree)(kMemTypeTree);
         if (!TypeTreeIO::ReadTypeTree(*typeTree, iterator, end, version, kSwap))
         {
-            UNITY_DELETE(typeTree, kMemTypeTree);
+            HUAHUO_DELETE(typeTree, kMemTypeTree);
             return false;
         }
         m_OldType = typeTree;
@@ -1835,13 +1836,13 @@ bool SerializedFile::SerializedType::ReadType(SerializedFileFormatVersion versio
             }
         }
     }
-#else
-    if (enableTypeTree)
-    {
-        ErrorString("Serialized file contains typetrees but the target can't use them.");
-        return false;
-    }
-#endif
+//#else
+//    if (enableTypeTree)
+//    {
+//        ErrorString("Serialized file contains typetrees but the target can't use them.");
+//        return false;
+//    }
+//#endif
 
     return true;
 #undef READ_HEADER_CHECKED_RETURN_ON_ERROR
@@ -1857,16 +1858,16 @@ void SerializedFile::SerializedType::CompareAgainstNewType(Object& object, TypeV
     if (m_OldType != NULL && TypeTreeQueries::IsStreamedBinaryCompatible(m_OldType->Root(), newerType.Root()))
     {
         SInt32 dependenciesCount = m_TypeDependencies.size();
-        for (SInt32 i = 0; i < dependenciesCount; ++i)
-        {
-            auto & refType = refTypesPool[m_TypeDependencies[i]];
-            TypeTreeCache::GetTypeTree(refType.m_KlassName, refType.m_NameSpace, refType.m_AsmName, options, newerType);
-            if (refType.m_OldType == NULL || !TypeTreeQueries::IsStreamedBinaryCompatible(refType.m_OldType->Root(), newerType.Root()))
-            {
-                m_Equals = kNotEqual;
-                return;
-            }
-        }
+//        for (SInt32 i = 0; i < dependenciesCount; ++i)
+//        {
+//            auto & refType = refTypesPool[m_TypeDependencies[i]];
+//            TypeTreeCache::GetTypeTree(refType.m_KlassName, refType.m_NameSpace, refType.m_AsmName, options, newerType);
+//            if (refType.m_OldType == NULL || !TypeTreeQueries::IsStreamedBinaryCompatible(refType.m_OldType->Root(), newerType.Root()))
+//            {
+//                m_Equals = kNotEqual;
+//                return;
+//            }
+//        }
         m_Equals = kEqual;
     }
     else

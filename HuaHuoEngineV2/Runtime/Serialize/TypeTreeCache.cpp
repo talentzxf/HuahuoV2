@@ -56,6 +56,7 @@ namespace TypeTreeCache
     static TypeTreeCacheCollection s_Cache;
 
     static CachedTypeTreeData s_InvalidCacheItem(0);
+
     bool GetTypeTree(const Object *object, TransferInstructionFlags flags, TypeTree& outTypeTree)
     {
         if (object == NULL)
