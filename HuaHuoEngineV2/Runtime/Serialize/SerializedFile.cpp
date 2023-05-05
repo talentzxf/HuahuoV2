@@ -142,9 +142,12 @@ static void OutOfBoundsReadingError(const HuaHuo::Type* unityType, size_t expect
 
 SerializedFile::SerializedType::~SerializedType()
 {
-#if SUPPORT_SERIALIZED_TYPETREES
-    UNITY_DELETE(m_OldType, kMemTypeTree);
-#endif
+// #if SUPPORT_SERIALIZED_TYPETREES
+    if(m_OldType != NULL){
+        HUAHUO_DELETE(m_OldType, kMemTypeTree);
+        m_OldType = NULL;
+    }
+// #endif
 }
 
 void SerializedFile::SerializedType::SetOldType(const TypeTree* t)
@@ -888,9 +891,9 @@ SerializedFile::SerializedFile(MemLabelRef label)
     m_IsTextFile = false;
 #endif
 
-#if SUPPORT_SERIALIZE_WRITE
+// #if SUPPORT_SERIALIZE_WRITE
     m_CachedWriter = NULL;
-#endif
+// #endif
 
     m_ReadFile = NULL;
 }
@@ -1708,9 +1711,9 @@ void SerializedFile::ReadObject(LocalIdentifierInFileType fileID, ObjectCreation
         }
     }
 
-#if SUPPORT_SERIALIZED_TYPETREES
+// #if SUPPORT_SERIALIZED_TYPETREES
     *oldTypeTree = serializedType.GetOldType();
-#endif
+// #endif
 
 //    // Setup hide flags when loading from a resource file
 //    if (m_Options & kIsBuiltinResourcesFile)

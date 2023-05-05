@@ -305,7 +305,7 @@ void TypeTree::ReleaseSharedData()
     if (m_Data != nullptr)
     {
         m_Data->Release();
-        m_Data = nullptr;
+         m_Data = nullptr;
     }
 }
 

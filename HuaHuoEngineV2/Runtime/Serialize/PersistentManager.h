@@ -106,7 +106,7 @@ enum VerifyWriteObjectResult
 struct ThreadedAwakeData
 {
     InstanceID      instanceID;
-    // const TypeTree* oldType;
+    const TypeTree* oldType;
     Object*         object;
     bool            checkConsistency; ///< Refactor to safeLoaded
 
@@ -308,7 +308,7 @@ private:
 
     void LoadRemainingPreallocatedObjects(LockFlags lockedFlags);
     ThreadedAwakeData*  CreateThreadActivationQueueEntry(SerializedFile& file, SerializedObjectIdentifier localIdentifier, InstanceID instanceID, bool loadStarted, LockFlags lockedFlags = kLockFlagNone);
-    void                PostReadActivationQueue(InstanceID instanceID, /*const TypeTree* oldType,*/ bool didTypeTreeChange, LockFlags lockedFlags = kLockFlagNone);
+    void                PostReadActivationQueue(InstanceID instanceID, const TypeTree* oldType, bool didTypeTreeChange, LockFlags lockedFlags = kLockFlagNone);
     Object*             ProduceObject(SerializedFile& file, SerializedObjectIdentifier identifier, InstanceID instanceID, ObjectCreationMode objectCreationMode, LockFlags lockedFlags = kLockFlagNone);
     void SetActiveNameSpace(int activeNameSpace, ActiveNameSpaceType type = kReadingNameSpace);
     void ClearActiveNameSpace(ActiveNameSpaceType type = kReadingNameSpace);

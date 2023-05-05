@@ -12,6 +12,7 @@
 #include <vector>
 #include "Memory/MemoryMacros.h"
 #include "SerializedFileFormatVersion.h"
+#include "Threads/AtomicRefCounter.h"
 
 
 class TypeTree;
@@ -159,20 +160,19 @@ public:
     void BlobWrite(std::vector<UInt8>& cache, bool swapByteOrder) const;
     bool BlobRead(const UInt8*& iterator, const UInt8* end, SerializedFileFormatVersion version, bool swapByteOrder);
 
-    void Retain()   {   /*m_RefCount.Retain();*/ }
+    void Retain()   {   m_RefCount.Retain(); }
     void Release()
-    {/*
+    {
         if (m_RefCount.Release() == true)
         {
             TypeTreeShareableData * _this = this;
             HUAHUO_DELETE(_this, m_MemLabel);
         }
-        */
     }
 
-    int RefCount() const { /*return m_RefCount.Count();*/ return 0;}
+    int RefCount() const { return m_RefCount.Count();}
 
-    bool IsReadOnly() const { return false; /*return m_RefCount.Count() > 1; */}
+    bool IsReadOnly() const { return m_RefCount.Count() > 1;}
 
     // Implementation is in header as it speeds up dramaticaly the execution! (imperical observation)
     size_t AddChildNode(size_t fatherIndex)
@@ -201,7 +201,7 @@ private:
 
     // Not serialized/persisted
     TransferInstructionFlags m_FlagsAtGeneration;
-    // AtomicRefCounter m_RefCount;
+    AtomicRefCounter m_RefCount;
     MemLabelRef m_MemLabel;
 };
 
@@ -377,7 +377,7 @@ public:
     private:
         typedef std::pair<Signature, TypeTree> Entry;
         std::vector<Entry> m_Data;
-        // AtomicRefCounter m_RefCount;
+        AtomicRefCounter m_RefCount;
 
         Pool(const Pool & rhs) {}
 
@@ -408,17 +408,17 @@ public:
 
         inline size_t Size() const { return m_Data.size(); }
 
-        void Retain() { /*m_RefCount.Retain();*/ }
+        void Retain() { m_RefCount.Retain();}
         void Release()
         {
-            /*if (m_RefCount.Release() == true)
+            if (m_RefCount.Release() == true)
             {
                 Pool * _this = this;
-                UNITY_DELETE(_this, _this->m_Data.get_memory_label());
-            }*/
+                HUAHUO_DELETE(_this, kMemTypeTree); // _this->m_Data.get_memory_label());
+            }
         }
 
-        int RefCount() const { return 0;/*m_RefCount.Count(); */}
+        int RefCount() const { return m_RefCount.Count(); }
     };
 
 public:

@@ -327,7 +327,7 @@ static inline void AddToAwakeQueue(const ThreadedAwakeData& awake, AwakeFromLoad
         overrideAwakeFromLoadMode = awake.overrideAwakeFromLoadMode;
 #endif
 
-        awakeQueue.Add(*awake.object/*, awake.oldType*/, awake.checkConsistency, overrideAwakeFromLoadMode);
+        awakeQueue.Add(*awake.object, awake.oldType, awake.checkConsistency, overrideAwakeFromLoadMode);
     }
 }
 
@@ -579,7 +579,7 @@ ThreadedAwakeData* PersistentManager::CreateThreadActivationQueueEntry(Serialize
     awake.checkConsistency = false;
     awake.completedThreadAwake = false;
     awake.loadStarted = loadStarted;
-    // awake.oldType = NULL;
+    awake.oldType = NULL;
 #if UNITY_EDITOR
     awake.overrideAwakeFromLoadMode = kDefaultAwakeFromLoadInvalid;
 #endif
@@ -598,7 +598,7 @@ ThreadedAwakeData* PersistentManager::CreateThreadActivationQueueEntry(Serialize
     return result;
 }
 
-void PersistentManager::PostReadActivationQueue(InstanceID instanceID/*, const TypeTree* oldType*/, bool didTypeTreeChange, LockFlags lockedFlags)
+void PersistentManager::PostReadActivationQueue(InstanceID instanceID, const TypeTree* oldType, bool didTypeTreeChange, LockFlags lockedFlags)
 {
     // AutoLock integrationAutoLock(*this, kIntegrationMutexLock, &lockedFlags);
 
@@ -611,7 +611,7 @@ void PersistentManager::PostReadActivationQueue(InstanceID instanceID/*, const T
         // PROFILER_AUTO(kProfileAwakeFromLoadThreaded, obj);
         obj->AwakeFromLoadThreaded();
     }
-    // awakeData.oldType = oldType;
+    awakeData.oldType = oldType;
     awakeData.checkConsistency = didTypeTreeChange;
     awakeData.completedThreadAwake = true;
 }
@@ -666,7 +666,7 @@ Object* PersistentManager::ReadAndActivateObjectThreaded(InstanceID instanceID, 
 
     ClearActiveNameSpace();
 
-    PostReadActivationQueue(instanceID/*, oldType*/, didTypeTreeChange, lockedFlags);
+    PostReadActivationQueue(instanceID, oldType, didTypeTreeChange, lockedFlags);
 
     return &targetObject;
 }

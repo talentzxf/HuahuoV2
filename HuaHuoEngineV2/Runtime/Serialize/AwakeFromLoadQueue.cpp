@@ -102,19 +102,19 @@ bool AwakeFromLoadQueue::IsInQueue(Object& target)
     return false;
 }
 
-void AwakeFromLoadQueue::Add(Object& target/*, const TypeTree* oldType*/, bool safeBinaryLoaded, AwakeFromLoadMode awakeOverride)
+void AwakeFromLoadQueue::Add(Object& target, const TypeTree* oldType, bool safeBinaryLoaded, AwakeFromLoadMode awakeOverride)
 {
     Item item;
     item.registerObjectPtr = &target;
     item.objectPPtr = &target;
     item.type = target.GetType();
-    #if UNITY_EDITOR
+    // #if UNITY_EDITOR
     item.oldType = oldType;
     item.safeBinaryLoaded = safeBinaryLoaded;
     item.awakeModeOverride = awakeOverride;
-    #else
-    Assert(awakeOverride == -1);
-    #endif
+    // #else
+    // Assert(awakeOverride == -1);
+    // #endif
 
     int queueIndex = DetermineQueueIndex(item.type, target);
 

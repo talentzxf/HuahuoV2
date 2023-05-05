@@ -55,11 +55,11 @@ public:
         PPtr<Object>       objectPPtr;
         const HuaHuo::Type* type;
 
-#if UNITY_EDITOR
+// #if UNITY_EDITOR
         const TypeTree*    oldType;
         bool               safeBinaryLoaded;
         AwakeFromLoadMode  awakeModeOverride;
-#endif
+// #endif
     };
 
     AwakeFromLoadQueue(MemLabelId label);
@@ -69,7 +69,7 @@ public:
     bool IsInQueue(Object& target);
 
     void Reserve(unsigned size);
-    void Add(Object& target, /*const TypeTree* oldType = NULL,*/ bool safeBinaryLoaded = false, AwakeFromLoadMode awakeOverride = kDefaultAwakeFromLoadInvalid);
+    void Add(Object& target, const TypeTree* oldType = NULL, bool safeBinaryLoaded = false, AwakeFromLoadMode awakeOverride = kDefaultAwakeFromLoadInvalid);
     void Erase(Object& target, int queueIndex);
 
     static void InitializeClass();
