@@ -249,10 +249,8 @@ SerializedFile::SerializedType::SerializedType(const HuaHuo::Type* unityType, bo
         , m_PerClassTypeTree(true)
         , m_ScriptTypeIndex(scriptTypeIdx)
         , m_TypeTreeCacheId(0)
-#if SUPPORT_SERIALIZED_TYPETREES
-, m_OldType(NULL)
-    , m_Equals(kNotCompared)
-#endif
+        , m_OldType(NULL)
+        , m_Equals(kNotCompared)
 {
 }
 
