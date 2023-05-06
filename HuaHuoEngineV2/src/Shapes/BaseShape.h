@@ -93,9 +93,6 @@ public:
         , mRecordTransformationOfKeyFrame(true)
         , mTypeName("")
     {
-        AddFrameStateByName("ShapeTransformComponent");
-        AddFrameStateByName("ShapeSegmentFrameState");
-        AddFrameStateByName("ShapeFollowCurveFrameState");
     }
 
     AbstractFrameState* AddFrameState(AbstractFrameState* frameState);

@@ -137,6 +137,10 @@ public:
 
     public:
         SerializedType(const HuaHuo::Type* type, bool isStrippedType, SInt16 scriptTypeIdx = -1);
+        SerializedType(SerializedType&& other) noexcept;
+        SerializedType(const SerializedType& other) = default;
+
+        SerializedType& operator=(const SerializedType& other) = default;
         ~SerializedType();
 
         // Note that deserialized persistent Type ID might not have a runtime class present anymore in

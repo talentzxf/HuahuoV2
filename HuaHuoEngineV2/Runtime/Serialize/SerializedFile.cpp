@@ -246,6 +246,11 @@ SerializedFileLoadError SerializedFile::FinalizeInitRead(TransferInstructionFlag
     }
 }
 
+SerializedFile::SerializedType::SerializedType(SerializedFile::SerializedType&& other) noexcept{
+    *this = other;
+    other.SetOldType(NULL); // The ownership of the OldTypeData has been transfered to this. No need to keep one in other.
+}
+
 SerializedFile::SerializedType::SerializedType(const HuaHuo::Type* unityType, bool isStrippedType, SInt16 scriptTypeIdx)
         : m_Type(unityType)
         , m_IsStrippedType(isStrippedType)
@@ -450,7 +455,7 @@ static SInt32 FindOrCreateSerializedTypeForUnityType(SerializedFile::TypeVector&
     }
 
     SerializedFile::SerializedType serializedType(unityType, isStripped, scriptTypeIndex);
-    serializedTypes.push_back(serializedType);
+    serializedTypes.push_back(std::move(serializedType));
 
     if (originalTypeId >= 0 && serializedTypes[originalTypeId].GetOldTypeHash() != serializedTypes[serializedTypes.size() - 1].GetOldTypeHash())
     {

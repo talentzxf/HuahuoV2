@@ -46,8 +46,8 @@ public:
         currentLayer = layer;
         layerMap.insert(std::pair<std::string, PPtr<Layer>>(uuid, layer));
         layers.push_back(layer);
-        GetPersistentManager().MakeObjectPersistent(layer->GetInstanceID(), StoreFilePath);
         layer->Init();
+        GetPersistentManager().MakeObjectPersistent(layer->GetInstanceID(), StoreFilePath);
 
         return layer;
     }
