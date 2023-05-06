@@ -369,6 +369,18 @@ void testMultipleStores() {
 
     bool result = GetDefaultObjectStoreManager()->SetDefaultStoreByIndex(newStore);
     assert(result);
+
+    ObjectStoreManager *objectStoreManager = GetDefaultObjectStoreManager();
+    Layer* currentLayer = objectStoreManager->GetCurrentStore()->CreateLayer("TestTest");
+    RectangleShape *rectangleShape = (RectangleShape *) BaseShape::CreateShape("RectangleShape");
+    ShapeTransformComponent* pTransformComponent = (ShapeTransformComponent*) rectangleShape->GetFrameStateByTypeName("ShapeTransformComponent");
+
+    pTransformComponent->SetVector3Value("globalPivotPosition", 100.0, 100.0, 0.0);
+
+    currentLayer->AddShapeInternal(rectangleShape);
+
+    std::string storeFilePath = GenerateRandomFilePath();
+    GetPersistentManager().WriteObject(storeFilePath, objectStoreManager->GetCurrentStore());
 }
 
 void testCloneObject() {

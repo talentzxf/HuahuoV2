@@ -52,8 +52,12 @@ std::string gen_random(const int len) {
     return tmp_s;
 }
 
-void InitStorFilePath(){
-    StoreFilePath = "mem://" + gen_random(10) + currentTime();;
+std::string GenerateRandomFilePath(){
+    return "mem://" + gen_random(10) + currentTime();
+}
+
+void InitStoreFilePath(){
+    StoreFilePath = GenerateRandomFilePath();
 }
 
 #if HUAHUO_EDITOR
@@ -250,7 +254,7 @@ PersistentManager& GetPersistentManager()
     //__FAKEABLE_FUNCTION__(GetPersistentManager, ());
 
     if(StoreFilePath.length() == 0){
-        InitStorFilePath();
+        InitStoreFilePath();
     }
 
     Assert(gPersistentManager != NULL);
@@ -262,7 +266,7 @@ PersistentManager* GetPersistentManagerPtr()
     //__FAKEABLE_FUNCTION__(GetPersistentManager, ());
 
     if(StoreFilePath.length() == 0){
-        InitStorFilePath();
+        InitStoreFilePath();
     }
 
     // __FAKEABLE_FUNCTION__(GetPersistentManagerPtr, ());
@@ -1506,6 +1510,63 @@ void PersistentManager::CleanupStreamAndNameSpaceMapping(unsigned serializedFile
 
     m_GlobalToLocalNameSpace[serializedFileIndex].clear();
     m_LocalToGlobalNameSpace[serializedFileIndex].clear();
+}
+
+class GatherInstanceIdFunctor: public GenerateIDFunctor{
+public:
+    GatherInstanceIdFunctor(std::set<InstanceID>& pInstanceIdVector)
+    :m_pInstanceIdVector(pInstanceIdVector){
+    }
+
+    virtual InstanceID GenerateInstanceID(InstanceID oldInstanceID, TransferMetaFlags metaFlags = kNoTransferFlags){
+        if(oldInstanceID != InstanceID_None){
+            m_pInstanceIdVector.insert(oldInstanceID);
+        }
+        return oldInstanceID;
+    }
+
+private:
+    std::set<InstanceID>& m_pInstanceIdVector;
+};
+
+int PersistentManager::WriteObject(std::string& path, PPtr<Object> object){
+    // Create writing tools
+    CachedWriter writer;
+
+    FileCacherWrite serializedFileWriter;
+    if (!InitTempWriteFile(serializedFileWriter, path, kCacheSize, true))
+        return kFileCouldNotBeWritten;
+    writer.InitWrite(serializedFileWriter);
+
+    int serializedFileIndex;
+
+    serializedFileIndex = InsertPathNameInternal(path, false);
+    ObjectIDs writeObjects; //(kMemTempAlloc);
+
+    std::set<InstanceID> collectedInstanceIDs;
+
+    std::set<InstanceID> pendingInstanceIDs;
+    pendingInstanceIDs.insert(object->GetInstanceID());
+
+    while(!pendingInstanceIDs.empty()){
+        InstanceID firstInstanceID = *pendingInstanceIDs.begin();
+        pendingInstanceIDs.erase(firstInstanceID);
+
+        if(!collectedInstanceIDs.contains(firstInstanceID)){
+            collectedInstanceIDs.insert(firstInstanceID);
+
+            Object* pendingObject = Object::IDToPointer(firstInstanceID);
+            GatherInstanceIdFunctor functor(pendingInstanceIDs);
+            RemapPPtrTransfer remapTransfer(kNoTransferInstructionFlags, false);
+            remapTransfer.SetGenerateIDFunctor(&functor);
+            pendingObject->VirtualRedirectTransfer(remapTransfer);
+        }
+    }
+
+    printf("Gathered:%d instanceIds\n", collectedInstanceIDs.size());
+    
+
+    return kNoError;
 }
 
 int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, const WriteData* writeData, int size, /*const GlobalBuildData& globalBuildData,*/ VerifyWriteObjectCallback* verifyCallback, BuildTargetSelection target, TransferInstructionFlags options, WriteInformation& writeInfo, const InstanceIDResolver* instanceIDResolver, LockFlags lockedFlags, ReportWriteObjectCallback* reportCallback, void* reportCallbackUserData)

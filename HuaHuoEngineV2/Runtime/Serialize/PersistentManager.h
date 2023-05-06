@@ -261,6 +261,8 @@ public:
     int WriteFile(std::string& path, int serializedFileIndex, const WriteData* writeData, int size, /*const GlobalBuildData& globalBuildData,*/ VerifyWriteObjectCallback* verifyCallback, BuildTargetSelection target, TransferInstructionFlags options, const InstanceIDResolver* instanceIDResolver = NULL, LockFlags lockedFlags = kLockFlagNone, ReportWriteObjectCallback* reportCallback = NULL, void* reportCallbackUserData = NULL);
     int WriteFile(std::string& path, int serializedFileIndex, const WriteData* writeData, int size, /*const GlobalBuildData& globalBuildData,*/ VerifyWriteObjectCallback* verifyCallback, BuildTargetSelection target, TransferInstructionFlags options, WriteInformation& writeInfo, const InstanceIDResolver* instanceIDResolver = NULL, LockFlags lockedFlags = kLockFlagNone, ReportWriteObjectCallback* reportCallback = NULL, void* reportCallbackUserData = NULL);
 
+    int WriteObject(std::string& path, PPtr<Object> object);
+
     int LoadFileCompletely(std::string& pathName);
 
     enum LoadFlags
@@ -339,6 +341,7 @@ PersistentManager& GetPersistentManager();
 PersistentManager* GetPersistentManagerPtr();
 void CleanupPersistentManager();
 void SetPersistentManager(PersistentManager* persistentManager);
+std::string GenerateRandomFilePath();
 
 #if WEB_ENV
 #include <emscripten/bind.h>
