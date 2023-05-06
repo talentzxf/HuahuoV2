@@ -216,16 +216,32 @@ class ElementShapeJS extends BaseShapeJS {
         return this.elementController.playSpeed
     }
 
-    afterWASMReady() {
-        super.afterWASMReady();
+    onUploadElement(){
 
-        this.propertySheet.addProperty({
-            key: "inspector.editElement",
-            type: PropertyType.BUTTON,
-            config: {
-                action: this.onEditElement.bind(this)
-            }
-        })
+    }
+
+    additionalPropertyAdded: boolean = false
+    getPropertySheet(){
+        if(!this.additionalPropertyAdded){
+            this.additionalPropertyAdded = true
+            this.propertySheet.addProperty({
+                key: "inspector.editElement",
+                type: PropertyType.BUTTON,
+                config: {
+                    action: this.onEditElement.bind(this)
+                }
+            })
+
+            this.propertySheet.addProperty({
+                key: "inspector.uploadElement",
+                type: PropertyType.BUTTON,
+                config:{
+                    action: this.onUploadElement.bind(this)
+                }
+            })
+        }
+
+        return super.getPropertySheet()
     }
 }
 

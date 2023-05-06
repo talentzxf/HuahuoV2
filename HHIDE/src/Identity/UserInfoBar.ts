@@ -22,6 +22,8 @@ class UserInfoBar extends HTMLElement {
 
         if(!val){
             this.usernameSpan.innerText = i18n.t("not_logged_in")
+            this.usernameSpan.style.cursor = 'pointer'
+            this.usernameSpan.onclick = this.login.bind(this)
         }else{
             this.usernameSpan.innerText = this._username
         }

@@ -81,6 +81,7 @@
     "Rotation": "Rotation",
     "enclose": "EnClose",
     "editElement": "Edit Element",
+    "uploadElement": "Upload Element",
     "image": {
       "Frames": "Frames"
     },
@@ -118,7 +119,8 @@
       "particleShape": "Particle Shape",
       "particleDirection": "Particle Direction",
       "eventGraph": "Event Graph",
-      "starMirrorInterval": "Star Mirror Interval"
+      "starMirrorInterval": "Star Mirror Interval",
+      "playSpeed": "Play Speed"
     },
     "nail": {
       "isStatic": "Is Static"

@@ -80,7 +80,8 @@
     "Scaling": "缩放",
     "Rotation": "旋转",
     "enclose": "封闭",
-    "editElement": "编辑原件",
+    "editElement": "编辑元件",
+    "uploadElement": "上传元件",
     "image": {
       "Frames": "帧数"
     },
@@ -118,7 +119,8 @@
       "particleShape": "粒子形状",
       "particleDirection": "粒子朝向",
       "eventGraph": "事件逻辑图",
-      "starMirrorInterval": "中心对称间隔"
+      "starMirrorInterval": "中心对称间隔",
+      "playSpeed": "播放速度"
     },
     "nail": {
       "isStatic": "是否静态"
@@ -136,7 +138,7 @@
     "userLoggedOut": "用户已退出",
     "userLoginSuccess": "用户 {{userName}} 登录成功!",
     "projectUploaded": "项目已被成功上传",
-    "elementCreated": "原件 {{elementName}} 创建成功!",
+    "elementCreated": "元件 {{elementName}} 创建成功!",
     "insufficientColorStop": "无法删除,至少需要有两个颜色点.",
     "insufficientKeyFrames": "无法删除，至少需要有一个关键帧",
     "nailDuplicated": "无法添加钉子，这两个形状已经被其他钉子绑定了",
