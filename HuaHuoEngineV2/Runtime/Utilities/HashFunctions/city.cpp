@@ -130,6 +130,7 @@ static inline uint64 bswap_64(uint64 value)
 #include <byteswap.h>
 
 #endif
+#endif
 
 #ifdef WORDS_BIGENDIAN
 #define uint32_in_expected_order(x) (bswap_32(x))
@@ -146,7 +147,7 @@ static inline uint64 bswap_64(uint64 value)
 #define LIKELY(x) (x)
 #endif
 #endif
-#endif
+
 
 static uint64 Fetch64(const char *p) {
     return uint64_in_expected_order(UNALIGNED_LOAD64(p));
