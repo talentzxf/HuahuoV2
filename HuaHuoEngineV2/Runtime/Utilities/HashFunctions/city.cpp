@@ -47,10 +47,28 @@ static uint32 UNALIGNED_LOAD32(const char *p) {
     return result;
 }
 
+#if WEB_ENV
+uint32 bswap_32(uint32 value){
+    return ((value & 0xFF000000u) >> 24) |
+           ((value & 0x00FF0000u) >> 8)  |
+           ((value & 0x0000FF00u) << 8)  |
+           ((value & 0x000000FFu) << 24);
+}
+
+uint64 bswap_64(uint64 value){
+    return ((value & 0xFF00000000000000ull) >> 56) |
+       ((value & 0x00FF000000000000ull) >> 40) |
+       ((value & 0x0000FF0000000000ull) >> 24) |
+       ((value & 0x000000FF00000000ull) >> 8)  |
+       ((value & 0x00000000FF000000ull) << 8)  |
+       ((value & 0x0000000000FF0000ull) << 24) |
+       ((value & 0x000000000000FF00ull) << 40) |
+       ((value & 0x00000000000000FFull) << 56);
+}
+
+#else
 #define _MSC_VER
 #ifdef _MSC_VER
-
-#include <stdlib.h>
 #define bswap_32(x) _byteswap_ulong(x)
 #define bswap_64(x) _byteswap_uint64(x)
 
@@ -126,6 +144,7 @@ static inline uint64 bswap_64(uint64 value)
 #define LIKELY(x) (__builtin_expect(!!(x), 1))
 #else
 #define LIKELY(x) (x)
+#endif
 #endif
 #endif
 
