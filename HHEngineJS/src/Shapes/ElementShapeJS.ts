@@ -75,11 +75,11 @@ class ElementShapeJS extends BaseShapeJS {
         super.afterCreateShape()
     }
 
-    get storeId(): number {
+    get storeId(): string {
         return this.rawObj.GetElementStoreId();
     }
 
-    set storeId(val: number) {
+    set storeId(val: string) {
         this.rawObj.SetElementStoreId(val)
 
         huahuoEngine.registerElementParent(val, this.getBornStoreId())
@@ -165,8 +165,17 @@ class ElementShapeJS extends BaseShapeJS {
         }
     }
 
+    static isValidGUID(guid:string){
+        for(let char of guid){
+            if(char != '0')
+                return true
+        }
+
+        return false
+    }
+
     update(force: boolean = false) {
-        if (this.storeId > 0) { // If the storeId is less than 0, the shape has not been inited.
+        if (ElementShapeJS.isValidGUID(this.storeId)) { // If the storeId is less than 0, the shape has not been inited.
             super.update(force)
             elementUpdated++
         }

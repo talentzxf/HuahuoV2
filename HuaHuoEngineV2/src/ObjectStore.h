@@ -161,6 +161,11 @@ public:
         HuaHuoGUID storeGuid = StringToGUID(storeId);
         if(!allStores.contains(storeGuid)){
             printf("StoreId:%s not found or is invalid\n", storeId);
+            printf("Printing current stores:");
+            for(auto storeId : allStores){
+                printf("%s,", GUIDToString(storeId.first).c_str());
+            }
+            printf("\n");
             return false;
         }
 

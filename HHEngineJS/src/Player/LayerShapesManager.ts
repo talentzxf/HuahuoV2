@@ -2,6 +2,7 @@ import {huahuoEngine} from "../EngineAPI";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {Logger} from "hhcommoncomponents"
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
+import {ElementShapeJS} from "../Shapes/ElementShapeJS";
 
 class LayerShapesManager {
     layerShapes = new Map();
@@ -90,8 +91,11 @@ class LayerShapesManager {
         return null
     }
 
-    loadShapesFromStore(parent: BaseShapeJS): number {
+    loadShapesFromStore(parent: ElementShapeJS): number {
         let layerShapeCount = 0
+
+        if(parent != null)
+            this.storeId = parent.storeId
 
         let store = huahuoEngine.GetStoreById(this.storeId)
 

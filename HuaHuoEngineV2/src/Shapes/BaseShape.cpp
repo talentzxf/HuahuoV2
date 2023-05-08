@@ -100,8 +100,7 @@ const char* BaseShape::GetStoreId() {
     if (this->mLayer == NULL)
         return "";
 
-    std::string guidString = GUIDToString(this->mLayer->GetObjectStore()->GetStoreGuid());
-    return guidString.c_str();
+    return this->mLayer->GetObjectStore()->GetStoreId();
 }
 
 AbstractFrameState *BaseShape::AddFrameState(AbstractFrameState *frameState) {

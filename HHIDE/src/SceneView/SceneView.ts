@@ -31,6 +31,11 @@ class SceneView extends HTMLElement {
     inited: boolean = false;
     timeline: HHTimeline = null;
 
+    setStoreId(storeId: string){
+        this.storeId = storeId
+        this.animationPlayer.storeId = storeId
+    }
+
     createCanvasContainer() {
         this.canvasContainer = document.createElement("div")
         this.canvasContainer.id = "CanvasContainer"

@@ -57,6 +57,9 @@ class ProjectManager {
             HHToast.error(i18n.t("toast.openProjectFailed"))
         }
 
+        // Set scene view storeId as the newly loaded storeId.
+        let mainSceneView: SceneView = document.querySelector("#mainScene")
+        mainSceneView.setStoreId(huahuoEngine.GetCurrentStoreId())
         huahuoEngine.getActivePlayer().updateAllShapes(true)
     }
 

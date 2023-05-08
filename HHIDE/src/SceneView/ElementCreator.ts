@@ -43,7 +43,7 @@ class ElementCreator {
 
     onShapeCreated(newShape) {
         if (newShape.getTypeName() == "ElementShape") {
-            if (newShape.storeId > 0) {
+            if (ElementShapeJS.isValidGUID(newShape.storeId)) {
                 this.registerElementChangeEvent(newShape.storeId, function () {
                     newShape.update()
                 })
@@ -128,7 +128,7 @@ class ElementCreator {
             let idx = this.sceneViewPanel.addContent(newEleContent)
             this.sceneViewPanel.selectTab(idx)
 
-            elementSceneView.storeId = element.storeId
+            elementSceneView.setStoreId(element.storeId)
 
             elementSceneView.animationPlayer.loadShapesFromStore()
             elementSceneView.animationPlayer.updateAllShapes(true)

@@ -8,7 +8,7 @@ import {findParentPanel} from "hhpanel"
 
 class SceneViewManager{
     // Map from storeId->SceneView
-    sceneViews: Map<number, SceneView> = new Map()
+    sceneViews: Map<string, SceneView> = new Map()
     curFocusedSceneView: SceneView = null
 
     // Map from sceneview to frameId, when switch back to this scene, we need to restore it's frameId.
@@ -23,7 +23,7 @@ class SceneViewManager{
         return huahuoEngine.GetStoreById(storeId).GetCurrentLayer().GetCurrentFrame()
     }
 
-    getSceneView(storeId:number){
+    getSceneView(storeId:string){
         if(this.sceneViews.has(storeId)){
             return this.sceneViews.get(storeId)
         }
@@ -69,7 +69,7 @@ class SceneViewManager{
         return this.curFocusedSceneView
     }
 
-    removeSceneViewMap(storeId: number){
+    removeSceneViewMap(storeId: string){
         this.sceneViews.delete(storeId)
     }
 
