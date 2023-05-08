@@ -7,6 +7,7 @@ import {HHContent, PanelEventNames} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
 import {BaseShapeJS} from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
+import {elementUploader} from "../RESTApis/ElementUploader";
 class ElementCreator {
     sceneView: SceneView
     sceneViewPanel: HHPanel
@@ -27,11 +28,17 @@ class ElementCreator {
             huahuoEngine.registerEventListener("HHEngine", "BeforeJSShapeCreated", _this.onShapeCreated.bind(_this))
 
             huahuoEngine.registerEventListener("HHEngine", "onEditElement", _this.editElement.bind(_this))
+
+            huahuoEngine.registerEventListener("HHEngine", "onUploadElement", _this.uploadElement.bind(_this))
         })
     }
 
     editElement(element){
         this.openElementEditTab(element)
+    }
+
+    uploadElement(element){
+        elementUploader.uploadStore(element.storeId)
     }
 
     onShapeCreated(newShape) {

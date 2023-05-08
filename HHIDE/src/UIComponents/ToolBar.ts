@@ -92,8 +92,8 @@ class HHToolBar extends HTMLElement{
     }
 
     @NeedLogin()
-    uploadStore(afterAction: Function = null){
-        
+    uploadStore(storeId, afterAction: Function = null){
+
     }
 
     uploadAndOpenPlayer(){

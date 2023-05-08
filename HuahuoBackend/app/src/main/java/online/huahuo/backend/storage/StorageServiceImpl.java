@@ -1,9 +1,9 @@
 package online.huahuo.backend.storage;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import online.huahuo.backend.db.FileRepository;
-import online.huahuo.backend.db.ProjectFileDB;
+import online.huahuo.backend.db.FileType;
+import online.huahuo.backend.db.BinaryFileDB;
 import online.huahuo.backend.exception.DuplicateFileException;
 import online.huahuo.backend.utils.Utils;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
@@ -38,10 +36,12 @@ public class StorageServiceImpl implements StorageService{
     }
 
     @Override
-    public ProjectFileDB store(String path, MultipartFile file, Boolean forceOverride) throws IOException, NoSuchAlgorithmException {
+    public BinaryFileDB store(String path, MultipartFile file, Boolean forceOverride, Boolean isElement) throws IOException, NoSuchAlgorithmException {
         String fileName = file.getOriginalFilename();
-        String savePath = getPath() + path + File.separator;
-        String absoluteFilePath = savePath + fileName + HUAHUO_POSTFIX;
+        FileType fileType = isElement?FileType.ELEMENT:FileType.PROJECT;
+        String savePath = getPath() + path + File.separator + fileType + File.separator;
+        String absoluteFilePath = savePath +  fileName + HUAHUO_POSTFIX;
+
 
         if(!forceOverride){ // Don't override if the file exists and forceOverride = false.
             if(new File(absoluteFilePath).exists()){
@@ -59,11 +59,11 @@ public class StorageServiceImpl implements StorageService{
 
         String fileHash = Utils.hashBytes(file.getBytes());
 
-        ProjectFileDB fileDB = fileRepository.findByCreatedByAndName(username, fileName);
+        BinaryFileDB fileDB = fileRepository.findByCreatedByAndName(username, fileName);
 
         // TODO: Read the version from the file.
         if(fileDB == null)
-            fileDB = new ProjectFileDB(fileName, file.getContentType(), "0.0.1", username, absoluteFilePath, fileHash, "");
+            fileDB = new BinaryFileDB(fileName, file.getContentType(), "0.0.1", username, absoluteFilePath, fileHash, "", fileType);
         else
         {
             fileDB.setChecksum(fileHash);
@@ -74,28 +74,30 @@ public class StorageServiceImpl implements StorageService{
     }
 
     @Override
-    public boolean storeCoverPage(String path, Long projectId, MultipartFile coverPageFile) throws IOException {
-        ProjectFileDB projectFileDB = fileRepository.getReferenceById(projectId);
+    public boolean storeCoverPage(String path, Long projectId, MultipartFile coverPageFile, boolean isElement) throws IOException {
+        BinaryFileDB binaryFileDB = fileRepository.getReferenceById(projectId);
 
         String fileName = coverPageFile.getOriginalFilename();
-        String savePath = getPath() + path + File.separator;
+
+        FileType fileType = isElement?FileType.ELEMENT:FileType.PROJECT;
+        String savePath = getPath() + path + File.separator + fileType + File.separator;
         String absoluteCoverPageFilePath = savePath + fileName;
 
         new File(savePath).mkdirs();
         Files.write(Paths.get(absoluteCoverPageFilePath), coverPageFile.getBytes());
 
-        projectFileDB.setCoverPagePath(absoluteCoverPageFilePath);
-        fileRepository.save(projectFileDB);
+        binaryFileDB.setCoverPagePath(absoluteCoverPageFilePath);
+        fileRepository.save(binaryFileDB);
         return true;
     }
 
     @Override
-    public ProjectFileDB getById(Long projectId) {
+    public BinaryFileDB getById(Long projectId) {
         return fileRepository.getReferenceById(projectId);
     }
 
     @Override
-    public ProjectFileDB save(ProjectFileDB projectFileDB) {
-        return fileRepository.save(projectFileDB);
+    public BinaryFileDB save(BinaryFileDB binaryFileDB) {
+        return fileRepository.save(binaryFileDB);
     }
 }

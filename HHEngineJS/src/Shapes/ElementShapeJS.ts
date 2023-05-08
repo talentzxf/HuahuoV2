@@ -199,9 +199,13 @@ class ElementShapeJS extends BaseShapeJS {
         huahuoEngine.GetDefaultObjectStoreManager().GetStoreById(this.storeId).SyncLayersInfo()
     }
 
-    // TODO: This should only exist in HHIDE, should move to IDE.
+    // TODO: These functions should only exist in HHIDE, should move to IDE.
     onEditElement() {
         huahuoEngine.dispatchEvent("HHEngine", "onEditElement", this)
+    }
+
+    onUploadElement(){
+        huahuoEngine.dispatchEvent("HHEngine", "onUploadElement", this)
     }
 
     _elementController = null
@@ -216,9 +220,7 @@ class ElementShapeJS extends BaseShapeJS {
         return this.elementController.playSpeed
     }
 
-    onUploadElement(){
 
-    }
 
     additionalPropertyAdded: boolean = false
     getPropertySheet(){

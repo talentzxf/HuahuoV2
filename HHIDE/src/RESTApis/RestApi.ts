@@ -170,8 +170,8 @@ class RestApi {
         return this._callApi(uploadPath, headers, formData)
     }
 
-    async uploadProject(data: Blob, fileName: string) {
-        let uploadPath = "/projects/projectData"
+    async uploadProject(data: Blob, fileName: string, isElement: boolean = false) {
+        let uploadPath = "/projects/projectData?isElement=" + isElement
         return this.uploadFile(uploadPath, data, fileName)
     }
 

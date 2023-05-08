@@ -9,11 +9,11 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "PROJECTS", indexes = {
+@Table(name = "BINARYFILES", indexes = {
         @Index(columnList = "name"),
         @Index(columnList = "createdBy")
 })
-public class ProjectFileDB {
+public class BinaryFileDB {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,8 +37,11 @@ public class ProjectFileDB {
     @Column(nullable = false)
     private ProjectStatus status;
 
-    public ProjectFileDB(String name, String type, String version, String createdBy,
-                         String fullPath, String checksum, String description){
+    private FileType fileType;
+
+
+    public BinaryFileDB(String name, String type, String version, String createdBy,
+                        String fullPath, String checksum, String description, FileType fileType){
         this.name = name;
         this.type = type;
         this.version = version;
@@ -49,5 +52,6 @@ public class ProjectFileDB {
         this.modifiedTime = new Date();
         this.status = ProjectStatus.ACTIVE;
         this.description = description;
+        this.fileType = fileType;
     }
 }
