@@ -66,7 +66,7 @@ class ProjectManager {
 
         try{
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainSceneView.storeId)
-            let Uint8Array = Module.writeObjectStoreInMemoryFile()
+            let Uint8Array = Module.writeAllObjectsInMemoryFile()
 
             let storeFilePathArray = Module.getStoreFilePath().split(/[/\\]/)
             let storeFileName = storeFilePathArray[storeFilePathArray.length - 1]

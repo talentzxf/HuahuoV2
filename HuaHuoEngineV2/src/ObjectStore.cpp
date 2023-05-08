@@ -7,10 +7,10 @@
 #include "Serialize/SerializeUtility.h"
 
 
-ObjectStoreManager* gDefaultObjectStoreManager = NULL;
+ObjectStoreManager *gDefaultObjectStoreManager = NULL;
 
-ObjectStoreManager* GetDefaultObjectStoreManager(){
-    if(gDefaultObjectStoreManager == NULL){
+ObjectStoreManager *GetDefaultObjectStoreManager() {
+    if (gDefaultObjectStoreManager == NULL) {
         gDefaultObjectStoreManager = Object::Produce<ObjectStoreManager>();
         gDefaultObjectStoreManager->SetIsGlobal(true);
 
@@ -20,7 +20,7 @@ ObjectStoreManager* GetDefaultObjectStoreManager(){
     return gDefaultObjectStoreManager;
 }
 
-void SetDefaultObjectStoreManager(ObjectStoreManager* objectStoreManager){
+void SetDefaultObjectStoreManager(ObjectStoreManager *objectStoreManager) {
     gDefaultObjectStoreManager = objectStoreManager;
 
     printf("Set Default object store manager\n");
@@ -29,7 +29,9 @@ void SetDefaultObjectStoreManager(ObjectStoreManager* objectStoreManager){
 IMPLEMENT_REGISTER_CLASS(ObjectStoreManager, 10004);
 
 IMPLEMENT_OBJECT_SERIALIZE(ObjectStoreManager);
+
 INSTANTIATE_TEMPLATE_TRANSFER(ObjectStoreManager);
+
 template<class TransferFunction>
 void ObjectStoreManager::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
@@ -42,18 +44,18 @@ void ObjectStoreManager::Transfer(TransferFunction &transfer) {
     TRANSFER(allKeyFrames);
 }
 
-ObjectStoreManager* ObjectStoreManager::GetDefaultObjectStoreManager(){
+ObjectStoreManager *ObjectStoreManager::GetDefaultObjectStoreManager() {
     return ::GetDefaultObjectStoreManager();
 }
 
-void ObjectStoreManager::AwakeFromLoad(AwakeFromLoadMode awakeMode){
+void ObjectStoreManager::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
     Super::AwakeFromLoad(awakeMode);
 
-    if(this->m_IsGlobal){
+    if (this->m_IsGlobal) {
         SetDefaultObjectStoreManager(this);
 
         size_t layerCount = GetCurrentStore()->GetLayerCount();
-        for(int i = 0 ; i < layerCount; i++){
+        for (int i = 0; i < layerCount; i++) {
             GetCurrentStore()->GetLayer(i)->AwakeAllShapes(awakeMode);
         }
     }
@@ -62,6 +64,7 @@ void ObjectStoreManager::AwakeFromLoad(AwakeFromLoadMode awakeMode){
 IMPLEMENT_REGISTER_CLASS(ObjectStore, 10000);
 
 IMPLEMENT_OBJECT_SERIALIZE(ObjectStore);
+
 INSTANTIATE_TEMPLATE_TRANSFER(ObjectStore);
 
 template<class TransferFunction>
@@ -84,7 +87,7 @@ void setStoreFilePath(std::string storeFilePath){
     StoreFilePath = storeFilePath;
 }
 
-emscripten::val writeObjectStoreInMemoryFile(){
+emscripten::val writeAllObjectsInMemoryFile(){
     int writeResult = GetPersistentManager().WriteFile(StoreFilePath);
     printf("%s,%d; file:%s\n writeResult:%d\n", __FILE__, __LINE__ , StoreFilePath.c_str(), writeResult);
     UInt8* bufferPtr = GetMemoryFileSystem()->GetDataPtr(StoreFilePath);
@@ -98,13 +101,31 @@ emscripten::val writeObjectStoreInMemoryFile(){
     return emscripten::val(
                 emscripten::typed_memory_view(length, bufferPtr)
                 );
+}
+
+emscripten::val writeObjectStoreInMemoryFile(int storeId, std::string fileName){
+    std::string filePath = "mem://" + fileName;
+    ObjectStore* pStore = GetDefaultObjectStoreManager()->GetStoreByIndex(storeId);
+    int writeResult = GetPersistentManager().WriteObject(filePath, pStore);
+    printf("%s,%d; file:%s\n writeResult:%d\n", __FILE__, __LINE__ , filePath.c_str(), writeResult);
+    UInt8 bufferPtr = GetMemoryFileSystem()->GetDataPtr(filePath);
+    if(bufferPtr == NULL){
+        printf("Error: Buffer is NULL: %s,%d\n", __FILE__, __LINE__ );
     }
+
+    size_t length = GetMemoryFileSystem()->GetFileLength(filePath);
+
+    return emscripten::val(
+            emscripten::typed_memory_view(length, bufferPtr)
+            );
+}
 
 
 EMSCRIPTEN_BINDINGS(HuaHuoEngineV2_OBJECTSTORE) {
-    emscripten::function("writeObjectStoreInMemoryFile", &writeObjectStoreInMemoryFile);
+    emscripten::function("writeAllObjectsInMemoryFile", &writeAllObjectsInMemoryFile);
     emscripten::function("getStoreFilePath", &getStoreFilePath);
     emscripten::function("setStoreFilePath", &setStoreFilePath);
+    emscripten::function("writeObjectStoreInMemoryFile", &writeObjectStore);
 }
 #endif
 

@@ -220,7 +220,7 @@ void SetDefaultObjectStoreManager(ObjectStoreManager* storeManager);
 
 #if WEB_ENV
 #include <emscripten/bind.h>
-emscripten::val writeObjectStoreInMemoryFile();
+emscripten::val writeAllObjectsInMemoryFile();
 
 #endif
 
