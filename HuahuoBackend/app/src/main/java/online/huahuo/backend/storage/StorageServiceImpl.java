@@ -1,7 +1,7 @@
 package online.huahuo.backend.storage;
 
 import lombok.RequiredArgsConstructor;
-import online.huahuo.backend.db.FileRepository;
+import online.huahuo.backend.db.BinaryFileRepository;
 import online.huahuo.backend.db.FileType;
 import online.huahuo.backend.db.BinaryFileDB;
 import online.huahuo.backend.exception.DuplicateFileException;
@@ -21,10 +21,10 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
-public class StorageServiceImpl implements StorageService{
+public class StorageServiceImpl implements StorageService {
 
     final private String HUAHUO_POSTFIX = ".hua";
-    final private FileRepository fileRepository;
+    final private BinaryFileRepository fileRepository;
 
     @Value("${huahuo.backend.datafilepath}")
     private String dataFilePath;
@@ -38,13 +38,13 @@ public class StorageServiceImpl implements StorageService{
     @Override
     public BinaryFileDB store(String path, MultipartFile file, Boolean forceOverride, Boolean isElement) throws IOException, NoSuchAlgorithmException {
         String fileName = file.getOriginalFilename();
-        FileType fileType = isElement?FileType.ELEMENT:FileType.PROJECT;
+        FileType fileType = isElement ? FileType.ELEMENT : FileType.PROJECT;
         String savePath = getPath() + path + File.separator + fileType + File.separator;
-        String absoluteFilePath = savePath +  fileName + HUAHUO_POSTFIX;
+        String absoluteFilePath = savePath + fileName + HUAHUO_POSTFIX;
 
 
-        if(!forceOverride){ // Don't override if the file exists and forceOverride = false.
-            if(new File(absoluteFilePath).exists()){
+        if (!forceOverride) { // Don't override if the file exists and forceOverride = false.
+            if (new File(absoluteFilePath).exists()) {
                 throw new DuplicateFileException(fileName);
             }
         }
@@ -59,13 +59,12 @@ public class StorageServiceImpl implements StorageService{
 
         String fileHash = Utils.hashBytes(file.getBytes());
 
-        BinaryFileDB fileDB = fileRepository.findByCreatedByAndName(username, fileName);
+        BinaryFileDB fileDB = fileRepository.findByCreatedByAndFileTypeAndName(username, fileType, fileName);
 
         // TODO: Read the version from the file.
-        if(fileDB == null)
+        if (fileDB == null)
             fileDB = new BinaryFileDB(fileName, file.getContentType(), "0.0.1", username, absoluteFilePath, fileHash, "", fileType);
-        else
-        {
+        else {
             fileDB.setChecksum(fileHash);
             fileDB.setModifiedTime(new Date());
         }
@@ -79,7 +78,7 @@ public class StorageServiceImpl implements StorageService{
 
         String fileName = coverPageFile.getOriginalFilename();
 
-        FileType fileType = isElement?FileType.ELEMENT:FileType.PROJECT;
+        FileType fileType = isElement ? FileType.ELEMENT : FileType.PROJECT;
         String savePath = getPath() + path + File.separator + fileType + File.separator;
         String absoluteCoverPageFilePath = savePath + fileName;
 

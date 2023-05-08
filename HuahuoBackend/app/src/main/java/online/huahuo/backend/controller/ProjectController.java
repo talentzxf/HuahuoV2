@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import online.huahuo.backend.db.BinaryFileDB;
-import online.huahuo.backend.db.BinaryFileRespository;
+import online.huahuo.backend.db.BinaryFileRepository;
+import online.huahuo.backend.db.FileType;
 import online.huahuo.backend.db.ProjectStatus;
 import online.huahuo.backend.storage.StorageService;
 import org.springframework.core.io.ByteArrayResource;
@@ -40,7 +41,7 @@ class ProjectCallStatus {
 }
 
 @Data
-class ListProjectResult {
+class ListBinaryFileResult {
     private int totalCount;
     private List<BinaryFileDB> projectFiles;
 }
@@ -57,20 +58,16 @@ class ProjectExistResponse {
 public class ProjectController {
     private final StorageService storageService;
     @javax.annotation.Resource
-    private BinaryFileRespository binaryFileRespository;
+    private BinaryFileRepository binaryFileRepository;
 
     @ResponseBody
     @PostMapping("/projects/projectData")
-    public ProjectCallStatus handleFileUpload(@RequestParam("file") MultipartFile file,
-                                              @RequestParam(value = "force_override", required = false) Boolean forceOverride,
-                                              @RequestParam(value = "isElement", required = false) Boolean isElement
+    public ProjectCallStatus handleFileUpload(@RequestParam() MultipartFile file,
+                                              @RequestParam(required = false, defaultValue = "true") Boolean forceOverride,
+                                              @RequestParam(required = false, defaultValue = "false") Boolean isElement
     ) throws IOException, NoSuchAlgorithmException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-
-        if (forceOverride == null) { // By default, override previous project
-            forceOverride = true;
-        }
 
         BinaryFileDB fileDB = storageService.store(username, file, forceOverride, isElement);
         return new ProjectCallStatus(fileDB.getId(), true, "File uploaded successfully!");
@@ -109,19 +106,23 @@ public class ProjectController {
 
     @PreAuthorize("hasRole('READER')")
     @GetMapping("/projects")
-    public ResponseEntity<ListProjectResult> listProjects(@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int pageSize) {
+    public ResponseEntity<ListBinaryFileResult> listProjects(@RequestParam(defaultValue = "0") int pageNumber,
+                                                             @RequestParam(defaultValue = "10") int pageSize,
+                                                             @RequestParam(defaultValue = "false") Boolean isElement ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        List<BinaryFileDB> resultList = binaryFileRespository.findByCreatedByAndStatus(username, ProjectStatus.ACTIVE, pageable);
 
-        int totalProjectCount = binaryFileRespository.countByCreatedByAndStatus(username, ProjectStatus.ACTIVE);
-        ListProjectResult listProjectResult = new ListProjectResult();
-        listProjectResult.setProjectFiles(resultList);
-        listProjectResult.setTotalCount(totalProjectCount);
+        FileType fileType = isElement?FileType.ELEMENT:FileType.PROJECT;
+        List<BinaryFileDB> resultList = binaryFileRepository.findByCreatedByAndFileTypeAndStatus(username, fileType, ProjectStatus.ACTIVE, pageable);
+
+        int totalProjectCount = binaryFileRepository.countByCreatedByAndFileTypeAndStatus(username, fileType, ProjectStatus.ACTIVE);
+        ListBinaryFileResult listBinaryFileResult = new ListBinaryFileResult();
+        listBinaryFileResult.setProjectFiles(resultList);
+        listBinaryFileResult.setTotalCount(totalProjectCount);
         return ResponseEntity.ok()
-                .body(listProjectResult);
+                .body(listBinaryFileResult);
     }
 
     @PreAuthorize("hasRole('READER')")
@@ -130,7 +131,7 @@ public class ProjectController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        BinaryFileDB binaryFileDB = binaryFileRespository.findByCreatedByAndName(username, projectName);
+        BinaryFileDB binaryFileDB = binaryFileRepository.findByCreatedByAndFileTypeAndName(username, FileType.PROJECT, projectName);
 
         ProjectExistResponse response = new ProjectExistResponse();
         response.setProjectName(projectName);
@@ -147,14 +148,9 @@ public class ProjectController {
     @PostMapping("/projects/{projectId}/coverPage")
     public ProjectCallStatus handleCoverPageUpload(@RequestParam("file") MultipartFile coverPageFile,
                                                    @PathVariable("projectId") Long projectId,
-                                                   @RequestParam(value = "isElement", required = false) Boolean isElement) throws IOException {
+                                                   @RequestParam(defaultValue = "false", required = false) Boolean isElement) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-
-        if(isElement == null){
-            isElement = false;
-        }
-
         storageService.storeCoverPage(username, projectId, coverPageFile, isElement);
         return new ProjectCallStatus(projectId, true, "Project cover page uploaded successfully!");
     }
@@ -182,7 +178,7 @@ public class ProjectController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        BinaryFileDB binaryFileDB = binaryFileRespository.findById(projectId).get();
+        BinaryFileDB binaryFileDB = binaryFileRepository.findById(projectId).get();
         if(!binaryFileDB.getCreatedBy().equals(username)){
             return ResponseEntity.badRequest().body("Project creator mismatch!");
         }
@@ -195,7 +191,7 @@ public class ProjectController {
             Files.delete(Path.of(projectDataPath));
             Files.delete(Path.of(projectImgPath));
         }finally {
-            binaryFileRespository.deleteById(projectId);
+            binaryFileRepository.deleteById(projectId);
         }
 
         return ResponseEntity.ok("Project successfully deleted!");
