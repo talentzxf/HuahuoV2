@@ -227,6 +227,20 @@ class RestApi {
         })
     }
 
+    async listElements(callBack: Function, pageNo: number = 0, pageSize: number = 10) {
+
+        let headers = {
+            "Authorization": "Bearer " + this.getJwtToken()
+        };
+        let listElementApi = "/projects?isElement=true"
+        let apiCallPromise = this._callApi(listElementApi, headers, null, HTTP_METHOD.GET)
+        apiCallPromise.then((projects)=>{
+            callBack(projects)
+        }).catch((ex)=>{
+            HHToast.error("Exception happened when listing projects!" + ex)
+        })
+    }
+
     async updateProjectDescription(projectId, description){
         let headers = {
             "Authorization": "Bearer " + this.getJwtToken()

@@ -81,10 +81,6 @@ class HHToolBar extends HTMLElement{
         }.bind(this))
     }
 
-    listElements(){
-
-    }
-
     @NeedLogin()
     uploadProject(afterAction:Function = null){
         if(!projectInfo.inited){
@@ -102,11 +98,6 @@ class HHToolBar extends HTMLElement{
                     afterAction(response)
             })
         }
-    }
-
-    @NeedLogin()
-    uploadStore(storeId, afterAction: Function = null){
-
     }
 
     uploadAndOpenPlayer(){
@@ -140,7 +131,15 @@ class HHToolBar extends HTMLElement{
             let form = formManager.openForm(ProjectListForm)
             let totalPage = listProjectResult.totalCount/pageSize
 
-            form.updateProjectList(totalPage, pageNo, listProjectResult.projectFiles)
+            form.updateList(totalPage, pageNo, listProjectResult.binaryFiles)
+        })
+    }
+
+    listElements(pageNo: number = 0, pageSize: number = 20){
+        api.listElements((listElementResult)=>{
+            let form = formManager.openForm(ProjectListForm)
+            let totalPage = listElementResult.totalCount/pageSize
+            form.updateList(totalPage, pageNo, listElementResult.binaryFiles, false)
         })
     }
 }

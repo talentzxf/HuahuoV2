@@ -43,7 +43,7 @@ class ProjectCallStatus {
 @Data
 class ListBinaryFileResult {
     private int totalCount;
-    private List<BinaryFileDB> projectFiles;
+    private List<BinaryFileDB> binaryFiles;
 }
 
 @Data
@@ -119,7 +119,7 @@ public class ProjectController {
 
         int totalProjectCount = binaryFileRepository.countByCreatedByAndFileTypeAndStatus(username, fileType, ProjectStatus.ACTIVE);
         ListBinaryFileResult listBinaryFileResult = new ListBinaryFileResult();
-        listBinaryFileResult.setProjectFiles(resultList);
+        listBinaryFileResult.setBinaryFiles(resultList);
         listBinaryFileResult.setTotalCount(totalProjectCount);
         return ResponseEntity.ok()
                 .body(listBinaryFileResult);

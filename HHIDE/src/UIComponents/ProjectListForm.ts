@@ -11,11 +11,11 @@ import {projectInfo} from "../SceneView/ProjectInfo";
     selector: "hh-project-list"
 })
 class ProjectListForm extends HTMLElement implements HHForm {
-    projectListDiv: HTMLElement
+    listDiv: HTMLElement
     selector: string;
     closeBtn: HTMLElement
-    projectListUlContainer: HTMLDivElement
-    projectListUL: HTMLUListElement
+    listUlContainer: HTMLDivElement
+    listUL: HTMLUListElement
 
     projectInfoMap: Map<number, Object> = new Map
 
@@ -36,9 +36,9 @@ class ProjectListForm extends HTMLElement implements HHForm {
             "}" +
             "</style>"
 
-        this.projectListDiv = document.createElement("div")
-        this.projectListDiv.innerHTML = CSSUtils.formStyle
-        this.projectListDiv.innerHTML +=
+        this.listDiv = document.createElement("div")
+        this.listDiv.innerHTML = CSSUtils.formStyle
+        this.listDiv.innerHTML +=
             "   <form id='projectListForm'>" +
             "   <div style='display: flex; flex-direction: row-reverse'>" +
             "       <div id='projectListCloseBtn' >" +
@@ -50,24 +50,24 @@ class ProjectListForm extends HTMLElement implements HHForm {
             "           <ul id='projectListUl' style='width: 100%'></ul>" +
             "       </div>" +
             "   </form>"
-        this.appendChild(this.projectListDiv)
+        this.appendChild(this.listDiv)
 
-        this.closeBtn = this.projectListDiv.querySelector("#projectListCloseBtn")
+        this.closeBtn = this.listDiv.querySelector("#projectListCloseBtn")
         this.closeBtn.addEventListener("mousedown", this.closeForm.bind(this))
 
-        this.projectListUL = this.projectListDiv.querySelector("#projectListUl")
+        this.listUL = this.listDiv.querySelector("#projectListUl")
 
-        this.projectListUlContainer = this.querySelector("#projectListUlContainer")
+        this.listUlContainer = this.querySelector("#projectListUlContainer")
     }
 
     closeForm() {
         this.style.display = "none"
     }
 
-    updateProjectList(totalPage, curPageNo, projects) {
+    updateList(totalPage, curPageNo, projects, enableDeletion = true) {
         this.projectInfoMap.clear()
 
-        this.projectListUL.innerHTML = i18n.t("project.nothing")
+        this.listUL.innerHTML = i18n.t("project.nothing")
 
         let ulInnerHTML = ""
         let projectDivPrefix = "loadProject_"
@@ -82,7 +82,10 @@ class ProjectListForm extends HTMLElement implements HHForm {
             ulInnerHTML += "        <span >" + project.name + "</span>"
             ulInnerHTML += "        <span style='font-size: x-small; text-align: right' class='" + projectDivPrefix + project.id + "'>" + project.createTime.split("T")[0] + "</span>"
             ulInnerHTML += "        <span style='font-size: small'>" + project.description + "</span>"
-            ulInnerHTML += "        <button id='" + deletProjectBtnPrefix + project.id + "'>" + i18n.t("project.delete") + "</button>"
+
+            if(enableDeletion)
+                ulInnerHTML += "        <button id='" + deletProjectBtnPrefix + project.id + "'>" + i18n.t("project.delete") + "</button>"
+
             ulInnerHTML += "    </div>"
             ulInnerHTML += "    </div>"
             ulInnerHTML += "</li>"
@@ -91,14 +94,16 @@ class ProjectListForm extends HTMLElement implements HHForm {
         }
 
         if(projects.length > 0)
-            this.projectListUL.innerHTML = ulInnerHTML
+            this.listUL.innerHTML = ulInnerHTML
 
         for (let project of projects) {
-            let projectElements = this.projectListUL.querySelectorAll("." + projectDivPrefix + project.id)
+            let projectElements = this.listUL.querySelectorAll("." + projectDivPrefix + project.id)
             projectElements.forEach(ele => ele.addEventListener("mousedown", this.loadProject(project.id).bind(this)))
 
-            let deleteProjectBtn = this.projectListUL.querySelector("#" + deletProjectBtnPrefix + project.id)
-            deleteProjectBtn.addEventListener("click", this.deleteProject(project.id).bind(this))
+            if(enableDeletion){
+                let deleteProjectBtn = this.listUL.querySelector("#" + deletProjectBtnPrefix + project.id)
+                deleteProjectBtn.addEventListener("click", this.deleteProject(project.id).bind(this))
+            }
         }
     }
 
@@ -124,7 +129,7 @@ class ProjectListForm extends HTMLElement implements HHForm {
         let _this = this
         api.listProjects((listProjectResult)=>{
             let totalPage = listProjectResult.totalCount/pageSize
-            _this.updateProjectList(totalPage, pageNo, listProjectResult.projectFiles)
+            _this.updateList(totalPage, pageNo, listProjectResult.binaryFiles)
         })
     }
 
