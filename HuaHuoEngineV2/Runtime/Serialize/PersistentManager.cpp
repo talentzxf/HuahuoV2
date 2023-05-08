@@ -1540,20 +1540,18 @@ int PersistentManager::WriteObject(std::string& path, PPtr<Object> object){
 
     int serializedFileIndex;
 
-    serializedFileIndex = InsertPathNameInternal(path, false);
+    serializedFileIndex = InsertPathNameInternal(path, true);
     ObjectIDs writeObjects; //(kMemTempAlloc);
 
-    std::set<InstanceID> collectedInstanceIDs;
-
-    std::set<InstanceID> pendingInstanceIDs;
+    ObjectIDs pendingInstanceIDs;
     pendingInstanceIDs.insert(object->GetInstanceID());
 
     while(!pendingInstanceIDs.empty()){
         InstanceID firstInstanceID = *pendingInstanceIDs.begin();
         pendingInstanceIDs.erase(firstInstanceID);
 
-        if(!collectedInstanceIDs.contains(firstInstanceID)){
-            collectedInstanceIDs.insert(firstInstanceID);
+        if(!writeObjects.contains(firstInstanceID)){
+            writeObjects.insert(firstInstanceID);
 
             Object* pendingObject = Object::IDToPointer(firstInstanceID);
             GatherInstanceIdFunctor functor(pendingInstanceIDs);
@@ -1563,10 +1561,40 @@ int PersistentManager::WriteObject(std::string& path, PPtr<Object> object){
         }
     }
 
-    printf("Gathered:%d instanceIds\n", collectedInstanceIDs.size());
-    
 
-    return kNoError;
+    WriteDataArray writeData;
+
+    for (const auto instanceID : writeObjects)
+    {
+        // Force load object from disk.
+        Object* o = dynamic_instanceID_cast<Object*>(instanceID);
+
+        if (o == NULL)
+            continue;
+
+        Assert(!(o != NULL && !o->IsPersistent()));
+
+        SerializedObjectIdentifier identifier;
+        m_Remapper->InstanceIDToSerializedObjectIdentifier(instanceID, identifier);
+
+        Assert(identifier.serializedFileIndex == serializedFileIndex);
+
+        DebugAssert(o->IsPersistent());
+        DebugAssert(m_Remapper->GetSerializedFileIndex(instanceID) == serializedFileIndex);
+        DebugAssert(m_Remapper->IsSerializedObjectIdentifierMappedToAnything(identifier));
+
+        writeData.push_back(WriteData(identifier.localIdentifierInFile, instanceID/*, BuildUsageTag()*/));
+    }
+
+    std::sort(writeData.begin(), writeData.end());
+
+    int result = WriteFile(path, serializedFileIndex, writeData.begin().base(), writeData.size()/*, GlobalBuildData()*/, NULL, BuildTargetSelection::NoTarget(), kNoTransferInstructionFlags, NULL/*, lockedFlags*/);
+
+//    if (result != kNoError && options & kAllowTextSerialization)
+//        // Try binary serialization as a fallback.
+//        result = WriteFile(path, serializedFileIndex, writeData.begin().base(), writeData.size()/*, GlobalBuildData()*/, NULL, target, options & ~kAllowTextSerialization, NULL/*, lockedFlags*/);
+
+    return result;
 }
 
 int PersistentManager::WriteFile(std::string& path, int serializedFileIndex, const WriteData* writeData, int size, /*const GlobalBuildData& globalBuildData,*/ VerifyWriteObjectCallback* verifyCallback, BuildTargetSelection target, TransferInstructionFlags options, WriteInformation& writeInfo, const InstanceIDResolver* instanceIDResolver, LockFlags lockedFlags, ReportWriteObjectCallback* reportCallback, void* reportCallbackUserData)
