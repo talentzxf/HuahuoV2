@@ -91,6 +91,11 @@ class HHToolBar extends HTMLElement{
         }
     }
 
+    @NeedLogin()
+    uploadStore(afterAction: Function = null){
+        
+    }
+
     uploadAndOpenPlayer(){
         this.uploadProject((response)=>{
             let fileId = response["fileId"]

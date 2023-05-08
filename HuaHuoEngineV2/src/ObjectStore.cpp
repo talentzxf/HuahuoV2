@@ -6,7 +6,6 @@
 #include "Memory/MemoryMacros.h"
 #include "Serialize/SerializeUtility.h"
 
-
 ObjectStoreManager *gDefaultObjectStoreManager = NULL;
 
 ObjectStoreManager *GetDefaultObjectStoreManager() {
@@ -108,7 +107,7 @@ emscripten::val writeObjectStoreInMemoryFile(int storeId, std::string fileName){
     ObjectStore* pStore = GetDefaultObjectStoreManager()->GetStoreByIndex(storeId);
     int writeResult = GetPersistentManager().WriteObject(filePath, pStore);
     printf("%s,%d; file:%s\n writeResult:%d\n", __FILE__, __LINE__ , filePath.c_str(), writeResult);
-    UInt8 bufferPtr = GetMemoryFileSystem()->GetDataPtr(filePath);
+    UInt8* bufferPtr = GetMemoryFileSystem()->GetDataPtr(filePath);
     if(bufferPtr == NULL){
         printf("Error: Buffer is NULL: %s,%d\n", __FILE__, __LINE__ );
     }
@@ -125,7 +124,7 @@ EMSCRIPTEN_BINDINGS(HuaHuoEngineV2_OBJECTSTORE) {
     emscripten::function("writeAllObjectsInMemoryFile", &writeAllObjectsInMemoryFile);
     emscripten::function("getStoreFilePath", &getStoreFilePath);
     emscripten::function("setStoreFilePath", &setStoreFilePath);
-    emscripten::function("writeObjectStoreInMemoryFile", &writeObjectStore);
+    emscripten::function("writeObjectStoreInMemoryFile", &writeObjectStoreInMemoryFile);
 }
 #endif
 
