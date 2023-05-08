@@ -46,7 +46,7 @@ abstract class BaseShapeJS {
 
     private parent: BaseShapeJS = null
 
-    private bornStoreId: number = -1;
+    private bornStoreId: string;
 
     private shapeCenterSelector: ShapeCenterSelector;
 
@@ -86,7 +86,7 @@ abstract class BaseShapeJS {
         return this._isMirage
     }
 
-    get belongStoreId(): number {
+    get belongStoreId(): string {
         return this.rawObj.GetStoreId()
     }
 
@@ -155,11 +155,11 @@ abstract class BaseShapeJS {
         return this.paperShape.getPointAt(offset)
     }
 
-    public getBornStoreId(): number {
+    public getBornStoreId(): string {
         return this.bornStoreId
     }
 
-    public setBornStoreId(val: number) {
+    public setBornStoreId(val: string) {
         this.bornStoreId = val
     }
 

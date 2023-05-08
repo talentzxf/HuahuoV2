@@ -26,7 +26,7 @@ class SceneView extends HTMLElement {
     zoomOutBtn: HTMLButtonElement = null;
     zoomResetBtn: HTMLButtonElement = null;
     animationPlayer: EditorPlayer = null;
-    storeId: number = null;
+    storeId: string;
 
     inited: boolean = false;
     timeline: HHTimeline = null;

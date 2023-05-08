@@ -5,7 +5,7 @@ import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 
 class LayerShapesManager {
     layerShapes = new Map();
-    storeId: number = -1;
+    storeId: string;
 
     constructor(storeId) {
         this.storeId = storeId

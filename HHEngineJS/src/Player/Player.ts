@@ -18,11 +18,11 @@ class Player extends EventEmitter{
 
     public currentlyPlayingFrameId: number = 0
 
-    set storeId(val: number){
+    set storeId(val: string){
         this.layerShapesManager.storeId = val
     }
 
-    get storeId():number{
+    get storeId():string{
         return this.layerShapesManager.storeId
     }
 
