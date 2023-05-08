@@ -159,7 +159,7 @@ public:
 
     bool SetDefaultStoreByIndex(const char * storeId){
         HuaHuoGUID storeGuid = StringToGUID(storeId);
-        if(allStores.contains(storeGuid)){
+        if(!allStores.contains(storeGuid)){
             printf("StoreId:%s not found or is invalid\n", storeId);
             return false;
         }
