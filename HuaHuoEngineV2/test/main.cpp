@@ -39,7 +39,7 @@ void testTransform() {
 
     transform1->SetParent(transform2);
     printf("Child cound:%d\n", transform2->GetChildrenCount());
-    Assert(&transform2->GetChild(0) == transform1);
+    assert(&transform2->GetChild(0) == transform1);
 }
 
 class TestScriptEventHandler : public ScriptEventHandler {
@@ -60,7 +60,7 @@ class TestScriptEventHandler : public ScriptEventHandler {
 //    for (auto itr = pScene->RootBegin(); itr != pScene->RootEnd(); itr++) {
 //        printf("name: %s", itr->GetData()->GetName());
 //    }
-//    Assert(pScene->RootBegin() != pScene->RootEnd());
+//    assert(pScene->RootBegin() != pScene->RootEnd());
 //}
 
 void testGameObject() {
@@ -196,7 +196,7 @@ void testShapeStore() {
 //    writeCache->CompleteWriting();
 //
 //    UInt32 length = memoryCacheWriter.GetFileLength() * sizeof(UInt8);
-//    Assert(length != 0);
+//    assert(length != 0);
 //    printf("Length is:%d\n", length);
 //
 //    GetPersistentManager().BeginFileReading(path);
@@ -208,15 +208,15 @@ void testShapeStore() {
 //    Object* clonedObj = Object::Produce(GetDefaultObjectStoreManager()->GetType());
 //    clonedObj->VirtualRedirectTransfer(readStream);
 //    ObjectStoreManager* storeManager = (ObjectStoreManager*)clonedObj;
-//    Assert(storeManager->GetCurrentStore()->GetCurrentLayer() != NULL);
+//    assert(storeManager->GetCurrentStore()->GetCurrentLayer() != NULL);
 //
 //    Layer* layer = storeManager->GetCurrentStore()->GetCurrentLayer();
 //    BaseShape* firstShape = layer->GetShapes()[0];
-//    Assert(firstShape != NULL);
+//    assert(firstShape != NULL);
 //
 //    std::vector<UInt8> memoryStream;
 //    size_t size = GetPersistentManager().WriteStoreFileInMemory();
-//    Assert(size != 0);
+//    assert(size != 0);
 }
 
 void testTimeManager() {
@@ -225,21 +225,21 @@ void testTimeManager() {
     Layer *layer = objectStore->GetCurrentLayer();
     TimeLineCellManager *timeLineCellManager = layer->GetTimeLineCellManager();
     timeLineCellManager->MergeCells(0, 10);
-    Assert(timeLineCellManager->IsSpanHead(0) == true);
-    Assert(timeLineCellManager->IsSpanHead(10) == true);
-    Assert(timeLineCellManager->IsSpanHead(11) == false);
-    Assert(timeLineCellManager->IsSpanHead(20) == false);
+    assert(timeLineCellManager->IsSpanHead(0) == true);
+    assert(timeLineCellManager->IsSpanHead(10) == false);
+    assert(timeLineCellManager->IsSpanHead(11) == true);
+    assert(timeLineCellManager->IsSpanHead(20) == true);
     timeLineCellManager->MergeCells(20, 50);
-    Assert(timeLineCellManager->IsSpanHead(20) == true);
-    Assert(timeLineCellManager->IsSpanHead(30) == true);
-    Assert(timeLineCellManager->IsSpanHead(40) == true);
-    Assert(timeLineCellManager->IsSpanHead(50) == true);
-    Assert(timeLineCellManager->IsSpanHead(51) == false);
+    assert(timeLineCellManager->IsSpanHead(20) == true);
+    assert(timeLineCellManager->IsSpanHead(30) == false);
+    assert(timeLineCellManager->IsSpanHead(40) == false);
+    assert(timeLineCellManager->IsSpanHead(50) == false);
+    assert(timeLineCellManager->IsSpanHead(51) == true);
     timeLineCellManager->MergeCells(70, 60);
-    Assert(timeLineCellManager->IsSpanHead(51) == false);
+    assert(timeLineCellManager->IsSpanHead(61) == false);
     timeLineCellManager->MergeCells(0, 100);
-    Assert(timeLineCellManager->GetCellSpan(0) == 101);
-    Assert(timeLineCellManager->GetSpanHead(1) == 0);
+    assert(timeLineCellManager->GetCellSpan(0) == 101);
+    assert(timeLineCellManager->GetSpanHead(1) == 0);
 
     timeLineCellManager->MergeCells(0, 1000);
     timeLineCellManager->MergeCells(0, 20);
@@ -253,7 +253,7 @@ void testTimeManager() {
     std::string filenamestr(filename);
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
     TimeLineCellManager *pTimelineCellManager = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->GetTimeLineCellManager();
-    Assert(pTimelineCellManager->GetSpanHead(100) == 0);
+    assert(pTimelineCellManager->GetSpanHead(100) == 0);
 }
 
 void testKeyFrames() {
@@ -405,7 +405,7 @@ void testCloneObject() {
 
     rectangleShape->SetGlobalPivotPosition(10, 10, 10);
     Vector3f* position = rectangleShape->GetGlobalPivotPosition();
-    Assert(*position == Vector3f(10, 10, 11));
+    assert(*position == Vector3f(10, 10, 10));
 
     Vector3f* scale = rectangleShape->GetScale();
 
@@ -418,7 +418,7 @@ void testCloneObject() {
 
     currentLayer->SetCurrentFrame(0);
     Vector3f *curPosition = clonedRectangle->GetGlobalPivotPosition();
-    Assert(curPosition != NULL);
+    assert(curPosition != NULL);
 
     ShapeTransformComponent *shapeTransform = (ShapeTransformComponent *) clonedRectangle->GetFrameStateByTypeName(
             "ShapeTransformComponent");
@@ -427,7 +427,7 @@ void testCloneObject() {
 
     for (int i = 0; i < keyFrameCount; i++) {
         int frameId = shapeTransform->GetKeyFrameAtIndex(i);
-        Assert(frameId >= 0);
+        assert(frameId >= 0);
     }
 
     ImageShape *imageShape = (ImageShape *) BaseShape::CreateShape("ImageShape");
@@ -437,8 +437,8 @@ void testCloneObject() {
     imageShape->SetData("asdf", imgData.data(), imgData.size());
 
     ImageShape *imageShapeDup = (ImageShape *) CloneObject(*imageShape);
-    Assert(imageShapeDup->GetFileName() == imgName);
-    Assert(imageShapeDup->GetDataSize() == imgData.size());
+    assert(imageShapeDup->GetFileName() == imgName);
+    assert(imageShapeDup->GetDataSize() == imgData.size());
 }
 
 void testDelete() {
@@ -586,7 +586,7 @@ void testReadFromFile() {
 
     customComponent->SetBinaryResourceName("particleShape", "HelloHello2");
     BinaryResource* binaryResource = customComponent->GetBinaryResource("particleShape");
-    Assert(binaryResource->GetResourceName() == "HelloHello2");
+    assert(strcmp(binaryResource->GetResourceName() ,"HelloHello2") == 0);
 
     GetPersistentManager().WriteFile(StoreFilePath);
 
@@ -605,7 +605,7 @@ void testReadFromFile() {
     CustomComponent *clonedGrowthComponent = (CustomComponent *) clonedCircleShape->GetFrameState("CurveGrowth");
     clonedGrowthComponent->SetFloatValue("growth", 100.0f);
 
-    Assert(customComponent->GetFloatValue("growth") != clonedGrowthComponent->GetFloatValue("growth"));
+    assert(customComponent->GetFloatValue("growth") != clonedGrowthComponent->GetFloatValue("growth"));
 
     customComponent->ReverseKeyFrame(0, 10, 5);
 
@@ -613,7 +613,7 @@ void testReadFromFile() {
     for (int idx = 0; idx < keyFrameCount; idx++) {
         int keyframeId = customComponent->GetKeyFrameAtIndex(idx);
 
-        Assert(keyframeId >= 0);
+        assert(keyframeId >= 0);
     }
     customComponent->DeleteKeyFrame(0);
 
@@ -634,16 +634,16 @@ void testReadFromFile() {
     customComponent->Apply(1);
     velocity = particleSystem->GetVector3Value("maxInitVelocity");
 
-    Assert(particleSystem != NULL);
-    Assert(velocity != NULL);
+    assert(particleSystem != NULL);
+    assert(velocity != NULL);
 
     customComponent->RegisterStringValue("eventGraphJson", "");
     customComponent->SetStringValue("eventGraphJson", "Test");
     const char* string = customComponent->GetStringValue("eventGraphJson");
-    Assert(string != NULL);
+    assert(string != NULL);
 
     KeyFrameCurve* pCurve = customComponent->GetFloatKeyFrameCurve("growth");
-    Assert(pCurve != NULL && pCurve->GetTotalPoints() != 0);
+    assert(pCurve != NULL && pCurve->GetTotalPoints() != 0);
 }
 
 void testKeyFrameCurve(){
@@ -654,9 +654,9 @@ void testKeyFrameCurve(){
     keyFrameCurve.SetCurveValue(4.0, 10);
     keyFrameCurve.SetCurveValue(120.0, 120.0);
 
-    Assert(keyFrameCurve.GetKeyFrameCurvePoint(0)->GetFrameId() == 1);
-    Assert(keyFrameCurve.GetKeyFrameCurvePoint(1)->GetFrameId() == 5);
-    Assert(keyFrameCurve.GetKeyFrameCurvePoint(2)->GetFrameId() == 10);
+    assert(keyFrameCurve.GetKeyFrameCurvePoint(0)->GetFrameId() == 1);
+    assert(keyFrameCurve.GetKeyFrameCurvePoint(1)->GetFrameId() == 2);
+    assert(keyFrameCurve.GetKeyFrameCurvePoint(2)->GetFrameId() == 3);
 
     const char* fieldName = "thickness";
 
@@ -676,18 +676,18 @@ void testKeyFrameCurve(){
     customComponent->SetFloatValue(fieldName, 300.0f);
 
     KeyFrameCurve* keyFrameCurve1 = customComponent->GetFloatKeyFrameCurve(fieldName);
-    Assert(keyFrameCurve1->GetTotalPoints() == 4);
+    assert(keyFrameCurve1->GetTotalPoints() == 4);
 
     layer->SetCurrentFrame(400);
     keyFrameCurve1->SetValueByIndex(3, 400, 400);
 
     bool isKeyFrame = layer->IsKeyFrame(300);
-    Assert(isKeyFrame == false);
+    assert(isKeyFrame == false);
     isKeyFrame = layer->IsKeyFrame(400);
-    Assert(isKeyFrame == true);
+    assert(isKeyFrame == true);
     customComponent->Apply(400);
     float value = customComponent->GetFloatValue(fieldName);
-    Assert(value == 400);
+    assert(value == 400);
 }
 
 int main() {

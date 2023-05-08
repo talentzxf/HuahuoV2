@@ -31,7 +31,8 @@ public:
     }
 
     const char* GetStoreId(){
-        return GUIDToString(this->mStoreId).c_str();
+        storeIdString = GUIDToString(this->mStoreId);
+        return storeIdString.c_str();
     }
 
     HuaHuoGUID GetStoreGuid(){
@@ -97,6 +98,7 @@ private:
     std::vector<PPtr<Layer>> layers;
     std::map<std::string, PPtr<Layer>> layerMap;
     PPtr<Layer> currentLayer;
+    std::string storeIdString;
 };
 
 class ObjectStoreManager: public Object{
@@ -127,7 +129,7 @@ public:
         if(!currentStore.IsValid()){
             printf("currentStore invalid, creating new store\n");
             CreateStore();
-            printf("New store created, current storeId:%d\n", currentStore->GetStoreId());
+            printf("New store created, current storeId:%s\n", currentStore->GetStoreId());
         }
         return currentStore;
     }

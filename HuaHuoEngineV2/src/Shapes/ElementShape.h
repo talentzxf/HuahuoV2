@@ -23,7 +23,8 @@ public:
     }
 
     const char* GetElementStoreId(){
-        return GUIDToString(mStoreId).c_str();
+        mStoreIdString = GUIDToString(mStoreId);
+        return mStoreIdString.c_str();
     }
 
     void SetElementStoreId(const char* storeId){
@@ -34,6 +35,7 @@ public:
 
 private:
     HuaHuoGUID mStoreId;
+    std::string mStoreIdString;
 };
 
 

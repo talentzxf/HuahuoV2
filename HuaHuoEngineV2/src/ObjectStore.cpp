@@ -102,9 +102,9 @@ emscripten::val writeAllObjectsInMemoryFile(){
                 );
 }
 
-emscripten::val writeObjectStoreInMemoryFile(int storeId, std::string fileName){
+emscripten::val writeObjectStoreInMemoryFile(std::string storeId, std::string fileName){
     std::string filePath = "mem://" + fileName;
-    ObjectStore* pStore = GetDefaultObjectStoreManager()->GetStoreByIndex(storeId);
+    ObjectStore* pStore = GetDefaultObjectStoreManager()->GetStoreById(storeId.c_str());
     int writeResult = GetPersistentManager().WriteObject(filePath, pStore);
     printf("%s,%d; file:%s\n writeResult:%d\n", __FILE__, __LINE__ , filePath.c_str(), writeResult);
     UInt8* bufferPtr = GetMemoryFileSystem()->GetDataPtr(filePath);

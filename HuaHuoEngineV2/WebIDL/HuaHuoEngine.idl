@@ -279,7 +279,7 @@ interface BaseShape{
     [Const] DOMString GetName();
     void SetName(DOMString name);
 
-    [const] DOMString GetStoreId();
+    [Const] DOMString GetStoreId();
 
     void AddFrameState(AbstractFrameState frameState);
 
