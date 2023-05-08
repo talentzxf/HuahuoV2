@@ -14,7 +14,6 @@ class ElementShape : public BaseShape{
 public:
     ElementShape(MemLabelId label, ObjectCreationMode mode)
     :Super(label, mode)
-    ,mStoreId(-1)
     {
 
     }
@@ -23,19 +22,18 @@ public:
         return "ElementShape";
     }
 
-    SInt32 GetElementStoreId(){
-        return mStoreId;
+    const char* GetElementStoreId(){
+        return GUIDToString(mStoreId).c_str();
     }
 
-    void SetElementStoreId(SInt32 storeId){
-        mStoreId = storeId;
+    void SetElementStoreId(const char* storeId){
+        mStoreId = StringToGUID(storeId);
     }
 
     virtual void Apply(int frameId) override;
 
 private:
-    SInt32 mStoreId;
-
+    HuaHuoGUID mStoreId;
 };
 
 

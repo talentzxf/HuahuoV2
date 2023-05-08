@@ -96,10 +96,12 @@ Layer *BaseShape::GetLayer(bool assignDefaultIfNotExist) {
     return mLayer;
 }
 
-int BaseShape::GetStoreId() {
+const char* BaseShape::GetStoreId() {
     if (this->mLayer == NULL)
-        return -1;
-    return this->mLayer->GetObjectStore()->GetStoreId();
+        return "";
+
+    std::string guidString = GUIDToString(this->mLayer->GetObjectStore()->GetStoreGuid());
+    return guidString.c_str();
 }
 
 AbstractFrameState *BaseShape::AddFrameState(AbstractFrameState *frameState) {

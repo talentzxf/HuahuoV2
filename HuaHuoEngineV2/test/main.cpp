@@ -362,10 +362,10 @@ void testSegmentKeyFrames() {
 }
 
 void testMultipleStores() {
-    int defaultStoreId = GetDefaultObjectStoreManager()->GetCurrentStore()->GetStoreId();
+    const char* defaultStoreId = GetDefaultObjectStoreManager()->GetCurrentStore()->GetStoreId();
     ObjectStore *pNewStore = GetDefaultObjectStoreManager()->CreateStore();
 
-    int newStore = pNewStore->GetStoreId();
+    const char* newStore = pNewStore->GetStoreId();
 
     bool result = GetDefaultObjectStoreManager()->SetDefaultStoreByIndex(newStore);
     assert(result);

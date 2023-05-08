@@ -76,7 +76,7 @@ interface ObjectStore{
     unsigned long GetLayerCount();
     Layer GetLayer(unsigned long id);
     long GetMaxFrameId();
-    long GetStoreId();
+    [Const] DOMString GetStoreId();
     void SyncLayersInfo();
     void UpdateMaxFrameId(long frameId, optional boolean force);
 };
@@ -86,8 +86,8 @@ interface ObjectStoreManager{
     static ObjectStoreManager GetDefaultObjectStoreManager();
     ObjectStore GetCurrentStore();
     ObjectStore CreateStore();
-    boolean SetDefaultStoreByIndex(long storeIdx);
-    ObjectStore GetStoreById(long storeIdx);
+    boolean SetDefaultStoreByIndex([Const] DOMString storeIdx);
+    ObjectStore GetStoreById([Const] DOMString storeIdx);
 
     void SetCanvasWH(unsigned long canvasWidth, unsigned long canvasHeight);
 
@@ -279,7 +279,7 @@ interface BaseShape{
     [Const] DOMString GetName();
     void SetName(DOMString name);
 
-    long GetStoreId();
+    [const] DOMString GetStoreId();
 
     void AddFrameState(AbstractFrameState frameState);
 
@@ -420,8 +420,8 @@ CurveShape implements BaseShape;
 
 [NoDelete]
 interface ElementShape{
-    void SetElementStoreId(long storeId);
-    long GetElementStoreId();
+    void SetElementStoreId([Const] DOMString storeId);
+    [Const] DOMString GetElementStoreId();
 };
 ElementShape implements BaseShape;
 

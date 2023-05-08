@@ -168,7 +168,7 @@ public:
         this->mLayer = layer;
     }
 
-    int GetStoreId();
+    const char* GetStoreId();
 
     Layer* GetLayer(bool assignDefaultIfNotExist = true);
 

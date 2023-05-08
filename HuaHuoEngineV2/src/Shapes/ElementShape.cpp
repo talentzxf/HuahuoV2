@@ -18,14 +18,14 @@ void ElementShape::Transfer(TransferFunction& transfer){
 }
 
 void ElementShape::Apply(int frameId) {
-    if(this->mStoreId < 0){
-        printf("Store:%d is invalid.\n", this->mStoreId);
+    if(!this->mStoreId.IsValid()){
+        printf("Store:%s is invalid.\n", GUIDToString(this->mStoreId).c_str());
         return;
     }
 
     Super::Apply(frameId);
 
-    ObjectStore* pStore = GetDefaultObjectStoreManager()->GetStoreByIndex(this->mStoreId);
+    ObjectStore* pStore = GetDefaultObjectStoreManager()->GetStoreByGUID(this->mStoreId);
     size_t layerCount = pStore->GetLayerCount();
     for(size_t layerId = 0 ; layerId < layerCount; layerId++){
         Layer* pLayer = pStore->GetLayer(layerId);

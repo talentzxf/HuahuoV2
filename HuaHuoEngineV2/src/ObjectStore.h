@@ -26,16 +26,15 @@ public:
     ObjectStore(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
         ,maxFrameId(-1)
-        ,mStoreId(0)
     {
-
+        mStoreId.Init();
     }
 
-    void SetStoreId(UInt32 storeId){
-        this->mStoreId = storeId;
+    const char* GetStoreId(){
+        return GUIDToString(this->mStoreId).c_str();
     }
 
-    UInt32 GetStoreId(){
+    HuaHuoGUID GetStoreGuid(){
         return this->mStoreId;
     }
 
@@ -93,7 +92,7 @@ public:
     }
 
 private:
-    UInt32 mStoreId;
+    HuaHuoGUID mStoreId;
     int maxFrameId;
     std::vector<PPtr<Layer>> layers;
     std::map<std::string, PPtr<Layer>> layerMap;
@@ -135,44 +134,37 @@ public:
 
     // After creating a store, it will be set as the default store.
     ObjectStore* CreateStore(){
-        UInt32 storeId = allStores.size() + 1;
         currentStore = Object::Produce<ObjectStore>();
-        currentStore->SetStoreId(storeId);
         GetPersistentManager().MakeObjectPersistent(currentStore.GetInstanceID(), StoreFilePath);
-        allStores.push_back(currentStore);
+        allStores[currentStore->GetStoreGuid()] = currentStore;
 
         printf("CurrentStore instance id:%d at file:%s\n", currentStore.GetInstanceID(), StoreFilePath.c_str());
         return currentStore;
     }
 
-    ObjectStore* GetStoreById(UInt32 storeId){
-        if(allStores.size() < storeId){
-            printf("StoreId:%d not found\n", storeId);
+    ObjectStore* GetStoreByGUID(HuaHuoGUID storeGuid){
+        if(!allStores.contains(storeGuid)){
             return NULL;
         }
 
-        return allStores[storeId -1];
+        return allStores[storeGuid];
     }
 
-    bool SetDefaultStoreByIndex(UInt32 index){
-        if(allStores.size() < index || index <=0){
-            printf("StoreId:%d not found or is invalid\n", index);
+    ObjectStore* GetStoreById(const char * storeId){
+        HuaHuoGUID storeGuid = StringToGUID(storeId);
+        return GetStoreByGUID(storeGuid);
+    }
+
+    bool SetDefaultStoreByIndex(const char * storeId){
+        HuaHuoGUID storeGuid = StringToGUID(storeId);
+        if(allStores.contains(storeGuid)){
+            printf("StoreId:%s not found or is invalid\n", storeId);
             return false;
         }
 
-//        printf("Setting default store:%d\n", index);
-        currentStore = allStores[index - 1];
+        currentStore = allStores[storeGuid];
 
         return true;
-    }
-
-    ObjectStore* GetStoreByIndex(UInt32 index){
-        if(allStores.size() < index){
-            printf("StoreId:%d not found\n", index);
-            return NULL;
-        }
-
-        return allStores[index - 1];
     }
 
     static ObjectStoreManager* GetDefaultObjectStoreManager();
@@ -206,7 +198,10 @@ public:
     }
 
 private:
-    std::vector<PPtr<ObjectStore>> allStores;
+    // std::vector<PPtr<ObjectStore>> allStores;
+    typedef std::map<HuaHuoGUID, PPtr<ObjectStore>> GUIDObjectStoreMap;
+    GUIDObjectStoreMap allStores;
+
     KeyFrameIdentifier maxKeyFrameIdentifier; // This is NOT the frameId of the keyframes. It's just an ID for all the KeyFrame objects.
     std::map<KeyFrameIdentifier, KeyFrame> allKeyFrames; // All key frames in the store. Map from keyframe identifier to keyframe object.
 
