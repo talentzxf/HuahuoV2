@@ -14,17 +14,18 @@ import {projectManager} from "../HuaHuoEngine/ProjectManager";
 @CustomElement({
     selector: "hh-tool-bar"
 })
-class HHToolBar extends HTMLElement{
+class HHToolBar extends HTMLElement {
     saveButton: HTMLButtonElement
     loadButton: HTMLButtonElement
     previewButton: HTMLButtonElement
     projectListButton: HTMLButtonElement
     elementListButton: HTMLButtonElement
     uploadButton: HTMLButtonElement
+
     constructor() {
         super();
 
-        i18n.ExecuteAfterInited(function(){
+        i18n.ExecuteAfterInited(function () {
             this.saveButton = document.createElement("button")
             this.saveButton.style.width = "30px"
             this.saveButton.style.height = "30px"
@@ -73,7 +74,7 @@ class HHToolBar extends HTMLElement{
             this.uploadButton.title = i18n.t("hint.uploadProject")
 
             let _this = this
-            this.uploadButton.onclick = function(){
+            this.uploadButton.onclick = function () {
                 _this.uploadProject()
             }
             this.appendChild(this.uploadButton)
@@ -82,26 +83,26 @@ class HHToolBar extends HTMLElement{
     }
 
     @NeedLogin()
-    uploadProject(afterAction:Function = null){
-        if(!projectInfo.inited){
+    uploadProject(afterAction: Function = null) {
+        if (!projectInfo.inited) {
             // Prompt the Project description page.
             let storeInforForm = formManager.openForm(ProjectInfoForm)
-            storeInforForm.onOKCallback = ()=>{
-                projectUploader.upload().then((response)=>{
-                    if(afterAction)
+            storeInforForm.onOKCallback = () => {
+                projectUploader.upload().then((response) => {
+                    if (afterAction)
                         afterAction(response)
                 })
             }
-        }else{
-            projectUploader.upload().then((response)=>{
-                if(afterAction)
+        } else {
+            projectUploader.upload().then((response) => {
+                if (afterAction)
                     afterAction(response)
             })
         }
     }
 
-    uploadAndOpenPlayer(){
-        this.uploadProject((response)=>{
+    uploadAndOpenPlayer() {
+        this.uploadProject((response) => {
             let fileId = response["fileId"]
 
             let playerUrl = huahuoProperties["huahuo.player.url"] + "?projectId=" + fileId
@@ -110,36 +111,38 @@ class HHToolBar extends HTMLElement{
         })
     }
 
-    onFileSelected(){
+    onFileSelected() {
         let hiddenFileButton = document.createElement("input")
         hiddenFileButton.type = "file"
         hiddenFileButton.click()
 
-        hiddenFileButton.addEventListener("change", (evt)=>{
+        hiddenFileButton.addEventListener("change", (evt) => {
             let fName = hiddenFileButton.value
             projectManager.load(fName, evt)
         })
     }
 
-    save(){
+    save() {
         projectManager.save()
     }
 
     @NeedLogin()
-    listProjects(pageNo:number = 0, pageSize:number = 20){
-        api.listProjects((listProjectResult)=>{
+    listProjects(pageNo: number = 0, pageSize: number = 20) {
+        api.listProjects((listProjectResult) => {
             let form = formManager.openForm(ProjectListForm)
-            let totalPage = listProjectResult.totalCount/pageSize
+            let totalPage = listProjectResult.totalCount / pageSize
 
             form.updateList(totalPage, pageNo, listProjectResult.binaryFiles)
         })
     }
 
-    listElements(pageNo: number = 0, pageSize: number = 20){
-        api.listElements((listElementResult)=>{
+    listElements(pageNo: number = 0, pageSize: number = 20) {
+        api.listElements((listElementResult) => {
             let form = formManager.openForm(ProjectListForm)
-            let totalPage = listElementResult.totalCount/pageSize
-            form.updateList(totalPage, pageNo, listElementResult.binaryFiles, false)
+            let totalPage = listElementResult.totalCount / pageSize
+            form.updateList(totalPage, pageNo, listElementResult.binaryFiles, (elementId) => {
+                console.log("Element:" + elementId + " clicked")
+            }, false)
         })
     }
 }

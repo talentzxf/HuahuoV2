@@ -64,7 +64,7 @@ class ProjectListForm extends HTMLElement implements HHForm {
         this.style.display = "none"
     }
 
-    updateList(totalPage, curPageNo, projects, enableDeletion = true) {
+    updateList(totalPage, curPageNo, projects, onItemClicked: Function = null, enableDeletion = true) {
         this.projectInfoMap.clear()
 
         this.listUL.innerHTML = i18n.t("project.nothing")
@@ -83,7 +83,7 @@ class ProjectListForm extends HTMLElement implements HHForm {
             ulInnerHTML += "        <span style='font-size: x-small; text-align: right' class='" + projectDivPrefix + project.id + "'>" + project.createTime.split("T")[0] + "</span>"
             ulInnerHTML += "        <span style='font-size: small'>" + project.description + "</span>"
 
-            if(enableDeletion)
+            if (enableDeletion)
                 ulInnerHTML += "        <button id='" + deletProjectBtnPrefix + project.id + "'>" + i18n.t("project.delete") + "</button>"
 
             ulInnerHTML += "    </div>"
@@ -93,14 +93,20 @@ class ProjectListForm extends HTMLElement implements HHForm {
             this.projectInfoMap.set(project.id, project)
         }
 
-        if(projects.length > 0)
+        if (projects.length > 0)
             this.listUL.innerHTML = ulInnerHTML
+
+        let _this = this
+        let callBack = onItemClicked == null ? this.loadProject.bind(this) : onItemClicked
 
         for (let project of projects) {
             let projectElements = this.listUL.querySelectorAll("." + projectDivPrefix + project.id)
-            projectElements.forEach(ele => ele.addEventListener("mousedown", this.loadProject(project.id).bind(this)))
+            projectElements.forEach(ele => ele.addEventListener("mousedown", (evt) => {
+                callBack(project.id)
+                _this.closeForm()
+            }))
 
-            if(enableDeletion){
+            if (enableDeletion) {
                 let deleteProjectBtn = this.listUL.querySelector("#" + deletProjectBtnPrefix + project.id)
                 deleteProjectBtn.addEventListener("click", this.deleteProject(project.id).bind(this))
             }
@@ -115,9 +121,9 @@ class ProjectListForm extends HTMLElement implements HHForm {
 
             let project: any = _this.projectInfoMap.get(projectId)
             let confirmResult = window.confirm("Are you sure to delete project:" + project.name + "?")
-            if(confirmResult){
+            if (confirmResult) {
                 Logger.info("Begin to delete project:" + projectId)
-                api.deleteProject(projectId).then(()=>{
+                api.deleteProject(projectId).then(() => {
                     HHToast.info(i18n.t("project.deleted", {projectName: project.name}))
                     _this.refreshList()
                 })
@@ -125,28 +131,23 @@ class ProjectListForm extends HTMLElement implements HHForm {
         }
     }
 
-    refreshList(pageNo = 0, pageSize = 20){
+    refreshList(pageNo = 0, pageSize = 20) {
         let _this = this
-        api.listProjects((listProjectResult)=>{
-            let totalPage = listProjectResult.totalCount/pageSize
+        api.listProjects((listProjectResult) => {
+            let totalPage = listProjectResult.totalCount / pageSize
             _this.updateList(totalPage, pageNo, listProjectResult.binaryFiles)
         })
     }
 
     loadProject(projectId) {
-        let _this = this
-        return function onProjectClicked(evt) {
-            if (!huahuoEngine.hasShape) {
-                let project: any = _this.projectInfoMap.get(projectId)
-                // Store is clean, directly load the project
-                projectManager.loadFromServer(projectId).then(() => {
-                    projectInfo.Setup(project.name, project.description, null)
-                })
-            } else { // Ask the user if he/she wants to clear the current store. TODO: Can we merge the two stores in the future??
-                HHToast.warn("Can't merge project, not implemented!!!")
-            }
-
-            _this.closeForm()
+        if (!huahuoEngine.hasShape) {
+            let project: any = this.projectInfoMap.get(projectId)
+            // Store is clean, directly load the project
+            projectManager.loadFromServer(projectId).then(() => {
+                projectInfo.Setup(project.name, project.description, null)
+            })
+        } else { // Ask the user if he/she wants to clear the current store. TODO: Can we merge the two stores in the future??
+            HHToast.warn("Can't merge project, not implemented!!!")
         }
     }
 }
