@@ -19,6 +19,7 @@ class HHToolBar extends HTMLElement{
     loadButton: HTMLButtonElement
     previewButton: HTMLButtonElement
     projectListButton: HTMLButtonElement
+    elementListButton: HTMLButtonElement
     uploadButton: HTMLButtonElement
     constructor() {
         super();
@@ -49,6 +50,14 @@ class HHToolBar extends HTMLElement{
             this.previewButton.addEventListener("click", this.uploadAndOpenPlayer.bind(this))
             this.appendChild(this.previewButton)
 
+            this.elementListButton = document.createElement("button")
+            this.elementListButton.style.width = "30px"
+            this.elementListButton.style.height = "30px"
+            this.elementListButton.innerHTML = SVGFiles.elementListButton
+            this.elementListButton.title = i18n.t("hint.library")
+            this.elementListButton.addEventListener("click", this.listElements.bind(this))
+            this.appendChild(this.elementListButton)
+
             this.projectListButton = document.createElement("button")
             this.projectListButton.style.width = "30px"
             this.projectListButton.style.height = "30px"
@@ -70,6 +79,10 @@ class HHToolBar extends HTMLElement{
             this.appendChild(this.uploadButton)
 
         }.bind(this))
+    }
+
+    listElements(){
+
     }
 
     @NeedLogin()
