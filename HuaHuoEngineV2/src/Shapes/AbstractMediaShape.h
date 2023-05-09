@@ -29,7 +29,7 @@ public:
     }
 
     void SetResourceByMD5(const char* resourceMD5){
-        GetDefaultResourceManager()->GetResourceByMD5(resourceMD5);
+        mBinaryResource = GetDefaultResourceManager()->GetResourceByMD5(resourceMD5);
     }
 
     const char* GetFileName(){

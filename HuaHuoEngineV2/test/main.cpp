@@ -185,7 +185,7 @@ void testShapeStore() {
     std::string filenamestr = std::string("mem://") + filename;
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
-    vector<UInt8> imgData = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
+    vector<UInt8> imgData = {31, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
     GetDefaultResourceManager()->LoadBinaryResource("mellon", "test.jps", imgData.data(), imgData.size());
 
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
@@ -440,7 +440,7 @@ void testCloneObject() {
     }
 
     ImageShape *imageShape = (ImageShape *) BaseShape::CreateShape("ImageShape");
-    vector<UInt8> imgData = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
+    vector<UInt8> imgData = {32, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
     std::string imgName = "asdf";
     GetDefaultResourceManager()->LoadBinaryResource(imgName.c_str(), "jpeg",imgData.data(), imgData.size());
     MD5_CTX md5Ctx;
