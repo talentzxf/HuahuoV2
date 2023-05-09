@@ -47,7 +47,7 @@ class ElementCreator {
     }
 
     uploadElement(element){
-        elementUploader.uploadStore(element.storeId)
+        elementUploader.uploadStore(element.storeId, element.name)
     }
 
     onShapeCreated(newShape) {

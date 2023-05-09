@@ -114,7 +114,7 @@ emscripten::val writeAllObjectsInMemoryFile(){
 }
 
 emscripten::val writeObjectStoreInMemoryFile(std::string storeId){
-    std::string filePath = StoreFileName;
+    std::string filePath = StoreFilePath;
     ObjectStore* pStore = GetDefaultObjectStoreManager()->GetStoreById(storeId.c_str());
     int writeResult = GetPersistentManager().WriteObject(filePath, pStore);
     printf("%s,%d; file:%s\n writeResult:%d\n", __FILE__, __LINE__ , filePath.c_str(), writeResult);
