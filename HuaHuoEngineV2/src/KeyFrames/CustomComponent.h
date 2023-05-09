@@ -62,13 +62,13 @@ DECLARE_OBJECT_SERIALIZE();
 
     bool Apply(int frameId) override;
 
-    void SetBinaryResourceName(const char* fieldName, const char* resourceName){
+    void SetBinaryResourceByMD5(const char* fieldName, const char* resourceMD5){
         if(!m_fieldNameFieldIndexMap.contains(fieldName))
             return;
 
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
-        pComponent->SetBinaryResourceName(resourceName);
+        pComponent->SetBinaryResourceMD5(resourceMD5);
     }
 
     AbstractKeyFrame* SetVector3Value(const char *fieldName, float x, float y, float z) {
@@ -228,13 +228,13 @@ DECLARE_OBJECT_SERIALIZE();
         return pComponent->GetColorStopArray();
     }
 
-    BinaryResource *GetBinaryResource(const char *fieldName) {
+    BinaryResourceWrapper *GetBinaryResource(const char *fieldName) {
         if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
             return NULL;
 
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
-        return pComponent->GetBinaryResource()->Reset();
+        return pComponent->GetBinaryResource();
     }
 
     const char* GetStringValue(const char* fieldName){

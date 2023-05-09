@@ -47,7 +47,7 @@ public:
 
     void DestroyShape(BaseShape *object);
 
-    void SetFileData(const char* fileName, const char* mimeType, UInt8* pData, long dataSize);
+    bool LoadBinaryResource(const char* fileName, const char* mimeType, UInt8* pData, long dataSize);
 };
 
 

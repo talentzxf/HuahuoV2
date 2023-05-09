@@ -16,10 +16,14 @@ public:
 
     }
 
-    void SetFileData(const char* fileName, const char* mimeType, UInt8* pData, UInt32 dataSize);
+    void SetFileData(const char* fileName, const char* mimeType, UInt8* pData, UInt32 dataSize, Hash128 resultHash = Hash128());
 
     UInt32 GetFileSize(){
-        return mFileContent.size();
+        return mFileData.size();
+    }
+
+    void SetFileName(const char* fileName){
+        mFileName = fileName;
     }
 
     std::string& GetFileName(){
@@ -27,18 +31,26 @@ public:
     }
 
     std::vector<UInt8>& GetFileData(std::string &fileName){
-        return mFileContent;
+        return mFileData;
     }
 
     std::string& GetMimeType(){
         return mFileMime;
     }
 
+    std::vector<UInt8>& GetFileDataPointer(){
+        return mFileData;
+    }
+
+    Hash128 GetMD5(){
+        return mFileMD5;
+    }
+
 private:
     std::string mFileName;
     std::string mFileMime;
-    std::vector<UInt8> mFileContent;
-    Hash128 mFileHash;
+    std::vector<UInt8> mFileData;
+    Hash128 mFileMD5;
 };
 
 

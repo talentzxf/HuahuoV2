@@ -91,6 +91,6 @@ void HuaHuoEngine::DestroyShape(BaseShape *shape){
     DestroySingleObject(shape);
 }
 
-void HuaHuoEngine::SetFileData(const char* fileName, const char* mimeType, UInt8* pData, long dataSize){
-    GetDefaultResourceManager()->SetFileData(fileName, mimeType, pData, dataSize);
+bool HuaHuoEngine::LoadBinaryResource(const char* fileName, const char* mimeType, UInt8* pData, long dataSize){
+    return GetDefaultResourceManager()->LoadBinaryResource(fileName, mimeType, pData, dataSize);
 }

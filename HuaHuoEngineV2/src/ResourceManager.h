@@ -7,6 +7,7 @@
 #include "TypeSystem/Object.h"
 #include "Utilities/Hash128.h"
 #include "BinaryResource.h"
+#include "BaseClasses/PPtr.h"
 
 class ResourceManager : public Object {
 REGISTER_CLASS(ResourceManager);
@@ -22,13 +23,21 @@ public:
 
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
 
-    void SetFileData(const char* fileName, const char* mimeType, UInt8* pData, UInt32 dataSize);
+    PPtr<BinaryResource> GetResourceByMD5(const char* resourceMD5){
+        Hash128 resourceMD5Hash = StringToHash128(resourceMD5);
+        if(!mBinaryResources.contains(resourceMD5Hash)){
+            return NULL;
+        }
+
+        return mBinaryResources[resourceMD5Hash];
+    }
+
+    bool LoadBinaryResource(const char* fileName, const char* mimeType, UInt8* pData, long dataSize);
 private:
     void Merge(ResourceManager* other);
     friend void SetDefaultResourceManager(ResourceManager* resourceManager);
 private:
     std::map<Hash128, PPtr<BinaryResource>> mBinaryResources;
-
 };
 
 ResourceManager *GetDefaultResourceManager();

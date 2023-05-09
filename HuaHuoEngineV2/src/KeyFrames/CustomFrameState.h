@@ -12,6 +12,7 @@
 #include "FieldShapeArray.h"
 #include "ColorStop.h"
 #include "AbstractFrameStateWithKeyFrameCurve.h"
+#include "BinaryResource.h"
 
 class BaseShape;
 
@@ -26,40 +27,32 @@ enum CustomDataType{
     BOOLEAN
 };
 
-class BinaryResource{
+class BinaryResourceWrapper{
 public:
-    BinaryResource():mFileDataPointer(NULL){}
-
     const char* GetResourceName(){
-        return mResourceName.c_str();
+        return mBinaryResource->GetFileName().c_str();
     }
 
-    const char* GetMimeType();
-
-    void SetResourceName(std::string resourceName){
-        mResourceName = resourceName;
+    const char* GetMimeType(){
+        return mBinaryResource->GetMimeType().c_str();
     }
 
-    BinaryResource* Reset(){
-        mFileDataPointer = NULL;
-        return this;
-    }
+    void SetResourceMD5(const char* resourceMD5);
 
     UInt8 GetDataAtIndex(UInt32 index);
     UInt32 GetDataSize();
 
     DECLARE_SERIALIZE(BinaryResource);
+
+    std::vector<UInt8> & GetFileDataPointer();
 private:
-    std::vector<UInt8>& GetFileDataPointer();
-private:
-    std::string mResourceName;
-    std::vector<UInt8>* mFileDataPointer;
+    PPtr<BinaryResource> mBinaryResource;
 };
 
 template<class TransferFunction>
-void BinaryResource::Transfer(TransferFunction& transfer)
+void BinaryResourceWrapper::Transfer(TransferFunction& transfer)
 {
-    TRANSFER(mResourceName);
+    TRANSFER(mBinaryResource);
 }
 
 // Use union to save space.
@@ -70,7 +63,7 @@ struct CustomData{
     FieldShapeArray shapeArrayValue;
     ColorRGBAf colorValue;
     ColorStopArray colorStopArray;
-    BinaryResource binaryResource;
+    BinaryResourceWrapper binaryResource;
     std::string stringValue;
     bool  booleanValue;
     CustomDataType dataType;
@@ -152,11 +145,11 @@ public:
     AbstractKeyFrame * SetFloatValue(float value) override;
     AbstractKeyFrame * SetVector3Value(float x, float y, float z) override;
 
-    void SetBinaryResourceName(const char* resourceName);
+    void SetBinaryResourceMD5(const char* resourceMD5);
 
     void SetStringValue(const char* stringValue);
 
-    BinaryResource* GetBinaryResource();
+    BinaryResourceWrapper* GetBinaryResource();
 
     bool GetBooleanValue();
     float GetFloatValue() override;

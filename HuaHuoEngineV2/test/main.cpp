@@ -28,6 +28,7 @@
 #include "KeyFrames/CustomComponent.h"
 #include "Shapes/ImageShape.h"
 
+#include "openssl/md5.h"
 #define ASSERT assert
 
 void testTransform() {
@@ -157,9 +158,17 @@ void testShapeStore() {
     printf("maxFrameId: %d\n", circleShape->GetMaxFrameId());
 
     ImageShape* imageShape = Object::Produce<ImageShape>();
-    imageShape->SetFileName("TestTestTest");
     vector<UInt8> data = {30,31,32,33,34,35,36,37,38,39,40};
-    imageShape->SetData("asdf", data.data(), data.size());
+    if(GetDefaultResourceManager()->LoadBinaryResource("TestTest", "binary", data.data(), data.size())){
+        MD5_CTX md5Ctx;
+        MD5_Init(&md5Ctx);
+        MD5_Update(&md5Ctx, data.data(), data.size());
+        Hash128 resultHash;
+        MD5_Final(resultHash.hashData.bytes, &md5Ctx);
+
+        std::string resultHashString = Hash128ToString(resultHash);
+        imageShape->SetResourceByMD5(resultHashString.c_str());
+    }
 
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
 
@@ -177,7 +186,7 @@ void testShapeStore() {
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
     vector<UInt8> imgData = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
-    GetDefaultResourceManager()->SetFileData("mellon", "test.jps", imgData.data(), imgData.size());
+    GetDefaultResourceManager()->LoadBinaryResource("mellon", "test.jps", imgData.data(), imgData.size());
 
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
 
@@ -431,10 +440,17 @@ void testCloneObject() {
     }
 
     ImageShape *imageShape = (ImageShape *) BaseShape::CreateShape("ImageShape");
-    std::string imgName("TestImageTestImage");
-    imageShape->SetFileName(imgName);
     vector<UInt8> imgData = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
-    imageShape->SetData("asdf", imgData.data(), imgData.size());
+    std::string imgName = "asdf";
+    GetDefaultResourceManager()->LoadBinaryResource(imgName.c_str(), "jpeg",imgData.data(), imgData.size());
+    MD5_CTX md5Ctx;
+    MD5_Init(&md5Ctx);
+    MD5_Update(&md5Ctx, imgData.data(), imgData.size());
+    Hash128 resultHash;
+    MD5_Final(resultHash.hashData.bytes, &md5Ctx);
+
+    std::string md5Str = Hash128ToString(resultHash);
+    imageShape->SetResourceByMD5(md5Str.c_str());
 
     ImageShape *imageShapeDup = (ImageShape *) CloneObject(*imageShape);
     assert(imageShapeDup->GetFileName() == imgName);
@@ -565,7 +581,7 @@ void testReadFromFile() {
     customComponent->SetFloatValue("growth", 1.0f);
     customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
 
-    // customComponent->SetBinaryResourceName("particleShape", "HelloHello1");
+    // customComponent->SetBinaryResourceByMD5("particleShape", "HelloHello1");
 
     ColorRGBAf *color = customComponent->GetColorValue("strokeColor");
 
@@ -584,8 +600,8 @@ void testReadFromFile() {
     customComponent->SetColorValue("strokeColor", 0.0, 1.0, 0.0, 1.0);
     float growthValue = customComponent->GetFloatValue("growth");
 
-    customComponent->SetBinaryResourceName("particleShape", "HelloHello2");
-    BinaryResource* binaryResource = customComponent->GetBinaryResource("particleShape");
+    customComponent->SetBinaryResourceByMD5("particleShape", "HelloHello2");
+    BinaryResourceWrapper* binaryResource = customComponent->GetBinaryResource("particleShape");
     assert(strcmp(binaryResource->GetResourceName() ,"HelloHello2") == 0);
 
     GetPersistentManager().WriteFile(StoreFilePath);

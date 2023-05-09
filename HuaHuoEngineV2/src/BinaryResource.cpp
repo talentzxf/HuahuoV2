@@ -16,21 +16,24 @@ INSTANTIATE_TEMPLATE_TRANSFER(BinaryResource);
 template<class TransferFunction>
 void BinaryResource::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
-
     TRANSFER(mFileName);
-    TRANSFER(mFileContent);
+    TRANSFER(mFileData);
     TRANSFER(mFileMime);
+    TRANSFER(mFileMD5);
 }
 
 // Return the MD4 of the resource.
-void BinaryResource::SetFileData(const char* fileName, const char* mimeType, UInt8* pData, UInt32 dataSize){
+void BinaryResource::SetFileData(const char* fileName, const char* mimeType, UInt8* pData, UInt32 dataSize, Hash128 resultHash){
     mFileName = fileName;
-    mFileContent.resize(dataSize);
-    memcpy(mFileContent.data(), pData, dataSize);
+    mFileData.resize(dataSize);
+    memcpy(mFileData.data(), pData, dataSize);
 
-    // Calculate MD4.
-    MD5_CTX md4_ctx;
-    MD5_Init(&md4_ctx);
-    MD5_Update(&md4_ctx, mFileContent.data(), mFileContent.size());
-    MD5_Final(mFileHash.hashData.bytes,&md4_ctx);
+    if(!resultHash.IsValid()){
+        MD5_CTX md5Ctx;
+        MD5_Init(&md5Ctx);
+        MD5_Update(&md5Ctx, mFileData.data(), mFileData.size());
+        MD5_Final(mFileMD5.hashData.bytes, &md5Ctx);
+    }else{
+        mFileMD5 = resultHash;
+    }
 }

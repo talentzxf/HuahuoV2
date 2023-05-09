@@ -172,9 +172,10 @@ interface ColorStopArray{
 };
 
 [NoDelete]
-interface BinaryResource{
+interface BinaryResourceWrapper{
     [Const] DOMString GetResourceName();
     [Const] DOMString GetMimeType();
+    [Const] DOMString GetResourceMD5();
     octet GetDataAtIndex(long index);
     long GetDataSize();
 };
@@ -220,8 +221,8 @@ interface CustomComponent{
     void UpdateColorStop([Const] DOMString fieldName, long colorStopIdentifier, float value, float r, float g, float b, float a);
     void DeleteColorStop([Const] DOMString fieldName, long colorStopIdentifier);
 
-    void SetBinaryResourceName([Const] DOMString fieldName, [Const] DOMString resourceName);
-    BinaryResource GetBinaryResource([Const] DOMString fieldName);
+    void SetBinaryResourceByMD5([Const] DOMString fieldName, [Const] DOMString resourceMD5);
+    BinaryResourceWrapper GetBinaryResource([Const] DOMString fieldName);
 
     void SetStringValue([Const] DOMString fieldName, [Const] DOMString strValue);
     [Const] DOMString GetStringValue([Const] DOMString fieldName);
@@ -392,11 +393,9 @@ CircleShape implements BaseShape;
 interface AbstractMediaShape{
     // inherited from AbstractMediaShape
     octet GetDataAtIndex(long index);
-    void LoadData(octet[] pData);
     long GetDataSize();
-    void SetData([Const] DOMString mimeType, octet[] pData, long dataSize);
     [Const] DOMString GetMimeType();
-    void SetFileName(DOMString fName);
+    void SetResourceByMD5([Const] DOMString resourceMD5);
     [Const] DOMString GetFileName();
 };
 
@@ -459,5 +458,6 @@ interface HuaHuoEngine {
     BaseShape DuplicateShape(BaseShape shape);
     void DestroyShape(BaseShape shape);
 
-    void SetFileData([Const] DOMString fileName,[Const] DOMString mimeType, octet[] pData, long dataSize);
+    // Return false, the resource has already been uploaded before.
+    boolean LoadBinaryResource([Const] DOMString fileName,[Const] DOMString mimeType, octet[] pData, long dataSize);
 };

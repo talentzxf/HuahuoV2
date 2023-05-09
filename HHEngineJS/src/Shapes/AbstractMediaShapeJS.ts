@@ -34,10 +34,6 @@ abstract class AbstractMediaShapeJS extends BaseShapeJS{
 
         this.fileName = this.rawObj.GetFileName()
 
-        // VZ: This code is not working, not sure why.
-        // this.rawObj.LoadData(binaryData)
-        // console.log("Loaded")
-
         let mimeType:string = this.rawObj.GetMimeType()
         let blob = new Blob([binaryData], {'type': mimeType})
 

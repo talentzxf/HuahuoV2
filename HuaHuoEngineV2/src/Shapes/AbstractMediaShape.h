@@ -15,46 +15,33 @@ class AbstractMediaShape : public BaseShape{
 public:
     AbstractMediaShape(MemLabelId label, ObjectCreationMode mode)
     :Super(label, mode)
-    ,mFileDataPointer(NULL)
     {
     }
 
-    void SetData(const char* mimeType, UInt8* pData, UInt32 dataSize);
-
     UInt8 GetDataAtIndex(UInt32 index);
 
-    // TODO: This is not working for WebIDL, not sure why
-    void LoadData(UInt8* pData);
     UInt32 GetDataSize(){
-        return GetDefaultResourceManager()->GetDataSize(mFileName);
+        return mBinaryResource->GetFileSize();
     }
 
     const char* GetMimeType(){
-        return GetDefaultResourceManager()->GetMimeType(mFileName).c_str();
+        return mBinaryResource->GetMimeType().c_str();
     }
 
-    void SetFileName(std::string fName){
-        this->mFileName = fName;
-
-        GetDefaultResourceManager()->RegisterFile(fName);
+    void SetResourceByMD5(const char* resourceMD5){
+        GetDefaultResourceManager()->GetResourceByMD5(resourceMD5);
     }
 
     const char* GetFileName(){
-        return mFileName.c_str();
+        return mBinaryResource->GetFileName().c_str();
     }
 
     std::vector<UInt8>& GetFileDataPointer(){
-        if(mFileDataPointer == NULL){
-            mFileDataPointer = &GetDefaultResourceManager()->GetFileData(mFileName);
-        }
-
-        return *mFileDataPointer;
+        return mBinaryResource->GetFileDataPointer();
     }
 
 private:
-    std::string mFileName;
-
-    std::vector<UInt8>* mFileDataPointer;
+    PPtr<BinaryResource> mBinaryResource;
 };
 
 

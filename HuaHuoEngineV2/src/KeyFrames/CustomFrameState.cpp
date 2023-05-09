@@ -7,34 +7,21 @@
 #include "ResourceManager.h"
 #include <type_traits>
 
-UInt32 BinaryResource::GetDataSize() {
-    if (mResourceName.length() == 0) // Empty string is a placeholder
-        return 0;
-
-    return GetDefaultResourceManager()->GetDataSize(mResourceName);
+UInt32 BinaryResourceWrapper::GetDataSize() {
+    return mBinaryResource->GetFileSize();
 }
 
-UInt8 BinaryResource::GetDataAtIndex(UInt32 index) {
-    if (mResourceName.length() == 0) // Empty string is a placeholder
-        return 0;
-
-    std::vector<UInt8> &fileData = GetFileDataPointer();
+UInt8 BinaryResourceWrapper::GetDataAtIndex(UInt32 index) {
+    std::vector<UInt8> &fileData = mBinaryResource->GetFileDataPointer();
     return fileData[index];
 }
 
-const char *BinaryResource::GetMimeType() {
-    if (mResourceName.length() == 0) // Empty string is a placeholder
-        return "Unknown";
-
-    return GetDefaultResourceManager()->GetMimeType(mResourceName).c_str();
+std::vector<UInt8> &BinaryResourceWrapper::GetFileDataPointer() {
+    return mBinaryResource->GetFileDataPointer();
 }
 
-std::vector<UInt8> &BinaryResource::GetFileDataPointer() {
-    if (mFileDataPointer == NULL) {
-        mFileDataPointer = &GetDefaultResourceManager()->GetFileData(mResourceName);
-    }
-
-    return *mFileDataPointer;
+void BinaryResourceWrapper::SetResourceMD5(const char *resourceMD5) {
+    GetDefaultResourceManager()->GetResourceByMD5(resourceMD5);
 }
 
 IMPLEMENT_REGISTER_CLASS(CustomFrameState, 10021);
@@ -259,7 +246,7 @@ AbstractKeyFrame * CustomFrameState::SetVector3Value(float x, float y, float z) 
     return pKeyFrame;
 }
 
-void CustomFrameState::SetBinaryResourceName(const char *resourceName) {
+void CustomFrameState::SetBinaryResourceMD5(const char *resourceMD5) {
     if (this->m_DataType != BINARYRESOURCE) {
         Assert("Data Type mismatch!");
         return;
@@ -268,7 +255,7 @@ void CustomFrameState::SetBinaryResourceName(const char *resourceName) {
     Layer *shapeLayer = GetBaseShape()->GetLayer();
     int currentFrameId = shapeLayer->GetCurrentFrame();
     CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames(), this);
-    pKeyFrame->data.binaryResource.SetResourceName(resourceName);
+    pKeyFrame->data.binaryResource.SetResourceMD5(resourceMD5);
     pKeyFrame->data.dataType = BINARYRESOURCE;
 
     Apply(currentFrameId);
@@ -480,7 +467,7 @@ ColorStopArray *CustomFrameState::GetColorStopArray() {
     return NULL;
 }
 
-BinaryResource *CustomFrameState::GetBinaryResource() {
+BinaryResourceWrapper *CustomFrameState::GetBinaryResource() {
     if (isValidFrame) {
         return &m_CurrentKeyFrame.data.binaryResource;
     }
