@@ -90,6 +90,7 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<CustomFrameState>("ObjectStore");
     RegisterHuaHuoClass<CustomComponent>("ObjectStore");
     RegisterHuaHuoClass<EventGraphComponent>("ObjectStore");
+    RegisterHuaHuoClass<BinaryResource>("ObjectStore");
 
     RegisterHuaHuoClass<ResourceManager>("ObjectStore");
 }
