@@ -8,6 +8,9 @@ import {sceneViewManager} from "./SceneViewManager";
 import {BaseShapeJS, Utils} from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {elementUploader} from "../RESTApis/ElementUploader";
+
+declare var Module:any;
+
 class ElementCreator {
     sceneView: SceneView
     sceneViewPanel: HHPanel
@@ -30,6 +33,12 @@ class ElementCreator {
             huahuoEngine.registerEventListener("HHEngine", "onEditElement", _this.editElement.bind(_this))
 
             huahuoEngine.registerEventListener("HHEngine", "onUploadElement", _this.uploadElement.bind(_this))
+
+            let storeAddedHandler = new Module.ScriptEventHandlerImpl()
+            storeAddedHandler.handleEvent = _this.OnStoreAdded.bind(_this)
+
+            huahuoEngine.GetInstance().RegisterEvent("OnStoreAdded", storeAddedHandler)
+
         })
     }
 
@@ -146,7 +155,7 @@ class ElementCreator {
         IDEEventBus.getInstance().emit(EventNames.UNSELECTOBJECTS)
     }
 
-    onNewElement(openElementTab: boolean = true) {
+    onNewElement(openElementTab: boolean = true, storeId: string = null) {
 
         let elementId = "NewElement_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
 
@@ -160,8 +169,13 @@ class ElementCreator {
         let currentLayer = huahuoEngine.GetCurrentLayer()
         currentLayer.addShape(newElementShape)
 
-        let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
-        newElementShape.storeId = newStore.GetStoreId()
+        if(!storeId){
+            let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
+            newElementShape.storeId = newStore.GetStoreId()
+        }else{
+            newElementShape.storeId = storeId
+        }
+
 
         if (openElementTab)
             this.openElementEditTab(newElementShape)
@@ -253,6 +267,17 @@ class ElementCreator {
         } finally {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStoreId)
         }
+    }
+
+    OnStoreAdded(args){
+        let objectStoreAddedEvent = Module.wrapPointer(args, Module.ObjectStoreAddedEvent)
+        let store = objectStoreAddedEvent.GetStore()
+        console.log("Store added!!!")
+
+        let newElement = this.onNewElement(false, store.GetStoreId())
+        HHToast.info(i18n.t("toast.elementLoaded"))
+        newElement.update(true)
+        huahuoEngine.getActivePlayer().updateAllShapes(true)
     }
 }
 

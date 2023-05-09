@@ -172,8 +172,8 @@ void testShapeStore() {
     fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath), length, 1, fp);
     fclose(fp);
 
-    // std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\huahuo_project (44)\\0Gp3iuAmyG1678541779");
-    std::string filenamestr = std::string("mem://") + filename;
+    std::string filenamestr("C:\\Users\\vincentzhang\\MyProjects\\HuahuoV2\\HuahuoBackend\\projectfiles\\vincentzhang\\ELEMENT\\itJZY7Zb00.ele\\itJZY7Zb00.ele");
+    // std::string filenamestr = std::string("mem://") + filename;
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
     vector<UInt8> imgData = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
@@ -379,7 +379,7 @@ void testMultipleStores() {
 
     currentLayer->AddShapeInternal(rectangleShape);
 
-    std::string storeFilePath = GenerateRandomFilePath();
+    std::string storeFilePath = StoreFilePath;
     GetPersistentManager().WriteObject(storeFilePath, objectStoreManager->GetCurrentStore());
 }
 

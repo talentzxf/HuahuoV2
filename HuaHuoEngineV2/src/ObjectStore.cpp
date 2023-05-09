@@ -77,6 +77,17 @@ void ObjectStore::Transfer(TransferFunction &transfer) {
     TRANSFER(mStoreId);
 }
 
+void ObjectStore::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
+    printf("Object store awake!!!");
+
+    if(!GetDefaultObjectStoreManager()->HasStore(this)){
+        GetDefaultObjectStoreManager()->AddStore(this);
+
+        ObjectStoreAddedEvent args(this);
+        GetScriptEventManager()->TriggerEvent("OnStoreAdded", &args);
+    }
+}
+
 #if WEB_ENV
 std::string getStoreFilePath(){
     return StoreFilePath;
@@ -102,8 +113,8 @@ emscripten::val writeAllObjectsInMemoryFile(){
                 );
 }
 
-emscripten::val writeObjectStoreInMemoryFile(std::string storeId, std::string fileName){
-    std::string filePath = "mem://" + fileName;
+emscripten::val writeObjectStoreInMemoryFile(std::string storeId){
+    std::string filePath = StoreFileName;
     ObjectStore* pStore = GetDefaultObjectStoreManager()->GetStoreById(storeId.c_str());
     int writeResult = GetPersistentManager().WriteObject(filePath, pStore);
     printf("%s,%d; file:%s\n writeResult:%d\n", __FILE__, __LINE__ , filePath.c_str(), writeResult);

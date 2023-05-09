@@ -942,7 +942,6 @@ int PersistentManager::WriteFile(std::string& path, BuildTargetSelection target 
         writeData.push_back(WriteData(identifier.localIdentifierInFile, instanceID/*, BuildUsageTag()*/));
 
     }
-
     std::sort(writeData.begin(), writeData.end());
 
 

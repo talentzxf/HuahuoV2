@@ -82,6 +82,11 @@ interface ObjectStore{
 };
 
 [NoDelete]
+interface ObjectStoreAddedEvent{
+    ObjectStore GetStore();
+};
+
+[NoDelete]
 interface ObjectStoreManager{
     static ObjectStoreManager GetDefaultObjectStoreManager();
     ObjectStore GetCurrentStore();

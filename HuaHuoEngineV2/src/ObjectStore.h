@@ -92,6 +92,8 @@ public:
         }
     }
 
+    void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
+
 private:
     HuaHuoGUID mStoreId;
     int maxFrameId;
@@ -99,6 +101,20 @@ private:
     std::map<std::string, PPtr<Layer>> layerMap;
     PPtr<Layer> currentLayer;
     std::string storeIdString;
+};
+
+class ObjectStoreAddedEvent : public ScriptEventHandlerArgs{
+public:
+    ObjectStoreAddedEvent(ObjectStore* pStore){
+        this->mStore = pStore;
+    }
+
+    ObjectStore* GetStore(){
+        return mStore;
+    }
+
+private:
+    ObjectStore* mStore;
 };
 
 class ObjectStoreManager: public Object{
@@ -132,6 +148,14 @@ public:
             printf("New store created, current storeId:%s\n", currentStore->GetStoreId());
         }
         return currentStore;
+    }
+
+    bool HasStore(ObjectStore* objectStore){
+        return allStores.contains(objectStore->GetStoreGuid());
+    }
+
+    void AddStore(ObjectStore* objectStore){
+        allStores[objectStore->GetStoreGuid()] = objectStore;
     }
 
     // After creating a store, it will be set as the default store.

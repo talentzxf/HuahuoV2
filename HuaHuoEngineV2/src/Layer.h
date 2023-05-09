@@ -73,7 +73,6 @@ private:
     BaseShape* baseShape;
 };
 
-class KeyFrame;
 
 class Layer : public Object {
 REGISTER_CLASS(Layer);
@@ -82,8 +81,6 @@ DECLARE_OBJECT_SERIALIZE();
 public:
     Layer(MemLabelId label, ObjectCreationMode mode)
             : Super(label, mode), name("Unknown Layer"), currentFrameId(0), isVisible(true), isSelected(false) {
-        cellManager = Object::Produce<TimeLineCellManager>();
-        GetPersistentManagerPtr()->MakeObjectPersistent(cellManager.GetInstanceID(), StoreFilePath);
     }
 
     typedef std::vector<PPtr<BaseShape>> ShapePPtrVector;
@@ -91,6 +88,8 @@ public:
     void AddShapeInternal(BaseShape *newShape);
 
     void Init() {
+        cellManager = Object::Produce<TimeLineCellManager>();
+        GetPersistentManagerPtr()->MakeObjectPersistent(cellManager.GetInstanceID(), StoreFilePath);
         this->cellManager->SetLayer(this);
     }
 
