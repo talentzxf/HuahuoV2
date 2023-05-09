@@ -18,16 +18,16 @@ function randomElementFileName(length = 10) {
 
 class ElementUploader {
 
-    getStoreData(storeId){
+    getStoreData(storeId, elementName){
         let uint8Array = Module.writeObjectStoreInMemoryFile(storeId)
-        let compressedFileContent = gzipSync(uint8Array)
+        let compressedFileContent = gzipSync(uint8Array, {filename: elementName + ".ele"})
 
         return new Blob([compressedFileContent], {type:"application/octet-stream"})
     }
 
     @NeedLogin()
     uploadStore(storeId, elementName) {
-        let storeData = this.getStoreData(storeId)
+        let storeData = this.getStoreData(storeId, elementName)
         let uploadElementPromise = api.uploadProject(storeData, elementName, true)
 
         return uploadElementPromise
