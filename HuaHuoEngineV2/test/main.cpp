@@ -181,8 +181,8 @@ void testShapeStore() {
     fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath), length, 1, fp);
     fclose(fp);
 
-    std::string filenamestr("C:\\Users\\vincentzhang\\MyProjects\\HuahuoV2\\HuahuoBackend\\projectfiles\\vincentzhang\\ELEMENT\\NewElement_hnjot\\NewElement_hnjot");
-    // std::string filenamestr = std::string("mem://") + filename;
+    // std::string filenamestr("C:\\Users\\vincentzhang\\MyProjects\\HuahuoV2\\HuahuoBackend\\projectfiles\\vincentzhang\\ELEMENT\\NewElement_hnjot\\NewElement_hnjot");
+    std::string filenamestr = std::string("mem://") + filename;
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
     vector<UInt8> imgData = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
@@ -600,7 +600,16 @@ void testReadFromFile() {
     customComponent->SetColorValue("strokeColor", 0.0, 1.0, 0.0, 1.0);
     float growthValue = customComponent->GetFloatValue("growth");
 
-    customComponent->SetBinaryResourceByMD5("particleShape", "HelloHello2");
+    std::vector<UInt8> test = {12,32,123,123,1,23,1,23,1,22,3,1};
+    GetDefaultResourceManager()->LoadBinaryResource("HelloHello2", "asfdasdf", test.data(), test.size());
+    MD5_CTX md5Ctx;
+    MD5_Init(&md5Ctx);
+    MD5_Update(&md5Ctx, test.data(), test.size());
+    Hash128 md5Result;
+    MD5_Final(md5Result.hashData.bytes, &md5Ctx);
+    std::string md5ResultString = Hash128ToString(md5Result);
+
+    customComponent->SetBinaryResourceByMD5("particleShape", md5ResultString.c_str());
     BinaryResourceWrapper* binaryResource = customComponent->GetBinaryResource("particleShape");
     assert(strcmp(binaryResource->GetResourceName() ,"HelloHello2") == 0);
 

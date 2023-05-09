@@ -21,7 +21,7 @@ std::vector<UInt8> &BinaryResourceWrapper::GetFileDataPointer() {
 }
 
 void BinaryResourceWrapper::SetResourceMD5(const char *resourceMD5) {
-    GetDefaultResourceManager()->GetResourceByMD5(resourceMD5);
+    mBinaryResource = GetDefaultResourceManager()->GetResourceByMD5(resourceMD5);
 }
 
 IMPLEMENT_REGISTER_CLASS(CustomFrameState, 10021);

@@ -81,5 +81,6 @@ bool ResourceManager::LoadBinaryResource(const char* fileName, const char* mimeT
     BinaryResource* binaryResource = Object::Produce<BinaryResource>();
     GetPersistentManager().MakeObjectPersistent(binaryResource->GetInstanceID(), StoreFilePath);
     binaryResource->SetFileData(fileName, mimeType, pData, dataSize, resultHash);
+    mBinaryResources[resultHash] = binaryResource;
     return true;
 }
