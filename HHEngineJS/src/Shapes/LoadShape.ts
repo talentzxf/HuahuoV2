@@ -1,6 +1,7 @@
 import {huahuoEngine} from "../EngineAPI";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {BaseShapeJS} from "./BaseShapeJS";
+import {Utils} from "./Utils";
 
 declare var Module: any;
 
@@ -65,7 +66,7 @@ huahuoEngine.ExecuteAfterInited(() => {
         let baseShape = arg.GetBaseShape();
 
         let shapeStoreId = baseShape.GetStoreId()
-        if(shapeStoreId < 0)
+        if(Utils.isValidGUID(shapeStoreId))
             return;
 
         if (shapeStoreId != huahuoEngine.GetCurrentStoreId()) {

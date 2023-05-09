@@ -4,6 +4,7 @@ import {LayerShapesManager} from "../Player/LayerShapesManager";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {PropertyType} from "hhcommoncomponents";
 import {ElementController} from "../Components/ElementController";
+import {Utils} from "./Utils";
 
 let shapeName = "ElementShape"
 
@@ -165,17 +166,10 @@ class ElementShapeJS extends BaseShapeJS {
         }
     }
 
-    static isValidGUID(guid:string){
-        for(let char of guid){
-            if(char != '0')
-                return true
-        }
 
-        return false
-    }
 
     update(force: boolean = false) {
-        if (ElementShapeJS.isValidGUID(this.storeId)) { // If the storeId is less than 0, the shape has not been inited.
+        if (Utils.isValidGUID(this.storeId)) { // If the storeId is less than 0, the shape has not been inited.
             super.update(force)
             elementUpdated++
         }

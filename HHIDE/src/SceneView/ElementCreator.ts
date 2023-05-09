@@ -5,7 +5,7 @@ import {HHToast} from "hhcommoncomponents";
 import {huahuoEngine, ElementShapeJS, paper} from "hhenginejs"
 import {HHContent, PanelEventNames} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
-import {BaseShapeJS} from "hhenginejs";
+import {BaseShapeJS, Utils} from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {elementUploader} from "../RESTApis/ElementUploader";
 class ElementCreator {
@@ -43,7 +43,7 @@ class ElementCreator {
 
     onShapeCreated(newShape) {
         if (newShape.getTypeName() == "ElementShape") {
-            if (ElementShapeJS.isValidGUID(newShape.storeId)) {
+            if (Utils.isValidGUID(newShape.storeId)) {
                 this.registerElementChangeEvent(newShape.storeId, function () {
                     newShape.update()
                 })

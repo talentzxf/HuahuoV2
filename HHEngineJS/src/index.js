@@ -24,6 +24,7 @@ import {BaseShapeActions} from "./EventGraph/BaseShapeActions";
 import {EventNode} from "./EventGraph/Nodes/EventNode";
 import {ActionNode} from "./EventGraph/Nodes/ActionNode";
 import {StarMirrorShapeJS} from "./Shapes/StarMirrorShapeJS";
+import {Utils} from "./Shapes/Utils";
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 import {LGraphCanvas, LiteGraph} from "litegraph.js";
@@ -105,5 +106,6 @@ export {
     ActionNode,
     LGraphCanvas,
     LiteGraph,
-    StarMirrorShapeJS
+    StarMirrorShapeJS,
+    Utils
 }
