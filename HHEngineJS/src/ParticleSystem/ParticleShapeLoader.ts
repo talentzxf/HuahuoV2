@@ -8,7 +8,7 @@ const PARTICLE_TEXTURE_SIZE = 256
 class ParticleShapeLoader {
     hiddenImage: HTMLImageElement
     hiddenCanvas: HTMLCanvasElement
-    lastParticleShapeResourceName: string = ""
+    lastParticleShapeMD5: string = ""
 
     _particleShapeData
     _particleShapeSize
@@ -32,7 +32,7 @@ class ParticleShapeLoader {
     }
 
     setParticleShape(binaryResource) {
-        if (binaryResource.GetResourceName() != this.lastParticleShapeResourceName) {
+        if (binaryResource.GetResourceMD5() != this.lastParticleShapeMD5) {
             if (this.hiddenImage == null) {
                 this.hiddenImage = document.createElement("img")
                 this.hiddenImage.id = "particleShapeImg"
@@ -57,7 +57,7 @@ class ParticleShapeLoader {
                     _this.hiddenImage.onload = _this.onImageLoaded.bind(_this)
                 }
 
-                this.lastParticleShapeResourceName = binaryResource.GetResourceName()
+                this.lastParticleShapeMD5 = binaryResource.GetResourceMD5()
             } else {
                 this._particleShapeSize.fromArray1D([0, 0])
             }

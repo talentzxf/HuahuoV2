@@ -75,12 +75,16 @@ bool ResourceManager::LoadBinaryResource(const char* fileName, const char* mimeT
     Hash128 resultHash;
     MD5_Final(resultHash.hashData.bytes, &md5Ctx);
 
-    if(this->mBinaryResources.contains(resultHash))
+    if(this->mBinaryResources.contains(resultHash)){
+        printf("Resource already existed with name:%s\n", fileName);
         return false;
+    }
 
     BinaryResource* binaryResource = Object::Produce<BinaryResource>();
     GetPersistentManager().MakeObjectPersistent(binaryResource->GetInstanceID(), StoreFilePath);
     binaryResource->SetFileData(fileName, mimeType, pData, dataSize, resultHash);
     mBinaryResources[resultHash] = binaryResource;
+
+    printf("Added new resource into ResourceManager, name:%s hash:%s\n", fileName, Hash128ToString(resultHash).c_str());
     return true;
 }

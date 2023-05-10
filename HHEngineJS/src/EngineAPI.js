@@ -234,10 +234,6 @@ class EngineAPI{
         this.cppEngine.SetFileData(resourceName, mimeType, binaryData, binaryData.length)
     }
 
-    GetBinaryResource(resourceName){
-        return this.cppEngine.GetBinaryResource(resourceName)
-    }
-
     IsBinaryResourceExist(resourceMD5){
         return this.cppEngine.IsBinaryResourceExist(resourceMD5)
     }
