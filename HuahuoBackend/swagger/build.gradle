@@ -20,17 +20,19 @@ dependencies {
 }
 
 swaggerSources {
-    huahuo {
+    huahuo_spring {
         inputFile = file('projects.yaml')
         code {
             language = 'spring'
             configuration = configurations.swaggerCodegenOpenAPI
-            outputDir = 'swaggerSpring'
         }
+    }
+
+    huahuo_typescript{
+        inputFile = file('projects.yaml')
         code {
             language = 'typescript-axios'
             configuration = configurations.swaggerCodegenOpenAPI
-            outputDir = 'swaggerTypescriptAxios'
         }
     }
 }
