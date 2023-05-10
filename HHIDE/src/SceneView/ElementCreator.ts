@@ -263,6 +263,8 @@ class ElementCreator {
 
             huahuoEngine.getActivePlayer().updateAllShapes(true)
 
+            IDEEventBus.getInstance().emit(EventNames.OBJECTSELECTED, newElement.getPropertySheet(), newElement)
+
             return newElement
         } finally {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStoreId)
