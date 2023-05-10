@@ -82,6 +82,9 @@
     "enclose": "封闭",
     "editElement": "编辑元件",
     "uploadElement": "上传元件",
+    "media": {
+      "filename": "文件名"
+    },
     "image": {
       "Frames": "帧数"
     },

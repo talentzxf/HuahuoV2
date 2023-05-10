@@ -95,6 +95,8 @@ class ImageShapeJS extends AbstractMediaShapeJS{
     }
 
     appendProperties(){
+        super.appendProperties()
+
         if(this.isAnimation){
             // Position
             this.propertySheet.addProperty({

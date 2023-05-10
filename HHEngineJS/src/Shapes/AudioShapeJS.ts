@@ -27,12 +27,7 @@ class AudioShapeJS extends AbstractMediaShapeJS {
     }
 
     appendProperties(){
-        let _this = this
-        this.propertySheet.addProperty({
-            key: "file name",
-            type: PropertyType.STRING,
-            getter: ()=>{return _this.rawObj.GetFileName()}
-        })
+        super.appendProperties()
 
         this.propertySheet.addProperty({
             key:"Start",
@@ -77,6 +72,10 @@ class AudioShapeJS extends AbstractMediaShapeJS {
     }
 
     override update(force: boolean = false){
+        if(!this.isLoaded()){
+            return
+        }
+
         this.createElement()
 
         if(this.rawObj.IsVisible()){

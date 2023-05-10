@@ -82,6 +82,9 @@
     "enclose": "EnClose",
     "editElement": "Edit Element",
     "uploadElement": "Upload Element",
+    "media": {
+      "filename": "File Name"
+    },
     "image": {
       "Frames": "Frames"
     },
