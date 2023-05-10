@@ -31,7 +31,7 @@ class AudioShapeJS extends AbstractMediaShapeJS {
         this.propertySheet.addProperty({
             key: "file name",
             type: PropertyType.STRING,
-            getter: ()=>{return _this.fileName}
+            getter: ()=>{return _this.rawObj.GetFileName()}
         })
 
         this.propertySheet.addProperty({
@@ -53,7 +53,7 @@ class AudioShapeJS extends AbstractMediaShapeJS {
     }
 
     createElement(){
-        if(!this.audioElement && this.loaded){
+        if(!this.audioElement){
             this.audioElement = document.createElement("audio")
             this.audioElement.preload = "auto"
             let sourceEle = document.createElement("source") as HTMLSourceElement
@@ -77,9 +77,6 @@ class AudioShapeJS extends AbstractMediaShapeJS {
     }
 
     override update(force: boolean = false){
-        if(!this.loaded)
-            return
-
         this.createElement()
 
         if(this.rawObj.IsVisible()){

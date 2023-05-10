@@ -391,12 +391,12 @@ CircleShape implements BaseShape;
 
 [NoDelete]
 interface AbstractMediaShape{
-    // inherited from AbstractMediaShape
     octet GetDataAtIndex(long index);
     long GetDataSize();
     [Const] DOMString GetMimeType();
     void SetResourceByMD5([Const] DOMString resourceMD5);
     [Const] DOMString GetFileName();
+    [Const] DOMString GetResourceMD5();
 };
 
 [NoDelete]
@@ -458,6 +458,7 @@ interface HuaHuoEngine {
     BaseShape DuplicateShape(BaseShape shape);
     void DestroyShape(BaseShape shape);
 
+    boolean IsBinaryResourceExist([Const] DOMString resourceMD5);
     // Return false, the resource has already been uploaded before.
     boolean LoadBinaryResource([Const] DOMString fileName,[Const] DOMString mimeType, octet[] pData, long dataSize);
 };

@@ -3,24 +3,18 @@ import {getMimeTypeFromDataURI, dataURItoBlob} from "hhcommoncomponents"
 
 // The class is abstract and can't be instantiated.
 abstract class AbstractMediaShapeJS extends BaseShapeJS{
+    resourceMD5: string
 
-    data:string = null
-    fileName: string = ""
+    data
 
-    loaded: boolean = false
-
-    dirty: boolean = false
-
-    setData(fName, data){
-        this.fileName = fName
-        this.data = data
-        this.dirty = true
-
-        if(this.data)
-            this.loaded = true
+    setResourceByMD5(md5){
+        if(this.resourceMD5 != md5){
+            this.rawObj.SetResourceByMD5(md5)
+            this.loadDataFromCpp()
+        }
     }
 
-    awakeFromLoad() {
+    loadDataFromCpp(){
         let dataLength = this.rawObj.GetDataSize()
 
         // write the bytes of the string to an ArrayBuffer
@@ -32,8 +26,6 @@ abstract class AbstractMediaShapeJS extends BaseShapeJS{
             binaryData[idx] = this.rawObj.GetDataAtIndex(idx);
         }
 
-        this.fileName = this.rawObj.GetFileName()
-
         let mimeType:string = this.rawObj.GetMimeType()
         let blob = new Blob([binaryData], {'type': mimeType})
 
@@ -43,26 +35,17 @@ abstract class AbstractMediaShapeJS extends BaseShapeJS{
         let _this = this
         reader.onload = function(){
             _this.data = reader.result as string
-            _this.loaded = true
-
+            _this.resourceMD5 = _this.rawObj.GetResourceMD5()
             _this.onDataLoaded()
         }
+    }
 
+    awakeFromLoad() {
+        this.loadDataFromCpp()
         super.awakeFromLoad();
     }
 
     abstract onDataLoaded();
-
-    store() {
-        super.store();
-
-        if(this.data != null && !this.data.startsWith("blob") && this.dirty){
-            let binaryData:Uint8Array = dataURItoBlob(this.data)
-            this.rawObj.SetFileName(this.fileName) // Should set file name before set data. TODO: Merge these two functions.
-            this.rawObj.SetData(getMimeTypeFromDataURI(this.data), binaryData, binaryData.length);
-            this.dirty = false
-        }
-    }
 }
 
 export {AbstractMediaShapeJS}

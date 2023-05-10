@@ -24,6 +24,7 @@ void BinaryResource::Transfer(TransferFunction &transfer) {
 
 // Return the MD4 of the resource.
 void BinaryResource::SetFileData(const char* fileName, const char* mimeType, UInt8* pData, UInt32 dataSize, Hash128 resultHash){
+    mFileMime = mimeType;
     mFileName = fileName;
     mFileData.resize(dataSize);
     memcpy(mFileData.data(), pData, dataSize);

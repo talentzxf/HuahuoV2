@@ -94,3 +94,7 @@ void HuaHuoEngine::DestroyShape(BaseShape *shape){
 bool HuaHuoEngine::LoadBinaryResource(const char* fileName, const char* mimeType, UInt8* pData, long dataSize){
     return GetDefaultResourceManager()->LoadBinaryResource(fileName, mimeType, pData, dataSize);
 }
+
+bool HuaHuoEngine::IsBinaryResourceExist(const char *resourceMd5) {
+    return GetDefaultResourceManager()->IsBinaryResourceExist(resourceMd5);
+}

@@ -66,7 +66,7 @@ huahuoEngine.ExecuteAfterInited(() => {
         let baseShape = arg.GetBaseShape();
 
         let shapeStoreId = baseShape.GetStoreId()
-        if(Utils.isValidGUID(shapeStoreId))
+        if(!Utils.isValidGUID(shapeStoreId))
             return;
 
         if (shapeStoreId != huahuoEngine.GetCurrentStoreId()) {

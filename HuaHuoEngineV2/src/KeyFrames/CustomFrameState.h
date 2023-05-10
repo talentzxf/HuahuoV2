@@ -45,6 +45,10 @@ public:
     DECLARE_SERIALIZE(BinaryResource);
 
     std::vector<UInt8> & GetFileDataPointer();
+
+    const char* GetResourceMD5(){
+        return mBinaryResource->GetMD5();
+    }
 private:
     PPtr<BinaryResource> mBinaryResource;
 };

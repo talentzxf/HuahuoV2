@@ -47,6 +47,7 @@ public:
 
     void DestroyShape(BaseShape *object);
 
+    bool IsBinaryResourceExist(const char* resourceMd5);
     bool LoadBinaryResource(const char* fileName, const char* mimeType, UInt8* pData, long dataSize);
 };
 

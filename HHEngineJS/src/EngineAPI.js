@@ -238,6 +238,14 @@ class EngineAPI{
         return this.cppEngine.GetBinaryResource(resourceName)
     }
 
+    IsBinaryResourceExist(resourceMD5){
+        return this.cppEngine.IsBinaryResourceExist(resourceMD5)
+    }
+
+    LoadBinaryResource(fileName, mimeType, data, dataSize){
+        return this.cppEngine.LoadBinaryResource(fileName, mimeType, data, dataSize)
+    }
+
     get ti(){
         return ti
     }

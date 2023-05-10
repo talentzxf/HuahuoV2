@@ -33,6 +33,7 @@
     "hhpanel": "file:../HHPanel",
     "hhtimeline": "file:../HHTimeLine",
     "html-webpack-plugin": "^5.5.0",
+    "js-md5": "^0.7.3",
     "jsdom": "^20.0.1",
     "jsdom-global": "^3.0.2",
     "mocha": "^10.1.0",

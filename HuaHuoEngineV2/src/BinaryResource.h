@@ -42,8 +42,9 @@ public:
         return mFileData;
     }
 
-    Hash128 GetMD5(){
-        return mFileMD5;
+    const char* GetMD5(){
+        mMD5String = Hash128ToString(mFileMD5);
+        return mMD5String.c_str();
     }
 
 private:
@@ -51,6 +52,7 @@ private:
     std::string mFileMime;
     std::vector<UInt8> mFileData;
     Hash128 mFileMD5;
+    std::string mMD5String;
 };
 
 

@@ -12,16 +12,20 @@ class ImageShapeJS extends AbstractMediaShapeJS{
     }
 
     // Animation related properties
-    isAnimation: boolean = false
     frames: ParsedFrame[] = null;
     animationLoaded: boolean = false;
     worldFrameAnimationFrameMap: Map<number, number> = null;
     lastAnimationFrame: number = -1; // The animation frame used in last time update.
     animationTotalWorldFrames: number = -1;
 
-    setData(fName, data, isAnimation = false){
-        super.setData(fName, data)
-        this.isAnimation = isAnimation
+    resourceMD5: string
+
+    set isAnimation(isAnimation: boolean){
+        this.rawObj.SetIsAnimation(isAnimation)
+    }
+
+    get isAnimation(){
+        return this.rawObj.GetIsAnimation()
     }
 
     getShapeName(): string {
@@ -72,19 +76,12 @@ class ImageShapeJS extends AbstractMediaShapeJS{
     createShape(){
         super.createShape()
 
-        let _this = this
         let _paper:any = this.getPaperJs()
         let tempShape = new _paper.Raster()
         tempShape.data.meta = this
         tempShape.position = _paper.view.center
         tempShape.source = this.data // If it's gif, the first frame will be showed here.
         tempShape.fillColor = new _paper.Color("red")
-
-        tempShape.onLoad = function(){
-            _this.loaded = true
-
-            _this.dirty = false
-        }
 
         if(this.isAnimation){
             this.loadFrameData()
@@ -112,10 +109,6 @@ class ImageShapeJS extends AbstractMediaShapeJS{
     beforeUpdate(force:boolean = false) {
         super.beforeUpdate(force);
 
-        if(!this.loaded){
-            return;
-        }
-
         if(this.rawObj.IsVisible() && this.isAnimation){
             let bornFrameId = this.rawObj.GetBornFrameId();
             let worldFrameId = this.getLayer().GetCurrentFrame();
@@ -136,11 +129,6 @@ class ImageShapeJS extends AbstractMediaShapeJS{
                 this.lastAnimationFrame = playingAnimationFrameId
             }
         }
-    }
-
-    store() {
-        super.store();
-        this.rawObj.SetIsAnimation(this.isAnimation)
     }
 
     getFrames(){

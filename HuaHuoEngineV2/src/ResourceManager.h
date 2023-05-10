@@ -32,6 +32,11 @@ public:
         return mBinaryResources[resourceMD5Hash];
     }
 
+    bool IsBinaryResourceExist(const char *resourceMd5) {
+        Hash128 resourceMD5Hash = StringToHash128(resourceMd5);
+        return mBinaryResources.contains(resourceMD5Hash);
+    }
+    
     bool LoadBinaryResource(const char* fileName, const char* mimeType, UInt8* pData, long dataSize);
 private:
     void Merge(ResourceManager* other);

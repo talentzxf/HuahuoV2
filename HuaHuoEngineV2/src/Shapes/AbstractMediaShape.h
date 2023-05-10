@@ -40,6 +40,10 @@ public:
         return mBinaryResource->GetFileDataPointer();
     }
 
+    const char* GetResourceMD5(){
+        return mBinaryResource->GetMD5();
+    }
+
 private:
     PPtr<BinaryResource> mBinaryResource;
 };
