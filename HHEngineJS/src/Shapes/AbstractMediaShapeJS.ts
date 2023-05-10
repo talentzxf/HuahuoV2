@@ -7,10 +7,14 @@ abstract class AbstractMediaShapeJS extends BaseShapeJS{
 
     data
 
+    isLoaded(){
+        return this.data != null
+    }
+
     setResourceByMD5(md5){
         if(this.resourceMD5 != md5){
             this.rawObj.SetResourceByMD5(md5)
-            this.loadDataFromCpp()
+            return this.loadDataFromCpp()
         }
     }
 
@@ -32,17 +36,33 @@ abstract class AbstractMediaShapeJS extends BaseShapeJS{
         let reader = new FileReader()
         reader.readAsDataURL(blob)
 
+        let resolveFunction
+        let loadImagePromise = new Promise((resolve, reject)=>{
+            resolveFunction = resolve
+        })
+
         let _this = this
         reader.onload = function(){
             _this.data = reader.result as string
             _this.resourceMD5 = _this.rawObj.GetResourceMD5()
             _this.onDataLoaded()
+
+            resolveFunction()
+        }
+
+        return loadImagePromise
+    }
+
+    update(force: boolean = false) {
+        if(this.isLoaded()){
+            super.update(force);
         }
     }
 
     awakeFromLoad() {
-        this.loadDataFromCpp()
-        super.awakeFromLoad();
+        this.loadDataFromCpp().then(()=>{
+            super.awakeFromLoad();
+        })
     }
 
     abstract onDataLoaded();

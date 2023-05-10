@@ -106,8 +106,11 @@ class ImageShapeJS extends AbstractMediaShapeJS{
         }
     }
 
-    beforeUpdate(force:boolean = false) {
-        super.beforeUpdate(force);
+    afterUpdate(force: boolean = false) {
+        if(!this.isLoaded()){
+            return
+        }
+        super.afterUpdate(force);
 
         if(this.rawObj.IsVisible() && this.isAnimation){
             let bornFrameId = this.rawObj.GetBornFrameId();

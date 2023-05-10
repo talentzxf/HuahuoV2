@@ -26,12 +26,16 @@ class FileLoader{
             let resourceMD5 = loadBinaryDataIntoStore(file.name, img)
 
             let imageShape = new ImageShapeJS()
-            imageShape.setResourceByMD5(resourceMD5)
-            imageShape.isAnimation = fileExtension == "gif"
-            imageShape.createShape()
+            let loadResourcePromise = imageShape.setResourceByMD5(resourceMD5)
+            if(loadResourcePromise){
+                loadResourcePromise.then(()=>{
+                    imageShape.isAnimation = fileExtension == "gif"
+                    imageShape.createShape()
 
-            let currentLayer = huahuoEngine.GetCurrentLayer()
-            currentLayer.addShape(imageShape)
+                    let currentLayer = huahuoEngine.GetCurrentLayer()
+                    currentLayer.addShape(imageShape)
+                })
+            }
         })
 
         reader.readAsDataURL(file)
@@ -48,12 +52,15 @@ class FileLoader{
             let resourceMD5 = loadBinaryDataIntoStore(file.name, audio)
 
             let audioShape = new AudioShapeJS()
-            audioShape.setResourceByMD5(resourceMD5)
-
-            audioShape.createShape()
-            audioShape.store()
-            let currentLayer = huahuoEngine.GetCurrentLayer()
-            currentLayer.addShape(audioShape)
+            let loadResourcePromise = audioShape.setResourceByMD5(resourceMD5)
+            if(loadResourcePromise){
+                loadResourcePromise.then(()=>{
+                    audioShape.createShape()
+                    audioShape.store()
+                    let currentLayer = huahuoEngine.GetCurrentLayer()
+                    currentLayer.addShape(audioShape)
+                })
+            }
         })
 
         reader.readAsDataURL(file)
