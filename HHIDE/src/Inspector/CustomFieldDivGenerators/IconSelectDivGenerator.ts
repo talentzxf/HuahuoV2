@@ -23,8 +23,8 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator{
         selectIconForm.onIconClicked = this.onIconClicked.bind(this)
     }
 
-    onIconClicked(data){
-        this.targetComponent.particleShape = data
+    onIconClicked(shapeMD5){
+        this.targetComponent.particleShape = shapeMD5
     }
 
     generateDiv(property: Property) {

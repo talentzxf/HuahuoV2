@@ -5,6 +5,8 @@ import {CSSUtils} from "../../Utilities/CSSUtils";
 import axios from "axios";
 import {svgToDataURL} from "../../Utilities/Svgs";
 import {huahuoEngine} from "hhenginejs";
+import {getMimeTypeFromDataURI} from "hhcommoncomponents";
+let md5 = require("js-md5")
 
 @CustomElement({
     selector: "hh-select-icon-form"
@@ -39,11 +41,14 @@ class SelectIconForm extends HTMLElement implements HHForm {
                 data = svgToDataURL(data)
             }
 
+            let resourceMD5 = md5(data)
+
+            let mimeType = getMimeTypeFromDataURI(data)
             // Upload the img into the Default resource manager.
-            huahuoEngine.SetBinaryResource(imgName, data)
+            huahuoEngine.LoadBinaryResource(imgName, mimeType, data, data.length)
 
             if (_this.onIconClicked)
-                _this.onIconClicked(imgName)
+                _this.onIconClicked(resourceMD5)
 
             _this.closeForm()
         })

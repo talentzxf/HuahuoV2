@@ -48,6 +48,9 @@ class AudioShapeJS extends AbstractMediaShapeJS {
     }
 
     createElement(){
+        if(!this.isLoaded())
+            return
+
         if(!this.audioElement){
             this.audioElement = document.createElement("audio")
             this.audioElement.preload = "auto"
