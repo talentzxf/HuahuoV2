@@ -16,6 +16,14 @@ public:
 
     }
 
+    Hash128 GetMD5Hash(){
+        return mFileMD5;
+    }
+
+    bool IsValid(){
+        return this->mFileMD5.IsValid();
+    }
+
     void SetFileData(const char* fileName, const char* mimeType, UInt8* pData, UInt32 dataSize, Hash128 resultHash = Hash128());
 
     UInt32 GetFileSize(){
@@ -46,6 +54,8 @@ public:
         mMD5String = Hash128ToString(mFileMD5);
         return mMD5String.c_str();
     }
+
+    void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
 
 private:
     std::string mFileName;

@@ -6,6 +6,7 @@
 #include "Serialize/SerializeUtility.h"
 #include "openssl/md5.h"
 #include "Utilities/Hash128.h"
+#include "ResourceManager.h"
 
 IMPLEMENT_REGISTER_CLASS(BinaryResource, 10027);
 
@@ -37,4 +38,10 @@ void BinaryResource::SetFileData(const char* fileName, const char* mimeType, UIn
     }else{
         mFileMD5 = resultHash;
     }
+}
+
+void BinaryResource::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
+    Super::AwakeFromLoad(awakeMode);
+
+    GetDefaultResourceManager()->AddBinaryResource(this);
 }

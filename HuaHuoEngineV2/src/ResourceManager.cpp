@@ -88,3 +88,15 @@ bool ResourceManager::LoadBinaryResource(const char* fileName, const char* mimeT
     printf("Added new resource into ResourceManager, name:%s hash:%s\n", fileName, Hash128ToString(resultHash).c_str());
     return true;
 }
+
+void ResourceManager::AddBinaryResource(BinaryResource *pResource) {
+    if(!pResource->IsValid())
+        return;
+
+    Hash128 hash = pResource->GetMD5Hash();
+    if(this->mBinaryResources.contains(hash)){
+        return;
+    }
+
+    mBinaryResources[hash] = pResource;
+}
