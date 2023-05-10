@@ -1,0 +1,18 @@
+openapi: 3.0.3
+info:
+  title: Huahuo Backend - www.huahuo.online
+  description: |- 
+    This is a server to support the backend of Huahuo online network, an online animation creation and sharing platform.
+  contact:
+    email: talentzxf@hotmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1
+paths:
+  /binaryfiles:
+    post:
+      summary: Create a binary file
+      responses:
+        '200':
+          description: Successfully created a binary file.
