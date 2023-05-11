@@ -18,8 +18,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 @EnableSwagger2WebMvc
 public class SwaggerDocumentation {
 
-    public static final Contact CONTACT = new Contact("Murali", "http://muralitechblog.com/",
-            "muralitechblog@gmail.com");
+    public static final Contact CONTACT = new Contact("VincentZhang", "https://github.com/talentzxf/",
+            "talentzxf@hotmail.com");
     public static final ApiInfo DEFAULT_API = new ApiInfo("swagger", "Swagger Documentation", "1.0", "urn:tos", CONTACT,
             "Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0", new ArrayList<>());
     public static final Set<String> consumes = new HashSet<String>(Arrays.asList("application/json"));
@@ -29,5 +29,4 @@ public class SwaggerDocumentation {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(DEFAULT_API).consumes(consumes).produces(produces);
     }
-
 }

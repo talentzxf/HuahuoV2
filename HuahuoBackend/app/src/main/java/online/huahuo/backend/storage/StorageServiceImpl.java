@@ -63,7 +63,7 @@ public class StorageServiceImpl implements StorageService {
 
         // TODO: Read the version from the file.
         if (fileDB == null)
-            fileDB = new BinaryFileDB(fileName, file.getContentType(), "0.0.1", username, absoluteFilePath, fileHash, "", fileType);
+            fileDB = new BinaryFileDB(fileName, "0.0.1", username, absoluteFilePath, fileHash, "", fileType);
         else {
             fileDB.setChecksum(fileHash);
             fileDB.setModifiedTime(new Date());

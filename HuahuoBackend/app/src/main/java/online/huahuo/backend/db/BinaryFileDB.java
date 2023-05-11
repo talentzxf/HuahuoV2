@@ -20,7 +20,6 @@ public class BinaryFileDB {
     private Long id;
 
     private String name;
-    private String type;
     private String version;
 
     private String createdBy;
@@ -40,10 +39,9 @@ public class BinaryFileDB {
     private FileType fileType;
 
 
-    public BinaryFileDB(String name, String type, String version, String createdBy,
+    public BinaryFileDB(String name, String version, String createdBy,
                         String fullPath, String checksum, String description, FileType fileType){
         this.name = name;
-        this.type = type;
         this.version = version;
         this.fullPath = fullPath;
         this.checksum = checksum;
