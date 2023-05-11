@@ -10,6 +10,8 @@ plugins {
 }
 
 dependencies {
+    implementation "io.springfox:springfox-boot-starter:3.0.0"
+
     // Dependency
     implementation 'org.apache.commons:commons-text'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -38,3 +40,6 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
+
+// compileJava.dependsOn(":swagger:generateSwaggerCode")
+

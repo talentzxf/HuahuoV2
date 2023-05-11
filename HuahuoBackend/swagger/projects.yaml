@@ -13,6 +13,58 @@ paths:
   /binaryfiles:
     post:
       summary: Create a binary file
+      requestBody:
+        description: Create an empty binary file as a place holder.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BinaryFile"
       responses:
         '200':
           description: Successfully created a binary file.
+components:
+  schemas:
+    BinaryFile:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        type:
+          type: string
+          description: Binary file type
+          enum:
+            - PROJECT
+            - ELEMENT
+        version:
+          type: string
+          example: "0.0.1"
+        createdBy:
+          type: string
+          description: Creator of the binary file.
+        description:
+          type: string
+          description: Describe the binary file.
+        fullPath:
+          type: string
+          description: Full path of the file.
+        coverPagePath:
+          type: string
+          description: Full path of the cover page.
+        checksum:
+          type: string
+          description: MD5 of the file.
+        createTime:
+          type: string
+          format: date-time
+        modifyTime:
+          type: string
+          format: date-time
+        fileStatus:
+          type: string
+          description: Status of the file.
+          enum:
+            - ACTIVE
+            - DELETED
