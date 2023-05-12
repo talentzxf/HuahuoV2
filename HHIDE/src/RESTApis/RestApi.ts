@@ -3,6 +3,7 @@ import axios from "axios";
 import {userInfo} from "../Identity/UserInfo";
 import huahuoProperties from "/dist/hhide.properties";
 import {HHToast} from "hhcommoncomponents";
+import {LoginControllerApi} from "../../dist/clientApi/index"
 
 class CreateUserResponse {
     username: string
@@ -41,9 +42,10 @@ class RestApi {
         return token
     }
 
-
+    loginController
     constructor() {
         this.baseUrl = huahuoProperties["huahuo.backend.url"]
+        this.loginController = new LoginControllerApi(undefined, this.baseUrl, axios)
     }
 
     getProjectPreviewImageUrl(projectId){
@@ -129,8 +131,7 @@ class RestApi {
     }
 
     async login(): Promise<LoginResponse> {
-        let loginUrl = "/login?userName=" + userInfo.username + "&password=" + userInfo.password
-        let loginResponse: LoginResponse = await this._callApi<LoginResponse>(loginUrl)
+        let loginResponse: LoginResponse = await this.loginController.loginUsingPOST(userInfo.username, userInfo.password)
 
         if (loginResponse != null&& loginResponse.httpStatus && loginResponse.httpStatus == "OK") {
             userInfo.jwtToken = loginResponse.jwtToken

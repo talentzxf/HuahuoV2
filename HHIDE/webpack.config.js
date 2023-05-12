@@ -3,15 +3,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const FileManagerPlugin = require("filemanager-webpack-plugin")
 
-let moduleExports = (env)=> {
+let moduleExports = (env) => {
 
     let propertyFile = "./conf/hhide.default.properties"
-    if(env.production){
+    if (env.production) {
         propertyFile = "./conf/hhide.prod.properties"
     }
 
     let destinationPath = path.resolve(__dirname, 'dist')
     let destinationPropertyFile = destinationPath + "\\hhide.properties"
+
+    let apiSource = "../HuaHuoSwagger/build/swagger-code-huahuo_backend_api"
+    let destinationApiFolder = destinationPath + "\\" + "clientApi"
 
     return {
         mode: "development",
@@ -51,9 +54,11 @@ let moduleExports = (env)=> {
             compress: true,
             port: 8989,
         },
-        watchOptions:{
-            ignored:[
-                "/node_modules/" , "/dist" , "dist/*", "**/*.properties" ,destinationPath, destinationPath + "/*", destinationPropertyFile
+        watchOptions: {
+            ignored: [
+                "/node_modules/", "/dist", "dist/*", "**/*.properties", destinationPath,
+                destinationPath + "/*", destinationPropertyFile,
+                destinationApiFolder, destinationApiFolder + "/*"
             ]
         },
         plugins: [
@@ -63,28 +68,41 @@ let moduleExports = (env)=> {
                     {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
                     {from: "./svgs", to: "svgs"},
                     {from: "./src/i18n", to: "i18n"},
-                    {from:"./src/test_lgraph.html", to:"test_lgraph.html"},
-                    {from:"./static", to:"static"},
-                    {from:"../Libs/litegraph.js/build", to:"static"},
-                    {from:"../Libs/litegraph.js/css", to:"static"}
+                    {from: "./src/test_lgraph.html", to: "test_lgraph.html"},
+                    {from: "./static", to: "static"},
+                    {from: "../Libs/litegraph.js/build", to: "static"},
+                    {from: "../Libs/litegraph.js/css", to: "static"}
                 ],
             }),
             new FileManagerPlugin({
-                events:{
+                events: {
                     onStart: [{
-                        delete:[{
+                        delete: [{
                             source: destinationPropertyFile,
-                            options:{
+                            options: {
+                                force: true
+                            }
+                        }, {
+                            source: destinationPropertyFile,
+                            options: {
                                 force: true
                             }
                         }],
                         copy: [{
                             source: propertyFile,
                             destination: destinationPropertyFile,
-                            options:{
+                            options: {
                                 flat: false,
                                 preserveTimestamps: true,
                                 overwrite: true,
+                            }
+                        }, {
+                            source: apiSource,
+                            destination: destinationApiFolder,
+                            options: {
+                                flat: false,
+                                preserveTimestamps: true,
+                                overwrite: true
                             }
                         }]
                     }]
