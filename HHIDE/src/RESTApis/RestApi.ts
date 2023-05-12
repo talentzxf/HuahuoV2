@@ -131,7 +131,8 @@ class RestApi {
     }
 
     async login(): Promise<LoginResponse> {
-        let loginResponse: LoginResponse = await this.loginController.loginUsingPOST(userInfo.username, userInfo.password)
+        let loginResponseRaw = await this.loginController.loginUsingPOST(userInfo.username, userInfo.password)
+        let loginResponse:LoginResponse = loginResponseRaw.data
 
         if (loginResponse != null&& loginResponse.httpStatus && loginResponse.httpStatus == "OK") {
             userInfo.jwtToken = loginResponse.jwtToken

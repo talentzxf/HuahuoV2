@@ -10,6 +10,8 @@ plugins {
     id "org.springdoc.openapi-gradle-plugin" version "1.6.0"
 }
 
+project.mainClassName = "online.huahuo.backend.app.HuahuoApplication"
+
 dependencies {
     // implementation "io.springfox:springfox-boot-starter:3.0.0"
 

@@ -56,9 +56,11 @@ let moduleExports = (env) => {
         },
         watchOptions: {
             ignored: [
-                "/node_modules/", "/dist", "dist/*", "**/*.properties", destinationPath,
+                "/node_modules/", "/dist", "dist/*", "**/*.properties",
+                "dist/**/*", destinationPath,
                 destinationPath + "/*", destinationPropertyFile,
-                destinationApiFolder, destinationApiFolder + "/*"
+                destinationApiFolder, destinationApiFolder + "/*",
+                destinationApiFolder + "/**/*"
             ]
         },
         plugins: [
