@@ -1,6 +1,6 @@
 package online.huahuo.backend.controller;
 
-import lombok.Data;
+import antlr.Token;
 import lombok.RequiredArgsConstructor;
 import online.huahuo.backend.db.UserDB;
 import online.huahuo.backend.db.UserRepository;
@@ -22,20 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Date;
 import java.util.Optional;
 
-@Data
-class LoginStatus{
-    private String userName;
-    private String failReason;
-    private String jwtToken;
-    private HttpStatus httpStatus;
-}
-
-@Data
-class TokenValidResponse{
-    private String userName;
-    private Boolean isValid;
-}
-
 @RestController
 @RequiredArgsConstructor
 public class LoginController {
@@ -54,7 +40,7 @@ public class LoginController {
     }
 
     @GetMapping("/tokenValid")
-    ResponseEntity<?> isTokenValid(@RequestParam String userName, @RequestParam String jwtToken){
+    ResponseEntity<TokenValidResponse> isTokenValid(@RequestParam String userName, @RequestParam String jwtToken){
         TokenValidResponse tokenValidResponse = new TokenValidResponse();
         tokenValidResponse.setUserName(userName);
         tokenValidResponse.setIsValid(false);
@@ -69,7 +55,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    ResponseEntity<?> login(@RequestParam(required = false) String userName, @RequestParam(required = false) String password){
+    ResponseEntity<LoginStatus> login(@RequestParam(required = false) String userName, @RequestParam(required = false) String password){
         LoginStatus loginStatus = new LoginStatus();
         if(userName == null || password == null){
             loginStatus.setFailReason("Username or pwd is null");

@@ -3,18 +3,11 @@ import axios from "axios";
 import {userInfo} from "../Identity/UserInfo";
 import huahuoProperties from "/dist/hhide.properties";
 import {HHToast} from "hhcommoncomponents";
-import {LoginControllerApi} from "../../dist/clientApi/index"
+import {LoginControllerApi, LoginStatus} from "../../dist/clientApi/index"
 
 class CreateUserResponse {
     username: string
     password: string
-}
-
-class LoginResponse {
-    userName: string
-    failReason: string
-    jwtToken: string
-    httpStatus: string
 }
 
 class UserExistResponse {
