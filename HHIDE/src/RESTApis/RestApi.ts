@@ -4,7 +4,6 @@ import {userInfo} from "../Identity/UserInfo";
 import huahuoProperties from "/dist/hhide.properties";
 import {HHToast} from "hhcommoncomponents";
 import {LoginControllerApi, LoginStatus} from "../../dist/clientApi/index"
-import {LoginForm} from "../Identity/LoginForm";
 
 class CreateUserResponse {
     username: string
