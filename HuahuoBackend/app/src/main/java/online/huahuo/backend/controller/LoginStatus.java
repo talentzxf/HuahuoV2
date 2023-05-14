@@ -8,5 +8,4 @@ public class LoginStatus{
     private String userName;
     private String failReason;
     private String jwtToken;
-    private HttpStatus httpStatus;
 }

@@ -59,8 +59,7 @@ public class LoginController {
         LoginStatus loginStatus = new LoginStatus();
         if(userName == null || password == null){
             loginStatus.setFailReason("Username or pwd is null");
-            loginStatus.setHttpStatus(HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(loginStatus, loginStatus.getHttpStatus());
+            return new ResponseEntity<>(loginStatus, HttpStatus.BAD_REQUEST);
         }
 
         loginStatus.setUserName(userName);
@@ -68,13 +67,12 @@ public class LoginController {
         UserDB user = userRepository.findByUsername(userName);
         if(user == null){
             loginStatus.setFailReason("Can't find user!");
-            loginStatus.setHttpStatus(HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(loginStatus, loginStatus.getHttpStatus());
+            return new ResponseEntity<>(loginStatus, HttpStatus.BAD_REQUEST);
         }
 
         if(user.getStatus() != UserStatus.ACTIVE){
             loginStatus.setFailReason("User is not active!");
-            return new ResponseEntity<>(loginStatus, loginStatus.getHttpStatus());
+            return new ResponseEntity<>(loginStatus, HttpStatus.BAD_REQUEST);
         }
 
         String token = issueToken(user.getId());
@@ -83,11 +81,9 @@ public class LoginController {
         UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(userName, password);
         SecurityContextHolder.getContext().setAuthentication(authenticationProvider.authenticate(credentials));
 
-        loginStatus.setHttpStatus(HttpStatus.OK);
-
         user.setLastLoginTime(new Date());
         userRepository.save(user);
 
-        return new ResponseEntity<>(loginStatus, loginStatus.getHttpStatus());
+        return new ResponseEntity<>(loginStatus, HttpStatus.OK);
     }
 }

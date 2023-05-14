@@ -55,13 +55,7 @@ let moduleExports = (env) => {
             port: 8989,
         },
         watchOptions: {
-            ignored: [
-                "/node_modules/", "/dist", "dist/*", "**/*.properties",
-                "dist/**/*", destinationPath,
-                destinationPath + "/*", destinationPropertyFile,
-                destinationApiFolder, destinationApiFolder + "/*",
-                destinationApiFolder + "/**/*"
-            ]
+            ignored: ['**/node_modules/**', "**/dist/**"]
         },
         plugins: [
             new CopyPlugin({

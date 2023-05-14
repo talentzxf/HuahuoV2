@@ -1,9 +1,10 @@
 import {CustomElement, Logger} from "hhcommoncomponents";
 import {userInfo} from "./UserInfo";
-import {api, LoginResponse} from "../RESTApis/RestApi";
+import {api} from "../RESTApis/RestApi";
 import {HHToast} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {HHForm} from "../Utilities/HHForm";
+import {LoginStatus} from "../../dist/clientApi/index"
 
 
 // TODO: Extract the framework and make a webflow like lib.
@@ -121,7 +122,7 @@ class LoginForm extends HTMLElement implements HHForm {
         }
 
         if (userInfo.username != null && userInfo.password != null && !userInfo.isLoggedIn) {
-            let loginResponse: LoginResponse = await api.login()
+            let loginResponse = await api.login()
 
             if (userInfo.isLoggedIn) {
                 // HHToast.info("User:" + userInfo.username + " just logged in!")

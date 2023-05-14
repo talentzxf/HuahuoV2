@@ -4,6 +4,7 @@ import {userInfo} from "../Identity/UserInfo";
 import huahuoProperties from "/dist/hhide.properties";
 import {HHToast} from "hhcommoncomponents";
 import {LoginControllerApi, LoginStatus} from "../../dist/clientApi/index"
+import {LoginForm} from "../Identity/LoginForm";
 
 class CreateUserResponse {
     username: string
@@ -124,9 +125,10 @@ class RestApi {
     }
 
     async login(): Promise<LoginStatus> {
-        let loginResponse = await this.loginController.loginUsingPOST(userInfo.username, userInfo.password)
+        let loginResponseRaw = await this.loginController.login(userInfo.username, userInfo.password)
+        let loginResponse:LoginStatus = loginResponseRaw.data
 
-        if (loginResponse != null&& loginResponse.httpStatus && loginResponse.httpStatus == "OK") {
+        if (loginResponse != null&& loginResponseRaw.status == 200) {
             userInfo.jwtToken = loginResponse.jwtToken
             userInfo.isLoggedIn = true
         }
@@ -261,4 +263,4 @@ class RestApi {
 }
 
 let api = new RestApi()
-export {api, LoginResponse}
+export {api}
