@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface BinaryFileRepository extends PagingAndSortingRepository<BinaryFileDB, Long>, JpaRepository<BinaryFileDB, Long> {
-    List<BinaryFileDB> findByCreatedByAndFileTypeAndStatus(String createdBy, FileType fileType, ProjectStatus status,  Pageable pageable);
+    List<BinaryFileDB> findByCreatedByAndFileTypeAndStatus(String createdBy, FileType fileType, BinaryFileStatus status, Pageable pageable);
     BinaryFileDB findByCreatedByAndFileTypeAndName(String createdBy, FileType fileType, String projectName);
-    int countByCreatedByAndFileTypeAndStatus(String createdBy, FileType fileType, ProjectStatus status);
+    int countByCreatedByAndFileTypeAndStatus(String createdBy, FileType fileType, BinaryFileStatus status);
 }

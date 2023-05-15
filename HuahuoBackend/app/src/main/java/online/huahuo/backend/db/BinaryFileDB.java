@@ -34,7 +34,7 @@ public class BinaryFileDB {
     private Date modifiedTime;
 
     @Column(nullable = false)
-    private ProjectStatus status;
+    private BinaryFileStatus status;
 
     private FileType fileType;
 
@@ -48,7 +48,7 @@ public class BinaryFileDB {
         this.createdBy = createdBy;
         this.createTime = new Date();
         this.modifiedTime = new Date();
-        this.status = ProjectStatus.ACTIVE;
+        this.status = BinaryFileStatus.ACTIVE;
         this.description = description;
         this.fileType = fileType;
     }

@@ -1,7 +1,7 @@
 import {CustomElement} from "hhcommoncomponents";
 
 import {SVGFiles} from "../Utilities/Svgs";
-import {projectUploader} from "../RESTApis/ProjectUploader";
+import {binaryFileUploader} from "../RESTApis/BinaryFileUploader";
 import huahuoProperties from "/dist/hhide.properties";
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 import {api} from "../RESTApis/RestApi"
@@ -88,13 +88,13 @@ class HHToolBar extends HTMLElement {
             // Prompt the Project description page.
             let storeInforForm = formManager.openForm(ProjectInfoForm)
             storeInforForm.onOKCallback = () => {
-                projectUploader.upload().then((response) => {
+                binaryFileUploader.upload().then((response) => {
                     if (afterAction)
                         afterAction(response)
                 })
             }
         } else {
-            projectUploader.upload().then((response) => {
+            binaryFileUploader.upload().then((response) => {
                 if (afterAction)
                     afterAction(response)
             })

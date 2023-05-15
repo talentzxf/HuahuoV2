@@ -11,7 +11,7 @@ import {LoginForm} from "./Identity/LoginForm";
 import {RegisterForm} from "./Identity/RegisterForm";
 import {UserInfoBar} from "./Identity/UserInfoBar";
 import {PlayerController} from "./AnimationPlayer/PlayerController";
-import {projectUploader} from "./RESTApis/ProjectUploader";
+import {binaryFileUploader} from "./RESTApis/BinaryFileUploader";
 import {HHToolBar} from "./UIComponents/ToolBar";
 import {ProjectListForm} from "./UIComponents/ProjectListForm";
 import {ProjectInfoForm} from "./UIComponents/ProjectInfoForm";

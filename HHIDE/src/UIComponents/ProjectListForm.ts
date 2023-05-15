@@ -76,7 +76,7 @@ class ProjectListForm extends HTMLElement implements HHForm {
             ulInnerHTML += "<li>"
             ulInnerHTML += "    <div style='display: flex; flex-direction: row; flex-grow: 8''>"
             ulInnerHTML += "    <div class='" + projectDivPrefix + project.id + "'>"
-            ulInnerHTML += "        <img style='border: 1px solid blue; width: 160px; height: 120px; object-fit: scale-down' src='" + api.getProjectPreviewImageUrl(project.id) + "'>"
+            ulInnerHTML += "        <img style='border: 1px solid blue; width: 160px; height: 120px; object-fit: scale-down' src='" + api.getBinaryFileCoverPageUrl(project.id) + "'>"
             ulInnerHTML += "    </div>"
             ulInnerHTML += "    <div style='display: flex; flex-direction: column; width: 100%'>"
             ulInnerHTML += "        <span >" + project.name + "</span>"
@@ -123,7 +123,7 @@ class ProjectListForm extends HTMLElement implements HHForm {
             let confirmResult = window.confirm("Are you sure to delete project:" + project.name + "?")
             if (confirmResult) {
                 Logger.info("Begin to delete project:" + projectId)
-                api.deleteProject(projectId).then(() => {
+                api.deleteBinaryFile(projectId).then(() => {
                     HHToast.info(i18n.t("project.deleted", {projectName: project.name}))
                     _this.refreshList()
                 })

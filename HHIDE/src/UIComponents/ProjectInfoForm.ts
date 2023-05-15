@@ -109,7 +109,7 @@ class ProjectInfoForm extends HTMLElement implements HHForm{
             let candidateName = _this.projectNameInput.value
             if(_this.validateText(candidateName)){
 
-                api.checkProjectNameExistence(candidateName).then((result) => {
+                api.checkFileNameExistence(candidateName).then((result) => {
                     if(result["exist"] === false){ // The project name doesn't exist in the system now. Name is valid
                         _this.isNameValid = true
                     }else{

@@ -1,6 +1,6 @@
 package online.huahuo.backend.db;
 
-public enum ProjectStatus {
+public enum BinaryFileStatus {
     ACTIVE,
     INACTIVE
 }

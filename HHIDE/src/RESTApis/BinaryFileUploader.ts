@@ -6,7 +6,7 @@ import {HHToast} from "hhcommoncomponents";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
 
-class ProjectUploader {
+class BinaryFileUploader {
     private get fileName():string{
         return projectInfo.name
     }
@@ -44,5 +44,5 @@ class ProjectUploader {
     }
 }
 
-let projectUploader = new ProjectUploader()
-export {projectUploader}
+let binaryFileUploader = new BinaryFileUploader()
+export {binaryFileUploader}

@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    ResponseEntity<UserDB> newUser(@RequestHeader(required = false) Boolean isAnonymous, @RequestBody(required = false) UserDB user) throws NoSuchAlgorithmException {
+    ResponseEntity<UserDB> createUser(@RequestHeader(required = false) Boolean isAnonymous, @RequestBody(required = false) UserDB user) throws NoSuchAlgorithmException {
         if (isAnonymous == null && user == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

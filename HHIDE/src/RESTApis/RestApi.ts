@@ -3,24 +3,8 @@ import axios from "axios";
 import {userInfo} from "../Identity/UserInfo";
 import huahuoProperties from "/dist/hhide.properties";
 import {HHToast} from "hhcommoncomponents";
-import {LoginControllerApi, LoginStatus} from "../../dist/clientApi/index"
-
-class CreateUserResponse {
-    username: string
-    password: string
-}
-
-class UserExistResponse {
-    userName: string
-    exist: boolean
-}
-
-enum HTTP_METHOD {
-    POST,
-    GET,
-    PUT = 2,
-    DELETE
-}
+import {LoginControllerApi, UserControllerApi, BinaryFileControllerApi,
+        LoginStatus, UserDB} from "../../dist/clientApi/index"
 
 // TODO: Use Swagger to generate the API class
 class RestApi {
@@ -36,92 +20,17 @@ class RestApi {
     }
 
     loginController
+    userController
+    fileController
     constructor() {
         this.baseUrl = huahuoProperties["huahuo.backend.url"]
         this.loginController = new LoginControllerApi(undefined, this.baseUrl, axios)
+        this.userController = new UserControllerApi(undefined, this.baseUrl, axios)
+        this.fileController = new BinaryFileControllerApi(undefined, this.baseUrl, axios)
+        this.userController = new UserControllerApi(undefined, this.baseUrl, axios)
     }
 
-    getProjectPreviewImageUrl(projectId){
-        let previewURLTemplate = `/projects/${projectId}/coverPage`
-        return this.baseUrl + previewURLTemplate
-    }
 
-    async _callApi<T>(url: string, inHeaders: Object = null, requestBody: object = null, httpMethod: HTTP_METHOD = HTTP_METHOD.POST, isBlob: boolean = false): Promise<T> {
-        let targetUrl = this.baseUrl + url;
-
-        if (inHeaders == null) {
-            inHeaders = {}
-        }
-
-        if (!inHeaders["Content-Type"]) {
-            if(typeof requestBody === "string")
-                inHeaders["Content-Type"] = "text/plain"
-            else
-                inHeaders["Content-Type"] = "application/json"
-        }
-
-        try {
-            let config = {headers: {}}
-
-            if(isBlob){
-                config["responseType"] = 'blob'
-            }
-
-            if (inHeaders) {
-                config.headers = inHeaders
-            }
-
-            let returnObj = {}
-            switch (httpMethod) {
-
-                case HTTP_METHOD.POST:
-                    returnObj = await axios.post<T>(
-                        targetUrl,
-                        requestBody,
-                        config
-                    )
-                    break;
-                case HTTP_METHOD.GET:
-                    returnObj = await axios.get<T>(
-                        targetUrl,
-                        config
-                    )
-                    break;
-                case HTTP_METHOD.PUT:
-                    returnObj = await axios.put<T>(
-                        targetUrl,
-                        requestBody,
-                        config
-                    )
-                    break;
-                case HTTP_METHOD.DELETE:
-                    returnObj = await axios.delete<T>(
-                        targetUrl,
-                        config
-                    )
-                    break;
-                }
-
-            return returnObj["data"];
-
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                if (error.response.status == 401) {
-                    Logger.error("Auth failed", error.message) // TODO: Relogin the user. TODO: Rememeber me.
-                    HHToast.error("Auth failed! Invalid username/pwd!")
-                    userInfo.logout()
-                } else {
-                    Logger.error("Axios error happened!", error.message);
-                    HHToast.error("Axios error happened!" + error.message)
-                }
-                return null;
-            } else {
-                Logger.error("Unexpected error happened!", error);
-                HHToast.error("Unexpected error happened during Api call!")
-                return null;
-            }
-        }
-    }
 
     async login(): Promise<LoginStatus> {
         let loginResponseRaw = await this.loginController.login(userInfo.username, userInfo.password)
@@ -137,11 +46,8 @@ class RestApi {
 
     async createAnonymousUser() {
 
-        let headers = {
-            isAnonymous: true
-        };
-
-        let createUserResponse: CreateUserResponse = await this._callApi<CreateUserResponse>("/users", headers);
+        let createUserResponseRaw = await this.userController.createUser(true)
+        let createUserResponse:UserDB = createUserResponseRaw.data
 
         userInfo.username = createUserResponse.username
         userInfo.password = createUserResponse.password
@@ -150,39 +56,38 @@ class RestApi {
         HHToast.info("Anonymous user:" + userInfo.username + " has been created")
     }
 
-    async uploadFile(uploadPath:string, data: Blob, fileName: string){
-        let headers = {
-            "Authorization": "Bearer " + this.getJwtToken()
-        };
+    getBinaryFileCoverPageUrl(fileId){
+        let previewURLTemplate = `/binaryfiles/${fileId}/coverPage`
+        return this.baseUrl + previewURLTemplate
+    }
 
+    async uploadProject(data: Blob, fileName: string, isElement: boolean = false) {
         let formData = new FormData()
         data["lastModifiedDate"] = new Date();
         data["name"] = fileName;
 
         formData.append("file", data, fileName)
-        headers["Content-Type"] = "multipart/form-data"
 
-        return this._callApi(uploadPath, headers, formData)
+        this.fileController.uploadFile(true, isElement, formData)
     }
 
-    async uploadProject(data: Blob, fileName: string, isElement: boolean = false) {
-        let uploadPath = "/projects/projectData?isElement=" + isElement
-        return this.uploadFile(uploadPath, data, fileName)
+    async uploadProjectCoverPage(fileId, data:Blob, fileName, isElement: boolean = false){
+        let formData = new FormData()
+        data["lastModifiedDate"] = new Date();
+        data["name"] = fileName;
+
+        formData.append("file", data, fileName)
+        this.fileController.handleCoverPageUpload(fileId, isElement, formData)
     }
 
-    async uploadProjectCoverPage(projectId, data:Blob, fileName){
-        let uploadPath = "/projects/" + projectId + "/coverPage"
-        return this.uploadFile(uploadPath, data, fileName)
-    }
-
-    async downloadProject(projectId){
-        let downloadPath = "/projects/" + projectId
-        return this._callApi(downloadPath, null, null, HTTP_METHOD.GET, true)
+    async downloadProject(fileId){
+        return this.fileController.downloadBinaryFile(fileId)
     }
 
     async isUserExist(username: string, existUserFunc: Function, userNotExistFunc: Function) {
-        let userExistPath = "/users/exist?username=" + username
-        let userExistResponseData: UserExistResponse = await this._callApi(userExistPath, null, null, HTTP_METHOD.GET)
+        let userExistResponse = await this.userController.exist(username)
+        let userExistResponseData = userExistResponse.data
+
         if (userExistResponseData.exist) {
             existUserFunc()
         } else {
@@ -190,31 +95,25 @@ class RestApi {
         }
     }
 
-    async createUser(username: string, pwd: string, nickname: string): Promise<CreateUserResponse> {
-        let createUserPath = "/users"
-        let requestBody = {
+    async createUser(username: string, pwd: string, nickname: string, role = UserDB.RoleEnum.CREATOR){
+        let userDB = {
             username: username,
             password: pwd,
             nickname: nickname,
-            role: "CREATOR",
-            status: "ACTIVE"
+            role: role,
+            status: UserDB.StatusEnum.ACTIVE
         }
-
-        return this._callApi(createUserPath, null, requestBody)
+        this.userController.createUser(false, userDB)
     }
 
     async isTokenValid(username: string, jwtToken: string) {
-        let isTokenValidUrl = "/tokenValid?userName=" + username + "&jwtToken=" + jwtToken
-        return this._callApi(isTokenValidUrl, null, null, HTTP_METHOD.GET)
+        return this.loginController.isTokenValid(username, jwtToken)
     }
 
     async listProjects(callBack: Function, pageNo: number = 0, pageSize: number = 10) {
 
-        let headers = {
-            "Authorization": "Bearer " + this.getJwtToken()
-        };
-        let listProjectApi = "/projects"
-        let apiCallPromise = this._callApi(listProjectApi, headers, null, HTTP_METHOD.GET)
+        let apiCallPromise = this.fileController.listBinaryFiles(pageNo, pageSize, false)
+
         apiCallPromise.then((projects)=>{
             callBack(projects)
         }).catch((ex)=>{
@@ -223,41 +122,25 @@ class RestApi {
     }
 
     async listElements(callBack: Function, pageNo: number = 0, pageSize: number = 10) {
+        let apiCallPromise = this.fileController.listBinaryFiles(pageNo, pageSize, true)
 
-        let headers = {
-            "Authorization": "Bearer " + this.getJwtToken()
-        };
-        let listElementApi = "/projects?isElement=true"
-        let apiCallPromise = this._callApi(listElementApi, headers, null, HTTP_METHOD.GET)
         apiCallPromise.then((projects)=>{
             callBack(projects)
         }).catch((ex)=>{
-            HHToast.error("Exception happened when listing projects!" + ex)
+            HHToast.error("Exception happened when listing elements!" + ex)
         })
     }
 
     async updateProjectDescription(projectId, description){
-        let headers = {
-            "Authorization": "Bearer " + this.getJwtToken()
-        };
-        let updateProjectDescriptionApi = "/projects/" + projectId + "/description"
-        return this._callApi(updateProjectDescriptionApi, headers, description, HTTP_METHOD.PUT )
+        return this.fileController.updateBinaryFileDescription(projectId, description)
     }
 
-    async checkProjectNameExistence(projectName) {
-        let headers = {
-            "Authorization": "Bearer " + this.getJwtToken()
-        };
-        let checkProjectNameExistenceURL = "/projects/exist?projectName=" + projectName
-        return this._callApi(checkProjectNameExistenceURL, headers, null, HTTP_METHOD.GET )
+    async checkFileNameExistence(fileName) {
+        return this.fileController.existFile(fileName)
     }
 
-    async deleteProject(projectId){
-        let headers = {
-            "Authorization": "Bearer " + this.getJwtToken()
-        };
-        let deleteProjectURL = "/projects/"+projectId
-        return this._callApi(deleteProjectURL, headers, null, HTTP_METHOD.DELETE )
+    async deleteBinaryFile(fileId){
+        return this.fileController.deleteBinaryFile(fileId)
     }
 }
 
