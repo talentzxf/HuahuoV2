@@ -3,14 +3,16 @@ import axios from "axios";
 import {userInfo} from "../Identity/UserInfo";
 import huahuoProperties from "/dist/hhide.properties";
 import {HHToast} from "hhcommoncomponents";
-import {LoginControllerApi, UserControllerApi, BinaryFileControllerApi,
-        LoginStatus, UserDB} from "../../dist/clientApi/index"
+import {
+    LoginControllerApi, UserControllerApi, BinaryFileControllerApi,
+    LoginStatus, UserDB, UserDBRoleEnum, UserDBStatusEnum
+} from "../../dist/clientApi/index"
 
 // TODO: Use Swagger to generate the API class
 class RestApi {
     baseUrl: string;
 
-    getJwtToken(){
+    getJwtToken() {
         let token = userInfo.jwtToken
         if (token == null) {
             Logger.error("Token is null, login again!")
@@ -22,6 +24,7 @@ class RestApi {
     loginController
     userController
     fileController
+
     constructor() {
         this.baseUrl = huahuoProperties["huahuo.backend.url"]
         this.loginController = new LoginControllerApi(undefined, this.baseUrl, axios)
@@ -31,12 +34,11 @@ class RestApi {
     }
 
 
-
     async login(): Promise<LoginStatus> {
         let loginResponseRaw = await this.loginController.login(userInfo.username, userInfo.password)
-        let loginResponse:LoginStatus = loginResponseRaw.data
+        let loginResponse: LoginStatus = loginResponseRaw.data
 
-        if (loginResponse != null&& loginResponseRaw.status == 200) {
+        if (loginResponse != null && loginResponseRaw.status == 200) {
             userInfo.jwtToken = loginResponse.jwtToken
             userInfo.isLoggedIn = true
         }
@@ -47,7 +49,7 @@ class RestApi {
     async createAnonymousUser() {
 
         let createUserResponseRaw = await this.userController.createUser(true)
-        let createUserResponse:UserDB = createUserResponseRaw.data
+        let createUserResponse: UserDB = createUserResponseRaw.data
 
         userInfo.username = createUserResponse.username
         userInfo.password = createUserResponse.password
@@ -56,7 +58,7 @@ class RestApi {
         HHToast.info("Anonymous user:" + userInfo.username + " has been created")
     }
 
-    getBinaryFileCoverPageUrl(fileId){
+    getBinaryFileCoverPageUrl(fileId) {
         let previewURLTemplate = `/binaryfiles/${fileId}/coverPage`
         return this.baseUrl + previewURLTemplate
     }
@@ -71,7 +73,7 @@ class RestApi {
         this.fileController.uploadFile(true, isElement, formData)
     }
 
-    async uploadProjectCoverPage(fileId, data:Blob, fileName, isElement: boolean = false){
+    async uploadProjectCoverPage(fileId, data: Blob, fileName, isElement: boolean = false) {
         let formData = new FormData()
         data["lastModifiedDate"] = new Date();
         data["name"] = fileName;
@@ -80,7 +82,7 @@ class RestApi {
         this.fileController.handleCoverPageUpload(fileId, isElement, formData)
     }
 
-    async downloadProject(fileId){
+    async downloadProject(fileId) {
         return this.fileController.downloadBinaryFile(fileId)
     }
 
@@ -95,13 +97,13 @@ class RestApi {
         }
     }
 
-    async createUser(username: string, pwd: string, nickname: string, role = UserDB.RoleEnum.CREATOR){
+    async createUser(username: string, pwd: string, nickname: string, role = UserDBRoleEnum.CREATOR) {
         let userDB = {
             username: username,
             password: pwd,
             nickname: nickname,
             role: role,
-            status: UserDB.StatusEnum.ACTIVE
+            status: UserDBStatusEnum.ACTIVE
         }
         this.userController.createUser(false, userDB)
     }
@@ -112,11 +114,13 @@ class RestApi {
 
     async listProjects(callBack: Function, pageNo: number = 0, pageSize: number = 10) {
 
-        let apiCallPromise = this.fileController.listBinaryFiles(pageNo, pageSize, false)
+        let apiCallPromise = this.fileController.listBinaryFiles(pageNo, pageSize, false, {
+            headers: {"Authorization": "Bearer " + userInfo.jwtToken}
+        })
 
-        apiCallPromise.then((projects)=>{
-            callBack(projects)
-        }).catch((ex)=>{
+        apiCallPromise.then((projects) => {
+            callBack(projects.data)
+        }).catch((ex) => {
             HHToast.error("Exception happened when listing projects!" + ex)
         })
     }
@@ -124,14 +128,14 @@ class RestApi {
     async listElements(callBack: Function, pageNo: number = 0, pageSize: number = 10) {
         let apiCallPromise = this.fileController.listBinaryFiles(pageNo, pageSize, true)
 
-        apiCallPromise.then((projects)=>{
+        apiCallPromise.then((projects) => {
             callBack(projects)
-        }).catch((ex)=>{
+        }).catch((ex) => {
             HHToast.error("Exception happened when listing elements!" + ex)
         })
     }
 
-    async updateProjectDescription(projectId, description){
+    async updateProjectDescription(projectId, description) {
         return this.fileController.updateBinaryFileDescription(projectId, description)
     }
 
@@ -139,7 +143,7 @@ class RestApi {
         return this.fileController.existFile(fileName)
     }
 
-    async deleteBinaryFile(fileId){
+    async deleteBinaryFile(fileId) {
         return this.fileController.deleteBinaryFile(fileId)
     }
 }

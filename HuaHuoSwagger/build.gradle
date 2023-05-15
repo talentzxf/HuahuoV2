@@ -33,7 +33,7 @@ swaggerSources {
         inputFile = file('swagger.json')
         code {
             language = 'typescript-axios'
-            configuration = configurations.swaggerCodegenOpenAPI
+            configuration = configurations.swaggerCodegen3
         }
     }
 }
