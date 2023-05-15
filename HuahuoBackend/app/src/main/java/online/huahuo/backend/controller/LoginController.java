@@ -1,6 +1,11 @@
 package online.huahuo.backend.controller;
 
 import antlr.Token;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.RequiredArgsConstructor;
 import online.huahuo.backend.db.UserDB;
 import online.huahuo.backend.db.UserRepository;
@@ -54,6 +59,7 @@ public class LoginController {
         return new ResponseEntity<>(tokenValidResponse, HttpStatus.OK);
     }
 
+    @SecurityRequirements()
     @PostMapping("/login")
     ResponseEntity<LoginStatus> login(@RequestParam(required = false) String userName, @RequestParam(required = false) String password){
         LoginStatus loginStatus = new LoginStatus();

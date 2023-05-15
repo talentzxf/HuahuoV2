@@ -13,38 +13,38 @@ class UserInfoBar extends HTMLElement {
     usernameSpan: HTMLSpanElement
     loginLogoutBtn: HTMLButtonElement
 
-    get username(){
+    get username() {
         return this._username
     }
 
-    set username(val: string){
+    set username(val: string) {
         this._username = val
 
-        if(!val){
+        if (!val) {
             this.usernameSpan.innerText = i18n.t("not_logged_in")
             this.usernameSpan.style.cursor = 'pointer'
             this.usernameSpan.onclick = this.login.bind(this)
-        }else{
+        } else {
             this.usernameSpan.innerText = this._username
         }
     }
 
-    setUserName(val: string){
+    setUserName(val: string) {
         this.username = val
 
-        if(val){
+        if (val) {
             // Change to log out button
             this.loginLogoutBtn.innerHTML = SVGFiles.logoutBtn
             this.loginLogoutBtn.onclick = this.logout.bind(this)
-        }else{
+        } else {
             // Change to sign in button
             this.loginLogoutBtn.innerHTML = SVGFiles.signInBtn
             this.loginLogoutBtn.onclick = this.login.bind(this)
         }
     }
 
-    connectedCallback(){
-        if(!this.usernameSpan){
+    connectedCallback() {
+        if (!this.usernameSpan) {
             this.style.display = "flex"
             this.usernameSpan = document.createElement("span")
             this.usernameSpan.style.lineHeight = "30px"
@@ -67,8 +67,8 @@ class UserInfoBar extends HTMLElement {
             if (userName) {
                 let token = window.localStorage.getItem("jwtToken")
                 if (token != null) {
-                    api.isTokenValid(userName, token).then((response: any)=>{
-                        if(response && response["isValid"]){
+                    api.isTokenValid(userName, token).then((response: any) => {
+                        if (response && response["isValid"]) {
                             userInfo.username = userName
                             userInfo.jwtToken = token
                             userInfo.isLoggedIn = true
@@ -83,11 +83,11 @@ class UserInfoBar extends HTMLElement {
         }
     }
 
-    login(){
+    login() {
         formManager.openForm(LoginForm)
     }
 
-    logout(){
+    logout() {
         userInfo.logout()
         this.setUserName(null)
     }

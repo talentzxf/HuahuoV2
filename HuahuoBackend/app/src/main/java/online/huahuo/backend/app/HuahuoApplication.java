@@ -3,6 +3,12 @@
  */
 package online.huahuo.backend.app;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -12,6 +18,14 @@ import org.springframework.web.servlet.config.annotation.CorsRegistration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+@SecurityScheme(
+        name = "JWT_AUTH",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
+@OpenAPIDefinition(info = @Info(title = "Backend of HuaHuo APIs.", version = "1.0.0"),
+        security = { @SecurityRequirement(name = "JWT_AUTH") })
 @SpringBootApplication(scanBasePackages = "online.huahuo.backend.*")
 @EntityScan("online.huahuo.backend.db")
 @EnableJpaRepositories("online.huahuo.backend.db")

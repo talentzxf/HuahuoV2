@@ -1,5 +1,8 @@
 package online.huahuo.backend.controller;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -100,6 +103,7 @@ public class BinaryFileController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
     }
+
 
     @ResponseBody
     @PreAuthorize("hasRole('READER')")
