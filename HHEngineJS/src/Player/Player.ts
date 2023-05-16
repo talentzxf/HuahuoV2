@@ -19,16 +19,24 @@ class Player extends EventEmitter{
     public currentlyPlayingFrameId: number = 0
 
     set storeId(val: string){
+        if(this.layerShapesManager == null){
+            this.layerShapesManager = new LayerShapesManager(val)
+        }
         this.layerShapesManager.storeId = val
     }
 
     get storeId():string{
+        if(this.layerShapesManager == null)
+            return null
         return this.layerShapesManager.storeId
     }
 
-    constructor(storeId) {
+    constructor(storeId?) {
         super(true) // Player events are global
-        this.layerShapesManager = new LayerShapesManager(storeId)
+
+        if(storeId){
+            this.layerShapesManager = new LayerShapesManager(storeId)
+        }
     }
 
     getLayerShapes(layer){

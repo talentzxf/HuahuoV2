@@ -6,6 +6,7 @@ import {projectInfo} from "../SceneView/ProjectInfo";
 import {SVGFiles} from "../Utilities/Svgs";
 import {SnapshotUtils} from "../Utilities/SnapshotUtils";
 import {api} from "../RESTApis/RestApi";
+import {SceneView} from "../SceneView/SceneView";
 
 @CustomElement({
     selector: "hh-project-info"
@@ -127,7 +128,7 @@ class ProjectInfoForm extends HTMLElement implements HHForm{
         this.okBtn = this.querySelector("#okBtn")
         this.okBtn.onclick = this.onOK.bind(this)
 
-        this.previewAnimationPlayer = new Player(1) // Default store is 1.
+        this.previewAnimationPlayer = new Player()
 
         let prevCanvas = renderEngine2D.getDefaultCanvas()
         renderEngine2D.init(this.previewCanvas)
@@ -203,11 +204,16 @@ class ProjectInfoForm extends HTMLElement implements HHForm{
 
     RedrawFrame(){
         let prevStore = huahuoEngine.GetCurrentStoreId()
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(1) // Only render the main store.i.e. the 1st store.
+
+        let mainSceneView: SceneView = document.querySelector("#mainScene")
+        let mainStoreId = mainSceneView.storeId
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainStoreId) // Only render the main store.i.e. the 1st store.
 
         let currentLayer = huahuoEngine.GetCurrentLayer()
         let currentFrameId = currentLayer.GetCurrentFrame()
         let previousCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
+
+        this.previewAnimationPlayer.storeId = mainStoreId
         this.previewAnimationPlayer.loadShapesFromStore()
         this.previewAnimationPlayer.setFrameId(currentFrameId)
         if(previousCanvas)
