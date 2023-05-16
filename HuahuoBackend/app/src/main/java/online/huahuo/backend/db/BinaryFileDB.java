@@ -12,6 +12,8 @@ import java.util.Date;
 @Table(name = "BINARYFILES", indexes = {
         @Index(columnList = "name"),
         @Index(columnList = "createdBy")
+}, uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"createdBy", "name"}) // Can't create two same name files under the same creator.
 })
 public class BinaryFileDB {
     @Id

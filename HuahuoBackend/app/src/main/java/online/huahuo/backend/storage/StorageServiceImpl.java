@@ -2,6 +2,7 @@ package online.huahuo.backend.storage;
 
 import lombok.RequiredArgsConstructor;
 import online.huahuo.backend.db.BinaryFileRepository;
+import online.huahuo.backend.db.BinaryFileStatus;
 import online.huahuo.backend.db.FileType;
 import online.huahuo.backend.db.BinaryFileDB;
 import online.huahuo.backend.exception.DuplicateFileException;
@@ -38,19 +39,27 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public BinaryFileDB store(String path, MultipartFile file, String fileName, Boolean forceOverride, Boolean isElement) throws IOException, NoSuchAlgorithmException {
         FileType fileType = isElement ? FileType.ELEMENT : FileType.PROJECT;
-        String savePath = getPath() + path + File.separator + fileType + File.separator;
-        String absoluteFilePath = savePath + fileName + HUAHUO_POSTFIX;
+
+        BinaryFileStatus fileStatus = BinaryFileStatus.INACTIVE;
+        String absoluteFilePath = null;
+        if(file != null){
+            String savePath = getPath() + path + File.separator + fileType + File.separator;
+            absoluteFilePath = savePath + fileName + HUAHUO_POSTFIX;
 
 
-        if (!forceOverride) { // Don't override if the file exists and forceOverride = false.
-            if (new File(absoluteFilePath).exists()) {
-                throw new DuplicateFileException(fileName);
+            if (!forceOverride) { // Don't override if the file exists and forceOverride = false.
+                if (new File(absoluteFilePath).exists()) {
+                    throw new DuplicateFileException(fileName);
+                }
             }
+
+            new File(savePath).mkdirs();
+
+            Files.write(Paths.get(absoluteFilePath), file.getBytes());
+
+            fileStatus = BinaryFileStatus.ACTIVE;
         }
 
-        new File(savePath).mkdirs();
-
-        Files.write(Paths.get(absoluteFilePath), file.getBytes());
 
         // Get the userId from the JWT token.
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -64,9 +73,12 @@ public class StorageServiceImpl implements StorageService {
         if (fileDB == null)
             fileDB = new BinaryFileDB(fileName, "0.0.1", username, absoluteFilePath, fileHash, "", fileType);
         else {
+            fileDB.setFullPath(absoluteFilePath);
             fileDB.setChecksum(fileHash);
             fileDB.setModifiedTime(new Date());
         }
+
+        fileDB.setStatus(fileStatus);
 
         return fileRepository.save(fileDB);
     }

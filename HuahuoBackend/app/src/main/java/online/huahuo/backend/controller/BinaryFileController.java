@@ -59,6 +59,27 @@ public class BinaryFileController {
     @javax.annotation.Resource
     private BinaryFileRepository binaryFileRepository;
 
+    /**
+     * This function only creates the file but won't write any content.
+     * @param fileName
+     * @param isElement
+     * @return
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     */
+    @PostMapping(value="/binaryfiles")
+    @PreAuthorize("hasRole('CREATOR')")
+    @ResponseBody
+    public BinaryFileCallStatus createFile(@RequestParam String fileName,
+                                           @RequestParam(required = false, defaultValue = "false") Boolean isElement) throws IOException, NoSuchAlgorithmException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        BinaryFileDB fileDB = storageService.store(username, null, fileName, true, isElement);
+        return new BinaryFileCallStatus(fileDB.getId(), true, "File created successfully!");
+    }
+
+    @PreAuthorize("hasRole('CREATOR')")
     @ResponseBody
     @PostMapping(value = "/binaryfiles/upload",
     consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})

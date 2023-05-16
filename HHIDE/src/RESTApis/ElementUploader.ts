@@ -1,6 +1,7 @@
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 import {gzipSync} from "fflate";
 import {api} from "./RestApi";
+import {huahuoEngine} from "hhenginejs";
 
 declare var Module: any
 
@@ -27,10 +28,15 @@ class ElementUploader {
 
     @NeedLogin()
     uploadStore(storeId, elementName) {
-        let storeData = this.getStoreData(storeId, elementName)
-        let uploadElementPromise = api.uploadProject(storeData, elementName, true)
+        api.createFile(elementName, true).then((response)=>{
+            if(response && response.data && response.data.succeeded){
+                let fileId = response.data.fileId
+                huahuoEngine.setStoreFileId(storeId, fileId)
 
-        return uploadElementPromise
+                let storeData = this.getStoreData(storeId, elementName)
+                api.uploadProject(storeData, elementName, true)
+            }
+        })
     }
 }
 

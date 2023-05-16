@@ -68,7 +68,7 @@ class UserInfoBar extends HTMLElement {
                 let token = window.localStorage.getItem("jwtToken")
                 if (token != null) {
                     api.isTokenValid(userName, token).then((response: any) => {
-                        if (response && response["isValid"]) {
+                        if (response && response["data"] && response["data"]["isValid"]) {
                             userInfo.username = userName
                             userInfo.jwtToken = token
                             userInfo.isLoggedIn = true
