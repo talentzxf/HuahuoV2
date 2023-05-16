@@ -242,10 +242,6 @@ class EngineAPI{
         return this.cppEngine.LoadBinaryResource(fileName, mimeType, data, dataSize)
     }
 
-    setStoreFileId(storeId, fileId){
-        this.GetDefaultObjectStoreManager().SetStoreFileId(storeId, fileId)
-    }
-
     get ti(){
         return ti
     }

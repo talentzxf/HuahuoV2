@@ -64,8 +64,8 @@ class RestApi {
         return this.baseUrl + previewURLTemplate
     }
 
-    async createFile(fileName, isElement){
-        return this.fileController.createFile(fileName, isElement)
+    async createElement(fileName, isElement){
+        return this.elementController.createElement(fileName, isElement)
     }
 
     async uploadProject(data: Blob, fileName: string, isElement: boolean = false) {
