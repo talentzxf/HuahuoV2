@@ -60,7 +60,8 @@ public class BinaryFileController {
     private BinaryFileRepository binaryFileRepository;
 
     @ResponseBody
-    @PostMapping("/binaryfiles/upload")
+    @PostMapping(value = "/binaryfiles/upload",
+    consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public BinaryFileCallStatus uploadFile(@RequestParam MultipartFile file,
                                            @RequestParam(required = false, defaultValue = "true") Boolean forceOverride,
                                            @RequestParam(required = false, defaultValue = "false") Boolean isElement

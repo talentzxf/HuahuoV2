@@ -25,8 +25,7 @@ class BinaryFileUploader {
         let uploadProjectPromise = api.uploadProject(data, this.fileName)
 
         return uploadProjectPromise.then((response)=>{
-            if(response["succeeded"]){
-
+            if(response != null && response["data"] && response["data"]["succeeded"]){
                 projectInfo.updateCoverPage()
 
                 // Two more things after project file has been uploaded.
@@ -38,6 +37,8 @@ class BinaryFileUploader {
                 Promise.all([updateDescriptionPromise, uploadCoverpagePromise]).then(()=>{
                     HHToast.info(i18n.t("toast.projectUploaded"))
                 })
+            }else{
+                HHToast.error("Project upload failed")
             }
             return response
         })

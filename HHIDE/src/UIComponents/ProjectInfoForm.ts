@@ -110,7 +110,7 @@ class ProjectInfoForm extends HTMLElement implements HHForm{
             if(_this.validateText(candidateName)){
 
                 api.checkFileNameExistence(candidateName).then((result) => {
-                    if(result["exist"] === false){ // The project name doesn't exist in the system now. Name is valid
+                    if(result && result.data && result.data["exist"] == false){ // The project name doesn't exist in the system now. Name is valid
                         _this.isNameValid = true
                     }else{
                         _this.isNameValid = false

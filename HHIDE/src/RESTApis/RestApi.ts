@@ -3,6 +3,7 @@ import axios from "axios";
 import {userInfo} from "../Identity/UserInfo";
 import huahuoProperties from "/dist/hhide.properties";
 import {HHToast} from "hhcommoncomponents";
+
 import {
     LoginControllerApi, UserControllerApi, BinaryFileControllerApi,
     LoginStatus, UserDB, UserDBRoleEnum, UserDBStatusEnum
@@ -64,13 +65,9 @@ class RestApi {
     }
 
     async uploadProject(data: Blob, fileName: string, isElement: boolean = false) {
-        let formData = new FormData()
         data["lastModifiedDate"] = new Date();
         data["name"] = fileName;
-
-        formData.append("file", data, fileName)
-
-        this.fileController.uploadFile(true, isElement, formData)
+        this.fileController.uploadFileForm(data, true, isElement, this.getAuthHeader())
     }
 
     async uploadProjectCoverPage(fileId, data: Blob, fileName, isElement: boolean = false) {
@@ -112,11 +109,15 @@ class RestApi {
         return this.loginController.isTokenValid(username, jwtToken)
     }
 
+    getAuthHeader(){
+        return {
+            headers: {"Authorization": "Bearer " + userInfo.jwtToken}
+        }
+    }
+
     async listProjects(callBack: Function, pageNo: number = 0, pageSize: number = 10) {
 
-        let apiCallPromise = this.fileController.listBinaryFiles(pageNo, pageSize, false, {
-            headers: {"Authorization": "Bearer " + userInfo.jwtToken}
-        })
+        let apiCallPromise = this.fileController.listBinaryFiles(pageNo, pageSize, false, this.getAuthHeader())
 
         apiCallPromise.then((projects) => {
             callBack(projects.data)
@@ -140,7 +141,7 @@ class RestApi {
     }
 
     async checkFileNameExistence(fileName) {
-        return this.fileController.existFile(fileName)
+        return this.fileController.existFile(fileName, this.getAuthHeader())
     }
 
     async deleteBinaryFile(fileId) {
