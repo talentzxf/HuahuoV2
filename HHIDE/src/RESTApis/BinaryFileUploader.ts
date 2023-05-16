@@ -31,8 +31,8 @@ class BinaryFileUploader {
                 // Two more things after project file has been uploaded.
                 // 1. Update the project description.
                 // 2. Update the project cover page.
-                let updateDescriptionPromise = api.updateProjectDescription(response["fileId"], projectInfo.description)
-                let uploadCoverpagePromise = api.uploadProjectCoverPage(response["fileId"], projectInfo.coverPage, projectInfo.name + ".png")
+                let updateDescriptionPromise = api.updateProjectDescription(response["data"]["fileId"], projectInfo.description)
+                let uploadCoverpagePromise = api.uploadProjectCoverPage(response["data"]["fileId"], projectInfo.coverPage, projectInfo.name + ".png")
 
                 Promise.all([updateDescriptionPromise, uploadCoverpagePromise]).then(()=>{
                     HHToast.info(i18n.t("toast.projectUploaded"))

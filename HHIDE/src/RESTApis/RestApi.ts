@@ -69,12 +69,7 @@ class RestApi {
     }
 
     async uploadProjectCoverPage(fileId, data: Blob, fileName, isElement: boolean = false) {
-        let formData = new FormData()
-        data["lastModifiedDate"] = new Date();
-        data["name"] = fileName;
-
-        formData.append("file", data, fileName)
-        return this.fileController.handleCoverPageUpload(fileId, isElement, formData)
+        return this.fileController.uploadCoverPageForm(fileName, fileId, data, isElement, this.getAuthHeader())
     }
 
     async downloadProject(fileId) {
@@ -134,8 +129,8 @@ class RestApi {
         })
     }
 
-    async updateProjectDescription(projectId, description) {
-        return this.fileController.updateBinaryFileDescription(projectId, description)
+    async updateProjectDescription(fileId, description) {
+        return this.fileController.updateBinaryFileDescription(fileId, description, this.getAuthHeader())
     }
 
     async checkFileNameExistence(fileName) {

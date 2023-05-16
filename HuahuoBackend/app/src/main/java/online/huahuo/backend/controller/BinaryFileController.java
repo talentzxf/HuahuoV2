@@ -150,13 +150,15 @@ public class BinaryFileController {
     }
 
     @ResponseBody
-    @PostMapping("/binaryfiles/{fileId}/coverPage")
-    public BinaryFileCallStatus uploadCoverPage(@RequestParam("file") MultipartFile coverPageFile,
-                                                @PathVariable("fileId") Long fileId,
+    @PostMapping(value =  "/binaryfiles/{fileId}/coverPage",
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public BinaryFileCallStatus uploadCoverPage(@RequestParam MultipartFile coverPageFile,
+                                                @RequestParam String fileName,
+                                                @PathVariable Long fileId,
                                                 @RequestParam(defaultValue = "false", required = false) Boolean isElement) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        storageService.storeCoverPage(username, fileId, coverPageFile, isElement);
+        storageService.storeCoverPage(username, fileId, coverPageFile, fileName, isElement);
         return new BinaryFileCallStatus(fileId, true, "Binary file cover page uploaded successfully!");
     }
 

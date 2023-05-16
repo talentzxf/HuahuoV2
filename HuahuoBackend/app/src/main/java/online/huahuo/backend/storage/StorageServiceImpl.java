@@ -72,10 +72,8 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public boolean storeCoverPage(String path, Long projectId, MultipartFile coverPageFile, boolean isElement) throws IOException {
+    public boolean storeCoverPage(String path, Long projectId, MultipartFile coverPageFile, String fileName, boolean isElement) throws IOException {
         BinaryFileDB binaryFileDB = fileRepository.getReferenceById(projectId);
-
-        String fileName = coverPageFile.getOriginalFilename();
 
         FileType fileType = isElement ? FileType.ELEMENT : FileType.PROJECT;
         String savePath = getPath() + path + File.separator + fileType + File.separator;

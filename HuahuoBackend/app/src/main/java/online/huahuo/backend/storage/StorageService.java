@@ -11,5 +11,5 @@ public interface StorageService {
     BinaryFileDB getById(Long projectId);
 
     BinaryFileDB save(BinaryFileDB binaryFileDB);
-    boolean storeCoverPage(String path, Long projectId, MultipartFile coverPageFile, boolean isElement) throws IOException;
+    boolean storeCoverPage(String path, Long projectId, MultipartFile coverPageFile, String fileName, boolean isElement) throws IOException;
 }
