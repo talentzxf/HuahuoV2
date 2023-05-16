@@ -36,8 +36,7 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public BinaryFileDB store(String path, MultipartFile file, Boolean forceOverride, Boolean isElement) throws IOException, NoSuchAlgorithmException {
-        String fileName = file.getOriginalFilename();
+    public BinaryFileDB store(String path, MultipartFile file, String fileName, Boolean forceOverride, Boolean isElement) throws IOException, NoSuchAlgorithmException {
         FileType fileType = isElement ? FileType.ELEMENT : FileType.PROJECT;
         String savePath = getPath() + path + File.separator + fileType + File.separator;
         String absoluteFilePath = savePath + fileName + HUAHUO_POSTFIX;

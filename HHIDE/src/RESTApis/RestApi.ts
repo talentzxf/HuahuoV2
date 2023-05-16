@@ -65,9 +65,7 @@ class RestApi {
     }
 
     async uploadProject(data: Blob, fileName: string, isElement: boolean = false) {
-        data["lastModifiedDate"] = new Date();
-        data["name"] = fileName;
-        this.fileController.uploadFileForm(data, true, isElement, this.getAuthHeader())
+        return this.fileController.uploadFileForm(fileName, data, true, isElement, this.getAuthHeader())
     }
 
     async uploadProjectCoverPage(fileId, data: Blob, fileName, isElement: boolean = false) {
@@ -76,7 +74,7 @@ class RestApi {
         data["name"] = fileName;
 
         formData.append("file", data, fileName)
-        this.fileController.handleCoverPageUpload(fileId, isElement, formData)
+        return this.fileController.handleCoverPageUpload(fileId, isElement, formData)
     }
 
     async downloadProject(fileId) {
@@ -109,7 +107,7 @@ class RestApi {
         return this.loginController.isTokenValid(username, jwtToken)
     }
 
-    getAuthHeader(){
+    getAuthHeader() {
         return {
             headers: {"Authorization": "Bearer " + userInfo.jwtToken}
         }
