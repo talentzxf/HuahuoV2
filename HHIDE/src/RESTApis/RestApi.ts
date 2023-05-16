@@ -49,7 +49,7 @@ class RestApi {
 
     async createAnonymousUser() {
 
-        let createUserResponseRaw = await this.userController.createUser(true)
+        let createUserResponseRaw = await this.userController.createUser(null, true)
         let createUserResponse: UserDB = createUserResponseRaw.data
 
         userInfo.username = createUserResponse.username
@@ -95,7 +95,7 @@ class RestApi {
             role: role,
             status: UserDBStatusEnum.ACTIVE
         }
-        this.userController.createUser(false, userDB)
+        return this.userController.createUser(userDB, false)
     }
 
     async isTokenValid(username: string, jwtToken: string) {
@@ -119,14 +119,8 @@ class RestApi {
         })
     }
 
-    async listElements(callBack: Function, pageNo: number = 0, pageSize: number = 10) {
-        let apiCallPromise = this.fileController.listBinaryFiles(pageNo, pageSize, true)
-
-        apiCallPromise.then((projects) => {
-            callBack(projects)
-        }).catch((ex) => {
-            HHToast.error("Exception happened when listing elements!" + ex)
-        })
+    async listElements(pageNo: number = 0, pageSize: number = 10) {
+        return this.fileController.listBinaryFiles(pageNo, pageSize, true, this.getAuthHeader())
     }
 
     async updateProjectDescription(fileId, description) {
@@ -138,7 +132,7 @@ class RestApi {
     }
 
     async deleteBinaryFile(fileId) {
-        return this.fileController.deleteBinaryFile(fileId)
+        return this.fileController.deleteBinaryFile(fileId, this.getAuthHeader())
     }
 }
 

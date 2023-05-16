@@ -206,6 +206,14 @@ public class BinaryFileController {
         return ResponseEntity.ok("Binary file successfully deleted!");
     }
 
+    public ResponseEntity JumpToNotFoundImage(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/binaryfiles/coverPageNotFound");
+
+        // 302 jump to not found image
+        return new ResponseEntity<byte[]>(null, headers, HttpStatus.FOUND);
+    }
+
     // TODO: Add Auth!!!
     // This is not REST call, don't marshal response.
     // @PreAuthorize("hasRole('READER')")
@@ -214,6 +222,9 @@ public class BinaryFileController {
         try {
             BinaryFileDB fileDB = storageService.getById(fileId);
             String fullPath = fileDB.getCoverPagePath();
+            if(fullPath == null)
+                return JumpToNotFoundImage();
+
             byte[] fileData = Files.readAllBytes(Paths.get(fullPath));
 
             ByteArrayResource resource = new ByteArrayResource(fileData);
@@ -229,11 +240,7 @@ public class BinaryFileController {
                     .body(resource);
         } catch (Exception e) {
             log.error("Exception happened, redirect to not found page.", e);
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Location", "/binaryfiles/coverPageNotFound");
-
-            // 302 jump to not found image
-            return new ResponseEntity<byte[]>(null, headers, HttpStatus.FOUND);
+            return JumpToNotFoundImage();
         }
     }
 
