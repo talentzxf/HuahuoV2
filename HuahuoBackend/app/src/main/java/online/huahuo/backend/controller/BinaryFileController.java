@@ -86,7 +86,8 @@ public class BinaryFileController {
 
 
     @ResponseBody
-    @GetMapping("/binaryfiles/{fileId}")
+    @GetMapping(value = "/binaryfiles/{fileId}",
+        produces = "application/octet-stream")
     public ResponseEntity<Resource> downloadBinaryFile(@PathVariable Long fileId) throws IOException {
         BinaryFileDB fileDB = storageService.getById(fileId);
 

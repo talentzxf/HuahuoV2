@@ -73,7 +73,7 @@ class RestApi {
     }
 
     async downloadProject(fileId) {
-        return this.fileController.downloadBinaryFile(fileId)
+        return this.fileController.downloadBinaryFile(fileId, {responseType: "arraybuffer"})
     }
 
     async isUserExist(username: string, existUserFunc: Function, userNotExistFunc: Function) {

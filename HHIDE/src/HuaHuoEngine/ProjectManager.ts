@@ -28,10 +28,8 @@ class ProjectManager {
 
     loadFromServer(projectId: number) {
         let _this = this
-        return api.downloadProject(projectId).then(function (blob: Blob) {
-            Promise.resolve(blob.arrayBuffer()).then((data) => {
-                _this.loadFromArrayBuffer(data)
-            })
+        return api.downloadProject(projectId).then(function (response: ArrayBuffer) {
+            _this.loadFromArrayBuffer(response["data"])
         })
     }
 
