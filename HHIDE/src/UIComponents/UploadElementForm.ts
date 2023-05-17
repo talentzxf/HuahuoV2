@@ -4,19 +4,30 @@ import {CSSUtils} from "../Utilities/CSSUtils";
 import {renderEngine2D, huahuoEngine, Player} from "hhenginejs"
 import {SceneView} from "../SceneView/SceneView";
 
+// TODO: A lot of duplication code with ProjectInfoForm.
 @CustomElement({
     selector: "hh-upload-element-list"
 })
 class UploadElementForm extends HTMLElement implements HHForm{
     selector: string;
 
-    afterOKAction: Function;
+    onOKAction: Function;
 
     listDiv
     closeBtn: HTMLButtonElement
     previewCanvas: HTMLCanvasElement
     previewCanvasContainer: HTMLDivElement
     previewAnimationPlayer: Player
+
+    okBtn: HTMLButtonElement
+    cancelBtn: HTMLButtonElement
+
+    eleStoreId: string
+    eleName: string
+    setStore(storeId, name){
+        this.eleStoreId = storeId
+        this.eleName = name
+    }
 
     connectedCallback(){
         this.style.position = "absolute"
@@ -69,7 +80,7 @@ class UploadElementForm extends HTMLElement implements HHForm{
         this.closeBtn.addEventListener("mousedown", this.closeForm.bind(this))
 
         this.previewAnimationPlayer = new Player()
-        
+
         let prevCanvas = renderEngine2D.getDefaultCanvas()
         renderEngine2D.init(this.previewCanvas)
         if(prevCanvas)
@@ -86,6 +97,20 @@ class UploadElementForm extends HTMLElement implements HHForm{
         let resizeObserver = new ResizeObserver(this.OnResize.bind(this))
         resizeObserver.observe(this.previewCanvasContainer)
 
+        this.okBtn = this.querySelector("#Submit")
+        this.cancelBtn = this.querySelector("#Cancel")
+
+        this.okBtn.onclick = this.OnOK.bind(this)
+        this.cancelBtn.onclick = this.onclose.bind(this)
+    }
+
+    OnOK(evt){
+        evt.stopPropagation()
+        evt.preventDefault()
+
+        if(this.onOKAction){
+            this.onOKAction()
+        }
     }
 
     // Duplicate with ProjectInfo.
