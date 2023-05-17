@@ -64,7 +64,7 @@ class ProjectListForm extends HTMLElement implements HHForm {
         this.style.display = "none"
     }
 
-    updateList(totalPage, curPageNo, projects, onItemClicked: Function = null, enableDeletion = true) {
+    updateList(totalPage, curPageNo, projects, onItemClicked: Function = null, enableDeletion = true, writeAuthInfo = false) {
         this.projectInfoMap.clear()
 
         this.listUL.innerHTML = i18n.t("project.nothing")
@@ -80,6 +80,8 @@ class ProjectListForm extends HTMLElement implements HHForm {
             ulInnerHTML += "    </div>"
             ulInnerHTML += "    <div style='display: flex; flex-direction: column; width: 100%'>"
             ulInnerHTML += "        <span >" + project.name + "</span>"
+            if(writeAuthInfo)
+                ulInnerHTML += "    <span style='font-size: small; text-align: right'>" + project.createdBy + "</span>"
             ulInnerHTML += "        <span style='font-size: x-small; text-align: right' class='" + projectDivPrefix + project.id + "'>" + project.createTime.split("T")[0] + "</span>"
             ulInnerHTML += "        <span style='font-size: small'>" + project.description + "</span>"
 

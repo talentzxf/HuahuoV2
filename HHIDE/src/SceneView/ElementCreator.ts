@@ -8,6 +8,8 @@ import {sceneViewManager} from "./SceneViewManager";
 import {BaseShapeJS, Utils} from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {elementUploader} from "../RESTApis/ElementUploader";
+import {formManager} from "../Utilities/FormManager";
+import {UploadElementForm} from "../UIComponents/UploadElementForm";
 
 declare var Module:any;
 
@@ -47,7 +49,10 @@ class ElementCreator {
     }
 
     uploadElement(element){
-        elementUploader.uploadStore(element.storeId, element.name)
+        let uploadElementForm = formManager.openForm(UploadElementForm)
+        uploadElementForm.afterOKAction = ()=>{
+            elementUploader.uploadStore(element.storeId, element.name)
+        }
     }
 
     onShapeCreated(newShape) {

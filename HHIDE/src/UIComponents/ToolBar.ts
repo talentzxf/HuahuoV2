@@ -144,7 +144,7 @@ class HHToolBar extends HTMLElement {
             let totalPage = listElementResult.totalCount / pageSize
             form.updateList(totalPage, pageNo, listElementResult.binaryFiles, (elementId) => {
                 projectManager.loadFromServer(elementId)
-            }, false)
+            }, false, true)
         })
     }
 }
