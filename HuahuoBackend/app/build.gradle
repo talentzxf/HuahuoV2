@@ -23,6 +23,7 @@ dependencies {
     implementation 'org.springframework.security:spring-security-test'
     implementation("org.springdoc:springdoc-openapi-ui:1.2.33")
     implementation("com.google.guava:guava:31.1-jre")
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate5', version: '2.15.0'
     implementation project(':utilities')
 
     // Compile time

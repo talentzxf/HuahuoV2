@@ -6,8 +6,10 @@ import {HHToast} from "hhcommoncomponents";
 
 import {
     LoginControllerApi, UserControllerApi, BinaryFileControllerApi,
-    LoginStatus, UserDB, UserDBRoleEnum, UserDBStatusEnum
+    LoginStatus, UserDB, UserDBRoleEnum, UserDBStatusEnum,
+    ElementControllerApi
 } from "../../dist/clientApi/index"
+
 
 // TODO: Use Swagger to generate the API class
 class RestApi {
@@ -25,6 +27,7 @@ class RestApi {
     loginController
     userController
     fileController
+    elementController
 
     constructor() {
         this.baseUrl = huahuoProperties["huahuo.backend.url"]
@@ -32,6 +35,7 @@ class RestApi {
         this.userController = new UserControllerApi(undefined, this.baseUrl, axios)
         this.fileController = new BinaryFileControllerApi(undefined, this.baseUrl, axios)
         this.userController = new UserControllerApi(undefined, this.baseUrl, axios)
+        this.elementController = new ElementControllerApi(undefined, this.baseUrl, axios)
     }
 
 
@@ -68,8 +72,18 @@ class RestApi {
         return this.elementController.createElement(fileName, isElement)
     }
 
-    async uploadProject(data: Blob, fileName: string, isElement: boolean = false) {
-        return this.fileController.uploadFileForm(fileName, data, true, isElement, this.getAuthHeader())
+    async uploadElement(data: Blob, fileName: string, storeId: string, isEditable = true, isShareable = true){
+        return this.fileController.uploadFileForm(fileName, data, true, true, this.getAuthHeader()).then((response)=>{
+            if(response && response.data){
+                let fileId = response.data.fileId
+
+                return this.elementController.createElement(storeId, fileId, isEditable, isShareable, this.getAuthHeader())
+            }
+        })
+    }
+
+    async uploadProject(data: Blob, fileName: string) {
+        return this.fileController.uploadFileForm(fileName, data, true, false, this.getAuthHeader())
     }
 
     async uploadProjectCoverPage(fileId, data: Blob, fileName, isElement: boolean = false) {

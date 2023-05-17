@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -19,5 +16,10 @@ public class ElementDB {
     @Column(name = "id", nullable = false)
     private String elementId;
 
-    private String fileId;
+    private boolean editable; // Allow other people to edit this element.
+    private boolean shareable; // Allow other people to share this element.
+
+    @OneToOne()
+    @JoinColumn(name = "fileId", referencedColumnName = "id")
+    private BinaryFileDB binaryFileDB;
 }

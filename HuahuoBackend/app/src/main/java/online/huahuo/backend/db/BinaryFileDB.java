@@ -1,5 +1,6 @@
 package online.huahuo.backend.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,8 +28,11 @@ public class BinaryFileDB {
     private String createdBy;
     private String description;
 
+    @JsonIgnore
     @Column(unique = true)
     private String fullPath;
+
+    @JsonIgnore
     private String coverPagePath;
     private String checksum;
 
