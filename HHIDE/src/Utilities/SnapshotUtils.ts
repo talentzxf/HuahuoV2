@@ -6,16 +6,27 @@ let previewPlayer = new Player()
 class SnapshotUtils{
 
     static takeSnapShotForStore(storeId): Blob{
+        // document.body.appendChild(hiddenCanvas)
+        // hiddenCanvas.style.position = "absolute"
+        // hiddenCanvas.style.left = "0px"
+        // hiddenCanvas.style.top = "0px"
+        // hiddenCanvas.style.border = "1px solid black"
+
+        let previousCanvas = renderEngine2D.getDefaultCanvas()
+        renderEngine2D.init(hiddenCanvas)
+
+        let [initW, initH] = renderEngine2D.getInitCanvasWH()
+        if(initW > 0){
+            renderEngine2D.resize(hiddenCanvas, initW, initH)
+        }
 
         let prevStore = huahuoEngine.GetCurrentStoreId()
-        let previousCanvas = null
-
         try{
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(storeId)
 
             let currentLayer = huahuoEngine.GetCurrentLayer()
             let currentFrameId = currentLayer.GetCurrentFrame()
-            previousCanvas = renderEngine2D.setDefaultCanvas(hiddenCanvas)
+            renderEngine2D.setDefaultCanvas(hiddenCanvas)
 
             previewPlayer.storeId = storeId
             previewPlayer.loadShapesFromStore()

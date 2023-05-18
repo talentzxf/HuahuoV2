@@ -133,6 +133,10 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
     public init(canvas: HTMLCanvasElement, isPlayer: boolean = false) {
         console.log("Initing paper!!!!")
+        if(this.canvasPaperMap.get(canvas)){
+            console.log("Already inited, won't init twice!")
+            return
+        }
 
         this.isPlayer = isPlayer
         paper.setup(canvas)
