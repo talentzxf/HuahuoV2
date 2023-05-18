@@ -100,7 +100,9 @@ class SceneView extends HTMLElement {
 
         let _this = this
         huahuoEngine.ExecuteAfterInited(() => {
-            _this.timeline = document.createElement("hh-timeline") as HHTimeline
+            if(_this.timeline == null)
+                _this.timeline = document.createElement("hh-timeline") as HHTimeline
+
             _this.canvasContainer.insertBefore(_this.timeline, _this.canvas)
 
             let i18n = (window as any).i18n;
