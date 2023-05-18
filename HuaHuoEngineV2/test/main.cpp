@@ -29,6 +29,7 @@
 #include "Shapes/ImageShape.h"
 
 #include "openssl/md5.h"
+
 #define ASSERT assert
 
 void testTransform() {
@@ -157,9 +158,9 @@ void testShapeStore() {
 
     printf("maxFrameId: %d\n", circleShape->GetMaxFrameId());
 
-    ImageShape* imageShape = Object::Produce<ImageShape>();
-    vector<UInt8> data = {30,31,32,33,34,35,36,37,38,39,40};
-    if(GetDefaultResourceManager()->LoadBinaryResource("TestTest", "binary", data.data(), data.size())){
+    ImageShape *imageShape = Object::Produce<ImageShape>();
+    vector<UInt8> data = {30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
+    if (GetDefaultResourceManager()->LoadBinaryResource("TestTest", "binary", data.data(), data.size())) {
         MD5_CTX md5Ctx;
         MD5_Init(&md5Ctx);
         MD5_Update(&md5Ctx, data.data(), data.size());
@@ -371,25 +372,31 @@ void testSegmentKeyFrames() {
 }
 
 void testMultipleStores() {
-    const char* defaultStoreId = GetDefaultObjectStoreManager()->GetCurrentStore()->GetStoreId();
+    const char *defaultStoreId = GetDefaultObjectStoreManager()->GetCurrentStore()->GetStoreId();
     ObjectStore *pNewStore = GetDefaultObjectStoreManager()->CreateStore();
 
-    const char* newStore = pNewStore->GetStoreId();
+    const char *newStore = pNewStore->GetStoreId();
 
     bool result = GetDefaultObjectStoreManager()->SetDefaultStoreByIndex(newStore);
     assert(result);
 
     ObjectStoreManager *objectStoreManager = GetDefaultObjectStoreManager();
-    Layer* currentLayer = objectStoreManager->GetCurrentStore()->CreateLayer("TestTest");
+    Layer *currentLayer = objectStoreManager->GetCurrentStore()->CreateLayer("TestTest");
     RectangleShape *rectangleShape = (RectangleShape *) BaseShape::CreateShape("RectangleShape");
-    ShapeTransformComponent* pTransformComponent = (ShapeTransformComponent*) rectangleShape->GetFrameStateByTypeName("ShapeTransformComponent");
+    ShapeTransformComponent *pTransformComponent = (ShapeTransformComponent *) rectangleShape->GetFrameStateByTypeName(
+            "ShapeTransformComponent");
 
     pTransformComponent->SetVector3Value("globalPivotPosition", 100.0, 100.0, 0.0);
 
     currentLayer->AddShapeInternal(rectangleShape);
 
+    ObjectStore* pNewStore2 = GetDefaultObjectStoreManager()->CreateStore();
+    ElementShape* elementShape = (ElementShape*) BaseShape::CreateShape("ElementShape");
+    elementShape->SetElementStoreId(pNewStore2->GetStoreId());
+    currentLayer->AddShapeInternal(elementShape);
+
     std::string storeFilePath = StoreFilePath;
-    GetPersistentManager().WriteObject(storeFilePath, objectStoreManager->GetCurrentStore());
+    GetPersistentManager().WriteObject(storeFilePath, pNewStore);
 }
 
 void testCloneObject() {
@@ -399,9 +406,10 @@ void testCloneObject() {
 
     RectangleShape *rectangleShape = (RectangleShape *) BaseShape::CreateShape("RectangleShape");
 
-    ShapeTransformComponent* pTransformComponent = (ShapeTransformComponent*) rectangleShape->GetFrameStateByTypeName("ShapeTransformComponent");
-    KeyFrameCurve* xCurve = pTransformComponent->GetVectorKeyFrameCurve("globalPivotPosition", 0);
-    KeyFrameCurve* yCurve = pTransformComponent->GetVectorKeyFrameCurve("globalPivotPosition", 1);
+    ShapeTransformComponent *pTransformComponent = (ShapeTransformComponent *) rectangleShape->GetFrameStateByTypeName(
+            "ShapeTransformComponent");
+    KeyFrameCurve *xCurve = pTransformComponent->GetVectorKeyFrameCurve("globalPivotPosition", 0);
+    KeyFrameCurve *yCurve = pTransformComponent->GetVectorKeyFrameCurve("globalPivotPosition", 1);
 
     currentLayer->SetCurrentFrame(10);
     xCurve->SetValue(10, 100.0f);
@@ -413,10 +421,10 @@ void testCloneObject() {
     rectangleShape->SetEndPoint(3, 3, 3);
 
     rectangleShape->SetGlobalPivotPosition(10, 10, 10);
-    Vector3f* position = rectangleShape->GetGlobalPivotPosition();
+    Vector3f *position = rectangleShape->GetGlobalPivotPosition();
     assert(*position == Vector3f(10, 10, 10));
 
-    Vector3f* scale = rectangleShape->GetScale();
+    Vector3f *scale = rectangleShape->GetScale();
 
     currentLayer->SetCurrentFrame(10);
     rectangleShape->SetGlobalPivotPosition(100, 100, 100);
@@ -442,7 +450,7 @@ void testCloneObject() {
     ImageShape *imageShape = (ImageShape *) BaseShape::CreateShape("ImageShape");
     vector<UInt8> imgData = {32, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
     std::string imgName = "asdf";
-    GetDefaultResourceManager()->LoadBinaryResource(imgName.c_str(), "jpeg",imgData.data(), imgData.size());
+    GetDefaultResourceManager()->LoadBinaryResource(imgName.c_str(), "jpeg", imgData.data(), imgData.size());
     MD5_CTX md5Ctx;
     MD5_Init(&md5Ctx);
     MD5_Update(&md5Ctx, imgData.data(), imgData.size());
@@ -541,7 +549,8 @@ void testReadFromFile() {
 
     GetDefaultObjectStoreManager()->GetCurrentStore()->CreateLayer("asdfasdfasdfasdf");
     CircleShape *circleShape = (CircleShape *) BaseShape::CreateShape("CircleShape");
-    ShapeTransformComponent* transformComponent = (ShapeTransformComponent*)circleShape->GetFrameStateByTypeName("ShapeTransformComponent");
+    ShapeTransformComponent *transformComponent = (ShapeTransformComponent *) circleShape->GetFrameStateByTypeName(
+            "ShapeTransformComponent");
     transformComponent->GetFieldCount();
 
     circleShape->SetRadius(10.0f);
@@ -600,7 +609,7 @@ void testReadFromFile() {
     customComponent->SetColorValue("strokeColor", 0.0, 1.0, 0.0, 1.0);
     float growthValue = customComponent->GetFloatValue("growth");
 
-    std::vector<UInt8> test = {12,32,123,123,1,23,1,23,1,22,3,1};
+    std::vector<UInt8> test = {12, 32, 123, 123, 1, 23, 1, 23, 1, 22, 3, 1};
     GetDefaultResourceManager()->LoadBinaryResource("HelloHello2", "asfdasdf", test.data(), test.size());
     MD5_CTX md5Ctx;
     MD5_Init(&md5Ctx);
@@ -610,8 +619,8 @@ void testReadFromFile() {
     std::string md5ResultString = Hash128ToString(md5Result);
 
     customComponent->SetBinaryResourceByMD5("particleShape", md5ResultString.c_str());
-    BinaryResourceWrapper* binaryResource = customComponent->GetBinaryResource("particleShape");
-    assert(strcmp(binaryResource->GetResourceName() ,"HelloHello2") == 0);
+    BinaryResourceWrapper *binaryResource = customComponent->GetBinaryResource("particleShape");
+    assert(strcmp(binaryResource->GetResourceName(), "HelloHello2") == 0);
 
     GetPersistentManager().WriteFile(StoreFilePath);
 
@@ -664,14 +673,14 @@ void testReadFromFile() {
 
     customComponent->RegisterStringValue("eventGraphJson", "");
     customComponent->SetStringValue("eventGraphJson", "Test");
-    const char* string = customComponent->GetStringValue("eventGraphJson");
+    const char *string = customComponent->GetStringValue("eventGraphJson");
     assert(string != NULL);
 
-    KeyFrameCurve* pCurve = customComponent->GetFloatKeyFrameCurve("growth");
+    KeyFrameCurve *pCurve = customComponent->GetFloatKeyFrameCurve("growth");
     assert(pCurve != NULL && pCurve->GetTotalPoints() != 0);
 }
 
-void testKeyFrameCurve(){
+void testKeyFrameCurve() {
     KeyFrameCurve keyFrameCurve;
     keyFrameCurve.SetCurveValue(1.0, 1);
     keyFrameCurve.SetCurveValue(2.0, 10);
@@ -683,9 +692,9 @@ void testKeyFrameCurve(){
     assert(keyFrameCurve.GetKeyFrameCurvePoint(1)->GetFrameId() == 2);
     assert(keyFrameCurve.GetKeyFrameCurvePoint(2)->GetFrameId() == 3);
 
-    const char* fieldName = "thickness";
+    const char *fieldName = "thickness";
 
-    Layer* layer = GetDefaultObjectStoreManager()->GetCurrentStore()->CreateLayer("Hahahaha");
+    Layer *layer = GetDefaultObjectStoreManager()->GetCurrentStore()->CreateLayer("Hahahaha");
     CircleShape *circleShape = (CircleShape *) BaseShape::CreateShape("CircleShape");
 
     CustomComponent *customComponent = CustomComponent::CreateComponent("CustomComponent");
@@ -700,7 +709,7 @@ void testKeyFrameCurve(){
     layer->SetCurrentFrame(300);
     customComponent->SetFloatValue(fieldName, 300.0f);
 
-    KeyFrameCurve* keyFrameCurve1 = customComponent->GetFloatKeyFrameCurve(fieldName);
+    KeyFrameCurve *keyFrameCurve1 = customComponent->GetFloatKeyFrameCurve(fieldName);
     assert(keyFrameCurve1->GetTotalPoints() == 4);
 
     layer->SetCurrentFrame(400);

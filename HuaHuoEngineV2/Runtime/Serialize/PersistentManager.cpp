@@ -1557,6 +1557,16 @@ int PersistentManager::WriteObject(std::string& path, PPtr<Object> object){
             RemapPPtrTransfer remapTransfer(kNoTransferInstructionFlags, false);
             remapTransfer.SetGenerateIDFunctor(&functor);
             pendingObject->VirtualRedirectTransfer(remapTransfer);
+
+            if(pendingObject->Is<ElementShape>()){
+                ElementShape* elementShape = (ElementShape*)pendingObject;
+                const char* elementStoreId = elementShape->GetElementStoreId();
+                ObjectStore* objectStore = GetDefaultObjectStoreManager()->GetStoreById(elementStoreId);
+                InstanceID storeInstanceID = objectStore->GetInstanceID();
+                if(!writeObjects.contains(storeInstanceID)){
+                    writeObjects.insert(objectStore->GetInstanceID());
+                }
+            }
         }
     }
 
