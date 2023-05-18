@@ -51,7 +51,6 @@ class ElementCreator {
     uploadElement(element){
         let uploadElementForm = formManager.openForm(UploadElementForm)
         uploadElementForm.setStore(element.storeId, element.name)
-
         uploadElementForm.onOKAction = ()=>{
             elementUploader.uploadStore(element.storeId, element.name)
         }

@@ -8,7 +8,7 @@ import {SceneView} from "../SceneView/SceneView";
 @CustomElement({
     selector: "hh-upload-element-list"
 })
-class UploadElementForm extends HTMLElement implements HHForm{
+class UploadElementForm extends HTMLElement implements HHForm {
     selector: string;
 
     onOKAction: Function;
@@ -18,18 +18,26 @@ class UploadElementForm extends HTMLElement implements HHForm{
     previewCanvas: HTMLCanvasElement
     previewCanvasContainer: HTMLDivElement
     previewAnimationPlayer: Player
+    elementNameSpan: HTMLSpanElement
 
     okBtn: HTMLButtonElement
     cancelBtn: HTMLButtonElement
 
     eleStoreId: string
     eleName: string
-    setStore(storeId, name){
+
+    setStore(storeId, name) {
         this.eleStoreId = storeId
         this.eleName = name
+
+        if (this.elementNameSpan) {
+            this.elementNameSpan.innerText = this.eleName
+        }
+
+        this.RedrawFrame()
     }
 
-    connectedCallback(){
+    connectedCallback() {
         this.style.position = "absolute"
         this.style.top = "50%"
         this.style.left = "50%"
@@ -55,7 +63,7 @@ class UploadElementForm extends HTMLElement implements HHForm{
             "           <img class='far fa-circle-xmark'>" +
             "       </div>" +
             "   </div>" +
-            "   <h3>Upload Element</h3>" +
+            "   <h4>Upload Element <span id='elementName'>" + this.eleName + "</span></h4>" +
             "   <div id='preview-canvas-container'>" +
             "       <canvas id='preview-canvas' style='border: 1px solid blue'></canvas>" +
             "   </div>" +
@@ -74,6 +82,8 @@ class UploadElementForm extends HTMLElement implements HHForm{
             "   </form>"
         this.appendChild(this.listDiv)
 
+        this.elementNameSpan = this.listDiv.querySelector("#elementName")
+
         this.previewCanvasContainer = this.listDiv.querySelector("#preview-canvas-container")
         this.previewCanvas = this.listDiv.querySelector("#preview-canvas")
         this.closeBtn = this.listDiv.querySelector("#closeBtn")
@@ -83,12 +93,12 @@ class UploadElementForm extends HTMLElement implements HHForm{
 
         let prevCanvas = renderEngine2D.getDefaultCanvas()
         renderEngine2D.init(this.previewCanvas)
-        if(prevCanvas)
+        if (prevCanvas)
             renderEngine2D.setDefaultCanvas(prevCanvas)
 
         let [initW, initH] = renderEngine2D.getInitCanvasWH()
 
-        if(initW > 0){
+        if (initW > 0) {
             renderEngine2D.resize(this.previewCanvas, initW, initH)
         }
 
@@ -101,27 +111,27 @@ class UploadElementForm extends HTMLElement implements HHForm{
         this.cancelBtn = this.querySelector("#Cancel")
 
         this.okBtn.onclick = this.OnOK.bind(this)
-        this.cancelBtn.onclick = this.onclose.bind(this)
+        this.cancelBtn.onclick = this.closeForm.bind(this)
     }
 
-    OnOK(evt){
+    OnOK(evt) {
         evt.stopPropagation()
         evt.preventDefault()
 
-        if(this.onOKAction){
+        if (this.onOKAction) {
             this.onOKAction()
         }
     }
 
     // Duplicate with ProjectInfo.
-    OnResize(){
-        if(window.getComputedStyle(this.parentElement).display == "none")
+    OnResize() {
+        if (window.getComputedStyle(this.parentElement).display == "none")
             return;
 
         let containerWidth = this.previewCanvasContainer.clientWidth
         let containerHeight = this.previewCanvasContainer.clientHeight
 
-        if(containerWidth <= 0 || containerHeight <= 0)
+        if (containerWidth <= 0 || containerHeight <= 0)
             return
 
         let margin = 0
@@ -142,24 +152,30 @@ class UploadElementForm extends HTMLElement implements HHForm{
         this.RedrawFrame()
     }
 
-    RedrawFrame(){
+    RedrawFrame() {
+        if (null == this.eleStoreId)
+            return
+
         let prevStore = huahuoEngine.GetCurrentStoreId()
+        let previousCanvas = null
 
-        let mainSceneView: SceneView = document.querySelector("#mainScene")
-        let mainStoreId = mainSceneView.storeId
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainStoreId) // Only render the main store.i.e. the 1st store.
+        try{
+            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.eleStoreId)
 
-        let currentLayer = huahuoEngine.GetCurrentLayer()
-        let currentFrameId = currentLayer.GetCurrentFrame()
-        let previousCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
+            let currentLayer = huahuoEngine.GetCurrentLayer()
+            let currentFrameId = currentLayer.GetCurrentFrame()
+            previousCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
 
-        this.previewAnimationPlayer.storeId = mainStoreId
-        this.previewAnimationPlayer.loadShapesFromStore()
-        this.previewAnimationPlayer.setFrameId(currentFrameId)
-        if(previousCanvas)
-            renderEngine2D.setDefaultCanvas(previousCanvas)
+            this.previewAnimationPlayer.storeId = this.eleStoreId
+            this.previewAnimationPlayer.loadShapesFromStore()
+            this.previewAnimationPlayer.setFrameId(currentFrameId)
+        }finally {
+            if (previousCanvas)
+                renderEngine2D.setDefaultCanvas(previousCanvas)
 
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStore)
+            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStore)
+        }
+
     }
 
     closeForm() {
