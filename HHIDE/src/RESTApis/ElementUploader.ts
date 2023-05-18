@@ -2,6 +2,8 @@ import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 import {gzipSync} from "fflate";
 import {api} from "./RestApi";
 import {HHToast} from "hhcommoncomponents";
+import {SnapshotUtils} from "../Utilities/SnapshotUtils";
+import {projectInfo} from "../SceneView/ProjectInfo";
 
 declare var Module: any
 
@@ -31,7 +33,16 @@ class ElementUploader {
         let elementBlob = this.getStoreData(storeId, elementName)
 
         api.uploadElement(elementBlob, elementName, storeId).then((response)=>{
-            HHToast.info("Element upload succeeded!")
+            if(response && response["data"]){
+                let fileId = response["data"]["binaryFileDB"]["id"]
+
+                let coverPageBlob = SnapshotUtils.takeSnapShotForStore(storeId)
+                let uploadCoverpagePromise = api.uploadProjectCoverPage(fileId, coverPageBlob, elementName + ".png")
+
+                uploadCoverpagePromise.then((response)=>{
+                    HHToast.info("Element upload succeeded!")
+                })
+            }
         })
     }
 }

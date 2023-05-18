@@ -1,6 +1,5 @@
 
 // Project == Store. (Should be consolidate these two terms??)
-import {SceneView} from "./SceneView";
 import {sceneViewManager} from "./SceneViewManager";
 import {SnapshotUtils} from "../Utilities/SnapshotUtils";
 
@@ -19,15 +18,15 @@ class ProjectInfo {
 
     Clear(){
         this.id = -1
-        this.name = "";
-        this.description = ""
+        this.name = '';
+        this.description = null
         this.coverPage = null
         this.inited = false
     }
 
     Setup(name:string, description:string, coverPageBinary:Blob){
         this.name = name
-        this.description = description
+        this.description = description.trim()
         this.coverPage = coverPageBinary
         this.inited = true
 

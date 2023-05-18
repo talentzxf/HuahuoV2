@@ -59,6 +59,8 @@ public class BinaryFileController {
     @javax.annotation.Resource
     private BinaryFileRepository binaryFileRepository;
 
+
+
     @PreAuthorize("hasRole('CREATOR')")
     @ResponseBody
     @PostMapping(value = "/binaryfiles/upload",
@@ -76,7 +78,8 @@ public class BinaryFileController {
     }
 
     @ResponseBody
-    @PutMapping("/binaryfiles/{fileId}/description")
+    @PutMapping(value = "/binaryfiles/{fileId}/description",
+        consumes = "text/plain")
     public BinaryFileCallStatus updateBinaryFileDescription(@PathVariable Long fileId, @RequestBody String description) {
         BinaryFileDB fileDB = storageService.getById(fileId);
         fileDB.setDescription(description);

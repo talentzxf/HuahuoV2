@@ -112,6 +112,19 @@ class UploadElementForm extends HTMLElement implements HHForm {
 
         this.okBtn.onclick = this.OnOK.bind(this)
         this.cancelBtn.onclick = this.closeForm.bind(this)
+
+        this.okBtn.onmouseenter = this.mouseEnter.bind(this)
+        this.okBtn.onmouseout = this.mouseOutBtn.bind(this)
+        this.cancelBtn.onmouseenter = this.mouseEnter.bind(this)
+        this.cancelBtn.onmouseout = this.mouseOutBtn.bind(this)
+    }
+
+    mouseEnter(evt: MouseEvent){
+        (evt.target as HTMLElement).style.backgroundColor = '#267ded'
+    }
+
+    mouseOutBtn(evt: MouseEvent){
+        (evt.target as HTMLElement).style.backgroundColor = '#6396D8'
     }
 
     OnOK(evt) {
@@ -121,6 +134,8 @@ class UploadElementForm extends HTMLElement implements HHForm {
         if (this.onOKAction) {
             this.onOKAction()
         }
+
+        this.closeForm()
     }
 
     // Duplicate with ProjectInfo.
