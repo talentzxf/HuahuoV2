@@ -36,11 +36,11 @@ class ElementUploader {
             if(response && response["data"]){
                 let fileId = response["data"]["binaryFileDB"]["id"]
 
-                let coverPageBlob = SnapshotUtils.takeSnapShotForStore(storeId)
-                let uploadCoverpagePromise = api.uploadProjectCoverPage(fileId, coverPageBlob, elementName + ".png")
-
-                uploadCoverpagePromise.then((response)=>{
-                    HHToast.info("Element upload succeeded!")
+                let coverPageBlob = SnapshotUtils.takeSnapShotForStore(storeId).then((blob)=>{
+                    let uploadCoverpagePromise = api.uploadProjectCoverPage(fileId, blob, elementName + ".png", true)
+                    uploadCoverpagePromise.then((response)=>{
+                        HHToast.info("Element upload succeeded!")
+                    })
                 })
             }
         })

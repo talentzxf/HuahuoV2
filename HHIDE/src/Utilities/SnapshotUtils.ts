@@ -5,7 +5,8 @@ let previewPlayer = new Player()
 
 class SnapshotUtils{
 
-    static takeSnapShotForStore(storeId): Blob{
+    // TODO: Merge all takesnapshot functions here. Avoid code duplication.
+    static async takeSnapShotForStore(storeId): Promise<Blob>{
         // document.body.appendChild(hiddenCanvas)
         // hiddenCanvas.style.position = "absolute"
         // hiddenCanvas.style.left = "0px"
@@ -13,11 +14,12 @@ class SnapshotUtils{
         // hiddenCanvas.style.border = "1px solid black"
 
         let previousCanvas = renderEngine2D.getDefaultCanvas()
-        renderEngine2D.init(hiddenCanvas)
+        renderEngine2D.init(hiddenCanvas, true)
 
         let [initW, initH] = renderEngine2D.getInitCanvasWH()
+        let [contentW, contentH] = renderEngine2D.getContentWH(initW, initH)
         if(initW > 0){
-            renderEngine2D.resize(hiddenCanvas, initW, initH)
+            renderEngine2D.resize(hiddenCanvas, contentW, contentH)
         }
 
         let prevStore = huahuoEngine.GetCurrentStoreId()
@@ -38,7 +40,13 @@ class SnapshotUtils{
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStore)
         }
 
-        return SnapshotUtils.takeSnapshot(hiddenCanvas)
+        return new Promise<Blob>((resolve, reject)=>{
+
+            setTimeout(function(){
+                let resultBlob = SnapshotUtils.takeSnapshot(hiddenCanvas)
+                resolve(resultBlob)
+            }, 10)
+        })
     }
     static takeSnapshot(canvas:HTMLCanvasElement): Blob{
         let BASE64_MARKER = ";base64,";

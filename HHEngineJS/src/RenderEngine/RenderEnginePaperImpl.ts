@@ -182,6 +182,8 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
             this._resize(width, height, originalSize, canvasView)
         }
+
+        this.clearBackground()
     }
 
     private _resize(width, height, originalSize, canvasView: paper.View){

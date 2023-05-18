@@ -92,7 +92,7 @@ class UploadElementForm extends HTMLElement implements HHForm {
         this.previewAnimationPlayer = new Player()
 
         let prevCanvas = renderEngine2D.getDefaultCanvas()
-        renderEngine2D.init(this.previewCanvas)
+        renderEngine2D.init(this.previewCanvas, true)
         if (prevCanvas)
             renderEngine2D.setDefaultCanvas(prevCanvas)
 
