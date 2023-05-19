@@ -171,7 +171,11 @@ void testShapeStore() {
         imageShape->SetResourceByMD5(resultHashString.c_str());
     }
 
+    printf("main: %s %d\n", __FILE__, __LINE__);
+
     GetPersistentManagerPtr()->WriteFile(StoreFilePath);
+
+    printf("main: %s %d\n", __FILE__, __LINE__);
 
     size_t length = GetMemoryFileSystem()->GetFileLength(StoreFilePath);
     printf("File length:%d\n", length);
@@ -473,6 +477,9 @@ void testDelete() {
 
     RectangleShape *rectangleShape = (RectangleShape *) BaseShape::CreateShape("RectangleShape");
 
+    currentLayer->SetCurrentFrame(6);
+    currentLayer->SetCurrentFrame(5);
+
     float segments[] = {
             0.0f, 0.0f,
             0.0f, 0.0f,
@@ -725,22 +732,34 @@ void testKeyFrameCurve() {
 }
 
 int main() {
+    printf("main: %s %d\n", __FILE__, __LINE__);
     HuaHuoEngine::InitEngine();
 
+    printf("main: %s %d\n", __FILE__, __LINE__);
     testReadFromFile();
     // testTransform();
     // testScene();
     // testGameObject();
+    printf("main: %s %d\n", __FILE__, __LINE__);
     testTimeManager();
+    printf("main: %s %d\n", __FILE__, __LINE__);
     testShapeStore();
+    printf("main: %s %d\n", __FILE__, __LINE__);
     testKeyFrames();
+    printf("main: %s %d\n", __FILE__, __LINE__);
     testRecordKeyFrames();
+    printf("main: %s %d\n", __FILE__, __LINE__);
     testSegmentKeyFrames();
+    printf("main: %s %d\n", __FILE__, __LINE__);
     testCloneObject();
+    printf("main: %s %d\n", __FILE__, __LINE__);
     testDelete();
+    printf("main: %s %d\n", __FILE__, __LINE__);
 
     testKeyFrameCurve();
+    printf("main: %s %d\n", __FILE__, __LINE__);
 
     testMultipleStores();
+    printf("main: %s %d\n", __FILE__, __LINE__);
     return 0;
 }

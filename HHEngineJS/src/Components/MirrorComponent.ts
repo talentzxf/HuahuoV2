@@ -40,12 +40,18 @@ class MirrorComponent extends AbstractComponent {
     p1: paper.Point
     p2: paper.Point
 
-    constructor(rawObj?, isMirage = false) {
-        super(rawObj, isMirage)
+    constructor(baseShape, rawObj?, isMirage = false) {
+        super(baseShape, rawObj, isMirage)
 
         this.paperShapeGroup = new paper.Group()
         this.paperShapeGroup.applyMatrix = false
         this.paperShapeGroup.data.meta = this.baseShape
+
+        let baseShapeSegments = this.baseShape.getSegments()
+        if(baseShapeSegments != null && baseShapeSegments.length == 2) {
+            this.p1 = this.baseShape.getSegments()[0].point
+            this.p2 = this.baseShape.getSegments()[1].point
+        }
 
         // let line1 = new paper.Path.Line(new paper.Point(0, 0), new paper.Point(1000, 0)) // X Axis
         // let line2 = new paper.Path.Line(new paper.Point(0, 0), new paper.Point(0, 1000)) // Y Axis
@@ -57,17 +63,6 @@ class MirrorComponent extends AbstractComponent {
         //
         // this.paperShapeGroup.addChild(line1)
         // this.paperShapeGroup.addChild(line2)
-    }
-
-
-    setBaseShape(baseShape: BaseShapeJS) {
-        super.setBaseShape(baseShape);
-
-        let baseShapeSegments = this.baseShape.getSegments()
-        if(baseShapeSegments != null && baseShapeSegments.length == 2) {
-            this.p1 = this.baseShape.getSegments()[0].point
-            this.p2 = this.baseShape.getSegments()[1].point
-        }
     }
 
     duplicateShape(shape){

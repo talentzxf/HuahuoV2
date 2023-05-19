@@ -15,7 +15,7 @@ class StarMirrorShapeJS extends BaseSolidShape{
         super(rawObj);
 
         if(needInitComponents){
-            this.starMirrorComponent = new StarMirrorComponent()
+            this.starMirrorComponent = new StarMirrorComponent(this)
             this.addComponent(this.starMirrorComponent)
         }
     }

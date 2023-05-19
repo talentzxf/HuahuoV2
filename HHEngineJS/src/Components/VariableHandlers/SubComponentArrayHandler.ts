@@ -41,7 +41,7 @@ class SubComponentArrayHandler {
 
         // Recreate the subcomponent
         let subComponentConstructor = clzObjectFactory.GetClassConstructor(rawSubComponent.GetTypeName())
-        let groupComponent = new subComponentConstructor(rawSubComponent)
+        let groupComponent = new subComponentConstructor(component.baseShape, rawSubComponent)
         component.addSubComponent(groupComponent)
 
         internalProcessComponent(component, fieldName, {

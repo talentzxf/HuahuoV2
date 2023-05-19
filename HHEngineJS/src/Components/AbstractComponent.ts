@@ -83,7 +83,9 @@ class AbstractComponent {
         this.valueChangeHandler.callHandlers(propertyName, val)
     }
 
-    constructor(rawObj?, isMirage = false) {
+    constructor(baseShape:BaseShapeJS, rawObj?, isMirage = false) {
+        this.baseShape = baseShape
+
         this.isMirage = isMirage
 
         let cppClzName = clzObjectFactory.getCppClassName(this.constructor.name)
@@ -119,10 +121,6 @@ class AbstractComponent {
         }
 
         this.rawObj.SetTypeName(this.constructor.name)
-    }
-
-    setBaseShape(baseShape: BaseShapeJS) {
-        this.baseShape = baseShape
     }
 
     afterUpdate(force: boolean = false) {

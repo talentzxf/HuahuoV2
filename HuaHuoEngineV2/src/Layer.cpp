@@ -186,6 +186,18 @@ void Layer::SetObjectStore(const ObjectStore *store) {
 }
 
 void Layer::AddShapeInternal(BaseShape *newShape) {
+    if(newShape == NULL || newShape->GetInstanceID() == InstanceID_None){
+        printf("Wrong instance ID!!!!\n");
+        return;
+    }
+
+    for(auto shapePtr:shapes){
+        if(shapePtr->GetInstanceID() == newShape->GetInstanceID()) // Already added.
+            return;
+    }
+
+    printf("Begin to add shape: %s\n", newShape->GetTypeName());
+
     newShape->SetLayer(this);
 
     if (newShape->GetBornFrameId() <
@@ -204,6 +216,8 @@ void Layer::AddShapeInternal(BaseShape *newShape) {
         // Merge from 0 to current maxFrameId
         this->GetTimeLineCellManager()->MergeCells(0, maxFrameId);
     }
+
+    printf("Shape added: %s\n", newShape->GetTypeName());
 }
 
 void Layer::SyncInfo() {

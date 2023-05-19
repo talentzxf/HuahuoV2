@@ -29,7 +29,7 @@ class ElementShapeJS extends BaseShapeJS {
         super(rawObj);
 
         if (needAddComponent) {
-            this.addComponent(new ElementController())
+            this.addComponent(new ElementController(this))
         }
 
         this.size = new paper.Point(100, 100)

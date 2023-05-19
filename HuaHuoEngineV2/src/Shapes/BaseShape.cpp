@@ -89,7 +89,10 @@ ShapeTransformComponent* BaseShape::GetTransform(){
 Layer *BaseShape::GetLayer(bool assignDefaultIfNotExist) {
     if (assignDefaultIfNotExist) {
         if (!this->mLayer) {
-            this->mLayer = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer();
+            auto defaultLayer = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer();
+
+            printf("Adding shape internal through GetLayer for instanceID:%d\n", this->GetInstanceID());
+            defaultLayer->AddShapeInternal(this);
         }
     }
 

@@ -12,8 +12,8 @@ abstract class BaseSolidShape extends BaseShapeJS {
         super(rawObj);
 
         if(needInitComponents){
-            this.addComponent(new StrokeComponent())
-            this.addComponent(new FillColorComponent())
+            this.addComponent(new StrokeComponent(this))
+            this.addComponent(new FillColorComponent(this))
         }
     }
 }

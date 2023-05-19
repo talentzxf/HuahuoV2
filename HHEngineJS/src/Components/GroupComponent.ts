@@ -9,8 +9,8 @@ import {clzObjectFactory} from "../CppClassObjectFactory";
 class GroupComponent extends AbstractComponent {
     private _subComponents: Array<AbstractComponent> // This array can't be inited in the constructor.
 
-    constructor(rawObj?, isMirage = false) {
-        super(rawObj, isMirage);
+    constructor(baseShape, rawObj?, isMirage = false) {
+        super(baseShape, rawObj, isMirage);
 
         if(rawObj){
             let subComponentCount = this.rawObj.GetSubComponentCount()
@@ -19,7 +19,7 @@ class GroupComponent extends AbstractComponent {
 
                 if(this.getComponentByRawObj(subComponentRawObj) == null){
                     let subComponentConstructor = clzObjectFactory.GetClassConstructor(subComponentRawObj.GetTypeName())
-                    let subComponent = new subComponentConstructor(subComponentRawObj)
+                    let subComponent = new subComponentConstructor(this.baseShape, subComponentRawObj)
                     this.addSubComponent(subComponent)
                 }
             }
@@ -33,19 +33,9 @@ class GroupComponent extends AbstractComponent {
         return this._subComponents
     }
 
-    setBaseShape(baseShape: BaseShapeJS) {
-        super.setBaseShape(baseShape);
-        for(let subComponent of this.subComponents){
-            subComponent.setBaseShape(baseShape) // Set baseshape for all it's children.
-        }
-    }
-
     addSubComponent(component: AbstractComponent) {
         this.rawObj.AddSubComponent(component.rawObj) // Add subcomponent in cpp side.
-
         this.subComponents.push(component)
-
-        component.setBaseShape(this.baseShape)
     }
 
     getComponentByRawObj(componentRawObj) {

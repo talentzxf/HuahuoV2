@@ -147,6 +147,8 @@ interface AbstractFrameState{
     boolean ReverseKeyFrame(long startFrameId, long endFrameId, long currentFrameId);
 
     long GetSubComponentCount();
+
+    BaseShape GetBaseShape();
 };
 
 [NoDelete]

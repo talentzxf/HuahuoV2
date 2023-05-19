@@ -14,7 +14,7 @@ function LoadComponentForShape(shape:BaseShapeJS, isMirage: boolean){
         let componentRawObj = baseShape.GetFrameState(idx)
         let componentConstructor = clzObjectFactory.GetClassConstructor(componentRawObj.GetTypeName())
         if(componentConstructor){
-            let component = new componentConstructor(componentRawObj, isMirage)
+            let component = new componentConstructor(shape, componentRawObj, isMirage)
             // The component has already been persistented, no need to persistent again.
             shape.addComponent(component, false)
         }

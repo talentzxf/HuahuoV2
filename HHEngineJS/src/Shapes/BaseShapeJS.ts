@@ -126,7 +126,6 @@ abstract class BaseShapeJS {
     addComponent(component: AbstractComponent, persistentTheComponent: boolean = true) {
         if (persistentTheComponent)
             this.rawObj.AddFrameState(component.rawObj)
-        component.setBaseShape(this)
         this.customComponents.push(component)
 
         component.initPropertySheet(this.propertySheet)
@@ -577,8 +576,6 @@ abstract class BaseShapeJS {
 
                 Logger.info("BaseShapeJS: Executing raw obj creation method")
                 _this.rawObj = Module.BaseShape.prototype.CreateShape(_this.getShapeName());
-
-                _this.rawObj.SetBornFrameId(_this.getLayer().GetCurrentFrame())
                 Logger.info("BaseShapeJS: Executing afterWASMReady")
                 _this.afterWASMReady();
                 Logger.info("BaseShapeJS: Executed afterWASMReady")
