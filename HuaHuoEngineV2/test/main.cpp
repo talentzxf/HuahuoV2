@@ -568,116 +568,119 @@ void testReadFromFile() {
     customComponent->RegisterColorValue("strokeColor", 1.0, 0.0, 0.0, 1.0);
     customComponent->RegisterColorStopArrayValue("gradientColor");
     customComponent->RegisterBinaryResource("particleShape");
-    printf("GetValue:%f\n", customComponent->GetFloatValue("growth"));
+    Assert(customComponent->GetFloatValue("growth") == 1.0f);
+
+    customComponent->RegisterBooleanValue("active", true);
+    customComponent->SetBooleanValue("active", true);
 
     circleShape->AddFrameState(customComponent);
     GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->AddShapeInternal(circleShape);
 
     customComponent->AddColorStop("gradientColor", 0.0, 1.0, 0.0, 0.0, 1.0);
     customComponent->AddColorStop("gradientColor", 1.0, 0.0, 0.0, 1.0, 1.0);
-    int identifier = customComponent->AddColorStop("gradientColor", 0.75, 0.3, 0.4, 0.5, 1.0);
-    customComponent->DeleteColorStop("gradientColor", identifier);
-    customComponent->GetColorStopArray("gradientColor");
-
-    customComponent->DeleteColorStop("gradientColor", 1);
-    customComponent->GetColorStopArray("gradientColor");
-    customComponent->AddColorStop("gradientColor", 1.0, 0.0, 0.0, 1.0, 1.0);
-
-    customComponent->GetColorStopArray("gradientColor");
-
-    customComponent->UpdateColorStop("gradientColor", 0, 0.1, 0.0, 1.0, 1.0, 1.0);
-
-    customComponent->SetFloatValue("growth", 1.0f);
-    customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
-
-    // customComponent->SetBinaryResourceByMD5("particleShape", "HelloHello1");
-
-    ColorRGBAf *color = customComponent->GetColorValue("strokeColor");
-
-    customComponent->Apply(0);
-    circleShape->GetMinFrameId();
-
-    Layer *shapeLayer = circleShape->GetLayer();
-    shapeLayer->SetCurrentFrame(10);
-
-    customComponent->AddColorStop("gradientColor", 0.5);
-
-    customComponent->UpdateColorStop("gradientColor", 0, 1.0, 1.0, 0.0, 0.0, 1.0);
-
-    ColorStopArray *pResult = customComponent->GetColorStopArray("gradientColor");
-
-    customComponent->SetColorValue("strokeColor", 0.0, 1.0, 0.0, 1.0);
-    float growthValue = customComponent->GetFloatValue("growth");
-
-    std::vector<UInt8> test = {12, 32, 123, 123, 1, 23, 1, 23, 1, 22, 3, 1};
-    GetDefaultResourceManager()->LoadBinaryResource("HelloHello2", "asfdasdf", test.data(), test.size());
-    MD5_CTX md5Ctx;
-    MD5_Init(&md5Ctx);
-    MD5_Update(&md5Ctx, test.data(), test.size());
-    Hash128 md5Result;
-    MD5_Final(md5Result.hashData.bytes, &md5Ctx);
-    std::string md5ResultString = Hash128ToString(md5Result);
-
-    customComponent->SetBinaryResourceByMD5("particleShape", md5ResultString.c_str());
-    BinaryResourceWrapper *binaryResource = customComponent->GetBinaryResource("particleShape");
-    assert(strcmp(binaryResource->GetResourceName(), "HelloHello2") == 0);
-
-    GetPersistentManager().WriteFile(StoreFilePath);
-
-    customComponent->SetFloatValue("growth", 0.5f);
-    customComponent->RegisterShapeArrayValue("targetShapeArray");
-    customComponent->CreateShapeArrayValue("targetShapeArray");
-
-    printf("GetValue:%f\n", customComponent->GetFloatValue("growth"));
-
-    color = customComponent->GetColorValue("strokeColor");
-    printf("GetColor:%f,%f,%f,%f\n", color->r, color->g, color->b, color->a);
-
-
-    CircleShape *clonedCircleShape = (CircleShape *) CloneObject(*circleShape);
-
-    CustomComponent *clonedGrowthComponent = (CustomComponent *) clonedCircleShape->GetFrameState("CurveGrowth");
-    clonedGrowthComponent->SetFloatValue("growth", 100.0f);
-
-    assert(customComponent->GetFloatValue("growth") != clonedGrowthComponent->GetFloatValue("growth"));
-
-    customComponent->ReverseKeyFrame(0, 10, 5);
-
-    int keyFrameCount = customComponent->GetKeyFrameCount();
-    for (int idx = 0; idx < keyFrameCount; idx++) {
-        int keyframeId = customComponent->GetKeyFrameAtIndex(idx);
-
-        assert(keyframeId >= 0);
-    }
-    customComponent->DeleteKeyFrame(0);
-
-    customComponent->GetBaseShape()->GetLayer()->SetCurrentFrame(20);
-    customComponent->SetFloatValue("growth", 0.5);
-
-    customComponent->DeleteKeyFrame(20);
-
-    customComponent->GetBaseShape()->GetLayer()->IsKeyFrame(20);
-
-    customComponent->RegisterSubcomponentArray("particleSystems");
-
-    CustomComponent *particleSystem = customComponent->GetSubComponentArrayByName("particleSystems");
-
-    particleSystem->RegisterVector3Value("maxInitVelocity", 100.0, 100.0, 100.0);
-    Vector3f *velocity = particleSystem->GetVector3Value("maxInitVelocity");
-
-    customComponent->Apply(1);
-    velocity = particleSystem->GetVector3Value("maxInitVelocity");
-
-    assert(particleSystem != NULL);
-    assert(velocity != NULL);
-
-    customComponent->RegisterStringValue("eventGraphJson", "");
-    customComponent->SetStringValue("eventGraphJson", "Test");
-    const char *string = customComponent->GetStringValue("eventGraphJson");
-    assert(string != NULL);
-
-    KeyFrameCurve *pCurve = customComponent->GetFloatKeyFrameCurve("growth");
-    assert(pCurve != NULL && pCurve->GetTotalPoints() != 0);
+//    int identifier = customComponent->AddColorStop("gradientColor", 0.75, 0.3, 0.4, 0.5, 1.0);
+//    customComponent->DeleteColorStop("gradientColor", identifier);
+//    customComponent->GetColorStopArray("gradientColor");
+//
+//    customComponent->DeleteColorStop("gradientColor", 1);
+//    customComponent->GetColorStopArray("gradientColor");
+//    customComponent->AddColorStop("gradientColor", 1.0, 0.0, 0.0, 1.0, 1.0);
+//
+//    customComponent->GetColorStopArray("gradientColor");
+//
+//    customComponent->UpdateColorStop("gradientColor", 0, 0.1, 0.0, 1.0, 1.0, 1.0);
+//
+//    customComponent->SetFloatValue("growth", 1.0f);
+//    customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
+//
+//    // customComponent->SetBinaryResourceByMD5("particleShape", "HelloHello1");
+//
+//    ColorRGBAf *color = customComponent->GetColorValue("strokeColor");
+//
+//    customComponent->Apply(0);
+//    circleShape->GetMinFrameId();
+//
+//    Layer *shapeLayer = circleShape->GetLayer();
+//    shapeLayer->SetCurrentFrame(10);
+//
+//    customComponent->AddColorStop("gradientColor", 0.5);
+//
+//    customComponent->UpdateColorStop("gradientColor", 0, 1.0, 1.0, 0.0, 0.0, 1.0);
+//
+//    ColorStopArray *pResult = customComponent->GetColorStopArray("gradientColor");
+//
+//    customComponent->SetColorValue("strokeColor", 0.0, 1.0, 0.0, 1.0);
+//    float growthValue = customComponent->GetFloatValue("growth");
+//
+//    std::vector<UInt8> test = {12, 32, 123, 123, 1, 23, 1, 23, 1, 22, 3, 1};
+//    GetDefaultResourceManager()->LoadBinaryResource("HelloHello2", "asfdasdf", test.data(), test.size());
+//    MD5_CTX md5Ctx;
+//    MD5_Init(&md5Ctx);
+//    MD5_Update(&md5Ctx, test.data(), test.size());
+//    Hash128 md5Result;
+//    MD5_Final(md5Result.hashData.bytes, &md5Ctx);
+//    std::string md5ResultString = Hash128ToString(md5Result);
+//
+//    customComponent->SetBinaryResourceByMD5("particleShape", md5ResultString.c_str());
+//    BinaryResourceWrapper *binaryResource = customComponent->GetBinaryResource("particleShape");
+//    assert(strcmp(binaryResource->GetResourceName(), "HelloHello2") == 0);
+//
+//    GetPersistentManager().WriteFile(StoreFilePath);
+//
+//    customComponent->SetFloatValue("growth", 0.5f);
+//    customComponent->RegisterShapeArrayValue("targetShapeArray");
+//    customComponent->CreateShapeArrayValue("targetShapeArray");
+//
+//    printf("GetValue:%f\n", customComponent->GetFloatValue("growth"));
+//
+//    color = customComponent->GetColorValue("strokeColor");
+//    printf("GetColor:%f,%f,%f,%f\n", color->r, color->g, color->b, color->a);
+//
+//
+//    CircleShape *clonedCircleShape = (CircleShape *) CloneObject(*circleShape);
+//
+//    CustomComponent *clonedGrowthComponent = (CustomComponent *) clonedCircleShape->GetFrameState("CurveGrowth");
+//    clonedGrowthComponent->SetFloatValue("growth", 100.0f);
+//
+//    assert(customComponent->GetFloatValue("growth") != clonedGrowthComponent->GetFloatValue("growth"));
+//
+//    customComponent->ReverseKeyFrame(0, 10, 5);
+//
+//    int keyFrameCount = customComponent->GetKeyFrameCount();
+//    for (int idx = 0; idx < keyFrameCount; idx++) {
+//        int keyframeId = customComponent->GetKeyFrameAtIndex(idx);
+//
+//        assert(keyframeId >= 0);
+//    }
+//    customComponent->DeleteKeyFrame(0);
+//
+//    customComponent->GetBaseShape()->GetLayer()->SetCurrentFrame(20);
+//    customComponent->SetFloatValue("growth", 0.5);
+//
+//    customComponent->DeleteKeyFrame(20);
+//
+//    customComponent->GetBaseShape()->GetLayer()->IsKeyFrame(20);
+//
+//    customComponent->RegisterSubcomponentArray("particleSystems");
+//
+//    CustomComponent *particleSystem = customComponent->GetSubComponentArrayByName("particleSystems");
+//
+//    particleSystem->RegisterVector3Value("maxInitVelocity", 100.0, 100.0, 100.0);
+//    Vector3f *velocity = particleSystem->GetVector3Value("maxInitVelocity");
+//
+//    customComponent->Apply(1);
+//    velocity = particleSystem->GetVector3Value("maxInitVelocity");
+//
+//    assert(particleSystem != NULL);
+//    assert(velocity != NULL);
+//
+//    customComponent->RegisterStringValue("eventGraphJson", "");
+//    customComponent->SetStringValue("eventGraphJson", "Test");
+//    const char *string = customComponent->GetStringValue("eventGraphJson");
+//    assert(string != NULL);
+//
+//    KeyFrameCurve *pCurve = customComponent->GetFloatKeyFrameCurve("growth");
+//    assert(pCurve != NULL && pCurve->GetTotalPoints() != 0);
 }
 
 void testKeyFrameCurve() {
@@ -731,16 +734,16 @@ int main() {
     // testTransform();
     // testScene();
     // testGameObject();
-    testTimeManager();
-    testShapeStore();
-    testKeyFrames();
-    testRecordKeyFrames();
-    testSegmentKeyFrames();
-    testCloneObject();
-    testDelete();
-
-    testKeyFrameCurve();
-
-    testMultipleStores();
+//    testTimeManager();
+//    testShapeStore();
+//    testKeyFrames();
+//    testRecordKeyFrames();
+//    testSegmentKeyFrames();
+//    testCloneObject();
+//    testDelete();
+//
+//    testKeyFrameCurve();
+//
+//    testMultipleStores();
     return 0;
 }

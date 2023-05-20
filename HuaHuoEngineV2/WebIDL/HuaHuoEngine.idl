@@ -274,7 +274,7 @@ ShapeTransformComponent implements CustomComponent;
 
 [NoDelete]
 interface BaseShape{
-    static BaseShape CreateShape(DOMString shapeName);
+    static BaseShape CreateShape(DOMString shapeName, boolean createDefaultComponents = true);
 
     ShapeTransformComponent GetTransform();
 
@@ -304,7 +304,7 @@ interface BaseShape{
     void SetScale(float xScale, float yScale, float zScale);
     Vector3f GetScale();
 
-    Layer GetLayer(optional boolean assignDefaultIfNotExist );
+    Layer GetLayer(optional boolean returnDefaultIfNotExist );
 
     boolean IsVisible();
     void SetSegments(float[] segmentBuffer, long size);

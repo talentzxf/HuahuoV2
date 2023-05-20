@@ -93,9 +93,7 @@ public:
         , mRecordTransformationOfKeyFrame(true)
         , mTypeName("")
     {
-        AddFrameStateByName("ShapeTransformComponent");
-        AddFrameStateByName("ShapeSegmentFrameState");
-        AddFrameStateByName("ShapeFollowCurveFrameState");
+
     }
 
     AbstractFrameState* AddFrameState(AbstractFrameState* frameState);
@@ -246,7 +244,7 @@ public:
     ShapeTransformComponent* GetTransform();
 
     virtual void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
-    static BaseShape* CreateShape(const char* shapeName);
+    static BaseShape* CreateShape(const char* shapeName, bool createDefaultComponents = true);
 
     AbstractFrameState* AddFrameStateByName(const char* frameStateName);
 

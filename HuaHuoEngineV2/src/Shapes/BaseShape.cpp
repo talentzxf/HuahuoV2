@@ -66,7 +66,7 @@ void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
     GetScriptEventManager()->TriggerEvent("OnShapeLoaded", &args);
 }
 
-BaseShape *BaseShape::CreateShape(const char *shapeName) {
+BaseShape *BaseShape::CreateShape(const char *shapeName, bool createDefaultComponents) {
     const HuaHuo::Type *shapeType = HuaHuo::Type::FindTypeByName(shapeName);
     BaseShape *baseShape = NULL;
     if (shapeType != NULL && shapeType->IsDerivedFrom<BaseShape>()) {
@@ -74,6 +74,12 @@ BaseShape *BaseShape::CreateShape(const char *shapeName) {
     } else {
         baseShape = (BaseShape *) Object::Produce<BaseShape>();
         baseShape->mTypeName = shapeName;
+    }
+
+    if(createDefaultComponents){
+        baseShape->AddFrameStateByName("ShapeTransformComponent");
+        baseShape->AddFrameStateByName("ShapeSegmentFrameState");
+        baseShape->AddFrameStateByName("ShapeFollowCurveFrameState");
     }
 
     baseShape->AwakeFromLoad(kInstantiateOrCreateFromCodeAwakeFromLoad);

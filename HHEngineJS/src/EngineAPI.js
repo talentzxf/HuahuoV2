@@ -103,8 +103,8 @@ class EngineAPI{
         }
     }
 
-    CreateShape(shapeName){
-        return this.cppEngine.CreateShape(shapeName)
+    CreateShape(shapeName, createDefaultComponents = true){
+        return this.cppEngine.CreateShape(shapeName, createDefaultComponents)
     }
 
     DuplicateObject(obj){

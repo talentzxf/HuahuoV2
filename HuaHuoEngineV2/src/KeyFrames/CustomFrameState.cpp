@@ -363,24 +363,23 @@ int CustomFrameState::AddColorStop(float value, float r, float g, float b, float
         Assert("Data Type mismatch!");
     }
 
-    Layer *shapeLayer = GetBaseShape()->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
-
     ColorStopEntry colorStopEntry(-1, value, r, g, b, a);
-    CustomDataKeyFrame *pKeyFrame = GetColorStopArrayKeyFrame(currentFrameId);
-    pKeyFrame->data.colorStopArray.AddEntry(colorStopEntry);
 
-    // Add the interpolated value to all other keyframes;
-    for (auto frameId = 0; frameId < m_KeyFrames.GetKeyFrames().size(); frameId++) {
-        if (m_KeyFrames.GetKeyFrames()[frameId].GetFrameId() == pKeyFrame->GetFrameId())
-            continue;
+    SetValueInternalHelper([=, this, &colorStopEntry](int currentFrameId){
 
-        m_KeyFrames.GetKeyFrames()[frameId].data.colorStopArray.AddEntry(colorStopEntry);
-    }
+        CustomDataKeyFrame *pKeyFrame = GetColorStopArrayKeyFrame(currentFrameId);
+        pKeyFrame->data.colorStopArray.AddEntry(colorStopEntry);
 
-    Apply(currentFrameId);
-    pKeyFrame->GetKeyFrame().SetFrameState(this);
-    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
+        // Add the interpolated value to all other keyframes;
+        for (auto frameId = 0; frameId < m_KeyFrames.GetKeyFrames().size(); frameId++) {
+            if (m_KeyFrames.GetKeyFrames()[frameId].GetFrameId() == pKeyFrame->GetFrameId())
+                continue;
+
+            m_KeyFrames.GetKeyFrames()[frameId].data.colorStopArray.AddEntry(colorStopEntry);
+        }
+
+        return pKeyFrame;
+    });
 
     return colorStopEntry.GetIdentifier();
 }
@@ -391,16 +390,13 @@ void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, f
         return;
     }
 
-    Layer *shapeLayer = GetBaseShape()->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
+    SetValueInternalHelper([=, this](int currentFrameId){
+        CustomDataKeyFrame *pKeyFrame = GetColorStopArrayKeyFrame(currentFrameId);
 
-    CustomDataKeyFrame *pKeyFrame = GetColorStopArrayKeyFrame(currentFrameId);
+        pKeyFrame->data.colorStopArray.UpdateAtIdentifier(idx, value, r, g, b, a);
 
-    pKeyFrame->data.colorStopArray.UpdateAtIdentifier(idx, value, r, g, b, a);
-    Apply(currentFrameId);
-
-    pKeyFrame->GetKeyFrame().SetFrameState(this);
-    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
+        return pKeyFrame;
+    });
 }
 
 void CustomFrameState::DeleteColorStop(int idx) {
@@ -408,23 +404,20 @@ void CustomFrameState::DeleteColorStop(int idx) {
         Assert("Data Type mismatch!");
     }
 
-    Layer *shapeLayer = GetBaseShape()->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
+    SetValueInternalHelper([=, this](int currentFrameId) {
 
-    // If this frame is not keyframe, need to copy all color stops over first.
-    CustomDataKeyFrame *pKeyFrame = GetColorStopArrayKeyFrame(currentFrameId);
+        // If this frame is not keyframe, need to copy all color stops over first.
+        CustomDataKeyFrame *pKeyFrame = GetColorStopArrayKeyFrame(currentFrameId);
 
-    // Delete the color stop from all key frames.
-    for (int keyFrameDataIndex = 0; keyFrameDataIndex < m_KeyFrames.GetKeyFrames().size(); keyFrameDataIndex++) {
-        m_KeyFrames.GetKeyFrames()[keyFrameDataIndex].data.colorStopArray.DeleteEntry(idx);
-    }
+        // Delete the color stop from all key frames.
+        for (int keyFrameDataIndex = 0; keyFrameDataIndex < m_KeyFrames.GetKeyFrames().size(); keyFrameDataIndex++) {
+            m_KeyFrames.GetKeyFrames()[keyFrameDataIndex].data.colorStopArray.DeleteEntry(idx);
+        }
 
-    m_CurrentKeyFrame.data.colorStopArray.DeleteEntry(idx);
+        m_CurrentKeyFrame.data.colorStopArray.DeleteEntry(idx);
 
-    Apply(currentFrameId);
-
-    pKeyFrame->GetKeyFrame().SetFrameState(this);
-    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
+        return pKeyFrame;
+    });
 }
 
 ColorRGBAf *CustomFrameState::GetColorValue() {
@@ -452,17 +445,11 @@ BinaryResourceWrapper *CustomFrameState::GetBinaryResource() {
 }
 
 void CustomFrameState::CreateShapeArrayValue() {
-    Layer *shapeLayer = GetBaseShape()->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
-
-    CustomDataKeyFrame *pDataKeyFrame = this->RecordFieldValue(currentFrameId, FieldShapeArray());
-    pDataKeyFrame->SetFrameState(this);
-    shapeLayer->AddKeyFrame(&pDataKeyFrame->GetKeyFrame());
+    SetValueInternal(FieldShapeArray());
 }
 
 FieldShapeArray *CustomFrameState::GetShapeArrayValueForWrite() {
-    Layer *shapeLayer = GetBaseShape()->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
+    int currentFrameId = GetCurrentFrameId();
     CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames(), this);
 
     FieldShapeArray *pShapeArray = &pKeyFrame->data.shapeArrayValue;
@@ -480,28 +467,39 @@ FieldShapeArray *CustomFrameState::GetShapeArrayValue() {
 }
 
 bool CustomFrameState::Apply() {
-    Layer *shapeLayer = GetBaseShape()->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
+    int currentFrameId = GetCurrentFrameId();
     return this->Apply(currentFrameId);
+}
+
+int CustomFrameState::GetCurrentFrameId(){
+    if (this->GetBaseShape() == NULL) {
+        return GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->GetCurrentFrame();
+    }
+    return GetBaseShape()->GetLayer()->GetCurrentFrame();
+}
+
+template<typename F>
+CustomDataKeyFrame *CustomFrameState::SetValueInternalHelper(F && setValueFunction){
+    Layer *shapeLayer = NULL;
+    int currentFrameId = GetCurrentFrameId();
+
+    if(GetBaseShape() != NULL)
+        shapeLayer = GetBaseShape()->GetLayer();
+
+    CustomDataKeyFrame *pKeyFrame = setValueFunction(currentFrameId);
+    pKeyFrame->SetFrameState(this);
+    if (shapeLayer)
+        shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
+    Apply(currentFrameId);
+
+    return pKeyFrame;
 }
 
 template<typename T>
 CustomDataKeyFrame *CustomFrameState::SetValueInternal(T value) {
-    Layer *shapeLayer = NULL;
-    int currentFrameId = -1;
-    if (this->GetBaseShape() == NULL) {
-        currentFrameId = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->GetCurrentFrame();
-    } else {
-        shapeLayer = GetBaseShape()->GetLayer();
-        currentFrameId = shapeLayer->GetCurrentFrame();
-    }
-
-    CustomDataKeyFrame *pKeyFrame = this->RecordFieldValue(currentFrameId, value);
-    pKeyFrame->SetFrameState(this);
-    if (shapeLayer)
-        shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
-
-    return pKeyFrame;
+    return SetValueInternalHelper([=, this](int currentFrameId){
+        return this->RecordFieldValue(currentFrameId, value);
+    });
 }
 
 template<typename T>
@@ -532,8 +530,6 @@ CustomDataKeyFrame *CustomFrameState::RecordFieldValue(int frameId, T value) {
         pKeyFrame->data.binaryResource = value;
         pKeyFrame->data.dataType = BINARYRESOURCE;
     }
-
-    Apply(frameId);
 
     return pKeyFrame;
 }

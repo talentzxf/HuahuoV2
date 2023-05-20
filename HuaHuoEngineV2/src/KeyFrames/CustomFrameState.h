@@ -203,8 +203,12 @@ public:
     void AddAnimationOffset(int offset) override;
 
 private:
+    int GetCurrentFrameId();
 
     Layer *GetLayer(bool returnDefaultIfNotExist = true);
+
+    template<typename F>
+    CustomDataKeyFrame *SetValueInternalHelper(F && lambda);
 
     template<typename T>
     CustomDataKeyFrame *SetValueInternal(T value);
