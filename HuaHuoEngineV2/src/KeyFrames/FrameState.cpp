@@ -39,6 +39,9 @@ BaseShape *AbstractFrameState::GetBaseShape() {
     if (this->baseShape != NULL)
         return this->baseShape;
 
+    if(!mBaseShapePPtr.IsValid())
+        return NULL;
+
     this->baseShape = &(*mBaseShapePPtr);
 
     return this->baseShape;

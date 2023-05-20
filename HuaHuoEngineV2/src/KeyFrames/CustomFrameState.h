@@ -16,7 +16,7 @@
 
 class BaseShape;
 
-enum CustomDataType{
+enum CustomDataType {
     FLOAT,
     COLOR,
     SHAPEARRAY,
@@ -27,40 +27,41 @@ enum CustomDataType{
     BOOLEAN
 };
 
-class BinaryResourceWrapper{
+class BinaryResourceWrapper {
 public:
-    const char* GetResourceName(){
+    const char *GetResourceName() {
         return mBinaryResource->GetFileName().c_str();
     }
 
-    const char* GetMimeType(){
+    const char *GetMimeType() {
         return mBinaryResource->GetMimeType().c_str();
     }
 
-    void SetResourceMD5(const char* resourceMD5);
+    void SetResourceMD5(const char *resourceMD5);
 
     UInt8 GetDataAtIndex(UInt32 index);
+
     UInt32 GetDataSize();
 
     DECLARE_SERIALIZE(BinaryResource);
 
-    std::vector<UInt8> & GetFileDataPointer();
+    std::vector<UInt8> &GetFileDataPointer();
 
-    const char* GetResourceMD5(){
+    const char *GetResourceMD5() {
         return mBinaryResource->GetMD5();
     }
+
 private:
     PPtr<BinaryResource> mBinaryResource;
 };
 
 template<class TransferFunction>
-void BinaryResourceWrapper::Transfer(TransferFunction& transfer)
-{
+void BinaryResourceWrapper::Transfer(TransferFunction &transfer) {
     TRANSFER(mBinaryResource);
 }
 
 // Use union to save space.
-struct CustomData{
+struct CustomData {
     float floatValue;
     Vector3f vector3Value;
 
@@ -69,14 +70,15 @@ struct CustomData{
     ColorStopArray colorStopArray;
     BinaryResourceWrapper binaryResource;
     std::string stringValue;
-    bool  booleanValue;
+    bool booleanValue;
     CustomDataType dataType;
 
     DECLARE_SERIALIZE(CustomData);
 };
 
 // TODO: Refactor! (One of) The most ugly function in the whole system. :(
-template<class TransferFunction> void CustomData::Transfer(TransferFunction &transfer) {
+template<class TransferFunction>
+void CustomData::Transfer(TransferFunction &transfer) {
     TRANSFER_ENUM(dataType);
 
     switch (dataType) {
@@ -108,32 +110,38 @@ template<class TransferFunction> void CustomData::Transfer(TransferFunction &tra
 }
 
 
-class CustomDataKeyFrame: public AbstractKeyFrame{
+class CustomDataKeyFrame : public AbstractKeyFrame {
 public:
     CustomData data;
 
     DECLARE_SERIALIZE(CustomDataKeyFrame);
 
-    CustomDataKeyFrame(){
+    CustomDataKeyFrame() {
     }
 };
 
-template <class TransferFunction> void CustomDataKeyFrame::Transfer(TransferFunction &transfer) {
+template<class TransferFunction>
+void CustomDataKeyFrame::Transfer(TransferFunction &transfer) {
     AbstractKeyFrame::Transfer(transfer);
     TRANSFER(data);
 }
 
-CustomDataKeyFrame Lerp(CustomDataKeyFrame& k1, CustomDataKeyFrame& k2, float ratio);
+CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ratio);
 
-class CustomFrameState: public AbstractFrameStateWithKeyFrameCurve<CustomDataKeyFrame>{
-    REGISTER_CLASS(CustomFrameState);
-    DECLARE_OBJECT_SERIALIZE()
+class Layer;
+
+class CustomFrameState : public AbstractFrameStateWithKeyFrameCurve<CustomDataKeyFrame> {
+REGISTER_CLASS(CustomFrameState);
+
+DECLARE_OBJECT_SERIALIZE()
+
 public:
     CustomFrameState(MemLabelId memLabelId, ObjectCreationMode creationMode)
-    : AbstractFrameStateWithKeyFrameCurve<CustomDataKeyFrame>(memLabelId, creationMode){
+            : AbstractFrameStateWithKeyFrameCurve<CustomDataKeyFrame>(memLabelId, creationMode) {
     }
 
     virtual bool Apply();
+
     virtual bool Apply(int frameId) override;
 
     KeyFrameCurve *GetVectorKeyFrameCurve(int index);
@@ -143,50 +151,68 @@ public:
 public:
     // This is used during dragging of the value in the keyFrameCurve.
     void SetFloatValueByIndex(int index, int frameId, float value) override;
+
     void SetVectorValueByIndex(int index, int vectorCoordinate, int frameId, float value) override;
 
     void SetBooleanValue(bool value);
-    AbstractKeyFrame * SetFloatValue(float value) override;
-    AbstractKeyFrame * SetVector3Value(float x, float y, float z) override;
 
-    void SetBinaryResourceMD5(const char* resourceMD5);
+    AbstractKeyFrame *SetFloatValue(float value) override;
 
-    void SetStringValue(const char* stringValue);
+    AbstractKeyFrame *SetVector3Value(float x, float y, float z) override;
 
-    BinaryResourceWrapper* GetBinaryResource();
+    AbstractKeyFrame *SetBinaryResourceMD5(const char *resourceMD5);
+
+    AbstractKeyFrame *SetStringValue(const char *stringValue);
+
+    BinaryResourceWrapper *GetBinaryResource();
 
     bool GetBooleanValue();
-    float GetFloatValue() override;
-    Vector3f* GetVector3Value() override;
 
-    void SetColorValue(float r, float g, float b, float a);
+    float GetFloatValue() override;
+
+    Vector3f *GetVector3Value() override;
+
+    AbstractKeyFrame *SetColorValue(float r, float g, float b, float a);
+
     int AddColorStop(float value);
+
     int AddColorStop(float value, float r, float g, float b, float a);
+
     void UpdateColorStop(int idx, float value, float r, float g, float b, float a);
+
     void DeleteColorStop(int idx);
 
-    ColorRGBAf* GetColorValue();
+    ColorRGBAf *GetColorValue();
 
     void CreateShapeArrayValue();
-    FieldShapeArray* GetShapeArrayValueForWrite();
-    FieldShapeArray* GetShapeArrayValue(); // Don't insert into this fieldShapeArray, it will have no effect.
 
-    static CustomFrameState* CreateFrameState(CustomDataType dataType);
+    FieldShapeArray *GetShapeArrayValueForWrite();
 
-    ColorStopArray* GetColorStopArray();
+    FieldShapeArray *GetShapeArrayValue(); // Don't insert into this fieldShapeArray, it will have no effect.
 
-    CustomData* GetDefaultValueData(){
+    static CustomFrameState *CreateFrameState(CustomDataType dataType);
+
+    ColorStopArray *GetColorStopArray();
+
+    CustomData *GetDefaultValueData() {
         return &m_defaultValue;
     }
 
-    const char* GetStringValue();
+    const char *GetStringValue();
 
     void AddAnimationOffset(int offset) override;
 
 private:
-    template <typename T> CustomDataKeyFrame* RecordFieldValue(int frameId, T value);
 
-    CustomDataKeyFrame* GetColorStopArrayKeyFrame(int currentFrameId);
+    Layer *GetLayer(bool returnDefaultIfNotExist = true);
+
+    template<typename T>
+    CustomDataKeyFrame *SetValueInternal(T value);
+
+    template<typename T>
+    CustomDataKeyFrame *RecordFieldValue(int frameId, T value);
+
+    CustomDataKeyFrame *GetColorStopArrayKeyFrame(int currentFrameId);
 
 private:
     CustomDataType m_DataType;

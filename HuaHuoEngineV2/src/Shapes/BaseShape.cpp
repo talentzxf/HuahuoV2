@@ -86,10 +86,10 @@ ShapeTransformComponent* BaseShape::GetTransform(){
 }
 
 // TODO: This logic is not good. Explicit is better than implicit!!!!
-Layer *BaseShape::GetLayer(bool assignDefaultIfNotExist) {
-    if (assignDefaultIfNotExist) {
+Layer *BaseShape::GetLayer(bool returnDefaultIfNotExist) {
+    if (returnDefaultIfNotExist) {
         if (!this->mLayer) {
-            this->mLayer = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer();
+            return GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer();
         }
     }
 

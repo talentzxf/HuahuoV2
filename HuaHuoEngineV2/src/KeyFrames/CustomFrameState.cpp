@@ -6,6 +6,7 @@
 #include "Layer.h"
 #include "ResourceManager.h"
 #include <type_traits>
+#include "ObjectStore.h"
 
 UInt32 BinaryResourceWrapper::GetDataSize() {
     return mBinaryResource->GetFileSize();
@@ -110,22 +111,26 @@ bool CustomFrameState::Apply(int frameId) {
     return false;
 }
 
+Layer *CustomFrameState::GetLayer(bool returnDefaultIfNotExist) {
+    if (this->GetBaseShape() == NULL) {
+        return returnDefaultIfNotExist ? GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer() : NULL;
+    }
+
+    return this->GetBaseShape()->GetLayer(returnDefaultIfNotExist);
+}
+
 void CustomFrameState::SetBooleanValue(bool value) {
     if (this->m_DataType != BOOLEAN) {
         Assert("Data Type mismatch!");
         return;
     }
 
-    Layer *shapeLayer = GetBaseShape()->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
-    CustomDataKeyFrame *pKeyFrame = this->RecordFieldValue(currentFrameId, value);
-    pKeyFrame->SetFrameState(this);
-    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
+    SetValueInternal(value);
 }
 
-KeyFrameCurve * CustomFrameState::GetVectorKeyFrameCurve(int index) {
+KeyFrameCurve *CustomFrameState::GetVectorKeyFrameCurve(int index) {
     printf("GetVectorKeyFrameCurve: %s %d\n", __FILE__, __LINE__);
-    if(m_DataType == VECTOR3 && index < 3 && index >= 0){
+    if (m_DataType == VECTOR3 && index < 3 && index >= 0) {
         printf("GetVectorKeyFrameCurve: %s %d\n", __FILE__, __LINE__);
         return AbstractFrameStateWithKeyFrameCurve<CustomDataKeyFrame>::GetVectorKeyFrameCurve(index);
     }
@@ -134,8 +139,8 @@ KeyFrameCurve * CustomFrameState::GetVectorKeyFrameCurve(int index) {
     return NULL;
 }
 
-KeyFrameCurve *CustomFrameState::GetFloatKeyFrameCurve(){
-    if(m_DataType == FLOAT){
+KeyFrameCurve *CustomFrameState::GetFloatKeyFrameCurve() {
+    if (m_DataType == FLOAT) {
         return AbstractFrameStateWithKeyFrameCurve<CustomDataKeyFrame>::GetFloatKeyFrameCurve();
     }
 
@@ -150,10 +155,11 @@ void CustomFrameState::SetFloatValueByIndex(int index, int frameId, float value)
     }
 
     KeyFrameArray &keyFrameArray = GetKeyFrames();
-
     int beforeFrameId = keyFrameArray[index].GetFrameId();
 
     CustomDataKeyFrame &targetKeyFrame = keyFrameArray[index];
+
+
     Layer *layer = targetKeyFrame.GetBaseShape()->GetLayer(false);
     if (layer) {
         if (beforeFrameId != frameId && layer) { // Move the keyframe object in layer's keyFrame map.
@@ -170,7 +176,7 @@ void CustomFrameState::SetFloatValueByIndex(int index, int frameId, float value)
     }
 }
 
-void CustomFrameState::SetVectorValueByIndex(int index, int vectorCoordinate, int frameId, float value){
+void CustomFrameState::SetVectorValueByIndex(int index, int vectorCoordinate, int frameId, float value) {
     if (this->m_DataType != VECTOR3) {
         Assert("Data Type mismatch!");
         return;
@@ -192,7 +198,7 @@ void CustomFrameState::SetVectorValueByIndex(int index, int vectorCoordinate, in
     targetKeyFrame.GetKeyFrame().SetFrameId(frameId);
     Vector3f currentValue = targetKeyFrame.data.vector3Value;
     // Foolish switch
-    switch(vectorCoordinate){
+    switch (vectorCoordinate) {
         case 0:
             currentValue.x = value;
             break;
@@ -211,57 +217,35 @@ void CustomFrameState::SetVectorValueByIndex(int index, int vectorCoordinate, in
     }
 }
 
-AbstractKeyFrame * CustomFrameState::SetFloatValue(float value) {
+AbstractKeyFrame *CustomFrameState::SetFloatValue(float value) {
     if (this->m_DataType != FLOAT) {
         Assert("Data Type mismatch!");
         return NULL;
     }
 
-    Layer *shapeLayer = GetBaseShape()->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
-    CustomDataKeyFrame *pKeyFrame = this->RecordFieldValue(currentFrameId, value);
-    pKeyFrame->SetFrameState(this);
-    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
-
-    AddFloatCurveValue(currentFrameId, value);
-
-    return pKeyFrame;
+    return SetValueInternal(value);
 }
 
-AbstractKeyFrame * CustomFrameState::SetVector3Value(float x, float y, float z) {
+AbstractKeyFrame *CustomFrameState::SetVector3Value(float x, float y, float z) {
     if (this->m_DataType != VECTOR3) {
         Assert("Data Type mismatch!");
         return NULL;
     }
 
-    Layer *shapeLayer = GetBaseShape()->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
     Vector3f value(x, y, z);
-    CustomDataKeyFrame *pKeyFrame = this->RecordFieldValue(currentFrameId, value);
-    pKeyFrame->SetFrameState(this);
-    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
-
-    SetVectorKeyFrameCurveValue(currentFrameId, x, y, z);
-
-    return pKeyFrame;
+    return SetValueInternal(value);
 }
 
-void CustomFrameState::SetBinaryResourceMD5(const char *resourceMD5) {
+AbstractKeyFrame *CustomFrameState::SetBinaryResourceMD5(const char *resourceMD5) {
     if (this->m_DataType != BINARYRESOURCE) {
         Assert("Data Type mismatch!");
-        return;
+        return NULL;
     }
 
-    Layer *shapeLayer = GetBaseShape()->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
-    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(currentFrameId, GetKeyFrames(), this);
-    pKeyFrame->data.binaryResource.SetResourceMD5(resourceMD5);
-    pKeyFrame->data.dataType = BINARYRESOURCE;
+    BinaryResourceWrapper binaryResourceWrapper;
+    binaryResourceWrapper.SetResourceMD5(resourceMD5);
 
-    Apply(currentFrameId);
-
-    pKeyFrame->SetFrameState(this);
-    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
+    return SetValueInternal(binaryResourceWrapper);
 }
 
 bool CustomFrameState::GetBooleanValue() {
@@ -316,31 +300,23 @@ const char *CustomFrameState::GetStringValue() {
     return m_defaultValue.stringValue.c_str();
 }
 
-void CustomFrameState::SetColorValue(float r, float g, float b, float a) {
+AbstractKeyFrame *CustomFrameState::SetColorValue(float r, float g, float b, float a) {
     if (this->m_DataType != COLOR) {
         Assert("Data Type mismatch!");
-        return;
+        return NULL;
     }
 
-    Layer *shapeLayer = GetBaseShape()->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
     ColorRGBAf value(r, g, b, a);
-    CustomDataKeyFrame *pKeyFrame = this->RecordFieldValue(currentFrameId, value);
-    pKeyFrame->SetFrameState(this);
-    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
+    return SetValueInternal(value);
 }
 
-void CustomFrameState::SetStringValue(const char *stringValue) {
+AbstractKeyFrame *CustomFrameState::SetStringValue(const char *stringValue) {
     if (this->m_DataType != STRING) {
         Assert("Data Type mismatch!");
-        return;
+        return NULL;
     }
-    Layer *shapeLayer = GetBaseShape()->GetLayer();
-    int currentFrameId = shapeLayer->GetCurrentFrame();
 
-    CustomDataKeyFrame *pKeyFrame = this->RecordFieldValue(currentFrameId, std::string(stringValue));
-    pKeyFrame->SetFrameState(this);
-    shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
+    return SetValueInternal(stringValue);
 }
 
 CustomDataKeyFrame *CustomFrameState::GetColorStopArrayKeyFrame(int currentFrameId) {
@@ -510,11 +486,29 @@ bool CustomFrameState::Apply() {
 }
 
 template<typename T>
+CustomDataKeyFrame *CustomFrameState::SetValueInternal(T value) {
+    Layer *shapeLayer = NULL;
+    int currentFrameId = -1;
+    if (this->GetBaseShape() == NULL) {
+        currentFrameId = GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->GetCurrentFrame();
+    } else {
+        shapeLayer = GetBaseShape()->GetLayer();
+        currentFrameId = shapeLayer->GetCurrentFrame();
+    }
+
+    CustomDataKeyFrame *pKeyFrame = this->RecordFieldValue(currentFrameId, value);
+    pKeyFrame->SetFrameState(this);
+    if (shapeLayer)
+        shapeLayer->AddKeyFrame(&pKeyFrame->GetKeyFrame());
+
+    return pKeyFrame;
+}
+
+template<typename T>
 CustomDataKeyFrame *CustomFrameState::RecordFieldValue(int frameId, T value) {
     CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(frameId, GetKeyFrames(), this);
 
     if constexpr(std::is_floating_point<T>()) {
-        pKeyFrame->data.floatValue = value;
         pKeyFrame->data.dataType = FLOAT;
     } else if constexpr(std::is_same<T, FieldShapeArray>()) {
         pKeyFrame->data.shapeArrayValue = value;
@@ -534,6 +528,9 @@ CustomDataKeyFrame *CustomFrameState::RecordFieldValue(int frameId, T value) {
     } else if constexpr(std::is_same<T, bool>()) {
         pKeyFrame->data.booleanValue = value;
         pKeyFrame->data.dataType = BOOLEAN;
+    } else if constexpr(std::is_same<T, BinaryResourceWrapper>()) {
+        pKeyFrame->data.binaryResource = value;
+        pKeyFrame->data.dataType = BINARYRESOURCE;
     }
 
     Apply(frameId);

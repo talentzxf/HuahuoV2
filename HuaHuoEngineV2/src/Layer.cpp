@@ -91,11 +91,11 @@ void Layer::SetIsVisible(bool isVisible) {
 }
 
 void Layer::MoveKeyFrameToKeyFrameId(KeyFrameIdentifier keyFrameIdentifier, int beforeFrameId, int afterFrameId) {
-    KeyFrame* keyFrame = &GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameIdentifier);
-    if(keyFrame->GetFrameId() != beforeFrameId)
+    KeyFrame *keyFrame = &GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameIdentifier);
+    if (keyFrame->GetFrameId() != beforeFrameId)
         return;
 
-    if(InternalDeleteKeyFrame(keyFrame)){
+    if (InternalDeleteKeyFrame(keyFrame)) {
         keyFrame->SetFrameId(afterFrameId);
         AddKeyFrame(keyFrame);
     }
@@ -137,7 +137,7 @@ void Layer::AddKeyFrame(KeyFrame *keyFrame) {
     GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
 }
 
-bool Layer::InternalDeleteKeyFrame(KeyFrame* keyFrame) {
+bool Layer::InternalDeleteKeyFrame(KeyFrame *keyFrame) {
     int frameId = keyFrame->GetFrameId();
     AbstractFrameState *frameState = keyFrame->GetFrameState();
     if (keyFrames.contains(frameId) && frameState != NULL) {
@@ -175,7 +175,7 @@ void Layer::DeleteKeyFrame(KeyFrame *keyFrame, bool notifyFrontEnd) {
         this->GetObjectStore()->SyncLayersInfo();
     }
 
-    if(notifyFrontEnd){
+    if (notifyFrontEnd) {
         KeyFrameChangedEventHandlerArgs args(this, keyFrame->GetFrameId());
         GetScriptEventManager()->TriggerEvent("OnKeyFrameChanged", &args);
     }
@@ -209,11 +209,16 @@ void Layer::AddShapeInternal(BaseShape *newShape) {
 void Layer::SyncInfo() {
     keyFrames.clear();
     for (auto shapePtr: this->shapes) {
-        shapePtr->RefreshKeyFrameCache();
-        int keyFrameCount = shapePtr->GetKeyFrameCount();
-        for (int keyFrameIdx = 0; keyFrameIdx < keyFrameCount; keyFrameIdx++) {
-            KeyFrame *keyFrame = shapePtr->GetKeyFrameObjectAtIdx(keyFrameIdx);
-            this->AddKeyFrame(keyFrame);
+        if (shapePtr->GetInstanceID() == InstanceID_None) {
+            printf("Sync Info: Error, InstanceID is none");
+        } else {
+            printf("Sync Info: InstanceID is %d\n", shapePtr->GetInstanceID());
+            shapePtr->RefreshKeyFrameCache();
+            int keyFrameCount = shapePtr->GetKeyFrameCount();
+            for (int keyFrameIdx = 0; keyFrameIdx < keyFrameCount; keyFrameIdx++) {
+                KeyFrame *keyFrame = shapePtr->GetKeyFrameObjectAtIdx(keyFrameIdx);
+                this->AddKeyFrame(keyFrame);
+            }
         }
     }
 }

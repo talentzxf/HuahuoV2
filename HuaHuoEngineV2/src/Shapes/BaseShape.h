@@ -170,7 +170,8 @@ public:
 
     const char* GetStoreId();
 
-    Layer* GetLayer(bool assignDefaultIfNotExist = true);
+    Layer*
+    GetLayer(bool returnDefaultIfNotExist = true);
 
     virtual const char* GetTypeName(){
         return mTypeName.c_str();
@@ -284,6 +285,10 @@ public:
                 allKeyFrames.insert(*itr);
             }
         }
+
+        printf("RefreshKeyFrameCache: this pointer is:%x\n", this);
+        printf("RefreshKeyFrameCache: InstanceId: %d\n", this->GetInstanceID());
+        printf("RefreshKeyFrameCache: Current key frame cache size:%d\n", mKeyFrameCache.size());
 
         mKeyFrameCache.clear();
 
