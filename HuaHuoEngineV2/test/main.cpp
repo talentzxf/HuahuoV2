@@ -604,24 +604,28 @@ void testReadFromFile() {
     customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
 
     Assert(customComponent->GetFloatValue("growth") == 1.0f);
+    ColorRGBAf *color = customComponent->GetColorValue("strokeColor");
 
-//
-//    // customComponent->SetBinaryResourceByMD5("particleShape", "HelloHello1");
-//
-//    ColorRGBAf *color = customComponent->GetColorValue("strokeColor");
-//
-//    customComponent->Apply(0);
-//    circleShape->GetMinFrameId();
-//
-//    Layer *shapeLayer = circleShape->GetLayer();
-//    shapeLayer->SetCurrentFrame(10);
-//
-//    customComponent->AddColorStop("gradientColor", 0.5);
-//
-//    customComponent->UpdateColorStop("gradientColor", 0, 1.0, 1.0, 0.0, 0.0, 1.0);
-//
-//    ColorStopArray *pResult = customComponent->GetColorStopArray("gradientColor");
-//
+    Assert(color->r == 1.0f);
+    Assert(color->g == 1.0f);
+    Assert(color->b == 0.0f);
+    Assert(color->a == 1.0f);
+
+    customComponent->Apply(0);
+    int frameId = circleShape->GetMinFrameId();
+
+    Assert(frameId == 0);
+
+    Layer *shapeLayer = circleShape->GetLayer();
+    shapeLayer->SetCurrentFrame(10);
+
+    customComponent->AddColorStop("gradientColor", 0.5);
+    customComponent->UpdateColorStop("gradientColor", 0, 1.0, 1.0, 0.0, 0.0, 1.0);
+
+    ColorStopArray *pResult = customComponent->GetColorStopArray("gradientColor");
+
+    Assert(pResult->GetColorStopCount() == 3);
+
 //    customComponent->SetColorValue("strokeColor", 0.0, 1.0, 0.0, 1.0);
 //    float growthValue = customComponent->GetFloatValue("growth");
 //

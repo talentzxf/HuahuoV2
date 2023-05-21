@@ -528,7 +528,7 @@ CustomDataKeyFrame *CustomFrameState::RecordFieldValue(int frameId, T value) {
         pKeyFrame->data.booleanValue = value;
         pKeyFrame->data.dataType = BOOLEAN;
     } else if constexpr(std::is_same<T, BinaryResourceWrapper>()) {
-        pKeyFrame->data.binaryResource = value;
+        pKeyFrame->data.binaryResource.SetResourceMD5(value.GetResourceMD5());
         pKeyFrame->data.dataType = BINARYRESOURCE;
     }
 

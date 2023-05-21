@@ -24,6 +24,10 @@ public:
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
 
     PPtr<BinaryResource> GetResourceByMD5(const char* resourceMD5){
+        if(resourceMD5 == NULL){
+            return NULL;
+        }
+
         Hash128 resourceMD5Hash = StringToHash128(resourceMD5);
         if(!mBinaryResources.contains(resourceMD5Hash)){
             return NULL;
