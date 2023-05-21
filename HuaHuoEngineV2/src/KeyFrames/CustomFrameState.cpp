@@ -508,6 +508,7 @@ CustomDataKeyFrame *CustomFrameState::RecordFieldValue(int frameId, T value) {
 
     if constexpr(std::is_floating_point<T>()) {
         pKeyFrame->data.dataType = FLOAT;
+        pKeyFrame->data.floatValue = value;
     } else if constexpr(std::is_same<T, FieldShapeArray>()) {
         pKeyFrame->data.shapeArrayValue = value;
         pKeyFrame->data.dataType = SHAPEARRAY;

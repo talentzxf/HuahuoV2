@@ -578,20 +578,33 @@ void testReadFromFile() {
 
     customComponent->AddColorStop("gradientColor", 0.0, 1.0, 0.0, 0.0, 1.0);
     customComponent->AddColorStop("gradientColor", 1.0, 0.0, 0.0, 1.0, 1.0);
-//    int identifier = customComponent->AddColorStop("gradientColor", 0.75, 0.3, 0.4, 0.5, 1.0);
-//    customComponent->DeleteColorStop("gradientColor", identifier);
-//    customComponent->GetColorStopArray("gradientColor");
-//
-//    customComponent->DeleteColorStop("gradientColor", 1);
-//    customComponent->GetColorStopArray("gradientColor");
-//    customComponent->AddColorStop("gradientColor", 1.0, 0.0, 0.0, 1.0, 1.0);
-//
-//    customComponent->GetColorStopArray("gradientColor");
-//
-//    customComponent->UpdateColorStop("gradientColor", 0, 0.1, 0.0, 1.0, 1.0, 1.0);
-//
-//    customComponent->SetFloatValue("growth", 1.0f);
-//    customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
+    int identifier = customComponent->AddColorStop("gradientColor", 0.75, 0.3, 0.4, 0.5, 1.0);
+
+    Assert(identifier == 2);
+    customComponent->DeleteColorStop("gradientColor", identifier);
+    ColorStopArray* colorStopArray = customComponent->GetColorStopArray("gradientColor");
+
+    Assert(colorStopArray->GetColorStopCount() == 2);
+
+    customComponent->DeleteColorStop("gradientColor", 1);
+
+    Assert(colorStopArray->GetColorStopCount() == 1);
+    customComponent->AddColorStop("gradientColor", 1.0, 0.0, 0.0, 1.0, 1.0);
+
+    Assert(colorStopArray->GetColorStopCount() == 2);
+    customComponent->UpdateColorStop("gradientColor", 0, 0.1, 0.0, 1.0, 1.0, 1.0);
+
+    Assert(colorStopArray->GetColorStop(0)->GetColor()->r == 0.0 );
+    Assert(colorStopArray->GetColorStop(0)->GetColor()->g == 1.0 );
+    Assert(colorStopArray->GetColorStop(0)->GetColor()->b == 1.0 );
+    Assert(colorStopArray->GetColorStop(0)->GetColor()->a == 1.0 );
+    Assert(colorStopArray->GetColorStop(0)->GetValue() == 0.1 );
+
+    customComponent->SetFloatValue("growth", 1.0f);
+    customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
+
+    Assert(customComponent->GetFloatValue("growth") == 1.0f);
+
 //
 //    // customComponent->SetBinaryResourceByMD5("particleShape", "HelloHello1");
 //

@@ -17,6 +17,7 @@
 class BaseShape;
 
 enum CustomDataType {
+    UNKNOWN,
     FLOAT,
     COLOR,
     SHAPEARRAY,
@@ -74,6 +75,10 @@ struct CustomData {
     CustomDataType dataType;
 
     DECLARE_SERIALIZE(CustomData);
+
+    CustomData() :
+            floatValue(0.0f),
+            dataType(UNKNOWN) {}
 };
 
 // TODO: Refactor! (One of) The most ugly function in the whole system. :(
@@ -208,7 +213,7 @@ private:
     Layer *GetLayer(bool returnDefaultIfNotExist = true);
 
     template<typename F>
-    CustomDataKeyFrame *SetValueInternalHelper(F && lambda);
+    CustomDataKeyFrame *SetValueInternalHelper(F &&lambda);
 
     template<typename T>
     CustomDataKeyFrame *SetValueInternal(T value);

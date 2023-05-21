@@ -17,6 +17,10 @@ bool operator==(BaseShape* p1, PPtr<BaseShape> p2);
 
 class FieldShapeArray {
 public:
+    FieldShapeArray()
+        :frameState(NULL){
+    }
+
     int GetShapeCount(){
         return shapeArray.size();
     }
