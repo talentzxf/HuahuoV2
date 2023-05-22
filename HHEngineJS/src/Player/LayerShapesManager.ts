@@ -129,7 +129,7 @@ class LayerShapesManager {
                 let shapes = this.layerShapes.get(layer)
                 for (let shapePtr of shapes.keys()) {
                     let shape = shapes.get(shapePtr)
-                    if (shape.belongStoreId != this.storeId) {
+                    if (shape.belongStoreId.length !=0 && shape.belongStoreId != this.storeId) {
                         shape.removePaperObj()
                         shapes.delete(shapePtr)
                     }
