@@ -1563,8 +1563,8 @@ int PersistentManager::WriteObject(std::string& path, PPtr<Object> object){
                 const char* elementStoreId = elementShape->GetElementStoreId();
                 ObjectStore* objectStore = GetDefaultObjectStoreManager()->GetStoreById(elementStoreId);
                 InstanceID storeInstanceID = objectStore->GetInstanceID();
-                if(!writeObjects.contains(storeInstanceID)){
-                    writeObjects.insert(objectStore->GetInstanceID());
+                if(!pendingInstanceIDs.contains(storeInstanceID)){
+                    pendingInstanceIDs.insert(objectStore->GetInstanceID());
                 }
             }
         }
