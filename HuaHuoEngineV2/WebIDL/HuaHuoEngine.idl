@@ -274,7 +274,7 @@ ShapeTransformComponent implements CustomComponent;
 
 [NoDelete]
 interface BaseShape{
-    static BaseShape CreateShape(DOMString shapeName, boolean createDefaultComponents = true);
+    static BaseShape CreateShape(DOMString shapeName, optional boolean createDefaultComponents = true);
 
     ShapeTransformComponent GetTransform();
 

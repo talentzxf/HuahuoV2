@@ -96,7 +96,6 @@ class AbstractComponent {
 
         if (!this.rawObj.IsFieldRegistered("isActive")) {
             this.rawObj.RegisterBooleanValue("isActive", true)
-            this.enableComponent()
         }
 
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
@@ -123,6 +122,7 @@ class AbstractComponent {
 
     setBaseShape(baseShape: BaseShapeJS) {
         this.baseShape = baseShape
+        this.enableComponent() // Enable the component after baseShape is set.
     }
 
     afterUpdate(force: boolean = false) {
@@ -148,14 +148,14 @@ class AbstractComponent {
         this.rawObj.SetBooleanValue("isActive", false)
 
         if(this.baseShape)
-            this.baseShape.afterUpdate(true)
+            this.baseShape.update(true)
     }
 
     enableComponent() {
         this.rawObj.SetBooleanValue("isActive", true)
 
         if(this.baseShape)
-            this.baseShape.afterUpdate(true)
+            this.baseShape.update(true)
     }
 
     getPropertySheet() {
