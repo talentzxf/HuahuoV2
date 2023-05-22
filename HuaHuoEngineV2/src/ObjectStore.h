@@ -26,6 +26,7 @@ public:
     ObjectStore(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
         ,maxFrameId(-1)
+        ,mIsRoot(false)
     {
         mStoreId.Init();
     }
@@ -94,6 +95,14 @@ public:
 
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
 
+    bool GetIsRoot(){
+        return mIsRoot;
+    }
+
+    void SetIsRoot(bool isRoot){
+        mIsRoot = isRoot;
+    }
+
 private:
     HuaHuoGUID mStoreId;
     int maxFrameId;
@@ -101,6 +110,7 @@ private:
     std::map<std::string, PPtr<Layer>> layerMap;
     PPtr<Layer> currentLayer;
     std::string storeIdString;
+    bool mIsRoot;
 };
 
 class ObjectStoreAddedEvent : public ScriptEventHandlerArgs{

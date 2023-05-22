@@ -75,6 +75,7 @@ void ObjectStore::Transfer(TransferFunction &transfer) {
     TRANSFER(currentLayer);
     TRANSFER(maxFrameId);
     TRANSFER(mStoreId);
+    TRANSFER(mIsRoot);
 }
 
 void ObjectStore::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
@@ -83,8 +84,10 @@ void ObjectStore::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
     if(!GetDefaultObjectStoreManager()->HasStore(this)){
         GetDefaultObjectStoreManager()->AddStore(this);
 
-        ObjectStoreAddedEvent args(this);
-        GetScriptEventManager()->TriggerEvent("OnStoreAdded", &args);
+        if(this->GetIsRoot()){
+            ObjectStoreAddedEvent args(this);
+            GetScriptEventManager()->TriggerEvent("OnStoreAdded", &args);
+        }
     }
 }
 

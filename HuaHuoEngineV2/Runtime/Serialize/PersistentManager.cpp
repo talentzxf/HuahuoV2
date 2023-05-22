@@ -1539,6 +1539,13 @@ int PersistentManager::WriteObject(std::string& path, PPtr<Object> object){
 
     int serializedFileIndex;
 
+    if(object->Is<ElementShape>()){
+        ElementShape* pElementShape = dynamic_cast<ElementShape *>(&(*object));
+        const char* storeId = pElementShape->GetElementStoreId();
+        ObjectStore* pStore = GetDefaultObjectStoreManager()->GetStoreById(storeId);
+        pStore->SetIsRoot(true);
+    }
+
     serializedFileIndex = InsertPathNameInternal(path, true);
     ObjectIDs writeObjects; //(kMemTempAlloc);
 
@@ -1560,6 +1567,11 @@ int PersistentManager::WriteObject(std::string& path, PPtr<Object> object){
 
             if(pendingObject->Is<ElementShape>()){
                 ElementShape* elementShape = (ElementShape*)pendingObject;
+
+                const char* storeId = elementShape->GetElementStoreId();
+                ObjectStore* pStore = GetDefaultObjectStoreManager()->GetStoreById(storeId);
+                pStore->SetIsRoot(false);
+
                 const char* elementStoreId = elementShape->GetElementStoreId();
                 ObjectStore* objectStore = GetDefaultObjectStoreManager()->GetStoreById(elementStoreId);
                 InstanceID storeInstanceID = objectStore->GetInstanceID();

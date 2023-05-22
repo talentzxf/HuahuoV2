@@ -32,7 +32,6 @@ public:
     }
 
     virtual void Apply(int frameId) override;
-
 private:
     HuaHuoGUID mStoreId;
     std::string mStoreIdString;
