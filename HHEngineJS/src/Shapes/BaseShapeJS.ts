@@ -126,9 +126,8 @@ abstract class BaseShapeJS {
     addComponent(component: AbstractComponent, persistentTheComponent: boolean = true) {
         if (persistentTheComponent)
             this.rawObj.AddFrameState(component.rawObj)
-        component.setBaseShape(this)
         this.customComponents.push(component)
-
+        component.setBaseShape(this)
         component.initPropertySheet(this.propertySheet)
     }
 
