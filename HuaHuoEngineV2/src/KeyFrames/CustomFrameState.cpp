@@ -223,6 +223,9 @@ AbstractKeyFrame *CustomFrameState::SetFloatValue(float value) {
         return NULL;
     }
 
+    int currentFrame = GetCurrentFrameId();
+    AddFloatCurveValue(currentFrame, value);
+
     return SetValueInternal(value);
 }
 
@@ -231,6 +234,8 @@ AbstractKeyFrame *CustomFrameState::SetVector3Value(float x, float y, float z) {
         Assert("Data Type mismatch!");
         return NULL;
     }
+
+    SetVectorKeyFrameCurveValue(GetCurrentFrameId(), x, y, z);
 
     Vector3f value(x, y, z);
     return SetValueInternal(value);
@@ -333,17 +338,16 @@ CustomDataKeyFrame *CustomFrameState::GetColorStopArrayKeyFrame(int currentFrame
         }
 
         if (itr == GetKeyFrames().end()) {
-            printf("Is End\n");
+            printf("Is End!\n");
+        } else {
+            pKeyFrame->data.dataType = COLORSTOPARRAY;
+            for (int colorStopIdx = pKeyFrame->data.colorStopArray.GetColorStopCount();
+                 colorStopIdx < itr->data.colorStopArray.GetColorStopCount(); colorStopIdx++) {
+                ColorStopEntry colorStopEntry = *itr->data.colorStopArray.GetColorStop(colorStopIdx);
+
+                pKeyFrame->data.colorStopArray.AddEntry(colorStopEntry);
+            }
         }
-
-        pKeyFrame->data.dataType = COLORSTOPARRAY;
-        for (int colorStopIdx = pKeyFrame->data.colorStopArray.GetColorStopCount();
-             colorStopIdx < itr->data.colorStopArray.GetColorStopCount(); colorStopIdx++) {
-            ColorStopEntry colorStopEntry = *itr->data.colorStopArray.GetColorStop(colorStopIdx);
-
-            pKeyFrame->data.colorStopArray.AddEntry(colorStopEntry);
-        }
-
     }
 
     return pKeyFrame;
@@ -365,7 +369,7 @@ int CustomFrameState::AddColorStop(float value, float r, float g, float b, float
 
     ColorStopEntry colorStopEntry(-1, value, r, g, b, a);
 
-    SetValueInternalHelper([=, this, &colorStopEntry](int currentFrameId){
+    SetValueInternalHelper([=, this, &colorStopEntry](int currentFrameId) {
 
         CustomDataKeyFrame *pKeyFrame = GetColorStopArrayKeyFrame(currentFrameId);
         pKeyFrame->data.colorStopArray.AddEntry(colorStopEntry);
@@ -390,7 +394,7 @@ void CustomFrameState::UpdateColorStop(int idx, float value, float r, float g, f
         return;
     }
 
-    SetValueInternalHelper([=, this](int currentFrameId){
+    SetValueInternalHelper([=, this](int currentFrameId) {
         CustomDataKeyFrame *pKeyFrame = GetColorStopArrayKeyFrame(currentFrameId);
 
         pKeyFrame->data.colorStopArray.UpdateAtIdentifier(idx, value, r, g, b, a);
@@ -471,7 +475,7 @@ bool CustomFrameState::Apply() {
     return this->Apply(currentFrameId);
 }
 
-int CustomFrameState::GetCurrentFrameId(){
+int CustomFrameState::GetCurrentFrameId() {
     if (this->GetBaseShape() == NULL) {
         return GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->GetCurrentFrame();
     }
@@ -479,11 +483,11 @@ int CustomFrameState::GetCurrentFrameId(){
 }
 
 template<typename F>
-CustomDataKeyFrame *CustomFrameState::SetValueInternalHelper(F && setValueFunction){
+CustomDataKeyFrame *CustomFrameState::SetValueInternalHelper(F &&setValueFunction) {
     Layer *shapeLayer = NULL;
     int currentFrameId = GetCurrentFrameId();
 
-    if(GetBaseShape() != NULL)
+    if (GetBaseShape() != NULL)
         shapeLayer = GetBaseShape()->GetLayer();
 
     CustomDataKeyFrame *pKeyFrame = setValueFunction(currentFrameId);
@@ -497,7 +501,7 @@ CustomDataKeyFrame *CustomFrameState::SetValueInternalHelper(F && setValueFuncti
 
 template<typename T>
 CustomDataKeyFrame *CustomFrameState::SetValueInternal(T value) {
-    return SetValueInternalHelper([=, this](int currentFrameId){
+    return SetValueInternalHelper([=, this](int currentFrameId) {
         return this->RecordFieldValue(currentFrameId, value);
     });
 }
