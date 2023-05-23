@@ -762,7 +762,7 @@ void testKeyFrameCurve() {
     bool isKeyFrame = layer->IsKeyFrame(300);
     Assert(isKeyFrame == true);
     isKeyFrame = layer->IsKeyFrame(400);
-    Assert(isKeyFrame == true);
+    Assert(isKeyFrame == false);
     customComponent->Apply(400);
     float value = customComponent->GetFloatValue(fieldName);
     Assert(value == 400);

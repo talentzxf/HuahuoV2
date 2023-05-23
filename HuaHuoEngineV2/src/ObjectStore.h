@@ -174,7 +174,6 @@ public:
         GetPersistentManager().MakeObjectPersistent(currentStore.GetInstanceID(), StoreFilePath);
         allStores[currentStore->GetStoreGuid()] = currentStore;
 
-        printf("CurrentStore instance id:%d at file:%s\n", currentStore.GetInstanceID(), StoreFilePath.c_str());
         return currentStore;
     }
 

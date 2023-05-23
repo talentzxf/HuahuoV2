@@ -1019,13 +1019,10 @@ LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIn
     // AutoLock autoLock(*this);
     LocalIdentifierInFileType localIdentifierInFile = globalIdentifier.localIdentifierInFile;
 
-    printf("Global identifier:%lld\n", globalIdentifier.localIdentifierInFile);
     int localSerializedFileIndex;
 
     // Remap globalPathID to localPathID
     int activeNameSpace = GetActiveNameSpace(kWritingNameSpace);
-
-    printf("Active name space is:%d\n", activeNameSpace);
 
     IDRemap& globalToLocalNameSpace = m_GlobalToLocalNameSpace[activeNameSpace];
     IDRemap& localToGlobalNameSpace = m_LocalToGlobalNameSpace[activeNameSpace];
@@ -1038,48 +1035,31 @@ LocalSerializedObjectIdentifier PersistentManager::GlobalToLocalSerializedFileIn
         Assert(activeNameSpace < (int)m_Streams.size());
         Assert(m_Streams[activeNameSpace].stream != NULL);
 
-        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
-
         if(NULL == m_Streams[activeNameSpace].stream){
             printf("Stream is null!!\n");
         }
 
-        printf("Get stream from active namespace:%d\n", activeNameSpace);
-
         SerializedFile& serialize = *m_Streams[activeNameSpace].stream;
-        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
 
         FileIdentifier fileIdentifier = PathIDToFileIdentifierInternal(globalIdentifier.serializedFileIndex);
-        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
-
         serialize.AddExternalRef(fileIdentifier);
 
-        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
 
         // localIdentifierInFile mapping is not zero based. zero is reserved for mapping into the same file.
         localSerializedFileIndex = serialize.GetExternalRefs().size();
 
-        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
-
         globalToLocalNameSpace[globalIdentifier.serializedFileIndex] = localSerializedFileIndex;
-        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
         localToGlobalNameSpace[localSerializedFileIndex] = globalIdentifier.serializedFileIndex;
-        printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
     }
     else{
         localSerializedFileIndex = found->second;
     }
 
-    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
-
     // Setup local identifier
     LocalSerializedObjectIdentifier localIdentifier;
-    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
     localIdentifier.localSerializedFileIndex = localSerializedFileIndex;
     localIdentifier.localIdentifierInFile = localIdentifierInFile;
 
-    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
-    printf("LocalIdentifier:%d,%lld\n",localIdentifier.localSerializedFileIndex, localIdentifier.localIdentifierInFile);
     return localIdentifier;
 }
 
@@ -1105,7 +1085,6 @@ void PersistentManager::InstanceIDToLocalSerializedObjectIdentifier(InstanceID i
         return;
     }
 
-    printf("Here!!!!! %s,%d\n", __FILE__, __LINE__);
     localIdentifier = GlobalToLocalSerializedFileIndex(globalIdentifier);
 
 }
@@ -1188,7 +1167,6 @@ static void CleanupStream(StreamNameSpace& stream, bool cleanupDestroyedList)
 
 StreamNameSpace& PersistentManager::GetStreamNameSpaceInternal(int nameSpaceID)
 {
-    printf("Getting namespace:%d stream\n", nameSpaceID);
     // Must lock m_Mutex BEFORE calling this function since it returns a reference to an element in m_Streams
 
     CheckedAssert(m_PreventLoadingFromFile != nameSpaceID);
@@ -1224,8 +1202,6 @@ StreamNameSpace& PersistentManager::GetStreamNameSpaceInternal(int nameSpaceID)
         // return nameSpace;
         CreateFile(absolutePath);
     }
-
-    printf("File has been created!!!!!!!! Namespace:%d\n", nameSpaceID);
 
     // Is Builtin resource file?
     TransferInstructionFlags options = kNoTransferInstructionFlags;
@@ -1293,7 +1269,6 @@ void PersistentManager::PostLoadStreamNameSpaceInternal(StreamNameSpace& nameSpa
 
 void PersistentManager::MakeObjectsPersistent(const InstanceID* heapIDs, LocalIdentifierInFileType* fileIDs, int size, std::string pathName, int options)
 {
-    printf("MakeObjectsPersistent:%s\n", pathName.c_str());
     // PROFILER_AUTO(gMakeObjectPersistentProfiler);
 
     CheckedAssert(m_AllowLoadingFromDisk);
@@ -1302,7 +1277,6 @@ void PersistentManager::MakeObjectsPersistent(const InstanceID* heapIDs, LocalId
     Assert(!pathName.empty());
     SInt32 globalNameSpace = InsertPathNameInternal(pathName, true);
 
-    printf("globalNameSpace:%d\n", globalNameSpace);
     StreamNameSpace* streamNameSpace = NULL;
     for (int i = 0; i < size; i++)
     {
@@ -1358,7 +1332,6 @@ void PersistentManager::MakeObjectsPersistent(const InstanceID* heapIDs, LocalId
         identifier.serializedFileIndex = globalNameSpace;
         identifier.localIdentifierInFile = fileID;
 
-        printf("identifier.serializedFileIndex:%d\n", identifier.serializedFileIndex);
         m_Remapper->SetupRemapping(heapID, identifier);
         fileIDs[i] = fileID;
 

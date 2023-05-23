@@ -29,7 +29,6 @@ void AbstractFrameState::SetBaseShape(BaseShape *pBaseShape) {
     if (pBaseShape == NULL)
         return;
 
-    printf("Set base shape for:%s\n", this->GetTypeName());
     baseShape = pBaseShape;
 
     mBaseShapePPtr = pBaseShape;

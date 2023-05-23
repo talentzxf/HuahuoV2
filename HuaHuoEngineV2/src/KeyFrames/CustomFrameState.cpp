@@ -542,7 +542,6 @@ CustomDataKeyFrame *CustomFrameState::RecordFieldValue(int frameId, T value) {
 CustomFrameState *CustomFrameState::CreateFrameState(CustomDataType dataType) {
     CustomFrameState *producedFrameState = Object::Produce<CustomFrameState>();
     producedFrameState->m_DataType = dataType;
-    printf("Creating component at path:%s\n", StoreFilePath.c_str());
     GetPersistentManagerPtr()->MakeObjectPersistent(producedFrameState->GetInstanceID(), StoreFilePath);
     return producedFrameState;
 }

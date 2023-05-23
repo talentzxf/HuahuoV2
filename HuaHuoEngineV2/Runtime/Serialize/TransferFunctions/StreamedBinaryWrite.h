@@ -50,7 +50,6 @@ void StreamedBinaryWrite::TransferSTLStyleArray(T& data, TransferMetaFlags /*met
 
     SInt32 size = (SInt32)cdata.size();
 
-    printf("Transfering STL size:%d\n", size);
     Transfer(size, "size");
 
     typedef typename T::value_type non_const_value_type;

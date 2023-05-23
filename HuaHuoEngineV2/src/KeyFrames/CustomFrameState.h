@@ -111,6 +111,9 @@ void CustomData::Transfer(TransferFunction &transfer) {
         case BOOLEAN:
             TRANSFER(booleanValue);
             break;
+        default:
+            printf("Error: No such type");
+            break;
     }
 }
 

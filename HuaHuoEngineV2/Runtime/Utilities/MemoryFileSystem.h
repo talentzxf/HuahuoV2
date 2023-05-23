@@ -26,7 +26,6 @@ public:
     }
 
     size_t GetFileLength(){
-        printf("%s,%d. File:%s, Data size is: %lu bytes\n", __FILE__, __LINE__, fName.c_str(), data.size());
         return data.size();
     }
 

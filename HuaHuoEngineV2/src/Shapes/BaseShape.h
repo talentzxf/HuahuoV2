@@ -284,10 +284,6 @@ public:
             }
         }
 
-        printf("RefreshKeyFrameCache: this pointer is:%x\n", this);
-        printf("RefreshKeyFrameCache: InstanceId: %d\n", this->GetInstanceID());
-        printf("RefreshKeyFrameCache: Current key frame cache size:%d\n", mKeyFrameCache.size());
-
         mKeyFrameCache.clear();
 
         int smallestKeyFrameId = -1;
