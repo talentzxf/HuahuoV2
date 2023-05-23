@@ -37,9 +37,9 @@ class ElementCreator {
             huahuoEngine.registerEventListener("HHEngine", "onUploadElement", _this.uploadElement.bind(_this))
 
             let storeAddedHandler = new Module.ScriptEventHandlerImpl()
-            storeAddedHandler.handleEvent = _this.OnStoreAdded.bind(_this)
+            storeAddedHandler.handleEvent = _this.OnRootStoreAdded.bind(_this)
 
-            huahuoEngine.GetInstance().RegisterEvent("OnStoreAdded", storeAddedHandler)
+            huahuoEngine.GetInstance().RegisterEvent("OnRootStoreAdded", storeAddedHandler)
 
         })
     }
@@ -277,10 +277,10 @@ class ElementCreator {
         }
     }
 
-    OnStoreAdded(args){
+    OnRootStoreAdded(args){
         let objectStoreAddedEvent = Module.wrapPointer(args, Module.ObjectStoreAddedEvent)
         let store = objectStoreAddedEvent.GetStore()
-        console.log("Store added!!!")
+        console.log("Root Store added!!!")
 
         let newElement = this.onNewElement(false, store.GetStoreId())
         HHToast.info(i18n.t("toast.elementLoaded"))

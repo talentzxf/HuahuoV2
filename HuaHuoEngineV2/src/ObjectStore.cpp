@@ -86,7 +86,7 @@ void ObjectStore::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
 
         if(this->GetIsRoot()){
             ObjectStoreAddedEvent args(this);
-            GetScriptEventManager()->TriggerEvent("OnStoreAdded", &args);
+            GetScriptEventManager()->TriggerEvent("OnRootStoreAdded", &args);
         }
     }
 }

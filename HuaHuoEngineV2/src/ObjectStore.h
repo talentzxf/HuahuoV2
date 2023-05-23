@@ -110,7 +110,7 @@ private:
     std::map<std::string, PPtr<Layer>> layerMap;
     PPtr<Layer> currentLayer;
     std::string storeIdString;
-    bool mIsRoot;
+    bool mIsRoot; // This flag will be set when element authors mark uploaded the element and cleared when it's uploaded under another root.
 };
 
 class ObjectStoreAddedEvent : public ScriptEventHandlerArgs{
