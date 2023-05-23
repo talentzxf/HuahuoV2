@@ -163,11 +163,11 @@ class ElementCreator {
 
     onNewElement(openElementTab: boolean = true, storeId: string = null) {
 
-        let elementId = "NewElement_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+        let elementName = "NewElement_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
 
         // Create shape in the original scene/element
         let newElementShape = new ElementShapeJS()
-        newElementShape.name = elementId
+        newElementShape.name = elementName
         newElementShape.createShape()
         newElementShape.position = new paper.Point(0, 0)
         newElementShape.store()

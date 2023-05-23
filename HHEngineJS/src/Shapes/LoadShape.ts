@@ -32,12 +32,13 @@ function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true, addToLayer: b
 
     jsShape.isMirage = isMirage
 
+    if(awake)
+        jsShape.awakeFromLoad()
+
     // TODO: Whatif there're dependencies across components?
     // Create all the component wrapper in the JS side.
     LoadComponentForShape(jsShape, isMirage)
-
-    if(awake)
-        jsShape.awakeFromLoad()
+    
     return jsShape
 }
 
