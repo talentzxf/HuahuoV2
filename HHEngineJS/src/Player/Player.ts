@@ -44,7 +44,7 @@ class Player extends EventEmitter{
     }
 
     async loadShapesFromStore(){
-        return this.layerShapesManager.loadShapesFromStore(null)
+        return await this.layerShapesManager.loadShapesFromStore(null)
     }
 
     updateAllShapes(force: boolean = false){

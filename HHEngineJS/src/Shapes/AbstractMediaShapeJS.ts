@@ -53,9 +53,9 @@ abstract class AbstractMediaShapeJS extends BaseShapeJS {
         return loadImagePromise
     }
 
-    update(force: boolean = false) {
+    async update(force: boolean = false) {
         if (this.isLoaded()) {
-            super.update(force);
+            await super.update(force);
         }
     }
 

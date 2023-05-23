@@ -453,9 +453,9 @@ abstract class BaseShapeJS {
         return this.rawObj.GetLayer()
     }
 
-    awakeFromLoad() {
+    async awakeFromLoad() {
         this.isLoadedFromFile = true
-        this.update(true);
+        await this.update(true);
     }
 
     getShapeName() {

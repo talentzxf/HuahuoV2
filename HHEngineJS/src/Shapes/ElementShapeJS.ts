@@ -172,15 +172,15 @@ class ElementShapeJS extends BaseShapeJS {
 
 
 
-    update(force: boolean = false) {
+    async update(force: boolean = false) {
         if (Utils.isValidGUID(this.storeId)) { // If the storeId is less than 0, the shape has not been inited.
-            super.update(force)
+            await super.update(force)
             elementUpdated++
         }
     }
 
-    awakeFromLoad() {
-        super.awakeFromLoad();
+    async awakeFromLoad() {
+        await super.awakeFromLoad();
         huahuoEngine.RegisterElementShape(this.storeId, this);
     }
 

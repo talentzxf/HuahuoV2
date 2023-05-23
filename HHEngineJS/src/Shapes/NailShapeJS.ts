@@ -110,8 +110,8 @@ class NailShapeJS extends BaseShapeJS{
         this.propertySheet.addProperty(nailConfig)
     }
 
-    awakeFromLoad() {
-        super.awakeFromLoad();
+    async awakeFromLoad() {
+        await super.awakeFromLoad();
 
         for(let targetShape of this.getBoundShapes()){
             targetShape.registerValueChangeHandler(allAffineTransformEvents)(() => {

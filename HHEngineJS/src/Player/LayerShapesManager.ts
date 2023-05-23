@@ -91,7 +91,7 @@ class LayerShapesManager {
         return null
     }
 
-    async loadShapesFromStore(parent: ElementShapeJS): number {
+    async loadShapesFromStore(parent: ElementShapeJS): Promise<number> {
         let layerShapeCount = 0
 
         if(parent != null)

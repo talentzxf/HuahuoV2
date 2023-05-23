@@ -21,7 +21,7 @@ function LoadComponentForShape(shape:BaseShapeJS, isMirage: boolean){
     }
 }
 
-function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true, addToLayer: boolean = true, isMirage: boolean = false){
+async function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true, addToLayer: boolean = true, isMirage: boolean = false){
     let shapeConstructor = clzObjectFactory.GetClassConstructor(rawShapeObj.GetTypeName())
     let jsShape = shapeConstructor(rawShapeObj)
 
@@ -32,8 +32,10 @@ function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true, addToLayer: b
 
     jsShape.isMirage = isMirage
 
-    if(awake)
-        jsShape.awakeFromLoad()
+    if(awake){
+        await jsShape.awakeFromLoad()
+    }
+
 
     // TODO: Whatif there're dependencies across components?
     // Create all the component wrapper in the JS side.
