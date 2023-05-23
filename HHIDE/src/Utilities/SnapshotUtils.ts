@@ -31,7 +31,7 @@ class SnapshotUtils{
             renderEngine2D.setDefaultCanvas(hiddenCanvas)
 
             previewPlayer.storeId = storeId
-            previewPlayer.loadShapesFromStore()
+            await previewPlayer.loadShapesFromStore()
             previewPlayer.setFrameId(currentFrameId)
         }finally {
             if (previousCanvas)

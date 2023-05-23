@@ -167,7 +167,7 @@ class UploadElementForm extends HTMLElement implements HHForm {
         this.RedrawFrame()
     }
 
-    RedrawFrame() {
+    async RedrawFrame() {
         if (null == this.eleStoreId)
             return
 
@@ -182,7 +182,7 @@ class UploadElementForm extends HTMLElement implements HHForm {
             previousCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
 
             this.previewAnimationPlayer.storeId = this.eleStoreId
-            this.previewAnimationPlayer.loadShapesFromStore()
+            await this.previewAnimationPlayer.loadShapesFromStore()
             this.previewAnimationPlayer.setFrameId(currentFrameId)
         }finally {
             if (previousCanvas)

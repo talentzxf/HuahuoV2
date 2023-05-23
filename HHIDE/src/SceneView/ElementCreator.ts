@@ -120,7 +120,7 @@ class ElementCreator {
         }
     }
 
-    openElementEditTab(element: ElementShapeJS) {
+    async openElementEditTab(element: ElementShapeJS) {
 
         let eleSceneView = sceneViewManager.getSceneView(element.storeId)
         if (!eleSceneView) {
@@ -145,7 +145,7 @@ class ElementCreator {
 
             elementSceneView.setStoreId(element.storeId)
 
-            elementSceneView.animationPlayer.loadShapesFromStore()
+            await elementSceneView.animationPlayer.loadShapesFromStore()
             elementSceneView.animationPlayer.updateAllShapes(true)
         } else { // Switch to the SceneView
             let panel: HHPanel = findParentPanel(eleSceneView)

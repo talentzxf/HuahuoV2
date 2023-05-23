@@ -59,10 +59,9 @@ abstract class AbstractMediaShapeJS extends BaseShapeJS {
         }
     }
 
-    awakeFromLoad() {
-        this.loadDataFromCpp().then(() => {
-            super.awakeFromLoad();
-        })
+    async awakeFromLoad() {
+        await this.loadDataFromCpp()
+        super.awakeFromLoad();
     }
 
     appendProperties() {

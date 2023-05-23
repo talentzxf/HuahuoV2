@@ -43,7 +43,7 @@ class Player extends EventEmitter{
         return this.layerShapesManager.getLayerShapes(layer)
     }
 
-    loadShapesFromStore(){
+    async loadShapesFromStore(){
         return this.layerShapesManager.loadShapesFromStore(null)
     }
 

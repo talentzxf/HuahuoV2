@@ -91,7 +91,7 @@ class LayerShapesManager {
         return null
     }
 
-    loadShapesFromStore(parent: ElementShapeJS): number {
+    async loadShapesFromStore(parent: ElementShapeJS): number {
         let layerShapeCount = 0
 
         if(parent != null)
@@ -112,7 +112,7 @@ class LayerShapesManager {
                 let baseShape = layer.GetShapeAtIndex(shapeId)
                 let shape = null
                 if (!shapes.has(baseShape.ptr)) { // TODO: This is duplicated with LoadShape.ts.
-                    let jsShape = LoadShapeFromCppShape(baseShape)
+                    let jsShape = await LoadShapeFromCppShape(baseShape)
                     shapes.set(baseShape.ptr, jsShape)
                     if (parent)
                         jsShape.setParent(parent)

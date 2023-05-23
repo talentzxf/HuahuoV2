@@ -202,7 +202,7 @@ class ProjectInfoForm extends HTMLElement implements HHForm{
         this.RedrawFrame()
     }
 
-    RedrawFrame(){
+    async RedrawFrame(){
         let prevStore = huahuoEngine.GetCurrentStoreId()
 
         let mainSceneView: SceneView = document.querySelector("#mainScene")
@@ -214,7 +214,7 @@ class ProjectInfoForm extends HTMLElement implements HHForm{
         let previousCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
 
         this.previewAnimationPlayer.storeId = mainStoreId
-        this.previewAnimationPlayer.loadShapesFromStore()
+        await this.previewAnimationPlayer.loadShapesFromStore()
         this.previewAnimationPlayer.setFrameId(currentFrameId)
         if(previousCanvas)
             renderEngine2D.setDefaultCanvas(previousCanvas)

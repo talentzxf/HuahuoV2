@@ -262,7 +262,12 @@ abstract class BaseShapeJS {
 
     setParent(parentShape: BaseShapeJS) {
         this.parent = parentShape
-        parentShape.paperItem.addChild(this.paperItem)
+
+        if(this.paperItem == null)
+            console.error("this.paperItem is null?!")
+        else{
+            parentShape.paperItem.addChild(this.paperItem)
+        }
     }
 
     getParent() {
@@ -1222,7 +1227,7 @@ abstract class BaseShapeJS {
         this.callHandlers("shapeHidden", null)
     }
 
-    update(force: boolean = false) {
+    async update(force: boolean = false) {
         let currentFrame = this.getLayer().GetCurrentFrame()
         // if (force || currentFrame != this.lastRenderFrame) { // TODO: Because of event graph, we might still need to update here.
         {
@@ -1230,7 +1235,7 @@ abstract class BaseShapeJS {
             // console.log("Totally updated:" + totallyUpdated)
 
             this.beforeUpdate(true)
-            this.preparePaperItem(true)
+            await this.preparePaperItem(true)
 
             if (!this.rawObj.IsVisible()) {
                 this.paperItem.visible = false

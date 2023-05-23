@@ -100,6 +100,10 @@ class ElementShapeJS extends BaseShapeJS {
         let bornFrame = this.bornFrameId
         let maxFrames = huahuoEngine.getStoreMaxFrames(this.storeId)
 
+        if(maxFrames == 0){
+            return 0;
+        }
+
         return (((currentFrame - bornFrame) * this.getPlaySpeed()) % maxFrames + maxFrames) % maxFrames
     }
 
@@ -115,7 +119,7 @@ class ElementShapeJS extends BaseShapeJS {
         }
     }
 
-    override preparePaperItem(force: boolean = false) {
+    override async preparePaperItem(force: boolean = false) {
         super.preparePaperItem(force)
 
         let defaultStoreManager = huahuoEngine.GetDefaultObjectStoreManager()
@@ -137,7 +141,7 @@ class ElementShapeJS extends BaseShapeJS {
                 layer.SetCurrentFrame(currentLocalFrame)
             })
 
-            this.layerShapesManager.loadShapesFromStore(this)
+            await this.layerShapesManager.loadShapesFromStore(this)
 
             let somethingIsVisible = false
             let _this = this
