@@ -150,7 +150,7 @@ class ShapeSelector extends BaseShapeDrawer {
         IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onShapeSelected.bind(this))
     }
 
-    groupAsElement(){
+    async groupAsElement(){
         // Calculate the center of all the selected elements.
         let newCenterPosition = new paper.Point(0,0)
         for(let shape of this.selectedShapes){
@@ -162,7 +162,7 @@ class ShapeSelector extends BaseShapeDrawer {
         newCenterPosition.x /= this.selectedShapes.size
         newCenterPosition.y /= this.selectedShapes.size
 
-        let element = elementCreator.createElement(this.selectedShapes)
+        let element = await elementCreator.createElement(this.selectedShapes)
 
         this.selectedShapes.clear()
         if(element)

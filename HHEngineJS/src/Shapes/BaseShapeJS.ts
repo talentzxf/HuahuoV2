@@ -480,7 +480,7 @@ abstract class BaseShapeJS {
         this.callHandlers("segments", {idx: idx, property: property, value: value})
     }
 
-    restoreFrameSegmentsBuffer(frameSegmentsBuffer) {
+    async restoreFrameSegmentsBuffer(frameSegmentsBuffer) {
         for (let keyframeObj of frameSegmentsBuffer) {
             let frameId = keyframeObj["frameId"]
             let segments = keyframeObj["segments"]
@@ -489,7 +489,7 @@ abstract class BaseShapeJS {
             }
         }
 
-        this.update(true)
+        await this.update(true)
 
         this.callHandlers("segments", null)
     }

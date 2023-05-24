@@ -195,7 +195,7 @@ class ElementCreator {
         return newElementShape
     }
 
-    createElement(shapes: Set<BaseShapeJS>): ElementShapeJS {
+    async createElement(shapes: Set<BaseShapeJS>): ElementShapeJS {
         let prevStoreId = huahuoEngine.GetCurrentStoreId()
 
         let allRelatedShapes = new Set<BaseShapeJS>()
@@ -263,7 +263,7 @@ class ElementCreator {
             }
 
             newElement.syncStoreLayerInfo() // Update the maxFrameId and keyFrameIds in the layer.
-            newElement.update()
+            await newElement.update()
 
             HHToast.info(i18n.t("toast.elementCreated", {elementName: newElement.name}))
 
