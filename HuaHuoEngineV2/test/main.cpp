@@ -191,8 +191,8 @@ void testShapeStore() {
 
     GetScriptEventManager()->RegisterEventHandler("OnRootStoreAdded", new RootStoreAddedEventHandler());
 
-    std::string filenamestr("C:\\Users\\vincentzhang\\MyProjects\\HuahuoV2\\HuahuoBackend\\projectfiles\\vincentzhang\\ELEMENT\\NewElement_laski\\NewElement_laski.ele");
-    // std::string filenamestr = std::string("mem://") + filename;
+    // std::string filenamestr("C:\\Users\\vincentzhang\\MyProjects\\HuahuoV2\\HuahuoBackend\\projectfiles\\vincentzhang\\ELEMENT\\NewElement_laski\\NewElement_laski.ele");
+    std::string filenamestr = std::string("mem://") + filename;
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
     vector<UInt8> imgData = {31, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};

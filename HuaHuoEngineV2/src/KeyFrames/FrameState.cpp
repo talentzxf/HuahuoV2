@@ -5,6 +5,7 @@
 #include "FrameState.h"
 #include "Shapes/BaseShape.h"
 #include "Layer.h"
+#include "ObjectStore.h"
 
 IMPLEMENT_REGISTER_CLASS(AbstractFrameState, 10007);
 
@@ -35,6 +36,9 @@ void AbstractFrameState::SetBaseShape(BaseShape *pBaseShape) {
 }
 
 ObjectStore *AbstractFrameState::GetObjectStore() {
+    if(GetBaseShape() == NULL){
+        return GetDefaultObjectStoreManager()->GetCurrentStore();
+    }
     return GetBaseShape()->GetLayer(true)->GetObjectStore();
 }
 
