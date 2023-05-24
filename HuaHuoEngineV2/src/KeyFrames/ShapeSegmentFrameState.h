@@ -94,6 +94,8 @@ public:
 
     friend class BaseShape;
 
+    void SaveAsKeyFrame() override;
+
 private:
     std::vector<Vector3f> m_currentPositionArray;
     std::vector<Vector3f> m_currentHandleInArray;

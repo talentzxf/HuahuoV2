@@ -79,3 +79,7 @@ bool ShapeSegmentFrameState::Apply(int frameId) {
 
     return false;
 }
+
+void ShapeSegmentFrameState::SaveAsKeyFrame() {
+    printf("ShapeSegmentFrameState::SaveAsKeyFrame Not implemented!\n");
+}

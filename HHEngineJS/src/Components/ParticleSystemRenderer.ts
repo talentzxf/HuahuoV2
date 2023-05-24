@@ -7,6 +7,7 @@ import {huahuoEngine} from "../EngineAPI";
 import {GroupComponent} from "./GroupComponent";
 import {SubComponentArrayProperty} from "hhcommoncomponents";
 import {Particles} from "../ParticleSystem/Particles";
+import {createDuplication} from "./MirrorComponent";
 
 // Convention: All variables start with _ is taichi variables.
 //             All variables with the same name is to receive input from Inspector.
@@ -70,7 +71,7 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
     }
 
     async afterUpdate(force: boolean = false) {
-        super.afterUpdate(force);
+        await uper.afterUpdate(force);
 
         // Only particle system can have this renderer.
         let particleSystemRaster = this.baseShape as ParticleSystemJS
@@ -113,7 +114,7 @@ class ParticleSystemRenderer extends GroupComponent { // Inherit from GroupCompo
     createRenderKernel() {
         this.renderKernel = huahuoEngine.ti.classKernel(this, () => {
 
-            let center = [this.outputImageWidth / 2.0, this.outputImageHeight / 2.0]
+            // let center = [this.outputImageWidth / 2.0, this.outputImageHeight / 2.0]
 
             for (let I of ndrange(i32(this.outputImageWidth), i32(this.outputImageHeight))) {
                 // outputImage[I] = [random(), random(), random(), 1.0]

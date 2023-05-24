@@ -85,3 +85,7 @@ void ShapeFollowCurveFrameState::RecordTargetShape(int frameId, BaseShape *targe
 
     Apply(frameId);
 }
+
+void ShapeFollowCurveFrameState::SaveAsKeyFrame() {
+    printf("ShapeFollowCurveFrameState::SaveAsKeyFrame Not Implemented");
+}

@@ -329,6 +329,8 @@ interface BaseShape{
 
     void SetRecordTransformationOfKeyFrame(boolean isRecordPosition);
     boolean GetRecordTransformationOfKeyFrame();
+
+    void SaveAsKeyFrame();
 };
 
 [NoDelete]

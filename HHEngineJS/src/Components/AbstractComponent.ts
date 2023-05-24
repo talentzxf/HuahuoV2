@@ -125,7 +125,7 @@ class AbstractComponent {
         this.enableComponent() // Enable the component after baseShape is set.
     }
 
-    afterUpdate(force: boolean = false) {
+    async afterUpdate(force: boolean = false) {
     }
 
     getCurrentFrameId() {

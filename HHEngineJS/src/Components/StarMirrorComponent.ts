@@ -78,14 +78,14 @@ class StarMirrorComponent extends AbstractComponent{
         return this.targetShapeMirroredShapeSetMap.get(rawPtr)
     }
 
-    updateMirroredShapeArray(targetShape){
+    async updateMirroredShapeArray(targetShape){
         let currentAngle = this.starMirrorInterval
         let mirroredShapeCount = Math.ceil(360 / this.starMirrorInterval) - 1
         let mirroredShapeArray = this.getMirroredShapeArray(targetShape)
 
         let currentShapeCount = mirroredShapeArray.length
         for(let currentShapeId = currentShapeCount ; currentShapeId < mirroredShapeCount; currentShapeId++){
-            let duplicatedShape = createDuplication(targetShape, this.baseShape)
+            let duplicatedShape = await createDuplication(targetShape, this.baseShape)
             mirroredShapeArray.push(duplicatedShape)
             this.mirroredShapeShapeEntryMap.set(duplicatedShape, {
                 shape: duplicatedShape,
@@ -128,8 +128,8 @@ class StarMirrorComponent extends AbstractComponent{
 
     }
 
-    override afterUpdate(force: boolean = false) {
-        super.afterUpdate(force);
+    override async afterUpdate(force: boolean = false) {
+        await super.afterUpdate(force);
 
         if(this.baseShape.isVisible()){
             let baseShapeParent = this.baseShape.paperShape.parent
@@ -156,7 +156,7 @@ class StarMirrorComponent extends AbstractComponent{
                             this.targetShapeMirroredShapeSetMap.set(targetShape.getRawShape().ptr, new Array())
                         }
 
-                        this.updateMirroredShapeArray(targetShape)
+                        await this.updateMirroredShapeArray(targetShape)
 
                         for(let mirroredShape of this.getMirroredShapeArray(targetShape)){
                             let cloneShapeEntry = this.mirroredShapeShapeEntryMap.get(mirroredShape)

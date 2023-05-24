@@ -550,3 +550,35 @@ void CustomFrameState::AddAnimationOffset(int offset) {
     AbstractFrameStateWithKeyType::AddAnimationOffset(offset);
 }
 
+// TODO: Ugly!!!
+void CustomFrameState::SaveAsKeyFrame() {
+    switch (m_DataType) {
+        case FLOAT:
+            SetFloatValue(GetFloatValue());
+            break;
+        case COLOR: {
+            ColorRGBAf *color = GetColorValue();
+            SetColorValue(color->r, color->g, color->b, color->a);
+        }
+            break;
+        case VECTOR3: {
+            Vector3f *vector3 = GetVector3Value();
+            SetVector3Value(vector3->x, vector3->y, vector3->z);
+        }
+            break;
+        case STRING: {
+            const char *value = GetStringValue();
+            SetStringValue(value);
+        }
+            break;
+        case BOOLEAN: {
+            bool value = GetBooleanValue();
+            SetBooleanValue(value);
+        }
+            break;
+
+        default:
+            printf("Can't save this value:");
+    }
+}
+

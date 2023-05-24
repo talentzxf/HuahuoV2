@@ -54,12 +54,12 @@ class GroupComponent extends AbstractComponent {
         })
     }
 
-    afterUpdate(force: boolean = false) {
-        super.afterUpdate(force);
+    async afterUpdate(force: boolean = false) {
+        await super.afterUpdate(force);
 
         for (let subComponent of this.subComponents) {
             if(subComponent.isComponentActive())
-                subComponent.afterUpdate(force)
+                await subComponent.afterUpdate(force)
         }
     }
 }

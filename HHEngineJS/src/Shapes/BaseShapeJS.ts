@@ -123,6 +123,11 @@ abstract class BaseShapeJS {
         this.paperItem.scaling = currentScaling
     }
 
+    saveAsKeyFrame(){
+        if(this.rawObj)
+            this.rawObj.SaveAsKeyFrame()
+    }
+
     addComponent(component: AbstractComponent, persistentTheComponent: boolean = true) {
         if (persistentTheComponent)
             this.rawObj.AddFrameState(component.rawObj)
@@ -883,7 +888,7 @@ abstract class BaseShapeJS {
         this.propertySheet.addProperty(componentConfigSheet)
     }
 
-    getComponentConfigSheet(componentName) {
+    getComponentConfigSheet(componentName): object {
         let _this = this
         if (componentName == BASIC_COMPONENTS) {
             return {
@@ -1190,7 +1195,7 @@ abstract class BaseShapeJS {
         this.paperItem.position = newPosition
     }
 
-    afterUpdate(force: boolean = false) {
+    async afterUpdate(force: boolean = false) {
         this.applySegments()
 
         // Reset the rotation.
@@ -1214,7 +1219,7 @@ abstract class BaseShapeJS {
         // Execute after update of all components
         for (let component of this.customComponents) {
             if (component.isComponentActive()) {
-                component.afterUpdate(force)
+                await component.afterUpdate(force)
             }
         }
     }
@@ -1248,7 +1253,7 @@ abstract class BaseShapeJS {
 
             } else {
                 this.paperItem.visible = true
-                this.afterUpdate(true)
+                await this.afterUpdate(true)
             }
 
             this.updateBoundingBox()

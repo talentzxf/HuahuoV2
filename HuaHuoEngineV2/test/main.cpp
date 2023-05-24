@@ -182,8 +182,8 @@ void testShapeStore() {
     fwrite(GetMemoryFileSystem()->GetDataPtr(StoreFilePath), length, 1, fp);
     fclose(fp);
 
-    std::string filenamestr("C:\\Users\\vincentzhang\\MyProjects\\HuahuoV2\\HuahuoBackend\\projectfiles\\vincentzhang\\ELEMENT\\NewElement_vophu\\NewElement_vophu.ele");
-    // std::string filenamestr = std::string("mem://") + filename;
+    // std::string filenamestr("C:\\Users\\vincentzhang\\MyProjects\\HuahuoV2\\HuahuoBackend\\projectfiles\\vincentzhang\\ELEMENT\\NewElement_vophu\\NewElement_vophu.ele");
+    std::string filenamestr = std::string("mem://") + filename;
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
     vector<UInt8> imgData = {31, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
@@ -568,6 +568,8 @@ void testReadFromFile() {
 
     GetDefaultObjectStoreManager()->GetCurrentStore()->CreateLayer("asdfasdfasdfasdf");
     CircleShape *circleShape = (CircleShape *) BaseShape::CreateShape("CircleShape");
+
+    circleShape->SaveAsKeyFrame();
     ShapeTransformComponent *transformComponent = (ShapeTransformComponent *) circleShape->GetFrameStateByTypeName(
             "ShapeTransformComponent");
     transformComponent->GetFieldCount();

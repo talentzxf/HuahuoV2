@@ -82,6 +82,8 @@ public:
         return 0;
     }
 
+    virtual void SaveAsKeyFrame() = 0;
+
 protected:
     void DeleteKeyFrameInternal(KeyFrame *keyFrame, bool notifyFrontEnd = true);
 

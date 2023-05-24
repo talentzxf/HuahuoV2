@@ -62,6 +62,13 @@ public:
     void AddKeyFrame(KeyFrameIdentifier keyFrameIdentifier){
         mBaseShapeLevelKeyFrames.insert(keyFrameIdentifier);
     }
+
+    void SaveAsKeyFrame(){
+        for(auto frameStateItr = mFrameStates.begin(); frameStateItr != mFrameStates.end(); frameStateItr++){
+            frameStateItr->GetComponentPtr()->SaveAsKeyFrame();
+        }
+    }
+
 private:
 
     Container   mFrameStates;

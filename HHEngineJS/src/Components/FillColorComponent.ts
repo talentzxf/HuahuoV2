@@ -6,8 +6,8 @@ class FillColorComponent extends AbstractComponent{
     @PropertyValue(PropertyCategory.interpolateColor, {random: true})
     fillColor
 
-    override afterUpdate(force: boolean = false) {
-        super.afterUpdate(force);
+    override async afterUpdate(force: boolean = false) {
+        await super.afterUpdate(force);
 
         this.baseShape.paperShape.fillColor = this.fillColor
     }

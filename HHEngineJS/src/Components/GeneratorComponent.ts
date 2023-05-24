@@ -17,7 +17,7 @@ class GeneratorComponent extends AbstractComponent {
 
     paperShapeGroup: paper.Group
 
-    constructor(rawObj?, isMirage = false) {
+    constructor(baseShape, rawObj?, isMirage = false) {
         super(rawObj, isMirage);
 
         this.paperShapeGroup = new paper.Group()
@@ -25,8 +25,8 @@ class GeneratorComponent extends AbstractComponent {
         this.paperShapeGroup.data.meta = this.baseShape
     }
 
-    override afterUpdate(force: boolean = false) {
-        super.afterUpdate(force);
+    override async afterUpdate(force: boolean = false) {
+        await super.afterUpdate(force);
 
         this.paperShapeGroup.rotation = this.baseShape.rotation
         this.paperShapeGroup.scaling = this.baseShape.scaling

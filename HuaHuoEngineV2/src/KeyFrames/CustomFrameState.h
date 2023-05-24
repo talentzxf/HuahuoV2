@@ -17,7 +17,6 @@
 class BaseShape;
 
 enum CustomDataType {
-    UNKNOWN,
     FLOAT,
     COLOR,
     SHAPEARRAY,
@@ -77,8 +76,7 @@ struct CustomData {
     DECLARE_SERIALIZE(CustomData);
 
     CustomData() :
-            floatValue(0.0f),
-            dataType(UNKNOWN) {}
+            floatValue(0.0f) {}
 };
 
 // TODO: Refactor! (One of) The most ugly function in the whole system. :(
@@ -209,6 +207,8 @@ public:
     const char *GetStringValue();
 
     void AddAnimationOffset(int offset) override;
+
+    void SaveAsKeyFrame() override;
 
 private:
     int GetCurrentFrameId();

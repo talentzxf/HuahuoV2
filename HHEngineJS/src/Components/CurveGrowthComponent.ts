@@ -46,8 +46,8 @@ class CurveGrowthComponent extends AbstractComponent {
         }
     }
 
-    override afterUpdate(force: boolean = false) {
-        super.afterUpdate(force);
+    override async afterUpdate(force: boolean = false) {
+        await super.afterUpdate(force);
 
         let growth = this.growth
         if (growth < 1.0) {

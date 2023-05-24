@@ -60,9 +60,9 @@ class AudioShapeJS extends AbstractMediaShapeJS {
         }
     }
 
-    startAudio(){
+    async startAudio(){
         this.createElement()
-        this.audioElement.play()
+        await this.audioElement.play()
     }
 
     stopAudio(){
@@ -74,7 +74,7 @@ class AudioShapeJS extends AbstractMediaShapeJS {
         return shapeName
     }
 
-    override update(force: boolean = false){
+    override async update(force: boolean = false){
         if(!this.isLoaded()){
             return
         }
@@ -83,7 +83,7 @@ class AudioShapeJS extends AbstractMediaShapeJS {
 
         if(this.rawObj.IsVisible()){
             if(this.audioElement.paused){
-                this.audioElement.play()
+                await this.audioElement.play()
             }
 
             // Sync the time.
@@ -103,7 +103,7 @@ class AudioShapeJS extends AbstractMediaShapeJS {
                 this.audioElement.currentTime = 0.0
             }
         }
-        super.update()
+        await super.update()
     }
 
     onDataLoaded() {

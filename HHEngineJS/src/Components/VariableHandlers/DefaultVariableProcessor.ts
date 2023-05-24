@@ -21,10 +21,6 @@ class DefaultVariableProcessor{
                 return operator.isEqual(val1, val2)
             }
         })
-
-        // This is a mirage, no need to store.
-        if(!component.isMirage)
-            component[fieldName] = component[fieldName] // Get the variable and save to ensure first frame is recorded in Cpp side.
     }
 }
 

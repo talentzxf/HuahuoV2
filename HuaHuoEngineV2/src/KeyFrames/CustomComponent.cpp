@@ -93,4 +93,10 @@ bool CustomComponent::ReverseKeyFrame(int startFrameId, int endFrameId, int curr
     return true;
 }
 
+void CustomComponent::SaveAsKeyFrame() {
+    for(auto frameState : m_FrameStates){
+        frameState.GetComponentPtr()->SaveAsKeyFrame();
+    }
+}
+
 

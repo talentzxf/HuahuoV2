@@ -5,7 +5,7 @@ import {mirrorPoint} from "hhcommoncomponents";
 import * as paper from "paper"
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 
-function createDuplication(targetShape, baseShape){
+async function createDuplication(targetShape, baseShape){
     /*
     let duplicatedShape = targetShape.duplicate()
     // Move the position to the target position.
@@ -19,7 +19,7 @@ function createDuplication(targetShape, baseShape){
 
     let rawObj = targetShape.rawObj
 
-    let duplicatedShape = LoadShapeFromCppShape(rawObj, true, false, true)
+    let duplicatedShape = await LoadShapeFromCppShape(rawObj, true, false, true)
     duplicatedShape.setSelectedMeta(baseShape)
 
     duplicatedShape.registerValueChangeHandler("*")(()=>{
@@ -70,8 +70,8 @@ class MirrorComponent extends AbstractComponent {
         }
     }
 
-    duplicateShape(shape){
-        let duplicatedShape = createDuplication(shape, this.baseShape)
+    async duplicateShape(shape){
+        let duplicatedShape = await createDuplication(shape, this.baseShape)
         this.targetShapeMirroredShapeMap.set(shape.rawObj.ptr, duplicatedShape)
 
         this.paperShapeGroup.addChild(duplicatedShape.paperItem)
@@ -108,8 +108,8 @@ class MirrorComponent extends AbstractComponent {
         this.targetShapeMirroredShapeMap = new Map<number, BaseShapeJS>()
     }
 
-    override afterUpdate(force: boolean = false) {
-        super.afterUpdate(force);
+    override async afterUpdate(force: boolean = false) {
+        await super.afterUpdate(force);
 
         if(this.baseShape.isVisible()){
             let baseShapeParent = this.baseShape.paperShape.parent
@@ -149,19 +149,19 @@ class MirrorComponent extends AbstractComponent {
                 for (let targetShape of this.targetShapeArray) {
                     if(targetShape != null){ // Target shape might be null if the target shape has not been loaded yet.
                         if (!this.targetShapeMirroredShapeMap.has(targetShape.rawObj.ptr)) {
-                            this.duplicateShape(targetShape)
+                            await this.duplicateShape(targetShape)
                         }
 
                         let duplicatedShape = this.targetShapeMirroredShapeMap.get(targetShape.rawObj.ptr)
                         if(duplicatedShape.getBornStoreId() != this.baseShape.getBornStoreId()){
                             duplicatedShape.removePaperObj()
-                            duplicatedShape = this.duplicateShape(targetShape)
+                            duplicatedShape = await this.duplicateShape(targetShape)
                         }
 
                         duplicatedShape.paperShape.visible = targetShape.paperShape.visible
 
                         if(force){
-                            duplicatedShape.update(force)
+                            await duplicatedShape.update(force)
                         }
                     }
                 }
