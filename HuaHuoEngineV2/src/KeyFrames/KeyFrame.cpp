@@ -5,11 +5,21 @@
 #include "ObjectStore.h"
 #include "KeyFrame.h"
 
+void AbstractKeyFrame::SetObjectStore(ObjectStore *pStore) {
+    mStorePPtr = pStore;
+}
+
 KeyFrame &AbstractKeyFrame::GetKeyFrame() {
     if (this->keyFrameId <= 0) {
-        this->keyFrameId = GetDefaultObjectStoreManager()->ProduceKeyFrame();
+        this->keyFrameId = mStorePPtr->ProduceKeyFrame();
     }
-    return GetDefaultObjectStoreManager()->GetKeyFrameById(this->keyFrameId);
+    return mStorePPtr->GetKeyFrameById(this->keyFrameId);
+}
+
+void AbstractKeyFrame::SetFrameState(AbstractFrameState *frameState) {
+    ObjectStore* pStore = frameState->GetObjectStore();
+    this->SetObjectStore(pStore);
+    GetKeyFrame().SetFrameState(frameState);
 }
 
 AbstractFrameState *KeyFrame::GetFrameState() const {

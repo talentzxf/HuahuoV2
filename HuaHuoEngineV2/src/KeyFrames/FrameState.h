@@ -66,7 +66,7 @@ public:
         return typeName.c_str();
     }
 
-
+    ObjectStore* GetObjectStore();
 
     virtual int GetKeyFrameCount() = 0;
 
@@ -332,6 +332,8 @@ InsertOrUpdateKeyFrame(int frameId, std::vector<T> &keyFrames, AbstractFrameStat
         }
     } else {
         T transformKeyFrame;
+        transformKeyFrame.SetObjectStore(pFrameState->GetObjectStore());
+
         auto newFrameItr = keyFrames.insert(itr, transformKeyFrame);
         pKeyFrame = &(*newFrameItr);
 

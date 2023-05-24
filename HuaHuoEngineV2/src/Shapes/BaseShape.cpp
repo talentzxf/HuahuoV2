@@ -140,8 +140,10 @@ void BaseShape::SetLocalPivotPosition(float x, float y, float z) {
 void BaseShape::SetBornFrameId(SInt32 bornFrameId) {
     mBornFrameId = bornFrameId;
 
-    KeyFrameIdentifier shapeBornKeyFrameIdentifier = GetDefaultObjectStoreManager()->ProduceKeyFrame();
-    KeyFrame &shapeBornKeyFrame = GetDefaultObjectStoreManager()->GetKeyFrameById(shapeBornKeyFrameIdentifier);
+    ObjectStore* myStore = GetLayer(true)->GetObjectStore();
+
+    KeyFrameIdentifier shapeBornKeyFrameIdentifier = myStore->ProduceKeyFrame();
+    KeyFrame &shapeBornKeyFrame = myStore->GetKeyFrameById(shapeBornKeyFrameIdentifier);
     shapeBornKeyFrame.SetFrameId(bornFrameId);
     shapeBornKeyFrame.SetBaseShape(this);
 
@@ -151,7 +153,9 @@ void BaseShape::SetBornFrameId(SInt32 bornFrameId) {
 
 KeyFrame &BaseShape::GetKeyFrameFromCache(int idx) {
     KeyFrameIdentifier keyFrameIdentifier = mKeyFrameCache[idx];
-    return ::GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameIdentifier);
+
+    ObjectStore* myStore = GetLayer(true)->GetObjectStore();
+    return myStore->GetKeyFrameById(keyFrameIdentifier);
 }
 
 void BaseShape::SetGlobalPivotPosition(float x, float y, float z) {

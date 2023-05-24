@@ -37,10 +37,6 @@ struct SegmentKeyFrame : public AbstractKeyFrame{
         handleInArray.erase(handleInArray.begin() + index);
         handleOutArray.erase(handleOutArray.begin() + index);
     }
-
-    SegmentKeyFrame() {
-
-    }
 };
 
 template<class TransferFunction>

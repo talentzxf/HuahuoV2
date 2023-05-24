@@ -224,6 +224,8 @@ class ElementShapeJS extends BaseShapeJS {
     }
 
     getPlaySpeed() {
+        if(this.elementController == null)
+            return 1.0;
         return this.elementController.playSpeed
     }
 

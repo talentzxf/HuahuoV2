@@ -39,8 +39,6 @@ void ObjectStoreManager::Transfer(TransferFunction &transfer) {
     TRANSFER(currentStore);
     TRANSFER(canvasWidth);
     TRANSFER(canvasHeight);
-    TRANSFER(maxKeyFrameIdentifier);
-    TRANSFER(allKeyFrames);
 }
 
 ObjectStoreManager *ObjectStoreManager::GetDefaultObjectStoreManager() {
@@ -76,6 +74,8 @@ void ObjectStore::Transfer(TransferFunction &transfer) {
     TRANSFER(maxFrameId);
     TRANSFER(mStoreId);
     TRANSFER(mIsRoot);
+    TRANSFER(maxKeyFrameIdentifier);
+    TRANSFER(allKeyFrames);
 }
 
 void ObjectStore::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
@@ -118,8 +118,8 @@ emscripten::val writeAllObjectsInMemoryFile(){
 
 emscripten::val writeObjectStoreInMemoryFile(std::string storeId){
     std::string filePath = StoreFilePath;
-    ObjectStore* pStore = GetDefaultObjectStoreManager()->GetStoreById(storeId.c_str());
-    int writeResult = GetPersistentManager().WriteObject(filePath, pStore);
+    ObjectStore* mStorePPtr = GetDefaultObjectStoreManager()->GetStoreById(storeId.c_str());
+    int writeResult = GetPersistentManager().WriteObject(filePath, mStorePPtr);
     printf("%s,%d; file:%s\n writeResult:%d\n", __FILE__, __LINE__ , filePath.c_str(), writeResult);
     UInt8* bufferPtr = GetMemoryFileSystem()->GetDataPtr(filePath);
     if(bufferPtr == NULL){

@@ -34,11 +34,15 @@ void AbstractFrameState::SetBaseShape(BaseShape *pBaseShape) {
     mBaseShapePPtr = pBaseShape;
 }
 
+ObjectStore *AbstractFrameState::GetObjectStore() {
+    return GetBaseShape()->GetLayer(true)->GetObjectStore();
+}
+
 BaseShape *AbstractFrameState::GetBaseShape() {
     if (this->baseShape != NULL)
         return this->baseShape;
 
-    if(!mBaseShapePPtr.IsValid())
+    if (!mBaseShapePPtr.IsValid())
         return NULL;
 
     this->baseShape = &(*mBaseShapePPtr);
@@ -54,8 +58,8 @@ void AbstractFrameState::SetName(const char *name) {
     frameStateName = name;
 }
 
-void AbstractFrameState::DeleteKeyFrameInternal(KeyFrame* keyFrame, bool notifyFrontEnd) {
-    Layer* layer = GetBaseShape()->GetLayer(false);
+void AbstractFrameState::DeleteKeyFrameInternal(KeyFrame *keyFrame, bool notifyFrontEnd) {
+    Layer *layer = GetBaseShape()->GetLayer(false);
     layer->DeleteKeyFrame(keyFrame, notifyFrontEnd);
 }
 
