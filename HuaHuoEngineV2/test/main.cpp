@@ -320,29 +320,33 @@ void testKeyFrames() {
 }
 
 void testRecordKeyFrames() {
+    RectangleShape* pRectangle = (RectangleShape*) BaseShape::CreateShape("RectangleShape", true);
+    ShapeTransformComponent* pTransformComponent = pRectangle->GetTransform();
+    AbstractFrameState* pPosition = pTransformComponent->GetFrameStates()[0].GetComponentPtr();
+
     std::vector<CustomDataKeyFrame> transformKeyFrames;
-    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(0, transformKeyFrames, NULL);
+    CustomDataKeyFrame *pKeyFrame = InsertOrUpdateKeyFrame(0, transformKeyFrames, pPosition);
     pKeyFrame->data.vector3Value = Vector3f(1.0, 0.0, 0.0f);
     Assert(transformKeyFrames.size() == 1);
     Assert(transformKeyFrames[0].data.vector3Value == Vector3f(1.0, 0.0, 0.0));
 
-    pKeyFrame = InsertOrUpdateKeyFrame(5, transformKeyFrames, NULL);
+    pKeyFrame = InsertOrUpdateKeyFrame(5, transformKeyFrames, pPosition);
     pKeyFrame->data.vector3Value = Vector3f(5.0, 1.0, 0.0f);
     Assert(transformKeyFrames.size() == 2);
     Assert(transformKeyFrames[1].data.vector3Value == Vector3f(5.0, 1.0, 0.0));
 
-    pKeyFrame = InsertOrUpdateKeyFrame(3, transformKeyFrames, NULL);
+    pKeyFrame = InsertOrUpdateKeyFrame(3, transformKeyFrames, pPosition);
     pKeyFrame->data.vector3Value = Vector3f(3.0, 1.0, 0.0f);
     Assert(transformKeyFrames.size() == 3);
     Assert(transformKeyFrames[1].data.vector3Value == Vector3f(3.0, 1.0, 0.0));
     Assert(transformKeyFrames[2].data.vector3Value == Vector3f(5.0, 1.0, 0.0));
 
-    pKeyFrame = InsertOrUpdateKeyFrame(10, transformKeyFrames, NULL);
+    pKeyFrame = InsertOrUpdateKeyFrame(10, transformKeyFrames, pPosition);
     pKeyFrame->data.vector3Value = Vector3f(10.0, 1.0, 0.0f);
     Assert(transformKeyFrames.size() == 4);
     Assert(transformKeyFrames[3].data.vector3Value == Vector3f(10.0, 1.0, 0.0));
 
-    pKeyFrame = InsertOrUpdateKeyFrame(5, transformKeyFrames, NULL);
+    pKeyFrame = InsertOrUpdateKeyFrame(5, transformKeyFrames, pPosition);
     pKeyFrame->data.vector3Value = Vector3f(5.0, 2.0, 0.0f);
     Assert(transformKeyFrames.size() == 4);
     Assert(transformKeyFrames[2].GetFrameId() == 5);

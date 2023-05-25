@@ -315,6 +315,8 @@ typename std::vector<T>::iterator FindInsertPosition(int frameId, std::vector<T>
 template<typename T>
 T *
 InsertOrUpdateKeyFrame(int frameId, std::vector<T> &keyFrames, AbstractFrameState *pFrameState, bool *isInsert = NULL) {
+    Assert(pFrameState != NULL);
+
     auto itr = FindInsertPosition(frameId, keyFrames);
     T *pKeyFrame = NULL;
     if (itr == keyFrames.end()) {

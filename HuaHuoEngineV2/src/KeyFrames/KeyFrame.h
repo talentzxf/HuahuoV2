@@ -129,6 +129,10 @@ protected:
     DECLARE_SERIALIZE(AbstractKeyFrame);
 
 public:
+    AbstractKeyFrame():keyFrameId(-1){
+
+    }
+
     void SetObjectStore(ObjectStore* pStore);
     KeyFrame& GetKeyFrame();
 

@@ -17,6 +17,7 @@
 class BaseShape;
 
 enum CustomDataType {
+    UNKNOWN,
     FLOAT,
     COLOR,
     SHAPEARRAY,
@@ -108,6 +109,8 @@ void CustomData::Transfer(TransferFunction &transfer) {
             break;
         case BOOLEAN:
             TRANSFER(booleanValue);
+            break;
+        case UNKNOWN:
             break;
         default:
             printf("Error: No such type");

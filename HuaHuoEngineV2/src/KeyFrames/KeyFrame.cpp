@@ -11,13 +11,19 @@ void AbstractKeyFrame::SetObjectStore(ObjectStore *pStore) {
 
 KeyFrame &AbstractKeyFrame::GetKeyFrame() {
     if (this->keyFrameId <= 0) {
+        if (!mStorePPtr.IsValid()) {
+            mStorePPtr = GetDefaultObjectStoreManager()->GetCurrentStore();
+        }
         this->keyFrameId = mStorePPtr->ProduceKeyFrame();
     }
+
+
     return mStorePPtr->GetKeyFrameById(this->keyFrameId);
 }
 
 void AbstractKeyFrame::SetFrameState(AbstractFrameState *frameState) {
-    ObjectStore* pStore = frameState->GetObjectStore();
+    Assert(frameState != NULL);
+    ObjectStore *pStore = frameState->GetObjectStore();
     this->SetObjectStore(pStore);
     GetKeyFrame().SetFrameState(frameState);
 }
