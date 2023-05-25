@@ -52,6 +52,8 @@ class BaseShapeDrawer{
     addShapeToCurrentLayer(shape:BaseShapeJS){
         let currentLayer = huahuoEngine.GetCurrentLayer()
 
+        shape.saveAsKeyFrame();
+
         let createShapeCommand = new CreateShapeCommand(currentLayer, shape)
         createShapeCommand.DoCommand()
 

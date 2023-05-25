@@ -100,6 +100,10 @@ class ElementShapeJS extends BaseShapeJS {
         let bornFrame = this.bornFrameId
         let maxFrames = huahuoEngine.getStoreMaxFrames(this.storeId)
 
+        if(maxFrames == 0){
+            return 0;
+        }
+
         return (((currentFrame - bornFrame) * this.getPlaySpeed()) % maxFrames + maxFrames) % maxFrames
     }
 

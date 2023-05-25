@@ -123,6 +123,11 @@ abstract class BaseShapeJS {
         this.paperItem.scaling = currentScaling
     }
 
+    saveAsKeyFrame(){
+        if(this.rawObj)
+            this.rawObj.SaveAsKeyFrame()
+    }
+
     addComponent(component: AbstractComponent, persistentTheComponent: boolean = true) {
         if (persistentTheComponent)
             this.rawObj.AddFrameState(component.rawObj)
@@ -878,7 +883,7 @@ abstract class BaseShapeJS {
         this.propertySheet.addProperty(componentConfigSheet)
     }
 
-    getComponentConfigSheet(componentName) {
+    getComponentConfigSheet(componentName): object {
         let _this = this
         if (componentName == BASIC_COMPONENTS) {
             return {
