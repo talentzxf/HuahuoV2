@@ -100,6 +100,9 @@ bool CustomFrameState::Apply(int frameId) {
                           k1->GetFrameId()) { // Avoid 0/0 during ratio calculation. Or beyond the last frame. k1 is the last frame.
             this->m_CurrentKeyFrame = *k1;
         } else {
+            Assert(k1->GetFrameId() >= 0);
+            Assert(k2->GetFrameId() >= 0);
+
             float ratio = float(frameId - k1->GetFrameId()) / float(k2->GetFrameId() - k1->GetFrameId());
 
             this->m_CurrentKeyFrame = Lerp(*k1, *k2, ratio);
@@ -340,7 +343,6 @@ CustomDataKeyFrame *CustomFrameState::GetColorStopArrayKeyFrame(int currentFrame
         if (itr == GetKeyFrames().end()) {
             printf("Is End!\n");
         } else {
-            pKeyFrame->data.dataType = COLORSTOPARRAY;
             for (int colorStopIdx = pKeyFrame->data.colorStopArray.GetColorStopCount();
                  colorStopIdx < itr->data.colorStopArray.GetColorStopCount(); colorStopIdx++) {
                 ColorStopEntry colorStopEntry = *itr->data.colorStopArray.GetColorStop(colorStopIdx);
@@ -348,6 +350,8 @@ CustomDataKeyFrame *CustomFrameState::GetColorStopArrayKeyFrame(int currentFrame
                 pKeyFrame->data.colorStopArray.AddEntry(colorStopEntry);
             }
         }
+
+        pKeyFrame->data.dataType = COLORSTOPARRAY;
     }
 
     return pKeyFrame;
@@ -548,5 +552,37 @@ CustomFrameState *CustomFrameState::CreateFrameState(CustomDataType dataType) {
 
 void CustomFrameState::AddAnimationOffset(int offset) {
     AbstractFrameStateWithKeyType::AddAnimationOffset(offset);
+}
+
+// TODO: Ugly!!!
+void CustomFrameState::SaveAsKeyFrame() {
+    switch (m_DataType) {
+        case FLOAT:
+            SetFloatValue(GetFloatValue());
+            break;
+        case COLOR: {
+            ColorRGBAf *color = GetColorValue();
+            SetColorValue(color->r, color->g, color->b, color->a);
+        }
+            break;
+        case VECTOR3: {
+            Vector3f *vector3 = GetVector3Value();
+            SetVector3Value(vector3->x, vector3->y, vector3->z);
+        }
+            break;
+        case STRING: {
+            const char *value = GetStringValue();
+            SetStringValue(value);
+        }
+            break;
+        case BOOLEAN: {
+            bool value = GetBooleanValue();
+            SetBooleanValue(value);
+        }
+            break;
+
+        default:
+            printf("Can't save this value:");
+    }
 }
 

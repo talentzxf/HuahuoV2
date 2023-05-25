@@ -37,10 +37,6 @@ struct SegmentKeyFrame : public AbstractKeyFrame{
         handleInArray.erase(handleInArray.begin() + index);
         handleOutArray.erase(handleOutArray.begin() + index);
     }
-
-    SegmentKeyFrame() {
-
-    }
 };
 
 template<class TransferFunction>
@@ -93,6 +89,8 @@ public:
     };
 
     friend class BaseShape;
+
+    void SaveAsKeyFrame() override;
 
 private:
     std::vector<Vector3f> m_currentPositionArray;

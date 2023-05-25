@@ -5,11 +5,40 @@
 #include "ObjectStore.h"
 #include "KeyFrame.h"
 
-KeyFrame &AbstractKeyFrame::GetKeyFrame() {
-    if (this->keyFrameId <= 0) {
-        this->keyFrameId = GetDefaultObjectStoreManager()->ProduceKeyFrame();
+void AbstractKeyFrame::SetObjectStore(ObjectStore *pStore) {
+    Assert(pStore != NULL);
+
+    if(mStorePPtr.GetInstanceID() != pStore->GetInstanceID()){
+        KeyFrame& oldKeyFrame = GetKeyFrame();
+
+        int oldFrameId = oldKeyFrame.GetFrameId();
+        AbstractFrameState* pOriginalFrameState = oldKeyFrame.GetFrameState();
+
+        this->keyFrameId = -1;
+        mStorePPtr = pStore;
+        KeyFrame& newKeyFrame = GetKeyFrame();
+        newKeyFrame.SetFrameId(oldFrameId);
+        newKeyFrame.SetFrameState(pOriginalFrameState);
     }
-    return GetDefaultObjectStoreManager()->GetKeyFrameById(this->keyFrameId);
+}
+
+KeyFrame &AbstractKeyFrame::GetKeyFrame() {
+    if (this->keyFrameId < 0) {
+        if (!mStorePPtr.IsValid()) {
+            mStorePPtr = GetDefaultObjectStoreManager()->GetCurrentStore();
+        }
+        this->keyFrameId = mStorePPtr->ProduceKeyFrame();
+    }
+
+
+    return mStorePPtr->GetKeyFrameById(this->keyFrameId);
+}
+
+void AbstractKeyFrame::SetFrameState(AbstractFrameState *frameState) {
+    Assert(frameState != NULL);
+    ObjectStore *pStore = frameState->GetObjectStore();
+    this->SetObjectStore(pStore);
+    GetKeyFrame().SetFrameState(frameState);
 }
 
 AbstractFrameState *KeyFrame::GetFrameState() const {

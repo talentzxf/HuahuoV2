@@ -66,7 +66,7 @@ public:
         return typeName.c_str();
     }
 
-
+    ObjectStore* GetObjectStore();
 
     virtual int GetKeyFrameCount() = 0;
 
@@ -81,6 +81,10 @@ public:
     int GetSubComponentCount() {
         return 0;
     }
+
+    virtual void SaveAsKeyFrame() = 0;
+
+    virtual void MoveToStore(ObjectStore* pStore) = 0;
 
 protected:
     void DeleteKeyFrameInternal(KeyFrame *keyFrame, bool notifyFrontEnd = true);
@@ -234,6 +238,10 @@ public:
         }
     }
 
+    virtual void MoveToStore(ObjectStore* pStore) override{
+        m_KeyFrames.MoveToStore(pStore);
+    }
+
 protected:
     KeyFrameManager<T> m_KeyFrames;
 };
@@ -313,6 +321,8 @@ typename std::vector<T>::iterator FindInsertPosition(int frameId, std::vector<T>
 template<typename T>
 T *
 InsertOrUpdateKeyFrame(int frameId, std::vector<T> &keyFrames, AbstractFrameState *pFrameState, bool *isInsert = NULL) {
+    Assert(pFrameState != NULL);
+
     auto itr = FindInsertPosition(frameId, keyFrames);
     T *pKeyFrame = NULL;
     if (itr == keyFrames.end()) {
@@ -330,6 +340,8 @@ InsertOrUpdateKeyFrame(int frameId, std::vector<T> &keyFrames, AbstractFrameStat
         }
     } else {
         T transformKeyFrame;
+        transformKeyFrame.SetObjectStore(pFrameState->GetObjectStore());
+
         auto newFrameItr = keyFrames.insert(itr, transformKeyFrame);
         pKeyFrame = &(*newFrameItr);
 

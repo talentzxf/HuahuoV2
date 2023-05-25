@@ -284,6 +284,8 @@ DECLARE_OBJECT_SERIALIZE();
         printf("Successfully added subcomponent with type:%s\n", pSubComponent->GetTypeName());
     }
 
+    void MoveToStore(ObjectStore *pStore) override;
+
 private:
     int RegisterField(const char *fieldName, CustomDataType dataType) {
         if (m_FrameStates.size() != m_fieldNameFieldIndexMap.size()) {
@@ -305,6 +307,9 @@ private:
 
         return m_fieldNameFieldIndexMap[fieldName];
     }
+
+public:
+    void SaveAsKeyFrame() override;
 
 public:
     // This function will also clear and rebuild the keyFrameIdCache.

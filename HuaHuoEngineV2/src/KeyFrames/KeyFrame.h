@@ -15,6 +15,7 @@ extern const int MAX_FRAMES;
 class AbstractKeyFrame;
 class AbstractFrameState;
 class BaseShape;
+class ObjectStore;
 
 class KeyFrame {
 public:
@@ -115,6 +116,12 @@ public:
         return keyFrameIdentifiers;
     }
 
+    void MoveToStore(ObjectStore* pStore){
+        for(auto& keyFrame: m_KeyFrameData){
+            keyFrame.SetObjectStore(pStore);
+        }
+    }
+
 private:
     std::vector<T> m_KeyFrameData;
 };
@@ -123,14 +130,16 @@ private:
 struct AbstractKeyFrame{
 protected:
     KeyFrameIdentifier keyFrameId;
+    PPtr<ObjectStore> mStorePPtr;
 
     DECLARE_SERIALIZE(AbstractKeyFrame);
 
 public:
-    AbstractKeyFrame(): keyFrameId(-1){
+    AbstractKeyFrame():keyFrameId(-1){
 
     }
 
+    void SetObjectStore(ObjectStore* pStore);
     KeyFrame& GetKeyFrame();
 
     int GetFrameId() {
@@ -141,9 +150,7 @@ public:
         GetKeyFrame().SetFrameId(frameId);
     }
 
-    void SetFrameState(AbstractFrameState* frameState){
-        GetKeyFrame().SetFrameState(frameState);
-    }
+    void SetFrameState(AbstractFrameState* frameState);
 
     BaseShape* GetBaseShape(){
         return GetKeyFrame().GetBaseShape();
@@ -152,6 +159,7 @@ public:
 
 template<class TransferFunction> void AbstractKeyFrame::Transfer (TransferFunction& transfer){
     TRANSFER(keyFrameId);
+    TRANSFER(mStorePPtr);
 }
 
 #endif //HUAHUOENGINEV2_KEYFRAME_H

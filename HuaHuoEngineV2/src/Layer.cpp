@@ -47,8 +47,9 @@ void Layer::RemoveShape(BaseShape *shape) {
     // Remove the shape from keyframes.
     for (auto keyframe: keyFrames) {
 
-        std::erase_if(keyframe.second, [shape](KeyFrameIdentifier keyframeIdentifier) {
-            KeyFrame &keyFrameObj = GetDefaultObjectStoreManager()->GetKeyFrameById(keyframeIdentifier);
+        std::erase_if(keyframe.second, [shape, this](KeyFrameIdentifier keyframeIdentifier) {
+            ObjectStore* pStore = this->GetObjectStore();
+            KeyFrame &keyFrameObj = pStore->GetKeyFrameById(keyframeIdentifier);
             return keyFrameObj.GetBaseShape()->GetInstanceID() == shape->GetInstanceID();
         });
 
@@ -91,7 +92,8 @@ void Layer::SetIsVisible(bool isVisible) {
 }
 
 void Layer::MoveKeyFrameToKeyFrameId(KeyFrameIdentifier keyFrameIdentifier, int beforeFrameId, int afterFrameId) {
-    KeyFrame *keyFrame = &GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameIdentifier);
+    ObjectStore* pObjectStore = GetObjectStore();
+    KeyFrame *keyFrame = &pObjectStore->GetKeyFrameById(keyFrameIdentifier);
     if (keyFrame->GetFrameId() != beforeFrameId)
         return;
 
@@ -107,8 +109,9 @@ void Layer::AddKeyFrame(KeyFrame *keyFrame) {
     if (keyFrames.contains(frameId) && frameState != NULL) {
         auto keyFrameSet = keyFrames[frameId];
         auto foundKeyFrameObjItr = std::find_if(keyFrameSet.begin(), keyFrameSet.end(),
-                                                [frameState](const int keyFrameIdentifier) {
-                                                    KeyFrame &keyFrameObject = GetDefaultObjectStoreManager()->GetKeyFrameById(
+                                                [frameState, this](const int keyFrameIdentifier) {
+                                                    ObjectStore* pObjectStore = this->GetObjectStore();
+                                                    KeyFrame &keyFrameObject = pObjectStore->GetKeyFrameById(
                                                             keyFrameIdentifier);
                                                     if (keyFrameObject.GetFrameState() == NULL ||
                                                         !keyFrameObject.GetFrameState()->IsValid())
@@ -143,8 +146,9 @@ bool Layer::InternalDeleteKeyFrame(KeyFrame *keyFrame) {
     if (keyFrames.contains(frameId) && frameState != NULL) {
         KeyFrameIdentifierSet &keyFrameSet = keyFrames[frameId];
 
-        std::erase_if(keyFrameSet, [keyFrame, frameState](const int keyFrameIdentifier) {
-            KeyFrame &keyFrameObject = GetDefaultObjectStoreManager()->GetKeyFrameById(keyFrameIdentifier);
+        std::erase_if(keyFrameSet, [keyFrame, frameState, this](const int keyFrameIdentifier) {
+            ObjectStore* pObjectStore = this->GetObjectStore();
+            KeyFrame &keyFrameObject = pObjectStore->GetKeyFrameById(keyFrameIdentifier);
             if (keyFrameObject.GetFrameState() == NULL || !keyFrameObject.GetFrameState()->IsValid())
                 return false;
 
@@ -193,7 +197,6 @@ void Layer::AddShapeInternal(BaseShape *newShape) {
         newShape->SetBornFrameId(this->currentFrameId);
 
     shapes.push_back(newShape);
-
     GetPersistentManager().MakeObjectPersistent(newShape->GetInstanceID(), StoreFilePath);
 
     // Update the max length of the animation

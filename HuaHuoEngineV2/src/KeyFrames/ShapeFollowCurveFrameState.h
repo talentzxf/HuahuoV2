@@ -73,6 +73,8 @@ public:
         return -1.0f;
     }
 
+    void SaveAsKeyFrame() override;
+
 private:
     ShapeFollowCurveData m_CurrentShapeFollowCurveData;
 };

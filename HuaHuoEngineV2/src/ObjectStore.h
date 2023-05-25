@@ -27,6 +27,7 @@ public:
         :Super(label, mode)
         ,maxFrameId(-1)
         ,mIsRoot(false)
+        , maxKeyFrameIdentifier(0)
     {
         mStoreId.Init();
     }
@@ -103,6 +104,16 @@ public:
         mIsRoot = isRoot;
     }
 
+    KeyFrameIdentifier ProduceKeyFrame(){
+        allKeyFrames[maxKeyFrameIdentifier] = KeyFrame();
+        allKeyFrames[maxKeyFrameIdentifier].SetKeyFrameIdentifier(maxKeyFrameIdentifier);
+        return maxKeyFrameIdentifier++;
+    }
+
+    KeyFrame& GetKeyFrameById(KeyFrameIdentifier keyFrameId){
+        return allKeyFrames[keyFrameId];
+    }
+
 private:
     HuaHuoGUID mStoreId;
     int maxFrameId;
@@ -110,6 +121,9 @@ private:
     std::map<std::string, PPtr<Layer>> layerMap;
     PPtr<Layer> currentLayer;
     std::string storeIdString;
+
+    KeyFrameIdentifier maxKeyFrameIdentifier; // This is NOT the frameId of the keyframes. It's just an ID for all the KeyFrame objects.
+    std::map<KeyFrameIdentifier, KeyFrame> allKeyFrames; // All key frames in the store. Map from keyframe identifier to keyframe object.
     bool mIsRoot; // This flag will be set when element authors mark uploaded the element and cleared when it's uploaded under another root.
 };
 
@@ -138,7 +152,6 @@ public:
         , m_IsGlobal(false)
         , canvasWidth(-1)
         , canvasHeight(-1)
-        , maxKeyFrameIdentifier(0)
     {
         printf("Creating new store manager!!!!\n");
     }
@@ -227,23 +240,10 @@ public:
         return this->canvasHeight;
     }
 
-    KeyFrameIdentifier ProduceKeyFrame(){
-        allKeyFrames[maxKeyFrameIdentifier] = KeyFrame();
-        allKeyFrames[maxKeyFrameIdentifier].SetKeyFrameIdentifier(maxKeyFrameIdentifier);
-        return maxKeyFrameIdentifier++;
-    }
-
-    KeyFrame& GetKeyFrameById(KeyFrameIdentifier keyFrameId){
-        return allKeyFrames[keyFrameId];
-    }
-
 private:
     // std::vector<PPtr<ObjectStore>> allStores;
     typedef std::map<HuaHuoGUID, PPtr<ObjectStore>> GUIDObjectStoreMap;
     GUIDObjectStoreMap allStores;
-
-    KeyFrameIdentifier maxKeyFrameIdentifier; // This is NOT the frameId of the keyframes. It's just an ID for all the KeyFrame objects.
-    std::map<KeyFrameIdentifier, KeyFrame> allKeyFrames; // All key frames in the store. Map from keyframe identifier to keyframe object.
 
     PPtr<ObjectStore> currentStore;
     int canvasWidth;

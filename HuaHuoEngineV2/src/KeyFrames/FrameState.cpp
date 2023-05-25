@@ -5,6 +5,7 @@
 #include "FrameState.h"
 #include "Shapes/BaseShape.h"
 #include "Layer.h"
+#include "ObjectStore.h"
 
 IMPLEMENT_REGISTER_CLASS(AbstractFrameState, 10007);
 
@@ -34,11 +35,18 @@ void AbstractFrameState::SetBaseShape(BaseShape *pBaseShape) {
     mBaseShapePPtr = pBaseShape;
 }
 
+ObjectStore *AbstractFrameState::GetObjectStore() {
+    if(GetBaseShape() == NULL){
+        return GetDefaultObjectStoreManager()->GetCurrentStore();
+    }
+    return GetBaseShape()->GetLayer(true)->GetObjectStore();
+}
+
 BaseShape *AbstractFrameState::GetBaseShape() {
     if (this->baseShape != NULL)
         return this->baseShape;
 
-    if(!mBaseShapePPtr.IsValid())
+    if (!mBaseShapePPtr.IsValid())
         return NULL;
 
     this->baseShape = &(*mBaseShapePPtr);
@@ -54,8 +62,8 @@ void AbstractFrameState::SetName(const char *name) {
     frameStateName = name;
 }
 
-void AbstractFrameState::DeleteKeyFrameInternal(KeyFrame* keyFrame, bool notifyFrontEnd) {
-    Layer* layer = GetBaseShape()->GetLayer(false);
+void AbstractFrameState::DeleteKeyFrameInternal(KeyFrame *keyFrame, bool notifyFrontEnd) {
+    Layer *layer = GetBaseShape()->GetLayer(false);
     layer->DeleteKeyFrame(keyFrame, notifyFrontEnd);
 }
 

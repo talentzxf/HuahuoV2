@@ -62,6 +62,13 @@ public:
     void AddKeyFrame(KeyFrameIdentifier keyFrameIdentifier){
         mBaseShapeLevelKeyFrames.insert(keyFrameIdentifier);
     }
+
+    void SaveAsKeyFrame(){
+        for(auto frameStateItr = mFrameStates.begin(); frameStateItr != mFrameStates.end(); frameStateItr++){
+            frameStateItr->GetComponentPtr()->SaveAsKeyFrame();
+        }
+    }
+
 private:
 
     Container   mFrameStates;
@@ -162,9 +169,7 @@ public:
         mIsVisible = isVisible;
     }
 
-    void SetLayer(Layer* layer){
-        this->mLayer = layer;
-    }
+    void SetLayer(Layer* layer);
 
     const char* GetStoreId();
 

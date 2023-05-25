@@ -77,8 +77,7 @@ struct CustomData {
     DECLARE_SERIALIZE(CustomData);
 
     CustomData() :
-            floatValue(0.0f),
-            dataType(UNKNOWN) {}
+            floatValue(0.0f), dataType(UNKNOWN) {}
 };
 
 // TODO: Refactor! (One of) The most ugly function in the whole system. :(
@@ -110,6 +109,8 @@ void CustomData::Transfer(TransferFunction &transfer) {
             break;
         case BOOLEAN:
             TRANSFER(booleanValue);
+            break;
+        case UNKNOWN:
             break;
         default:
             printf("Error: No such type");
@@ -209,6 +210,8 @@ public:
     const char *GetStringValue();
 
     void AddAnimationOffset(int offset) override;
+
+    void SaveAsKeyFrame() override;
 
 private:
     int GetCurrentFrameId();
