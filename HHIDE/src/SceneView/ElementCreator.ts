@@ -196,6 +196,9 @@ class ElementCreator {
     }
 
     createElement(shapes: Set<BaseShapeJS>): ElementShapeJS {
+        if(shapes.size == 0)
+            return
+
         let prevStoreId = huahuoEngine.GetCurrentStoreId()
 
         let allRelatedShapes = new Set<BaseShapeJS>()

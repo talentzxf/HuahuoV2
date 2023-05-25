@@ -1,6 +1,6 @@
 import {BaseShapeJS} from "hhenginejs"
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
-import {Vector2, pointsNear, relaxRectangle, ContextMenu} from "hhcommoncomponents"
+import {Vector2, pointsNear, relaxRectangle, ContextMenu, HHToast} from "hhcommoncomponents"
 import {paper} from "hhenginejs";
 import {shapeScaleHandler} from "../TransformHandlers/ShapeScaleHandler";
 import {ShapeTranslateMorphBase} from "../TransformHandlers/ShapeTranslateMorphBase";
@@ -151,6 +151,11 @@ class ShapeSelector extends BaseShapeDrawer {
     }
 
     groupAsElement(){
+        if(this.selectedShapes == null || this.selectedShapes.size == 0){
+            HHToast.warn("No shape selected, can't create element")
+            return
+        }
+
         // Calculate the center of all the selected elements.
         let newCenterPosition = new paper.Point(0,0)
         for(let shape of this.selectedShapes){
