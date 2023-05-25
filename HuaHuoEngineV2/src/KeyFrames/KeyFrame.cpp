@@ -11,16 +11,19 @@ void AbstractKeyFrame::SetObjectStore(ObjectStore *pStore) {
     if(mStorePPtr.GetInstanceID() != pStore->GetInstanceID()){
         KeyFrame& oldKeyFrame = GetKeyFrame();
 
+        int oldFrameId = oldKeyFrame.GetFrameId();
+        AbstractFrameState* pOriginalFrameState = oldKeyFrame.GetFrameState();
+
         this->keyFrameId = -1;
         mStorePPtr = pStore;
         KeyFrame& newKeyFrame = GetKeyFrame();
-        newKeyFrame.SetFrameId(oldKeyFrame.GetFrameId());
-        newKeyFrame.SetFrameState(oldKeyFrame.GetFrameState());
+        newKeyFrame.SetFrameId(oldFrameId);
+        newKeyFrame.SetFrameState(pOriginalFrameState);
     }
 }
 
 KeyFrame &AbstractKeyFrame::GetKeyFrame() {
-    if (this->keyFrameId <= 0) {
+    if (this->keyFrameId < 0) {
         if (!mStorePPtr.IsValid()) {
             mStorePPtr = GetDefaultObjectStoreManager()->GetCurrentStore();
         }

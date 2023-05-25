@@ -238,7 +238,7 @@ public:
         }
     }
 
-    virtual void MoveToStore(ObjectStore* pStore){
+    virtual void MoveToStore(ObjectStore* pStore) override{
         m_KeyFrames.MoveToStore(pStore);
     }
 

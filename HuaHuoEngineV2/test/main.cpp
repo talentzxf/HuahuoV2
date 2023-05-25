@@ -32,7 +32,7 @@
 #include "openssl/md5.h"
 
 extern float eps;
-#define ASSERT assert
+#define Assert assert
 
 void testTransform() {
     GameObject *go = MonoCreateGameObject("Go1");

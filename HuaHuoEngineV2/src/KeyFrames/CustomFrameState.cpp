@@ -100,6 +100,9 @@ bool CustomFrameState::Apply(int frameId) {
                           k1->GetFrameId()) { // Avoid 0/0 during ratio calculation. Or beyond the last frame. k1 is the last frame.
             this->m_CurrentKeyFrame = *k1;
         } else {
+            Assert(k1->GetFrameId() >= 0);
+            Assert(k2->GetFrameId() >= 0);
+
             float ratio = float(frameId - k1->GetFrameId()) / float(k2->GetFrameId() - k1->GetFrameId());
 
             this->m_CurrentKeyFrame = Lerp(*k1, *k2, ratio);
