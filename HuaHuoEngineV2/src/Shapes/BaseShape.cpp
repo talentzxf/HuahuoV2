@@ -51,13 +51,14 @@ void BaseShape::TransferFrameStates(TransferFunction &transfer) {
 
 void BaseShape::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
     Super::AwakeFromLoad(awakeMode);
-    if (this->mLayer != NULL) { // When the shape is loaded, it's layer has not been loaded yet. It's possible as this might be a shape within another element.
+    if (this->mLayer !=
+        NULL) { // When the shape is loaded, it's layer has not been loaded yet. It's possible as this might be a shape within another element.
         int frameId = this->GetLayer()->GetCurrentFrame();
         Apply(frameId);
     }
 
-    if(awakeMode == kInstantiateOrCreateFromCodeAwakeFromLoad){ // Awake all it's components.
-        for(FrameStatePair& abstractFrameStatePair: this->mFrameStates){
+    if (awakeMode == kInstantiateOrCreateFromCodeAwakeFromLoad) { // Awake all it's components.
+        for (FrameStatePair &abstractFrameStatePair: this->mFrameStates) {
             abstractFrameStatePair.GetComponentPtr()->AwakeFromLoad(awakeMode);
         }
     }
@@ -70,13 +71,13 @@ BaseShape *BaseShape::CreateShape(const char *shapeName, bool createDefaultCompo
     const HuaHuo::Type *shapeType = HuaHuo::Type::FindTypeByName(shapeName);
     BaseShape *baseShape = NULL;
     if (shapeType != NULL && shapeType->IsDerivedFrom<BaseShape>()) {
-         baseShape = (BaseShape *) Object::Produce(shapeType);
+        baseShape = (BaseShape *) Object::Produce(shapeType);
     } else {
         baseShape = (BaseShape *) Object::Produce<BaseShape>();
         baseShape->mTypeName = shapeName;
     }
 
-    if(createDefaultComponents){
+    if (createDefaultComponents) {
         baseShape->AddFrameStateByName("ShapeTransformComponent");
         baseShape->AddFrameStateByName("ShapeSegmentFrameState");
         baseShape->AddFrameStateByName("ShapeFollowCurveFrameState");
@@ -87,7 +88,7 @@ BaseShape *BaseShape::CreateShape(const char *shapeName, bool createDefaultCompo
     return baseShape;
 }
 
-ShapeTransformComponent* BaseShape::GetTransform(){
+ShapeTransformComponent *BaseShape::GetTransform() {
     return &this->GetFrameState<ShapeTransformComponent>();
 }
 
@@ -102,7 +103,7 @@ Layer *BaseShape::GetLayer(bool returnDefaultIfNotExist) {
     return mLayer;
 }
 
-const char* BaseShape::GetStoreId() {
+const char *BaseShape::GetStoreId() {
     if (this->mLayer == NULL)
         return "";
 
@@ -126,6 +127,19 @@ AbstractFrameState *BaseShape::GetFrameState(const char *name) {
     return NULL;
 }
 
+void BaseShape::SetLayer(Layer *layer) {
+    // if layer is NULL, it means we are deleting the shape.
+    if (layer != NULL && this->mLayer != layer) {
+        Container::const_iterator i;
+        Container::const_iterator end = mFrameStates.end();
+        for (i = mFrameStates.begin(); i != end; ++i) {
+            i->GetComponentPtr()->MoveToStore(layer->GetObjectStore());
+        }
+    }
+
+    mLayer = layer;
+}
+
 void BaseShape::SetLocalPivotPosition(float x, float y, float z) {
 
     Layer *shapeLayer = GetLayer();
@@ -140,7 +154,7 @@ void BaseShape::SetLocalPivotPosition(float x, float y, float z) {
 void BaseShape::SetBornFrameId(SInt32 bornFrameId) {
     mBornFrameId = bornFrameId;
 
-    ObjectStore* myStore = GetLayer(true)->GetObjectStore();
+    ObjectStore *myStore = GetLayer(true)->GetObjectStore();
 
     KeyFrameIdentifier shapeBornKeyFrameIdentifier = myStore->ProduceKeyFrame();
     KeyFrame &shapeBornKeyFrame = myStore->GetKeyFrameById(shapeBornKeyFrameIdentifier);
@@ -154,7 +168,7 @@ void BaseShape::SetBornFrameId(SInt32 bornFrameId) {
 KeyFrame &BaseShape::GetKeyFrameFromCache(int idx) {
     KeyFrameIdentifier keyFrameIdentifier = mKeyFrameCache[idx];
 
-    ObjectStore* myStore = GetLayer(true)->GetObjectStore();
+    ObjectStore *myStore = GetLayer(true)->GetObjectStore();
     return myStore->GetKeyFrameById(keyFrameIdentifier);
 }
 
@@ -269,8 +283,8 @@ AbstractFrameState *BaseShape::GetFrameStateByTypeName(const char *frameStateNam
 //    const HuaHuo::Type *componentType = HuaHuo::Type::FindTypeByName(frameStateName);
 //    return QueryFrameStateByType(componentType);
 
-    for(auto frameStateItr = mFrameStates.begin(); frameStateItr != mFrameStates.end(); frameStateItr++){
-        if(strcmp(frameStateItr->GetComponentPtr()->GetTypeName(), frameStateName) == 0)
+    for (auto frameStateItr = mFrameStates.begin(); frameStateItr != mFrameStates.end(); frameStateItr++) {
+        if (strcmp(frameStateItr->GetComponentPtr()->GetTypeName(), frameStateName) == 0)
             return frameStateItr->GetComponentPtr();
     }
 

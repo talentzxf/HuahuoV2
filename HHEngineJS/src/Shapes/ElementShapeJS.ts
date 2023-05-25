@@ -229,8 +229,6 @@ class ElementShapeJS extends BaseShapeJS {
         return this.elementController.playSpeed
     }
 
-
-
     additionalPropertyAdded: boolean = false
     getPropertySheet(){
         if(!this.additionalPropertyAdded){

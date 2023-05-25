@@ -197,7 +197,6 @@ void Layer::AddShapeInternal(BaseShape *newShape) {
         newShape->SetBornFrameId(this->currentFrameId);
 
     shapes.push_back(newShape);
-
     GetPersistentManager().MakeObjectPersistent(newShape->GetInstanceID(), StoreFilePath);
 
     // Update the max length of the animation

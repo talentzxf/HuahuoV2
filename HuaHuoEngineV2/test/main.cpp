@@ -7,6 +7,7 @@
 #include "Serialize/SerializationCaching/BlockMemoryCacheWriter.h"
 #include "Serialize/SerializationCaching/MemoryCacherReadBlocks.h"
 
+#include <cmath>
 #include <cstdio>
 #include <cAssert>
 #include "Export/Scripting/GameObjectExport.h"
@@ -30,7 +31,8 @@
 
 #include "openssl/md5.h"
 
-#define ASSERT Assert
+extern float eps;
+#define ASSERT assert
 
 void testTransform() {
     GameObject *go = MonoCreateGameObject("Go1");
@@ -632,7 +634,7 @@ void testReadFromFile() {
     Assert(colorStopArray->GetColorStop(0)->GetColor()->g == 1.0 );
     Assert(colorStopArray->GetColorStop(0)->GetColor()->b == 1.0 );
     Assert(colorStopArray->GetColorStop(0)->GetColor()->a == 1.0 );
-    Assert(colorStopArray->GetColorStop(0)->GetValue() == 0.1 );
+    Assert( abs(colorStopArray->GetColorStop(0)->GetValue() - 0.1) <= eps );
 
     customComponent->SetFloatValue("growth", 1.0f);
     customComponent->SetColorValue("strokeColor", 1.0, 1.0, 0.0, 1.0);
@@ -663,9 +665,9 @@ void testReadFromFile() {
     customComponent->SetColorValue("strokeColor", 0.0, 1.0, 0.0, 1.0);
     color = customComponent->GetColorValue("strokeColor");
     Assert(color->r == 0.0f);
-    Assert(color->r == 1.0f);
-    Assert(color->r == 0.0f);
-    Assert(color->r == 1.0f);
+    Assert(color->g == 1.0f);
+    Assert(color->b == 0.0f);
+    Assert(color->a == 1.0f);
 
 
     std::vector<UInt8> test = {12, 32, 123, 123, 1, 23, 1, 23, 1, 22, 3, 1};
@@ -691,6 +693,7 @@ void testReadFromFile() {
 
 
     CircleShape *clonedCircleShape = (CircleShape *) CloneObject(*circleShape);
+    clonedCircleShape->Apply(shapeLayer->GetCurrentFrame());
 
     CustomComponent *clonedGrowthComponent = (CustomComponent *) clonedCircleShape->GetFrameState("CurveGrowth");
     Assert(clonedGrowthComponent->GetFloatValue("growth") == 0.5f);
@@ -783,6 +786,34 @@ void testKeyFrameCurve() {
     Assert(value == 400);
 }
 
+void testMoveShapeFromStoreToStore(){
+    auto store1 = GetDefaultObjectStoreManager()->CreateStore();
+    auto layer1_1 = store1->CreateLayer("First Layer");
+    RectangleShape* pRectangleShape = (RectangleShape*)BaseShape::CreateShape("RectangleShape");
+    layer1_1->AddShapeInternal(pRectangleShape);
+    pRectangleShape->SetGlobalPivotPosition(100, 100, 100);
+
+    layer1_1->SetCurrentFrame(10);
+    pRectangleShape->SetGlobalPivotPosition(200, 200, 200);
+
+    layer1_1->SetCurrentFrame(5);
+    Vector3f* currentPosition = pRectangleShape->GetGlobalPivotPosition();
+    Assert(currentPosition->x == 150);
+    Assert(currentPosition->y == 150);
+    Assert(currentPosition->z == 150);
+
+    auto store2 = GetDefaultObjectStoreManager()->CreateStore();
+    auto layer2_1 = store2->CreateLayer("Second Layer");
+    layer2_1->SetCurrentFrame(0);
+    layer2_1->AddShapeInternal(pRectangleShape);
+
+    layer2_1->SetCurrentFrame(1);
+    currentPosition = pRectangleShape->GetGlobalPivotPosition();
+    Assert(currentPosition->x == 110);
+    Assert(currentPosition->y == 110);
+    Assert(currentPosition->z == 110);
+}
+
 int main() {
     HuaHuoEngine::InitEngine();
 
@@ -801,5 +832,7 @@ int main() {
     testKeyFrameCurve();
 
     testMultipleStores();
+
+    testMoveShapeFromStoreToStore();
     return 0;
 }

@@ -84,6 +84,8 @@ public:
 
     virtual void SaveAsKeyFrame() = 0;
 
+    virtual void MoveToStore(ObjectStore* pStore) = 0;
+
 protected:
     void DeleteKeyFrameInternal(KeyFrame *keyFrame, bool notifyFrontEnd = true);
 
@@ -234,6 +236,10 @@ public:
         } else {
             printf("Doesn't found the frameId:%d\n", frameId);
         }
+    }
+
+    virtual void MoveToStore(ObjectStore* pStore){
+        m_KeyFrames.MoveToStore(pStore);
     }
 
 protected:

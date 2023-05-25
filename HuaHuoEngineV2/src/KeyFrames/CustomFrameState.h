@@ -77,7 +77,7 @@ struct CustomData {
     DECLARE_SERIALIZE(CustomData);
 
     CustomData() :
-            floatValue(0.0f) {}
+            floatValue(0.0f), dataType(UNKNOWN) {}
 };
 
 // TODO: Refactor! (One of) The most ugly function in the whole system. :(

@@ -230,7 +230,7 @@ bool AssertImplementation(InstanceID objID, const char* fileStripped, int line, 
 # define HuaHuo__ASSERT_IMPL(test, objID, msg) PP_WRAP_CODE(\
     if(!(test))                                             \
     {                                                       \
-        printf("Assert error happened! %s:%d", __FILE__, __LINE__); \
+        printf("Assert error happened! %s:%d\n", __FILE__, __LINE__); \
     })                                                      \
 
 #endif

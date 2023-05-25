@@ -116,6 +116,12 @@ public:
         return keyFrameIdentifiers;
     }
 
+    void MoveToStore(ObjectStore* pStore){
+        for(auto& keyFrame: m_KeyFrameData){
+            keyFrame.SetObjectStore(pStore);
+        }
+    }
+
 private:
     std::vector<T> m_KeyFrameData;
 };

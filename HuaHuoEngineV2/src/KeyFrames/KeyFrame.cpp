@@ -6,7 +6,17 @@
 #include "KeyFrame.h"
 
 void AbstractKeyFrame::SetObjectStore(ObjectStore *pStore) {
-    mStorePPtr = pStore;
+    Assert(pStore != NULL);
+
+    if(mStorePPtr.GetInstanceID() != pStore->GetInstanceID()){
+        KeyFrame& oldKeyFrame = GetKeyFrame();
+
+        this->keyFrameId = -1;
+        mStorePPtr = pStore;
+        KeyFrame& newKeyFrame = GetKeyFrame();
+        newKeyFrame.SetFrameId(oldKeyFrame.GetFrameId());
+        newKeyFrame.SetFrameState(oldKeyFrame.GetFrameState());
+    }
 }
 
 KeyFrame &AbstractKeyFrame::GetKeyFrame() {

@@ -169,9 +169,7 @@ public:
         mIsVisible = isVisible;
     }
 
-    void SetLayer(Layer* layer){
-        this->mLayer = layer;
-    }
+    void SetLayer(Layer* layer);
 
     const char* GetStoreId();
 

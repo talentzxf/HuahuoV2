@@ -340,7 +340,6 @@ CustomDataKeyFrame *CustomFrameState::GetColorStopArrayKeyFrame(int currentFrame
         if (itr == GetKeyFrames().end()) {
             printf("Is End!\n");
         } else {
-            pKeyFrame->data.dataType = COLORSTOPARRAY;
             for (int colorStopIdx = pKeyFrame->data.colorStopArray.GetColorStopCount();
                  colorStopIdx < itr->data.colorStopArray.GetColorStopCount(); colorStopIdx++) {
                 ColorStopEntry colorStopEntry = *itr->data.colorStopArray.GetColorStop(colorStopIdx);
@@ -348,6 +347,8 @@ CustomDataKeyFrame *CustomFrameState::GetColorStopArrayKeyFrame(int currentFrame
                 pKeyFrame->data.colorStopArray.AddEntry(colorStopEntry);
             }
         }
+
+        pKeyFrame->data.dataType = COLORSTOPARRAY;
     }
 
     return pKeyFrame;
