@@ -289,6 +289,11 @@ class ElementCreator {
         let newElement = this.onNewElement(false, store.GetStoreId())
         HHToast.info(i18n.t("toast.elementLoaded"))
         newElement.update(true)
+
+        // Update the maxFrameId of the current store.
+        let maxFrameId = store.GetMaxFrameId();
+        huahuoEngine.GetCurrentStore().UpdateMaxFrameId(newElement.bornFrameId + maxFrameId)
+
         huahuoEngine.getActivePlayer().updateAllShapes(true)
     }
 }
