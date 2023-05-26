@@ -118,7 +118,6 @@ class ElementShapeJS extends BaseShapeJS {
             layer.SetCurrentFrame(previousFrame)
         }
     }
-
     override preparePaperItem(force: boolean = false) {
         super.preparePaperItem(force)
 
@@ -197,6 +196,14 @@ class ElementShapeJS extends BaseShapeJS {
 
             // 2. Add the shape into current layer of this store. And it will be loaded by the element.
             huahuoEngine.GetCurrentLayer().AddShapeInternal(shape.getRawShape())
+
+            if(shape.getRawShape().GetType() == shapeName){
+                let maxFrameId = huahuoEngine.GetStoreById((shape as ElementShapeJS).storeId).GetMaxFrameId()
+
+                let currentStore = huahuoEngine.GetStoreById(this.storeId)
+
+                currentStore.UpdateMaxFrameId(shape.bornFrameId + maxFrameId)
+            }
         } finally {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStoreId)
         }
