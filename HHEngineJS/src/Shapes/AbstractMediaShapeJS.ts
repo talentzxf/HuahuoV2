@@ -61,7 +61,7 @@ abstract class AbstractMediaShapeJS extends BaseShapeJS {
 
     awakeFromLoad() {
         super.isLoadedFromFile = true
-        
+
         // load is async, create the paperItem first as a placeholder.
         if (!this.paperItem) {
             this.createShape()

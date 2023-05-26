@@ -3,6 +3,7 @@ import {parseGIF, decompressFrames, ParsedFrame} from "gifuct-js";
 import {GlobalConfig} from "../GlobalConfig"
 import {AbstractMediaShapeJS} from "./AbstractMediaShapeJS";
 import {clzObjectFactory} from "../CppClassObjectFactory";
+import {huahuoEngine} from "../EngineAPI";
 
 let shapeName = "ImageShape"
 class ImageShapeJS extends AbstractMediaShapeJS{
@@ -70,6 +71,11 @@ class ImageShapeJS extends AbstractMediaShapeJS{
             this.animationTotalWorldFrames = lastWorldFrame
 
             this.animationLoaded = true
+
+            let maxFrameId = this.bornFrameId + this.worldFrameAnimationFrameMap.size
+            // Update the max frame of the layer.
+            let store = huahuoEngine.GetStoreById(this.getBornStoreId())
+            store.UpdateMaxFrameId(maxFrameId)
         }
     }
 

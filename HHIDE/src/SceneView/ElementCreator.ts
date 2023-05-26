@@ -237,7 +237,8 @@ class ElementCreator {
 
             let newElement = this.onNewElement(false) as ElementShapeJS
             // Create Layer for the store as we won't open it. (If we open it, timeline track will create it.)
-            huahuoEngine.GetCurrentStore().CreateLayer(newElement.name)
+            let layer = huahuoEngine.GetCurrentStore().CreateLayer(newElement.name)
+            layer.GetTimeLineCellManager().MergeCells(0, huahuoEngine.defaultFrameCount)
 
             // It's much easier to align element with the global coordinate. Or else we need to set the position for all the keyframes
             // of all the underlying shapes!

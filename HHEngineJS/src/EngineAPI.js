@@ -242,6 +242,10 @@ class EngineAPI{
         return this.cppEngine.LoadBinaryResource(fileName, mimeType, data, dataSize)
     }
 
+    get defaultFrameCount(){
+        return 1000;
+    }
+
     get ti(){
         return ti
     }
