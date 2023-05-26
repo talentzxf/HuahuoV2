@@ -68,6 +68,10 @@ class ElementCreator {
         newShape.registerValueChangeHandler("index")(() => {
             elementCreator.dispatchElementChange(newShape.bornStoreId)
         })
+
+        newShape.registerComponentValueChangeHandler( ()=>{
+            elementCreator.dispatchElementChange(newShape.bornStoreId)
+        })
     }
 
     onTabClosed(e) {

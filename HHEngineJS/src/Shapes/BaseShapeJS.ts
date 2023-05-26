@@ -6,6 +6,7 @@ import {ShapeCenterSelector} from "./ShapeCenterSelector";
 import {ValueChangeHandler} from "./ValueChangeHandler";
 import {AbstractComponent} from "../Components/AbstractComponent";
 import {BaseShapeActions} from "../EventGraph/BaseShapeActions";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
 let BASIC_COMPONENTS = "BasicComponents"
 
@@ -54,7 +55,8 @@ abstract class BaseShapeJS {
 
     private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
-    private customComponents: Array<AbstractComponent> = new Array<AbstractComponent>()
+    // From ptr to the component.
+    private customComponentMap: Map<number, AbstractComponent> = new Map<number, AbstractComponent>()
 
     private _isMirage: boolean = false
     private _isUpdatePos: boolean = true
@@ -65,6 +67,10 @@ abstract class BaseShapeJS {
 
     // Purpose of action is to store temporary results during system running. All the status in the action won't be persisted.
     private action: BaseShapeActions = new BaseShapeActions(this)
+
+    private get customComponents() {
+        return this.customComponentMap.values();
+    }
 
     public getAction() {
         return this.action
@@ -123,22 +129,40 @@ abstract class BaseShapeJS {
         this.paperItem.scaling = currentScaling
     }
 
-    saveAsKeyFrame(){
-        if(this.rawObj)
+    saveAsKeyFrame() {
+        if (this.rawObj)
             this.rawObj.SaveAsKeyFrame()
     }
 
+    componentValueChangeHandlers: Array<Function> = new Array()
+
     addComponent(component: AbstractComponent, persistentTheComponent: boolean = true) {
-        if (persistentTheComponent)
+        if(this.customComponentMap.has(component.rawObj.ptr)){
+            return
+        }
+
+        if (persistentTheComponent){
             this.rawObj.AddFrameState(component.rawObj)
-        this.customComponents.push(component)
+        }
+
+        this.customComponentMap.set(component.rawObj.ptr, component)
         component.setBaseShape(this)
         component.initPropertySheet(this.propertySheet)
+
+        let _this = this
+        component.registerValueChangeHandler("*", ()=>{
+            for(let func of _this.componentValueChangeHandlers){
+                func()
+            }
+        })
     }
 
     getComponentCountByTypeName(typeName) {
         let returnCount = 0
         for (let component of this.customComponents) {
+            if(component == null)
+                continue
+
             if (component.getTypeName() == typeName) {
                 returnCount++
             }
@@ -148,6 +172,8 @@ abstract class BaseShapeJS {
 
     getComponentByTypeName(typeName) {
         for (let component of this.customComponents) {
+            if(component == null)
+                continue;
             if (component.getTypeName() == typeName) {
                 return component
             }
@@ -399,6 +425,10 @@ abstract class BaseShapeJS {
         this.isSelected = val
 
         this.updateBoundingBox()
+    }
+
+    registerComponentValueChangeHandler(func){
+        this.componentValueChangeHandlers.push(func)
     }
 
     // Remove these functions later.
@@ -1047,6 +1077,28 @@ abstract class BaseShapeJS {
 
             this.callHandlers("paperItemReady", this.paperItem)
         }
+
+        this.LoadComponents()
+    }
+
+    LoadComponents(){
+        // Create all the component wrapper in the JS side.
+        let componentCount = this.rawObj.GetFrameStateCount()
+        for(let idx = 0; idx < componentCount; idx++){
+            let componentRawObj = this.rawObj.GetFrameState(idx)
+
+            if(!this.customComponentMap.has(componentRawObj.ptr)){
+                let component = null
+                let componentConstructor = clzObjectFactory.GetClassConstructor(componentRawObj.GetTypeName())
+                if(componentConstructor){
+                    component = new componentConstructor(componentRawObj, this.isMirage)
+                    // The component has already been persistented, no need to persistent again.
+                    this.addComponent(component, false)
+                }
+
+                this.customComponentMap.set(componentRawObj.ptr, component)
+            }
+        }
     }
 
     getTypeName() {
@@ -1213,6 +1265,8 @@ abstract class BaseShapeJS {
 
         // Execute after update of all components
         for (let component of this.customComponents) {
+            if(component == null)
+                continue
             if (component.isComponentActive()) {
                 component.afterUpdate(force)
             }
@@ -1243,6 +1297,9 @@ abstract class BaseShapeJS {
 
                 // Execute after update of all components
                 for (let component of this.customComponents) {
+                    if(component == null)
+                        continue
+
                     component.setInvisible()
                 }
 
@@ -1279,6 +1336,9 @@ abstract class BaseShapeJS {
         this.shapeCenterSelector.selected = false
 
         for (let component of this.customComponents) {
+            if(component == null)
+                continue
+
             component.cleanUp()
         }
     }
@@ -1296,6 +1356,9 @@ abstract class BaseShapeJS {
 
         // Get all referenced shapes
         for (let component of this.customComponents) {
+            if(component == null)
+                continue
+
             component.getReferencedShapes(set)
         }
     }

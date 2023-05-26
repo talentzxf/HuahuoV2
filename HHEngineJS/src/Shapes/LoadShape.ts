@@ -5,22 +5,6 @@ import {Utils} from "./Utils";
 
 declare var Module: any;
 
-function LoadComponentForShape(shape:BaseShapeJS, isMirage: boolean){
-    let baseShape = shape.getRawShape()
-
-    // Create all the component wrapper in the JS side.
-    let componentCount = baseShape.GetFrameStateCount()
-    for(let idx = 0; idx < componentCount; idx++){
-        let componentRawObj = baseShape.GetFrameState(idx)
-        let componentConstructor = clzObjectFactory.GetClassConstructor(componentRawObj.GetTypeName())
-        if(componentConstructor){
-            let component = new componentConstructor(componentRawObj, isMirage)
-            // The component has already been persistented, no need to persistent again.
-            shape.addComponent(component, false)
-        }
-    }
-}
-
 function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true, addToLayer: boolean = true, isMirage: boolean = false){
     let shapeConstructor = clzObjectFactory.GetClassConstructor(rawShapeObj.GetTypeName())
     let jsShape = shapeConstructor(rawShapeObj)
@@ -36,8 +20,7 @@ function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true, addToLayer: b
         jsShape.awakeFromLoad()
 
     // TODO: Whatif there're dependencies across components?
-    // Create all the component wrapper in the JS side.
-    LoadComponentForShape(jsShape, isMirage)
+    jsShape.LoadComponents()
     
     return jsShape
 }

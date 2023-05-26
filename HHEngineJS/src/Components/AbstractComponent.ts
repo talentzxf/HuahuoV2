@@ -79,6 +79,10 @@ class AbstractComponent {
 
     private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
+    registerValueChangeHandler(valueNameString: string, callbackFunc: Function){
+        this.valueChangeHandler.registerValueChangeHandler(valueNameString)(callbackFunc)
+    }
+
     callHandlers(propertyName: string, val: any) {
         this.valueChangeHandler.callHandlers(propertyName, val)
     }
