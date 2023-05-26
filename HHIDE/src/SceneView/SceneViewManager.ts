@@ -4,7 +4,6 @@ import {Player} from "hhenginejs"
 import {huahuoEngine, renderEngine2D} from "hhenginejs";
 import {undoManager} from "../RedoUndo/UndoManager";
 import {FocusSceneViewCommand} from "../RedoUndo/FocusSceneViewCommand";
-import {findParentPanel} from "hhpanel"
 
 class SceneViewManager{
     // Map from storeId->SceneView
@@ -60,7 +59,8 @@ class SceneViewManager{
         sceneView.resetDefaultShapeDrawer()
 
         if(pushCommand && previousSceneView != null){
-            undoManager.PushCommand(new FocusSceneViewCommand(previousSceneView, this.curFocusedSceneView))
+            // Have to use event to push the command, or else, there will be a cyclic dependency loop.
+            huahuoEngine.dispatchEvent("HHIDE", "PushFocusSceneViewCommand", previousSceneView, this.curFocusedSceneView)
         }
 
     }

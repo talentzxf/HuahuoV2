@@ -1,10 +1,8 @@
 import {Logger, Vector2} from "hhcommoncomponents";
 import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
-import {huahuoEngine, renderEngine2D} from "hhenginejs"
+import {renderEngine2D} from "hhenginejs"
 import {BaseShapeJS} from "hhenginejs";
-import {elementCreator} from "../SceneView/ElementCreator";
-import {CreateShapeCommand} from "../RedoUndo/CreateShapeCommand";
-import {undoManager} from "../RedoUndo/UndoManager";
+import {LayerUtils} from "../SceneView/Layer";
 
 class BaseShapeDrawer{
     name = "unknown_shape"
@@ -50,16 +48,7 @@ class BaseShapeDrawer{
     }
 
     addShapeToCurrentLayer(shape:BaseShapeJS){
-        let currentLayer = huahuoEngine.GetCurrentLayer()
-
-        shape.saveAsKeyFrame();
-
-        let createShapeCommand = new CreateShapeCommand(currentLayer, shape)
-        createShapeCommand.DoCommand()
-
-        undoManager.PushCommand(createShapeCommand)
-
-        elementCreator.dispatchElementChange(shape.getBornStoreId())
+        LayerUtils.addShapeToCurrentLayer(shape)
     }
 
     onMouseUp(evt: MouseEvent){

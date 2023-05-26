@@ -22,6 +22,7 @@ import {EventGraphEditorDivGenerator} from "./Inspector/CustomFieldDivGenerators
 import {SelectIconForm} from "./Inspector/CustomFieldDivGenerators/SelectIconForm";
 import {EventNode} from "../../HHEngineJS/src/EventGraph/Nodes/EventNode";
 import {ActionNode} from "../../HHEngineJS/src/EventGraph/Nodes/ActionNode";
+import {FocusSceneViewCommand} from "./RedoUndo/FocusSceneViewCommand";
 
 // Input components
 import {HHFloatInput} from "./Inspector/InputComponents/HHFloatInput";

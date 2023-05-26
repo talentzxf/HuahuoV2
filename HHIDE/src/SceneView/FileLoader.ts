@@ -1,6 +1,7 @@
 import {Logger} from "hhcommoncomponents"
 import {ImageShapeJS, huahuoEngine, AudioShapeJS} from "hhenginejs"
 import {dataURItoBlob, getMimeTypeFromDataURI} from "hhcommoncomponents";
+import {LayerUtils} from "./Layer";
 let md5 = require("js-md5")
 
 function loadBinaryDataIntoStore(fileName: string, data){
@@ -32,8 +33,8 @@ class FileLoader{
                     imageShape.isAnimation = fileExtension == "gif"
                     imageShape.createShape()
 
-                    let currentLayer = huahuoEngine.GetCurrentLayer()
-                    currentLayer.addShape(imageShape)
+                    LayerUtils.addShapeToCurrentLayer(imageShape)
+
                 })
             }
         })

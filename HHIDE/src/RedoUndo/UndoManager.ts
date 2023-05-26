@@ -1,7 +1,6 @@
 import {huahuoEngine} from "hhenginejs";
 import {sceneViewManager} from "../SceneView/SceneViewManager";
 import {ShortcutEventNames, shortcutsManager} from "../Shortcuts/ShortcutsManager";
-import {Func} from "mocha";
 
 class ExecutionStackFrame{
     private store
