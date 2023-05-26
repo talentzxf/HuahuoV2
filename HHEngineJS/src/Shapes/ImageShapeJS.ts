@@ -83,8 +83,17 @@ class ImageShapeJS extends AbstractMediaShapeJS{
         tempShape.source = this.data // If it's gif, the first frame will be showed here.
         tempShape.fillColor = new _paper.Color("red")
 
+        // As data is loaded asynchronously, it might not be ready when the shape is created.
+        // In that case, should load the frame data when the load is completed.
         if(this.isAnimation){
-            this.loadFrameData()
+            if(this.data){
+                this.loadFrameData()
+            }else{
+                let _this = this
+                this.loadDataFromCpp().then(()=>{
+                    _this.loadFrameData()
+                })
+            }
         }
 
         this.paperItem = tempShape

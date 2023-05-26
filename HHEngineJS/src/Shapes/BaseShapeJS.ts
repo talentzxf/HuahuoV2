@@ -39,7 +39,7 @@ abstract class BaseShapeJS {
 
     // If this shape is not loaded from (i.e. generated on the fly), we might need to record some information during creation. like it's local pivot position.
     // Or else, just read these information from the file.
-    private isLoadedFromFile: boolean = false;
+    protected isLoadedFromFile: boolean = false;
 
     // This is used for Editor only to set properties.
     protected propertySheet: PropertySheet
