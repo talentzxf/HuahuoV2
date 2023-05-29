@@ -128,7 +128,7 @@ class EngineAPI{
     }
 
     getStoreMaxFrames(storeId){
-        // FrameId starts from 0. So, maxFames = maxFrameId + 1
+        // FrameId starts from 0. So, maxFrames = maxFrameId + 1
         return this.GetStoreById(storeId).GetMaxFrameId() + 1
     }
 
