@@ -78,10 +78,13 @@ function getFileNameFromGZip(d: Uint8Array){
     return fileName
 }
 
-const getMethodsAndVariables = (obj: any) => {
+const getMethodsAndVariables = (obj: any, excludeNative: boolean = false) => {
     let properties = new Set<any>()
     let currentObj = obj
     do {
+        if(excludeNative && currentObj.constructor.name == "Object"){
+            break;
+        }
         Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
     } while ((currentObj = Object.getPrototypeOf(currentObj)))
     return [...properties.keys()]

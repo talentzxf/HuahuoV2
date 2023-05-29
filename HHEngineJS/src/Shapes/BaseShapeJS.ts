@@ -26,7 +26,6 @@ declare class ShapeFollowCurveFrameState {
     RecordLengthRatio(frameId: number, lengthRatio: number)
 }
 
-const BOUNDMARGIN: number = 10
 const eps: number = 0.001
 
 let totallyUpdated: number = 0
@@ -137,11 +136,11 @@ abstract class BaseShapeJS {
     componentValueChangeHandlers: Array<Function> = new Array()
 
     addComponent(component: AbstractComponent, persistentTheComponent: boolean = true) {
-        if(this.customComponentMap.has(component.rawObj.ptr)){
+        if (this.customComponentMap.has(component.rawObj.ptr)) {
             return
         }
 
-        if (persistentTheComponent){
+        if (persistentTheComponent) {
             this.rawObj.AddFrameState(component.rawObj)
         }
 
@@ -150,8 +149,8 @@ abstract class BaseShapeJS {
         component.initPropertySheet(this.propertySheet)
 
         let _this = this
-        component.registerValueChangeHandler("*", ()=>{
-            for(let func of _this.componentValueChangeHandlers){
+        component.registerValueChangeHandler("*", () => {
+            for (let func of _this.componentValueChangeHandlers) {
                 func()
             }
         })
@@ -160,7 +159,7 @@ abstract class BaseShapeJS {
     getComponentCountByTypeName(typeName) {
         let returnCount = 0
         for (let component of this.customComponents) {
-            if(component == null)
+            if (component == null)
                 continue
 
             if (component.getTypeName() == typeName) {
@@ -172,7 +171,7 @@ abstract class BaseShapeJS {
 
     getComponentByTypeName(typeName) {
         for (let component of this.customComponents) {
-            if(component == null)
+            if (component == null)
                 continue;
             if (component.getTypeName() == typeName) {
                 return component
@@ -424,10 +423,10 @@ abstract class BaseShapeJS {
     set selected(val: boolean) {
         this.isSelected = val
 
-        this.updateBoundingBox()
+        // this.updateBoundingBox()
     }
 
-    registerComponentValueChangeHandler(func){
+    registerComponentValueChangeHandler(func) {
         this.componentValueChangeHandlers.push(func)
     }
 
@@ -444,40 +443,85 @@ abstract class BaseShapeJS {
         this.valueChangeHandler.callHandlers(propertyName, val)
     }
 
-    updateBoundingBox() {
-        if (this.isSelected) {
-            {
-                if (this.boundingBoxGroup)
-                    this.boundingBoxGroup.remove()
-
-                let boundingBox = this.paperItem.bounds;
-
-                let paperjs = this.getPaperJs()
-                this.boundingBoxGroup = new paperjs.Group()
-
-                let boundingBoxRect = new paperjs.Path.Rectangle(relaxRectangle(boundingBox, BOUNDMARGIN))
-                boundingBoxRect.dashArray = [4, 10]
-                boundingBoxRect.strokeColor = new paper.Color("black")
-                this.boundingBoxGroup.addChild(boundingBoxRect)
-
-                let centerCircle = new paperjs.Path.Circle(this.pivotPosition, 10)
-                centerCircle.fillColor = new paper.Color("red")
-                centerCircle.data.meta = this.shapeCenterSelector
-
-                this.boundingBoxGroup.addChild(centerCircle)
-            }
-
-            if (this.paperItem)
-                this.paperItem.selected = true
-        } else {
-            if (this.paperItem)
-                this.paperItem.selected = false
-            if (this.boundingBoxGroup)
-                this.boundingBoxGroup.remove()
-            if (this.shapeCenterSelector)
-                this.shapeCenterSelector.selected = false
-        }
-    }
+    // updateBoundingBox() {
+    //     if (this.isSelected) {
+    //         {
+    //             if (this.boundingBoxGroup)
+    //                 this.boundingBoxGroup.remove()
+    //
+    //             let boundingBox = this.paperItem.bounds;
+    //
+    //             let paperjs = this.getPaperJs()
+    //             this.boundingBoxGroup = new paperjs.Group()
+    //
+    //             let rotationStickLength = 50;
+    //             let rotationHandleRadius = 10;
+    //             let xyDiff = rotationStickLength/Math.sqrt(2)
+    //
+    //             let boundingBoxRectangle:paper.Rectangle = relaxRectangle(boundingBox, BOUNDMARGIN)
+    //             let boundingBoxRect = new paperjs.Path.Rectangle(boundingBoxRectangle)
+    //             boundingBoxRect.dashArray = [4, 10]
+    //             boundingBoxRect.strokeColor = new paper.Color("black")
+    //             this.boundingBoxGroup.addChild(boundingBoxRect)
+    //
+    //             // Draw rotation handles.
+    //             // 0 -- top-left
+    //             // 1 -- top-right
+    //             // 2 -- bottom-right
+    //             // 3 -- bottom-left
+    //             let dir = 0;
+    //             for(let dir = 0; dir <= 3; dir++){
+    //                 let startPoint = null;
+    //                 let endPoint = null;
+    //
+    //                 switch(dir){
+    //                     case 0:
+    //                         startPoint = boundingBoxRectangle.topLeft
+    //                         endPoint = startPoint.add(new paper.Point(-xyDiff, -xyDiff))
+    //                         break;
+    //                     case 1:
+    //                         startPoint = boundingBoxRectangle.topRight
+    //                         endPoint = startPoint.add(new paper.Point(xyDiff, -xyDiff))
+    //                         break;
+    //                     case 2:
+    //                         startPoint = boundingBoxRectangle.bottomRight
+    //                         endPoint = startPoint.add(new paper.Point(xyDiff, xyDiff))
+    //                         break;
+    //                     case 3:
+    //                         startPoint = boundingBoxRectangle.bottomLeft
+    //                         endPoint = startPoint.add(new paper.Point(-xyDiff, xyDiff))
+    //                         break;
+    //                 }
+    //
+    //                 let line = new paperjs.Path.Line(startPoint, endPoint)
+    //                 line.dashArray = [4,10]
+    //                 line.strokeColor = new paper.Color("black")
+    //                 this.boundingBoxGroup.addChild(line)
+    //
+    //                 // Draw circle at endPoint
+    //                 let circle = new paperjs.Path.Circle(endPoint, rotationHandleRadius)
+    //                 circle.strokeColor = new paper.Color("black")
+    //                 this.boundingBoxGroup.addChild(circle)
+    //             }
+    //
+    //             let centerCircle = new paperjs.Path.Circle(this.pivotPosition, 10)
+    //             centerCircle.fillColor = new paper.Color("red")
+    //             centerCircle.data.meta = this.shapeCenterSelector
+    //
+    //             this.boundingBoxGroup.addChild(centerCircle)
+    //         }
+    //
+    //         if (this.paperItem)
+    //             this.paperItem.selected = true
+    //     } else {
+    //         if (this.paperItem)
+    //             this.paperItem.selected = false
+    //         if (this.boundingBoxGroup)
+    //             this.boundingBoxGroup.remove()
+    //         if (this.shapeCenterSelector)
+    //             this.shapeCenterSelector.selected = false
+    //     }
+    // }
 
     getLayer() {
         return this.rawObj.GetLayer()
@@ -599,7 +643,7 @@ abstract class BaseShapeJS {
             this.storeSameLayerShapeIndices()
         }
 
-        this.updateBoundingBox()
+        // this.updateBoundingBox()
     }
 
     constructor(rawObj?) {
@@ -1081,16 +1125,16 @@ abstract class BaseShapeJS {
         this.LoadComponents()
     }
 
-    LoadComponents(){
+    LoadComponents() {
         // Create all the component wrapper in the JS side.
         let componentCount = this.rawObj.GetFrameStateCount()
-        for(let idx = 0; idx < componentCount; idx++){
+        for (let idx = 0; idx < componentCount; idx++) {
             let componentRawObj = this.rawObj.GetFrameState(idx)
 
-            if(!this.customComponentMap.has(componentRawObj.ptr)){
+            if (!this.customComponentMap.has(componentRawObj.ptr)) {
                 let component = null
                 let componentConstructor = clzObjectFactory.GetClassConstructor(componentRawObj.GetTypeName())
-                if(componentConstructor){
+                if (componentConstructor) {
                     component = new componentConstructor(componentRawObj, this.isMirage)
                     // The component has already been persistented, no need to persistent again.
                     this.addComponent(component, false)
@@ -1156,7 +1200,7 @@ abstract class BaseShapeJS {
 
         segment.remove()
 
-        this.updateBoundingBox()
+        // this.updateBoundingBox()
 
         this.callHandlers("segment", null)
     }
@@ -1265,7 +1309,7 @@ abstract class BaseShapeJS {
 
         // Execute after update of all components
         for (let component of this.customComponents) {
-            if(component == null)
+            if (component == null)
                 continue
             if (component.isComponentActive()) {
                 component.afterUpdate(force)
@@ -1276,7 +1320,7 @@ abstract class BaseShapeJS {
     hide() {
         this.paperItem.visible = false
         this.selected = false
-        this.updateBoundingBox()
+        // this.updateBoundingBox()
 
         this.callHandlers("shapeHidden", null)
     }
@@ -1297,7 +1341,7 @@ abstract class BaseShapeJS {
 
                 // Execute after update of all components
                 for (let component of this.customComponents) {
-                    if(component == null)
+                    if (component == null)
                         continue
 
                     component.setInvisible()
@@ -1308,7 +1352,7 @@ abstract class BaseShapeJS {
                 this.afterUpdate(true)
             }
 
-            this.updateBoundingBox()
+            // this.updateBoundingBox()
 
             this.lastRenderFrame = currentFrame
         }
@@ -1336,7 +1380,7 @@ abstract class BaseShapeJS {
         this.shapeCenterSelector.selected = false
 
         for (let component of this.customComponents) {
-            if(component == null)
+            if (component == null)
                 continue
 
             component.cleanUp()
@@ -1356,7 +1400,7 @@ abstract class BaseShapeJS {
 
         // Get all referenced shapes
         for (let component of this.customComponents) {
-            if(component == null)
+            if (component == null)
                 continue
 
             component.getReferencedShapes(set)
