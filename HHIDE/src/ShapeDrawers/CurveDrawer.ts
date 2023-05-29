@@ -1,6 +1,7 @@
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {huahuoEngine, CurveShapeJS} from "hhenginejs";
 import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
+import {EditorShapeProxy} from "./EditorShapeProxy";
 
 class CurveDrawer extends BaseShapeDrawer {
     name = "Curve"
@@ -11,7 +12,7 @@ class CurveDrawer extends BaseShapeDrawer {
     onMouseDown(evt: MouseEvent) {
         super.onMouseDown(evt);
 
-        this.curvePath = new CurveShapeJS()
+        this.curvePath = EditorShapeProxy.CreateProxy(new CurveShapeJS())
 
         let point = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.curvePath.addPoint(point)

@@ -3,6 +3,7 @@ import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {TextShapeJS, huahuoEngine} from "hhenginejs"
 import {Vector2} from "hhcommoncomponents";
 import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
+import {EditorShapeProxy} from "./EditorShapeProxy";
 
 class TextDrawer extends BaseShapeDrawer{
     name = "Text"
@@ -52,7 +53,7 @@ class TextDrawer extends BaseShapeDrawer{
 
             _this.addShapeToCurrentLayer(_this.textShape)
 
-            this.textShape = new TextShapeJS();
+            this.textShape = EditorShapeProxy.CreateProxy(new TextShapeJS())
         })
 
         this.textInput.value = ""
@@ -62,7 +63,7 @@ class TextDrawer extends BaseShapeDrawer{
         let curText:string = this.textInput.value
 
         if(!this.textShape)
-            this.textShape = new TextShapeJS();
+            this.textShape = EditorShapeProxy.CreateProxy(new TextShapeJS());
 
         this.textShape.setTextWithPosition(curText, this.textPos)
     }

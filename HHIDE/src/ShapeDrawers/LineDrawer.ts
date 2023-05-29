@@ -4,6 +4,7 @@ import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {LineShapeJS} from "hhenginejs"
 import {huahuoEngine} from "hhenginejs"
 import {setPrompt} from "../init";
+import {EditorShapeProxy} from "./EditorShapeProxy";
 
 class LineDrawer extends BaseShapeDrawer {
     name = 'Line'
@@ -45,7 +46,7 @@ class LineDrawer extends BaseShapeDrawer {
         this.startPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.isDrawing = true
 
-        this.tempShape = new LineShapeJS()
+        this.tempShape = EditorShapeProxy.CreateProxy(new LineShapeJS())
         this.tempShape.setStartPoint(this.startPosition)
         this.tempShape.setEndPoint(this.startPosition)
     }

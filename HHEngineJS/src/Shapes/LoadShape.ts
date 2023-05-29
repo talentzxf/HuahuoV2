@@ -1,6 +1,5 @@
 import {huahuoEngine} from "../EngineAPI";
 import {clzObjectFactory} from "../CppClassObjectFactory";
-import {BaseShapeJS} from "./BaseShapeJS";
 import {Utils} from "./Utils";
 
 declare var Module: any;
@@ -8,6 +7,11 @@ declare var Module: any;
 function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true, addToLayer: boolean = true, isMirage: boolean = false){
     let shapeConstructor = clzObjectFactory.GetClassConstructor(rawShapeObj.GetTypeName())
     let jsShape = shapeConstructor(rawShapeObj)
+
+    let shapeDecorator = huahuoEngine.getShapeDecorator()
+    if(shapeDecorator){
+        jsShape = shapeDecorator(jsShape)
+    }
 
     if(addToLayer){
         let layer = jsShape.getLayer()

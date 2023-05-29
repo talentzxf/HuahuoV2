@@ -11,6 +11,11 @@ class BaseShapeHandler{
 
     functionMap: Map<string, Function> = new Map()
 
+    proxy
+    setProxy(proxy){
+        this.proxy = proxy
+    }
+
     constructor(targetShape) {
         this.targetShape = targetShape
 
@@ -26,22 +31,27 @@ class BaseShapeHandler{
     }
 
     store(){
-        this.targetShape.store()
+        this.targetShape.store.apply(this.proxy)
         this.updateBoundingBox()
     }
 
+    createShape(){
+        this.targetShape.createShape.apply(this.proxy)
+        this.targetShape.paperShape.data.meta = this.proxy
+    }
+
     removeSegment(segment){
-        this.targetShape.removeSegment(segment)
+        this.targetShape.removeSegment.apply(this.proxy, [segment])
         this.updateBoundingBox()
     }
 
     update(force: boolean = false){
-        this.targetShape.update(force)
+        this.targetShape.update.apply(this.proxy, [force])
         this.updateBoundingBox()
     }
 
     hide(){
-        this.targetShape.hide()
+        this.targetShape.hide.apply(this.proxy)
         this.updateBoundingBox()
     }
 
@@ -150,7 +160,11 @@ class EditorShapeProxy extends BaseShapeJS{
 
     targetObj
     static CreateProxy(baseShape: BaseShapeJS){
-        return new Proxy(baseShape, new BaseShapeHandler(baseShape))
+        let proxyHandler = new BaseShapeHandler(baseShape)
+        let proxy = new Proxy(baseShape, proxyHandler)
+        proxyHandler.setProxy(proxy)
+
+        return proxy
     }
 }
 

@@ -52,6 +52,7 @@ import {faShapes} from "@fortawesome/free-solid-svg-icons";
 import {init} from "./init"
 
 import "./i18nInit"
+import {EditorShapeProxy} from "./ShapeDrawers/EditorShapeProxy";
 
 library.add(faMinus)
 library.add(faPlus)

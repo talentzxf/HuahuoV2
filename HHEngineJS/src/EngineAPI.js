@@ -132,6 +132,15 @@ class EngineAPI{
         return this.GetStoreById(storeId).GetMaxFrameId() + 1
     }
 
+    shapeDecorator = null
+    setShapeDecorator(shapeDecoratorFunc){
+        this.shapeDecorator = shapeDecoratorFunc
+    }
+
+    getShapeDecorator(){
+        return this.shapeDecorator
+    }
+
     GetStoreById(storeId){
         return this.GetDefaultObjectStoreManager().GetStoreById(storeId)
     }

@@ -25,6 +25,7 @@ import {EventNode} from "./EventGraph/Nodes/EventNode";
 import {ActionNode} from "./EventGraph/Nodes/ActionNode";
 import {StarMirrorShapeJS} from "./Shapes/StarMirrorShapeJS";
 import {Utils} from "./Shapes/Utils";
+import {SetShapeDecorator} from "./Shapes/LoadShape";
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 import {LGraphCanvas, LiteGraph} from "litegraph.js";

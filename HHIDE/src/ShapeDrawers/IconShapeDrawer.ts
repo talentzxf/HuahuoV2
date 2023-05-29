@@ -7,6 +7,7 @@ import {svgShapes} from "./SVGShapes";
 import axios from "axios";
 import {ImageShapeJS} from "hhenginejs";
 import {svgToDataURL} from "../Utilities/Svgs";
+import {EditorShapeProxy} from "./EditorShapeProxy";
 
 class IconShapeDrawer extends BaseShapeDrawer{
     name = "Shapes"
@@ -85,7 +86,7 @@ class IconShapeDrawer extends BaseShapeDrawer{
                     data = svgToDataURL(data)
                 }
 
-                _this.tempShape = new ImageShapeJS()
+                _this.tempShape = EditorShapeProxy.CreateProxy(new ImageShapeJS())
                 _this.tempShape.setData(imgURL, data)
                 _this.tempShape.createShape()
 

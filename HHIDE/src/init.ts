@@ -1,6 +1,7 @@
 import {huahuoEngine, renderEngine2D} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
 import {shortcutsManager} from "./Shortcuts/ShortcutsManager";
+import {EditorShapeProxy} from "./ShapeDrawers/EditorShapeProxy";
 
 function showMainDiv(){
     let loadingElement = document.querySelector("#loading") as HTMLDivElement
@@ -40,6 +41,10 @@ function init(){
             document.body.addEventListener("mousemove", updateMousePos)
 
             shortcutsManager.init()
+
+            huahuoEngine.setShapeDecorator((shape)=>{
+                return EditorShapeProxy.CreateProxy(shape)
+            })
         })
     })
 }
