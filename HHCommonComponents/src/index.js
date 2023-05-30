@@ -8,6 +8,8 @@ import {getFullEventName, splitFullEventName} from "./EventBus/EventBus";
 
 import {
     pointsNear,
+    pointsNearHorizontal,
+    pointsNearVertical,
     relaxRectangle,
     getMimeTypeFromDataURI,
     dataURItoBlob,
@@ -31,7 +33,7 @@ if (!window.i18n) {
 let i18n = window.i18n
 
 export {
-    i18n, ContextMenu, CustomElement, Logger, Vector2, pointsNear,
+    i18n, ContextMenu, CustomElement, Logger, Vector2, pointsNear, pointsNearVertical, pointsNearHorizontal,
     relaxRectangle, PropertySheet, Property, PropertyType, getMimeTypeFromDataURI,
     dataURItoBlob, HHToast, getFileNameFromGZip, eventBus, mirrorPoint,
     IsValidWrappedObject, getMethodsAndVariables,

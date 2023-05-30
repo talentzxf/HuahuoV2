@@ -15,6 +15,14 @@ function pointsNear(p1:paper.Point, p2:paper.Point, margin:number){
     return p1.getDistance(p2) < margin
 }
 
+function pointsNearHorizontal(p1: paper.Point, yValue: number, margin: number){
+    return Math.abs(p1.y - yValue) < margin
+}
+
+function pointsNearVertical(p1: paper.Point, xValue: number, margin: number){
+    return Math.abs(p1.x - xValue) < margin
+}
+
 function relaxRectangle(rectangle, margin) {
     if(rectangle == null)
         return
@@ -90,4 +98,6 @@ const getMethodsAndVariables = (obj: any, excludeNative: boolean = false) => {
     return [...properties.keys()]
 }
 
-export {pointsNear,relaxRectangle, getMimeTypeFromDataURI, dataURItoBlob, getFileNameFromGZip, getMethodsAndVariables, getParameterNameAtIdx}
+export {pointsNear, pointsNearHorizontal, pointsNearVertical,
+    relaxRectangle, getMimeTypeFromDataURI, dataURItoBlob,
+    getFileNameFromGZip, getMethodsAndVariables, getParameterNameAtIdx}

@@ -1,8 +1,13 @@
 import {BaseShapeJS} from "hhenginejs"
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
-import {Vector2, pointsNear, relaxRectangle, ContextMenu, HHToast} from "hhcommoncomponents"
+import {Vector2, pointsNear, pointsNearHorizontal, pointsNearVertical,
+    relaxRectangle, ContextMenu, HHToast} from "hhcommoncomponents"
 import {paper} from "hhenginejs";
-import {shapeScaleHandler} from "../TransformHandlers/ShapeScaleHandler";
+import {
+    shapeHorizontalScaleHandler,
+    shapeScaleHandler,
+    ShapeScaleHandler, shapeVerticalScaleHandler
+} from "../TransformHandlers/ShapeScaleHandler";
 import {ShapeTranslateMorphBase} from "../TransformHandlers/ShapeTranslateMorphBase";
 import {TransformHandlerMap} from "../TransformHandlers/TransformHandlerMap";
 import {shapeRotateHandler} from "../TransformHandlers/ShapeRotateHandler";
@@ -344,6 +349,8 @@ class ShapeSelector extends BaseShapeDrawer {
         let bounds = relaxRectangle(targetShape.paperShape.bounds, BOUNDMARGIN)
 
         if (!bounds.contains(targetPos)) {
+
+            // Four corners.
             if (pointsNear(bounds.topLeft, targetPos, VERYNEARMARGIN)) {
                 this.canvas.style.cursor = "nw-resize"
                 this.setTransformHandler(this.selectedShapes, pos, shapeScaleHandler)
@@ -361,6 +368,20 @@ class ShapeSelector extends BaseShapeDrawer {
                 this.setTransformHandler(this.selectedShapes, pos, shapeScaleHandler)
                 return;
             }
+
+            // Four edges.
+            else if (pointsNearHorizontal(targetPos, bounds.topLeft.y, VERYNEARMARGIN)
+                  || pointsNearHorizontal(targetPos, bounds.bottomLeft.y, VERYNEARMARGIN)){
+                this.canvas.style.cursor = "ns-resize"
+                this.setTransformHandler(this.selectedShapes, pos, shapeVerticalScaleHandler)
+                return
+            }
+            else if (pointsNearVertical(targetPos, bounds.topLeft.x, VERYNEARMARGIN)
+                ||   pointsNearVertical(targetPos, bounds.topRight.x, VERYNEARMARGIN)){
+                this.canvas.style.cursor = "ew-resize"
+                this.setTransformHandler(this.selectedShapes, pos, shapeHorizontalScaleHandler)
+                return
+            }
             // else {
             //     if (pointsNear(bounds.topLeft, pos, NEARBOUNDMARGIN) ||
             //         pointsNear(bounds.topRight, pos, NEARBOUNDMARGIN) ||
@@ -373,7 +394,8 @@ class ShapeSelector extends BaseShapeDrawer {
             // }
         }
 
-        if(this.transformHandler == null || this.transformHandler == shapeScaleHandler){
+        // If we reached here and the transform handler has not been set, it definite shouldn't be the ShapeScaleHandler.
+        if(this.transformHandler == null || this.transformHandler instanceof ShapeScaleHandler){
             this.canvas.style.cursor = "default"
             this.transformHandler = null
         }
