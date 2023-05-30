@@ -33,6 +33,6 @@ let defaultShapeDrawerArray = shapes.filter(drawer=>{
     return false
 })
 
-let defaultShapeDrawer = defaultShapeDrawerArray.length == 0 ? null: defaultShapeDrawerArray[0]
+let defaultShapeDrawer: ShapeSelector = defaultShapeDrawerArray.length == 0 ? null: defaultShapeDrawerArray[0] as ShapeSelector
 
 export {shapes, defaultShapeDrawer}

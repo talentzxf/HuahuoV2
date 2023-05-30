@@ -1,6 +1,7 @@
 import {BaseShapeJS} from "hhenginejs";
 import {relaxRectangle} from "hhcommoncomponents"
 import {getMethodsAndVariables} from "hhcommoncomponents"
+import {defaultShapeDrawer} from "./Shapes"
 
 const BOUNDMARGIN: number = 10
 
@@ -93,7 +94,6 @@ class BaseShapeHandler{
                 // 1 -- top-right
                 // 2 -- bottom-right
                 // 3 -- bottom-left
-                let dir = 0;
                 for(let dir = 0; dir <= 3; dir++){
                     let startPoint = null;
                     let endPoint = null;
@@ -123,9 +123,12 @@ class BaseShapeHandler{
                     this.boundingBoxGroup.addChild(line)
 
                     // Draw circle at endPoint
-                    let circle = new paperjs.Path.Circle(endPoint, rotationHandleRadius)
-                    circle.strokeColor = new paper.Color("black")
-                    this.boundingBoxGroup.addChild(circle)
+                    let rotationIndicatorCircle = new paperjs.Path.Circle(endPoint, rotationHandleRadius)
+                    rotationIndicatorCircle.strokeColor = new paper.Color("black")
+                    rotationIndicatorCircle.fillColor = new paper.Color("lightblue")
+                    this.boundingBoxGroup.addChild(rotationIndicatorCircle)
+
+                    rotationIndicatorCircle.onMouseEnter = defaultShapeDrawer.onShowRotationIndicator.bind(defaultShapeDrawer)
                 }
 
                 let centerCircle = new paperjs.Path.Circle(targetShape.pivotPosition, 10)
