@@ -4,6 +4,7 @@
 
 #include "CustomComponent.h"
 #include "Serialize/PersistentManager.h"
+#include "Shapes/BaseShape.h"
 
 extern std::string StoreFilePath;
 
@@ -23,7 +24,15 @@ void CustomComponent::Transfer(TransferFunction &transfer) {
     TRANSFER(m_SubComponents);
 }
 
-CustomComponent *CustomComponent::CreateComponent(const char* componentTypeName){
+int CustomComponent::RegisterShapeValue(const char *fieldName) {
+    int fieldIdx = this->RegisterField(fieldName, SHAPE);
+    CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());
+    pComponent->GetDefaultValueData()->dataType = SHAPE;
+    pComponent->GetDefaultValueData()->shapeValue = NULL;
+    return fieldIdx;
+}
+
+CustomComponent *CustomComponent::CreateComponent(const char *componentTypeName) {
     const HuaHuo::Type *shapeType = HuaHuo::Type::FindTypeByName(componentTypeName);
     if (shapeType == NULL || !shapeType->IsDerivedFrom<CustomComponent>()) {
         return NULL;
@@ -35,7 +44,7 @@ CustomComponent *CustomComponent::CreateComponent(const char* componentTypeName)
 }
 
 bool CustomComponent::Apply(int frameId) {
-    for(auto frameState : m_FrameStates){
+    for (auto frameState: m_FrameStates) {
         frameState.GetComponentPtr()->Apply(frameId);
     }
 
@@ -45,7 +54,7 @@ bool CustomComponent::Apply(int frameId) {
 void CustomComponent::SetBaseShape(BaseShape *pBaseShape) {
     AbstractFrameState::SetBaseShape(pBaseShape);
 
-    for(auto frameState : m_FrameStates){
+    for (auto frameState: m_FrameStates) {
         frameState.GetComponentPtr()->SetBaseShape(pBaseShape);
     }
 }
@@ -55,7 +64,7 @@ int CustomComponent::GetKeyFrameCount() {
 
     int totalKeyFrames = keyframeIdSet.size();
     keyFrameIdCache.clear();
-    for(int keyframeId : keyframeIdSet){
+    for (int keyframeId: keyframeIdSet) {
         keyFrameIdCache.push_back(keyframeId);
     }
 
@@ -63,7 +72,7 @@ int CustomComponent::GetKeyFrameCount() {
 }
 
 int CustomComponent::GetKeyFrameAtIndex(int idx) {
-    if(idx >= keyFrameIdCache.size())
+    if (idx >= keyFrameIdCache.size())
         return -1;
     return keyFrameIdCache[idx];
 }
@@ -71,35 +80,36 @@ int CustomComponent::GetKeyFrameAtIndex(int idx) {
 vector<KeyFrameIdentifier> CustomComponent::GetKeyFrameIdentifiers() {
     std::vector<KeyFrameIdentifier> returnKeyFrameIdentifiers;
 
-    for(auto frameState : m_FrameStates){
+    for (auto frameState: m_FrameStates) {
         auto keyframeIdentifiers = frameState.GetComponentPtr()->GetKeyFrameIdentifiers();
-        returnKeyFrameIdentifiers.insert(returnKeyFrameIdentifiers.end(), keyframeIdentifiers.begin(), keyframeIdentifiers.end());
+        returnKeyFrameIdentifiers.insert(returnKeyFrameIdentifiers.end(), keyframeIdentifiers.begin(),
+                                         keyframeIdentifiers.end());
     }
 
     return returnKeyFrameIdentifiers;
 }
 
 void CustomComponent::DeleteKeyFrame(int frameId, bool notifyFrontEnd) {
-    for(auto frameState : m_FrameStates){
+    for (auto frameState: m_FrameStates) {
         frameState.GetComponentPtr()->DeleteKeyFrame(frameId, notifyFrontEnd);
     }
 }
 
 bool CustomComponent::ReverseKeyFrame(int startFrameId, int endFrameId, int currentFrameId) {
-    for(auto frameState : m_FrameStates){
+    for (auto frameState: m_FrameStates) {
         frameState.GetComponentPtr()->ReverseKeyFrame(startFrameId, endFrameId, currentFrameId);
     }
     return true;
 }
 
 void CustomComponent::SaveAsKeyFrame() {
-    for(auto frameState : m_FrameStates){
+    for (auto frameState: m_FrameStates) {
         frameState.GetComponentPtr()->SaveAsKeyFrame();
     }
 }
 
 void CustomComponent::MoveToStore(ObjectStore *pStore) {
-    for(auto frameState : m_FrameStates){
+    for (auto frameState: m_FrameStates) {
         frameState.GetComponentPtr()->MoveToStore(pStore);
     }
 }

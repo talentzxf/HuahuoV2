@@ -193,11 +193,15 @@ interface CustomComponent{
     long RegisterBinaryResource([Const] DOMString fieldName);
     long RegisterStringValue([Const] DOMString fieldName, [Const] DOMString defaultValue);
     long RegisterBooleanValue([Const]  DOMString fieldName, boolean initValue);
+    long RegisterShapeValue([Const]  DOMString fieldName);
     boolean IsFieldRegistered([Const] DOMString fieldName);
 
     CustomComponent GetSubComponentByIdx(long idx);
     CustomComponent GetSubComponentArrayByName([Const] DOMString fieldName);
     void AddSubComponent(CustomComponent pSubComponent);
+
+    void SetShapeValue([Const] DOMString fieldName, BaseShape shape);
+    BaseShape GetShapeValue([Const] DOMString fieldName);
 
     void CreateShapeArrayValue([Const] DOMString fieldName);
     FieldShapeArray GetShapeArrayValueForWrite([Const] DOMString fieldName);
@@ -257,14 +261,6 @@ interface EventGraphComponent{
     void AddNodeIdShapeMap(long nodeId, BaseShape shape);
 };
 EventGraphComponent implements CustomComponent;
-
-[NoDelete]
-interface ShapeFollowCurveFrameState{
-    void RecordTargetShape(long frameId, BaseShape targetCurve);
-    void RecordLengthRatio(long frameId, float lengthRatio);
-    BaseShape GetTargetShape();
-    float GetLengthRatio();
-};
 
 [NoDelete]
 interface ShapeTransformComponent{

@@ -22,7 +22,6 @@
 #include "Shapes/CircleShape.h"
 #include "KeyFrames/FrameState.h"
 #include "KeyFrames/ShapeTransformComponent.h"
-#include "KeyFrames/ShapeFollowCurveFrameState.h"
 #include "Shapes/RectangleShape.h"
 #include "CloneObject.h"
 #include "KeyFrames/CustomFrameState.h"
@@ -31,7 +30,7 @@
 
 #include "openssl/md5.h"
 
-extern float eps;
+float eps = 0.01f;
 #define Assert assert
 
 void testTransform() {
@@ -150,14 +149,6 @@ void testShapeStore() {
     circleShape->RefreshKeyFrameCache();
     int keyFrameCount = circleShape->GetKeyFrameCount();
     int firstKeyFrame = circleShape->GetKeyFrameAtIdx(0);
-
-    ShapeFollowCurveFrameState *curveFrameState = (ShapeFollowCurveFrameState *) circleShape->GetFrameStateByTypeName(
-            "ShapeFollowCurveFrameState");
-    curveFrameState->RecordTargetShape(10, rectangleShape);
-    curveFrameState->RecordLengthRatio(10, 1.0f);
-
-    curveFrameState->RecordTargetShape(20, clonedRectangleShape);
-    curveFrameState->RecordLengthRatio(20, 0.0f);
 
     currentLayer->SetCurrentFrame(0);
 

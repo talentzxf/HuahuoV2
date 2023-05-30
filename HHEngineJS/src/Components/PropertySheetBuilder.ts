@@ -8,6 +8,7 @@ enum PropertyCategory{
     interpolateColor,
     interpolateVector2,  // vector2 is just vector3 with z = 0
     interpolateVector3,
+    shape, // One reference to a shape.
     shapeArray,
     colorStopArray, // Every color stop is a float->Color mapping entry.
     keyframeArray,
@@ -177,6 +178,25 @@ class StringValueOperator extends CppValueOperator{
     }
 }
 
+class ShapeValueOperator extends CppValueOperator {
+    getField(fieldName: string) {
+        return this.rawObj["GetShapeValue"](fieldName)
+    }
+
+    isEqual(v1, v2) {
+        return v1.ptr == v2.ptr
+    }
+
+    registerField(fieldName: string, initValue) {
+        this.rawObj["RegisterShapeValue"](fieldName, initValue)
+    }
+
+    setField(fieldName: string, val) {
+        this.rawObj["SetShapeValue"](fieldName, val)
+    }
+
+}
+
 function buildOperator(type, rawObj): CppValueOperator{
     switch(type){ // TODO: Get rid of switch-case
         case PropertyCategory.interpolateFloat:
@@ -191,6 +211,8 @@ function buildOperator(type, rawObj): CppValueOperator{
             return new StringValueOperator(rawObj)
         case PropertyCategory.boolean:
             return new BooleanFloatOperator(rawObj)
+        case PropertyCategory.shape:
+            return new ShapeValueOperator(rawObj)
     }
 
     return null
