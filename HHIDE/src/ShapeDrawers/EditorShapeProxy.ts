@@ -30,6 +30,11 @@ class BaseShapeHandler{
         })
     }
 
+    setText(inText: string){
+        this.targetShape.setText.apply(this.proxy, [inText])
+        this.updateBoundingBox()
+    }
+
     store(){
         this.targetShape.store.apply(this.proxy)
         this.updateBoundingBox()

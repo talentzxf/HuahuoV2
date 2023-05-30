@@ -66,8 +66,6 @@ class TextShapeJS extends BaseSolidShape{
 
     setText(inText:string){
         this.text = inText
-
-        this.updateBoundingBox()
     }
 
     afterWASMReady() {
