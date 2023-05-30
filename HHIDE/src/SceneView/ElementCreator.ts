@@ -10,6 +10,7 @@ import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {elementUploader} from "../RESTApis/ElementUploader";
 import {formManager} from "../Utilities/FormManager";
 import {UploadElementForm} from "../UIComponents/UploadElementForm";
+import {EditorShapeProxy} from "../ShapeDrawers/EditorShapeProxy";
 
 declare var Module:any;
 
@@ -170,7 +171,7 @@ class ElementCreator {
         let elementName = "NewElement_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
 
         // Create shape in the original scene/element
-        let newElementShape = new ElementShapeJS()
+        let newElementShape = EditorShapeProxy.CreateProxy(new ElementShapeJS())
         newElementShape.name = elementName
         newElementShape.createShape()
         newElementShape.position = new paper.Point(0, 0)

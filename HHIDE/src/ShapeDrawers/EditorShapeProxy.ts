@@ -30,6 +30,11 @@ class BaseShapeHandler{
         })
     }
 
+    removePaperObj(){
+        this.targetShape.removePaperObj.apply(this.proxy)
+        this.updateBoundingBox()
+    }
+
     setText(inText: string){
         this.targetShape.setText.apply(this.proxy, [inText])
         this.updateBoundingBox()
