@@ -12,7 +12,6 @@
 #include "Shapes/ElementShape.h"
 #include "Shapes/TextShape.h"
 #include "Shapes/CurveShape.h"
-#include "KeyFrames/ShapeFollowCurveFrameState.h"
 #include "KeyFrames/CustomComponent.h"
 #include "Shapes/MirrorShape.h"
 #include "Shapes/NailShape.h"
