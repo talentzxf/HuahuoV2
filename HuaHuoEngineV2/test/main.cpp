@@ -591,6 +591,8 @@ void testReadFromFile() {
     CustomComponent *customComponent = CustomComponent::CreateComponent("CustomComponent");
     customComponent->SetName("CurveGrowth");
 
+    customComponent->RegisterShapeValue("ReferenceShape");
+
     customComponent->RegisterFloatValue("growth", 1.0f);
     customComponent->RegisterColorValue("strokeColor", 1.0, 0.0, 0.0, 1.0);
     customComponent->RegisterColorStopArrayValue("gradientColor");
@@ -599,6 +601,14 @@ void testReadFromFile() {
 
     customComponent->RegisterBooleanValue("active", true);
     customComponent->SetBooleanValue("active", true);
+
+    RectangleShape* ref_1 = dynamic_cast<RectangleShape *>(BaseShape::CreateShape("RectangleShape"));
+    customComponent->SetShapeValue("ReferenceShape", ref_1);
+
+    BaseShape* result_1 = customComponent->GetShapeValue("ReferenceShape");
+
+    Assert(ref_1->GetInstanceID() == result_1->GetInstanceID());
+
 
     circleShape->AddFrameState(customComponent);
     GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->AddShapeInternal(circleShape);
