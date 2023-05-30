@@ -129,6 +129,7 @@ class BaseShapeHandler{
                     this.boundingBoxGroup.addChild(rotationIndicatorCircle)
 
                     rotationIndicatorCircle.onMouseEnter = defaultShapeDrawer.onShowRotationIndicator.bind(defaultShapeDrawer)
+                    rotationIndicatorCircle.onMouseLeave = defaultShapeDrawer.onHideRotationIndicator.bind(defaultShapeDrawer)
                 }
 
                 let centerCircle = new paperjs.Path.Circle(targetShape.pivotPosition, 10)
