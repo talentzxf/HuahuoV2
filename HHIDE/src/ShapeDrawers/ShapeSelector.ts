@@ -403,6 +403,11 @@ class ShapeSelector extends BaseShapeDrawer {
                 }
             }
         }
+
+        if(this.transformHandler == null){
+            this.canvas.style.cursor = "default"
+            this.transformHandler = null
+        }
     }
 
 
@@ -418,7 +423,6 @@ class ShapeSelector extends BaseShapeDrawer {
         this.transformHandler = handler
 
         this.transformHandler.setTarget(targetObjs)
-        this.transformHandler.beginMove(pos, hitResult)
     }
 
     onMouseUp(evt: MouseEvent) {
@@ -427,6 +431,8 @@ class ShapeSelector extends BaseShapeDrawer {
         if (this.transformHandler) {
             this.transformHandler.endMove();
             this.transformHandler = null;
+
+            this.canvas.style.cursor = "default"
         }
 
         this.isDrawing = false
