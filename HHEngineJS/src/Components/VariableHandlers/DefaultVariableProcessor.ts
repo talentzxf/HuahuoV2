@@ -15,7 +15,7 @@ class DefaultVariableProcessor{
                 return operator.getField(fieldName)
             },
             setter: (val)=>{
-                operator.setField(fieldName, val)
+                return operator.setField(fieldName, val)
             },
             isVariableEqual: (val1, val2)=>{
                 return operator.isEqual(val1, val2)

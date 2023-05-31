@@ -4,7 +4,7 @@ import {PropertyCategory} from "./PropertySheetBuilder";
 @Component({compatibleShapes: ["BaseShapeJS"], maxCount: 1})
 class FollowCurveComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.shape)
-    targetCurveShape
+    targetShape
 
 }
 

@@ -192,7 +192,12 @@ class ShapeValueOperator extends CppValueOperator {
     }
 
     setField(fieldName: string, val) {
+        if(this.rawObj.GetBaseShape().ptr == val.rawObj.ptr){
+            return false
+        }
+
         this.rawObj["SetShapeValue"](fieldName, val)
+        return true
     }
 
 }

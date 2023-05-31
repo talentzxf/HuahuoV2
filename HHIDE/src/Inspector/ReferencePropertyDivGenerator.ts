@@ -50,13 +50,13 @@ class ReferencePropertyDesc extends BasePropertyDesc{
     onShapePicked(selectedShape:BaseShapeJS){
         if(this.property.setter(selectedShape)){
             this.onValueChanged(selectedShape)
-
-            let currentFocusedSceneView = sceneViewManager.getFocusedSceneView()
-            currentFocusedSceneView.resetDefaultShapeDrawer()
-            currentFocusedSceneView.endOfDrawingShape(this.shapePicker)
         }else{
             HHToast.warn(i18n.t("toast.cantSelectSelf"))
         }
+
+        let currentFocusedSceneView = sceneViewManager.getFocusedSceneView()
+        currentFocusedSceneView.resetDefaultShapeDrawer()
+        currentFocusedSceneView.endOfDrawingShape(this.shapePicker)
     }
 
     onEntryAdded() {

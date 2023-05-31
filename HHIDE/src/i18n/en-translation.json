@@ -123,7 +123,8 @@
       "particleDirection": "Particle Direction",
       "eventGraph": "Event Graph",
       "starMirrorInterval": "Star Mirror Interval",
-      "playSpeed": "Play Speed"
+      "playSpeed": "Play Speed",
+      "targetShape": "Target Shape"
     },
     "nail": {
       "isStatic": "Is Static"
