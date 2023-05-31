@@ -24,7 +24,7 @@ import {HHToast} from "./Toast/Toast";
 import {eventBus, GraphEvent} from "./EventBus/EventBus";
 import {mirrorPoint} from "./Math/MathFunctions";
 import {IsValidWrappedObject} from "./WrappedObjectUtils"
-import {CustomFieldConfig, CustomFieldContentDivGenerator} from "./Properties/PropertyConfig";
+import {CustomFieldConfig, CustomFieldContentDivGenerator, ShapeArrayProperty} from "./Properties/PropertyConfig";
 
 if (!window.i18n) {
     window.i18n = new I18nHandler()
