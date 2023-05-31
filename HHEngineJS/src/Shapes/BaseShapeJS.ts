@@ -302,7 +302,6 @@ abstract class BaseShapeJS {
             }
         }
     }
-
     duplicate() {
         let newRawObj = huahuoEngine.DuplicateObject(this.rawObj)
         let shapeLayer = newRawObj.GetLayer()
@@ -1040,15 +1039,6 @@ abstract class BaseShapeJS {
                 parent.insertChild(this.rawObj.GetIndex(), this.paperItem)
             }
         }
-
-        // Execute after update of all components
-        for (let component of this.customComponents) {
-            if (component == null)
-                continue
-            if (component.isComponentActive()) {
-                component.afterUpdate(force)
-            }
-        }
     }
 
     hide() {
@@ -1083,6 +1073,15 @@ abstract class BaseShapeJS {
             } else {
                 this.paperItem.visible = true
                 this.afterUpdate(true)
+
+                // Execute after update of all components
+                for (let component of this.customComponents) {
+                    if (component == null)
+                        continue
+                    if (component.isComponentActive()) {
+                        component.afterUpdate(force)
+                    }
+                }
             }
 
             this.lastRenderFrame = currentFrame

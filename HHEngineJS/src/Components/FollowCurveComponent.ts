@@ -16,7 +16,7 @@ class FollowCurveComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateFloat, null, {max: 1.0, min: 0.0} as FloatPropertyConfig)
     lengthRatio: number = 0.0
 
-    tsTargetShape: BaseShapeJS
+    private tsFollowingTargetShape: BaseShapeJS
 
     constructor(rawObj?) {
         super(rawObj);
@@ -25,22 +25,27 @@ class FollowCurveComponent extends AbstractComponent {
     }
 
     onTargetShapeChanged(followShape: BaseShapeJS){
-        this.tsTargetShape = followShape
+        this.tsFollowingTargetShape = followShape
 
-        let shapePosition = this.tsTargetShape.pivotPosition
+        let shapePosition = this.tsFollowingTargetShape.pivotPosition
         this.baseShape.getAction().setPosition(shapePosition.x, shapePosition.y)
+    }
+
+    getFollowingTargetShape(){
+        return this.tsFollowingTargetShape
     }
 
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
         if(this.baseShape.isVisible()){
-            if(this.tsTargetShape && this.tsTargetShape){
-                let totalLength = this.tsTargetShape.length()
+            if(this.tsFollowingTargetShape && this.tsFollowingTargetShape){
+                let totalLength = this.tsFollowingTargetShape.length()
                 let targetLength = totalLength * this.lengthRatio
-                let curvePoint = this.tsTargetShape.getPointAt(targetLength)
+                let curvePoint = this.tsFollowingTargetShape.getPointAt(targetLength)
 
                 this.baseShape.getAction().setPosition(curvePoint.x, curvePoint.y)
+                this.baseShape.afterUpdate(force) // Refresh the shape to reflect the change.
             }
         }
     }

@@ -3,6 +3,14 @@ import {Vector2} from "hhcommoncomponents"
 import {undoManager} from "../RedoUndo/UndoManager";
 import {ShapeMoveCommand} from "../RedoUndo/ShapeMoveCommand";
 import {BaseShapeJS} from "hhenginejs"
+import {FollowCurveComponent} from "hhenginejs";
+
+function getFollowCurveComponentFromBaseShape(shape: BaseShapeJS): FollowCurveComponent{
+    let component:FollowCurveComponent = shape.getComponentByTypeName("FollowCurveComponent")
+    if(!component)
+        return null
+    return component
+}
 
 class ShapeTranslateHandler extends ShapeTranslateMorphBase
 {
@@ -67,12 +75,22 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
 
                 let proposedNewPosition = obj.position.add(offset)
 
-                if(obj.getFollowCurve && obj.getFollowCurve()){
-                    let followingCurve = obj.getFollowCurve()
-                    proposedNewPosition = followingCurve.getGlobalNearestPoint(proposedNewPosition)
+
+                let followCurveComponent = getFollowCurveComponentFromBaseShape(obj)
+                if(followCurveComponent != null){
+                    let followingCurve = followCurveComponent.getFollowingTargetShape()
+
+                    if(followingCurve){
+                        // If it's following a curve, no need to update its local position.
+                        proposedNewPosition = followingCurve.getGlobalNearestPoint(proposedNewPosition)
+
+                        let length = followingCurve.getGlobalOffsetOf(proposedNewPosition)
+                        followCurveComponent.lengthRatio = length / followingCurve.length()
+                    }
                 }
 
                 obj.position = proposedNewPosition
+
                 obj.store()
             }
 
