@@ -18,6 +18,8 @@ class FollowCurveComponent extends AbstractComponent {
 
     private tsFollowingTargetShape: BaseShapeJS
 
+    private valueChangeHandlerId: number = -1;
+
     constructor(rawObj?) {
         super(rawObj);
 
@@ -25,10 +27,21 @@ class FollowCurveComponent extends AbstractComponent {
     }
 
     onTargetShapeChanged(followShape: BaseShapeJS){
+        if(this.tsFollowingTargetShape == followShape)
+            return
+
+        if(this.tsFollowingTargetShape && this.valueChangeHandlerId > 0){
+            this.tsFollowingTargetShape.unregisterValueChangeHandler("*")(this.valueChangeHandlerId)
+        }
+
         this.tsFollowingTargetShape = followShape
 
         let shapePosition = this.tsFollowingTargetShape.pivotPosition
         this.baseShape.getAction().setPosition(shapePosition.x, shapePosition.y)
+
+        this.tsFollowingTargetShape.registerValueChangeHandler("*")(()=>{
+            this.afterUpdate(true)
+        })
     }
 
     getFollowingTargetShape(){
@@ -40,11 +53,15 @@ class FollowCurveComponent extends AbstractComponent {
 
         if(this.baseShape.isVisible()){
             if(this.tsFollowingTargetShape && this.tsFollowingTargetShape){
+                this.tsFollowingTargetShape.afterUpdate(true) // Force update the curveShape.
+
                 let totalLength = this.tsFollowingTargetShape.length()
                 let targetLength = totalLength * this.lengthRatio
                 let curvePoint = this.tsFollowingTargetShape.getPointAt(targetLength)
 
-                this.baseShape.getAction().setPosition(curvePoint.x, curvePoint.y)
+                let globalCurvePoint = this.tsFollowingTargetShape.localToGlobal(curvePoint)
+
+                this.baseShape.getAction().setPosition(globalCurvePoint.x, globalCurvePoint.y)
                 this.baseShape.afterUpdate(force) // Refresh the shape to reflect the change.
             }
         }
