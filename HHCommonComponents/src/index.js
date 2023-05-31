@@ -39,6 +39,6 @@ export {
     IsValidWrappedObject, getMethodsAndVariables,
     CustomFieldContentDivGenerator, CustomFieldConfig,
     GraphEvent, EventParam, EventEmitter, getParameterNameAtIdx,
-    getFullEventName, splitFullEventName
+    getFullEventName, splitFullEventName, ShapeArrayProperty
 }
 

@@ -20,6 +20,11 @@ class PanelPropertyDesc extends BasePropertyDesc {
                 if (childProperty.hide) { // Some properties are hidden.
                     continue
                 }
+
+                // In child property, setter is actually inserter if not explicitly set.
+                if(childProperty.inserter && !childProperty.hasOwnProperty("setter")){
+                    childProperty.setter = childProperty.inserter
+                }
                 let divGenerator = GetPropertyDivGenerator(childProperty.type)
                 let propertyDesc = divGenerator.generatePropertyDesc(childProperty)
 
