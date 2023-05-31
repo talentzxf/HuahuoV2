@@ -77,7 +77,7 @@ class AbstractComponent {
     // @PropertyValue(PropertyCategory.boolean, false)
     // isActive
 
-    private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
+    protected valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
     registerValueChangeHandler(valueNameString: string, callbackFunc: Function){
         this.valueChangeHandler.registerValueChangeHandler(valueNameString)(callbackFunc)
