@@ -51,7 +51,7 @@ class ReferencePropertyDesc extends BasePropertyDesc{
         if(this.property.setter(selectedShape)){
             this.onValueChanged(selectedShape)
         }else{
-            HHToast.warn(i18n.t("toast.cantSelectSelf"))
+            HHToast.warn(i18n.t("toast.cantSelect"))
         }
 
         let currentFocusedSceneView = sceneViewManager.getFocusedSceneView()

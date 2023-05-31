@@ -147,7 +147,7 @@
     "insufficientKeyFrames": "无法删除，至少需要有一个关键帧",
     "nailDuplicated": "无法添加钉子，这两个形状已经被其他钉子绑定了",
     "nailMirageError": "钉子无法绑定镜中幻象.",
-    "cantSelectSelf": "无法添加自己为目标形状"
+    "cantSelectSelf": "无法添加该目标形状"
   },
   "hint": {
     "saveLocal": "将项目保存到本地",
