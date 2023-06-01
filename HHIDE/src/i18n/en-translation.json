@@ -73,6 +73,7 @@
     "BaseProperties": "Base Properties",
     "CollapseAll": "Collapse All",
     "OpenAll": "Open All",
+    "SaveAsKeyFrame": "Save as KeyFrame",
     "AddComponent": "Add Component",
     "Type": "Type",
     "Name": "Name",
@@ -147,7 +148,8 @@
     "insufficientKeyFrames": "Can't delete the keyframe. At least one keyframe needed",
     "nailDuplicated": "Duplicated nail, the shape has already been bound with another nail",
     "nailMirageError": "Nail can't bind mirage.",
-    "cantSelect": "Can't select the shape"
+    "cantSelect": "Can't select the shape",
+    "keyframeSaved": "KeyFrame saved"
   },
   "hint": {
     "saveLocal": "Save project to local",
