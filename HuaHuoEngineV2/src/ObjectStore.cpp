@@ -65,15 +65,23 @@ IMPLEMENT_OBJECT_SERIALIZE(ObjectStore);
 INSTANTIATE_TEMPLATE_TRANSFER(ObjectStore);
 
 template<class TransferFunction>
+void ElementMetaData::Transfer(TransferFunction &transfer) {
+    TRANSFER(mIsRoot);
+    TRANSFER(mIsEditable);
+    TRANSFER(elementLocalPivotCenter);
+    TRANSFER(elementGlobalPivotCenter);
+}
+
+template<class TransferFunction>
 void ObjectStore::Transfer(TransferFunction &transfer) {
     Super::Transfer(transfer);
 
     TRANSFER(layerMap);
     TRANSFER(layers);
     TRANSFER(currentLayer);
+    TRANSFER(elementMetaData);
     TRANSFER(maxFrameId);
     TRANSFER(mStoreId);
-    TRANSFER(mIsRoot);
     TRANSFER(maxKeyFrameIdentifier);
     TRANSFER(allKeyFrames);
 }
@@ -84,7 +92,7 @@ void ObjectStore::AwakeFromLoad(AwakeFromLoadMode awakeMode) {
     if(!GetDefaultObjectStoreManager()->HasStore(this)){
         GetDefaultObjectStoreManager()->AddStore(this);
 
-        if(this->GetIsRoot()){
+        if(this->elementMetaData.GetIsRoot()){
             ObjectStoreAddedEvent args(this);
             GetScriptEventManager()->TriggerEvent("OnRootStoreAdded", &args);
         }

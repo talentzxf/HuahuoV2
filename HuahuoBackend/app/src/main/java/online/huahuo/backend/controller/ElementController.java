@@ -35,6 +35,8 @@ public class ElementController {
         ElementDB elementDB = new ElementDB();
         elementDB.setElementId(elementId);
         elementDB.setBinaryFileDB(binaryFileDB);
+        elementDB.setEditable(editable);
+        elementDB.setShareable(sharable);
 
         elementDB = elementRepository.save(elementDB);
 

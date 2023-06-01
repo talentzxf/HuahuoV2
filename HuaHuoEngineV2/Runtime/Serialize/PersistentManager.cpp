@@ -1516,7 +1516,7 @@ int PersistentManager::WriteObject(std::string& path, PPtr<Object> object){
 
     if(object->Is<ObjectStore>()){
         ObjectStore* pStore = (ObjectStore*)&(*object);
-        pStore->SetIsRoot(true);
+        pStore->GetMetaData()->SetIsRoot(true);
         rootStoreInstanceId = pStore->GetInstanceID();
     }
 
@@ -1545,7 +1545,7 @@ int PersistentManager::WriteObject(std::string& path, PPtr<Object> object){
                 const char* storeId = elementShape->GetElementStoreId();
                 ObjectStore* pStore = GetDefaultObjectStoreManager()->GetStoreById(storeId);
                 if(pStore->GetInstanceID() != rootStoreInstanceId)
-                    pStore->SetIsRoot(false);
+                    pStore->GetMetaData()->SetIsRoot(false);
 
                 const char* elementStoreId = elementShape->GetElementStoreId();
                 ObjectStore* objectStore = GetDefaultObjectStoreManager()->GetStoreById(elementStoreId);

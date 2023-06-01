@@ -346,6 +346,10 @@ class ShapeSelector extends BaseShapeDrawer {
             return
         }
 
+        if(!(targetShape instanceof BaseShapeJS)){
+            return
+        }
+
         let bounds = relaxRectangle(targetShape.paperShape.bounds, BOUNDMARGIN)
 
         if (!bounds.contains(targetPos)) {

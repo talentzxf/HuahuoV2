@@ -3,7 +3,6 @@ import {gzipSync} from "fflate";
 import {api} from "./RestApi";
 import {HHToast} from "hhcommoncomponents";
 import {SnapshotUtils} from "../Utilities/SnapshotUtils";
-import {projectInfo} from "../SceneView/ProjectInfo";
 
 declare var Module: any
 
@@ -29,10 +28,10 @@ class ElementUploader {
     }
 
     @NeedLogin()
-    uploadStore(storeId, elementName) {
+    uploadStore(storeId, elementName, isShareable, isEditable) {
         let elementBlob = this.getStoreData(storeId, elementName)
 
-        api.uploadElement(elementBlob, elementName, storeId).then((response)=>{
+        api.uploadElement(elementBlob, elementName, storeId, isShareable, isEditable).then((response)=>{
             if(response && response["data"]){
                 let fileId = response["data"]["binaryFileDB"]["id"]
 

@@ -52,8 +52,19 @@ class ElementCreator {
     uploadElement(element){
         let uploadElementForm = formManager.openForm(UploadElementForm)
         uploadElementForm.setStore(element.storeId, element.name)
-        uploadElementForm.onOKAction = ()=>{
-            elementUploader.uploadStore(element.storeId, element.name)
+        uploadElementForm.onOKAction = (isShareable, isEditable)=>{
+
+            let store = huahuoEngine.GetStoreById(element.storeId)
+            let storeMeta = store.GetMetaData()
+
+            storeMeta.SetIsEditable(isEditable)
+            let globalPosition = element.position
+            storeMeta.SetElementGlobalPivotCenter(globalPosition.x, globalPosition.y, 0.0)
+
+            let localPosition = element.localPivotPosition
+            storeMeta.SetElementLocalPivotCenter(localPosition.x, localPosition.y, 0.0)
+
+            elementUploader.uploadStore(element.storeId, element.name, isShareable, isEditable)
         }
     }
 
@@ -294,6 +305,11 @@ class ElementCreator {
         let newElement = this.onNewElement(false, store.GetStoreId())
         HHToast.info(i18n.t("toast.elementLoaded"))
         newElement.update(true)
+
+        let localPosition = store.GetMetaData().GetElementLocalPivotCenter()
+        newElement.pivotPosition = new paper.Point(localPosition.x, localPosition.y)
+        let globalPosition = store.GetMetaData().GetElementGlobalPivotCenter()
+        newElement.position = new paper.Point(globalPosition.x, globalPosition.y)
 
         // Update the maxFrameId of the current store.
         let maxFrameId = store.GetMaxFrameId();

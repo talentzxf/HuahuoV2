@@ -17,6 +17,57 @@
 #include "Layer.h"
 #include "ResourceManager.h"
 
+class ElementMetaData{
+public:
+    DECLARE_SERIALIZE(ElementMetaData)
+public:
+    ElementMetaData(): mIsRoot(false), mIsEditable(true){
+
+    }
+
+    bool GetIsRoot(){
+        return mIsRoot;
+    }
+
+    void SetIsRoot(bool isRoot){
+        mIsRoot = isRoot;
+    }
+
+    Vector3f* GetElementGlobalPivotCenter(){
+        return &elementGlobalPivotCenter;
+    }
+
+    void SetElementGlobalPivotCenter(float x, float y, float z){
+        elementGlobalPivotCenter.x = x;
+        elementGlobalPivotCenter.y = y;
+        elementGlobalPivotCenter.z = z;
+    }
+
+    Vector3f* GetElementLocalPivotCenter(){
+        return &elementLocalPivotCenter;
+    }
+
+    void SetElementLocalPivotCenter(float x, float y, float z){
+        elementLocalPivotCenter.x = x;
+        elementLocalPivotCenter.y = y;
+        elementLocalPivotCenter.z = z;
+    }
+
+    bool GetIsEditable(){
+        return mIsEditable;
+    }
+
+    void SetIsEditable(bool isEditable){
+        mIsEditable = isEditable;
+    }
+
+private:
+    bool mIsRoot; // This flag will be set when element authors mark uploaded the element and cleared when it's uploaded under another root.
+    Vector3f elementGlobalPivotCenter;
+    Vector3f elementLocalPivotCenter;
+    bool mIsEditable; //
+};
+
 extern std::string StoreFilePath;
 
 class ObjectStore : public Object{
@@ -26,7 +77,6 @@ public:
     ObjectStore(MemLabelId label, ObjectCreationMode mode)
         :Super(label, mode)
         ,maxFrameId(-1)
-        ,mIsRoot(false)
         , maxKeyFrameIdentifier(0)
     {
         mStoreId.Init();
@@ -95,12 +145,8 @@ public:
 
     void AwakeFromLoad(AwakeFromLoadMode awakeMode) override;
 
-    bool GetIsRoot(){
-        return mIsRoot;
-    }
-
-    void SetIsRoot(bool isRoot){
-        mIsRoot = isRoot;
+    ElementMetaData* GetMetaData(){
+        return &elementMetaData;
     }
 
     KeyFrameIdentifier ProduceKeyFrame(){
@@ -123,7 +169,9 @@ private:
 
     KeyFrameIdentifier maxKeyFrameIdentifier; // This is NOT the frameId of the keyframes. It's just an ID for all the KeyFrame objects.
     std::map<KeyFrameIdentifier, KeyFrame> allKeyFrames; // All key frames in the store. Map from keyframe identifier to keyframe object.
-    bool mIsRoot; // This flag will be set when element authors mark uploaded the element and cleared when it's uploaded under another root.
+
+    ElementMetaData elementMetaData;
+
 };
 
 class ObjectStoreAddedEvent : public ScriptEventHandlerArgs{

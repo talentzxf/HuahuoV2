@@ -6,10 +6,12 @@ import {BaseShapeJS} from "hhenginejs"
 import {FollowCurveComponent} from "hhenginejs";
 
 function getFollowCurveComponentFromBaseShape(shape: BaseShapeJS): FollowCurveComponent{
-    let component:FollowCurveComponent = shape.getComponentByTypeName("FollowCurveComponent")
-    if(!component)
-        return null
-    return component
+    if(shape instanceof BaseShapeJS){
+        let component:FollowCurveComponent = shape.getComponentByTypeName("FollowCurveComponent")
+        if(component)
+            return component
+    }
+    return null
 }
 
 class ShapeTranslateHandler extends ShapeTranslateMorphBase
