@@ -4,4 +4,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ElementRepository extends CrudRepository<ElementDB, String> {
     ElementDB getByElementId(String elementId);
+    ElementDB getByBinaryFileDB(BinaryFileDB binaryFileDB);
 }

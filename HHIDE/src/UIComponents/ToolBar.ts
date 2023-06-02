@@ -141,10 +141,16 @@ class HHToolBar extends HTMLElement {
         }, pageNo, pageSize)
     }
 
+    deleteElement(elementId){
+
+    }
+
     @NeedLogin()
     listElements(pageNo: number = 0, pageSize: number = 10) {
         let _this = this
         api.listElements(pageNo, pageSize).then((response) => {
+
+
             let listElementResult = response.data
             let form = formManager.openForm(ProjectListForm)
             let totalPage = listElementResult.totalCount / pageSize
@@ -152,7 +158,7 @@ class HHToolBar extends HTMLElement {
 
             form.updateList(totalPage, pageNo, pageSize, listElementResult.binaryFiles, (elementId) => {
                 projectManager.loadFromServer(elementId)
-            }, false, true)
+            }, true)
         })
     }
 }

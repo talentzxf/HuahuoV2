@@ -6,6 +6,7 @@ import {huahuoEngine} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
 import {projectInfo} from "../SceneView/ProjectInfo";
+import {userInfo} from "../Identity/UserInfo";
 
 @CustomElement({
     selector: "hh-project-list"
@@ -72,7 +73,7 @@ class ProjectListForm extends HTMLElement implements HHForm {
         this.updateListFunctor = updateListFunctor
     }
 
-    updateList(totalPage, curPageNo, pageSize, projects, onItemClicked: Function = null, enableDeletion = true, writeAuthInfo = false) {
+    updateList(totalPage, curPageNo, pageSize, projects, onItemClicked: Function = null, writeAuthInfo = false) {
         this.projectInfoMap.clear()
 
         this.listUL.innerHTML = i18n.t("project.nothing")
@@ -95,7 +96,7 @@ class ProjectListForm extends HTMLElement implements HHForm {
             let description = project.description.length > 0? project.description:"No Description"
             ulInnerHTML += "        <span style='font-size: small'>" + description + "</span>"
 
-            if (enableDeletion)
+            if (project.createdBy === userInfo.username)
                 ulInnerHTML += "        <button id='" + deletProjectBtnPrefix + project.id + "'>" + i18n.t("project.delete") + "</button>"
 
             ulInnerHTML += "    </div>"
@@ -147,10 +148,8 @@ class ProjectListForm extends HTMLElement implements HHForm {
                 _this.closeForm()
             }))
 
-            if (enableDeletion) {
-                let deleteProjectBtn = this.listUL.querySelector("#" + deletProjectBtnPrefix + project.id)
-                deleteProjectBtn.addEventListener("click", this.deleteProject(project.id).bind(this))
-            }
+            let deleteProjectBtn = this.listUL.querySelector("#" + deletProjectBtnPrefix + project.id)
+            deleteProjectBtn.addEventListener("click", this.deleteProject(project.id).bind(this))
         }
     }
 
@@ -166,13 +165,29 @@ class ProjectListForm extends HTMLElement implements HHForm {
                 Logger.info("Begin to delete project:" + projectId)
                 api.deleteBinaryFile(projectId).then(() => {
                     HHToast.info(i18n.t("project.deleted", {projectName: project.name}))
-                    _this.refreshList()
+
+                    if(project.fileType == "ELEMENT"){
+                        _this.refreshElementList()
+                    } else if(project.fileType == "PROJECT"){
+                        _this.refreshProjectList()
+                    }else{
+                        console.error("Unknown file type")
+                    }
                 })
             }
         }
     }
 
-    refreshList(pageNo = 0, pageSize = 10) {
+    refreshElementList(pageNo = 0, pageSize = 10){
+        let _this = this
+        api.listElements(0, 10).then((listElementResult) => {
+            let listResultData = listElementResult.data
+            let totalPage = listResultData.totalCount / pageSize
+            _this.updateList(totalPage, pageNo, pageSize, listResultData.binaryFiles)
+        })
+    }
+
+    refreshProjectList(pageNo = 0, pageSize = 10) {
         let _this = this
         api.listProjects((listProjectResult) => {
             let totalPage = listProjectResult.totalCount / pageSize

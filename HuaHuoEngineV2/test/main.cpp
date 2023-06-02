@@ -48,7 +48,13 @@ void testTransform() {
 class RootStoreAddedEventHandler: public ScriptEventHandler {
     void handleEvent(ScriptEventHandlerArgs* args){
         ObjectStoreAddedEvent* storeAddedEvent = (ObjectStoreAddedEvent*)args;
-        Assert( storeAddedEvent->GetStore() != NULL);
+
+        ObjectStore* pStore = storeAddedEvent->GetStore();
+        Assert( pStore != NULL);
+
+        // int maxFrameId = pStore->GetMaxFrameId();
+        pStore->GetCurrentLayer()->SetCurrentFrame(1);
+
     }
 };
 
@@ -184,8 +190,8 @@ void testShapeStore() {
 
     GetScriptEventManager()->RegisterEventHandler("OnRootStoreAdded", new RootStoreAddedEventHandler());
 
-    // std::string filenamestr("C:\\Users\\vincentzhang\\MyProjects\\HuahuoV2\\HuahuoBackend\\projectfiles\\vincentzhang\\ELEMENT\\NewElement_laski\\NewElement_laski.ele");
-    std::string filenamestr = std::string("mem://") + filename;
+    std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\NewElement_sqy\\NewElement_sqy.ele");
+    // std::string filenamestr = std::string("mem://") + filename;
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
     vector<UInt8> imgData = {31, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
