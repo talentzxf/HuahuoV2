@@ -6,6 +6,7 @@ import {huahuoEngine} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
 import {projectInfo} from "../SceneView/ProjectInfo";
+import {userInfo} from "../Identity/UserInfo";
 
 @CustomElement({
     selector: "hh-project-list"
@@ -19,6 +20,9 @@ class ProjectListForm extends HTMLElement implements HHForm {
     paginationDiv: HTMLDivElement
 
     projectInfoMap: Map<number, Object> = new Map
+
+    titleText: string = "Projects"
+    titleTextElement: HTMLElement
 
     connectedCallback() {
         this.style.position = "absolute"
@@ -46,13 +50,15 @@ class ProjectListForm extends HTMLElement implements HHForm {
             "           <img class='far fa-circle-xmark'>" +
             "       </div>" +
             "   </div>" +
-            "       <h3>Your Projects</h3>" +
+            "       <h3 id='listTitle'>" + this.titleText + "</h3>" +
             "       <div id='projectListUlContainer' style='height: 500px; overflow-x: hidden; overflow-y: auto; width: 100%'>" +
             "           <ul id='projectListUl' style='width: 100%; float: left'></ul>" +
             "       </div>" +
             "       <div id='pagination' style='display: none'></div>" +
             "   </form>"
         this.appendChild(this.listDiv)
+
+        this.titleTextElement = this.listDiv.querySelector("#listTitle")
 
         this.closeBtn = this.listDiv.querySelector("#projectListCloseBtn")
         this.closeBtn.addEventListener("mousedown", this.closeForm.bind(this))
@@ -72,7 +78,14 @@ class ProjectListForm extends HTMLElement implements HHForm {
         this.updateListFunctor = updateListFunctor
     }
 
-    updateList(totalPage, curPageNo, pageSize, projects, onItemClicked: Function = null, enableDeletion = true, writeAuthInfo = false) {
+    setTitle(title: string){
+        this.titleText = title;
+        if(this.titleTextElement){
+            this.titleTextElement.innerText = this.titleText
+        }
+    }
+
+    updateList(totalPage, curPageNo, pageSize, projects, onItemClicked: Function = null, writeAuthInfo = false) {
         this.projectInfoMap.clear()
 
         this.listUL.innerHTML = i18n.t("project.nothing")
@@ -95,7 +108,7 @@ class ProjectListForm extends HTMLElement implements HHForm {
             let description = project.description.length > 0? project.description:"No Description"
             ulInnerHTML += "        <span style='font-size: small'>" + description + "</span>"
 
-            if (enableDeletion)
+            if (project.createdBy === userInfo.username)
                 ulInnerHTML += "        <button id='" + deletProjectBtnPrefix + project.id + "'>" + i18n.t("project.delete") + "</button>"
 
             ulInnerHTML += "    </div>"
@@ -147,10 +160,9 @@ class ProjectListForm extends HTMLElement implements HHForm {
                 _this.closeForm()
             }))
 
-            if (enableDeletion) {
-                let deleteProjectBtn = this.listUL.querySelector("#" + deletProjectBtnPrefix + project.id)
+            let deleteProjectBtn = this.listUL.querySelector("#" + deletProjectBtnPrefix + project.id)
+            if(deleteProjectBtn)
                 deleteProjectBtn.addEventListener("click", this.deleteProject(project.id).bind(this))
-            }
         }
     }
 
@@ -166,13 +178,29 @@ class ProjectListForm extends HTMLElement implements HHForm {
                 Logger.info("Begin to delete project:" + projectId)
                 api.deleteBinaryFile(projectId).then(() => {
                     HHToast.info(i18n.t("project.deleted", {projectName: project.name}))
-                    _this.refreshList()
+
+                    if(project.fileType == "ELEMENT"){
+                        _this.refreshElementList()
+                    } else if(project.fileType == "PROJECT"){
+                        _this.refreshProjectList()
+                    }else{
+                        console.error("Unknown file type")
+                    }
                 })
             }
         }
     }
 
-    refreshList(pageNo = 0, pageSize = 10) {
+    refreshElementList(pageNo = 0, pageSize = 10){
+        let _this = this
+        api.listElements(0, 10).then((listElementResult) => {
+            let listResultData = listElementResult.data
+            let totalPage = listResultData.totalCount / pageSize
+            _this.updateList(totalPage, pageNo, pageSize, listResultData.binaryFiles)
+        })
+    }
+
+    refreshProjectList(pageNo = 0, pageSize = 10) {
         let _this = this
         api.listProjects((listProjectResult) => {
             let totalPage = listProjectResult.totalCount / pageSize

@@ -1,5 +1,5 @@
 import {LiteGraph, SerializedLGraphNode} from "litegraph.js";
-import {splitFullEventName} from "HHCommonComponents";
+import {splitFullEventName} from "hhcommoncomponents";
 import {AbstractNode} from "./AbstractNode";
 
 class EventNode extends AbstractNode {

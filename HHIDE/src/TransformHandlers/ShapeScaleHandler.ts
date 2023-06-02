@@ -24,6 +24,10 @@ class ShapeScaleHandler extends ShapeTranslateMorphBase{
         }
     }
 
+    getNewScale(obj, scale){
+        return this.originalScaleMap.get(obj).multiply(scale)
+    }
+
     dragging(newPos: Vector2) {
         super.dragging(newPos);
 
@@ -34,7 +38,7 @@ class ShapeScaleHandler extends ShapeTranslateMorphBase{
                 let vec2 = newPos.subtract(center)
 
                 let scale = vec2.length()/vec1.length()
-                obj.scaling = this.originalScaleMap.get(obj).multiply(scale)
+                obj.scaling = this.getNewScale(obj, scale)
 
                 obj.store()
             }
@@ -53,5 +57,21 @@ class ShapeScaleHandler extends ShapeTranslateMorphBase{
     }
 }
 
+class ShapeHorizontalScaleHandler extends ShapeScaleHandler{
+    override getNewScale(obj, scale){
+        let originalScale = this.originalScaleMap.get(obj)
+        return originalScale.multiply(new paper.Point(scale, 1.0))
+    }
+}
+
+class ShapeVerticalScaleHandler extends ShapeScaleHandler{
+    override getNewScale(obj, scale): any {
+        let originalScale = this.originalScaleMap.get(obj)
+        return originalScale.multiply(new paper.Point(1.0, scale))
+    }
+}
+
 let shapeScaleHandler = new ShapeScaleHandler()
-export {shapeScaleHandler}
+let shapeHorizontalScaleHandler = new ShapeHorizontalScaleHandler()
+let shapeVerticalScaleHandler = new ShapeVerticalScaleHandler()
+export {shapeScaleHandler, shapeHorizontalScaleHandler, shapeVerticalScaleHandler, ShapeScaleHandler}

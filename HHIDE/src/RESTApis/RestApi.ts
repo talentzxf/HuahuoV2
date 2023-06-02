@@ -72,7 +72,7 @@ class RestApi {
         return this.elementController.createElement(fileName, isElement)
     }
 
-    async uploadElement(data: Blob, fileName: string, storeId: string, isEditable = true, isShareable = true){
+    async uploadElement(data: Blob, fileName: string, storeId: string, isShareable = true, isEditable = true){
         return this.fileController.uploadFileForm(fileName, data, true, true, this.getAuthHeader()).then((response)=>{
             if(response && response.data){
                 let fileId = response.data.fileId

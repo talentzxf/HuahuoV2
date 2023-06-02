@@ -59,6 +59,12 @@ CustomDataKeyFrame Lerp(CustomDataKeyFrame &k1, CustomDataKeyFrame &k2, float ra
             else
                 resultData.data.shapeArrayValue = k2.data.shapeArrayValue;
             break;
+        case SHAPE:
+            if (ratio < 1.0)
+                resultData.data.shapeValue = k1.data.shapeValue;
+            else
+                resultData.data.shapeValue = k2.data.shapeValue;
+            break;
         case COLORSTOPARRAY:
             resultData.data.colorStopArray = Lerp(k1.data.colorStopArray, k2.data.colorStopArray, ratio);
             break;
@@ -318,6 +324,15 @@ AbstractKeyFrame *CustomFrameState::SetColorValue(float r, float g, float b, flo
     return SetValueInternal(value);
 }
 
+AbstractKeyFrame *CustomFrameState::SetShapeValue(BaseShape *shape) {
+    if (this->m_DataType != SHAPE) {
+        Assert("Data Type mismatch!");
+        return NULL;
+    }
+
+    return SetValueInternal(shape);
+}
+
 AbstractKeyFrame *CustomFrameState::SetStringValue(const char *stringValue) {
     if (this->m_DataType != STRING) {
         Assert("Data Type mismatch!");
@@ -444,6 +459,14 @@ ColorStopArray *CustomFrameState::GetColorStopArray() {
     return NULL;
 }
 
+BaseShape *CustomFrameState::GetShapeValue() {
+    if (isValidFrame) {
+        return m_CurrentKeyFrame.data.shapeValue;
+    }
+
+    return m_defaultValue.shapeValue;
+}
+
 BinaryResourceWrapper *CustomFrameState::GetBinaryResource() {
     if (isValidFrame) {
         return &m_CurrentKeyFrame.data.binaryResource;
@@ -538,6 +561,9 @@ CustomDataKeyFrame *CustomFrameState::RecordFieldValue(int frameId, T value) {
     } else if constexpr(std::is_same<T, BinaryResourceWrapper>()) {
         pKeyFrame->data.binaryResource.SetResourceMD5(value.GetResourceMD5());
         pKeyFrame->data.dataType = BINARYRESOURCE;
+    } else if constexpr(std::is_same<T, BaseShape *>()) {
+        pKeyFrame->data.shapeValue = value;
+        pKeyFrame->data.dataType = SHAPE;
     }
 
     return pKeyFrame;
@@ -580,6 +606,40 @@ void CustomFrameState::SaveAsKeyFrame() {
             SetBooleanValue(value);
         }
             break;
+
+        case BINARYRESOURCE: {
+            BinaryResourceWrapper *binaryResourceWrapper = GetBinaryResource();
+            SetBinaryResourceMD5(binaryResourceWrapper->GetResourceMD5());
+            break;
+        }
+
+        case SHAPE: {
+            BaseShape *shape = GetShapeValue();
+            SetShapeValue(shape);
+        }
+            break;
+
+        case SHAPEARRAY:{
+            FieldShapeArray* sourceFieldShapeArray = GetShapeArrayValue();
+            int fieldArrayShapeCount = sourceFieldShapeArray->GetShapeCount();
+            FieldShapeArray* targetFieldShapeArray = GetShapeArrayValueForWrite();
+            for(int shapeId = 0; shapeId < fieldArrayShapeCount; shapeId++){
+                BaseShape* pShape = sourceFieldShapeArray->GetShape(shapeId);
+                targetFieldShapeArray->InsertShape(pShape);
+            }
+            break;
+        }
+
+        case COLORSTOPARRAY:{
+            ColorStopArray* colorStopArray = GetColorStopArray();
+            int colorStopArrayCount = colorStopArray->GetColorStopCount();
+            for(int colorStopIdx = 0 ; colorStopIdx < colorStopArrayCount; colorStopIdx++){
+                ColorStopEntry* colorStopEntry = colorStopArray->GetColorStop(colorStopIdx);
+                const ColorRGBAf* currentColor = colorStopEntry->GetColor();
+                AddColorStop(colorStopEntry->GetValue(), currentColor->r, currentColor->g, currentColor->b, currentColor->a);
+            }
+        }
+        break;
 
         default:
             printf("Can't save this value:");

@@ -4,6 +4,8 @@
 
 #include "ShapeSegmentFrameState.h"
 #include "Serialize/SerializeUtility.h"
+#include "Shapes/BaseShape.h"
+#include "Layer.h"
 
 IMPLEMENT_REGISTER_CLASS(ShapeSegmentFrameState, 10010);
 
@@ -82,4 +84,27 @@ bool ShapeSegmentFrameState::Apply(int frameId) {
 
 void ShapeSegmentFrameState::SaveAsKeyFrame() {
     printf("ShapeSegmentFrameState::SaveAsKeyFrame Not implemented!\n");
+
+    int currentFrameId = this->GetBaseShape()->GetLayer()->GetCurrentFrame();
+    int totalSegmentCount = GetSegmentCount();
+
+    float segmentBuffer[totalSegmentCount * 9];
+
+    for(int segmentId = 0; segmentId < totalSegmentCount; segmentId++){
+        Vector3f position = m_currentPositionArray[segmentId];
+        Vector3f handleIn = m_currentHandleInArray[segmentId];
+        Vector3f handleOut = m_currentHandleOutArray[segmentId];
+
+        segmentBuffer[segmentId * 6] = position.x;
+        segmentBuffer[segmentId * 6 + 1 ] = position.y;
+
+        segmentBuffer[segmentId * 6 + 2 ] = handleIn.x;
+        segmentBuffer[segmentId * 6 + 3 ] = handleIn.y;
+
+        segmentBuffer[segmentId * 6 + 4 ] = handleOut.x;
+        segmentBuffer[segmentId * 6 + 5 ] = handleOut.y;
+
+    }
+
+    RecordSegments(currentFrameId, segmentBuffer, totalSegmentCount);
 }

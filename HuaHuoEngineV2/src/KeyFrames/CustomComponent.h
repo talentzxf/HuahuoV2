@@ -9,6 +9,7 @@
 #include "CustomFrameState.h"
 #include "KeyFrames/FrameStateContainer.h"
 
+
 // This is the cpp side of the user created components.
 // It might contain multiple CustomFrameState(s).
 class CustomComponent : public AbstractFrameState {
@@ -105,6 +106,15 @@ DECLARE_OBJECT_SERIALIZE();
         int idx = m_fieldNameFieldIndexMap[fieldName];
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
         pComponent->SetColorValue(r, g, b, a);
+    }
+
+    void SetShapeValue(const char *fieldName, BaseShape* pShape){
+        if(!m_fieldNameFieldIndexMap.contains(fieldName))
+            return;
+
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        pComponent->SetShapeValue(pShape);
     }
 
     void SetStringValue(const char* fieldName, const char* strValue){
@@ -237,6 +247,15 @@ DECLARE_OBJECT_SERIALIZE();
         return pComponent->GetBinaryResource();
     }
 
+    BaseShape* GetShapeValue(const char* fieldName){
+        if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
+            return NULL;
+
+        int idx = m_fieldNameFieldIndexMap[fieldName];
+        CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[idx].GetComponentPtr());
+        return pComponent->GetShapeValue();
+    }
+
     const char* GetStringValue(const char* fieldName){
         if(!m_fieldNameFieldIndexMap.contains(fieldName)) // The field has not been registered.
             return NULL;
@@ -319,6 +338,8 @@ public:
     int GetKeyFrameAtIndex(int idx) override;
 
 public:
+    int RegisterShapeValue(const char *fieldName);
+
     int RegisterBooleanValue(const char *fieldName, bool initValue) {
         int fieldIdx = this->RegisterField(fieldName, BOOLEAN);
         CustomFrameState *pComponent = (CustomFrameState *) &(*m_FrameStates[fieldIdx].GetComponentPtr());

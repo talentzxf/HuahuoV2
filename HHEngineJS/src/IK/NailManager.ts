@@ -193,7 +193,7 @@ class NailManager {
         let nailOffset = currentNailPosition.subtract(afterNailPosition)
 
         shape.isTransformationPermanent = isTransformationPermanent
-        shape.setParentLocalPosition(shape.position.add(nailOffset), false, false, false)
+        shape.setParentLocalPosition(shape.position.add(nailOffset), false, false)
         shape.isTransformationPermanent = true
         shape.updatePositionAndRotation()
     }
@@ -287,7 +287,7 @@ class NailManager {
                     stabledShapes.add(nextNail)
                 }else{
                     // nail.position = newGlobalPosition
-                    nextNail.setParentLocalPosition(newGlobalPosition, false, false, false)
+                    nextNail.setParentLocalPosition(newGlobalPosition, false, false)
                 }
             }
         }

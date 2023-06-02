@@ -8,6 +8,7 @@ import {formManager} from "../Utilities/FormManager";
 import {ComponentListForm} from "../UIComponents/ComponentListForm";
 import {huahuoEngine} from "hhenginejs";
 import {HHRefreshableDiv} from "./InputComponents/HHRefreshableDiv";
+import {HHToast} from "hhcommoncomponents";
 
 @CustomElement({
     selector: "hh-inspector"
@@ -110,6 +111,19 @@ class Inspector extends HTMLElement{
         return addComponentBtn
     }
 
+    createSaveAsKeyFrameButton(targetObj){
+        let saveAsKeyFrameBtn = document.createElement("button")
+        saveAsKeyFrameBtn.innerText = i18n.t("inspector.SaveAsKeyFrame")
+
+        saveAsKeyFrameBtn.onclick = function(){
+            targetObj.saveAsKeyFrame()
+
+            HHToast.info(i18n.t("toast.keyframeSaved"))
+        }
+
+        return saveAsKeyFrameBtn
+    }
+
     objectDeleted(targetObj){
         if(this.selectedObj == targetObj){
             findParentSideBar(this).hide()
@@ -153,6 +167,10 @@ class Inspector extends HTMLElement{
 
             if(targetObj["addComponent"]){
                 contentDiv.appendChild(this.createMountComponentButton(targetObj))
+            }
+
+            if(targetObj["saveAsKeyFrame"]){
+                contentDiv.appendChild(this.createSaveAsKeyFrameButton(targetObj))
             }
 
             let allComponentTitleDivs:Array<HTMLElement> = new Array<HTMLElement>()

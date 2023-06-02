@@ -10,6 +10,7 @@ import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {elementUploader} from "../RESTApis/ElementUploader";
 import {formManager} from "../Utilities/FormManager";
 import {UploadElementForm} from "../UIComponents/UploadElementForm";
+import {EditorShapeProxy} from "../ShapeDrawers/EditorShapeProxy";
 
 declare var Module:any;
 
@@ -51,8 +52,19 @@ class ElementCreator {
     uploadElement(element){
         let uploadElementForm = formManager.openForm(UploadElementForm)
         uploadElementForm.setStore(element.storeId, element.name)
-        uploadElementForm.onOKAction = ()=>{
-            elementUploader.uploadStore(element.storeId, element.name)
+        uploadElementForm.onOKAction = (isShareable, isEditable)=>{
+
+            let store = huahuoEngine.GetStoreById(element.storeId)
+            let storeMeta = store.GetMetaData()
+
+            storeMeta.SetIsEditable(isEditable)
+            let globalPosition = element.position
+            storeMeta.SetElementGlobalPivotCenter(globalPosition.x, globalPosition.y, 0.0)
+
+            let localPosition = element.localPivotPosition
+            storeMeta.SetElementLocalPivotCenter(localPosition.x, localPosition.y, 0.0)
+
+            elementUploader.uploadStore(element.storeId, element.name, isShareable, isEditable)
         }
     }
 
@@ -170,7 +182,7 @@ class ElementCreator {
         let elementName = "NewElement_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
 
         // Create shape in the original scene/element
-        let newElementShape = new ElementShapeJS()
+        let newElementShape = EditorShapeProxy.CreateProxy(new ElementShapeJS())
         newElementShape.name = elementName
         newElementShape.createShape()
         newElementShape.position = new paper.Point(0, 0)
@@ -293,6 +305,11 @@ class ElementCreator {
         let newElement = this.onNewElement(false, store.GetStoreId())
         HHToast.info(i18n.t("toast.elementLoaded"))
         newElement.update(true)
+
+        let localPosition = store.GetMetaData().GetElementLocalPivotCenter()
+        newElement.pivotPosition = new paper.Point(localPosition.x, localPosition.y)
+        let globalPosition = store.GetMetaData().GetElementGlobalPivotCenter()
+        newElement.position = new paper.Point(globalPosition.x, globalPosition.y)
 
         // Update the maxFrameId of the current store.
         let maxFrameId = store.GetMaxFrameId();

@@ -5,6 +5,7 @@ import {Vector2} from "hhcommoncomponents";
 import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {undoManager} from "../RedoUndo/UndoManager";
 import {CreateShapeCommand} from "../RedoUndo/CreateShapeCommand";
+import {EditorShapeProxy} from "./EditorShapeProxy";
 
 class CircleDrawer extends BaseShapeDrawer {
     name = "Circle"
@@ -23,7 +24,7 @@ class CircleDrawer extends BaseShapeDrawer {
         this.startPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.isDrawing = true
 
-        this.tempShape = new CircleShapeJS()
+        this.tempShape = EditorShapeProxy.CreateProxy(new CircleShapeJS())
         this.tempShape.setCenter(this.startPosition)
     }
 

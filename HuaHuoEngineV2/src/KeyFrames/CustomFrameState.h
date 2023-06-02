@@ -20,6 +20,7 @@ enum CustomDataType {
     UNKNOWN,
     FLOAT,
     COLOR,
+    SHAPE,
     SHAPEARRAY,
     COLORSTOPARRAY,
     VECTOR3,
@@ -69,6 +70,7 @@ struct CustomData {
     FieldShapeArray shapeArrayValue;
     ColorRGBAf colorValue;
     ColorStopArray colorStopArray;
+    PPtr<BaseShape> shapeValue;
     BinaryResourceWrapper binaryResource;
     std::string stringValue;
     bool booleanValue;
@@ -109,6 +111,9 @@ void CustomData::Transfer(TransferFunction &transfer) {
             break;
         case BOOLEAN:
             TRANSFER(booleanValue);
+            break;
+        case SHAPE:
+            TRANSFER(shapeValue);
             break;
         case UNKNOWN:
             break;
@@ -173,6 +178,9 @@ public:
 
     AbstractKeyFrame *SetStringValue(const char *stringValue);
 
+    AbstractKeyFrame *SetShapeValue(BaseShape* shape);
+
+    BaseShape* GetShapeValue();
     BinaryResourceWrapper *GetBinaryResource();
 
     bool GetBooleanValue();

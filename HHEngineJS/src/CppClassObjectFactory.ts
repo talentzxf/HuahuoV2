@@ -13,6 +13,7 @@ function isInheritedFromClzName(obj, clzName): boolean{
 }
 
 class CppClassObjectFactory{
+
     clzNameConstructorMap: Map<string, Function> = new Map<string, Function>();
 
     componentNameComponentPropertyMap: Map<string, ComponentConfig> = new Map<string, ComponentConfig>()

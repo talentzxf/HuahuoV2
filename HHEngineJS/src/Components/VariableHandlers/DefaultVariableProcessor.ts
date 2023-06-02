@@ -15,16 +15,12 @@ class DefaultVariableProcessor{
                 return operator.getField(fieldName)
             },
             setter: (val)=>{
-                operator.setField(fieldName, val)
+                return operator.setField(fieldName, val)
             },
             isVariableEqual: (val1, val2)=>{
                 return operator.isEqual(val1, val2)
             }
         })
-
-        // This is a mirage, no need to store.
-        if(!component.isMirage)
-            component[fieldName] = component[fieldName] // Get the variable and save to ensure first frame is recorded in Cpp side.
     }
 }
 

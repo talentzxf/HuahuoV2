@@ -128,8 +128,17 @@ class EngineAPI{
     }
 
     getStoreMaxFrames(storeId){
-        // FrameId starts from 0. So, maxFames = maxFrameId + 1
+        // FrameId starts from 0. So, maxFrames = maxFrameId + 1
         return this.GetStoreById(storeId).GetMaxFrameId() + 1
+    }
+
+    shapeDecorator = null
+    setShapeDecorator(shapeDecoratorFunc){
+        this.shapeDecorator = shapeDecoratorFunc
+    }
+
+    getShapeDecorator(){
+        return this.shapeDecorator
     }
 
     GetStoreById(storeId){

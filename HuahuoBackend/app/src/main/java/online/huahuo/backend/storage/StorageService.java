@@ -12,4 +12,6 @@ public interface StorageService {
 
     BinaryFileDB save(BinaryFileDB binaryFileDB);
     boolean storeCoverPage(String path, Long projectId, MultipartFile coverPageFile, String fileName, boolean isElement) throws IOException;
+
+    void delete(String path) throws IOException;
 }

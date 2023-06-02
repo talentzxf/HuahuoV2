@@ -80,7 +80,6 @@ BaseShape *BaseShape::CreateShape(const char *shapeName, bool createDefaultCompo
     if (createDefaultComponents) {
         baseShape->AddFrameStateByName("ShapeTransformComponent");
         baseShape->AddFrameStateByName("ShapeSegmentFrameState");
-        baseShape->AddFrameStateByName("ShapeFollowCurveFrameState");
     }
 
     baseShape->AwakeFromLoad(kInstantiateOrCreateFromCodeAwakeFromLoad);

@@ -3,6 +3,7 @@ import {SVGFiles} from "../Utilities/Svgs";
 import {StarMirrorShapeJS, huahuoEngine} from "hhenginejs"
 import {setPrompt} from "../init";
 import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
+import {EditorShapeProxy} from "./EditorShapeProxy";
 
 class StarMirrorDrawer extends BaseShapeDrawer{
     name = "StarMirror"
@@ -18,7 +19,7 @@ class StarMirrorDrawer extends BaseShapeDrawer{
         super.onMouseDown(evt);
 
         let currentPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
-        let tempShape = new StarMirrorShapeJS()
+        let tempShape = EditorShapeProxy.CreateProxy(new StarMirrorShapeJS())
         tempShape.update(true)
         tempShape.position = currentPosition
 

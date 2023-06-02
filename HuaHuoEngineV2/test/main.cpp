@@ -22,7 +22,6 @@
 #include "Shapes/CircleShape.h"
 #include "KeyFrames/FrameState.h"
 #include "KeyFrames/ShapeTransformComponent.h"
-#include "KeyFrames/ShapeFollowCurveFrameState.h"
 #include "Shapes/RectangleShape.h"
 #include "CloneObject.h"
 #include "KeyFrames/CustomFrameState.h"
@@ -31,7 +30,7 @@
 
 #include "openssl/md5.h"
 
-extern float eps;
+float eps = 0.01f;
 #define Assert assert
 
 void testTransform() {
@@ -49,7 +48,13 @@ void testTransform() {
 class RootStoreAddedEventHandler: public ScriptEventHandler {
     void handleEvent(ScriptEventHandlerArgs* args){
         ObjectStoreAddedEvent* storeAddedEvent = (ObjectStoreAddedEvent*)args;
-        Assert( storeAddedEvent->GetStore() != NULL);
+
+        ObjectStore* pStore = storeAddedEvent->GetStore();
+        Assert( pStore != NULL);
+
+        // int maxFrameId = pStore->GetMaxFrameId();
+        pStore->GetCurrentLayer()->SetCurrentFrame(1);
+
     }
 };
 
@@ -151,14 +156,6 @@ void testShapeStore() {
     int keyFrameCount = circleShape->GetKeyFrameCount();
     int firstKeyFrame = circleShape->GetKeyFrameAtIdx(0);
 
-    ShapeFollowCurveFrameState *curveFrameState = (ShapeFollowCurveFrameState *) circleShape->GetFrameStateByTypeName(
-            "ShapeFollowCurveFrameState");
-    curveFrameState->RecordTargetShape(10, rectangleShape);
-    curveFrameState->RecordLengthRatio(10, 1.0f);
-
-    curveFrameState->RecordTargetShape(20, clonedRectangleShape);
-    curveFrameState->RecordLengthRatio(20, 0.0f);
-
     currentLayer->SetCurrentFrame(0);
 
     currentLayer->AddShapeInternal(circleShape);
@@ -193,8 +190,8 @@ void testShapeStore() {
 
     GetScriptEventManager()->RegisterEventHandler("OnRootStoreAdded", new RootStoreAddedEventHandler());
 
-    // std::string filenamestr("C:\\Users\\vincentzhang\\MyProjects\\HuahuoV2\\HuahuoBackend\\projectfiles\\vincentzhang\\ELEMENT\\NewElement_laski\\NewElement_laski.ele");
-    std::string filenamestr = std::string("mem://") + filename;
+    std::string filenamestr("C:\\Users\\vincentzhang\\Downloads\\NewElement_sqy\\NewElement_sqy.ele");
+    // std::string filenamestr = std::string("mem://") + filename;
     GetPersistentManagerPtr()->LoadFileCompletely(filenamestr);
 
     vector<UInt8> imgData = {31, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
@@ -600,6 +597,8 @@ void testReadFromFile() {
     CustomComponent *customComponent = CustomComponent::CreateComponent("CustomComponent");
     customComponent->SetName("CurveGrowth");
 
+    customComponent->RegisterShapeValue("ReferenceShape");
+
     customComponent->RegisterFloatValue("growth", 1.0f);
     customComponent->RegisterColorValue("strokeColor", 1.0, 0.0, 0.0, 1.0);
     customComponent->RegisterColorStopArrayValue("gradientColor");
@@ -608,6 +607,14 @@ void testReadFromFile() {
 
     customComponent->RegisterBooleanValue("active", true);
     customComponent->SetBooleanValue("active", true);
+
+    RectangleShape* ref_1 = dynamic_cast<RectangleShape *>(BaseShape::CreateShape("RectangleShape"));
+    customComponent->SetShapeValue("ReferenceShape", ref_1);
+
+    BaseShape* result_1 = customComponent->GetShapeValue("ReferenceShape");
+
+    Assert(ref_1->GetInstanceID() == result_1->GetInstanceID());
+
 
     circleShape->AddFrameState(customComponent);
     GetDefaultObjectStoreManager()->GetCurrentStore()->GetCurrentLayer()->AddShapeInternal(circleShape);

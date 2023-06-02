@@ -4,6 +4,7 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {mirrorPoint} from "hhcommoncomponents";
 import * as paper from "paper"
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
+import {ShapeArrayProperty} from "hhcommoncomponents";
 
 function createDuplication(targetShape, baseShape){
     /*
@@ -32,7 +33,7 @@ function createDuplication(targetShape, baseShape){
 @Component({compatibleShapes:["MirrorShapeJS"], maxCount:1})
 class MirrorComponent extends AbstractComponent {
 
-    @PropertyValue(PropertyCategory.shapeArray)
+    @PropertyValue(PropertyCategory.shapeArray, null, {allowDuplication: false} as ShapeArrayProperty)
     targetShapeArray
     targetShapeMirroredShapeMap: Map<number, BaseShapeJS> = new Map<number, BaseShapeJS>()
 

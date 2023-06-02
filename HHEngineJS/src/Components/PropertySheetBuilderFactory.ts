@@ -17,6 +17,8 @@ class PropertySheetFactory {
         this.categoryTypeMap.set(PropertyCategory.shapeArray, PropertyType.ARRAY)
         this.categoryElementTypeMap.set(PropertyCategory.shapeArray, PropertyType.REFERENCE)
 
+        this.categoryTypeMap.set(PropertyCategory.shape, PropertyType.REFERENCE)
+
         this.categoryTypeMap.set(PropertyCategory.colorStopArray, PropertyType.COLORSTOPARRAY)
 
         this.categoryTypeMap.set(PropertyCategory.interpolateVector2, PropertyType.VECTOR2)

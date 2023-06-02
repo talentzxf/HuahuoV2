@@ -54,6 +54,10 @@ class ShapeArrayHandler {
 
                 if (!IsValidWrappedObject(component.rawObj.GetShapeArrayValue(fieldName))) {
                     component.rawObj.CreateShapeArrayValue(fieldName)
+                } else if(!propertyEntry.config.allowDuplication){
+                    if( component.rawObj.GetShapeArrayValue(fieldName).ContainShape(val.getRawShape())){
+                        return false
+                    }
                 }
 
                 component.rawObj.GetShapeArrayValueForWrite(fieldName).InsertShape(val.getRawShape())

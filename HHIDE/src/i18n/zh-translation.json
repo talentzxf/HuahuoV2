@@ -38,6 +38,8 @@
   "Activate": "激活组件",
   "Deactivate": "关闭组件",
   "edit": "编辑",
+  "yourProjects": "你的项目列表",
+  "allElements": "所有可用组件",
   "eventgraph": {
     "resetScale": "重置缩放",
     "addEventListener" : "监听事件",
@@ -73,6 +75,7 @@
     "BaseProperties": "基础属性",
     "CollapseAll": "折叠所有配置",
     "OpenAll": "打开所有配置",
+    "SaveAsKeyFrame": "保存为关键帧",
     "AddComponent": "添加组件",
     "Type": "类型",
     "Name": "名字",
@@ -123,7 +126,8 @@
       "particleDirection": "粒子朝向",
       "eventGraph": "事件逻辑图",
       "starMirrorInterval": "中心对称间隔",
-      "playSpeed": "播放速度"
+      "playSpeed": "播放速度",
+      "targetShape": "目标形状"
     },
     "nail": {
       "isStatic": "是否静态"
@@ -146,7 +150,8 @@
     "insufficientKeyFrames": "无法删除，至少需要有一个关键帧",
     "nailDuplicated": "无法添加钉子，这两个形状已经被其他钉子绑定了",
     "nailMirageError": "钉子无法绑定镜中幻象.",
-    "cantSelectSelf": "镜子无法添加自己为反射目标"
+    "cantSelectSelf": "无法添加该目标形状",
+    "keyframeSaved": "关键帧添加成功"
   },
   "hint": {
     "saveLocal": "将项目保存到本地",
@@ -161,7 +166,7 @@
   "project": {
     "delete": "删除项目",
     "deleted": "项目:{{projectName}} 已被删除",
-    "nothing": "您目前在花火服务器上并无任何项目"
+    "nothing": "目前在花火服务器上并无任何项目"
   },
   "component": {
     "nothing": "未找到适配的组件!"

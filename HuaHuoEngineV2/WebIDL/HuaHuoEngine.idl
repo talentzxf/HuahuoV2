@@ -69,6 +69,18 @@ interface Layer{
 };
 
 [NoDelete]
+interface ElementMetaData{
+    Vector3f GetElementGlobalPivotCenter();
+    void SetElementGlobalPivotCenter(float x, float y, float z);
+
+    Vector3f GetElementLocalPivotCenter();
+    void SetElementLocalPivotCenter(float x, float y, float z);
+
+    boolean GetIsEditable();
+    void SetIsEditable(boolean isEditable);
+};
+
+[NoDelete]
 interface ObjectStore{
     Layer GetCurrentLayer();
     void SetCurrentLayer(Layer layer);
@@ -79,6 +91,8 @@ interface ObjectStore{
     [Const] DOMString GetStoreId();
     void SyncLayersInfo();
     void UpdateMaxFrameId(long frameId, optional boolean force);
+
+    ElementMetaData GetMetaData();
 };
 
 [NoDelete]
@@ -147,6 +161,8 @@ interface AbstractFrameState{
     boolean ReverseKeyFrame(long startFrameId, long endFrameId, long currentFrameId);
 
     long GetSubComponentCount();
+
+    BaseShape GetBaseShape();
 };
 
 [NoDelete]
@@ -193,11 +209,15 @@ interface CustomComponent{
     long RegisterBinaryResource([Const] DOMString fieldName);
     long RegisterStringValue([Const] DOMString fieldName, [Const] DOMString defaultValue);
     long RegisterBooleanValue([Const]  DOMString fieldName, boolean initValue);
+    long RegisterShapeValue([Const]  DOMString fieldName);
     boolean IsFieldRegistered([Const] DOMString fieldName);
 
     CustomComponent GetSubComponentByIdx(long idx);
     CustomComponent GetSubComponentArrayByName([Const] DOMString fieldName);
     void AddSubComponent(CustomComponent pSubComponent);
+
+    void SetShapeValue([Const] DOMString fieldName, BaseShape shape);
+    BaseShape GetShapeValue([Const] DOMString fieldName);
 
     void CreateShapeArrayValue([Const] DOMString fieldName);
     FieldShapeArray GetShapeArrayValueForWrite([Const] DOMString fieldName);
@@ -257,14 +277,6 @@ interface EventGraphComponent{
     void AddNodeIdShapeMap(long nodeId, BaseShape shape);
 };
 EventGraphComponent implements CustomComponent;
-
-[NoDelete]
-interface ShapeFollowCurveFrameState{
-    void RecordTargetShape(long frameId, BaseShape targetCurve);
-    void RecordLengthRatio(long frameId, float lengthRatio);
-    BaseShape GetTargetShape();
-    float GetLengthRatio();
-};
 
 [NoDelete]
 interface ShapeTransformComponent{

@@ -15,6 +15,14 @@ function pointsNear(p1:paper.Point, p2:paper.Point, margin:number){
     return p1.getDistance(p2) < margin
 }
 
+function pointsNearHorizontal(p1: paper.Point, yValue: number, margin: number){
+    return Math.abs(p1.y - yValue) < margin
+}
+
+function pointsNearVertical(p1: paper.Point, xValue: number, margin: number){
+    return Math.abs(p1.x - xValue) < margin
+}
+
 function relaxRectangle(rectangle, margin) {
     if(rectangle == null)
         return
@@ -78,13 +86,18 @@ function getFileNameFromGZip(d: Uint8Array){
     return fileName
 }
 
-const getMethodsAndVariables = (obj: any) => {
+const getMethodsAndVariables = (obj: any, excludeNative: boolean = false) => {
     let properties = new Set<any>()
     let currentObj = obj
     do {
+        if(excludeNative && currentObj.constructor.name == "Object"){
+            break;
+        }
         Object.getOwnPropertyNames(currentObj).map(item => properties.add(item))
     } while ((currentObj = Object.getPrototypeOf(currentObj)))
     return [...properties.keys()]
 }
 
-export {pointsNear,relaxRectangle, getMimeTypeFromDataURI, dataURItoBlob, getFileNameFromGZip, getMethodsAndVariables, getParameterNameAtIdx}
+export {pointsNear, pointsNearHorizontal, pointsNearVertical,
+    relaxRectangle, getMimeTypeFromDataURI, dataURItoBlob,
+    getFileNameFromGZip, getMethodsAndVariables, getParameterNameAtIdx}

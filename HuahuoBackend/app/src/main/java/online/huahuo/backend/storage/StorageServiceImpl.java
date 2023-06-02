@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -107,5 +108,11 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public BinaryFileDB save(BinaryFileDB binaryFileDB) {
         return fileRepository.save(binaryFileDB);
+    }
+
+    @Override
+    public void delete(String fullPath) throws IOException {
+        Path fileToBeDeleted = Paths.get(fullPath);
+        Files.delete(fileToBeDeleted);
     }
 }

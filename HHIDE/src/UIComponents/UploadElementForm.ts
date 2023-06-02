@@ -11,7 +11,7 @@ import {SceneView} from "../SceneView/SceneView";
 class UploadElementForm extends HTMLElement implements HHForm {
     selector: string;
 
-    onOKAction: Function;
+    onOKAction: (isShareable: boolean, isEditable: boolean)=>void;
 
     listDiv
     closeBtn: HTMLButtonElement
@@ -68,14 +68,14 @@ class UploadElementForm extends HTMLElement implements HHForm {
             "       <canvas id='preview-canvas' style='border: 1px solid blue'></canvas>" +
             "   </div>" +
             "   <h4>Do you want to share the element?</h4>" +
-            "   <input style='display: inline; width: auto; height: auto' type='radio' id='share' name='shareable' value='share' checked>" +
+            "   <input style='display: inline; width: auto; height: auto' type='radio' id='share' name='shareable' value='true' checked>" +
             "   <label for='share'>Share</label>" +
-            "   <input style='display: inline; width: auto; height: auto' type='radio' id='unshare' name='shareable' value='unshare'>" +
+            "   <input style='display: inline; width: auto; height: auto' type='radio' id='unshare' name='shareable' value='false'>" +
             "   <label for='share'>Unshare</label>" +
             "   <h4>Do you want others to edit this element?</h4>" +
-            "   <input style='display: inline; width: auto; height: auto' type='radio' id='editable' name='editable' value='editable' checked>" +
+            "   <input style='display: inline; width: auto; height: auto' type='radio' id='editable' name='editable' value='true' checked>" +
             "   <label for='share'>Editable</label>" +
-            "   <input style='display: inline; width: auto; height: auto' type='radio' id='uneditable' name='editable' value='uneditable'>" +
+            "   <input style='display: inline; width: auto; height: auto' type='radio' id='uneditable' name='editable' value='false'>" +
             "   <label for='share'>UnEditable</label>" +
             "   <input style='background-color: #6396D8' id='Submit' type='button' value='Submit'>" +
             "   <input style='background-color: #6396D8' id='Cancel' type='button' value='Cancel'>" +
@@ -132,7 +132,9 @@ class UploadElementForm extends HTMLElement implements HHForm {
         evt.preventDefault()
 
         if (this.onOKAction) {
-            this.onOKAction()
+            let isShareable:boolean = this.listDiv.querySelector('input[name="shareable"]:checked').value == "true"
+            let isEditable:boolean = this.listDiv.querySelector('input[name="editable"]:checked').value == "true"
+            this.onOKAction(isShareable, isEditable)
         }
 
         this.closeForm()

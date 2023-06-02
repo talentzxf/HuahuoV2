@@ -38,6 +38,8 @@
   "Activate": "Activate",
   "Deactivate": "Deactivate",
   "edit": "edit",
+  "yourProjects": "Your Projects",
+  "allElements": "All Elements",
   "eventgraph": {
     "resetScale": "Reset Scale",
     "addEventListener" : "Add Event Receiver",
@@ -73,6 +75,7 @@
     "BaseProperties": "Base Properties",
     "CollapseAll": "Collapse All",
     "OpenAll": "Open All",
+    "SaveAsKeyFrame": "Save as KeyFrame",
     "AddComponent": "Add Component",
     "Type": "Type",
     "Name": "Name",
@@ -123,7 +126,8 @@
       "particleDirection": "Particle Direction",
       "eventGraph": "Event Graph",
       "starMirrorInterval": "Star Mirror Interval",
-      "playSpeed": "Play Speed"
+      "playSpeed": "Play Speed",
+      "targetShape": "Target Shape"
     },
     "nail": {
       "isStatic": "Is Static"
@@ -146,7 +150,8 @@
     "insufficientKeyFrames": "Can't delete the keyframe. At least one keyframe needed",
     "nailDuplicated": "Duplicated nail, the shape has already been bound with another nail",
     "nailMirageError": "Nail can't bind mirage.",
-    "cantSelectSelf": "Can't select myself"
+    "cantSelect": "Can't select the shape",
+    "keyframeSaved": "KeyFrame saved"
   },
   "hint": {
     "saveLocal": "Save project to local",

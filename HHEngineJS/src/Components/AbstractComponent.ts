@@ -77,7 +77,7 @@ class AbstractComponent {
     // @PropertyValue(PropertyCategory.boolean, false)
     // isActive
 
-    private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
+    protected valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
     registerValueChangeHandler(valueNameString: string, callbackFunc: Function){
         this.valueChangeHandler.registerValueChangeHandler(valueNameString)(callbackFunc)
@@ -158,7 +158,10 @@ class AbstractComponent {
     enableComponent() {
         this.rawObj.SetBooleanValue("isActive", true)
 
-        if(this.baseShape)
+        // Something might be changed, so we need to refresh the shape.
+        // But if the shape or the paper shape has not been created yet, do not refresh it.
+        // TODO: if there're a lot of components, how to avoid update again and again?
+        if(this.baseShape && this.baseShape.paperShape)
             this.baseShape.update(true)
     }
 

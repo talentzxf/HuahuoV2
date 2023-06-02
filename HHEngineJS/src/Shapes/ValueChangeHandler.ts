@@ -40,7 +40,7 @@ class ValueChangeHandler{
     }
 
     registerValueChangeHandler(valueNameString: string, preProcessor: Function = null) {
-        return function (valueChangedHandler: Function) {
+        return function (valueChangedHandler: Function): number {
             let valueNames = valueNameString.split("|") // Use | to subscribe multiple events.
 
             for(let valueName of valueNames){
@@ -53,6 +53,8 @@ class ValueChangeHandler{
                 if(preProcessor)
                     this.valueChangeHandlersPreProcessorMap.set(id, preProcessor)
                 this.handlerId++
+
+                return id
             }
         }.bind(this)
     }

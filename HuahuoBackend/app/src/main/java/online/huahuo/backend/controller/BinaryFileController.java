@@ -6,10 +6,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import online.huahuo.backend.db.BinaryFileDB;
-import online.huahuo.backend.db.BinaryFileRepository;
-import online.huahuo.backend.db.FileType;
-import online.huahuo.backend.db.BinaryFileStatus;
+import online.huahuo.backend.db.*;
 import online.huahuo.backend.storage.StorageService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -59,6 +56,8 @@ public class BinaryFileController {
     @javax.annotation.Resource
     private BinaryFileRepository binaryFileRepository;
 
+    @javax.annotation.Resource
+    private ElementRepository elementRepository;
 
 
     @PreAuthorize("hasRole('CREATOR')")
@@ -124,7 +123,12 @@ public class BinaryFileController {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
         FileType fileType = isElement?FileType.ELEMENT:FileType.PROJECT;
-        List<BinaryFileDB> resultList = binaryFileRepository.findByCreatedByAndFileTypeAndStatus(username, fileType, BinaryFileStatus.ACTIVE, pageable);
+        List<BinaryFileDB> resultList = null;
+
+        if(fileType == FileType.PROJECT)
+            resultList = binaryFileRepository.findByCreatedByAndFileTypeAndStatus(username, fileType, BinaryFileStatus.ACTIVE, pageable);
+        else
+            resultList = binaryFileRepository.findByFileTypeAndStatus(fileType, BinaryFileStatus.ACTIVE, pageable);
 
         int totalFileCount = binaryFileRepository.countByCreatedByAndFileTypeAndStatus(username, fileType, BinaryFileStatus.ACTIVE);
         ListBinaryFileResult listBinaryFileResult = new ListBinaryFileResult();
@@ -204,6 +208,14 @@ public class BinaryFileController {
             Files.delete(Path.of(fileDataPath));
             Files.delete(Path.of(fileDoverPathPath));
         }finally {
+            if(binaryFileDB.getFileType().equals(FileType.ELEMENT)){
+                ElementDB elementDB = elementRepository.getByBinaryFileDB(binaryFileDB);
+                if(elementDB != null){
+                    String elementId = elementDB.getElementId();
+                    elementRepository.deleteById(elementId);
+                }
+
+            }
             binaryFileRepository.deleteById(fileId);
         }
 

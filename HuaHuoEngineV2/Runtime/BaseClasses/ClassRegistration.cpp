@@ -13,7 +13,6 @@
 #include "Shapes/CircleShape.h"
 #include "KeyFrames/FrameState.h"
 #include "KeyFrames/ShapeTransformComponent.h"
-#include "KeyFrames/ShapeFollowCurveFrameState.h"
 #include "Shapes/RectangleShape.h"
 #include "Shapes/ImageShape.h"
 #include "Shapes/AudioShape.h"
@@ -86,7 +85,6 @@ void RegisterAllClasses(){
     RegisterHuaHuoClass<ShapeTransformComponent>("ObjectStore");
     RegisterHuaHuoClass<ShapeSegmentFrameState>("ObjectStore");
     RegisterHuaHuoClass<CurveShape>("ObjectStore");
-    RegisterHuaHuoClass<ShapeFollowCurveFrameState>("ObjectStore");
     RegisterHuaHuoClass<CustomFrameState>("ObjectStore");
     RegisterHuaHuoClass<CustomComponent>("ObjectStore");
     RegisterHuaHuoClass<EventGraphComponent>("ObjectStore");
