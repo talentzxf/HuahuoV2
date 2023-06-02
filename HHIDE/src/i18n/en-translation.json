@@ -38,6 +38,8 @@
   "Activate": "Activate",
   "Deactivate": "Deactivate",
   "edit": "edit",
+  "yourProjects": "Your Projects",
+  "allElements": "All Elements",
   "eventgraph": {
     "resetScale": "Reset Scale",
     "addEventListener" : "Add Event Receiver",

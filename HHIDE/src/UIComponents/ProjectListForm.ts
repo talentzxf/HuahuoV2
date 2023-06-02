@@ -21,6 +21,9 @@ class ProjectListForm extends HTMLElement implements HHForm {
 
     projectInfoMap: Map<number, Object> = new Map
 
+    titleText: string = "Projects"
+    titleTextElement: HTMLElement
+
     connectedCallback() {
         this.style.position = "absolute"
         this.style.top = "50%"
@@ -47,13 +50,15 @@ class ProjectListForm extends HTMLElement implements HHForm {
             "           <img class='far fa-circle-xmark'>" +
             "       </div>" +
             "   </div>" +
-            "       <h3>Your Projects</h3>" +
+            "       <h3 id='listTitle'>" + this.titleText + "</h3>" +
             "       <div id='projectListUlContainer' style='height: 500px; overflow-x: hidden; overflow-y: auto; width: 100%'>" +
             "           <ul id='projectListUl' style='width: 100%; float: left'></ul>" +
             "       </div>" +
             "       <div id='pagination' style='display: none'></div>" +
             "   </form>"
         this.appendChild(this.listDiv)
+
+        this.titleTextElement = this.listDiv.querySelector("#listTitle")
 
         this.closeBtn = this.listDiv.querySelector("#projectListCloseBtn")
         this.closeBtn.addEventListener("mousedown", this.closeForm.bind(this))
@@ -71,6 +76,13 @@ class ProjectListForm extends HTMLElement implements HHForm {
     updateListFunctor:(totalPage, curPageNo)=>void
     setUpdateListFunctor(updateListFunctor:(totalPage, curPageNo)=>void){
         this.updateListFunctor = updateListFunctor
+    }
+
+    setTitle(title: string){
+        this.titleText = title;
+        if(this.titleTextElement){
+            this.titleTextElement.innerText = this.titleText
+        }
     }
 
     updateList(totalPage, curPageNo, pageSize, projects, onItemClicked: Function = null, writeAuthInfo = false) {
@@ -149,7 +161,8 @@ class ProjectListForm extends HTMLElement implements HHForm {
             }))
 
             let deleteProjectBtn = this.listUL.querySelector("#" + deletProjectBtnPrefix + project.id)
-            deleteProjectBtn.addEventListener("click", this.deleteProject(project.id).bind(this))
+            if(deleteProjectBtn)
+                deleteProjectBtn.addEventListener("click", this.deleteProject(project.id).bind(this))
         }
     }
 

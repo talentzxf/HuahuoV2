@@ -123,7 +123,12 @@ public class BinaryFileController {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
         FileType fileType = isElement?FileType.ELEMENT:FileType.PROJECT;
-        List<BinaryFileDB> resultList = binaryFileRepository.findByCreatedByAndFileTypeAndStatus(username, fileType, BinaryFileStatus.ACTIVE, pageable);
+        List<BinaryFileDB> resultList = null;
+
+        if(fileType == FileType.PROJECT)
+            resultList = binaryFileRepository.findByCreatedByAndFileTypeAndStatus(username, fileType, BinaryFileStatus.ACTIVE, pageable);
+        else
+            resultList = binaryFileRepository.findByFileTypeAndStatus(fileType, BinaryFileStatus.ACTIVE, pageable);
 
         int totalFileCount = binaryFileRepository.countByCreatedByAndFileTypeAndStatus(username, fileType, BinaryFileStatus.ACTIVE);
         ListBinaryFileResult listBinaryFileResult = new ListBinaryFileResult();
