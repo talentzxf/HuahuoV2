@@ -32,7 +32,7 @@ let experimentalShapes = [
     new ParticleSystemDrawer()
 ]
 
-if(huahuoProperties["huahuo.experimentalFeatures.enable"]){
+if(huahuoProperties["huahuo.experimentalFeatures.enable"] == "true"){
     shapes = shapes.concat(experimentalShapes)
 }
 
