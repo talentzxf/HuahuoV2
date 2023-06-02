@@ -94,7 +94,7 @@ class Player extends EventEmitter{
             layer.SetCurrentFrame(playFrameId)
         }
 
-        this.updateAllShapes()
+        this.updateAllShapes(true)
 
         getNailManager().update()
 
