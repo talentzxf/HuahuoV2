@@ -11,6 +11,7 @@ import {IconShapeDrawer} from "./IconShapeDrawer";
 import {NailDrawer} from "./NailDrawer";
 import {ParticleSystemDrawer} from "./ParticleSystemDrawer";
 import {StarMirrorDrawer} from "./StarMirrorDrawer";
+import huahuoProperties from "/dist/hhide.properties";
 
 let shapes = [
     new ShapeSelector(),
@@ -24,9 +25,16 @@ let shapes = [
     new AudioClipSelector(),
     new ImageSelector(),
     new IconShapeDrawer(),
+]
+
+let experimentalShapes = [
     new NailDrawer(),
     new ParticleSystemDrawer()
 ]
+
+if(huahuoProperties["enableExperimentalFeatures"]){
+    shapes = shapes.concat(experimentalShapes)
+}
 
 let defaultShapeDrawerArray = shapes.filter(drawer=>{
     if(drawer.isDefaultDrawer()) return true
