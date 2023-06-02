@@ -41,6 +41,8 @@ class BooleanFloatOperator extends CppValueOperator{
 
     setField(fieldName:string, val){
         this.rawObj["SetBooleanValue"](fieldName, val)
+
+        return this.rawObj["GetBooleanValue"](fieldName) == val
     }
 
     isEqual(v1, v2) {
@@ -59,6 +61,9 @@ class InterpolateFloatOperator extends CppValueOperator{
 
     setField(fieldName: string, val) {
         this.rawObj["SetFloatValue"](fieldName, val)
+
+        // TODO: Validate
+        return true;
     }
 
     isEqual(val1, val2){
@@ -86,6 +91,9 @@ class InterpolateColorOperator extends CppValueOperator{
 
     setField(fieldName: string, val) {
         this.rawObj["SetColorValue"](fieldName, val.red, val.green, val.blue, val.alpha)
+
+        // TODO: Validate
+        return true
     }
 
     isEqual(v1, v2) {
@@ -124,6 +132,9 @@ class InterpolateVector2Operator extends CppValueOperator{
         }else{
             this.rawObj["SetVector3Value"](fieldName, vals.x, vals.y, 0.0)
         }
+
+        // TODO: Validate
+        return true
     }
 }
 
@@ -155,6 +166,9 @@ class InterpolateVector3Operator extends CppValueOperator{
         }else{
             this.rawObj["SetVector3Value"](fieldName, vals.x, vals.y, vals.z)
         }
+
+        // TODO: Validate
+        return true
     }
 }
 
@@ -175,6 +189,8 @@ class StringValueOperator extends CppValueOperator{
 
     setField(fieldName: string, val: string) {
         this.rawObj["SetStringValue"](fieldName, val)
+        // TODO: Validate
+        return true
     }
 }
 
