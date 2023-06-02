@@ -6,6 +6,7 @@ import {EditorShapeProxy} from "./ShapeDrawers/EditorShapeProxy";
 function showMainDiv(){
     let loadingElement = document.querySelector("#loading") as HTMLDivElement
     loadingElement.style.display = "none"
+    document.body.style.removeProperty("overflow")
     let mainDiv = document.querySelector("#mainSceneDiv") as HTMLDivElement
     mainDiv.style.display = "block"
 }
