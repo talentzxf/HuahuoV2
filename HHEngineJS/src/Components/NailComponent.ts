@@ -1,10 +1,11 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {NailShapeJS} from "../Shapes/NailShapeJS";
 import {PropertyCategory} from "./PropertySheetBuilder";
+import {ShapeArrayProperty} from "hhcommoncomponents/dist/src";
 
 @Component({compatibleShapes: ["BaseSolidShape"], maxCount: 1, canBeFound: false})
 class NailComponent extends AbstractComponent {
-    @PropertyValue(PropertyCategory.shapeArray) // It should actually be NailShape array. But as NailShape is actually also BaseShape, so it's fine.
+    @PropertyValue(PropertyCategory.shapeArray, null, {allowDuplication: false} as ShapeArrayProperty) // It should actually be NailShape array. But as NailShape is actually also BaseShape, so it's fine.
     nails
 
     // isUpdating = false
