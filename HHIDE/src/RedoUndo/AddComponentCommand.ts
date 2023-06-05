@@ -9,11 +9,11 @@ class AddComponentCommand extends UndoableCommand{
     targetComponent: AbstractComponent
     targetShape: BaseShapeJS
 
-    constructor(targetComponent:AbstractComponent) {
+    constructor(targetShape: BaseShapeJS, targetComponent:AbstractComponent) {
         super();
 
         this.targetComponent = targetComponent
-        this.targetShape = targetComponent.baseShape
+        this.targetShape = targetShape
     }
 
     GetType(): string {
@@ -23,6 +23,7 @@ class AddComponentCommand extends UndoableCommand{
     _DoCommand() {
         // Add the component back.
         this.targetShape.addComponent(this.targetComponent)
+        this.targetComponent.enableComponent()
         elementCreator.dispatchElementChange(this.targetShape.belongStoreId)
 
         IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, this.targetShape)
@@ -31,6 +32,7 @@ class AddComponentCommand extends UndoableCommand{
     _UnDoCommand() {
         // Remove the component.
         this.targetComponent.detachFromCurrentShape()
+        this.targetComponent.disableComponent()
         elementCreator.dispatchElementChange(this.targetShape.belongStoreId)
 
         IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, this.targetShape)

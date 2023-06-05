@@ -57,11 +57,12 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
         if(this.isDragging && this.curObjs != null){
 
             for(let obj of this.curObjs){
-                console.log("local position:" + this.startPosMap.get(obj))
                 let prevGlobalPosition = obj.localToGlobal(this.startPosMap.get(obj))
-                console.log("prevGlobalPosition:" + prevGlobalPosition.x + "," + prevGlobalPosition.y)
                 let newGlobalPosition = newPos
                 let offset = new paper.Point(newGlobalPosition.x - prevGlobalPosition.x, newGlobalPosition.y - prevGlobalPosition.y)
+
+                if(offset.length <= .001)
+                    return
 
                 let mouseOffset = new paper.Point(newPos.x - this.lastPos.x , newPos.y - this.lastPos.y)
                 // TODO: check whether the position is acceptable or need some modification

@@ -11,6 +11,8 @@ class StrokeComponent extends AbstractComponent{
     @PropertyValue(PropertyCategory.interpolateColor, {r:0, g:0, b:0, a:1})
     strokeColor
 
+    isBuiltIn = true
+
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 

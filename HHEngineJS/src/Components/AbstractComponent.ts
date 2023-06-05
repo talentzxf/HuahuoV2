@@ -66,6 +66,9 @@ function Component(componentConfig?: ComponentConfig) {
 declare function castObject(obj: any, clz: any): any;
 
 class AbstractComponent {
+
+    isBuiltIn: boolean = false
+
     rawObj: any;
     baseShape: BaseShapeJS;
     propertySheetInited: boolean = false;
@@ -177,15 +180,18 @@ class AbstractComponent {
                 enabler: () => {
                     _this.enableComponent()
                 },
-                deleter: ()=>{
-                    huahuoEngine.dispatchEvent("HHIDE", "DeleteComponent", this)
-                },
                 disabler: () => {
                     _this.disableComponent()
                 },
                 isActive: () => {
                     return _this.isComponentActive()
                 }
+            }
+        }
+
+        if(!this.isBuiltIn){
+            componentConfigSheet.config["deleter"] = ()=>{
+                huahuoEngine.dispatchEvent("HHIDE", "DeleteComponent", this)
             }
         }
 

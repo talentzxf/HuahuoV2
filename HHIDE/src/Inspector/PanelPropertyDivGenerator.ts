@@ -96,12 +96,14 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator {
 
             titleDiv.appendChild(activateButtion)
 
-            let deleteButton = document.createElement("input")
-            deleteButton.type = "button"
-            deleteButton.value = i18n.t("DeleteComponent")
-            deleteButton.onclick = this.deleteComponent(property).bind(this)
+            if(property.config && property.config.hasOwnProperty("deleter")){
+                let deleteButton = document.createElement("input")
+                deleteButton.type = "button"
+                deleteButton.value = i18n.t("DeleteComponent")
+                deleteButton.onclick = this.deleteComponent(property).bind(this)
 
-            titleDiv.appendChild(deleteButton)
+                titleDiv.appendChild(deleteButton)
+            }
         }
 
         return propertyDesc

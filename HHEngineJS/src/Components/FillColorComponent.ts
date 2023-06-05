@@ -6,6 +6,8 @@ class FillColorComponent extends AbstractComponent{
     @PropertyValue(PropertyCategory.interpolateColor, {random: true})
     fillColor
 
+    isBuiltIn = true
+
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 

@@ -90,7 +90,7 @@ class ComponentListForm extends HTMLElement implements HHForm{
                     e.preventDefault()
                     let newComponent = huahuoEngine.produceObject(componentName)
 
-                    let addComponentCommand = new AddComponentCommand(newComponent)
+                    let addComponentCommand = new AddComponentCommand(targetObj, newComponent)
                     addComponentCommand.DoCommand()
 
                     undoManager.PushCommand(addComponentCommand)

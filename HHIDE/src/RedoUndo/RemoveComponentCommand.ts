@@ -8,7 +8,8 @@ class RemoveComponentCommand extends UndoableCommand{
     addComponentCommand: AddComponentCommand
     constructor(targetComponent:AbstractComponent) {
         super();
-        this.addComponentCommand = new AddComponentCommand(targetComponent)
+        let targetShape = targetComponent.baseShape
+        this.addComponentCommand = new AddComponentCommand(targetShape, targetComponent)
     }
     GetType(): string {
         return "RemoveComponentCommand";

@@ -51,6 +51,10 @@ class FollowCurveComponent extends AbstractComponent {
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
+        if(!this.isComponentActive()){
+            return
+        }
+
         if(this.baseShape.isVisible()){
             if(this.tsFollowingTargetShape && this.tsFollowingTargetShape){
                 this.tsFollowingTargetShape.afterUpdate(true) // Force update the curveShape.
