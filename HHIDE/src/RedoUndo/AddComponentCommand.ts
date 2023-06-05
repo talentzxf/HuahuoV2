@@ -20,6 +20,9 @@ class AddComponentCommand extends UndoableCommand{
     }
 
     _DoCommand() {
+        // Add the component back.
+        this.targetShape.addComponent(this.targetComponent)
+        IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, this.targetShape)
     }
 
     _UnDoCommand() {
