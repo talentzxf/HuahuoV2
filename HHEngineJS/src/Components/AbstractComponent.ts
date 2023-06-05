@@ -177,6 +177,9 @@ class AbstractComponent {
                 enabler: () => {
                     _this.enableComponent()
                 },
+                deleter: ()=>{
+                    huahuoEngine.dispatchEvent("HHIDE", "DeleteComponent", this)
+                },
                 disabler: () => {
                     _this.disableComponent()
                 },

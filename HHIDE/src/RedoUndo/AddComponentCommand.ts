@@ -9,11 +9,11 @@ class AddComponentCommand extends UndoableCommand{
     targetComponent: AbstractComponent
     targetShape: BaseShapeJS
 
-    constructor(targetShape: BaseShapeJS, targetComponent:AbstractComponent) {
+    constructor(targetComponent:AbstractComponent) {
         super();
 
         this.targetComponent = targetComponent
-        this.targetShape = targetShape
+        this.targetShape = targetComponent.baseShape
     }
 
     GetType(): string {

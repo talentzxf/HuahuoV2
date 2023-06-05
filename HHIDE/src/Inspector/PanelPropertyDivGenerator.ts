@@ -95,6 +95,13 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator {
             }
 
             titleDiv.appendChild(activateButtion)
+
+            let deleteButton = document.createElement("input")
+            deleteButton.type = "button"
+            deleteButton.value = i18n.t("DeleteComponent")
+            deleteButton.onclick = this.deleteComponent(property).bind(this)
+
+            titleDiv.appendChild(deleteButton)
         }
 
         return propertyDesc
@@ -116,6 +123,13 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator {
             activateButton.value = i18n.t("Activate")
             activateButton.onclick = this.activateComponent(activateButton, property).bind(this)
         }.bind(this)
+    }
+
+    deleteComponent(property){
+        return function (evt: MouseEvent){
+            evt.stopPropagation()
+            property.config.deleter()
+        }
     }
 
     flexDirection(): string {

@@ -37,6 +37,7 @@
   "CenterOf": "中心",
   "Activate": "激活组件",
   "Deactivate": "关闭组件",
+  "DeleteComponent": "删除组件",
   "edit": "编辑",
   "yourProjects": "你的项目列表",
   "allElements": "所有可用组件",

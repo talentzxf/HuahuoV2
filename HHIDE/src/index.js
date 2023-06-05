@@ -23,6 +23,7 @@ import {SelectIconForm} from "./Inspector/CustomFieldDivGenerators/SelectIconFor
 import {EventNode} from "../../HHEngineJS/src/EventGraph/Nodes/EventNode";
 import {ActionNode} from "../../HHEngineJS/src/EventGraph/Nodes/ActionNode";
 import {FocusSceneViewCommand} from "./RedoUndo/FocusSceneViewCommand";
+import {RemoveComponentCommand} from "./RedoUndo/RemoveComponentCommand"
 
 // Input components
 import {HHFloatInput} from "./Inspector/InputComponents/HHFloatInput";
