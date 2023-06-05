@@ -44,6 +44,10 @@ class PropertySheet {
         return this.properties
     }
 
+    setProperties(properties){
+        this.properties = properties
+    }
+
     getProperty(key: string) {
         for (let property of this.properties) {
             if (property.key == key)

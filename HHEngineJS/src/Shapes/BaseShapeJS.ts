@@ -1,6 +1,6 @@
 import {huahuoEngine} from "../EngineAPI";
-import {Vector2, eventBus} from "hhcommoncomponents";
-import {relaxRectangle, PropertySheet, PropertyType, Logger} from "hhcommoncomponents"
+import {Vector2} from "hhcommoncomponents";
+import {PropertySheet, PropertyType, Logger} from "hhcommoncomponents"
 import * as paper from "paper";
 import {ShapeCenterSelector} from "./ShapeCenterSelector";
 import {ValueChangeHandler} from "./ValueChangeHandler";
@@ -1133,6 +1133,21 @@ abstract class BaseShapeJS {
     removeComponent(component: AbstractComponent) {
         this.customComponentMap.delete(component.rawObj.ptr)
         component.rawObj.DetachFromCurrentShape()
+
+
+        let properties = this.getPropertySheet().getProperties()
+
+        let _this = this
+
+        properties = properties.filter(function(entry){
+            if(entry.hasOwnProperty("rawObjPtr") && entry["rawObjPtr"] == component.rawObj.ptr){
+                return false;
+            }
+
+            return true;
+        })
+
+        this.getPropertySheet().setProperties(properties)
     }
 }
 

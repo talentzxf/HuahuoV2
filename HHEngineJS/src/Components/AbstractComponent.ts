@@ -11,6 +11,7 @@ import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
 import {colorStopArrayHandler} from "./VariableHandlers/ColorArrayProcessor";
 import {subComponentArrayHandler} from "./VariableHandlers/SubComponentArrayHandler";
 import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariableHandler";
+import {huahuoEngine} from "../EngineAPI";
 
 
 // Key is: className#fieldName
@@ -237,7 +238,9 @@ class AbstractComponent {
     initPropertySheet(propertySheet) {
         if (!this.propertySheetInited) {
             this.propertySheetInited = true
+
             let myPropertySheet = this.getPropertySheet()
+            myPropertySheet["rawObjPtr"] = this.rawObj.ptr
             if (myPropertySheet)
                 propertySheet.addProperty(myPropertySheet)
         }
