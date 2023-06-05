@@ -1,7 +1,7 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {NailShapeJS} from "../Shapes/NailShapeJS";
 import {PropertyCategory} from "./PropertySheetBuilder";
-import {ShapeArrayProperty} from "hhcommoncomponents/dist/src";
+import {ShapeArrayProperty} from "hhcommoncomponents";
 
 @Component({compatibleShapes: ["BaseSolidShape"], maxCount: 1, canBeFound: false})
 class NailComponent extends AbstractComponent {
