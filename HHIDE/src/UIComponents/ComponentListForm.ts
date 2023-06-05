@@ -96,7 +96,7 @@ class ComponentListForm extends HTMLElement implements HHForm{
 
                     elementCreator.dispatchElementChange(targetObj.belongStoreId)
 
-                    IDEEventBus.getInstance().emit(EventNames.COMPONENTADDED, targetObj)
+                    IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, targetObj)
                     _this.closeForm()
                 }
             }

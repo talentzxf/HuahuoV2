@@ -1129,6 +1129,11 @@ abstract class BaseShapeJS {
             component.getReferencedShapes(set)
         }
     }
+
+    removeComponent(component: AbstractComponent) {
+        this.customComponentMap.delete(component.rawObj.ptr)
+        component.rawObj.DetachFromCurrentShape()
+    }
 }
 
 export {BaseShapeJS}

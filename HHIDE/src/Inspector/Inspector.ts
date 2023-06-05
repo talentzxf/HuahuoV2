@@ -34,7 +34,7 @@ class Inspector extends HTMLElement{
         IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
         IDEEventBus.getInstance().on(EventNames.UNSELECTOBJECTS, this.unselectObjects.bind(this))
 
-        IDEEventBus.getInstance().on(EventNames.COMPONENTADDED, this.componentAdded.bind(this))
+        IDEEventBus.getInstance().on(EventNames.COMPONENTCHANGED, this.componentChanged.bind(this))
 
         IDEEventBus.getInstance().on(EventNames.CELLCLICKED, this.timelineCellClicked.bind(this))
 
@@ -54,7 +54,7 @@ class Inspector extends HTMLElement{
         findParentSideBar(this).hide()
     }
 
-    componentAdded(targetObj: any){
+    componentChanged(targetObj: any){
         if(this.shapePropertyDivMapping.has(targetObj)){
             this.shapePropertyDivMapping.delete(targetObj)
         }

@@ -269,6 +269,10 @@ class AbstractComponent {
     getVector2KeyFrameCurves(fieldName){
         return [this.rawObj.GetVectorKeyFrameCurve(fieldName, 0), this.rawObj.GetVectorKeyFrameCurve(fieldName, 1)]
     }
+
+    detachFromCurrentShape() {
+        this.baseShape.removeComponent(this)
+    }
 }
 
 

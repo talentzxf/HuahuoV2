@@ -1,6 +1,7 @@
 import {UndoableCommand} from "./UndoManager";
 import {BaseShapeJS} from "hhenginejs";
-import {AbstractComponent} from "hhenginejs/dist/src/Components/AbstractComponent";
+import {AbstractComponent} from "hhenginejs";
+import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 
 class AddComponentCommand extends UndoableCommand{
 
@@ -24,6 +25,7 @@ class AddComponentCommand extends UndoableCommand{
     _UnDoCommand() {
         this.targetComponent.detachFromCurrentShape()
 
+        IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, this.targetShape)
     }
 
 }
