@@ -8,3 +8,6 @@
 	url = git@github.com:talentzxf/litegraph.js.git
 	branch = master
 	update = merge
+[submodule "HuahuoEngines"]
+	path = HuahuoEngines
+	url = git@github.com:talentzxf/HuahuoEngines.git

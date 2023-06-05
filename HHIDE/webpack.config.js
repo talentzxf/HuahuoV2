@@ -60,8 +60,8 @@ let moduleExports = (env) => {
         plugins: [
             new CopyPlugin({
                 patterns: [
-                    {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to: "wasm"},
-                    {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
+                    {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to: "wasm"},
+                    {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
                     {from: "./svgs", to: "svgs"},
                     {from: "./src/i18n", to: "i18n"},
                     {from: "./src/test_lgraph.html", to: "test_lgraph.html"},

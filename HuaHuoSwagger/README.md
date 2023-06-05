@@ -4,3 +4,9 @@ It will consume the swagger.json and uses gradle-swagger-generator-plugin to do 
 - You can also access the swagger UI from here: http://localhost:8080/swagger-ui/#/
 - Note that whenever HuaHuo backend API is changed, regenerate the ts-axios client of this project.
 - TODO: How to automatically update this client??
+
+TODOs:
+1. Fix all UNDO-REDO related bugs.
+2. Tutorials.
+3. Improve of UI.
+4. Gif load issue.
