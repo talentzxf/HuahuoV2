@@ -1,4 +1,0 @@
-libumbraoptimizer for Linux and Mac is a custom version with the build identification:
-umbra-3.3.22-change-97-5797-2
-
-I was provided directly by the Umbra support to us since we ran into issues with the previous version since which dragged in libcurl.
