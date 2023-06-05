@@ -88,15 +88,13 @@ class ComponentListForm extends HTMLElement implements HHForm{
                 let componentName = componentAddBtn.id.split("_")[1]
                 componentAddBtn.onclick = function(e){
                     e.preventDefault()
-
                     let newComponent = huahuoEngine.produceObject(componentName)
-                    targetObj.addComponent(newComponent)
 
-                    undoManager.PushCommand(new AddComponentCommand(targetObj, newComponent))
+                    let addComponentCommand = new AddComponentCommand(targetObj, newComponent)
+                    addComponentCommand.DoCommand()
 
-                    elementCreator.dispatchElementChange(targetObj.belongStoreId)
+                    undoManager.PushCommand(addComponentCommand)
 
-                    IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, targetObj)
                     _this.closeForm()
                 }
             }

@@ -2,6 +2,7 @@ import {UndoableCommand} from "./UndoManager";
 import {BaseShapeJS} from "hhenginejs";
 import {AbstractComponent} from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
+import {elementCreator} from "../SceneView/ElementCreator";
 
 class AddComponentCommand extends UndoableCommand{
 
@@ -22,11 +23,15 @@ class AddComponentCommand extends UndoableCommand{
     _DoCommand() {
         // Add the component back.
         this.targetShape.addComponent(this.targetComponent)
+        elementCreator.dispatchElementChange(this.targetShape.belongStoreId)
+
         IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, this.targetShape)
     }
 
     _UnDoCommand() {
+        // Remove the component.
         this.targetComponent.detachFromCurrentShape()
+        elementCreator.dispatchElementChange(this.targetShape.belongStoreId)
 
         IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, this.targetShape)
     }
