@@ -127,7 +127,8 @@
       "eventGraph": "Event Graph",
       "starMirrorInterval": "Star Mirror Interval",
       "playSpeed": "Play Speed",
-      "targetShape": "Target Shape"
+      "targetShape": "Target Shape",
+      "lengthRatio": "Length Ratio"
     },
     "nail": {
       "isStatic": "Is Static"

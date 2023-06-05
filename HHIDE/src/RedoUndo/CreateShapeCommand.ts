@@ -1,4 +1,4 @@
-import {UndoableCommand, ExecutionStackFrame} from "./UndoManager";
+import {UndoableCommand} from "./UndoManager";
 import {BaseShapeJS} from "hhenginejs";
 
 class CreateShapeCommand extends UndoableCommand{
