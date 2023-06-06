@@ -159,7 +159,7 @@ class AbstractComponent {
 
     // Life cycle function, call back when the component is disabled.
     onComponentDisabled(){
-
+        this.baseShape.getAction().RemoveActionInvoker(this)
     }
 
     disableComponent() {

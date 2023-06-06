@@ -31,6 +31,8 @@ class EventGraphComponent extends AbstractComponent {
         let rawObj = this.rawObj.GetShapeByNodeId(nodeId)
         let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
 
+        this.baseShape.getAction().AddActionInvoker(this)
+
         return baseShapeObj.getAction()
     }
 
