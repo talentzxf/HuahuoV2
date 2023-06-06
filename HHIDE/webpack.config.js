@@ -53,6 +53,9 @@ let moduleExports = (env) => {
             },
             compress: true,
             port: 8989,
+            client:{
+                overlay: false
+            }
         },
         watchOptions: {
             ignored: ['**/node_modules/**', "**/dist/**"]

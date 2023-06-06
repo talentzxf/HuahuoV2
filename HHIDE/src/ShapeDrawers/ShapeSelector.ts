@@ -374,14 +374,16 @@ class ShapeSelector extends BaseShapeDrawer {
             }
 
             // Four edges.
-            else if (pointsNearHorizontal(targetPos, bounds.topLeft.y, VERYNEARMARGIN)
-                  || pointsNearHorizontal(targetPos, bounds.bottomLeft.y, VERYNEARMARGIN)){
+            else if ((pointsNearHorizontal(targetPos, bounds.topLeft.y, VERYNEARMARGIN)
+                  || pointsNearHorizontal(targetPos, bounds.bottomLeft.y, VERYNEARMARGIN))
+                && targetPos.x >= bounds.topLeft.x && targetPos.x <= bounds.topRight.x){
                 this.canvas.style.cursor = "ns-resize"
                 this.setTransformHandler(this.selectedShapes, pos, shapeVerticalScaleHandler)
                 return
             }
-            else if (pointsNearVertical(targetPos, bounds.topLeft.x, VERYNEARMARGIN)
-                ||   pointsNearVertical(targetPos, bounds.topRight.x, VERYNEARMARGIN)){
+            else if ((pointsNearVertical(targetPos, bounds.topLeft.x, VERYNEARMARGIN)
+                ||   pointsNearVertical(targetPos, bounds.topRight.x, VERYNEARMARGIN)
+                && targetPos.y >= bounds.topLeft.y && targetPos.y <= bounds.bottomLeft.y)){
                 this.canvas.style.cursor = "ew-resize"
                 this.setTransformHandler(this.selectedShapes, pos, shapeHorizontalScaleHandler)
                 return
