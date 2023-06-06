@@ -1,6 +1,5 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
-import {BaseShapeActions} from "../EventGraph/BaseShapeActions";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {LGraph} from "litegraph.js";
 import {huahuoEngine} from "../EngineAPI";

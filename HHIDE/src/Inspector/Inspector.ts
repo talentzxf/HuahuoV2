@@ -133,69 +133,74 @@ class Inspector extends HTMLElement{
     }
 
     onItemSelected(propertySheet: PropertySheet, targetObj: any){
-        this.selectedObj = targetObj
+        try {
+            this.selectedObj = targetObj
 
-        findParentSideBar(this).show()
-        let parentContainer = findParentSideBar(this)
-        let titleBarHeight = parentContainer.querySelector(".title_tabs").offsetHeight
-        let parentHeight = parentContainer.clientHeight - titleBarHeight;
-        if(parentHeight == 0){
-            parentHeight = 500 // Restore to default height.
-        }
-
-        this.contentScrollerDiv.style.height = (parentHeight) + "px"
-
-        while(this.contentScrollerDiv.firstChild){
-            this.contentScrollerDiv.removeChild(this.contentScrollerDiv.firstChild)
-        }
-
-        if(this.shapePropertyDivMapping.has(targetObj)){
-            let contentDiv = this.shapePropertyDivMapping.get(targetObj)
-            try{
-                this.contentScrollerDiv.appendChild(contentDiv)
-                contentDiv.refresh()
-            }catch (e){ // DOMException also can't be caught here ....
-                Logger.error("Not sure why, but vanilla hex-input might throw exception, but seems every thing is fine regardless of this exception.")
+            findParentSideBar(this).show()
+            let parentContainer = findParentSideBar(this)
+            let titleBarHeight = parentContainer.querySelector(".title_tabs").offsetHeight
+            let parentHeight = parentContainer.clientHeight - titleBarHeight;
+            if (parentHeight == 0) {
+                parentHeight = 500 // Restore to default height.
             }
 
-        }else{
-            Logger.info("Selected something")
+            this.contentScrollerDiv.style.height = (parentHeight) + "px"
 
-            let contentDiv = new HHRefreshableDiv()
-            contentDiv.style.width="100%"
-            this.contentScrollerDiv.appendChild(contentDiv)
-
-            if(targetObj["addComponent"]){
-                contentDiv.appendChild(this.createMountComponentButton(targetObj))
+            while (this.contentScrollerDiv.firstChild) {
+                this.contentScrollerDiv.removeChild(this.contentScrollerDiv.firstChild)
             }
 
-            if(targetObj["saveAsKeyFrame"]){
-                contentDiv.appendChild(this.createSaveAsKeyFrameButton(targetObj))
-            }
-
-            let allComponentTitleDivs:Array<HTMLElement> = new Array<HTMLElement>()
-            // Add collapse-all button.
-            let properties = propertySheet.getProperties()
-            for(let property of properties){
-                if(property.hide)
-                    continue;
-
-                let divGenerator = GetPropertyDivGenerator(property.type)
-                let propertyDesc = divGenerator.generatePropertyDesc(property)
-
-                let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
-                contentDiv.appendChild(propertyDiv)
-
-                if(property.type == PropertyType.COMPONENT){
-                    allComponentTitleDivs.push(propertyDesc.getTitleDiv())
+            if (this.shapePropertyDivMapping.has(targetObj)) {
+                let contentDiv = this.shapePropertyDivMapping.get(targetObj)
+                try {
+                    this.contentScrollerDiv.appendChild(contentDiv)
+                    contentDiv.refresh()
+                } catch (e) { // DOMException also can't be caught here ....
+                    Logger.error("Not sure why, but vanilla hex-input might throw exception, but seems every thing is fine regardless of this exception.")
                 }
-            }
 
-            if(allComponentTitleDivs.length >= 2){
-                contentDiv.insertBefore(this.createOpenCollapseButton(allComponentTitleDivs), contentDiv.firstChild)
-            }
+            } else {
+                Logger.info("Selected something")
 
-            this.shapePropertyDivMapping.set(targetObj, contentDiv)
+                let contentDiv = new HHRefreshableDiv()
+                contentDiv.style.width = "100%"
+                this.contentScrollerDiv.appendChild(contentDiv)
+
+                if (targetObj["addComponent"]) {
+                    contentDiv.appendChild(this.createMountComponentButton(targetObj))
+                }
+
+                if (targetObj["saveAsKeyFrame"]) {
+                    contentDiv.appendChild(this.createSaveAsKeyFrameButton(targetObj))
+                }
+
+                let allComponentTitleDivs: Array<HTMLElement> = new Array<HTMLElement>()
+                // Add collapse-all button.
+                let properties = propertySheet.getProperties()
+                for (let property of properties) {
+                    if (property.hide)
+                        continue;
+
+                    let divGenerator = GetPropertyDivGenerator(property.type)
+                    let propertyDesc = divGenerator.generatePropertyDesc(property)
+
+                    let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
+                    contentDiv.appendChild(propertyDiv)
+
+                    if (property.type == PropertyType.COMPONENT) {
+                        allComponentTitleDivs.push(propertyDesc.getTitleDiv())
+                    }
+                }
+
+                if (allComponentTitleDivs.length >= 2) {
+                    contentDiv.insertBefore(this.createOpenCollapseButton(allComponentTitleDivs), contentDiv.firstChild)
+                }
+
+                this.shapePropertyDivMapping.set(targetObj, contentDiv)
+            }
+        }catch (e){
+            console.log("Error happened while trying to show inspector")
+            console.log(e)
         }
     }
 }

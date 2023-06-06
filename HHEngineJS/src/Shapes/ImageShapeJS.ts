@@ -144,7 +144,7 @@ class ImageShapeJS extends AbstractMediaShapeJS{
                 let dims = frame.dims
                 let frameImageData = raster.createImageData(new paper.Size(dims.width, dims.height))
                 frameImageData.data.set(frame.patch)
-                raster.setImageData(frameImageData, new paper.Point(0,0))
+                raster.setImageData(frameImageData)
 
                 this.lastAnimationFrame = playingAnimationFrameId
             }
