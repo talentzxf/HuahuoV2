@@ -152,15 +152,30 @@ class AbstractComponent {
         return this.rawObj.GetBooleanValue("isActive")
     }
 
+    // Life cycle function, call back when the component is enabled.
+    onComponentEnabled(){
+
+    }
+
+    // Life cycle function, call back when the component is disabled.
+    onComponentDisabled(){
+
+    }
+
     disableComponent() {
         this.rawObj.SetBooleanValue("isActive", false)
 
+        this.onComponentDisabled()
+
         if(this.baseShape)
             this.baseShape.update(true)
+
+
     }
 
     enableComponent() {
         this.rawObj.SetBooleanValue("isActive", true)
+        this.onComponentEnabled()
 
         // Something might be changed, so we need to refresh the shape.
         // But if the shape or the paper shape has not been created yet, do not refresh it.

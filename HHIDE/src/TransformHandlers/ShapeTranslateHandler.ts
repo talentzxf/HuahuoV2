@@ -92,7 +92,10 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase
                     }
                 }
 
+                console.log("ShapeTranslateHandler: Proposed New Position:" + proposedNewPosition)
+                console.log("ShapeTranslateHandler: Before position:" + obj.position)
                 obj.position = proposedNewPosition
+                console.log("ShapeTranslateHandler: After position:" + obj.position)
 
                 obj.store()
             }

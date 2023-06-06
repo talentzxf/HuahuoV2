@@ -2,6 +2,7 @@ import {AbstractGraphAction, ActionDef, ActionParam, GraphAction} from "./GraphA
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {PropertyType} from "hhcommoncomponents"
 import {Vector2} from "hhcommoncomponents"
+import {AbstractComponent} from "../Components/AbstractComponent";
 
 class BaseShapeActions extends AbstractGraphAction{
     targetShape:BaseShapeJS
@@ -12,10 +13,24 @@ class BaseShapeActions extends AbstractGraphAction{
     rotation = 0
     isRotationValid:boolean = false
 
+    actionInvokers: Set<AbstractComponent> = new Set<AbstractComponent>()
+
     constructor(targetShape: BaseShapeJS) {
         super();
 
         this.targetShape = targetShape
+    }
+
+    AddActionInvoker(component: AbstractComponent){
+        this.actionInvokers.add(component)
+    }
+
+    RemoveActionInvoker(component: AbstractComponent){
+        this.actionInvokers.delete(component)
+
+        if(this.actionInvokers.size == 0){
+            this.reset()
+        }
     }
 
     @GraphAction()

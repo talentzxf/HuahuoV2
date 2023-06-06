@@ -48,6 +48,16 @@ class FollowCurveComponent extends AbstractComponent {
         return this.tsFollowingTargetShape
     }
 
+    onComponentDisabled() {
+        super.onComponentDisabled();
+
+        this.baseShape.getAction().RemoveActionInvoker(this)
+    }
+
+    onComponentEnabled() {
+        this.baseShape.getAction().AddActionInvoker(this)
+    }
+
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
