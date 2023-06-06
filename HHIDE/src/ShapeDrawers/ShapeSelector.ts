@@ -478,7 +478,7 @@ class ShapeSelector extends BaseShapeDrawer {
                         if (shapeBoundingBox.intersects(selectionRectBoundingBox)) {
                             if(itemSelectable(shape)){
                                 this.selectObject(shape.data.meta)
-                                this.setTransformHandler(this.selectedShapes, pos)
+                                // this.setTransformHandler(this.selectedShapes, pos)
                             }
                         }
                     }
