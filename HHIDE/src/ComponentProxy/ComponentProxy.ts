@@ -2,9 +2,9 @@ import {AbstractComponent} from "hhenginejs";
 import {getMethodsAndVariables} from "hhcommoncomponents";
 import {huahuoEngine} from "hhenginejs";
 import {PropertyCategory, PropertyDef} from "hhenginejs";
-import {propertySheetFactory} from "hhenginejs";
 import {PropertyType} from "hhcommoncomponents";
 import {CustomFieldConfig} from "hhcommoncomponents";
+import {propertySheetFactory} from "./PropertySheetBuilderFactory";
 
 // Key is: className#fieldName
 // Value is the constructor of the divContent generator
