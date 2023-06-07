@@ -2,13 +2,13 @@ import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {ShapeArrayProperty} from "hhcommoncomponents";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
-import {FloatPropertyConfig} from "hhcommoncomponents/dist/src/Properties/PropertyConfig";
 import {huahuoEngine} from "../EngineAPI";
+import {IsValidWrappedObject, FloatPropertyConfig} from "hhcommoncomponents";
 
 @Component({compatibleShapes: ["BaseShapeJS"], maxCount: 1})
 class FollowCurveComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.shape, null, {allowDuplication: false} as ShapeArrayProperty)
-    targetShape
+    targetShape: BaseShapeJS
 
     // From 0.0 - 100.0
     // 0.0 -- At the beginning
@@ -16,7 +16,6 @@ class FollowCurveComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateFloat, null, {max: 1.0, min: 0.0} as FloatPropertyConfig)
     lengthRatio: number = 0.0
 
-    private tsFollowingTargetShape: BaseShapeJS
 
     private valueChangeHandlerId: number = -1;
 
@@ -27,22 +26,22 @@ class FollowCurveComponent extends AbstractComponent {
     }
 
     onTargetShapeChanged(followShape: BaseShapeJS){
-        if(this.tsFollowingTargetShape == followShape)
+        if(this.targetShape.getRawShape().ptr == followShape.getRawShape().ptr)
             return
 
-        if(this.tsFollowingTargetShape && this.valueChangeHandlerId > 0){
-            this.tsFollowingTargetShape.unregisterValueChangeHandler("*")(this.valueChangeHandlerId)
+        if(this.targetShape && this.valueChangeHandlerId > 0){
+            this.targetShape.unregisterValueChangeHandler("*")(this.valueChangeHandlerId)
         }
 
-        this.tsFollowingTargetShape = followShape
+        this.targetShape = followShape
 
         if(followShape != null){
             this.baseShape.getAction().AddActionInvoker(this)
 
-            let shapePosition = this.tsFollowingTargetShape.pivotPosition
+            let shapePosition = this.targetShape.pivotPosition
             this.baseShape.getAction().setPosition(shapePosition.x, shapePosition.y)
 
-            this.tsFollowingTargetShape.registerValueChangeHandler("*")(()=>{
+            this.targetShape.registerValueChangeHandler("*")(()=>{
                 this.afterUpdate(true)
             })
         } else {
@@ -53,10 +52,7 @@ class FollowCurveComponent extends AbstractComponent {
     }
 
     getFollowingTargetShape(){
-        if(this.tsFollowingTargetShape && !this.tsFollowingTargetShape.isValid()){
-            this.onTargetShapeChanged(null)
-        }
-        return this.tsFollowingTargetShape
+        return this.targetShape
     }
 
     override afterUpdate(force: boolean = false) {

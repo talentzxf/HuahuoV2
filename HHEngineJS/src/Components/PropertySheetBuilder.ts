@@ -1,5 +1,5 @@
-import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
-import {PropertyType} from "hhcommoncomponents";
+import {huahuoEngine} from "../EngineAPI";
+import {IsValidWrappedObject} from "hhcommoncomponents";
 
 const eps:number = 0.001;
 
@@ -196,11 +196,18 @@ class StringValueOperator extends CppValueOperator{
 
 class ShapeValueOperator extends CppValueOperator {
     getField(fieldName: string) {
-        return this.rawObj["GetShapeValue"](fieldName)
+        let rawObj = this.rawObj["GetShapeValue"](fieldName);
+        if(IsValidWrappedObject(rawObj)){
+            return huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
+        }
+        return null;
     }
 
     isEqual(v1, v2) {
-        return v1.ptr == v2.ptr
+        if(v1 == null || v2 == null)
+            return false
+
+        return v1.rawObj.ptr == v2.rawObj.ptr
     }
 
     registerField(fieldName: string, initValue) {
@@ -214,7 +221,7 @@ class ShapeValueOperator extends CppValueOperator {
             }
         }
 
-        this.rawObj["SetShapeValue"](fieldName, val)
+        this.rawObj["SetShapeValue"](fieldName, val.rawObj)
         return true
     }
 

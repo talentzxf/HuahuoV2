@@ -66,12 +66,19 @@ class ComponentProxyHandler{
         return origProperty
     }
 
+    getProxy(obj){
+        if(obj instanceof ComponentProxyHandler)
+            return obj.proxy
+
+        return obj
+    }
+
     propertySheetInited = false
     initPropertySheet(propertySheet) {
         if (!this.propertySheetInited) {
             this.propertySheetInited = true
 
-            let thisComponent: AbstractComponent = this
+            let thisComponent: AbstractComponent = this.getProxy(this)
 
             let myPropertySheet = this.getPropertySheet()
             myPropertySheet["rawObjPtr"] = thisComponent.rawObj.ptr
@@ -81,7 +88,7 @@ class ComponentProxyHandler{
     }
 
     getPropertySheet() {
-        let thisComponent: AbstractComponent = this
+        let thisComponent: AbstractComponent = this.getProxy(this)
 
         let componentConfigSheet = {
             key: thisComponent.getTypeName(),
