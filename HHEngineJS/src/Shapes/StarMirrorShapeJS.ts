@@ -10,14 +10,11 @@ class StarMirrorShapeJS extends BaseSolidShape{
         return new StarMirrorShapeJS(rawObj)
     }
 
-    constructor(rawObj) {
-        let needInitComponents = rawObj == null?true:false;
-        super(rawObj);
+    override initShapeFromEditor() {
+        super.initShapeFromEditor();
 
-        if(needInitComponents){
-            this.starMirrorComponent = new StarMirrorComponent()
-            this.addComponent(this.starMirrorComponent)
-        }
+        this.starMirrorComponent = new StarMirrorComponent()
+        this.addComponent(this.starMirrorComponent)
     }
 
     isSegmentSeletable(){

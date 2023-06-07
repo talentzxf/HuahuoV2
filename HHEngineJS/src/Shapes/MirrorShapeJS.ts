@@ -14,18 +14,10 @@ class MirrorShapeJS extends BaseSolidShape{
 
     mirrorComponent: MirrorComponent
 
-    constructor(rawObj) {
-        let needInitComponents = false
-        if(!rawObj){
-            needInitComponents = true
-        }
-
-        super(rawObj);
-
-        if(needInitComponents){
-            this.mirrorComponent = new MirrorComponent()
-            this.addComponent(this.mirrorComponent)
-        }
+    override initShapeFromEditor() {
+        super.initShapeFromEditor();
+        this.mirrorComponent = new MirrorComponent()
+        this.addComponent(this.mirrorComponent)
     }
 
     getShapeName(): string {

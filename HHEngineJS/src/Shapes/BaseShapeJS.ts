@@ -547,6 +547,13 @@ abstract class BaseShapeJS {
         }
     }
 
+    // Should only be called from HHIDE.
+    // As the addComponent is proxied in Editor.
+    // For player, all the components are loaded from file.
+    initShapeFromEditor(){
+
+    }
+
     isSelectable() {
         return true
     }

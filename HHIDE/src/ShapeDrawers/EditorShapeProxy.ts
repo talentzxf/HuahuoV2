@@ -186,6 +186,7 @@ class EditorShapeProxy{
         let proxy = new Proxy(baseShape, proxyHandler)
         proxyHandler.setProxy(proxy)
 
+        proxy.InitShapeFromEditor()
         return proxy
     }
 }

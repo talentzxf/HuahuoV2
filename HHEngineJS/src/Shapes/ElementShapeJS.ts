@@ -25,18 +25,19 @@ class ElementShapeJS extends BaseShapeJS {
     layerFrameMap: Map<any, number> = new Map();
 
     constructor(rawObj) {
-        let needAddComponent = !rawObj
         super(rawObj);
-
-        if (needAddComponent) {
-            this.addComponent(new ElementController())
-        }
 
         this.size = new paper.Point(100, 100)
 
         elementCreated++
 
         console.log("ELement created count:" + elementCreated)
+    }
+
+    override initShapeFromEditor() {
+        super.initShapeFromEditor();
+
+        this.addComponent(new ElementController())
     }
 
     protected isUpdateStrokeColor(): boolean {
