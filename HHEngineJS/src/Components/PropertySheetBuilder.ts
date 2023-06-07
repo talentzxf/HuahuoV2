@@ -249,12 +249,5 @@ class PropertyDef{
     hide: boolean = false
 }
 
-function capitalizeFirstLetter(str){
-    if(str.length == 0)
-        return ""
-
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-export {PropertyCategory, PropertyDef, capitalizeFirstLetter, buildOperator}
+export {PropertyCategory, PropertyDef, buildOperator}
 

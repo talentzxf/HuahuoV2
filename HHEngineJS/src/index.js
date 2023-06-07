@@ -26,7 +26,7 @@ import {StarMirrorShapeJS} from "./Shapes/StarMirrorShapeJS";
 import {Utils} from "./Shapes/Utils";
 import {AbstractComponent} from "./Components/AbstractComponent";
 import {PropertyCategory} from "./Components/PropertySheetBuilder"
-import {propertySheetFactory} from "./Components/PropertySheetBuilderFactory";
+import {PropertyDef} from "./Components/PropertySheetBuilder";
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 import {LGraphCanvas, LiteGraph} from "litegraph.js";
@@ -112,5 +112,5 @@ export {
     Utils,
     AbstractComponent,
     PropertyCategory,
-    propertySheetFactory
+    PropertyDef
 }

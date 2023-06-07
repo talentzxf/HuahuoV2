@@ -1,5 +1,5 @@
 import {AbstractComponent} from "../AbstractComponent";
-import {capitalizeFirstLetter} from "../PropertySheetBuilder";
+import {capitalizeFirstLetter} from "hhcommoncomponents";
 
 class VariableHandlerConfig {
     setter?: Function

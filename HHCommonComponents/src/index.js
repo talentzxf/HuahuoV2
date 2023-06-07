@@ -25,6 +25,7 @@ import {eventBus, GraphEvent} from "./EventBus/EventBus";
 import {mirrorPoint} from "./Math/MathFunctions";
 import {IsValidWrappedObject} from "./WrappedObjectUtils"
 import {CustomFieldConfig, CustomFieldContentDivGenerator, ShapeArrayProperty} from "./Properties/PropertyConfig";
+import {capitalizeFirstLetter} from "./Properties/Utils";
 
 if (!window.i18n) {
     window.i18n = new I18nHandler()
@@ -39,6 +40,7 @@ export {
     IsValidWrappedObject, getMethodsAndVariables,
     CustomFieldContentDivGenerator, CustomFieldConfig,
     GraphEvent, EventParam, EventEmitter, getParameterNameAtIdx,
-    getFullEventName, splitFullEventName, ShapeArrayProperty
+    getFullEventName, splitFullEventName, ShapeArrayProperty,
+    capitalizeFirstLetter
 }
 

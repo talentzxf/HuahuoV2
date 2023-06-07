@@ -1,9 +1,8 @@
 import {BaseShapeJS} from "../../Shapes/BaseShapeJS";
 import {huahuoEngine} from "../../EngineAPI";
 
-import {IsValidWrappedObject} from "hhcommoncomponents";
+import {IsValidWrappedObject, capitalizeFirstLetter} from "hhcommoncomponents";
 import {internalProcessComponent} from "./AbstractVariableHandler";
-import {capitalizeFirstLetter} from "../PropertySheetBuilder";
 
 class FieldShapeArrayIterable {
     fieldShapeArray // Store the cpp side array.

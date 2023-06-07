@@ -1,4 +1,4 @@
-import {capitalizeFirstLetter} from "../PropertySheetBuilder";
+import {capitalizeFirstLetter} from "hhcommoncomponents";
 import {ColorStop} from "../ColorStop";
 import {Logger} from "hhcommoncomponents";
 import {internalProcessComponent} from "./AbstractVariableHandler";
