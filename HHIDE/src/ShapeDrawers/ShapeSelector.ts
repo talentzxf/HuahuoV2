@@ -17,6 +17,9 @@ import {HHContent} from "hhpanel"
 import {findParentContent} from "hhpanel";
 import {objectDeleter} from "./ObjectDeleter";
 import {clearPrompt, setPrompt} from "../init";
+import {CommandArrayCommand} from "../RedoUndo/CommandArrayCommand";
+import {UndoableCommand, undoManager} from "../RedoUndo/UndoManager";
+import {DeleteShapeCommand} from "../RedoUndo/DeleteShapeCommand";
 
 
 const BOUNDMARGIN: number = 10
@@ -201,11 +204,17 @@ class ShapeSelector extends BaseShapeDrawer {
 
             this.selectedSegment = null
         } else {
+            let commands: Array<UndoableCommand> = new Array<UndoableCommand>()
+
             for (let shape of this.selectedShapes) {
-                objectDeleter.deleteShape(shape)
+                commands.push(new DeleteShapeCommand(shape.getLayer(), shape))
 
                 IDEEventBus.getInstance().emit(EventNames.OBJECTDELETED, shape)
             }
+
+            let commandArray: CommandArrayCommand = new CommandArrayCommand(commands);
+            undoManager.PushCommand(commandArray)
+            commandArray.DoCommand()
 
             this.clearSelection(false)
         }

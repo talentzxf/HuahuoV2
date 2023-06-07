@@ -25,3 +25,5 @@ class CommandArrayCommand extends UndoableCommand {
         }
     }
 }
+
+export {CommandArrayCommand}

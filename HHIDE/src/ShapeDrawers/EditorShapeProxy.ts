@@ -2,6 +2,8 @@ import {BaseShapeJS} from "hhenginejs";
 import {relaxRectangle} from "hhcommoncomponents"
 import {getMethodsAndVariables} from "hhcommoncomponents"
 import {defaultShapeDrawer} from "./Shapes"
+import {AbstractComponent} from "hhenginejs/dist/src/Components/AbstractComponent";
+import {EditorComponentProxy} from "../ComponentProxy/ComponentProxy";
 
 const BOUNDMARGIN: number = 10
 
@@ -64,6 +66,10 @@ class BaseShapeHandler{
     hide(){
         this.targetShape.hide.apply(this.proxy)
         this.updateBoundingBox()
+    }
+
+    addComponent(component: AbstractComponent, persistentTheComponent: boolean = true){
+        this.targetShape.addComponent.apply(this.proxy, [EditorComponentProxy.CreateProxy(component), persistentTheComponent])
     }
 
     updateBoundingBox() {
@@ -168,11 +174,10 @@ class BaseShapeHandler{
 
         return origProperty
     }
+
 }
 
-class EditorShapeProxy extends BaseShapeJS{
-
-    targetObj
+class EditorShapeProxy{
     static CreateProxy(baseShape: BaseShapeJS){
         let proxyHandler = new BaseShapeHandler(baseShape)
         let proxy = new Proxy(baseShape, proxyHandler)
