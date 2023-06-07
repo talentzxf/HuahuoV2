@@ -6,9 +6,10 @@ import {clzObjectFactory} from "../CppClassObjectFactory";
 import {huahuoEngine} from "../EngineAPI";
 
 let shapeName = "ImageShape"
-class ImageShapeJS extends AbstractMediaShapeJS{
 
-    static createImageShape(rawObj){
+class ImageShapeJS extends AbstractMediaShapeJS {
+
+    static createImageShape(rawObj) {
         return new ImageShapeJS(rawObj);
     }
 
@@ -21,11 +22,11 @@ class ImageShapeJS extends AbstractMediaShapeJS{
 
     resourceMD5: string
 
-    set isAnimation(isAnimation: boolean){
+    set isAnimation(isAnimation: boolean) {
         this.rawObj.SetIsAnimation(isAnimation)
     }
 
-    get isAnimation(){
+    get isAnimation() {
         return this.rawObj.GetIsAnimation()
     }
 
@@ -35,18 +36,18 @@ class ImageShapeJS extends AbstractMediaShapeJS{
 
     onDataLoaded() {
         this.isAnimation = this.rawObj.GetIsAnimation()
-        if(this.isAnimation)
+        if (this.isAnimation)
             this.loadFrameData()
 
-        if(this.paperItem){
+        if (this.paperItem) {
             let raster = this.paperItem as paper.Raster
             raster.source = this.data
         }
     }
 
-    loadFrameData(){
-        if(!this.animationLoaded){
-            let binaryData:Uint8Array = dataURItoBlob(this.data)
+    loadFrameData() {
+        if (!this.animationLoaded) {
+            let binaryData: Uint8Array = dataURItoBlob(this.data)
             let gif = parseGIF(binaryData)
             this.frames = decompressFrames(gif, true)
 
@@ -54,15 +55,15 @@ class ImageShapeJS extends AbstractMediaShapeJS{
             this.worldFrameAnimationFrameMap = new Map<number, number>()
             let animationFrameId = 0
             let lastWorldFrame = -1
-            for(let frame of this.frames){
+            for (let frame of this.frames) {
                 let elapsedFrames = Math.floor(elapsedTime * GlobalConfig.fps);
 
-                for(let frameId = lastWorldFrame + 1; frameId <= elapsedFrames; frameId++){
+                for (let frameId = lastWorldFrame + 1; frameId <= elapsedFrames; frameId++) {
                     this.worldFrameAnimationFrameMap.set(frameId, animationFrameId)
                     lastWorldFrame = frameId
                 }
 
-                let delay = frame.delay?frame.delay/1000.0: 1.0/GlobalConfig.fps
+                let delay = frame.delay ? frame.delay / 1000.0 : 1.0 / GlobalConfig.fps
 
                 elapsedTime += delay // delay is in milliseconds
                 animationFrameId++
@@ -79,10 +80,10 @@ class ImageShapeJS extends AbstractMediaShapeJS{
         }
     }
 
-    createShape(){
+    createShape() {
         super.createShape()
 
-        let _paper:any = this.getPaperJs()
+        let _paper: any = this.getPaperJs()
         let tempShape = new _paper.Raster()
         tempShape.data.meta = this
         tempShape.position = _paper.view.center
@@ -91,12 +92,12 @@ class ImageShapeJS extends AbstractMediaShapeJS{
 
         // As data is loaded asynchronously, it might not be ready when the shape is created.
         // In that case, should load the frame data when the load is completed.
-        if(this.isAnimation){
-            if(this.data){
+        if (this.isAnimation) {
+            if (this.data) {
                 this.loadFrameData()
-            }else{
+            } else {
                 let _this = this
-                this.loadDataFromCpp().then(()=>{
+                this.loadDataFromCpp().then(() => {
                     _this.loadFrameData()
                 })
             }
@@ -109,10 +110,10 @@ class ImageShapeJS extends AbstractMediaShapeJS{
         super.afterCreateShape()
     }
 
-    appendProperties(){
+    appendProperties() {
         super.appendProperties()
 
-        if(this.isAnimation){
+        if (this.isAnimation) {
             // Position
             this.propertySheet.addProperty({
                 key: "inspector.image.Frames",
@@ -124,19 +125,19 @@ class ImageShapeJS extends AbstractMediaShapeJS{
     }
 
     afterUpdate(force: boolean = false) {
-        if(!this.isLoaded()){
+        if (!this.isLoaded()) {
             return
         }
         super.afterUpdate(force);
 
-        if(this.rawObj.IsVisible() && this.isAnimation){
+        if (this.rawObj.IsVisible() && this.isAnimation) {
             let bornFrameId = this.rawObj.GetBornFrameId();
             let worldFrameId = this.getLayer().GetCurrentFrame();
 
             let curFrameId = Math.floor((worldFrameId - bornFrameId) % this.animationTotalWorldFrames)
             let playingAnimationFrameId = this.worldFrameAnimationFrameMap.get(curFrameId)
 
-            if(this.lastAnimationFrame != playingAnimationFrameId){
+            if (this.lastAnimationFrame != playingAnimationFrameId) {
                 let frame = this.frames[playingAnimationFrameId]
                 let raster = this.paperItem as paper.Raster
                 raster.clear()
@@ -144,14 +145,14 @@ class ImageShapeJS extends AbstractMediaShapeJS{
                 let dims = frame.dims
                 let frameImageData = raster.createImageData(new paper.Size(dims.width, dims.height))
                 frameImageData.data.set(frame.patch)
-                raster.setImageData(frameImageData)
+                raster.setImageData(frameImageData, new paper.Point(0, 0))
 
                 this.lastAnimationFrame = playingAnimationFrameId
             }
         }
     }
 
-    getFrames(){
+    getFrames() {
         return this.worldFrameAnimationFrameMap.size;
     }
 }

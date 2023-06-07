@@ -165,6 +165,8 @@ class AbstractComponent {
     disableComponent() {
         this.rawObj.SetBooleanValue("isActive", false)
 
+        this.propertySheetInited = false
+
         this.onComponentDisabled()
 
         if(this.baseShape)

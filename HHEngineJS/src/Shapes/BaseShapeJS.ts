@@ -1092,10 +1092,16 @@ abstract class BaseShapeJS {
         return new paper.Point(engineV3Point.x, engineV3Point.y)
     }
 
+    isValid(){
+        return this.rawObj == null
+    }
+
     remove() {
         // TODO: TODO
         huahuoEngine.DestroyShape(this.rawObj)
         this.removePaperObj()
+
+        this.rawObj = null
 
         this.callHandlers("shapeRemoved", null)
     }

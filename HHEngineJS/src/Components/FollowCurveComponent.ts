@@ -60,7 +60,7 @@ class FollowCurveComponent extends AbstractComponent {
         }
 
         if(this.baseShape.isVisible()){
-            if(this.tsFollowingTargetShape && this.tsFollowingTargetShape){
+            if(this.tsFollowingTargetShape && this.tsFollowingTargetShape.isValid() != null){
                 this.tsFollowingTargetShape.afterUpdate(true) // Force update the curveShape.
 
                 let totalLength = this.tsFollowingTargetShape.length()
