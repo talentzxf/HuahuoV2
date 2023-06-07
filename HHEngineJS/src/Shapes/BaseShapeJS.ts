@@ -121,7 +121,6 @@ abstract class BaseShapeJS {
 
         this.customComponentMap.set(component.rawObj.ptr, component)
         component.setBaseShape(this)
-        component.initPropertySheet(this.propertySheet)
 
         let _this = this
         component.registerValueChangeHandler("*", () => {

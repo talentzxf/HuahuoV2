@@ -1,11 +1,11 @@
 import {CustomFieldContentDivGenerator} from "hhcommoncomponents";
-import {registerCustomFieldContentDivGeneratorConstructor} from "hhenginejs";
 import {formManager} from "../../Utilities/FormManager";
 import {SelectIconForm} from "./SelectIconForm";
 import {Property} from "hhcommoncomponents";
 import {AbstractComponent} from "hhenginejs";
 import {Particles} from "hhenginejs";
 import {HHRefreshableIconComponent} from "../InputComponents/HHRefreshableIconComponent";
+import {registerCustomFieldContentDivGeneratorConstructor} from "../../ComponentProxy/ComponentProxy";
 
 class IconSelectDivGenerator implements CustomFieldContentDivGenerator{
     targetComponent: AbstractComponent

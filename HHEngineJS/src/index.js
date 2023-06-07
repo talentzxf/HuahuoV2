@@ -19,13 +19,14 @@ import {NailShapeJS} from "./Shapes/NailShapeJS";
 import {ParticleSystemJS} from "./Shapes/ParticleSystemJS";
 import {ParticleSystemRenderer} from "./Components/ParticleSystemRenderer";
 import {Particles} from "./ParticleSystem/Particles";
-import {registerCustomFieldContentDivGeneratorConstructor} from "./Components/AbstractComponent"
 import {BaseShapeActions} from "./EventGraph/BaseShapeActions";
 import {EventNode} from "./EventGraph/Nodes/EventNode";
 import {ActionNode} from "./EventGraph/Nodes/ActionNode";
 import {StarMirrorShapeJS} from "./Shapes/StarMirrorShapeJS";
 import {Utils} from "./Shapes/Utils";
-import {SetShapeDecorator} from "./Shapes/LoadShape";
+import {AbstractComponent} from "./Components/AbstractComponent";
+import {PropertyCategory} from "./Components/PropertySheetBuilder"
+import {propertySheetFactory} from "./Components/PropertySheetBuilderFactory";
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 import {LGraphCanvas, LiteGraph} from "litegraph.js";
@@ -102,12 +103,14 @@ export {
     ColorStop,
     getNailManager,
     isInheritedFromClzName,
-    registerCustomFieldContentDivGeneratorConstructor,
     BaseShapeActions,
     EventNode,
     ActionNode,
     LGraphCanvas,
     LiteGraph,
     StarMirrorShapeJS,
-    Utils
+    Utils,
+    AbstractComponent,
+    PropertyCategory,
+    propertySheetFactory
 }

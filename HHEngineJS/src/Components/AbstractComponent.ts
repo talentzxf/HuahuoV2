@@ -2,8 +2,7 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import "reflect-metadata"
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
 import {PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
-import {propertySheetFactory} from "./PropertySheetBuilderFactory"
-import {CustomFieldConfig, PropertyConfig, PropertyType} from "hhcommoncomponents";
+import {PropertyConfig} from "hhcommoncomponents";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {ComponentConfig} from "./ComponentConfig";
 import {defaultVariableProcessor} from "./VariableHandlers/DefaultVariableProcessor";
@@ -11,22 +10,6 @@ import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
 import {colorStopArrayHandler} from "./VariableHandlers/ColorArrayProcessor";
 import {subComponentArrayHandler} from "./VariableHandlers/SubComponentArrayHandler";
 import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariableHandler";
-import {huahuoEngine} from "../EngineAPI";
-
-
-// Key is: className#fieldName
-// Value is the constructor of the divContent generator
-let customFieldContentDivGeneratorMap: Map<string, Function> = new Map()
-
-function registerCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string, constructor: Function) {
-    let fieldFullName = className + "#" + fieldName
-    customFieldContentDivGeneratorMap.set(fieldFullName, constructor)
-}
-
-function getCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string): Function {
-    let fieldFullName = className + "#" + fieldName
-    return customFieldContentDivGeneratorMap.get(fieldFullName)
-}
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -66,6 +49,10 @@ function Component(componentConfig?: ComponentConfig) {
 declare function castObject(obj: any, clz: any): any;
 
 class AbstractComponent {
+
+    static getMetaDataKey(){
+        return metaDataKey
+    }
 
     isBuiltIn: boolean = false
 
@@ -186,68 +173,6 @@ class AbstractComponent {
             this.baseShape.update(true)
     }
 
-    getPropertySheet() {
-        let _this = this
-        let componentConfigSheet = {
-            key: this.getTypeName(),
-            type: PropertyType.COMPONENT,
-            targetObject: this.baseShape,
-            config: {
-                children: [],
-                enabler: () => {
-                    _this.enableComponent()
-                },
-                disabler: () => {
-                    _this.disableComponent()
-                },
-                isActive: () => {
-                    return _this.isComponentActive()
-                }
-            }
-        }
-
-        if(!this.isBuiltIn){
-            componentConfigSheet.config["deleter"] = ()=>{
-                huahuoEngine.dispatchEvent("HHIDE", "DeleteComponent", this)
-            }
-        }
-
-        const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
-        if (properties != null) {
-            for (let propertyMeta of properties) {
-                if (propertyMeta.type == PropertyCategory.customField) {
-                    if (propertyMeta.config == null || propertyMeta.config["contentDivGenerator"] == null) {
-
-                        propertyMeta = {...propertyMeta} // Clone it to avoid affecting other objects. Shallow copy should be enough.
-
-                        let divGeneratorConstructor = getCustomFieldContentDivGeneratorConstructor(this.constructor.name, propertyMeta.key)
-
-                        // @ts-ignore
-                        let contentDivGenerator = new divGeneratorConstructor(this)
-                        propertyMeta.config = {
-                            fieldName: propertyMeta["key"],
-                            contentDivGenerator: contentDivGenerator
-                        } as CustomFieldConfig
-                    }
-                }
-                let propertySheetEntry = propertySheetFactory.createEntry(this, propertyMeta, this.valueChangeHandler)
-                if (propertySheetEntry != null) {
-                    componentConfigSheet.config.children.push(propertySheetEntry)
-                }
-            }
-        }
-
-        let keyFramePropertySheet = propertySheetFactory.createEntryByNameAndCategory("keyframes", PropertyCategory.keyframeArray)
-
-        keyFramePropertySheet["getter"] = this.getKeyFrames.bind(this)
-        keyFramePropertySheet["targetObject"] = this.baseShape
-        keyFramePropertySheet["deleter"] = this.baseShape.deleteComponentKeyFrame(this.getTypeName()).bind(this.baseShape)
-
-        componentConfigSheet.config.children.push(keyFramePropertySheet)
-
-        return componentConfigSheet
-    }
-
     getKeyFrames() {
         let keyFrameCount = this.rawObj.GetKeyFrameCount()
         let keyFrames = []
@@ -259,17 +184,6 @@ class AbstractComponent {
 
     insertKeyFrames(val) {
 
-    }
-
-    initPropertySheet(propertySheet) {
-        if (!this.propertySheetInited) {
-            this.propertySheetInited = true
-
-            let myPropertySheet = this.getPropertySheet()
-            myPropertySheet["rawObjPtr"] = this.rawObj.ptr
-            if (myPropertySheet)
-                propertySheet.addProperty(myPropertySheet)
-        }
     }
 
     cleanUp() {
@@ -305,4 +219,4 @@ class AbstractComponent {
 }
 
 
-export {AbstractComponent, PropertyValue, Component, registerCustomFieldContentDivGeneratorConstructor}
+export {AbstractComponent, PropertyValue, Component}

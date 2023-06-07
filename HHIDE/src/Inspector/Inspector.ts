@@ -193,7 +193,7 @@ class Inspector extends HTMLElement{
                 }
 
                 if (allComponentTitleDivs.length >= 2) {
-                    contentDiv.insertBefore(this.createOpenCollapseButton(allComponentTitleDivs), contentDiv.firstChild)
+                    contentDiv.insertBefore(this.createOpenCollapseButton(allComponentTitleDivs), contentDiv.firstChild) 
                 }
 
                 this.shapePropertyDivMapping.set(targetObj, contentDiv)

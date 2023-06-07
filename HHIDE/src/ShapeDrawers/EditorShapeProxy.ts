@@ -69,7 +69,10 @@ class BaseShapeHandler{
     }
 
     addComponent(component: AbstractComponent, persistentTheComponent: boolean = true){
-        this.targetShape.addComponent.apply(this.proxy, [EditorComponentProxy.CreateProxy(component), persistentTheComponent])
+        let componentProxy = EditorComponentProxy.CreateProxy(component)
+        this.targetShape.addComponent.apply(this.proxy, [componentProxy, persistentTheComponent])
+
+        componentProxy.initPropertySheet(this.proxy.propertySheet)
     }
 
     updateBoundingBox() {
