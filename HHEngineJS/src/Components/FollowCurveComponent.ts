@@ -36,20 +36,27 @@ class FollowCurveComponent extends AbstractComponent {
 
         this.tsFollowingTargetShape = followShape
 
-        let shapePosition = this.tsFollowingTargetShape.pivotPosition
-        this.baseShape.getAction().setPosition(shapePosition.x, shapePosition.y)
+        if(followShape != null){
+            this.baseShape.getAction().AddActionInvoker(this)
 
-        this.tsFollowingTargetShape.registerValueChangeHandler("*")(()=>{
-            this.afterUpdate(true)
-        })
+            let shapePosition = this.tsFollowingTargetShape.pivotPosition
+            this.baseShape.getAction().setPosition(shapePosition.x, shapePosition.y)
+
+            this.tsFollowingTargetShape.registerValueChangeHandler("*")(()=>{
+                this.afterUpdate(true)
+            })
+        } else {
+            this.baseShape.getAction().RemoveActionInvoker(this)
+
+            this.valueChangeHandler.callHandlers("targetShape", null)
+        }
     }
 
     getFollowingTargetShape(){
+        if(this.tsFollowingTargetShape && !this.tsFollowingTargetShape.isValid()){
+            this.onTargetShapeChanged(null)
+        }
         return this.tsFollowingTargetShape
-    }
-
-    onComponentEnabled() {
-        this.baseShape.getAction().AddActionInvoker(this)
     }
 
     override afterUpdate(force: boolean = false) {
@@ -60,14 +67,15 @@ class FollowCurveComponent extends AbstractComponent {
         }
 
         if(this.baseShape.isVisible()){
-            if(this.tsFollowingTargetShape && this.tsFollowingTargetShape.isValid() != null){
-                this.tsFollowingTargetShape.afterUpdate(true) // Force update the curveShape.
+            let followTargetShape = this.getFollowingTargetShape()
+            if(followTargetShape){
+                followTargetShape.afterUpdate(true) // Force update the curveShape.
 
-                let totalLength = this.tsFollowingTargetShape.length()
+                let totalLength = followTargetShape.length()
                 let targetLength = totalLength * this.lengthRatio
-                let curvePoint = this.tsFollowingTargetShape.getPointAt(targetLength)
+                let curvePoint = followTargetShape.getPointAt(targetLength)
 
-                let globalCurvePoint = this.tsFollowingTargetShape.localToGlobal(curvePoint)
+                let globalCurvePoint = followTargetShape.localToGlobal(curvePoint)
 
                 this.baseShape.getAction().setPosition(globalCurvePoint.x, globalCurvePoint.y)
                 this.baseShape.afterUpdate(force) // Refresh the shape to reflect the change.

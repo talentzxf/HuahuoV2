@@ -1093,7 +1093,7 @@ abstract class BaseShapeJS {
     }
 
     isValid(){
-        return this.rawObj == null
+        return this.rawObj != null
     }
 
     remove() {
