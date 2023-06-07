@@ -1093,15 +1093,18 @@ abstract class BaseShapeJS {
     }
 
     isValid(){
-        return this.rawObj != null
+        return this.isRemoved == false
     }
+
+    isRemoved: boolean = false
 
     remove() {
         // TODO: TODO
-        huahuoEngine.DestroyShape(this.rawObj)
-        this.removePaperObj()
+        // huahuoEngine.DestroyShape(this.rawObj)
 
-        this.rawObj = null
+        this.detachFromCurrentLayer()
+        this.removePaperObj()
+        this.isRemoved = true
 
         this.callHandlers("shapeRemoved", null)
     }

@@ -54,7 +54,7 @@ class FollowCurveComponent extends AbstractComponent {
 
     getFollowingTargetShape(){
         if(this.tsFollowingTargetShape && !this.tsFollowingTargetShape.isValid()){
-            this.onTargetShapeChanged(null)
+            this.targetShape = null
         }
         return this.tsFollowingTargetShape
     }

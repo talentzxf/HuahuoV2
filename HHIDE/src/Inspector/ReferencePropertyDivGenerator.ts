@@ -12,6 +12,10 @@ class ReferencePropertyDesc extends BasePropertyDesc{
     shapeNameSpan: HTMLSpanElement
 
     formatShapeName(type:string, name:string){
+        if(type == null){
+            return "Unselected"
+        }
+
         return type + "[" + name + "]"
     }
 
@@ -45,6 +49,8 @@ class ReferencePropertyDesc extends BasePropertyDesc{
         this.referenceDiv.appendChild(shapeSelectButton)
 
         this.contentDiv.appendChild(this.referenceDiv)
+
+        property.registerValueChangeFunc(this.onValueChanged.bind(this))
     }
 
     onShapePicked(selectedShape:BaseShapeJS){
@@ -65,13 +71,14 @@ class ReferencePropertyDesc extends BasePropertyDesc{
     }
 
     onValueChanged(val) {
-        if(val == null)
-            return;
-        
-        let typeName = val.typename
-        let name = val.name
+        if(val == null){
+            this.shapeNameSpan.innerText = this.formatShapeName(null, null)
+        }else{
+            let typeName = val.typename
+            let name = val.name
 
-        this.shapeNameSpan.innerText = this.formatShapeName(typeName, name)
+            this.shapeNameSpan.innerText = this.formatShapeName(typeName, name)
+        }
     }
 
     beginToPickupShape(){

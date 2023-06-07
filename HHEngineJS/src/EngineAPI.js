@@ -153,6 +153,7 @@ class EngineAPI{
                 shape.update()
                 layer.AddShapeInternal(shape.getRawShape())
                 shape.isPermanent = true
+                shape.isDeleted = false
 
                 if(this.activePlayer){
                     this.activePlayer.getLayerShapes(layer).set(shape.getRawShape().ptr, shape)
