@@ -179,14 +179,14 @@ class BaseShapeHandler{
     }
 
 }
-
 class EditorShapeProxy{
-    static CreateProxy(baseShape: BaseShapeJS){
+    static CreateProxy(baseShape: BaseShapeJS, invokeShapeInit: boolean = true){
         let proxyHandler = new BaseShapeHandler(baseShape)
         let proxy = new Proxy(baseShape, proxyHandler)
         proxyHandler.setProxy(proxy)
 
-        proxy.InitShapeFromEditor()
+        if(invokeShapeInit)
+            proxy.initShapeFromEditor()
         return proxy
     }
 }

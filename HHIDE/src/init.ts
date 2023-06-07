@@ -44,7 +44,7 @@ function init(){
             shortcutsManager.init()
 
             huahuoEngine.setShapeDecorator((shape)=>{
-                return EditorShapeProxy.CreateProxy(shape)
+                return EditorShapeProxy.CreateProxy(shape, false)
             })
         })
     })

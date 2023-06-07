@@ -169,7 +169,7 @@ class AbstractComponent {
         // Something might be changed, so we need to refresh the shape.
         // But if the shape or the paper shape has not been created yet, do not refresh it.
         // TODO: if there're a lot of components, how to avoid update again and again?
-        if(this.baseShape && this.baseShape.paperShape)
+        if(this.baseShape && this.baseShape.paperShape && !this.baseShape.isLoadingComponents)
             this.baseShape.update(true)
     }
 

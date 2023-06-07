@@ -866,7 +866,9 @@ abstract class BaseShapeJS {
         this.LoadComponents()
     }
 
+    isLoadingComponents: Boolean = false
     LoadComponents() {
+        this.isLoadingComponents = true
         // Create all the component wrapper in the JS side.
         let componentCount = this.rawObj.GetFrameStateCount()
         for (let idx = 0; idx < componentCount; idx++) {
@@ -884,6 +886,8 @@ abstract class BaseShapeJS {
                 this.customComponentMap.set(componentRawObj.ptr, component)
             }
         }
+
+        this.isLoadingComponents = false
     }
 
     getTypeName() {
