@@ -4,7 +4,9 @@ import {undoManager} from "../RedoUndo/UndoManager";
 import {ShapeMoveCommand} from "../RedoUndo/ShapeMoveCommand";
 import {BaseShapeJS} from "hhenginejs"
 import {FollowCurveComponent} from "hhenginejs";
-import {SetFloatCommand} from "../RedoUndo/SetFieldCommands/SetFloatCommand";
+import {SetFieldValueCommand} from "../RedoUndo/SetFieldCommands/SetFieldValueCommand";
+
+let eps = 0.01
 
 function getFollowCurveComponentFromBaseShape(shape: BaseShapeJS): FollowCurveComponent {
     if (shape instanceof BaseShapeJS) {
@@ -93,13 +95,10 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase {
                         let oldRatio = followCurveComponent.lengthRatio
                         let newRatio = length / followingCurve.length()
 
-                        let setRatioCommand = new SetFloatCommand(
-                            (value) => {
-                                followCurveComponent.setLengthRatio(value)
-                            },
+                        let setRatioCommand = new SetFieldValueCommand<number>(
+                            followCurveComponent.setLengthRatio,
                             oldRatio,
-                            newRatio,
-                            followingCurve
+                            newRatio
                         )
 
                         setRatioCommand.DoCommand()
@@ -121,9 +120,13 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase {
 
     endMove() {
         for (let obj of this.curObjs) {
-            let prevPosition = this.startPosMap.get(obj)
-            let command = new ShapeMoveCommand(obj, prevPosition, obj.position)
-            undoManager.PushCommand(command)
+
+            let prevPosition = obj.localToGlobal(this.startPosMap.get(obj))
+
+            if (obj.position.getDistance(prevPosition) >= eps) {
+                let command = new ShapeMoveCommand(obj, prevPosition, obj.position)
+                undoManager.PushCommand(command)
+            }
         }
     }
 }
