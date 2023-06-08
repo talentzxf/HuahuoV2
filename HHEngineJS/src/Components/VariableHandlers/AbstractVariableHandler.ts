@@ -20,7 +20,7 @@ function internalProcessComponent(component: AbstractComponent, fieldName: strin
         component[getterName] = config.getter.bind(component)
     }
 
-    let setterName = "set" + capitalizeFirstLetter(fieldName) // Set is actually insert.
+    let setterName = "set" + capitalizeFirstLetter(fieldName)
     if (config.setter) { // Call setter function will trigger events.
         component[setterName] = (val)=>{
             let currentValue = component[fieldName]
