@@ -20,6 +20,7 @@ import {clearPrompt, setPrompt} from "../init";
 import {CommandArrayCommand} from "../RedoUndo/CommandArrayCommand";
 import {UndoableCommand, undoManager} from "../RedoUndo/UndoManager";
 import {DeleteShapeCommand} from "../RedoUndo/DeleteShapeCommand";
+import {CreateShapeCommand} from "../RedoUndo/CreateShapeCommand";
 
 
 const BOUNDMARGIN: number = 10
@@ -98,6 +99,9 @@ class ShapeSelector extends BaseShapeDrawer {
             duplicatedShape.store()
 
             duplicatedShapes.add(duplicatedShape)
+
+            let createShapeCommand = new CreateShapeCommand(duplicatedShape.getLayer(), duplicatedShape)
+            undoManager.PushCommand(createShapeCommand)
         }
 
         this.clearSelection()
