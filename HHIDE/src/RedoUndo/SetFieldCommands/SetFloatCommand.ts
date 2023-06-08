@@ -1,15 +1,20 @@
 import {MergableCommand} from "../UndoManager";
+import {AbstractComponent} from "hhenginejs";
 class SetFloatCommand extends MergableCommand{
     setter: Function
     oldValue: number
     newValue: number
 
-    constructor(setter, oldValue, newValue) {
+    targetComponent: AbstractComponent
+
+    constructor(setter, oldValue, newValue, targetComponent = null) {
         super();
 
         this.setter = setter
         this.oldValue = oldValue
         this.newValue = newValue
+
+        this.targetComponent = targetComponent
     }
     GetType(): string {
         return "SetFloatValue From:" + this.oldValue + " to" + this.newValue;
@@ -25,7 +30,7 @@ class SetFloatCommand extends MergableCommand{
 
     override MergeCommand(anotherCommand:MergableCommand): boolean{
         let newSetFloatValueCommand = anotherCommand as SetFloatCommand
-        if(newSetFloatValueCommand.setter == this.setter){
+        if(newSetFloatValueCommand.setter == this.setter || newSetFloatValueCommand.targetComponent == this.targetComponent){
             this.newValue = newSetFloatValueCommand.newValue
             return true
         }

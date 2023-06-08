@@ -4,6 +4,7 @@ import {undoManager} from "../RedoUndo/UndoManager";
 import {ShapeMoveCommand} from "../RedoUndo/ShapeMoveCommand";
 import {BaseShapeJS} from "hhenginejs"
 import {FollowCurveComponent} from "hhenginejs";
+import {SetFloatCommand} from "../RedoUndo/SetFieldCommands/SetFloatCommand";
 
 function getFollowCurveComponentFromBaseShape(shape: BaseShapeJS): FollowCurveComponent {
     if (shape instanceof BaseShapeJS) {
@@ -88,7 +89,21 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase {
                         proposedNewPosition = followingCurve.getGlobalNearestPoint(proposedNewPosition)
 
                         let length = followingCurve.getGlobalOffsetOf(proposedNewPosition)
-                        followCurveComponent.setLengthRatio(length / followingCurve.length())
+
+                        let oldRatio = followCurveComponent.lengthRatio
+                        let newRatio = length / followingCurve.length()
+
+                        let setRatioCommand = new SetFloatCommand(
+                            (value) => {
+                                followCurveComponent.setLengthRatio(value)
+                            },
+                            oldRatio,
+                            newRatio,
+                            followingCurve
+                        )
+
+                        setRatioCommand.DoCommand()
+                        undoManager.PushCommand(setRatioCommand)
                     }
                 }
 

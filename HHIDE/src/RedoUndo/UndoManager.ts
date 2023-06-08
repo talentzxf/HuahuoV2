@@ -97,7 +97,7 @@ abstract class TransformCommand extends MergableCommand{
         super.UnDoCommand();
 
         this.targetShape.store()
-        this.targetShape.update(true)
+        this.targetShape.update(true)        
     }
 }
 

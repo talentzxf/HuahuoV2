@@ -547,9 +547,9 @@ abstract class BaseShapeJS {
         }
     }
 
-    // Should only be called from HHIDE.
+    // Should only be called from HHIDE when creating new shapes.
     // As the addComponent is proxied in Editor.
-    // For player, all the components are loaded from file.
+    // For player, all components are loaded from file.
     initShapeFromEditor(){
 
     }
