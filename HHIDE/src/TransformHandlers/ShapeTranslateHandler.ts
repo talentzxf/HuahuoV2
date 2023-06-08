@@ -1,10 +1,11 @@
 import {ShapeTranslateMorphBase} from "./ShapeTranslateMorphBase";
 import {Vector2} from "hhcommoncomponents"
-import {undoManager} from "../RedoUndo/UndoManager";
+import {UndoableCommand, undoManager} from "../RedoUndo/UndoManager";
 import {ShapeMoveCommand} from "../RedoUndo/ShapeMoveCommand";
 import {BaseShapeJS} from "hhenginejs"
 import {FollowCurveComponent} from "hhenginejs";
 import {SetFieldValueCommand} from "../RedoUndo/SetFieldCommands/SetFieldValueCommand";
+import {CommandArrayCommand} from "../RedoUndo/CommandArrayCommand";
 
 let eps = 0.01
 
@@ -24,6 +25,8 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase {
     // Map from shape->local position of the mouse.
     // After translation, local position should still remain unchanged.
     private startPosMap: Map<BaseShapeJS, Vector2> = new Map
+
+    private originalPosMap: Map<BaseShapeJS, Vector2> = new Map
 
     constructor() {
         super();
@@ -50,8 +53,12 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase {
         this.lastPos = startPos
 
         this.startPosMap.clear()
+
+        this.originalPosMap.clear()
+
         for (let obj of this.curObjs) {
             this.startPosMap.set(obj, obj.globalToLocal(startPos))
+            this.originalPosMap.set(obj, obj.position)
         }
     }
 
@@ -119,15 +126,30 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase {
     }
 
     endMove() {
+        let singleCommand = this.curObjs.size == 1
+
+        let commandArray = new Array<UndoableCommand>()
+
         for (let obj of this.curObjs) {
 
-            let prevPosition = obj.localToGlobal(this.startPosMap.get(obj))
+            let prevPosition = this.originalPosMap.get(obj)
 
             if (obj.position.getDistance(prevPosition) >= eps) {
                 let command = new ShapeMoveCommand(obj, prevPosition, obj.position)
-                undoManager.PushCommand(command)
+
+                if(singleCommand)
+                    undoManager.PushCommand(command)
+                else{
+                    commandArray.push(command)
+                }
             }
         }
+
+        if(!singleCommand){
+
+            undoManager.PushCommand(new CommandArrayCommand(commandArray))
+        }
+
     }
 }
 
