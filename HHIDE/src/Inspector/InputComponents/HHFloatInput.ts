@@ -1,5 +1,7 @@
 import {CustomElement} from "hhcommoncomponents";
 import {HHCurveInput} from "./HHCurveInput";
+import {undoManager} from "../../RedoUndo/UndoManager";
+import {SetFloatCommand} from "../../RedoUndo/SetFieldCommands/SetFloatCommand";
 
 @CustomElement({
     selector: "hh-float-input"
@@ -66,8 +68,14 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
     }
 
     inputValueChanged(){
-        if(this.setter)
-            this.setter(Number(this.inputElement.value))
+        if(this.setter){
+            let oldValue = Number(this.getter())
+            let newValue = Number(this.inputElement.value)
+
+            let command = new SetFloatCommand(this.setter, oldValue, newValue)
+            undoManager.PushCommand(command)
+            command.DoCommand()
+        }
     }
 
     hideCurveInput(){
