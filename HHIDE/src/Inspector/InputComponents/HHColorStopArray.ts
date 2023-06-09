@@ -7,6 +7,7 @@ import {createPenShape, selectedPenCapColor, unselectedPenCapColor} from "./Util
 import {ArrayInsertCommand} from "../../RedoUndo/ArrayInsertCommand";
 import {ArrayDeleteCommand} from "../../RedoUndo/ArrayDeleteCommand";
 import {undoManager} from "../../RedoUndo/UndoManager";
+import {SetFieldValueCommand} from "../../RedoUndo/SetFieldValueCommand";
 
 const rectangleOffset = 10
 const canvasWidth = 200
@@ -320,6 +321,14 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         this.selectPen(pen)
     }
 
+    colorStopValueSetter(colorStop){
+        return function(value){
+            colorStop.value = value
+            this.updater(colorStop)
+            this.refresh()
+        }
+    }
+
     onPenMouseDrag(evt: paper.MouseEvent) {
         if (!evt.target["data"] || !evt.target["data"]["meta"]) {
             return
@@ -331,14 +340,20 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
 
         let colorStop = pen.colorStop
         let deltaPortion = (evt["delta"].x / rectangleWidth)
-        colorStop.value += deltaPortion
+
+        let oldValue = colorStop.value
+
+
+        let newValue = oldValue + deltaPortion
 
         // Clamp between 0-1
-        colorStop.value = Math.min(colorStop.value, 1.0)
-        colorStop.value = Math.max(0.0, colorStop.value)
+        newValue = Math.min(newValue, 1.0)
+        newValue = Math.max(0.0, newValue)
 
-        this.updater(colorStop)
-        this.refresh()
+        let setFieldValueCommand = new SetFieldValueCommand(this.colorStopValueSetter(colorStop).bind(this), oldValue, newValue)
+
+        setFieldValueCommand.DoCommand()
+        undoManager.PushCommand(setFieldValueCommand)
     }
 
     refresh() {
