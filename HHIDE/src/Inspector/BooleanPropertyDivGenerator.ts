@@ -1,6 +1,6 @@
 import {BasePropertyDesc, BasePropertyDivGenerator} from "./BasePropertyDivGenerator";
 import {Property} from "hhcommoncomponents"
-import {SetFieldValueCommand} from "../RedoUndo/SetFieldCommands/SetFieldValueCommand";
+import {SetFieldValueCommand} from "../RedoUndo/SetFieldValueCommand";
 import {undoManager} from "../RedoUndo/UndoManager";
 
 class BooleanPropertyDesc extends BasePropertyDesc{

@@ -5,7 +5,7 @@ import "vanilla-colorful/hex-input.js"
 import {RgbaStringColorPicker} from "vanilla-colorful/rgba-string-color-picker";
 import {HexInput} from "vanilla-colorful/hex-input";
 import {CustomElement} from "hhcommoncomponents";
-import {SetFieldValueCommand} from "../../RedoUndo/SetFieldCommands/SetFieldValueCommand";
+import {SetFieldValueCommand} from "../../RedoUndo/SetFieldValueCommand";
 import {undoManager} from "../../RedoUndo/UndoManager";
 
 function colorToHex(color: paper.Color) {

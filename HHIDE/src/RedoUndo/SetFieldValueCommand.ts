@@ -1,5 +1,5 @@
-import {MergableCommand} from "../UndoManager";
-import {AbstractComponent} from "hhenginejs";
+import {MergableCommand} from "./UndoManager";
+import {AbstractComponent} from "HHEngineJS";
 
 class SetFieldValueCommand<ValueType> extends MergableCommand {
     setter: Function

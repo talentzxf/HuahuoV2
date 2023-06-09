@@ -4,7 +4,7 @@ import {UndoableCommand, undoManager} from "../RedoUndo/UndoManager";
 import {ShapeMoveCommand} from "../RedoUndo/ShapeMoveCommand";
 import {BaseShapeJS} from "hhenginejs"
 import {FollowCurveComponent} from "hhenginejs";
-import {SetFieldValueCommand} from "../RedoUndo/SetFieldCommands/SetFieldValueCommand";
+import {SetFieldValueCommand} from "../RedoUndo/SetFieldValueCommand";
 import {CommandArrayCommand} from "../RedoUndo/CommandArrayCommand";
 
 let eps = 0.01

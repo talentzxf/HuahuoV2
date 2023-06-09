@@ -1,7 +1,7 @@
 import {CustomElement} from "hhcommoncomponents";
 import {HHCurveInput} from "./HHCurveInput";
 import {undoManager} from "../../RedoUndo/UndoManager";
-import {SetFieldValueCommand} from "../../RedoUndo/SetFieldCommands/SetFieldValueCommand";
+import {SetFieldValueCommand} from "../../RedoUndo/SetFieldValueCommand";
 
 @CustomElement({
     selector: "hh-float-input"

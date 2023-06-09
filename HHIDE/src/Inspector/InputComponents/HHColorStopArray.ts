@@ -4,7 +4,8 @@ import {HHColorInput} from "./HHColorInput";
 import {ColorStop} from "hhenginejs";
 import {HHToast, getMethodsAndVariables} from "hhcommoncomponents";
 import {createPenShape, selectedPenCapColor, unselectedPenCapColor} from "./Utils";
-import {ArrayInsertCommand} from "../../RedoUndo/ColorArrayInsertCommand";
+import {ArrayInsertCommand} from "../../RedoUndo/ArrayInsertCommand";
+import {ArrayDeleteCommand} from "../../RedoUndo/ArrayDeleteCommand";
 import {undoManager} from "../../RedoUndo/UndoManager";
 
 const rectangleOffset = 10
@@ -222,8 +223,29 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
                 let tobeDeletedPen = this.selectedPen
 
                 if (tobeDeletedPen != null) {
+                    let arrayDeleteCommand = new ArrayDeleteCommand(
+                        () => {
+                            let newlyInsertedPen = this.insertPenByValue(tobeDeletedPen.colorStop.value)
+                            newlyInsertedPen.colorStop.r = tobeDeletedPen.colorStop.r
+                            newlyInsertedPen.colorStop.g = tobeDeletedPen.colorStop.g
+                            newlyInsertedPen.colorStop.b = tobeDeletedPen.colorStop.b
+                            newlyInsertedPen.colorStop.a = tobeDeletedPen.colorStop.a
+
+                            this.updater(newlyInsertedPen.colorStop)
+
+                            this.refresh()
+
+                            return newlyInsertedPen
+                        },
+                        (pen) => {
+                            this.deletePen(pen)
+                        }
+                    )
+
                     this.deletePen(tobeDeletedPen)
-                    this.refresh()
+                    undoManager.PushCommand(arrayDeleteCommand)
+
+
                 }
 
                 evt.stopPropagation()
@@ -260,6 +282,8 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         tobeDeletedPen.remove()
 
         this.selectPen(this.pens[0]) // Select the first pen to avoid confusion.
+
+        this.refresh()
     }
 
     onRectangeClicked(evt: MouseEvent) {
