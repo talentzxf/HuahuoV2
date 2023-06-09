@@ -104,6 +104,8 @@ class Pen {
     }
 }
 
+let colorStopArrayPtrProjectIdMap = new Map()
+
 @CustomElement({
     selector: "hh-color-stop-array-input"
 })
@@ -117,7 +119,6 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
     rectangle: paper.Path
 
     pens: Array<Pen> = new Array<Pen>()
-    projectId: number = -1
 
     hhColorInput: HHColorInput
     colorTitleSpan: HTMLSpanElement
@@ -140,9 +141,15 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         this.canvas.width = canvasWidth
         this.canvas.height = canvasHeight
 
+        let colorStopArray = this.getter()
+        let colorStopArrayPtr = colorStopArray.ptr
+
         let previousPaperProject = paper.project
         paper.setup(this.canvas)
-        this.projectId = paper.project.index
+        let projectId = paper.project.index
+
+        colorStopArrayPtrProjectIdMap.set(colorStopArrayPtr, projectId)
+
         paper.project.view.translate(new paper.Point(rectangleOffset, 0))
 
         this.rectangle = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(rectangleWidth, rectangleHeight))
@@ -335,14 +342,14 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
     }
 
     refresh() {
+        let colorStopArray = this.getter()
+        let projectId = colorStopArrayPtrProjectIdMap.get(colorStopArray.ptr)
         let oldProjectId = -1
-        if (paper.project.index != this.projectId) {
+        if (paper.project.index != projectId) {
             oldProjectId = paper.project.index
 
-            paper.projects[this.projectId].activate()
+            paper.projects[projectId].activate()
         }
-
-        let colorStopArray = this.getter()
 
         let penIndex = 0
 
