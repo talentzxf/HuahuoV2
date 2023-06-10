@@ -321,12 +321,19 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         this.selectPen(pen)
     }
 
+
+    colorStopValueSetterFunctionMap:Map<ColorStop, Function> = new Map()
     colorStopValueSetter(colorStop){
-        return function(value){
-            colorStop.value = value
-            this.updater(colorStop)
-            this.refresh()
+
+        if(!this.colorStopValueSetterFunctionMap.has(colorStop.identifier)){
+            this.colorStopValueSetterFunctionMap.set(colorStop.identifier, (value)=>{
+                colorStop.value = value
+                this.updater(colorStop)
+                this.refresh()
+            })
         }
+
+        return this.colorStopValueSetterFunctionMap.get(colorStop.identifier)
     }
 
     onPenMouseDrag(evt: paper.MouseEvent) {
