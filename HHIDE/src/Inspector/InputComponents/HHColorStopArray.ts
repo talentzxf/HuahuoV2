@@ -74,6 +74,14 @@ class Pen {
         this.paperGroup.position = new paper.Point(colorStop.value * rectangleWidth, rectangleHeight / 2)
     }
 
+    hide(){
+        this.paperGroup.visible = false
+    }
+
+    show(){
+        this.paperGroup.visible = true
+    }
+
     remove() {
         this.paperGroup.remove()
     }
@@ -357,7 +365,7 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         newValue = Math.min(newValue, 1.0)
         newValue = Math.max(0.0, newValue)
 
-        let setFieldValueCommand = new SetFieldValueCommand(this.colorStopValueSetter(colorStop).bind(this), oldValue, newValue)
+        let setFieldValueCommand = new SetFieldValueCommand(this.colorStopValueSetter(colorStop), oldValue, newValue)
 
         setFieldValueCommand.DoCommand()
         undoManager.PushCommand(setFieldValueCommand)
@@ -385,6 +393,7 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
             // Draw pens.
             if (penIndex < this.pens.length) { // Reuse previously created pens
                 pen = this.pens[penIndex]
+                pen.show()
             } else { // Create new pen.
                 pen = new Pen(colorStop)
 
@@ -397,6 +406,10 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
 
             pen.bringToFront()
             penIndex++
+        }
+
+        for(let penIdx = penIndex; penIdx < this.pens.length; penIdx++){
+            this.pens[penIdx].hide()
         }
 
         this.rectangle.fillColor = new paper.Color({

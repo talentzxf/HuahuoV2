@@ -87,6 +87,12 @@ class ComponentProxyHandler{
         }
     }
 
+    detachFromCurrentShape(){
+        this.propertySheetInited = false // This shape has been removed from the shape, ret property sheet property.
+
+        this.targetComponent.detachFromCurrentShape.apply(this.proxy)
+    }
+
     getPropertySheet() {
         let thisComponent: AbstractComponent = this.getProxy(this)
 

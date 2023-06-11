@@ -58,7 +58,6 @@ class AbstractComponent {
 
     rawObj: any;
     baseShape: BaseShapeJS;
-    propertySheetInited: boolean = false;
     shapeArrayFieldNames: Set<string> = new Set<string>()
 
     // If this component belongs to a mirage shape, it should also be mirage.
@@ -151,15 +150,10 @@ class AbstractComponent {
 
     disableComponent() {
         this.rawObj.SetBooleanValue("isActive", false)
-
-        this.propertySheetInited = false
-
         this.onComponentDisabled()
 
         if(this.baseShape)
             this.baseShape.update(true)
-
-
     }
 
     enableComponent() {
