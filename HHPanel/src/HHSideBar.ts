@@ -71,6 +71,8 @@ class HHSideBar extends HTMLElement implements MovableElement {
         this.titleBar.style["webkit-touch-callout"] = "none"
         this.titleBar.style["khtml-user-select"] = "none"
 
+        this.titleBar.classList.add("bg-info")
+
         this.style.position = "absolute"
         this.style.position = "absolute"
         this.style.background = "white"

@@ -22,67 +22,42 @@ class HHToolBar extends HTMLElement {
     elementListButton: HTMLButtonElement
     uploadButton: HTMLButtonElement
 
+    createButton(svgFile, title, onClick){
+        let btn = document.createElement("button")
+        btn.className = "btn btn-outline-secondary"
+        btn.style.width = "40px"
+        btn.style.height = "40px"
+        btn.innerHTML = svgFile
+        btn.title = title
+        btn.addEventListener("click", onClick)
+
+        this.appendChild(btn)
+    }
+
     constructor() {
         super();
 
+
+        this.className = "btn-group btn-group-sm"
+
         i18n.ExecuteAfterInited(function () {
-            this.saveButton = document.createElement("button")
-            this.saveButton.style.width = "30px"
-            this.saveButton.style.height = "30px"
-            this.saveButton.innerHTML = SVGFiles.saveBtn
-            this.saveButton.title = i18n.t("hint.saveLocal")
-            this.saveButton.addEventListener("click", this.save.bind(this))
-            this.appendChild(this.saveButton)
+            this.saveButton = this.createButton(SVGFiles.saveBtn, i18n.t("hint.saveLocal"), this.save.bind(this))
 
-            this.loadButton = document.createElement("button")
-            this.loadButton.style.width = "30px"
-            this.loadButton.style.height = "30px"
-            this.loadButton.title = i18n.t("hint.loadLocal")
-            this.loadButton.innerHTML = SVGFiles.loadBtn
+            this.loadButton = this.createButton(SVGFiles.loadBtn, i18n.t("hint.loadLocal"), this.onFileSelected.bind(this))
 
-            this.loadButton.addEventListener("click", this.onFileSelected.bind(this))
-            this.appendChild(this.loadButton)
+            this.previewButton = this.createButton(SVGFiles.previewBtn, i18n.t("hint.preview"), this.uploadAndOpenPlayer.bind(this))
 
-            this.previewButton = document.createElement("button")
-            this.previewButton.style.width = "30px"
-            this.previewButton.style.height = "30px"
-            this.previewButton.innerHTML = SVGFiles.previewBtn
-            this.previewButton.title = i18n.t("hint.preview")
-            this.previewButton.addEventListener("click", this.uploadAndOpenPlayer.bind(this))
-            this.appendChild(this.previewButton)
-
-            this.elementListButton = document.createElement("button")
-            this.elementListButton.style.width = "30px"
-            this.elementListButton.style.height = "30px"
-            this.elementListButton.innerHTML = SVGFiles.elementListButton
-            this.elementListButton.title = i18n.t("hint.library")
-            let _this = this
-            this.elementListButton.addEventListener("click", ()=>{
-                _this.listElements()
+            this.elementListButton = this.createButton(SVGFiles.elementListButton, i18n.t("hint.library"), ()=>{
+                this.listElements()
             })
-            this.appendChild(this.elementListButton)
 
-            this.projectListButton = document.createElement("button")
-            this.projectListButton.style.width = "30px"
-            this.projectListButton.style.height = "30px"
-            this.projectListButton.innerHTML = SVGFiles.projectListBtn
-            this.projectListButton.title = i18n.t("hint.listProject")
-            this.projectListButton.addEventListener("click", ()=>{
-                _this.listProjects()
+            this.projectListButton = this.createButton(SVGFiles.projectListBtn, i18n.t("hint.listProject"), ()=>{
+                this.listProjects()
             })
-            this.appendChild(this.projectListButton)
 
-            this.uploadButton = document.createElement("button")
-            this.uploadButton.style.width = "30px"
-            this.uploadButton.style.height = "30px"
-            this.uploadButton.innerHTML = SVGFiles.uploadBtn
-            this.uploadButton.title = i18n.t("hint.uploadProject")
-
-            this.uploadButton.onclick = function () {
-                _this.uploadProject()
-            }
-            this.appendChild(this.uploadButton)
-
+            this.uploadButton = this.createButton(SVGFiles.uploadBtn, i18n.t("hint.uploadProject"), ()=>{
+                this.uploadProject()
+            })
         }.bind(this))
     }
 

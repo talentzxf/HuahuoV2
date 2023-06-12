@@ -45,6 +45,7 @@ class IconShapeDrawer extends BaseShapeDrawer{
             btnImg.title = shape.name
             btnImg.addEventListener("click", this.onShapeClicked.bind(this))
             let btn = document.createElement("button")
+            btn.className = "btn btn-outline-secondary"
             btn.appendChild(btnImg)
             this.secondaryToolBar.appendChild(btn)
 

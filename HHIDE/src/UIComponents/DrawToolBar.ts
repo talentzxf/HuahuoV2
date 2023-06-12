@@ -30,6 +30,7 @@ class DrawToolBar extends HTMLElement {
         this.appendChild(this.buttonContainer)
 
         this.secondaryDrawToolBar = document.createElement("div")
+        this.secondaryDrawToolBar.className = "btn-group btn-group-sm"
         this.appendChild(this.secondaryDrawToolBar)
 
         for (let shape of shapes) {
