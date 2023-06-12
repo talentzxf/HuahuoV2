@@ -51,6 +51,7 @@ class UserInfoBar extends HTMLElement {
             this.usernameSpan.style.verticalAlign = "middle"
 
             this.loginLogoutBtn = document.createElement("button")
+            this.loginLogoutBtn.className = "btn btn-outline-secondary"
             this.loginLogoutBtn.innerHTML = SVGFiles.signInBtn
             this.appendChild(this.usernameSpan)
             this.appendChild(this.loginLogoutBtn)

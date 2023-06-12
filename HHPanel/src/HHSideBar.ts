@@ -109,6 +109,7 @@ class HHSideBar extends HTMLElement implements MovableElement {
         titleToolBar.style.flexDirection = "row-reverse"
 
         this.minimizeButton = document.createElement("input")
+        this.minimizeButton.className = "btn btn-outline-secondary"
         this.minimizeButton.type = "button"
         this.minimizeButton.value = "-"
 
