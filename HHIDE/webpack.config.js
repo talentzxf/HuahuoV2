@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const FileManagerPlugin = require("filemanager-webpack-plugin")
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 let moduleExports = (env) => {
 
@@ -29,10 +30,41 @@ let moduleExports = (env) => {
         module: {
             rules: [
                 {
+                    test: /\.(scss)$/,
+                    use: [
+                        {
+                            // Adds CSS to the DOM by injecting a `<style>` tag
+                            loader: 'style-loader'
+                            // // Extracts CSS for each JS file that includes CSS
+                            // loader: miniCssExtractPlugin.loader
+                        },
+                        {
+                            // Interprets `@import` and `url()` like `import/require()` and will resolve them
+                            loader: 'css-loader'
+                        },
+                        {
+                            // Loader for webpack to process CSS with PostCSS
+                            loader: 'postcss-loader',
+                            options: {
+                                postcssOptions: {
+                                    plugins: () => [
+                                        autoprefixer
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            // Loads a SASS/SCSS file and compiles it to CSS
+                            loader: 'sass-loader'
+                        }
+                    ]
+                },
+                {
                     test: /\.tsx?$/,
                     use: 'ts-loader',
                     exclude: /node_modules/,
                 },
+
                 {
                     test: /\.css$/i,
                     use: ["style-loader", "css-loader"]
@@ -53,7 +85,7 @@ let moduleExports = (env) => {
             },
             compress: true,
             port: 8989,
-            client:{
+            client: {
                 overlay: false
             }
         },
@@ -111,7 +143,8 @@ let moduleExports = (env) => {
                 title: 'Development',
                 template: 'src/index.ejs',
                 // inject: false
-            })
+            }),
+            new MiniCssExtractPlugin()
         ]
     };
 

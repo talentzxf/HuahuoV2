@@ -26,6 +26,7 @@ class DrawToolBar extends HTMLElement {
     initializeTools() {
 
         this.buttonContainer = document.createElement("div")
+        this.buttonContainer.className = "btn-group btn-group-sm"
         this.appendChild(this.buttonContainer)
 
         this.secondaryDrawToolBar = document.createElement("div")
@@ -94,6 +95,7 @@ class DrawToolBar extends HTMLElement {
 
 
         let button = document.createElement('button')
+        button.className = "btn btn-outline-secondary"
         button.onclick = shape.onClicked.bind(shape)
         button.appendChild(img)
         this.buttonContainer.appendChild(button)

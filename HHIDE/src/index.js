@@ -52,6 +52,9 @@ import {faTimesCircle} from "@fortawesome/free-regular-svg-icons";
 import {faShapes} from "@fortawesome/free-solid-svg-icons";
 import {init} from "./init"
 
+import "./scss/styles.scss"
+import * as bootstrap from "bootstrap"
+
 import "./i18nInit"
 import {EditorShapeProxy} from "./ShapeDrawers/EditorShapeProxy";
 
