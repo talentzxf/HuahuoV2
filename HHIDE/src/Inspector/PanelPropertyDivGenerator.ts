@@ -29,8 +29,12 @@ class PanelPropertyDesc extends BasePropertyDesc {
                 }
                 let divGenerator = GetPropertyDivGenerator(childProperty.type)
                 let propertyDesc = divGenerator.generatePropertyDesc(childProperty)
+                if(propertyDesc.getTitleDiv() != null){
+                    propertyDesc.getTitleDiv().className = "input-group-text"
+                }
 
                 let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
+                propertyDiv.className = "input-group input-group-small mb-3"
 
                 panelPropertyDiv.appendChild(propertyDiv)
             }
@@ -68,7 +72,6 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator {
 
         let titleDiv = propertyDesc.getTitleDiv()
         titleDiv.classList.add("accordion-header")
-        // titleDiv.style.background = visibleColor
 
         makeDivUnselectable(titleDiv)
 

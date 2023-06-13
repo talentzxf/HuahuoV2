@@ -23,14 +23,17 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
         this.setter = setter
 
         this.inputElement = document.createElement("input")
+        this.inputElement.className = "form-control"
         this.inputElement.type = type
 
-        this.inputElement.style.width = "50px"
         this.inputElement.addEventListener("change", this.inputValueChanged.bind(this))
         this.appendChild(this.inputElement)
 
+        this.className = "input-group"
+
         if(this.keyFrameCurveGetter){
             this.curveButton = document.createElement("button")
+            this.curveButton.className = "btn btn-outline-secondary"
             this.appendChild(this.curveButton)
 
             this.curveInput = new HHCurveInput(this.keyFrameCurveGetter)
@@ -45,7 +48,7 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
     }
 
     set value(val){
-        this.inputElement.value = val
+        this.inputElement.value = Number.parseFloat(val).toFixed(2)
         if(this.curveInput){
             this.curveInput.refresh()
         }
@@ -96,7 +99,7 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
     }
 
     refresh(){
-        this.inputElement.value = this.getter()
+        this.inputElement.value = Number.parseFloat(this.getter()).toFixed(2)
 
         if(this.curveInput){
             this.curveInput.refresh()

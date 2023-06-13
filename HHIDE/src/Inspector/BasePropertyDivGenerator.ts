@@ -73,10 +73,11 @@ function GenerateDiv(divGenerator: BasePropertyDivGenerator, propertyDesc:BasePr
     propertyDiv.style.flexDirection = divGenerator.flexDirection()
     propertyDiv.style.display = "flex"
     propertyDiv.style.width = "100%"
-    propertyDiv.style.gap = "10px"
 
-    if(propertyDesc.getTitleDiv())
+    if(propertyDesc.getTitleDiv()){
         propertyDiv.appendChild(propertyDesc.getTitleDiv())
+    }
+
     propertyDiv.appendChild(propertyDesc.getContentDiv())
 
     return propertyDiv
