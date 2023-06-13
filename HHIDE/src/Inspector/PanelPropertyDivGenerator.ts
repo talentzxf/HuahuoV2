@@ -13,6 +13,7 @@ class PanelPropertyDesc extends BasePropertyDesc {
         let panelPropertyDiv = document.createElement("div")
 
         this.contentDiv.appendChild(panelPropertyDiv)
+        panelPropertyDiv.className = "accordion-body"
 
         if (property.config && property.config.children) {
             // TODO: Avoid duplication with Inspector
@@ -30,7 +31,7 @@ class PanelPropertyDesc extends BasePropertyDesc {
 
                 let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
 
-                this.contentDiv.appendChild(propertyDiv)
+                panelPropertyDiv.appendChild(propertyDiv)
             }
         }
     }
@@ -54,34 +55,41 @@ function makeDivUnselectable(div: HTMLElement) {
 let visibleColor = "yellow"
 let invisibleColor = "gray"
 
+let currentId = 0;
+
+function getCurrentId(){
+    return "component_content:" + currentId++
+}
+
 class ComponentPropertyDivGenerator extends BasePropertyDivGenerator {
     generatePropertyDesc(property): BasePropertyDesc {
         let propertyDesc = new PanelPropertyDesc(property);
 
         let titleDiv = propertyDesc.getTitleDiv()
-        titleDiv.style.background = visibleColor
+        // titleDiv.style.background = visibleColor
 
         makeDivUnselectable(titleDiv)
 
         let contentDiv = propertyDesc.getContentDiv()
+        contentDiv.className = "accordion-collapse collapse show"
+        contentDiv.id = getCurrentId()
 
-        let contentVisible = false
+        let titleText = titleDiv.innerText
+        for(let child of titleDiv.children){
+            titleDiv.removeChild(child)
+        }
+        titleDiv.innerText = ""
 
-        titleDiv.setAttribute("isCollapsed", "false")
-        titleDiv.addEventListener("click", function () {
-            contentVisible = !contentVisible
-            if (contentVisible) {
-                titleDiv.style.background = invisibleColor
-                contentDiv.style.display = "none"
+        let collapseButton = document.createElement("button")
+        collapseButton.className = "accordion-button"
+        collapseButton.setAttribute("data-bs-toggle", "collapse")
+        collapseButton.setAttribute("data-bs-target", "#" + contentDiv.id)
+        collapseButton.setAttribute("aria-expanded", "true")
+        collapseButton.setAttribute("aria-controls", contentDiv.id)
 
-                titleDiv.setAttribute("isCollapsed", "true")
-            } else {
-                titleDiv.style.background = visibleColor
-                contentDiv.style.display = "block"
+        collapseButton.innerText = titleText
 
-                titleDiv.setAttribute("isCollapsed", "false")
-            }
-        })
+        titleDiv.appendChild(collapseButton)
 
         if (property.config && property.config.isActive) {
             let activateButtion = document.createElement("input")

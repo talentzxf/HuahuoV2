@@ -27,6 +27,7 @@ abstract class BasePropertyDesc{
 
         if(this.property.key){
             this.titleDiv = document.createElement("div")
+            this.titleDiv.className = "accordion-header"
             this.titleDiv.innerText = (window as any).i18n.t(property.key)
         }
     }

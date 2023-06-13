@@ -182,6 +182,10 @@ class Inspector extends HTMLElement{
                     basicFunctionsGroup.appendChild(this.createSaveAsKeyFrameButton(targetObj))
                 }
 
+                let componentDivs = document.createElement("div")
+                componentDivs.className = "accordion"
+                contentDiv.appendChild(componentDivs)
+
                 let allComponentTitleDivs: Array<HTMLElement> = new Array<HTMLElement>()
                 // Add collapse-all button.
                 let properties = propertySheet.getProperties()
@@ -193,7 +197,8 @@ class Inspector extends HTMLElement{
                     let propertyDesc = divGenerator.generatePropertyDesc(property)
 
                     let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
-                    contentDiv.appendChild(propertyDiv)
+                    propertyDiv.className = "accordion-item"
+                    componentDivs.appendChild(propertyDiv)
 
                     if (property.type == PropertyType.COMPONENT) {
                         allComponentTitleDivs.push(propertyDesc.getTitleDiv())
