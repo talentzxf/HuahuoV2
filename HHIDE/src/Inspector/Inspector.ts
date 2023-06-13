@@ -9,6 +9,7 @@ import {ComponentListForm} from "../UIComponents/ComponentListForm";
 import {huahuoEngine} from "hhenginejs";
 import {HHRefreshableDiv} from "./InputComponents/HHRefreshableDiv";
 import {HHToast} from "hhcommoncomponents";
+import {saveAs} from "file-saver";
 
 @CustomElement({
     selector: "hh-inspector"
@@ -65,6 +66,7 @@ class Inspector extends HTMLElement{
     createOpenCollapseButton(allComponentTitleDivs: Array<HTMLElement>){
 
         let collapseAllButton = document.createElement("button")
+        collapseAllButton.className = "btn btn-primary btn-sm"
         collapseAllButton.innerText = i18n.t("inspector.CollapseAll")
 
         let isCollapseAll = true
@@ -99,6 +101,7 @@ class Inspector extends HTMLElement{
 
     createMountComponentButton(targetObj){
         let addComponentBtn = document.createElement("button")
+        addComponentBtn.className = "btn btn-primary btn-sm"
         addComponentBtn.innerText = i18n.t("inspector.AddComponent")
 
         addComponentBtn.onclick = function(){
@@ -113,6 +116,7 @@ class Inspector extends HTMLElement{
 
     createSaveAsKeyFrameButton(targetObj){
         let saveAsKeyFrameBtn = document.createElement("button")
+        saveAsKeyFrameBtn.className = "btn btn-primary btn-sm"
         saveAsKeyFrameBtn.innerText = i18n.t("inspector.SaveAsKeyFrame")
 
         saveAsKeyFrameBtn.onclick = function(){
@@ -166,12 +170,16 @@ class Inspector extends HTMLElement{
                 contentDiv.style.width = "100%"
                 this.contentScrollerDiv.appendChild(contentDiv)
 
+                let basicFunctionsGroup = document.createElement("div")
+                basicFunctionsGroup.className = "btn-group"
+                contentDiv.appendChild(basicFunctionsGroup)
+
                 if (targetObj["addComponent"]) {
-                    contentDiv.appendChild(this.createMountComponentButton(targetObj))
+                    basicFunctionsGroup.appendChild(this.createMountComponentButton(targetObj))
                 }
 
                 if (targetObj["saveAsKeyFrame"]) {
-                    contentDiv.appendChild(this.createSaveAsKeyFrameButton(targetObj))
+                    basicFunctionsGroup.appendChild(this.createSaveAsKeyFrameButton(targetObj))
                 }
 
                 let allComponentTitleDivs: Array<HTMLElement> = new Array<HTMLElement>()
@@ -193,7 +201,7 @@ class Inspector extends HTMLElement{
                 }
 
                 if (allComponentTitleDivs.length >= 2) {
-                    contentDiv.insertBefore(this.createOpenCollapseButton(allComponentTitleDivs), contentDiv.firstChild)
+                    basicFunctionsGroup.insertBefore(this.createOpenCollapseButton(allComponentTitleDivs), basicFunctionsGroup.firstChild)
                 }
 
                 this.shapePropertyDivMapping.set(targetObj, contentDiv)
