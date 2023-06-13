@@ -22,22 +22,35 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
         this.getter = getter
         this.setter = setter
 
+        let stackDiv = document.createElement("div")
+        stackDiv.style.display = "flex"
+        stackDiv.style.flexDirection = "column"
+        this.appendChild(stackDiv)
+
+
+        let rowDiv = document.createElement("div")
+        rowDiv.style.display = "flex"
+        rowDiv.style.flexDirection = "row"
+
+        stackDiv.appendChild(rowDiv)
+
         this.inputElement = document.createElement("input")
         this.inputElement.className = "form-control"
         this.inputElement.type = type
 
+        rowDiv.appendChild(this.inputElement)
+
         this.inputElement.addEventListener("change", this.inputValueChanged.bind(this))
-        this.appendChild(this.inputElement)
 
         this.className = "input-group"
 
         if(this.keyFrameCurveGetter){
             this.curveButton = document.createElement("button")
             this.curveButton.className = "btn btn-outline-secondary"
-            this.appendChild(this.curveButton)
+            rowDiv.appendChild(this.curveButton)
 
             this.curveInput = new HHCurveInput(this.keyFrameCurveGetter)
-            this.appendChild(this.curveInput)
+            stackDiv.appendChild(this.curveInput)
 
             this.hideCurveInput()
         }

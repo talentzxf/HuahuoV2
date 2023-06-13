@@ -34,7 +34,7 @@ class PanelPropertyDesc extends BasePropertyDesc {
                 }
 
                 let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
-                propertyDiv.className = "input-group input-group-small mb-3"
+                propertyDiv.className = "input-group input-group-sm"
 
                 panelPropertyDiv.appendChild(propertyDiv)
             }
