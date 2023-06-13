@@ -14,6 +14,7 @@ class PanelPropertyDesc extends BasePropertyDesc {
 
         this.contentDiv.appendChild(panelPropertyDiv)
         panelPropertyDiv.className = "accordion-body"
+        panelPropertyDiv.style.padding = "0px"
 
         if (property.config && property.config.children) {
             // TODO: Avoid duplication with Inspector
@@ -66,6 +67,7 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator {
         let propertyDesc = new PanelPropertyDesc(property);
 
         let titleDiv = propertyDesc.getTitleDiv()
+        titleDiv.classList.add("accordion-header")
         // titleDiv.style.background = visibleColor
 
         makeDivUnselectable(titleDiv)
