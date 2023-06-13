@@ -112,6 +112,7 @@ class HHColorInput extends HTMLElement implements RefreshableComponent {
         titleDiv.style.flexDirection = "row"
         this.colorInput = document.createElement("hex-input")
         this.colorInput.style.width = "80px"
+        this.colorInput.className = "form-control"
         titleDiv.appendChild(this.colorInput)
 
         let _this = this
@@ -133,6 +134,7 @@ class HHColorInput extends HTMLElement implements RefreshableComponent {
         }, 0)
 
         this.showMoreButton = document.createElement("button")
+        this.showMoreButton.className = "btn btn-outline-secondary"
         this.showMoreButton.innerText = this.getButtonText()
         this.showMoreButton.onclick = this.showMoreButtonClicked.bind(this)
 

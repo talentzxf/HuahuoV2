@@ -36,6 +36,7 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
 
         this.inputElement = document.createElement("input")
         this.inputElement.className = "form-control"
+        this.inputElement.style.width = "50%"
         this.inputElement.type = type
 
         rowDiv.appendChild(this.inputElement)
