@@ -58,7 +58,7 @@ let invisibleColor = "gray"
 let currentId = 0;
 
 function getCurrentId(){
-    return "component_content:" + currentId++
+    return "component_content_" + currentId++
 }
 
 class ComponentPropertyDivGenerator extends BasePropertyDivGenerator {
@@ -82,6 +82,8 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator {
 
         let collapseButton = document.createElement("button")
         collapseButton.className = "accordion-button"
+        collapseButton.style.padding = "0px"
+
         collapseButton.setAttribute("data-bs-toggle", "collapse")
         collapseButton.setAttribute("data-bs-target", "#" + contentDiv.id)
         collapseButton.setAttribute("aria-expanded", "true")
@@ -92,25 +94,27 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator {
         titleDiv.appendChild(collapseButton)
 
         if (property.config && property.config.isActive) {
-            let activateButtion = document.createElement("input")
-            activateButtion.type = "button"
+            let activateButton = document.createElement("input")
+            activateButton.className = "btn btn-outline-secondary btn-sm"
+            activateButton.type = "button"
             if (property.config.isActive()) {
-                activateButtion.value = i18n.t("Deactivate")
-                activateButtion.onclick = this.deActivateComponent(activateButtion, property).bind(this)
+                activateButton.value = i18n.t("Deactivate")
+                activateButton.onclick = this.deActivateComponent(activateButton, property).bind(this)
             } else {
-                activateButtion.value = i18n.t("Activate")
-                activateButtion.onclick = this.activateComponent(activateButtion, property).bind(this)
+                activateButton.value = i18n.t("Activate")
+                activateButton.onclick = this.activateComponent(activateButton, property).bind(this)
             }
 
-            titleDiv.appendChild(activateButtion)
+            collapseButton.appendChild(activateButton)
 
             if(property.config && property.config.hasOwnProperty("deleter")){
                 let deleteButton = document.createElement("input")
+                deleteButton.className = "btn btn-outline-secondary btn-sm"
                 deleteButton.type = "button"
                 deleteButton.value = i18n.t("DeleteComponent")
                 deleteButton.onclick = this.deleteComponent(property).bind(this)
 
-                titleDiv.appendChild(deleteButton)
+                collapseButton.appendChild(deleteButton)
             }
         }
 

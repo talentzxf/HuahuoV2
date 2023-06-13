@@ -70,21 +70,19 @@ class Inspector extends HTMLElement{
         collapseAllButton.innerText = i18n.t("inspector.CollapseAll")
 
         let isCollapseAll = true
+
+        let _this = this
         collapseAllButton.onclick = function(){
-            for(let componentTitleDiv of allComponentTitleDivs){
+            let allAccordionButtons = _this.querySelectorAll(".accordion-button")
 
-                let currentlyCollapsed = false
+            for(let button of allAccordionButtons){
+                let targetId = button.getAttribute("data-bs-target")
+                let target = _this.querySelector(targetId)
 
-                if(componentTitleDiv.getAttribute("isCollapsed") == "true"){
-                    currentlyCollapsed = true
-                }
-
-                if(isCollapseAll){
-                    if(!currentlyCollapsed)
-                        componentTitleDiv.click() // Mimic the click operation.
-                }else{
-                    if(currentlyCollapsed)
-                        componentTitleDiv.click()
+                if(target.classList.contains("show") && isCollapseAll){
+                    (button as HTMLButtonElement).click()
+                }else if(!target.classList.contains("show") && !isCollapseAll){
+                    (button as HTMLButtonElement).click()
                 }
             }
 
