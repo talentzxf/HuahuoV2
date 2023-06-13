@@ -66,6 +66,8 @@
     "drawMirror": "Drawing mirror, press Shift to draw vertical/horizontal mirror",
     "drawStarMirror": "Drawing central symmetric mirror"
   },
+  "StrokeComponent": "Stroke Component",
+  "FillColorComponent": "Fill Color Component",
   "inspector": {
     "CurveInputPrompt": "FrameId:{{frameId}}, value:{{value}}",
     "Smooth": "Smooth",

@@ -66,6 +66,8 @@
     "drawMirror": "绘制镜面反射器，请按Shift键绘制水平/垂直镜面",
     "drawStarMirror": "绘制中心对称图形"
   },
+  "StrokeComponent": "描边颜色",
+  "FillColorComponent": "填充颜色",
   "inspector": {
     "CurveInputPrompt": "关键帧:{{frameId}}, 值:{{value}}",
     "Smooth": "平滑特征点",
