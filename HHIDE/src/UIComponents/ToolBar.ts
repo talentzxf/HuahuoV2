@@ -69,13 +69,13 @@ class HHToolBar extends HTMLElement {
             storeInforForm.onOKCallback = () => {
                 binaryFileUploader.upload().then((response) => {
                     if (afterAction)
-                        afterAction(response)
+                        afterAction(response.data)
                 })
             }
         } else {
             binaryFileUploader.upload().then((response) => {
                 if (afterAction)
-                    afterAction(response)
+                    afterAction(response.data)
             })
         }
     }
