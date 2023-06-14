@@ -7,14 +7,13 @@ import {HHToast} from "hhcommoncomponents";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {userInfo} from "../Identity/UserInfo";
+import {BaseForm} from "./BaseForm";
 
 @CustomElement({
     selector: "hh-project-list"
 })
-class ProjectListForm extends HTMLElement implements HHForm {
+class ProjectListForm extends BaseForm {
     listDiv: HTMLElement
-    selector: string;
-    closeBtn: HTMLElement
     listUlContainer: HTMLDivElement
     listUL: HTMLUListElement
     paginationDiv: HTMLDivElement
@@ -22,55 +21,24 @@ class ProjectListForm extends HTMLElement implements HHForm {
     projectInfoMap: Map<number, Object> = new Map
 
     titleText: string = "Projects"
-    titleTextElement: HTMLElement
 
     connectedCallback() {
-        this.style.position = "absolute"
-        this.style.top = "50%"
-        this.style.left = "50%"
-        this.style.transform = "translate(-50%, -50%)"
+        super.connectedCallback()
 
-        this.innerHTML += "<style>" +
-            "ul{" +
-            "list-style-type: none;" +
-            "width: 500px" +
-            "}" +
-            "li img {" +
-            "  float: left;" +
-            "  margin: 0 15px 0 0;" +
-            "}" +
-            "</style>"
-
+        this.modalTitle.innerText = this.titleText
         this.listDiv = document.createElement("div")
-        this.listDiv.innerHTML = CSSUtils.formStyle
         this.listDiv.innerHTML +=
-            "   <form id='projectListForm' style='width: 1000px'>" +
-            "   <div style='display: flex; flex-direction: row-reverse'>" +
-            "       <div id='projectListCloseBtn' >" +
-            "           <img class='far fa-circle-xmark'>" +
-            "       </div>" +
-            "   </div>" +
-            "       <h3 id='listTitle'>" + this.titleText + "</h3>" +
             "       <div id='projectListUlContainer' style='height: 500px; overflow-x: hidden; overflow-y: auto; width: 100%'>" +
             "           <ul id='projectListUl' style='width: 100%; float: left'></ul>" +
             "       </div>" +
-            "       <div id='pagination' style='display: none'></div>" +
-            "   </form>"
-        this.appendChild(this.listDiv)
+            "       <div id='pagination' style='display: none'></div>"
 
-        this.titleTextElement = this.listDiv.querySelector("#listTitle")
-
-        this.closeBtn = this.listDiv.querySelector("#projectListCloseBtn")
-        this.closeBtn.addEventListener("mousedown", this.closeForm.bind(this))
+        this.form.appendChild(this.listDiv)
 
         this.listUL = this.listDiv.querySelector("#projectListUl")
         this.paginationDiv = this.listDiv.querySelector("#pagination")
 
         this.listUlContainer = this.querySelector("#projectListUlContainer")
-    }
-
-    closeForm() {
-        this.style.display = "none"
     }
 
     updateListFunctor:(totalPage, curPageNo)=>void
@@ -80,9 +48,7 @@ class ProjectListForm extends HTMLElement implements HHForm {
 
     setTitle(title: string){
         this.titleText = title;
-        if(this.titleTextElement){
-            this.titleTextElement.innerText = this.titleText
-        }
+        this.modalTitle.innerText = this.titleText
     }
 
     updateList(totalPage, curPageNo, pageSize, projects, onItemClicked: Function = null, writeAuthInfo = false) {
@@ -119,11 +85,11 @@ class ProjectListForm extends HTMLElement implements HHForm {
 
         if(totalPage > 1){
             let liPrefix = "listPage_"
-            let innerHTML = "<ul>"
+            let innerHTML = "<ul class='pagination'>"
                 for(let pageId = 0; pageId < totalPage; pageId++){
-                    innerHTML += "<li id='" + liPrefix + pageId +"' style='padding: 10px; list-style-type: none; float: left'>"
+                    innerHTML += "<li class='page-item' id='" + liPrefix + pageId +"' style='padding: 10px; list-style-type: none; float: left'>"
                     if(pageId != curPageNo) // When displayed, add 1.
-                        innerHTML += "<a href='#'>" + (pageId + 1) + "</a>"
+                        innerHTML += "<a class='page-link' href='#'>" + (pageId + 1) + "</a>"
                     else
                         innerHTML += pageId + 1
 
