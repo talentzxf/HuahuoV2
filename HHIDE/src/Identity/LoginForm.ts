@@ -2,17 +2,16 @@ import {CustomElement, Logger} from "hhcommoncomponents";
 import {userInfo} from "./UserInfo";
 import {api} from "../RESTApis/RestApi";
 import {HHToast} from "hhcommoncomponents";
-import {CSSUtils} from "../Utilities/CSSUtils";
 import {HHForm} from "../Utilities/HHForm";
 import {BaseForm} from "../UIComponents/BaseForm";
+import {formManager} from "../Utilities/FormManager";
+import {RegisterForm} from "./RegisterForm";
 
 // TODO: Extract the framework and make a webflow like lib.
 @CustomElement({
     selector: "hh-login-form"
 })
 class LoginForm extends BaseForm implements HHForm {
-
-    registerForm: HTMLElement = null;
 
     loginBtn: HTMLButtonElement = null;
     registerBtn: HTMLButtonElement = null;
@@ -26,20 +25,7 @@ class LoginForm extends BaseForm implements HHForm {
         return ["style"]
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name == "style") {
-            let oldCssObj: object = CSSUtils.css2obj(oldValue)
-            let newCssObj: object = CSSUtils.css2obj(newValue)
-
-            if (oldCssObj["display"] == "none" && newCssObj["display"] != "none") {
-
-                if (this.registerForm)
-                    this.registerForm.style.display = "none"
-            }
-        }
-    }
-
-    connectedCallback() {
+   connectedCallback() {
         super.connectedCallback()
 
         this.modalTitle.innerText = "Login Here"
@@ -74,14 +60,7 @@ class LoginForm extends BaseForm implements HHForm {
     }
 
     register() {
-        this.form.style.display = "none"
-
-        if (!this.registerForm) {
-            this.registerForm = document.createElement("hh-register-form")
-            this.appendChild(this.registerForm)
-        }
-
-        this.registerForm.style.display = "block"
+        formManager.openForm(RegisterForm)
     }
 
     login(evt){
