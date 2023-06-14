@@ -4,22 +4,19 @@ import {api} from "../RESTApis/RestApi";
 import {HHToast} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {HHForm} from "../Utilities/HHForm";
-import {LoginStatus} from "../../dist/clientApi/index"
-
+import {BaseForm} from "../UIComponents/BaseForm";
 
 // TODO: Extract the framework and make a webflow like lib.
 @CustomElement({
     selector: "hh-login-form"
 })
-class LoginForm extends HTMLElement implements HHForm {
-    closeBtn: HTMLElement = null;
-    loginForm: HTMLFormElement = null;
+class LoginForm extends BaseForm implements HHForm {
+
     registerForm: HTMLElement = null;
 
     loginBtn: HTMLButtonElement = null;
     registerBtn: HTMLButtonElement = null;
     anonymouseBtn: HTMLButtonElement = null;
-    loginFormContainer: HTMLElement = null;
     userNameInput: HTMLInputElement
     passwordInput: HTMLInputElement
     afterLogin: Function = null;
@@ -38,63 +35,46 @@ class LoginForm extends HTMLElement implements HHForm {
 
                 if (this.registerForm)
                     this.registerForm.style.display = "none"
-                if (this.loginForm)
-                    this.loginForm.style.display = "block"
             }
         }
     }
 
-
     connectedCallback() {
-        this.style.position = "absolute"
-        this.style.top = "50%"
-        this.style.left = "50%"
-        this.style.transform = "translate(-50%, -50%)"
-        this.loginFormContainer = document.createElement("div")
-        this.loginFormContainer.innerHTML = CSSUtils.formStyle
+        super.connectedCallback()
 
-        this.loginFormContainer.innerHTML +=
-            "   <form id='loginForm'>" +
-            "   <div style='display: flex; flex-direction: row-reverse'>" +
-            "       <div id='loginFormCloseBtn' >" +
-            "           <img class='far fa-circle-xmark'>" +
-            "       </div>" +
-            "   </div>" +
-            "       <h3>Login Here</h3>" +
-            "       <label for='uname'><b>Username</b></label>" +
-            "       <input type='text' placeholder='Enter Username' name='username'> " +
-            "       <label for='pwd'><b>Password</b></label>" +
-            "       <input type='password' placeholder='Enter Password' name='password'> " +
-            "       <button id='loginBtn'>Login</button>" +
-            "       <button id='registerBtn'>Register</button>" +
-            "       <button id='anonymousLoginBtn'>Anonymous Login</button>" +
-            "   </form>"
+        this.modalTitle.innerText = "Login Here"
 
-        this.appendChild(this.loginFormContainer)
+        let div = document.createElement("div")
+        div.innerHTML =
+        "       <label for='uname' class='form-label'><b>Username</b></label>" +
+        "       <input type='text' class='form-control' placeholder='Enter Username' name='username'> " +
+        "       <label for='pwd' class='form-label'><b>Password</b></label>" +
+        "       <input type='password' class='form-control' placeholder='Enter Password' name='password'> "
 
-        this.loginForm = this.loginFormContainer.querySelector("form")
-        this.loginForm.addEventListener("submit", function (e) {
-            e.stopPropagation()
-            e.preventDefault()
-        })
+        let footerDiv = document.createElement("div")
+        footerDiv.innerHTML =
+        "       <button class='btn btn-primary' id='loginBtn'>Login</button>" +
+        "       <button class='btn btn-secondary' id='registerBtn'>Register</button>" +
+        "       <button class='btn btn-outline-primary' id='anonymousLoginBtn'>Anonymous Login</button>"
+
+        this.footer.appendChild(footerDiv)
+
+        this.form.appendChild(div)
 
         this.userNameInput = this.querySelector("input[name='username']")
         this.passwordInput = this.querySelector("input[name='password']")
 
-        this.closeBtn = this.loginFormContainer.querySelector("#loginFormCloseBtn")
-        this.closeBtn.addEventListener("mousedown", this.closeForm.bind(this))
-
-        this.loginBtn = this.loginFormContainer.querySelector("#loginBtn")
+        this.loginBtn = this.querySelector("#loginBtn")
         this.loginBtn.addEventListener("click", this.login.bind(this))
 
-        this.registerBtn = this.loginFormContainer.querySelector("#registerBtn")
+        this.registerBtn = this.querySelector("#registerBtn")
         this.registerBtn.addEventListener("click", this.register.bind(this))
-        this.anonymouseBtn = this.loginFormContainer.querySelector("#anonymousLoginBtn")
+        this.anonymouseBtn = this.querySelector("#anonymousLoginBtn")
         this.anonymouseBtn.addEventListener("click", this.anonymousLogin.bind(this))
     }
 
     register() {
-        this.loginForm.style.display = "none"
+        this.form.style.display = "none"
 
         if (!this.registerForm) {
             this.registerForm = document.createElement("hh-register-form")
@@ -144,10 +124,6 @@ class LoginForm extends HTMLElement implements HHForm {
 
     anonymousLogin() {
         this._login(true)
-    }
-
-    closeForm() {
-        this.style.display = "none";
     }
 }
 
