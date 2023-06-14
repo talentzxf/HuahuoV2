@@ -7,17 +7,15 @@ import {SVGFiles} from "../Utilities/Svgs";
 import {SnapshotUtils} from "../Utilities/SnapshotUtils";
 import {api} from "../RESTApis/RestApi";
 import {SceneView} from "../SceneView/SceneView";
+import {BaseForm} from "./BaseForm";
 
 @CustomElement({
     selector: "hh-project-info"
 })
-class ProjectInfoForm extends HTMLElement implements HHForm{
+class ProjectInfoForm extends BaseForm{
     projectNameInput: HTMLInputElement
     projectDescriptionInput: HTMLTextAreaElement
-    form: HTMLFormElement
-    formCloseBtn: HTMLElement
     previewSceneContainer: HTMLDivElement
-    selector: string;
     okBtn: HTMLButtonElement
 
     previewCanvas: HTMLCanvasElement
@@ -41,59 +39,33 @@ class ProjectInfoForm extends HTMLElement implements HHForm{
     }
 
     connectedCallback(){
-        this.style.position = "absolute"
-        this.style.top = "50%"
-        this.style.left = "50%"
-        this.style.transform = "translate(-50%, -50%)"
+        super.connectedCallback()
 
-        this.innerHTML += CSSUtils.formStyle
+        let formDiv = document.createElement("div")
 
-        this.innerHTML +=
-            "<style>" +
-            "form textarea{\n" +
-            "    display: block;\n" +
-            "    height: 50px;\n" +
-            "    width: 100%;\n" +
-            "    background-color: rgba(255,255,255,0.07);\n" +
-            "    border-radius: 3px;\n" +
-            "    padding: 0 10px;\n" +
-            "    margin-top: 8px;\n" +
-            "    font-size: 14px;\n" +
-            "    font-weight: 300;\n" +
-            "}" +
-            "/* Full-width inputs */\n" +
-            "form textarea{" +
-            "  width: 100%;" +
-            "  padding: 12px 20px;" +
-            "  margin: 8px 0;" +
-            "  display: inline-block;" +
-            "  border: 1px solid #ccc;" +
-            "  box-sizing: border-box;" +
-            "  resize: none" +
-            "}" +
-            "</style>"
+        this.modalTitle.innerText = "Project Info"
 
         // Add title.
-        this.innerHTML += "<form>" +
-            "   <div style='display: flex; flex-direction: row-reverse'>" +
-            "       <div id='formCloseBtn' >" +
-            "           <img class='far fa-circle-xmark'>" +
-            "       </div>" +
-            "   </div>" +
-            "<h3>Store Info</h3>" +
-            "   <label for='projectname'><b>ProjectName</b></label>" +
+        formDiv.innerHTML +=
+            "   <label for='projectname' class='form-label'><b>ProjectName</b></label>" +
             "   <div style='display: flex; align-items: center'>" +
-            "       <input type='text' placeholder='Enter Storename' id='projectname'> " +
+            "       <input type='text' class='form-control' placeholder='Enter Storename' id='projectname'> " +
             "       <img id='projectNameCheckImg' style='width:20px; height:20px'> " +
             "   </div>" +
-            "   <label for='description'><b>Descripition</b></label>" +
-            "   <textarea type='text' placeholder='Enter Description' id='projectdescription'> </textarea>" +
-            "   <label for='preview'><b>Preview</b></label>" +
-            "<div id='projectinfo-canvas-container' style='width:300px; height: 200px'>" +
-            "   <canvas id='projectinfo-preview-canvas' style='border: 1px solid blue'></canvas>" +
-            "</div>" +
-            "    <button id='okBtn'>OK</button>" +
-            "</form>"
+            "   <label for='description' class='form-label'><b>Descripition</b></label>" +
+            "   <textarea type='text' class='form-control' placeholder='Enter Description' id='projectdescription'> </textarea>" +
+            "   <label for='preview' class='form-label'><b>Preview</b></label>" +
+            "   <div id='projectinfo-canvas-container' style='width:300px; height: 200px'>" +
+            "       <canvas id='projectinfo-preview-canvas' style='border: 1px solid blue'></canvas>" +
+            "   </div>"
+
+        this.okBtn = document.createElement("button")
+        this.okBtn.className = "btn btn-primary"
+        this.okBtn.innerText = "OK"
+        this.okBtn.onclick = this.onOK.bind(this)
+        this.footer.appendChild(this.okBtn)
+
+        this.form.appendChild(formDiv)
 
         this.projectNameCheckImg = this.querySelector("#projectNameCheckImg")
         this.projectNameCheckImg.src = this.notOkImg
@@ -101,8 +73,6 @@ class ProjectInfoForm extends HTMLElement implements HHForm{
         this.projectDescriptionInput = this.querySelector("#projectdescription")
 
         this.form = this.querySelector("form")
-        this.formCloseBtn = this.querySelector("#formCloseBtn")
-        this.formCloseBtn.addEventListener("mousedown", this.closeForm.bind(this))
 
         this.projectNameInput = this.querySelector("#projectname")
         let _this = this
@@ -124,9 +94,6 @@ class ProjectInfoForm extends HTMLElement implements HHForm{
 
         this.previewSceneContainer = this.querySelector("#projectinfo-canvas-container")
         this.previewCanvas = this.querySelector("#projectinfo-preview-canvas")
-
-        this.okBtn = this.querySelector("#okBtn")
-        this.okBtn.onclick = this.onOK.bind(this)
 
         this.previewAnimationPlayer = new Player()
 
