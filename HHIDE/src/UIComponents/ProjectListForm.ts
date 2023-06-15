@@ -25,11 +25,14 @@ class ProjectListForm extends BaseForm {
     connectedCallback() {
         super.connectedCallback()
 
+        let modalDialog = this.querySelector(".modal-dialog")
+        modalDialog.classList.add("modal-xl")
+
         this.modalTitle.innerText = this.titleText
         this.listDiv = document.createElement("div")
         this.listDiv.innerHTML +=
             "       <div id='projectListUlContainer' style='height: 500px; overflow-x: hidden; overflow-y: auto; width: 100%'>" +
-            "           <ul id='projectListUl' style='width: 100%; float: left'></ul>" +
+            "           <ul id='projectListUl' style='list-style-type: none; width: 100%; float: left'></ul>" +
             "       </div>" +
             "       <div id='pagination' style='display: none'></div>"
 
@@ -86,26 +89,48 @@ class ProjectListForm extends BaseForm {
         if(totalPage > 1){
             let liPrefix = "listPage_"
             let innerHTML = "<ul class='pagination'>"
+            let prevPageId = curPageNo - 1
+
+            innerHTML += "<li class='page-item' id='" + liPrefix + prevPageId + "'>"
+            innerHTML += "      <a class='page-link' href='#' aria-label='Previous'>" +
+                "        <span aria-hidden='true'>&laquo;</span>" +
+                "        <span class='sr-only'>Previous</span>" +
+                "      </a>"
+
+            innerHTML += "</li>"
                 for(let pageId = 0; pageId < totalPage; pageId++){
-                    innerHTML += "<li class='page-item' id='" + liPrefix + pageId +"' style='padding: 10px; list-style-type: none; float: left'>"
+                    innerHTML += "<li class='page-item' id='" + liPrefix + pageId +"' style='list-style-type: none; float: left'>"
                     if(pageId != curPageNo) // When displayed, add 1.
                         innerHTML += "<a class='page-link' href='#'>" + (pageId + 1) + "</a>"
                     else
-                        innerHTML += pageId + 1
+                        innerHTML += "<span class='page-link active'>" + (pageId + 1) + "</span>"
 
                     innerHTML +="</li>"
                 }
+
+            let nextPageId = curPageNo + 1
+
+            innerHTML += "<li class='page-item' id='" + liPrefix + nextPageId + "'>"
+            innerHTML += " <a class='page-link' href='#' aria-label='Next'>" +
+                "        <span aria-hidden='true'>&raquo;</span>" +
+                "        <span class='sr-only'>Next</span>" +
+                "      </a>"
+            innerHTML += "</li>"
             innerHTML += "</ul>"
+
             this.paginationDiv.innerHTML = innerHTML
 
             let _this = this
             for(let pageId = 0; pageId < totalPage; pageId++){
                 let pageLiId = "#" + liPrefix + pageId
-                let pageLi = this.paginationDiv.querySelector(pageLiId)
-                pageLi.addEventListener("click", ()=>{
-                    if(_this.updateListFunctor)
-                        _this.updateListFunctor(pageId, pageSize)
-                })
+                let pageLis = this.paginationDiv.querySelectorAll(pageLiId)
+
+                for(let pageLi of pageLis){
+                    pageLi.addEventListener("click", ()=>{
+                        if(_this.updateListFunctor)
+                            _this.updateListFunctor(pageId, pageSize)
+                    })
+                }
             }
 
             this.paginationDiv.style.display = "block"
