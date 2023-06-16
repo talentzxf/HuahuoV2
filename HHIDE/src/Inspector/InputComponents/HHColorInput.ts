@@ -1,9 +1,7 @@
 import "vanilla-colorful"
 import "vanilla-colorful/rgba-string-color-picker.js";
-import "vanilla-colorful/hex-input.js"
 
 import {RgbaStringColorPicker} from "vanilla-colorful/rgba-string-color-picker";
-import {HexInput} from "vanilla-colorful/hex-input";
 import {CustomElement} from "hhcommoncomponents";
 import {SetFieldValueCommand} from "../../RedoUndo/SetFieldValueCommand";
 import {undoManager} from "../../RedoUndo/UndoManager";
@@ -14,15 +12,22 @@ function colorToHex(color: paper.Color) {
 }
 
 function rgbStringToHex(colorStr) {
-    let strippedColorStr = colorStr.replace(/[^\d,]/g, '')
-    let components = strippedColorStr.split(",")
     let resultStr = ""
-    for (let component of components) {
-        let componentValue = parseInt(component)
+    let strippedColorStr = colorStr.replace(/[^\d,.]/g, '')
+    let components = strippedColorStr.split(",")
+    for (let componentIdx = 0; componentIdx < 3; componentIdx++) {
+        let componentValue = parseInt(components[componentIdx])
         resultStr += ("00" + componentValue.toString(16)).slice(-2)
     }
-
-    return resultStr
+    if (colorStr.startsWith("rgba")) {
+        let alphaValue = Math.floor(parseFloat(components[3]) * 255).toString(16)
+        return resultStr + ("00" + alphaValue).slice(-2)
+    } else if (colorStr.startsWith("rgb")) {
+        resultStr += "ff" // Append "ff" as the color is totally opaque
+        return resultStr
+    } else {
+        throw "Unknown color format!" + colorStr
+    }
 }
 
 function hexToRgbString(hexStr) {
@@ -41,7 +46,7 @@ function hexToRgbString(hexStr) {
             parseInt(components[0], 16).toString(10) + "," +
             parseInt(components[1], 16).toString(10) + "," +
             parseInt(components[2], 16).toString(10) + "," +
-            parseInt(components[3], 16).toString(10) + ")"
+            parseInt(components[3], 16)/255.0 + ")"
     }
 }
 
@@ -50,7 +55,7 @@ function hexToRgbString(hexStr) {
 })
 class HHColorInput extends HTMLElement implements RefreshableComponent {
     colorPicker: RgbaStringColorPicker
-    colorInput: HexInput
+    colorInput: HTMLInputElement
     showMoreButton: HTMLButtonElement
     isExpanded: boolean = false
     silentColorChangeEvent: boolean = false
@@ -82,8 +87,8 @@ class HHColorInput extends HTMLElement implements RefreshableComponent {
 
             undoManager.PushCommand(setColorCommand)
 
-            if (e.detail.value.startsWith("rgb") && this.colorInput.color != e.detail.value) {
-                this.colorInput.color = rgbStringToHex(this.colorPicker.color)
+            if (e.detail.value.startsWith("rgb") && this.colorInput.value != e.detail.value) {
+                this.colorInput.value = rgbStringToHex(this.colorPicker.color)
             }
         })
 
@@ -103,24 +108,23 @@ class HHColorInput extends HTMLElement implements RefreshableComponent {
     set value(val: any) {
         this.silentColorChangeEvent = true
         this.colorPicker.color = val.toCSS()
-        this.colorInput.color = val.toCSS()
+        this.colorInput.value = colorToHex(val)
         this.silentColorChangeEvent = false
     }
 
     createTitleDiv(titleDiv) {
         titleDiv.style.display = "flex"
         titleDiv.style.flexDirection = "row"
-        this.colorInput = document.createElement("hex-input")
-        this.colorInput.style.width = "80px"
-        this.colorInput.className = "form-control"
+        this.colorInput = document.createElement("input")
+        this.colorInput.className = "form-control form-control-lg"
         titleDiv.appendChild(this.colorInput)
 
         let _this = this
-        this.colorInput.addEventListener("color-changed", e => {
+        this.colorInput.addEventListener("input", e => {
             if (_this.silentColorChangeEvent)
                 return
 
-            let rgbString = hexToRgbString(e.detail.value)
+            let rgbString = hexToRgbString(this.colorInput.value)
             if (rgbString)
                 this.colorPicker.color = rgbString
         })
@@ -165,7 +169,7 @@ class HHColorInput extends HTMLElement implements RefreshableComponent {
         this.silentColorChangeEvent = true
         let currentColor = this.getter()
         this.colorPicker.color = currentColor.toCSS()
-        this.colorInput.color = colorToHex(currentColor)
+        this.colorInput.value = colorToHex(currentColor)
         this.silentColorChangeEvent = false
     }
 }

@@ -165,7 +165,8 @@
     "uploadProject": "上传项目",
     "undo": "撤销",
     "redo": "重做",
-    "shortcuts": "配置快捷键"
+    "shortcuts": "配置快捷键",
+    "library": "元件库"
   },
   "project": {
     "delete": "删除项目",

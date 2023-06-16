@@ -165,7 +165,8 @@
     "uploadProject": "Upload project",
     "undo": "Undo",
     "redo": "Redo",
-    "shortcuts": "Configure shortcuts"
+    "shortcuts": "Configure shortcuts",
+    "library": "Element library"
   },
   "project": {
     "delete": "Delete Project",
