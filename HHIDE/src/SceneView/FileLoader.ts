@@ -54,7 +54,7 @@ class FileLoader {
         reader.addEventListener("load", (e) => {
             let audio = e.target.result
 
-            let resourceMD5 = loadBinaryDataIntoStore(file.name, audio)
+            let resourceMD5 = this.loadBinaryDataIntoStore(file.name, audio)
 
             let audioShape = EditorShapeProxy.CreateProxy(new AudioShapeJS())
             let loadResourcePromise = audioShape.setResourceByMD5(resourceMD5)
