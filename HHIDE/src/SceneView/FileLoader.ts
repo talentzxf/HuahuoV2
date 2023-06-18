@@ -6,18 +6,20 @@ import {EditorShapeProxy} from "../ShapeDrawers/EditorShapeProxy";
 
 let md5 = require("js-md5")
 
-function loadBinaryDataIntoStore(fileName: string, data) {
-    let binaryData: Uint8Array = dataURItoBlob(data)
 
-    let resourceMD5 = md5(binaryData)
-
-    if (!huahuoEngine.IsBinaryResourceExist(resourceMD5))
-        huahuoEngine.LoadBinaryResource(fileName, getMimeTypeFromDataURI(data), binaryData, binaryData.length)
-
-    return resourceMD5
-}
 
 class FileLoader {
+    loadBinaryDataIntoStore(fileName: string, data) {
+        let binaryData: Uint8Array = dataURItoBlob(data)
+
+        let resourceMD5 = md5(binaryData)
+
+        if (!huahuoEngine.IsBinaryResourceExist(resourceMD5))
+            huahuoEngine.LoadBinaryResource(fileName, getMimeTypeFromDataURI(data), binaryData, binaryData.length)
+
+        return resourceMD5
+    }
+
     loadImageFile(file: File): boolean {
         Logger.info("Loading:" + file.name)
         const reader = new FileReader()
@@ -26,7 +28,7 @@ class FileLoader {
             let fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1)
             let img = e.target.result
 
-            let resourceMD5 = loadBinaryDataIntoStore(file.name, img)
+            let resourceMD5 = this.loadBinaryDataIntoStore(file.name, img)
 
             let imageShape = EditorShapeProxy.CreateProxy(new ImageShapeJS())
             let loadResourcePromise = imageShape.setResourceByMD5(resourceMD5)

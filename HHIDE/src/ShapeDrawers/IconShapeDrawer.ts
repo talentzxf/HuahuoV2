@@ -8,6 +8,7 @@ import axios from "axios";
 import {ImageShapeJS} from "hhenginejs";
 import {svgToDataURL} from "../Utilities/Svgs";
 import {EditorShapeProxy} from "./EditorShapeProxy";
+import {fileLoader} from "../SceneView/FileLoader";
 
 class IconShapeDrawer extends BaseShapeDrawer{
     name = "Shapes"
@@ -87,8 +88,10 @@ class IconShapeDrawer extends BaseShapeDrawer{
                     data = svgToDataURL(data)
                 }
 
+                let resourceMD5 = fileLoader.loadBinaryDataIntoStore(imgURL, data)
+
                 _this.tempShape = EditorShapeProxy.CreateProxy(new ImageShapeJS())
-                _this.tempShape.setData(imgURL, data)
+                _this.tempShape.setResourceByMD5(resourceMD5)
                 _this.tempShape.createShape()
 
                 _this.tempShape.position = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
