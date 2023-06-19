@@ -37,6 +37,9 @@ huahuoEngine.ExecuteAfterInited(()=>{
 
     let projectCompletedLoadedHandler = new Module.ScriptEventHandlerImpl()
     projectCompletedLoadedHandler.handleEvent = function (){
+        if(huahuoEngine.getActivePlayer().storeId == null){ // Not inited.
+            huahuoEngine.getActivePlayer().storeId = huahuoEngine.huahuoEngine.GetCurrentStoreId()
+        }
         huahuoEngine.getActivePlayer().updateAllShapes()
     }
 

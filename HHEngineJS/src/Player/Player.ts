@@ -102,6 +102,10 @@ class Player extends EventEmitter{
     }
 
     startPlay(){
+        if(this.storeId == null){
+            this.storeId = huahuoEngine.GetCurrentStoreId()
+        }
+
         let store = huahuoEngine.GetStoreById(this.storeId)
         this.playStartTime = store.GetCurrentLayer().GetCurrentFrame() / GlobalConfig.fps
         this.lastAnimateTime = -1
