@@ -72,7 +72,8 @@ class EngineAPI{
             return
         }
 
-        await ti.init()
+        // TODO: Enable back when webgpu is supported on mobile phone.
+        // await ti.init()
 
         this.taichiInited = true
 
