@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const FileManagerPlugin = require("filemanager-webpack-plugin")
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 let moduleExports = (env) => {
 
@@ -144,7 +144,7 @@ let moduleExports = (env) => {
                 template: 'src/index.ejs',
                 // inject: false
             }),
-            new MiniCssExtractPlugin()
+            // new MiniCssExtractPlugin()
         ]
     };
 
