@@ -1,8 +1,6 @@
 import {ValueChangeHandler} from "hhenginejs";
 import {PropertyCategory, PropertyDef} from "hhenginejs";
-import {capitalizeFirstLetter} from "hhcommoncomponents"
-import {PropertyType} from "HHCommonComponents";
-
+import {capitalizeFirstLetter, PropertyType} from "hhcommoncomponents"
 const propertyPrefix = "inspector.property."
 
 class PropertySheetFactory {

@@ -1,5 +1,4 @@
 import {HHForm} from "../Utilities/HHForm";
-import {CustomElement} from "HHCommonComponents";
 
 abstract class BaseForm extends HTMLElement implements HHForm {
     selector: string;
