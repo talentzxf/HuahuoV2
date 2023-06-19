@@ -170,6 +170,9 @@ class ProjectInfoForm extends BaseForm{
     }
 
     RedrawFrame(){
+        let prevPlayer = huahuoEngine.getActivePlayer()
+
+        huahuoEngine.setActivePlayer(this.previewAnimationPlayer)
         let prevStore = huahuoEngine.GetCurrentStoreId()
 
         let mainSceneView: SceneView = document.querySelector("#mainScene")
@@ -183,10 +186,13 @@ class ProjectInfoForm extends BaseForm{
         this.previewAnimationPlayer.storeId = mainStoreId
         this.previewAnimationPlayer.loadShapesFromStore()
         this.previewAnimationPlayer.setFrameId(currentFrameId)
+
         if(previousCanvas)
             renderEngine2D.setDefaultCanvas(previousCanvas)
-
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStore)
+        if(prevPlayer){
+            huahuoEngine.setActivePlayer(prevPlayer)
+        }
     }
 }
 
