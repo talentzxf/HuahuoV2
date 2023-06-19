@@ -10,6 +10,7 @@ fi
 
 buildComponent(){
   cd $SCRIPT_DIR/$1
+  rm -rf ./package-lock.json
   npm install
 
   if [ $buildProd == "true" ] && [ $1 == "HHIDE" ]; then
