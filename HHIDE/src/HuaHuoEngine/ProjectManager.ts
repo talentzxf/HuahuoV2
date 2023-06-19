@@ -66,6 +66,10 @@ class ProjectManager {
         let oldStoreId = huahuoEngine.GetCurrentStoreId()
 
         try{
+            let mainSceneViewCanvas = mainSceneView.canvas
+
+            renderEngine2D.saveProjectCanvasWH(mainSceneViewCanvas.width, mainSceneViewCanvas.height)
+
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainSceneView.storeId)
             let Uint8Array = Module.writeAllObjectsInMemoryFile()
 
@@ -81,10 +85,6 @@ class ProjectManager {
     save() {
         // Restore current scene view.
         try {
-            let mainSceneView: SceneView = document.querySelector("#mainScene")
-            let mainSceneViewCanvas = mainSceneView.canvas
-
-            renderEngine2D.saveProjectCanvasWH(mainSceneViewCanvas.width, mainSceneViewCanvas.height)
             saveAs(this.getProjectData(), "huahuo_project.hua")
             HHToast.info(i18n.t("toast.projectSaved"))
         } catch (e) {
