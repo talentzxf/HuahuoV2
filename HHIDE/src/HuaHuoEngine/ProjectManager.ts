@@ -1,5 +1,5 @@
 import {Logger, HHToast, getFileNameFromGZip} from "hhcommoncomponents";
-import {huahuoEngine} from "hhenginejs";
+import {huahuoEngine, renderEngine2D} from "hhenginejs";
 import {HHTimeline} from "hhtimeline"
 import {api} from "../RESTApis/RestApi";
 import {gzipSync, gunzipSync} from "fflate"
@@ -81,6 +81,10 @@ class ProjectManager {
     save() {
         // Restore current scene view.
         try {
+            let mainSceneView: SceneView = document.querySelector("#mainScene")
+            let mainSceneViewCanvas = mainSceneView.canvas
+
+            renderEngine2D.saveProjectCanvasWH(mainSceneViewCanvas.width, mainSceneViewCanvas.height)
             saveAs(this.getProjectData(), "huahuo_project.hua")
             HHToast.info(i18n.t("toast.projectSaved"))
         } catch (e) {

@@ -148,6 +148,10 @@ class RenderEnginePaperJs implements RenderEngine2D {
         this.canvasPaperMap.set(canvas, paper.project.index)
     }
 
+    saveProjectCanvasWH(width, height){
+        huahuoEngine.setProjectWidthHeight(width, height)
+    }
+
     resize(canvas: HTMLCanvasElement, width: number, height: number) {
 
         if(!this.canvasPaperMap.has(canvas)){
