@@ -116,7 +116,9 @@ class AbstractComponent {
 
     setBaseShape(baseShape: BaseShapeJS) {
         this.baseShape = baseShape
-        this.enableComponent() // Enable the component after baseShape is set.
+
+        if(!this.isMirage)
+            this.enableComponent() // Enable the component after baseShape is set.
     }
 
     afterUpdate(force: boolean = false) {

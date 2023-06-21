@@ -834,8 +834,10 @@ abstract class BaseShapeJS {
 
             let localPos = this.paperShape.globalToLocal(paperPos)
 
-            this.rawObj.SetGlobalPivotPosition(paperPos.x, paperPos.y, 0.0);
-            this.rawObj.SetLocalPivotPosition(localPos.x, localPos.y, 0.0);
+            if(!this.isMirage){
+                this.rawObj.SetGlobalPivotPosition(paperPos.x, paperPos.y, 0.0);
+                this.rawObj.SetLocalPivotPosition(localPos.x, localPos.y, 0.0);
+            }
         }
     }
 
