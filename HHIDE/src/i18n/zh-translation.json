@@ -79,6 +79,8 @@
     "CollapseAll": "折叠所有配置",
     "OpenAll": "打开所有配置",
     "SaveAsKeyFrame": "保存为关键帧",
+    "LockObject": "锁定形状",
+    "UnlockObject": "不锁定形状",
     "AddComponent": "添加组件",
     "Type": "类型",
     "Name": "名字",

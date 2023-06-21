@@ -79,6 +79,8 @@
     "CollapseAll": "Collapse All",
     "OpenAll": "Open All",
     "SaveAsKeyFrame": "Save as KeyFrame",
+    "LockObject": "Lock Object",
+    "UnlockObject": "Unlock Object",
     "AddComponent": "Add Component",
     "Type": "Type",
     "Name": "Name",

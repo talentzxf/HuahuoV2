@@ -126,6 +126,23 @@ class Inspector extends HTMLElement{
         return saveAsKeyFrameBtn
     }
 
+    createLockButton(targetObj){
+        let lockObjectButton = document.createElement("button")
+        lockObjectButton.className = "btn btn-primary btn-sm"
+        lockObjectButton.innerText = i18n.t("inspector.LockObject")
+        lockObjectButton.onclick = function(){
+            if(!targetObj.isLocked){
+                lockObjectButton.innerText = i18n.t("inspector.UnlockObject")
+            }else{
+                lockObjectButton.innerText = i18n.t("inspector.LockObject")
+            }
+
+            targetObj.isLocked = !targetObj.isLocked
+        }
+
+        return lockObjectButton
+    }
+
     objectDeleted(targetObj){
         if(this.selectedObj == targetObj){
             findParentSideBar(this).hide()
@@ -179,6 +196,8 @@ class Inspector extends HTMLElement{
                 if (targetObj["saveAsKeyFrame"]) {
                     basicFunctionsGroup.appendChild(this.createSaveAsKeyFrameButton(targetObj))
                 }
+
+                basicFunctionsGroup.appendChild(this.createLockButton(targetObj))
 
                 let componentDivs = document.createElement("div")
                 componentDivs.className = "accordion"

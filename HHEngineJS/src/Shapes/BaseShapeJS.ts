@@ -48,6 +48,16 @@ abstract class BaseShapeJS {
 
     private lastRenderFrame = -1
 
+    private _isLocked: boolean = false
+
+    public set isLocked(val: boolean){
+        this._isLocked = val
+    }
+
+    public get isLocked(){
+        return this._isLocked
+    }
+
     // Purpose of action is to store temporary results during system running. All the status in the action won't be persisted.
     private action: BaseShapeActions = new BaseShapeActions(this)
 
