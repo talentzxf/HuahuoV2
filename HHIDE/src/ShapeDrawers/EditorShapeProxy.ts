@@ -58,6 +58,15 @@ class BaseShapeHandler{
         this.updateBoundingBox()
     }
 
+    _isLocked = false
+    isLocked(){
+        return this._isLocked
+    }
+
+    setIsLocked(val: boolean){
+        this._isLocked = val
+    }
+
     update(force: boolean = false){
         this.targetShape.update.apply(this.proxy, [force])
         this.updateBoundingBox()
@@ -164,6 +173,14 @@ class BaseShapeHandler{
         const origProperty = target[propKey]
 
         let _this = this
+
+        if(origProperty == null){
+            if(this.functionMap.has(propKey)){
+                return function(...args){
+                    return _this.functionMap.get(propKey).apply(this, args)
+                }
+            }
+        }
 
         if(origProperty instanceof Function){
             return function(...args){

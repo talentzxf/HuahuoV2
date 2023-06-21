@@ -33,14 +33,16 @@ class ShapeScaleHandler extends ShapeTranslateMorphBase{
 
         if(this.isDragging && this.curObjs != null){
             for(let obj of this.curObjs){
-                let center = obj.shapePosition
-                let vec1 = this.startPos.subtract(center)
-                let vec2 = newPos.subtract(center)
+                if(!obj.isLocked()){
+                    let center = obj.shapePosition
+                    let vec1 = this.startPos.subtract(center)
+                    let vec2 = newPos.subtract(center)
 
-                let scale = vec2.length()/vec1.length()
-                obj.scaling = this.getNewScale(obj, scale)
+                    let scale = vec2.length()/vec1.length()
+                    obj.scaling = this.getNewScale(obj, scale)
 
-                obj.store()
+                    obj.store()
+                }
             }
 
             this.lastPos = newPos

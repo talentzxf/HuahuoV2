@@ -117,7 +117,7 @@ class ShapeRotateHandler extends ShapeTranslateMorphBase {
     dragging(pos) {
         super.dragging(pos);
 
-        if (this.isDragging && this.targetShape != null) {
+        if (this.isDragging && this.targetShape != null && !this.targetShape.isLocked()) {
             let vec1 = this.lastPos.subtract(this.targetShape.pivotPosition)
             let vec2 = pos.subtract(this.targetShape.pivotPosition)
 

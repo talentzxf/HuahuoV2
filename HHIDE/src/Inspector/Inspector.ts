@@ -131,13 +131,13 @@ class Inspector extends HTMLElement{
         lockObjectButton.className = "btn btn-primary btn-sm"
         lockObjectButton.innerText = i18n.t("inspector.LockObject")
         lockObjectButton.onclick = function(){
-            if(!targetObj.isLocked){
+            if(!targetObj.isLocked()){
                 lockObjectButton.innerText = i18n.t("inspector.UnlockObject")
             }else{
                 lockObjectButton.innerText = i18n.t("inspector.LockObject")
             }
 
-            targetObj.isLocked = !targetObj.isLocked
+            targetObj.setIsLocked( !targetObj.isLocked())
         }
 
         return lockObjectButton
@@ -197,7 +197,9 @@ class Inspector extends HTMLElement{
                     basicFunctionsGroup.appendChild(this.createSaveAsKeyFrameButton(targetObj))
                 }
 
-                basicFunctionsGroup.appendChild(this.createLockButton(targetObj))
+                if(targetObj["isLocked"] && targetObj["isLocked"] instanceof Function){
+                    basicFunctionsGroup.appendChild(this.createLockButton(targetObj))
+                }
 
                 let componentDivs = document.createElement("div")
                 componentDivs.className = "accordion"

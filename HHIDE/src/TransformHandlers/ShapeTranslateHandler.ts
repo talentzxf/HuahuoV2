@@ -74,7 +74,7 @@ class ShapeTranslateHandler extends ShapeTranslateMorphBase {
                 if (offset.length <= .001)
                     return
 
-                if(obj.isLocked)
+                if(obj["isLocked"] && obj.isLocked())
                     return
 
                 let mouseOffset = new paper.Point(newPos.x - this.lastPos.x, newPos.y - this.lastPos.y)
