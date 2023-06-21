@@ -180,12 +180,13 @@ class ShapeSelector extends BaseShapeDrawer {
         newCenterPosition.y /= this.selectedShapes.size
 
         let element = elementCreator.createElement(this.selectedShapes)
+        if(element){
+            this.selectedShapes.clear()
+            if(element)
+                this.selectedShapes.add(element) // Only select this element
 
-        this.selectedShapes.clear()
-        if(element)
-            this.selectedShapes.add(element) // Only select this element
-
-        element.pivotPosition = newCenterPosition
+            element.pivotPosition = newCenterPosition
+        }
     }
 
     onShapeSelected(property, targetObj: any) {
