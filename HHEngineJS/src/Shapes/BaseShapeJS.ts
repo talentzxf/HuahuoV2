@@ -45,7 +45,6 @@ abstract class BaseShapeJS {
     private customComponentMap: Map<number, AbstractComponent> = new Map<number, AbstractComponent>()
 
     private _isMirage: boolean = false
-    private _isUpdatePos: boolean = true
 
     private lastRenderFrame = -1
 
@@ -62,10 +61,6 @@ abstract class BaseShapeJS {
 
     set isTransformationPermanent(isPermanent: boolean) {
         this.rawObj.SetRecordTransformationOfKeyFrame(isPermanent)
-    }
-
-    set isUpdatePos(val: boolean) {
-        this._isUpdatePos = val
     }
 
     set isMirage(val: boolean) {
@@ -164,10 +159,6 @@ abstract class BaseShapeJS {
 
     public setBornStoreId(val: string) {
         this.bornStoreId = val
-    }
-
-    protected isUpdateStrokeColor() {
-        return true;
     }
 
     set paperShape(val: paper.Path) {
@@ -1035,9 +1026,7 @@ abstract class BaseShapeJS {
         // Reset the rotation.
         this.paperItem.rotation = this.rotation;
 
-        if (this._isUpdatePos) {
-            this.updatePositionAndRotation()
-        }
+        this.updatePositionAndRotation()
 
         let scaling = this.rawObj.GetScale()
         this.paperItem.scaling = new paper.Point(scaling.x, scaling.y)

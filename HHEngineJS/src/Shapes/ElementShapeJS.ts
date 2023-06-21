@@ -40,10 +40,6 @@ class ElementShapeJS extends BaseShapeJS {
         this.addComponent(new ElementController())
     }
 
-    protected isUpdateStrokeColor(): boolean {
-        return false;
-    }
-
     getShapeName(): string {
         return shapeName
     }
