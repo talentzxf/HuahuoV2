@@ -169,7 +169,8 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         previousPaperProject.activate()
 
         let colorTitle = document.createElement("div")
-        this.colorTitleSpan = document.createElement("span")
+        this.colorTitleSpan = document.createElement("label")
+        this.colorTitleSpan.className = "form-label col-md"
 
         this.colorTitleSpan.innerText = "unselected pen"
         colorTitle.appendChild(this.colorTitleSpan)
