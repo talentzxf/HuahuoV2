@@ -44,8 +44,12 @@ class ComponentProperty extends PropertyConfig {
     isActive: Function
 }
 
+class StringProperty extends PropertyConfig{
+    options:[]
+}
+
 export {PropertyConfig, FloatPropertyConfig, ActionPropertyConfig,
     SubComponentArrayProperty, CustomFieldConfig, CustomFieldContentDivGenerator,
-    ComponentProperty, ShapeArrayProperty}
+    ComponentProperty, ShapeArrayProperty, StringProperty}
 
 

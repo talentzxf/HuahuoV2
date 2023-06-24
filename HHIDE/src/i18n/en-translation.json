@@ -115,6 +115,8 @@
       "generateInterval": "Generate Interval",
       "gradientColorArray": "Gradient Color Array",
       "centerPosition": "Center Position",
+      "destinationPosition": "Destination Position",
+      "gradientType": "Gradient Type",
       "keyframes": "Key Frames",
       "backgroundColor": "Background color",
       "particleSystems": "Particles",

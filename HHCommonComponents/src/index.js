@@ -24,7 +24,7 @@ import {HHToast} from "./Toast/Toast";
 import {eventBus, GraphEvent} from "./EventBus/EventBus";
 import {mirrorPoint} from "./Math/MathFunctions";
 import {IsValidWrappedObject} from "./WrappedObjectUtils"
-import {CustomFieldConfig, CustomFieldContentDivGenerator, ShapeArrayProperty} from "./Properties/PropertyConfig";
+import {CustomFieldConfig, CustomFieldContentDivGenerator, ShapeArrayProperty, StringProperty} from "./Properties/PropertyConfig";
 import {capitalizeFirstLetter} from "./Properties/Utils";
 
 if (!window.i18n) {
@@ -41,6 +41,6 @@ export {
     CustomFieldContentDivGenerator, CustomFieldConfig,
     GraphEvent, EventParam, EventEmitter, getParameterNameAtIdx,
     getFullEventName, splitFullEventName, ShapeArrayProperty,
-    capitalizeFirstLetter
+    capitalizeFirstLetter, StringProperty
 }
 
