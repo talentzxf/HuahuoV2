@@ -56,6 +56,7 @@ function hexToRgbString(hexStr) {
 class HHColorInput extends HTMLElement implements RefreshableComponent {
     colorPicker: RgbaStringColorPicker
     colorInput: HTMLInputElement
+    colorIndicator: HTMLDivElement
     showMoreButton: HTMLButtonElement
     isExpanded: boolean = false
     silentColorChangeEvent: boolean = false
@@ -89,6 +90,7 @@ class HHColorInput extends HTMLElement implements RefreshableComponent {
 
             if (e.detail.value.startsWith("rgb") && this.colorInput.value != e.detail.value) {
                 this.colorInput.value = rgbStringToHex(this.colorPicker.color)
+                this.colorIndicator.style.backgroundColor = this.colorPicker.color
             }
         })
 
@@ -109,6 +111,7 @@ class HHColorInput extends HTMLElement implements RefreshableComponent {
         this.silentColorChangeEvent = true
         this.colorPicker.color = val.toCSS()
         this.colorInput.value = colorToHex(val)
+        this.colorIndicator.style.backgroundColor = val.toCSS()
         this.silentColorChangeEvent = false
     }
 
@@ -119,14 +122,23 @@ class HHColorInput extends HTMLElement implements RefreshableComponent {
         this.colorInput.className = "form-control form-control-sm col-md"
         titleDiv.appendChild(this.colorInput)
 
+        this.colorIndicator = document.createElement("div")
+        this.colorIndicator.className = "col-md"
+        this.colorIndicator.style.border = "1px solid black"
+        this.colorIndicator.style.height = this.colorInput.size + "px"
+
+        titleDiv.appendChild(this.colorIndicator)
+
         let _this = this
         this.colorInput.addEventListener("input", e => {
             if (_this.silentColorChangeEvent)
                 return
 
             let rgbString = hexToRgbString(this.colorInput.value)
-            if (rgbString)
+            if (rgbString){
                 this.colorPicker.color = rgbString
+                this.colorIndicator.style.background = rgbString
+            }
         })
 
         setTimeout(() => {
@@ -171,6 +183,7 @@ class HHColorInput extends HTMLElement implements RefreshableComponent {
         this.colorPicker.color = currentColor.toCSS()
         this.colorInput.value = colorToHex(currentColor)
         this.silentColorChangeEvent = false
+        this.colorIndicator.style.backgroundColor = currentColor.toCSS()
     }
 }
 
