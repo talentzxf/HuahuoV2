@@ -240,6 +240,20 @@ class HHTimeline extends HTMLElement {
         return true
     }
 
+    selectLayer(layer){
+        let track = this.getTrackFromLayer(layer)
+        this.selectTrack(track.getSeqId(), null)
+    }
+
+    selectTrack(trackSeqId, offsetX){
+        this.timelineTracks[trackSeqId].selectTrack(offsetX);
+
+        if (this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId) {
+            this.timelineTracks[this.selectedTrackSeqId].unSelectTrack();
+        }
+        this.selectedTrackSeqId = trackSeqId;
+    }
+
     onCanvasClick(evt: MouseEvent) {
         let trackSeqId = this.calculateTrackSeqId(evt.offsetY)
         if (trackSeqId < 0 || trackSeqId >= this.timelineTracks.length) {
@@ -252,12 +266,8 @@ class HHTimeline extends HTMLElement {
             if (this.selectedTrackSeqId >= 0) {
                 this.timelineTracks[this.selectedTrackSeqId].clearSelect();
             }
-            this.timelineTracks[trackSeqId].selectTrack(evt.offsetX);
 
-            if (this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId) {
-                this.timelineTracks[this.selectedTrackSeqId].unSelectTrack();
-            }
-            this.selectedTrackSeqId = trackSeqId;
+            this.selectTrack(trackSeqId, evt.offsetX)
         } else {
             this.timelineTracks[trackSeqId].rangeSelect(evt.offsetX);
         }

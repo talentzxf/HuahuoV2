@@ -79,6 +79,10 @@ class EditorPlayer extends Player {
     onKeyFrameChanged(args) {
         let keyframeChangedArgs = Module.wrapPointer(args, Module.KeyFrameChangedEventHandlerArgs)
         let layer = keyframeChangedArgs.GetLayer()
+
+        if(layer != null){
+            this.timeline.selectLayer(layer)
+        }
         // let frameId = keyframeChangedArgs.GetFrameId()
 
         // Check if this event belongs to this EditorPlayer.
