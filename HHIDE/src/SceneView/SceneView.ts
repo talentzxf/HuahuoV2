@@ -43,7 +43,7 @@ class SceneView extends HTMLElement {
         // this.canvasContainer.style.height = "100%"
         this.canvasContainer.style.padding = "0"
         this.canvasContainer.style.margin = "0"
-        this.canvasContainer.style.backgroundColor = "gray"
+        this.canvasContainer.style.backgroundColor = "lightgray"
         this.canvasContainer.style.flexBasis = "100%"
         this.canvasContainer.style.overflowY = "auto"
 
@@ -233,7 +233,7 @@ class SceneView extends HTMLElement {
             this.createCanvas()
             renderEngine2D.init(this.canvas);
 
-            // (window as any).i18n.ExecuteAfterInited(this.createGizmos.bind(this)) // Need translate here!
+            (window as any).i18n.ExecuteAfterInited(this.createGizmos.bind(this)) // Need translate here!
 
             // this.drawCoordinate();
             this.setupEventsAndCreateFirstTrack()

@@ -85,27 +85,23 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
     public zoomIn(step = 1.05) {
         view.zoom *= step;
-        this.clearBackground()
-
         Logger.debug("Current view zoom:" + view.zoom)
     }
 
     public zoomOut(step = 1.05) {
         view.zoom /= step;
-        this.clearBackground()
-
         Logger.debug("Current view zoom:" + view.zoom)
     }
 
     public zoomReset() {
         view.zoom = 1.0
-        this.clearBackground()
     }
 
     public clearBackground() {
 
         let canvasWidth = view.element.width
         let canvasHeight = view.element.height
+
         // Logger.debug("Canvas width:" + canvasWidth + ",height:" + canvasHeight)
 
         if (this.bgLayer) {
@@ -117,12 +113,6 @@ class RenderEnginePaperJs implements RenderEngine2D {
         let yOffset = (canvasHeight - contentHeight) / 2
         let contentRect = this.createViewRectangle(xOffset, yOffset, contentWidth, contentHeight, "white")
         contentRect.sendToBack()
-
-        if (!this.isPlayer) {
-            let bgRect = this.createViewRectangle(0, 0, canvasWidth, canvasHeight, new paper.Color("lightgray"))
-            bgRect.sendToBack()
-        }
-
         this.restoreContentLayer()
     }
 

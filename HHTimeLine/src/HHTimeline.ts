@@ -242,7 +242,8 @@ class HHTimeline extends HTMLElement {
 
     selectLayer(layer){
         let track = this.getTrackFromLayer(layer)
-        this.selectTrack(track.getSeqId(), null)
+        if(track != null)
+            this.selectTrack(track.getSeqId(), null)
     }
 
     selectTrack(trackSeqId, offsetX){

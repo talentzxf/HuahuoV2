@@ -398,9 +398,13 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
             this.selectCell(cellId)
         }
-        
-        if (this.layer)
-            huahuoEngine.GetCurrentStore().SetCurrentLayer(this.layer)
+
+        if (this.layer){
+            let store = this.layer.GetObjectStore()
+            if(store != null)
+                store.SetCurrentLayer(this.layer)
+        }
+
     }
 
     selectCell(cellId) {
