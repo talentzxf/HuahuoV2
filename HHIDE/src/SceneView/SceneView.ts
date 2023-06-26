@@ -179,7 +179,8 @@ class SceneView extends HTMLElement {
         }
 
         timeline.reloadTracks()
-        timeline.addNewTrack(null, [eyeIcon])
+        let track = timeline.addNewTrack(null, [eyeIcon])
+        timeline.selectTrack(track.getSeqId(), null)
     }
 
     createGizmos() {
