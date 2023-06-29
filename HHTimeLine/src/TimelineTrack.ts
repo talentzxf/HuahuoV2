@@ -301,8 +301,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.ctx.font = this.trackNameSize + 'px serif'
         let textYOffset = this.yOffset + this.trackNameSize + (this.unitCellHeight - this.trackNameSize) * 0.5
 
-        let i18n = (window as any).i18n
-        this.ctx.fillText(i18n.t(this.trackName), xOffset, textYOffset)
+        this.ctx.fillText(this.trackName, xOffset, textYOffset)
 
         if (this.isSelected) {
 

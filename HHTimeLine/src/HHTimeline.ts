@@ -66,7 +66,8 @@ class HHTimeline extends HTMLElement {
             this.canvasScrollContainer.addEventListener("scroll", this.onScroll.bind(this))
             window.addEventListener("resize", this.Resize.bind(this))
 
-            let titleTimeLineTrack = new TitleTimelineTrack(0, this.frameCount, this.canvas.getContext('2d'), 0, null, "timeline.Frames")
+            let i18n = (window as any).i18n
+            let titleTimeLineTrack = new TitleTimelineTrack(0, this.frameCount, this.canvas.getContext('2d'), 0, null, i18n.t("timeline.Frames"))
             this.titleTrack = titleTimeLineTrack
             // Add one timelinetrack
             this.timelineTracks.push(titleTimeLineTrack)
@@ -134,6 +135,23 @@ class HHTimeline extends HTMLElement {
         }
 
         this.redrawCanvas()
+    }
+
+    setLayerIcons(layer, icons){
+
+        let candidateIcons = icons
+
+        let currentIcons = this.layerIconMap.get(layer)
+        if(currentIcons != null && currentIcons.length > 0){
+            candidateIcons.concat(currentIcons) // TODO: Is add twice a good idea??
+        }
+
+        this.layerIconMap.set(layer, candidateIcons)
+
+        let track = this.getTrackFromLayer(layer)
+        if(track){
+            track.setIcons(candidateIcons)
+        }
     }
 
     addNewTrack(layer = null, icons: Array<any> = null) {

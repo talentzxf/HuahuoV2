@@ -115,7 +115,7 @@ class SceneView extends HTMLElement {
                     {
                         itemName: i18n.t("contextmenu.createNewTrack"),
                         onclick: function(e){
-                            _this.createNewTrack(_this.timeline)
+                            _this.createNewTrack()
                         }
                     },
                     {
@@ -126,12 +126,21 @@ class SceneView extends HTMLElement {
                     }
                 ])
 
+                let currentStore = huahuoEngine.GetCurrentStore()
                 // If no layer in the store now, create a new track.
-                let layerCount = huahuoEngine.GetCurrentStore().GetLayerCount()
+                let layerCount = currentStore.GetLayerCount()
                 if(layerCount == 0)
-                    _this.createNewTrack(_this.timeline)
-                else
+                    _this.createNewTrack()
+                else{
+                    // Set up icons. In some cases, layers are created else where (like in elementCreator) and icons are not setup during layer creation
+                    for(let layerId = 0 ; layerId < layerCount; layerId++){
+                        let layer = currentStore.GetLayer(layerId)
+                        let eyeIcon = _this.createEyeIcon()
+                        _this.timeline.setLayerIcons(layer, [eyeIcon])
+                    }
                     _this.timeline.reloadTracks()
+                }
+                    
 
                 if(_this.animationPlayer == null){
                     _this.animationPlayer = new EditorPlayer(_this)
@@ -160,7 +169,8 @@ class SceneView extends HTMLElement {
         firstTrack.getLayer().GetObjectStore().UpdateMaxFrameId(cellId, true)
     }
 
-    createNewTrack(timeline){
+    createEyeIcon(){
+        let _this = this
         let eyeIcon = new Image()
         eyeIcon.src = SVGFiles.eyeSvg
         eyeIcon["onIconClicked"] = function(layer){
@@ -175,12 +185,17 @@ class SceneView extends HTMLElement {
         }
 
         eyeIcon.onload = function(){
-            timeline.reloadTracks()
+            _this.timeline.reloadTracks()
         }
 
-        timeline.reloadTracks()
-        let track = timeline.addNewTrack(null, [eyeIcon])
-        timeline.selectTrack(track.getSeqId(), null)
+        return eyeIcon
+    }
+
+    createNewTrack(){
+        let eyeIcon = this.createEyeIcon()
+        this.timeline.reloadTracks()
+        let track = this.timeline.addNewTrack(null, [eyeIcon])
+        this.timeline.selectTrack(track.getSeqId(), null)
     }
 
     createGizmos() {
