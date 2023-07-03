@@ -15,6 +15,8 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
     private originalZoomMap: Map<paper.View, number> = new Map()
 
+    private originalViewPosition: Map<paper.View, paper.Point> = new Map()
+
     private isPlayer = false
     private aspectRatio: number = 4 / 3  //  W:H = 4:3
 
@@ -101,6 +103,12 @@ class RenderEnginePaperJs implements RenderEngine2D {
         }else{
             view.zoom = 1.0
         }
+
+        if(this.originalViewPosition.has(view)){
+            view.center = this.originalViewPosition.get(view)
+        }else{
+            view.center = new paper.Point(0,0)
+        }
     }
 
     public clearBackground() {
@@ -186,6 +194,7 @@ class RenderEnginePaperJs implements RenderEngine2D {
         this.clearBackground()
 
         this.originalZoomMap.set(canvasView, canvasView.zoom)
+        this.originalViewPosition.set(canvasView, canvasView.center)
     }
 
     private _resize(width, height, originalSize, canvasView: paper.View){
