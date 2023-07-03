@@ -310,6 +310,16 @@ class SceneView extends HTMLElement {
         }
     }
 
+    resetDefaultShapeDrawer() {
+        defaultShapeDrawer.onBeginToDrawShape(this.canvas)
+    }
+
+    get isPlaying(): boolean {
+        return null != this.animationPlayer && this.animationPlayer.isPlaying
+    }
+
+    isPanning: boolean = false
+
     onMouseDown(evt: MouseEvent) {
         // Operating in this sceneview, set the storeId of this sceneview as default.
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId)
@@ -322,17 +332,13 @@ class SceneView extends HTMLElement {
         let title = content.getTitle()
         panel.selectTab(title.tabIndex)
 
-        if (this.currentShapeDrawer && !this.isPlaying) {
+        if(evt.ctrlKey){
+            this.isPanning = true
+
+            this.canvas.style.cursor = "grabbing"
+        } else if (this.currentShapeDrawer && !this.isPlaying) {
             this.currentShapeDrawer.onMouseDown(evt)
         }
-    }
-
-    resetDefaultShapeDrawer() {
-        defaultShapeDrawer.onBeginToDrawShape(this.canvas)
-    }
-
-    get isPlaying(): boolean {
-        return null != this.animationPlayer && this.animationPlayer.isPlaying
     }
 
     onMouseMove(evt: MouseEvent) {
