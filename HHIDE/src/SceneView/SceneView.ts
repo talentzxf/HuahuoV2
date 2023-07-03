@@ -106,6 +106,7 @@ class SceneView extends HTMLElement {
         this.canvas.addEventListener("mousedown", this.onMouseDown.bind(this))
         this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this))
         this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this))
+        this.canvas.addEventListener("wheel", this.onWheel.bind(this))
         this.canvas.addEventListener("dblclick", this.onDbClick.bind(this))
 
 
@@ -152,6 +153,13 @@ class SceneView extends HTMLElement {
         if (this.animationPlayer == null) {
             this.animationPlayer = new EditorPlayer(this)
             huahuoEngine.setActivePlayer(this.animationPlayer)
+        }
+    }
+
+    onWheel(evt: WheelEvent){
+        if(evt.ctrlKey){
+            evt.stopPropagation()
+            evt.preventDefault()
         }
     }
 
@@ -252,7 +260,7 @@ class SceneView extends HTMLElement {
             this.createCanvas()
             renderEngine2D.init(this.canvas);
 
-            this.createGizmos.bind(this)
+            this.createGizmos()
 
             this.setupEventsAndCreateFirstTrack()
 

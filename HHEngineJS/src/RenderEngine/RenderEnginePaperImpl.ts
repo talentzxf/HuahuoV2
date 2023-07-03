@@ -13,6 +13,8 @@ class RenderEnginePaperJs implements RenderEngine2D {
     private canvasPaperMap: Map<HTMLCanvasElement, number> = new Map()
     private canvasOriginalSize: Map<paper.View, [number, number]> = new Map()
 
+    private originalZoomMap: Map<paper.View, number> = new Map()
+
     private isPlayer = false
     private aspectRatio: number = 4 / 3  //  W:H = 4:3
 
@@ -94,7 +96,11 @@ class RenderEnginePaperJs implements RenderEngine2D {
     }
 
     public zoomReset() {
-        view.zoom = 1.0
+        if(this.originalZoomMap.has(view)){
+            view.zoom = this.originalZoomMap.get(view)
+        }else{
+            view.zoom = 1.0
+        }
     }
 
     public clearBackground() {
@@ -178,6 +184,8 @@ class RenderEnginePaperJs implements RenderEngine2D {
         }
 
         this.clearBackground()
+
+        this.originalZoomMap.set(canvasView, canvasView.zoom)
     }
 
     private _resize(width, height, originalSize, canvasView: paper.View){
