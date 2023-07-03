@@ -11,6 +11,14 @@ import {findParentContent, findParentPanel, HHSideBar} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
 import {SVGFiles} from "../Utilities/Svgs";
 
+function allReadyExecute(fn: Function) {
+    i18n.ExecuteAfterInited(
+        huahuoEngine.ExecuteAfterInited(
+            fn
+        )
+    )
+}
+
 @CustomElement({
     selector: "hh-sceneview"
 })
@@ -98,55 +106,51 @@ class SceneView extends HTMLElement {
         this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this))
         this.canvas.addEventListener("dblclick", this.onDbClick.bind(this))
 
-        let _this = this
-        i18n.ExecuteAfterInited(() => {
-            huahuoEngine.ExecuteAfterInited(() => {
-                if (_this.timeline == null)
-                    _this.timeline = document.createElement("hh-timeline") as HHTimeline
 
-                _this.canvasContainer.insertBefore(_this.timeline, _this.canvas)
+        if (this.timeline == null)
+            this.timeline = document.createElement("hh-timeline") as HHTimeline
 
-                _this.timeline.contextMenu.setItems([
-                    {
-                        itemName: i18n.t("contextmenu.mergecells"),
-                        onclick: _this.timeline.mergeCells.bind(_this.timeline)
-                    },
-                    {
-                        itemName: i18n.t("contextmenu.createNewTrack"),
-                        onclick: function (e) {
-                            _this.createNewTrack()
-                        }
-                    },
-                    {
-                        itemName: i18n.t("contextmenu.markAsAnimationEnd"),
-                        onclick: function (e) {
-                            _this.markAsAnimationEnd(_this.timeline)
-                        }
-                    }
-                ])
+        this.canvasContainer.insertBefore(this.timeline, this.canvas)
 
-                let currentStore = huahuoEngine.GetCurrentStore()
-                // If no layer in the store now, create a new track.
-                let layerCount = currentStore.GetLayerCount()
-                if (layerCount == 0)
-                    _this.createNewTrack()
-                else {
-                    // Set up icons. In some cases, layers are created else where (like in elementCreator) and icons are not setup during layer creation
-                    for (let layerId = 0; layerId < layerCount; layerId++) {
-                        let layer = currentStore.GetLayer(layerId)
-                        let eyeIcon = _this.createEyeIcon()
-                        _this.timeline.setLayerIcons(layer, [eyeIcon])
-                    }
-                    _this.timeline.reloadTracks()
+        this.timeline.contextMenu.setItems([
+            {
+                itemName: i18n.t("contextmenu.mergecells"),
+                onclick: this.timeline.mergeCells.bind(this.timeline)
+            },
+            {
+                itemName: i18n.t("contextmenu.createNewTrack"),
+                onclick: function (e) {
+                    this.createNewTrack()
                 }
-
-
-                if (_this.animationPlayer == null) {
-                    _this.animationPlayer = new EditorPlayer(_this)
-                    huahuoEngine.setActivePlayer(_this.animationPlayer)
+            },
+            {
+                itemName: i18n.t("contextmenu.markAsAnimationEnd"),
+                onclick: function (e) {
+                    this.markAsAnimationEnd(this.timeline)
                 }
-            })
-        })
+            }
+        ])
+
+        let currentStore = huahuoEngine.GetCurrentStore()
+        // If no layer in the store now, create a new track.
+        let layerCount = currentStore.GetLayerCount()
+        if (layerCount == 0)
+            this.createNewTrack()
+        else {
+            // Set up icons. In some cases, layers are created else where (like in elementCreator) and icons are not setup during layer creation
+            for (let layerId = 0; layerId < layerCount; layerId++) {
+                let layer = currentStore.GetLayer(layerId)
+                let eyeIcon = this.createEyeIcon()
+                this.timeline.setLayerIcons(layer, [eyeIcon])
+            }
+            this.timeline.reloadTracks()
+        }
+
+
+        if (this.animationPlayer == null) {
+            this.animationPlayer = new EditorPlayer(this)
+            huahuoEngine.setActivePlayer(this.animationPlayer)
+        }
     }
 
     markAsAnimationEnd(timeline: HHTimeline) {
@@ -237,7 +241,7 @@ class SceneView extends HTMLElement {
     //     xCoord.strokeWidth = 10
     // }
 
-    connectedCallback() {
+    initSceneView() {
         if (!this.inited) {
             this.style.width = "100%"
             this.style.height = "100%"
@@ -246,31 +250,26 @@ class SceneView extends HTMLElement {
             this.createCanvas()
             renderEngine2D.init(this.canvas);
 
-            (window as any).i18n.ExecuteAfterInited(this.createGizmos.bind(this)) // Need translate here!
+            this.createGizmos.bind(this)
 
             this.setupEventsAndCreateFirstTrack()
 
             defaultShapeDrawer.onBeginToDrawShape(this.canvas)
 
-            let _this = this
-            huahuoEngine.ExecuteAfterInited(() => {
-                _this.storeId = huahuoEngine.GetCurrentStore().GetStoreId()
-                console.log("New store id:" + _this.storeId)
+            this.storeId = huahuoEngine.GetCurrentStore().GetStoreId()
+            console.log("New store id:" + this.storeId)
 
-                if (!_this.animationPlayer) {
-                    _this.animationPlayer = new EditorPlayer(_this)
-                    huahuoEngine.setActivePlayer(_this.animationPlayer)
-                }
-                _this.animationPlayer.storeId = _this.storeId
-            })
+            if (!this.animationPlayer) {
+                this.animationPlayer = new EditorPlayer(this)
+                huahuoEngine.setActivePlayer(this.animationPlayer)
+            }
+            this.animationPlayer.storeId = this.storeId
 
             this.inited = true
 
             sceneViewManager.registerSceneView(this)
 
-            huahuoEngine.ExecuteAfterInited(() => {
-                sceneViewManager.focusSceneView(_this)
-            })
+            sceneViewManager.focusSceneView(this)
 
             // Refresh sidebar content.
             let sidebars = document.querySelectorAll("hh-sidebar")
@@ -278,6 +277,10 @@ class SceneView extends HTMLElement {
                 (sidebar as HHSideBar).refreshDockables()
             }
         }
+    }
+
+    connectedCallback() {
+        allReadyExecute(this.initSceneView.bind(this))
     }
 
     onDbClick(evt: MouseEvent) {
