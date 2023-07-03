@@ -160,6 +160,15 @@ class SceneView extends HTMLElement {
         if(evt.ctrlKey){
             evt.stopPropagation()
             evt.preventDefault()
+
+            let mousePoint = new paper.Point(evt.offsetX, evt.offsetY)
+
+            let curView = (window.paper as any).view
+            let oldCenter = curView.center
+
+            let mousePosition = curView.viewToProject(mousePoint)
+
+            evt.deltaY > 0? renderEngine2D.zoomOut(1.01):renderEngine2D.zoomIn(1.01)
         }
     }
 
