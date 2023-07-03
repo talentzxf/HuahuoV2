@@ -13,9 +13,11 @@ import {SVGFiles} from "../Utilities/Svgs";
 
 function allReadyExecute(fn: Function) {
     i18n.ExecuteAfterInited(
-        huahuoEngine.ExecuteAfterInited(
-            fn
-        )
+        ()=>{
+            huahuoEngine.ExecuteAfterInited(
+                fn
+            )            
+        }
     )
 }
 
