@@ -100,56 +100,53 @@ class SceneView extends HTMLElement {
 
         let _this = this
         i18n.ExecuteAfterInited(() => {
-                huahuoEngine.ExecuteAfterInited(() => {
-                    if (_this.timeline == null)
-                        _this.timeline = document.createElement("hh-timeline") as HHTimeline
+            huahuoEngine.ExecuteAfterInited(() => {
+                if (_this.timeline == null)
+                    _this.timeline = document.createElement("hh-timeline") as HHTimeline
 
-                    _this.canvasContainer.insertBefore(_this.timeline, _this.canvas)
+                _this.canvasContainer.insertBefore(_this.timeline, _this.canvas)
 
-                    let i18n = (window as any).i18n;
-                    i18n.ExecuteAfterInited(() => {
-                        _this.timeline.contextMenu.setItems([
-                            {
-                                itemName: i18n.t("contextmenu.mergecells"),
-                                onclick: _this.timeline.mergeCells.bind(_this.timeline)
-                            },
-                            {
-                                itemName: i18n.t("contextmenu.createNewTrack"),
-                                onclick: function (e) {
-                                    _this.createNewTrack()
-                                }
-                            },
-                            {
-                                itemName: i18n.t("contextmenu.markAsAnimationEnd"),
-                                onclick: function (e) {
-                                    _this.markAsAnimationEnd(_this.timeline)
-                                }
-                            }
-                        ])
-
-                        let currentStore = huahuoEngine.GetCurrentStore()
-                        // If no layer in the store now, create a new track.
-                        let layerCount = currentStore.GetLayerCount()
-                        if (layerCount == 0)
+                _this.timeline.contextMenu.setItems([
+                    {
+                        itemName: i18n.t("contextmenu.mergecells"),
+                        onclick: _this.timeline.mergeCells.bind(_this.timeline)
+                    },
+                    {
+                        itemName: i18n.t("contextmenu.createNewTrack"),
+                        onclick: function (e) {
                             _this.createNewTrack()
-                        else {
-                            // Set up icons. In some cases, layers are created else where (like in elementCreator) and icons are not setup during layer creation
-                            for (let layerId = 0; layerId < layerCount; layerId++) {
-                                let layer = currentStore.GetLayer(layerId)
-                                let eyeIcon = _this.createEyeIcon()
-                                _this.timeline.setLayerIcons(layer, [eyeIcon])
-                            }
-                            _this.timeline.reloadTracks()
                         }
+                    },
+                    {
+                        itemName: i18n.t("contextmenu.markAsAnimationEnd"),
+                        onclick: function (e) {
+                            _this.markAsAnimationEnd(_this.timeline)
+                        }
+                    }
+                ])
+
+                let currentStore = huahuoEngine.GetCurrentStore()
+                // If no layer in the store now, create a new track.
+                let layerCount = currentStore.GetLayerCount()
+                if (layerCount == 0)
+                    _this.createNewTrack()
+                else {
+                    // Set up icons. In some cases, layers are created else where (like in elementCreator) and icons are not setup during layer creation
+                    for (let layerId = 0; layerId < layerCount; layerId++) {
+                        let layer = currentStore.GetLayer(layerId)
+                        let eyeIcon = _this.createEyeIcon()
+                        _this.timeline.setLayerIcons(layer, [eyeIcon])
+                    }
+                    _this.timeline.reloadTracks()
+                }
 
 
-                        if (_this.animationPlayer == null) {
-                            _this.animationPlayer = new EditorPlayer(_this)
-                            huahuoEngine.setActivePlayer(_this.animationPlayer)
-                        }
-                    })
-                })
+                if (_this.animationPlayer == null) {
+                    _this.animationPlayer = new EditorPlayer(_this)
+                    huahuoEngine.setActivePlayer(_this.animationPlayer)
+                }
             })
+        })
     }
 
     markAsAnimationEnd(timeline: HHTimeline) {
