@@ -87,15 +87,30 @@ class SceneView extends HTMLElement {
         })
     }
 
+    isGrabbing = false
     OnKeyDown(e: KeyboardEvent) {
         if (e.key == "Escape") {
             this.endOfDrawingShape(this.currentShapeDrawer)
+        }
+        else{
+            if(e.ctrlKey){
+                this.canvas.style.cursor = "grabbing"
+                this.isGrabbing = true
+            }
+        }
+    }
+
+    OnKeyUp(e: KeyboardEvent){
+        if(!e.ctrlKey){
+            this.canvas.style.cursor = "default"
+            this.isGrabbing = false
         }
     }
 
     setupEventsAndCreateFirstTrack() {
         window.addEventListener("resize", this.OnResize.bind(this))
         window.addEventListener("keydown", this.OnKeyDown.bind(this))
+        window.addEventListener("keyup", this.OnKeyUp.bind(this))
 
         let resizeObserver = new ResizeObserver(this.OnResize.bind(this))
         resizeObserver.observe(this.canvasContainer)
@@ -334,16 +349,18 @@ class SceneView extends HTMLElement {
 
         if(evt.ctrlKey){
             this.isPanning = true
-
-            this.canvas.style.cursor = "grabbing"
         } else if (this.currentShapeDrawer && !this.isPlaying) {
             this.currentShapeDrawer.onMouseDown(evt)
         }
     }
 
     onMouseMove(evt: MouseEvent) {
-        if (this.currentShapeDrawer && !this.isPlaying) {
-            this.currentShapeDrawer.onMouseMove(evt)
+        if(this.isGrabbing){
+
+        }else{
+            if (this.currentShapeDrawer && !this.isPlaying) {
+                this.currentShapeDrawer.onMouseMove(evt)
+            }
         }
     }
 
