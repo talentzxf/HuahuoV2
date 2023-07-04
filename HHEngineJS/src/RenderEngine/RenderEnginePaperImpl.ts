@@ -3,11 +3,13 @@ import {view} from "paper";
 import {Logger, Vector2} from "hhcommoncomponents"
 import {RenderEngine2D} from "./RenderEngine2D";
 import {huahuoEngine} from "../EngineAPI";
+import {GraphEvent, EventParam, PropertyType} from "hhcommoncomponents";
+import {EventEmitter} from "hhcommoncomponents";
 
 let bgLayerName = "background"
 let contentLayerName = "content"
 
-class RenderEnginePaperJs implements RenderEngine2D {
+class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
 
     // From canvas to project index
     private canvasPaperMap: Map<HTMLCanvasElement, number> = new Map()
@@ -150,6 +152,15 @@ class RenderEnginePaperJs implements RenderEngine2D {
         this.clearBackground()
 
         this.canvasPaperMap.set(canvas, paper.project.index)
+
+        view.onMouseMove = (evt: paper.MouseEvent)=>{
+            this.onMouseMove(evt.point)
+        }
+    }
+
+    @GraphEvent(true)
+    onMouseMove(@EventParam(PropertyType.VECTOR2) point: paper.Point){
+
     }
 
     saveProjectCanvasWH(width, height) {
