@@ -366,8 +366,6 @@ class SceneView extends HTMLElement {
                 let currentPoint = curView.viewToProject(new paper.Point(evt.offsetX, evt.offsetY))
                 let panningStart = curView.viewToProject(this.panningStartPoint)
                 let delta = panningStart.subtract(currentPoint)
-
-                // let projectDelta = curView.viewToProject(delta)
                 curView.center = delta.add(curView.center)
 
                 this.panningStartPoint = new paper.Point(evt.offsetX, evt.offsetY)
