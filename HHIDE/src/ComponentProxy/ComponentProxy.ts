@@ -128,7 +128,9 @@ class ComponentProxyHandler{
 
                         propertyMeta = {...propertyMeta} // Clone it to avoid affecting other objects. Shallow copy should be enough.
 
-                        let divGeneratorConstructor = getCustomFieldContentDivGeneratorConstructor(thisComponent.constructor.name, propertyMeta.key)
+                        let constructorName = Object.getPrototypeOf(thisComponent).constructor.name
+
+                        let divGeneratorConstructor = getCustomFieldContentDivGeneratorConstructor(constructorName, propertyMeta.key)
 
                         // @ts-ignore
                         let contentDivGenerator = new divGeneratorConstructor(thisComponent)
