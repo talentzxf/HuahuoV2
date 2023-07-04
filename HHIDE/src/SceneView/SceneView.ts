@@ -13,10 +13,10 @@ import {SVGFiles} from "../Utilities/Svgs";
 
 function allReadyExecute(fn: Function) {
     i18n.ExecuteAfterInited(
-        ()=>{
+        () => {
             huahuoEngine.ExecuteAfterInited(
                 fn
-            )            
+            )
         }
     )
 }
@@ -87,23 +87,23 @@ class SceneView extends HTMLElement {
         })
     }
 
-    isGrabbing = false
+    isPanning = false
+
     OnKeyDown(e: KeyboardEvent) {
         if (e.key == "Escape") {
             this.endOfDrawingShape(this.currentShapeDrawer)
-        }
-        else{
-            if(e.ctrlKey){
+        } else {
+            if (e.ctrlKey) {
                 this.canvas.style.cursor = "grabbing"
-                this.isGrabbing = true
+                this.isPanning = true
             }
         }
     }
 
-    OnKeyUp(e: KeyboardEvent){
-        if(!e.ctrlKey){
+    OnKeyUp(e: KeyboardEvent) {
+        if (!e.ctrlKey) {
             this.canvas.style.cursor = "default"
-            this.isGrabbing = false
+            this.isPanning = false
         }
     }
 
@@ -171,8 +171,8 @@ class SceneView extends HTMLElement {
         }
     }
 
-    onWheel(evt: WheelEvent){
-        if(evt.ctrlKey){
+    onWheel(evt: WheelEvent) {
+        if (evt.ctrlKey) {
             evt.stopPropagation()
             evt.preventDefault()
 
@@ -181,10 +181,10 @@ class SceneView extends HTMLElement {
             let curView = (window.paper as any).view
             let oldZoom = curView.zoom
             let oldCenter = curView.center
-            evt.deltaY > 0? renderEngine2D.zoomOut(1.01):renderEngine2D.zoomIn(1.01)
+            evt.deltaY > 0 ? renderEngine2D.zoomOut(1.01) : renderEngine2D.zoomIn(1.01)
             let newZoom = curView.zoom
 
-            let newViewCenterDelta = (mousePoint.subtract(oldCenter)).multiply(1.0 - oldZoom/newZoom)
+            let newViewCenterDelta = (mousePoint.subtract(oldCenter)).multiply(1.0 - oldZoom / newZoom)
             curView.center = curView.center.add(newViewCenterDelta)
         }
     }
@@ -333,8 +333,7 @@ class SceneView extends HTMLElement {
         return null != this.animationPlayer && this.animationPlayer.isPlaying
     }
 
-    isPanning: boolean = false
-
+    panningStartPoint: paper.Point
     onMouseDown(evt: MouseEvent) {
         // Operating in this sceneview, set the storeId of this sceneview as default.
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId)
@@ -347,19 +346,31 @@ class SceneView extends HTMLElement {
         let title = content.getTitle()
         panel.selectTab(title.tabIndex)
 
-        if(evt.ctrlKey){
+        if (evt.ctrlKey) {
             this.isPanning = true
+            this.panningStartPoint = new paper.Point(evt.offsetX, evt.offsetY)
         } else if (this.currentShapeDrawer && !this.isPlaying) {
             this.currentShapeDrawer.onMouseDown(evt)
         }
     }
 
     onMouseMove(evt: MouseEvent) {
-        if(this.isGrabbing){
-
-        }else{
+        if (!this.isPanning) {
             if (this.currentShapeDrawer && !this.isPlaying) {
                 this.currentShapeDrawer.onMouseMove(evt)
+            }
+        } else {
+            if(this.panningStartPoint != null){
+                let curView = (window.paper as any).view
+
+                let currentPoint = curView.viewToProject(new paper.Point(evt.offsetX, evt.offsetY))
+                let panningStart = curView.viewToProject(this.panningStartPoint)
+                let delta = panningStart.subtract(currentPoint)
+
+                // let projectDelta = curView.viewToProject(delta)
+                curView.center = delta.add(curView.center)
+
+                this.panningStartPoint = new paper.Point(evt.offsetX, evt.offsetY)
             }
         }
     }
@@ -367,6 +378,7 @@ class SceneView extends HTMLElement {
     onMouseUp(evt: MouseEvent) {
         if (this.currentShapeDrawer && !this.isPlaying) {
             this.currentShapeDrawer.onMouseUp(evt)
+            this.panningStartPoint = null
         }
     }
 
