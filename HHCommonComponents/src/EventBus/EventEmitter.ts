@@ -7,6 +7,7 @@ class EventDef{
     eventNameSpace: string
     eventName: string
     target: Object // target object.
+    isGlobal: boolean
 }
 
 function getEvents(target): object[] {
@@ -28,6 +29,10 @@ class EventEmitter{
 
             // The event is registered with the event emitter.
             this.eventBus.registerEvent(eventDef.eventNameSpace, eventDef.eventName, eventParams)
+
+            if(eventDef.isGlobal){
+                eventBus.registerEvent(eventDef.eventNameSpace, eventDef.eventName, eventParams)
+            }
         })
     }
 

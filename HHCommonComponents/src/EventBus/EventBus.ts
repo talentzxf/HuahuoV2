@@ -103,7 +103,8 @@ function GraphEvent(isGlobal: boolean = false){
         let eventDef: EventDef = {
             eventNameSpace: target.constructor.name,
             eventName: propertyKey,
-            target: target
+            target: target,
+            isGlobal: isGlobal
         }
         events.push(eventDef)
 
