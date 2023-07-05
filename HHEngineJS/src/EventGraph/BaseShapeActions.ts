@@ -53,6 +53,16 @@ class BaseShapeActions extends AbstractGraphAction{
     }
 
     @GraphAction()
+    move(@ActionParam(PropertyType.VECTOR2) dir: paper.Point, @ActionParam(PropertyType.NUMBER) speed: number = 1.0){
+        if(dir == null || isNaN(dir.x) || isNaN(dir.y))
+            return
+
+        this.position = this.position.add(dir.multiply(speed))
+
+        this.isPositionValid = true
+    }
+
+    @GraphAction()
     rotateShape(@ActionParam(PropertyType.NUMBER) degree){
         if(isNaN(degree))
             return
