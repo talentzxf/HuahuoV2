@@ -40,7 +40,6 @@ class EventNode extends AbstractNode {
         this.title = fullEventName
         let _this = this
         this.currentEventHandler = targetEventBus.addEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, (params) => {
-            console.log(params)
             for (let paramIdx = 0; paramIdx < params.length; paramIdx++) {
                 let slot = _this.getParamMap()[paramIdx]
                 if (slot) {

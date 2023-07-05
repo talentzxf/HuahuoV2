@@ -61,6 +61,20 @@ class BaseShapeActions extends AbstractGraphAction{
 
         this.isRotationValid = true
     }
+
+    @GraphAction()
+    lookAt(@ActionParam(PropertyType.VECTOR2) targetPoint){
+        if(targetPoint == null || isNaN(targetPoint.x) || isNaN(targetPoint.y)){
+            return
+        }
+
+        let curShapePosition = this.targetShape.position
+        let degree = targetPoint.subtract(curShapePosition).angle
+
+        this.rotation = degree
+        this.isRotationValid = true
+
+    }
 }
 
 export {BaseShapeActions }
