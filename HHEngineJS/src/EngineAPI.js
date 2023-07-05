@@ -7,6 +7,7 @@ import {dataURItoBlob, eventBus} from "hhcommoncomponents";
 import * as ti from "taichi.js/dist/taichi"
 import {BaseShapeEvents} from "./EventGraph/BaseShapeEvents";
 import {IsValidWrappedObject} from "hhcommoncomponents";
+import {BaseShapeJS} from "./Shapes/BaseShapeJS";
 // import * as ti from "taichi.js/dist/taichi.dev"
 
 class EngineAPI{
@@ -39,8 +40,12 @@ class EngineAPI{
         return this.eventEmitterCache.get(shape)
     }
 
-    getEventBus(shape){
-        return this.getEvent(shape).getEventBus()
+    getEventBus(eventEmitter){
+        if(eventEmitter instanceof BaseShapeJS)
+            return this.getEvent(eventEmitter).getEventBus()
+
+        // Return the global event bus
+        return eventBus
     }
 
     constructor() {

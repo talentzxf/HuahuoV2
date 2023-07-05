@@ -6,6 +6,7 @@ import {getEventCategoryMap, getLiteGraphTypeFromPropertyType} from "./Utils"
 import {EventNode, ActionNode} from "hhenginejs";
 import {LGraphCanvas, LiteGraph} from "hhenginejs";
 import {huahuoEngine} from "hhenginejs";
+import {renderEngine2D} from "hhenginejs"
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -185,9 +186,15 @@ class EventGraphForm extends HTMLElement implements HHForm {
         let eventNameEventBusMap = new Map
 
         let player = huahuoEngine.getActivePlayer()
-        // Build up events
+        // Build up player events
         let events = player.getEventBus().getAllEvents()
         for(let eventName of events){
+            eventNameEventBusMap.set(eventName, null)
+        }
+
+        // Build up renderEngine events
+        let renderEngineEvents = renderEngine2D.getEventBus().getAllEvents()
+        for(let eventName of renderEngineEvents){
             eventNameEventBusMap.set(eventName, null)
         }
 

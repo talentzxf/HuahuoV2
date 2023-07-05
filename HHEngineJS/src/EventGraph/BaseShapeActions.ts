@@ -43,6 +43,9 @@ class BaseShapeActions extends AbstractGraphAction{
 
     @GraphAction()
     setPosition(@ActionParam(PropertyType.NUMBER) x:number, @ActionParam(PropertyType.NUMBER) y:number){
+        if(isNaN(x) || isNaN(y))
+            return
+
         this.position.x = x
         this.position.y = y
 
@@ -51,6 +54,9 @@ class BaseShapeActions extends AbstractGraphAction{
 
     @GraphAction()
     rotateShape(@ActionParam(PropertyType.NUMBER) degree){
+        if(isNaN(degree))
+            return
+
         this.rotation += degree
 
         this.isRotationValid = true

@@ -6,6 +6,7 @@ import {huahuoEngine} from "../EngineAPI";
 import {eventBus} from "hhcommoncomponents";
 import {EventNode} from "../EventGraph/Nodes/EventNode";
 import {ActionNode} from "../EventGraph/Nodes/ActionNode";
+import {IsValidWrappedObject} from "hhcommoncomponents";
 
 @Component({compatibleShapes: ["BaseShapeJS"], cppClassName: "EventGraphComponent"})
 class EventGraphComponent extends AbstractComponent {
@@ -37,7 +38,7 @@ class EventGraphComponent extends AbstractComponent {
 
     getEventBus(nodeId: number){
         let rawObj = this.rawObj.GetShapeByNodeId(nodeId)
-        if(rawObj == null)
+        if(rawObj == null || !IsValidWrappedObject(rawObj))
             return eventBus
 
         let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
