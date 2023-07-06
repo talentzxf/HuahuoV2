@@ -10,6 +10,24 @@ import {IsValidWrappedObject} from "hhcommoncomponents";
 import {BaseShapeJS} from "./Shapes/BaseShapeJS";
 // import * as ti from "taichi.js/dist/taichi.dev"
 
+
+// Not sure why, but the instanceof failed in this case...
+function isDerivedFrom(object, clz){
+    if(object instanceof clz)
+        return true
+
+    let targetClassName = clz.name
+    let curObj = object
+    while(curObj != null){
+        if(curObj.constructor.name == targetClassName)
+            return true
+
+        curObj = Object.getPrototypeOf(curObj)
+    }
+
+    return false
+}
+
 class EngineAPI{
     inited = false
 
@@ -41,7 +59,7 @@ class EngineAPI{
     }
 
     getEventBus(eventEmitter){
-        if(eventEmitter instanceof BaseShapeJS)
+        if(isDerivedFrom(eventEmitter, BaseShapeJS))
             return this.getEvent(eventEmitter).getEventBus()
 
         // Return the global event bus

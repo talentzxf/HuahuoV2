@@ -44,6 +44,10 @@ class ComponentProxyHandler{
         })
     }
 
+    getPrototypeOf(target){
+        return Object.getPrototypeOf(this.targetComponent);
+    }
+
     get(target, propKey, receiver){
         const origProperty = target[propKey]
 

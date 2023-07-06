@@ -33,6 +33,10 @@ class BaseShapeHandler{
         })
     }
 
+    getPrototypeOf(target){
+        return Object.getPrototypeOf(this.targetShape);
+    }
+
     removePaperObj(){
         this.targetShape.removePaperObj.apply(this.proxy)
         this.updateBoundingBox()

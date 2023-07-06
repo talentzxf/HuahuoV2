@@ -12,6 +12,9 @@ function getLiteGraphTypeFromPropertyType(propertyType: PropertyType) {
         case PropertyType.BOOLEAN:
             returnType = "boolean"
             break;
+        case PropertyType.VECTOR2:
+            returnType = "vec2"
+            break;
     }
 
     return returnType

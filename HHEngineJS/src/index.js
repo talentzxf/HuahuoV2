@@ -27,6 +27,7 @@ import {Utils} from "./Shapes/Utils";
 import {AbstractComponent} from "./Components/AbstractComponent";
 import {PropertyCategory} from "./Components/PropertySheetBuilder"
 import {PropertyDef} from "./Components/PropertySheetBuilder";
+import {Vector2NumberNode} from "./EventGraph/Nodes/Vector2NumberNode";
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 import {LGraphCanvas, LiteGraph} from "litegraph.js";

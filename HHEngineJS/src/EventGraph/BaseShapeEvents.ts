@@ -16,26 +16,26 @@ class BaseShapeEvents extends EventEmitter{
 
             for(let mouseEvent of mouseEvents){
                 paperItem[mouseEvent] = (evt:MouseEvent)=>{
-                    _this[mouseEvent](evt.point.x, evt.point.y)
+                    _this[mouseEvent](evt.point)
                 }
             }
         })
     }
 
     @GraphEvent()
-    onMouseMove(@EventParam(PropertyType.NUMBER) mouseX, @EventParam(PropertyType.NUMBER) mouseY){
+    onMouseMove(@EventParam(PropertyType.VECTOR2) point){
     }
 
     @GraphEvent()
-    onMouseDown(@EventParam(PropertyType.NUMBER) mouseX, @EventParam(PropertyType.NUMBER) mouseY){
+    onMouseDown(@EventParam(PropertyType.VECTOR2) point){
     }
 
     @GraphEvent()
-    onMouseLeave(@EventParam(PropertyType.NUMBER) mouseX, @EventParam(PropertyType.NUMBER) mouseY){
+    onMouseLeave(@EventParam(PropertyType.VECTOR2) point){
     }
 
     @GraphEvent()
-    onMouseEnter(@EventParam(PropertyType.NUMBER) mouseX, @EventParam(PropertyType.NUMBER) mouseY){
+    onMouseEnter(@EventParam(PropertyType.VECTOR2) point){
     }
 }
 
