@@ -7,6 +7,7 @@ import {EventNode, ActionNode} from "hhenginejs";
 import {LGraphCanvas, LiteGraph} from "hhenginejs";
 import {huahuoEngine} from "hhenginejs";
 import {renderEngine2D} from "hhenginejs"
+import {ActionDef} from "hhenginejs/dist/src/EventGraph/GraphActions";
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -115,7 +116,36 @@ class EventGraphForm extends HTMLElement implements HHForm {
         document.removeEventListener("mousemove", this.onDrag.bind(this))
     }
 
-    actionListenerMenu(node, options, e, prev_menu, callback){
+    actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, actionTarget) {
+        let first_event = contextMenu.getFirstEvent();
+        let graph = this.lcanvas.graph
+        let lcanvas = this.lcanvas
+        graph.beforeChange()
+
+        let node = LiteGraph.createNode(value.value) as ActionNode
+        if (node) {
+            let paramDefs = actionDef.paramDefs
+            for (let paramDef of paramDefs) {
+                let outputSlot = node.addInput(paramDef.paramName, getLiteGraphTypeFromPropertyType(paramDef.paramType))
+                node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)
+            }
+
+            node.pos = lcanvas.convertEventToCanvasOffset(first_event)
+            lcanvas.graph.add(node)
+
+            // TODO: Whatif we need to perform action on another object?
+            this.targetComponent.linkNodeWithTarget(node.id, actionTarget)
+            node.setEventGraphComponent(this.targetComponent)
+            node.setActionName(actionDef.actionName)
+        }
+
+        if (callback)
+            callback(node)
+
+        graph.afterChange()
+    }
+
+    actionListenerMenu(node, options, e, prev_menu, callback) {
         if (!this.lcanvas)
             return
 
@@ -135,41 +165,32 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 content: actionDef.actionName,
                 has_submenu: false,
                 callback: function (value, event, mouseEvent, contextMenu) {
-                    let first_event = contextMenu.getFirstEvent();
-                    let graph = _this.lcanvas.graph
-                    let lcanvas = _this.lcanvas
-                    graph.beforeChange()
-
-                    let node = LiteGraph.createNode(value.value) as ActionNode
-                    if (node) {
-                        let paramDefs = actionDef.paramDefs
-                        for (let paramDef of paramDefs) {
-                            let outputSlot = node.addInput(paramDef.paramName, getLiteGraphTypeFromPropertyType(paramDef.paramType))
-                            node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)
-                        }
-
-                        node.pos = lcanvas.convertEventToCanvasOffset(first_event)
-                        lcanvas.graph.add(node)
-
-                        // TODO: Whatif we need to perform action on another object?
-                        _this.targetComponent.linkNodeWithTarget(node.id, baseShape)
-                        node.setEventGraphComponent(_this.targetComponent)
-                        node.setActionName(actionDef.actionName)
-                    }
-
-                    if (callback)
-                        callback(node)
-
-                    graph.afterChange()
+                    _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, baseShape)
                 }
             }
 
             entries.push(entry)
         })
 
+
+        for (let component of baseShape.getComponents()) {
+            component.getActionDefs().forEach((actionDef) => {
+                let entry = {
+                    value: "actions/actionNode/" + component.getTypeName(),
+                    content: actionDef.actionName,
+                    has_submenu: false,
+                    callback: function (value, event, mouseEvent, contextMenu) {
+                        _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, component)
+                    }
+                }
+
+                entries.push(entry)
+            })
+        }
+
+
         new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
     }
-
 
 
     eventListenerMenu(node, options, e, prev_menu, callback) {
@@ -188,19 +209,19 @@ class EventGraphForm extends HTMLElement implements HHForm {
         let player = huahuoEngine.getActivePlayer()
         // Build up player events
         let events = player.getEventBus().getAllEvents()
-        for(let eventName of events){
+        for (let eventName of events) {
             eventNameEventBusMap.set(eventName, null)
         }
 
         // Build up renderEngine events
         let renderEngineEvents = renderEngine2D.getEventBus().getAllEvents()
-        for(let eventName of renderEngineEvents){
+        for (let eventName of renderEngineEvents) {
             eventNameEventBusMap.set(eventName, null)
         }
 
         let localEvents = huahuoEngine.getEvent(this.targetComponent.baseShape).getEvents()
 
-        for(let eventName of localEvents){
+        for (let eventName of localEvents) {
             eventNameEventBusMap.set(eventName, this.targetComponent.baseShape)
         }
 
@@ -217,12 +238,12 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 callback: function (value, event, mouseEvent, contextMenu) {
                     let eventEntries = []
 
-                    eventObjects.forEach((eventObject: object)=>{
+                    eventObjects.forEach((eventObject: object) => {
                         let eventEntry = {
                             value: "events/eventNode",
                             content: eventObject["eventName"],
                             has_submenu: false,
-                            callback: function(value, event, mouseEvent, contextMenu){
+                            callback: function (value, event, mouseEvent, contextMenu) {
                                 let fullEventName = getFullEventName(namespace, eventObject["eventName"])
 
                                 let first_event = contextMenu.getFirstEvent();
@@ -269,7 +290,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
     initLGraph(canvas: HTMLCanvasElement) {
         let graph = this.targetComponent.getGraph()
 
-        if(this.lcanvas == null){
+        if (this.lcanvas == null) {
             this.lcanvas = new LGraphCanvas(canvas, graph, {autoresize: false})
             let _this = this
             this.lcanvas.getExtraMenuOptions = function () {
@@ -301,8 +322,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
             // node_const.connect(0, node_watch, 0);
 
             LiteGraph["release_link_on_empty_shows_menu"] = true
-        }
-        else
+        } else
             this.lcanvas.setGraph(graph)
     }
 

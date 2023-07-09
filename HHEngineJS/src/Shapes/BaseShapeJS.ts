@@ -125,6 +125,10 @@ abstract class BaseShapeJS {
         })
     }
 
+    getComponents(){
+        return this.customComponents
+    }
+
     getComponentCountByTypeName(typeName) {
         let returnCount = 0
         for (let component of this.customComponents) {

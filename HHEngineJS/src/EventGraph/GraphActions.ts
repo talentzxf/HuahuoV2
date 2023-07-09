@@ -75,4 +75,23 @@ abstract class AbstractGraphAction {
     }
 }
 
-export {AbstractGraphAction, ActionDef, ActionParam, GraphAction}
+class ComponentActions{
+    targetComponent: Object
+
+    getActionDefs(): Array<ActionDef>{
+        return getActions(this.targetComponent) as Array<ActionDef>
+    }
+
+    constructor(targetComponent) {
+        this.targetComponent = targetComponent
+
+        let _this = this
+        let actions = getActions(this.targetComponent)
+        actions.forEach((actionDef: ActionDef) => {
+            let actionParams = getActionParams(_this.targetComponent, actionDef.actionName)
+            actionDef.paramDefs = actionParams
+        })
+    }
+}
+
+export {AbstractGraphAction, ActionDef, ActionParam, GraphAction, ComponentActions}

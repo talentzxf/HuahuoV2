@@ -10,6 +10,8 @@ import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
 import {colorStopArrayHandler} from "./VariableHandlers/ColorArrayProcessor";
 import {subComponentArrayHandler} from "./VariableHandlers/SubComponentArrayHandler";
 import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariableHandler";
+import {EventEmitter} from "hhcommoncomponents";
+import {AbstractGraphAction, ComponentActions} from "../EventGraph/GraphActions";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -48,11 +50,13 @@ function Component(componentConfig?: ComponentConfig) {
 
 declare function castObject(obj: any, clz: any): any;
 
-class AbstractComponent {
+class AbstractComponent extends EventEmitter{
 
     static getMetaDataKey(){
         return metaDataKey
     }
+
+    componentActions: ComponentActions
 
     isBuiltIn: boolean = false
 
@@ -78,6 +82,8 @@ class AbstractComponent {
     }
 
     constructor(rawObj?, isMirage = false) {
+        super()
+
         this.isMirage = isMirage
 
         let cppClzName = clzObjectFactory.getCppClassName(this.constructor.name)
@@ -112,6 +118,12 @@ class AbstractComponent {
         }
 
         this.rawObj.SetTypeName(this.constructor.name)
+
+        this.componentActions = new ComponentActions(this)
+    }
+
+    getActionDefs(){
+        return this.componentActions.getActionDefs()
     }
 
     setBaseShape(baseShape: BaseShapeJS) {
@@ -213,6 +225,5 @@ class AbstractComponent {
         this.baseShape.removeComponent(this)
     }
 }
-
 
 export {AbstractComponent, PropertyValue, Component}
