@@ -130,21 +130,22 @@ class SceneView extends HTMLElement {
 
         this.canvasContainer.insertBefore(this.timeline, this.canvas)
 
+        let _this = this
         this.timeline.contextMenu.setItems([
             {
                 itemName: i18n.t("contextmenu.mergecells"),
-                onclick: this.timeline.mergeCells.bind(this.timeline)
+                onclick: _this.timeline.mergeCells.bind(_this.timeline)
             },
             {
                 itemName: i18n.t("contextmenu.createNewTrack"),
                 onclick: function (e) {
-                    this.createNewTrack()
+                    _this.createNewTrack()
                 }
             },
             {
                 itemName: i18n.t("contextmenu.markAsAnimationEnd"),
                 onclick: function (e) {
-                    this.markAsAnimationEnd(this.timeline)
+                    _this.markAsAnimationEnd(_this.timeline)
                 }
             }
         ])
