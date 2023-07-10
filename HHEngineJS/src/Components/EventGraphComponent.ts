@@ -22,13 +22,13 @@ class EventGraphComponent extends AbstractComponent {
     // If shape is null, this node is listening to global event.
     linkNodeWithTarget(nodeId: number, actionTarget: BaseShapeJS| AbstractComponent){
         if(actionTarget != null)
-            this.rawObj.AddNodeIdShapeMap(nodeId, actionTarget.getRawObject())
+            this.rawObj.AddNodeIdActionTargetMap(nodeId, actionTarget.getRawObject())
         else
-            this.rawObj.AddNodeIdShapeMap(nodeId, null)
+            this.rawObj.AddNodeIdActionTargetMap(nodeId, null)
     }
 
     getActionTarget(nodeId: number){
-        let rawObj = this.rawObj.GetShapeByNodeId(nodeId)
+        let rawObj = this.rawObj.GetActionTargetByNodeId(nodeId)
         let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
 
         this.baseShape.getAction().AddActionInvoker(this)
