@@ -22,13 +22,13 @@ class EventGraphComponent extends AbstractComponent {
     // If shape is null, this node is listening to global event.
     linkNodeWithTarget(nodeId: number, actionTarget: BaseShapeJS| AbstractComponent){
         if(actionTarget != null)
-            this.rawObj.AddNodeIdActionTargetMap(nodeId, actionTarget.getRawObject())
+            this.rawObj.AddNodeIdObjectMap(nodeId, actionTarget.getRawObject())
         else
-            this.rawObj.AddNodeIdActionTargetMap(nodeId, null)
+            this.rawObj.AddNodeIdObjectMap(nodeId, null)
     }
 
     getActionTarget(nodeId: number){
-        let rawObj = this.rawObj.GetActionTargetByNodeId(nodeId)
+        let rawObj = this.rawObj.GetObjectByNodeId(nodeId)
         let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
 
         this.baseShape.getAction().AddActionInvoker(this)
@@ -37,7 +37,7 @@ class EventGraphComponent extends AbstractComponent {
     }
 
     getEventBus(nodeId: number){
-        let rawObj = this.rawObj.GetShapeByNodeId(nodeId)
+        let rawObj = this.rawObj.GetObjectByNodeId(nodeId)
         if(rawObj == null || !IsValidWrappedObject(rawObj))
             return eventBus
 
