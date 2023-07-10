@@ -15,7 +15,7 @@ function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true, addToLayer: b
 
     if(addToLayer){
         let layer = jsShape.getLayer()
-        huahuoEngine.getActivePlayer().getLayerShapes(layer).set(jsShape.getRawShape().ptr, jsShape)
+        huahuoEngine.getActivePlayer().getLayerShapes(layer).set(jsShape.getRawObject().ptr, jsShape)
     }
 
     jsShape.isMirage = isMirage

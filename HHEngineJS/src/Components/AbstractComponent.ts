@@ -73,6 +73,10 @@ class AbstractComponent extends EventEmitter{
 
     protected valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
+    getRawObject(){
+        return this.rawObj
+    }
+
     registerValueChangeHandler(valueNameString: string, callbackFunc: Function){
         this.valueChangeHandler.registerValueChangeHandler(valueNameString)(callbackFunc)
     }

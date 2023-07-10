@@ -20,9 +20,9 @@ class EventGraphComponent extends AbstractComponent {
     graph: LGraph
 
     // If shape is null, this node is listening to global event.
-    linkNodeWithTarget(nodeId: number, shape: BaseShapeJS){
-        if(shape != null)
-            this.rawObj.AddNodeIdShapeMap(nodeId, shape.getRawShape())
+    linkNodeWithTarget(nodeId: number, actionTarget: BaseShapeJS| AbstractComponent){
+        if(actionTarget != null)
+            this.rawObj.AddNodeIdShapeMap(nodeId, actionTarget.getRawObject())
         else
             this.rawObj.AddNodeIdShapeMap(nodeId, null)
     }

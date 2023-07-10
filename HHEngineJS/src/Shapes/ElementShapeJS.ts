@@ -192,9 +192,9 @@ class ElementShapeJS extends BaseShapeJS {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId)
 
             // 2. Add the shape into current layer of this store. And it will be loaded by the element.
-            huahuoEngine.GetCurrentLayer().AddShapeInternal(shape.getRawShape())
+            huahuoEngine.GetCurrentLayer().AddShapeInternal(shape.getRawObject())
 
-            if(shape.getRawShape().GetTypeName() == shapeName){
+            if(shape.getRawObject().GetTypeName() == shapeName){
                 let maxFrameId = huahuoEngine.GetStoreById((shape as ElementShapeJS).storeId).GetMaxFrameId()
 
                 let currentStore = huahuoEngine.GetStoreById(this.storeId)

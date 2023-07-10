@@ -58,7 +58,7 @@ class NailManager {
     }
 
     checkDuplication(shape1: BaseShapeJS, shape2: BaseShapeJS): boolean {
-        return this.cppNailManager.CheckDuplication(shape1.getRawShape(), shape2.getRawShape())
+        return this.cppNailManager.CheckDuplication(shape1.getRawObject(), shape2.getRawObject())
     }
 
     shapeMoved(shape: BaseShapeJS, isTransformationPermanent: boolean = false) {

@@ -34,6 +34,7 @@ import {LGraphCanvas, LiteGraph} from "litegraph.js";
 
 // All non-default components
 import {GeneratorComponent} from "./Components/GeneratorComponent";
+import {ObjectGenerator} from "./Components/ObjectGenerator";
 import {CurveGrowthComponent} from "./Components/CurveGrowthComponent";
 import {RadialGradientComponent} from "./Components/RadialGradientComponent";
 import {FollowCurveComponent} from "./Components/FollowCurveComponent";

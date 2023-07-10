@@ -145,7 +145,39 @@ class EventGraphForm extends HTMLElement implements HHForm {
         graph.afterChange()
     }
 
-    actionListenerMenu(node, options, e, prev_menu, callback) {
+    componentActionMenu(node, options, e, prev_menu, callback){
+        if (!this.lcanvas)
+            return
+
+        if (!this.lcanvas.graph)
+            return
+
+        let ref_window = this.lcanvas.getCanvasWindow()
+
+        let baseShape = this.targetComponent.baseShape
+        let _this = this
+        let entries = []
+
+        for (let component of baseShape.getComponents()) {
+            component.getActionDefs().forEach((actionDef) => {
+                let entry = {
+                    value: "actions/actionNode",
+                    content: component.getTypeName() + "/" + actionDef.actionName,
+                    has_submenu: false,
+                    callback: function (value, event, mouseEvent, contextMenu) {
+                        _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, component)
+                    }
+                }
+
+                entries.push(entry)
+            })
+        }
+
+
+        new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
+    }
+
+    actionMenu(node, options, e, prev_menu, callback) {
         if (!this.lcanvas)
             return
 
@@ -171,23 +203,6 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
             entries.push(entry)
         })
-
-
-        for (let component of baseShape.getComponents()) {
-            component.getActionDefs().forEach((actionDef) => {
-                let entry = {
-                    value: "actions/actionNode/" + component.getTypeName(),
-                    content: actionDef.actionName,
-                    has_submenu: false,
-                    callback: function (value, event, mouseEvent, contextMenu) {
-                        _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, component)
-                    }
-                }
-
-                entries.push(entry)
-            })
-        }
-
 
         new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
     }
@@ -303,7 +318,12 @@ class EventGraphForm extends HTMLElement implements HHForm {
                     {
                         content: i18n.t("eventgraph.addGraphAction"),
                         has_submenu: true,
-                        callback: _this.actionListenerMenu.bind(_this)
+                        callback: _this.actionMenu.bind(_this)
+                    },
+                    {
+                        content: i18n.t("eventgraph.addComponentGraphAction"),
+                        has_submenu: true,
+                        callback: _this.componentActionMenu.bind(_this)
                     }
                 ]
 

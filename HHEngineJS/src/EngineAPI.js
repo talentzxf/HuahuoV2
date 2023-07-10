@@ -175,12 +175,12 @@ class EngineAPI{
         if(!layer.addShape){
             layer.addShape = (shape)=>{
                 shape.update()
-                layer.AddShapeInternal(shape.getRawShape())
+                layer.AddShapeInternal(shape.getRawObject())
                 shape.isPermanent = true
                 shape.isDeleted = false
 
                 if(this.activePlayer){
-                    this.activePlayer.getLayerShapes(layer).set(shape.getRawShape().ptr, shape)
+                    this.activePlayer.getLayerShapes(layer).set(shape.getRawObject().ptr, shape)
                 }
 
                 _this.hasShape = true

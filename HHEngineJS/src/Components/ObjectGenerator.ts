@@ -2,6 +2,7 @@ import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
+import {GraphAction} from "../EventGraph/GraphActions";
 
 @Component()
 class ObjectGenerator extends AbstractComponent {
@@ -20,6 +21,7 @@ class ObjectGenerator extends AbstractComponent {
     }
 
     // Objects generated through this method won't sync with original object.
+    @GraphAction()
     generateObject(){
         let rawObj = this.targetShape.rawObj
         let duplicatedShape = LoadShapeFromCppShape(rawObj, false, false, true)
@@ -45,3 +47,5 @@ class ObjectGenerator extends AbstractComponent {
         this.generatedShapeArray = new Array<BaseShapeJS>()
     }
 }
+
+export {ObjectGenerator}

@@ -26,7 +26,7 @@ class FollowCurveComponent extends AbstractComponent {
     }
 
     onTargetShapeChanged(followShape: BaseShapeJS){
-        if(this.targetShape.getRawShape().ptr == followShape.getRawShape().ptr)
+        if(this.targetShape.getRawObject().ptr == followShape.getRawObject().ptr)
             return
 
         if(this.targetShape && this.valueChangeHandlerId > 0){

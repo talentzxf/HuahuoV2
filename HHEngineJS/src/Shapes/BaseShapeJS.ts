@@ -91,7 +91,6 @@ abstract class BaseShapeJS {
         this.paperItem.scaling = new paper.Point(1.0, 1.0)
 
         let localCenterPos = this.paperItem.globalToLocal(centerPosition)
-
         this.rawObj.SetGlobalPivotPosition(centerPosition.x, centerPosition.y, 0.0)
         this.rawObj.SetLocalPivotPosition(localCenterPos.x, localCenterPos.y, 0.0)
 
@@ -125,8 +124,19 @@ abstract class BaseShapeJS {
         })
     }
 
-    getComponents(){
-        return this.customComponents
+    // If allowNull, performance will be a little better
+    getComponents(allowNulls = false){
+
+        if(allowNulls)
+            return this.customComponents
+
+        let components = []
+        for(let component of this.customComponents){
+            if(component != null)
+                components.push(component)
+        }
+
+        return components
     }
 
     getComponentCountByTypeName(typeName) {
@@ -805,7 +815,7 @@ abstract class BaseShapeJS {
         return this.paperShape.length
     }
 
-    getRawShape() {
+    getRawObject() {
         return this.rawObj
     }
 

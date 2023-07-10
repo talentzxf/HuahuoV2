@@ -45,7 +45,7 @@ class ShapeArrayHandler {
                     return false
                 }
 
-                return component.rawObj.GetShapeArrayValue(fieldName).ContainShape(val.getRawShape())
+                return component.rawObj.GetShapeArrayValue(fieldName).ContainShape(val.getRawObject())
             },
             inserter: (val: BaseShapeJS) => {
                 if(val == component.baseShape) // This will cause stack overflow.
@@ -54,12 +54,12 @@ class ShapeArrayHandler {
                 if (!IsValidWrappedObject(component.rawObj.GetShapeArrayValue(fieldName))) {
                     component.rawObj.CreateShapeArrayValue(fieldName)
                 } else if(!propertyEntry.config.allowDuplication){
-                    if( component.rawObj.GetShapeArrayValue(fieldName).ContainShape(val.getRawShape())){
+                    if( component.rawObj.GetShapeArrayValue(fieldName).ContainShape(val.getRawObject())){
                         return false
                     }
                 }
 
-                component.rawObj.GetShapeArrayValueForWrite(fieldName).InsertShape(val.getRawShape())
+                component.rawObj.GetShapeArrayValueForWrite(fieldName).InsertShape(val.getRawObject())
 
                 if (component.baseShape)
                     component.baseShape.update(true)

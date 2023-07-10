@@ -44,7 +44,8 @@
   "eventgraph": {
     "resetScale": "Reset Scale",
     "addEventListener" : "Add Event Receiver",
-    "addGraphAction": "Add Graph Action"
+    "addGraphAction": "Add Graph Action",
+    "addComponentGraphAction": "Add Component Graph Action"
   },
   "contextmenu": {
     "sendToBack": "Send To Back",
