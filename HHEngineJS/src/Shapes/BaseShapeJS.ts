@@ -767,6 +767,14 @@ abstract class BaseShapeJS {
         }
     }
 
+    getComponentByRawObj(componentRawObj){
+        for(let component of this.customComponents){
+            if(component.rawObj.ptr == componentRawObj.ptr)
+                return component
+        }
+        return null
+    }
+
     getComponentKeyFrames(componentName) {
         let frameStateRawObj = this.rawObj.GetFrameStateByTypeName(componentName)
         return function () {

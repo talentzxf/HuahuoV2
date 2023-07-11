@@ -8,6 +8,8 @@ import {EventNode} from "../EventGraph/Nodes/EventNode";
 import {ActionNode} from "../EventGraph/Nodes/ActionNode";
 import {IsValidWrappedObject} from "hhcommoncomponents";
 
+declare var Module:any;
+
 @Component({compatibleShapes: ["BaseShapeJS"], cppClassName: "EventGraphComponent"})
 class EventGraphComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.stringValue, "", null, true)
@@ -29,11 +31,27 @@ class EventGraphComponent extends AbstractComponent {
 
     getActionTarget(nodeId: number){
         let rawObj = this.rawObj.GetObjectByNodeId(nodeId)
-        let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
 
-        this.baseShape.getAction().AddActionInvoker(this)
+        let rawObjType = this.rawObj.GetType()
+        let baseShapeType = rawObjType.FindTypeByName("BaseShape")
+        let customComponentType = rawObjType.FindTypeByName("CustomComponent")
 
-        return baseShapeObj.getAction()
+        if(rawObj.IsDerivedFrom(baseShapeType)){
+            let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
+
+            this.baseShape.getAction().AddActionInvoker(this)
+
+            return baseShapeObj.getAction()
+        } else if (rawObj.IsDerivedFrom(customComponentType)){
+            let customComponentRawObj = Module.wrapPointer(rawObj.ptr, Module.CustomComponent)
+            let baseShapeRawObj = customComponentRawObj.GetBaseShape()
+
+            let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(baseShapeRawObj)
+
+            let componentObj = baseShapeObj.getComponentByRawObj(customComponentRawObj)
+
+            return componentObj
+        }
     }
 
     getEventBus(nodeId: number){
