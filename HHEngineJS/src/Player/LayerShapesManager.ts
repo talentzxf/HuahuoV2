@@ -42,7 +42,8 @@ class LayerShapesManager {
         })
     }
 
-    forEachLayerInStore(store, func: (layer, param?) => void, param?) {
+    forEachLayerInStore(func: (layer, param?) => void, param?) {
+        let store = huahuoEngine.GetStoreById(this.storeId)
         let layerCount = store.GetLayerCount();
 
         for (let i = 0; i < layerCount; i++) {
@@ -59,7 +60,8 @@ class LayerShapesManager {
         }
     }
 
-    forEachShapeInStore(store, func: (shape) => void) {
+    forEachShapeInStore(func: (shape) => void) {
+        let store = huahuoEngine.GetStoreById(this.storeId)
         this.forEachLayerInStore(store, (layer) => {
             this.forEachShapeInLayer(layer, func)
         })
@@ -141,13 +143,11 @@ class LayerShapesManager {
     }
 
     updateAllShapes(force: boolean = false) {
-        let store = huahuoEngine.GetStoreById(this.storeId)
-        this.forEachLayerInStore(store, this.updateLayerShapes.bind(this), force)
+        this.forEachLayerInStore(this.updateLayerShapes.bind(this), force)
     }
 
     hideAllShapes() {
-        let store = huahuoEngine.GetStoreById(this.storeId)
-        this.forEachLayerInStore(store, this.hideLayerShapes.bind(this))
+        this.forEachLayerInStore(this.hideLayerShapes.bind(this))
     }
 }
 

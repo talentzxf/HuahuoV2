@@ -69,7 +69,7 @@ class EditorPlayer extends Player {
 
     setFrameId(playFrameId, force = false) {
         if (sceneViewManager.getFocusedSceneView() != this.sceneView && force == false) {
-            this.stopPlay() // Lost focus, stop play
+            this.pausePlay() // Lost focus, stop play
         } else {
             super.setFrameId(playFrameId)
 

@@ -131,7 +131,7 @@ class ElementShapeJS extends BaseShapeJS {
             }
 
             let currentLocalFrame = this.calculateLocalFrame()
-            this.layerShapesManager.forEachLayerInStore(store, (layer) => {
+            this.layerShapesManager.forEachLayerInStore((layer) => {
                 this.saveLayerFrame(layer, layer.GetCurrentFrame())
 
                 layer.SetCurrentFrame(currentLocalFrame)
@@ -141,7 +141,7 @@ class ElementShapeJS extends BaseShapeJS {
 
             let somethingIsVisible = false
             let _this = this
-            this.layerShapesManager.forEachShapeInStore(store, (shape) => {
+            this.layerShapesManager.forEachShapeInStore((shape) => {
                 if (shape) {
                     _this.emptyPlaceHolder.remove()
                     if (shape.isVisible()) {

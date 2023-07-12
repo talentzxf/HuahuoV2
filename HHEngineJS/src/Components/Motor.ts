@@ -17,3 +17,5 @@ class Motor extends AbstractComponent{
         action.setPosition(nextPosition.x, nextPosition.y)
     }
 }
+
+export {Motor}

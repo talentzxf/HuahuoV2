@@ -124,6 +124,10 @@ class Player extends EventEmitter{
 
         this.isPlaying = false
     }
+
+    resetAllActions(){
+        this.layerShapesManager.forEachShapeInStore()
+    }
 }
 
 export {Player}

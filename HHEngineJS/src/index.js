@@ -39,6 +39,7 @@ import {CurveGrowthComponent} from "./Components/CurveGrowthComponent";
 import {RadialGradientComponent} from "./Components/RadialGradientComponent";
 import {FollowCurveComponent} from "./Components/FollowCurveComponent";
 import {EventGraphComponent} from "./Components/EventGraphComponent";
+import {Motor} from "./Components/Motor";
 import {NailComponent} from "./Components/NailComponent";
 
 import "./Shapes/LoadShape"
@@ -102,6 +103,7 @@ export {
     Particles,
     NailComponent,
     EventGraphComponent,
+    Motor,
     ColorStop,
     getNailManager,
     isInheritedFromClzName,
