@@ -5,6 +5,7 @@ import {IsValidWrappedObject, GraphEvent} from "hhcommoncomponents";
 import {getNailManager} from '../IK/GetNailManager'
 import {EventParam} from "hhcommoncomponents";
 import {PropertyType, EventEmitter} from "hhcommoncomponents";
+import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 
 class Player extends EventEmitter{
     animationFrame = -1
@@ -125,8 +126,10 @@ class Player extends EventEmitter{
         this.isPlaying = false
     }
 
-    resetAllActions(){
-        this.layerShapesManager.forEachShapeInStore()
+    resetActions(){
+        this.layerShapesManager.forEachShapeInStore((shape: BaseShapeJS)=>{
+            shape.resetAction()
+        })
     }
 }
 

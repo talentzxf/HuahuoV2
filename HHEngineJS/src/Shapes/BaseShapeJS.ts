@@ -1181,6 +1181,13 @@ abstract class BaseShapeJS {
 
         this.getPropertySheet().setProperties(properties)
     }
+
+    resetAction(){
+        this.getAction().reset()
+        for(let component of this.customComponents){
+            component.getAction().reset()
+        }
+    }
 }
 
 export {BaseShapeJS}

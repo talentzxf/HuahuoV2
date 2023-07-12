@@ -56,6 +56,7 @@ class PlayerController extends HTMLElement {
                 player.startPlay()
             } else {
                 player.stopPlay()
+                player.resetActions()
             }
 
             evt.preventDefault()
@@ -74,7 +75,9 @@ class PlayerController extends HTMLElement {
 
     stopAnimation() {
         let player: Player = sceneViewManager.getFocusedViewAnimationPlayer()
+        player.
         player.stopPlay()
+        player.resetActions()
         player.setFrameId(0) // Reset to frame 0
     }
 }
