@@ -25,7 +25,6 @@ class ObjectGenerator extends AbstractComponent {
     generateObject(){
         let rawObj = this.targetShape.rawObj
         let duplicatedShape = LoadShapeFromCppShape(rawObj, false, false, true)
-        duplicatedShape.update(true)
         duplicatedShape.isSelectable = function (){
             return false
         }
@@ -33,6 +32,9 @@ class ObjectGenerator extends AbstractComponent {
         duplicatedShape.setSelectedMeta(null)
         duplicatedShape.isMirage = true
 
+        duplicatedShape.getAction().setPosition(this.baseShape.position.x, this.baseShape.position.y)
+
+        duplicatedShape.update(true)
         this.generatedShapeArray.push(duplicatedShape)
     }
 

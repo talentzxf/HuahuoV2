@@ -36,13 +36,13 @@ class EventGraphComponent extends AbstractComponent {
         let baseShapeType = rawObjType.FindTypeByName("BaseShape")
         let customComponentType = rawObjType.FindTypeByName("CustomComponent")
 
-        if(rawObj.IsDerivedFrom(baseShapeType)){
+        if(rawObjType.IsDerivedFrom(baseShapeType)){
             let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
 
             this.baseShape.getAction().AddActionInvoker(this)
 
             return baseShapeObj.getAction()
-        } else if (rawObj.IsDerivedFrom(customComponentType)){
+        } else if (rawObjType.IsDerivedFrom(customComponentType)){
             let customComponentRawObj = Module.wrapPointer(rawObj.ptr, Module.CustomComponent)
             let baseShapeRawObj = customComponentRawObj.GetBaseShape()
 
