@@ -3,6 +3,8 @@ import {PropertyCategory} from "./PropertySheetBuilder";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 import {GraphAction} from "../EventGraph/GraphActions";
+import {eventBus} from "hhcommoncomponents";
+import {huahuoEngine} from "../EngineAPI";
 
 @Component()
 class ObjectGenerator extends AbstractComponent {
@@ -13,16 +15,22 @@ class ObjectGenerator extends AbstractComponent {
 
     generatedShapeArray:Array<any> = new Array<BaseShapeJS>()
 
+    animationStoppedEventHandler: number = -1
     constructor(rawObj?, isMirage = false) {
         super(rawObj, isMirage);
 
         this.paperShapeGroup = new paper.Group()
         this.paperShapeGroup.applyMatrix = false
+
+        this.animationStoppedEventHandler = eventBus.addEventHandler("Player", "stopPlay", this.animationStopped.bind(this))
     }
 
     // Objects generated through this method won't sync with original object.
-    @GraphAction()
+    @GraphAction(true)
     generateObject(){
+        if(this.targetShape == null)
+            return
+
         let rawObj = this.targetShape.rawObj
         let duplicatedShape = LoadShapeFromCppShape(rawObj, false, false, true)
         duplicatedShape.isSelectable = function (){
@@ -38,15 +46,28 @@ class ObjectGenerator extends AbstractComponent {
         this.generatedShapeArray.push(duplicatedShape)
     }
 
-    cleanUp() {
-        super.cleanUp();
+    animationStopped(){
+        this.removeAllMirateObjects()
+    }
 
+    removeAllMirateObjects(){
         // TODO: Really delete these mirage objects?
         for(let generatedShape of this.generatedShapeArray){
             generatedShape.removePaperObj()
         }
 
         this.generatedShapeArray = new Array<BaseShapeJS>()
+    }
+
+    cleanUp() {
+        super.cleanUp();
+
+        this.removeAllMirateObjects()
+
+        if(this.animationStoppedEventHandler >= 0){
+            eventBus.removeEventHandler("Player", "stopPlay", this.animationStoppedEventHandler)
+            this.animationStoppedEventHandler = -1
+        }
     }
 }
 

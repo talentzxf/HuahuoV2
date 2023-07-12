@@ -11,6 +11,7 @@ class ActionParamDef {
 class ActionDef {
     actionName: string
     paramDefs: ActionParamDef[]
+    onlyRunWhenPlaing: boolean = false
 }
 
 function getActions(target): object[] {
@@ -23,12 +24,13 @@ function getActions(target): object[] {
     return properties
 }
 
-function GraphAction() {
+function GraphAction(onlyRunWhenPlaing = false) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         let actions = getActions(target)
         let actionDef: ActionDef = {
             actionName: propertyKey,
-            paramDefs: []
+            paramDefs: [],
+            onlyRunWhenPlaing: onlyRunWhenPlaing
         }
         actions.push(actionDef)
     }

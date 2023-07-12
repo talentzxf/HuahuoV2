@@ -113,6 +113,7 @@ class Player extends EventEmitter{
         this.isPlaying = true
     }
 
+    @GraphEvent(true)
     stopPlay(){
         if(this.animationFrame){
             cancelAnimationFrame(this.animationFrame)

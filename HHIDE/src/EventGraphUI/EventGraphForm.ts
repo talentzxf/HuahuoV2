@@ -136,7 +136,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
             // TODO: Whatif we need to perform action on another object?
             this.targetComponent.linkNodeWithTarget(node.id, actionTarget)
             node.setEventGraphComponent(this.targetComponent)
-            node.setActionName(actionDef.actionName)
+            node.setActionDef(actionDef)
         }
 
         if (callback)

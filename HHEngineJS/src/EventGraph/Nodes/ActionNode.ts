@@ -1,5 +1,7 @@
 import {LiteGraph} from "litegraph.js";
 import {AbstractNode} from "./AbstractNode";
+import {ActionDef} from "../GraphActions";
+import {huahuoEngine} from "../../EngineAPI";
 
 class ActionNode extends AbstractNode {
     title = "ActionNode"
@@ -9,7 +11,8 @@ class ActionNode extends AbstractNode {
     properties = {
         actionName: "unknownAction",
         paramIdxSlotMap: {},
-        maxParamIdx: -1 // -1 means no parameter.
+        maxParamIdx: -1, // -1 means no parameter.
+        onlyRunWhenPlaing: false
     }
 
 
@@ -19,12 +22,17 @@ class ActionNode extends AbstractNode {
         this.executedSlot = this.addOutput("Executed", LiteGraph.EVENT)
     }
 
-    setActionName(actionName) {
-        this.title = actionName
-        this.properties.actionName = actionName
+    setActionDef(actionDef: ActionDef) {
+        this.title = actionDef.actionName
+        this.properties.actionName = actionDef.actionName
+        this.properties.onlyRunWhenPlaing = actionDef.onlyRunWhenPlaing
     }
 
     onAction(action, param) {
+        // Player is not playing and this action should only run when playing. Return.
+        if(!huahuoEngine.getActivePlayer().isPlaying && this.properties.onlyRunWhenPlaing)
+            return
+
         console.log("Something happened!")
 
         let callBackParams = []
