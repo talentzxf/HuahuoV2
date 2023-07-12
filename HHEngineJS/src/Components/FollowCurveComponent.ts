@@ -16,7 +16,6 @@ class FollowCurveComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateFloat, null, {max: 1.0, min: 0.0} as FloatPropertyConfig)
     lengthRatio: number = 0.0
 
-
     private valueChangeHandlerId: number = -1;
 
     constructor(rawObj?) {
