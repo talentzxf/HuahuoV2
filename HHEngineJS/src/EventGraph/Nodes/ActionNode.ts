@@ -33,7 +33,7 @@ class ActionNode extends AbstractNode {
         if(!huahuoEngine.getActivePlayer().isPlaying && this.properties.onlyRunWhenPlaing)
             return
 
-        console.log("Something happened!")
+        console.log("Invoking action node:" + this.properties.actionName)
 
         let callBackParams = []
 

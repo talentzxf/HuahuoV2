@@ -32,7 +32,7 @@ class EventGraphComponent extends AbstractComponent {
     getActionTarget(nodeId: number){
         let rawObj = this.rawObj.GetObjectByNodeId(nodeId)
 
-        let rawObjType = this.rawObj.GetType()
+        let rawObjType = rawObj.GetType()
         let baseShapeType = rawObjType.FindTypeByName("BaseShape")
         let customComponentType = rawObjType.FindTypeByName("CustomComponent")
 
