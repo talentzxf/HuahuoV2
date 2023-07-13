@@ -50,9 +50,9 @@ function Component(componentConfig?: ComponentConfig) {
 
 declare function castObject(obj: any, clz: any): any;
 
-class AbstractComponent extends EventEmitter{
+abstract class AbstractComponent extends EventEmitter {
 
-    static getMetaDataKey(){
+    static getMetaDataKey() {
         return metaDataKey
     }
 
@@ -73,11 +73,11 @@ class AbstractComponent extends EventEmitter{
 
     protected valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
-    getRawObject(){
+    getRawObject() {
         return this.rawObj
     }
 
-    registerValueChangeHandler(valueNameString: string, callbackFunc: Function){
+    registerValueChangeHandler(valueNameString: string, callbackFunc: Function) {
         this.valueChangeHandler.registerValueChangeHandler(valueNameString)(callbackFunc)
     }
 
@@ -126,14 +126,14 @@ class AbstractComponent extends EventEmitter{
         this.componentActions = new ComponentActions(this)
     }
 
-    getActionDefs(){
+    getActionDefs() {
         return this.componentActions.getActionDefs()
     }
 
     setBaseShape(baseShape: BaseShapeJS) {
         this.baseShape = baseShape
 
-        if(!this.isMirage)
+        if (!this.isMirage)
             this.enableComponent() // Enable the component after baseShape is set.
     }
 
@@ -157,12 +157,12 @@ class AbstractComponent extends EventEmitter{
     }
 
     // Life cycle function, call back when the component is enabled.
-    onComponentEnabled(){
+    onComponentEnabled() {
 
     }
 
     // Life cycle function, call back when the component is disabled.
-    onComponentDisabled(){
+    onComponentDisabled() {
         this.baseShape.getAction().RemoveActionInvoker(this)
     }
 
@@ -170,7 +170,7 @@ class AbstractComponent extends EventEmitter{
         this.rawObj.SetBooleanValue("isActive", false)
         this.onComponentDisabled()
 
-        if(this.baseShape)
+        if (this.baseShape)
             this.baseShape.update(true)
     }
 
@@ -181,7 +181,7 @@ class AbstractComponent extends EventEmitter{
         // Something might be changed, so we need to refresh the shape.
         // But if the shape or the paper shape has not been created yet, do not refresh it.
         // TODO: if there're a lot of components, how to avoid update again and again?
-        if(this.baseShape && this.baseShape.paperShape && !this.baseShape.isLoadingComponents)
+        if (this.baseShape && this.baseShape.paperShape && !this.baseShape.isLoadingComponents)
             this.baseShape.update(true)
     }
 
@@ -217,17 +217,22 @@ class AbstractComponent extends EventEmitter{
         }
     }
 
-    getKeyFrameCurve(fieldName){
+    getKeyFrameCurve(fieldName) {
         return this.rawObj.GetFloatKeyFrameCurve(fieldName)
     }
 
-    getVector2KeyFrameCurves(fieldName){
+    getVector2KeyFrameCurves(fieldName) {
         return [this.rawObj.GetVectorKeyFrameCurve(fieldName, 0), this.rawObj.GetVectorKeyFrameCurve(fieldName, 1)]
     }
 
     detachFromCurrentShape() {
         this.baseShape.removeComponent(this)
     }
+
+    reset(){
+
+    }
 }
+
 
 export {AbstractComponent, PropertyValue, Component}

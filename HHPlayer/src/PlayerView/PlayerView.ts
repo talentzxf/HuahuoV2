@@ -117,7 +117,7 @@ class PlayerView extends HTMLElement {
 
     onPlayButtonClicked(){
         if(this.animationPlayer.isPlaying){
-            this.animationPlayer.stopPlay()
+            this.animationPlayer.pausePlay()
             this.playButton.src = this.playImg
         }else{
             this.animationPlayer.startPlay()

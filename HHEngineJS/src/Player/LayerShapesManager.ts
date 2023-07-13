@@ -62,7 +62,7 @@ class LayerShapesManager {
 
     forEachShapeInStore(func: (shape) => void) {
         let store = huahuoEngine.GetStoreById(this.storeId)
-        this.forEachLayerInStore(store, (layer) => {
+        this.forEachLayerInStore((layer) => {
             this.forEachShapeInLayer(layer, func)
         })
     }

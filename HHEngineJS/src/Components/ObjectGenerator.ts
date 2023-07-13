@@ -15,14 +15,11 @@ class ObjectGenerator extends AbstractComponent {
 
     generatedShapeArray:Array<any> = new Array<BaseShapeJS>()
 
-    animationStoppedEventHandler: number = -1
     constructor(rawObj?, isMirage = false) {
         super(rawObj, isMirage);
 
         this.paperShapeGroup = new paper.Group()
         this.paperShapeGroup.applyMatrix = false
-
-        this.animationStoppedEventHandler = eventBus.addEventHandler("Player", "stopPlay", this.animationStopped.bind(this))
     }
 
     // Objects generated through this method won't sync with original object.
@@ -50,6 +47,14 @@ class ObjectGenerator extends AbstractComponent {
         this.removeAllMirateObjects()
     }
 
+    afterUpdate(force: boolean = false) {
+        super.afterUpdate(force);
+
+        for(let generatedShape of this.generatedShapeArray){
+            generatedShape.update(true)
+        }
+    }
+
     removeAllMirateObjects(){
         // TODO: Really delete these mirage objects?
         for(let generatedShape of this.generatedShapeArray){
@@ -63,11 +68,10 @@ class ObjectGenerator extends AbstractComponent {
         super.cleanUp();
 
         this.removeAllMirateObjects()
+    }
 
-        if(this.animationStoppedEventHandler >= 0){
-            eventBus.removeEventHandler("Player", "stopPlay", this.animationStoppedEventHandler)
-            this.animationStoppedEventHandler = -1
-        }
+    reset() {
+        this.cleanUp()
     }
 }
 

@@ -115,7 +115,7 @@ class Player extends EventEmitter{
     }
 
     @GraphEvent(true)
-    stopPlay(){
+    pausePlay(){
         if(this.animationFrame){
             cancelAnimationFrame(this.animationFrame)
             this.animationStartTime = -1
@@ -124,6 +124,12 @@ class Player extends EventEmitter{
         }
 
         this.isPlaying = false
+    }
+
+    stopPlay(){
+        this.pausePlay()
+        this.setFrameId(0) // Reset to frame 0
+        this.resetActions()
     }
 
     resetActions(){

@@ -1185,8 +1185,11 @@ abstract class BaseShapeJS {
     resetAction(){
         this.getAction().reset()
         for(let component of this.customComponents){
-            component.getAction().reset()
+            if(component != null)
+                component.reset()
         }
+
+        this.update()
     }
 }
 
