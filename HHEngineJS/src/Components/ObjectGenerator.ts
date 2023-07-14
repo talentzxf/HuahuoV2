@@ -3,8 +3,6 @@ import {PropertyCategory} from "./PropertySheetBuilder";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 import {GraphAction} from "../EventGraph/GraphActions";
-import {eventBus} from "hhcommoncomponents";
-import {huahuoEngine} from "../EngineAPI";
 
 @Component()
 class ObjectGenerator extends AbstractComponent {
@@ -23,7 +21,7 @@ class ObjectGenerator extends AbstractComponent {
     }
 
     // Objects generated through this method won't sync with original object.
-    @GraphAction(true)
+    @GraphAction(true, PropertyCategory.shape)
     generateObject(){
         if(this.targetShape == null)
             return
@@ -41,6 +39,8 @@ class ObjectGenerator extends AbstractComponent {
 
         duplicatedShape.update(true)
         this.generatedShapeArray.push(duplicatedShape)
+
+        return duplicatedShape
     }
 
     animationStopped(){

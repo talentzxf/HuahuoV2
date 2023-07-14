@@ -1,10 +1,10 @@
-import {PropertyType, getParameterNameAtIdx} from "hhcommoncomponents";
-
+import {getParameterNameAtIdx} from "hhcommoncomponents";
+import {PropertyCategory} from "../Components/PropertySheetBuilder";
 const graphActionSymbol = Symbol("graphAction")
 
 class ActionParamDef {
     paramName: string
-    paramType: PropertyType
+    paramType: PropertyCategory
     paramIndex: number
 }
 
@@ -12,6 +12,7 @@ class ActionDef {
     actionName: string
     paramDefs: ActionParamDef[]
     onlyRunWhenPlaing: boolean = false
+    returnType: PropertyCategory | null
 }
 
 function getActions(target): object[] {
@@ -24,13 +25,14 @@ function getActions(target): object[] {
     return properties
 }
 
-function GraphAction(onlyRunWhenPlaing = false) {
+function GraphAction(onlyRunWhenPlaing = false, returnType: PropertyCategory | null = null) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         let actions = getActions(target)
         let actionDef: ActionDef = {
             actionName: propertyKey,
             paramDefs: [],
-            onlyRunWhenPlaing: onlyRunWhenPlaing
+            onlyRunWhenPlaing: onlyRunWhenPlaing,
+            returnType: returnType
         }
         actions.push(actionDef)
     }
@@ -48,7 +50,7 @@ function getActionParams(target, functionName) {
  * @param name There's no convenient way to get the parameter name from the JS runtime. So pass this parameter. If not set, we will try to get it from the function, but that might fail.
  * @constructor
  */
-function ActionParam(type: PropertyType, name: string = null) {
+function ActionParam(type: PropertyCategory, name: string = null) {
     return function (target: Object, propertyKey: string | symbol, parameterIndex: number) {
         let existingParameters: ActionParamDef[] = getActionParams(target, propertyKey)
 
