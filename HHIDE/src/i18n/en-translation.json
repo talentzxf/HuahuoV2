@@ -137,7 +137,8 @@
       "starMirrorInterval": "Star Mirror Interval",
       "playSpeed": "Play Speed",
       "targetShape": "Target Shape",
-      "lengthRatio": "Length Ratio"
+      "lengthRatio": "Length Ratio",
+      "velocity": "Velocity"
     },
     "nail": {
       "isStatic": "Is Static"

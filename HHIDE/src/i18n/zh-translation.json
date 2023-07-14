@@ -137,7 +137,8 @@
       "starMirrorInterval": "中心对称间隔",
       "playSpeed": "播放速度",
       "targetShape": "目标形状",
-      "lengthRatio": "长度比例"
+      "lengthRatio": "长度比例",
+      "velocity": "速度"
     },
     "nail": {
       "isStatic": "是否静态"
