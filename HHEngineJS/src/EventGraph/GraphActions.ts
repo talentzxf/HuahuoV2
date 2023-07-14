@@ -1,18 +1,23 @@
 import {getParameterNameAtIdx} from "hhcommoncomponents";
-import {PropertyCategory} from "../Components/PropertySheetBuilder";
+import {PropertyType} from "hhcommoncomponents";
 const graphActionSymbol = Symbol("graphAction")
 
 class ActionParamDef {
     paramName: string
-    paramType: PropertyCategory
+    paramType: PropertyType
     paramIndex: number
+}
+
+class ReturnValueInfo {
+    valueName: string
+    valueType: PropertyType
 }
 
 class ActionDef {
     actionName: string
     paramDefs: ActionParamDef[]
     onlyRunWhenPlaing: boolean = false
-    returnType: PropertyCategory | null
+    returnValueInfo: ReturnValueInfo | null
 }
 
 function getActions(target): object[] {
@@ -25,14 +30,14 @@ function getActions(target): object[] {
     return properties
 }
 
-function GraphAction(onlyRunWhenPlaing = false, returnType: PropertyCategory | null = null) {
+function GraphAction(onlyRunWhenPlaing = false, returnValueInfo: ReturnValueInfo | null = null) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         let actions = getActions(target)
         let actionDef: ActionDef = {
             actionName: propertyKey,
             paramDefs: [],
             onlyRunWhenPlaing: onlyRunWhenPlaing,
-            returnType: returnType
+            returnValueInfo: returnValueInfo
         }
         actions.push(actionDef)
     }
@@ -50,7 +55,7 @@ function getActionParams(target, functionName) {
  * @param name There's no convenient way to get the parameter name from the JS runtime. So pass this parameter. If not set, we will try to get it from the function, but that might fail.
  * @constructor
  */
-function ActionParam(type: PropertyCategory, name: string = null) {
+function ActionParam(type: PropertyType, name: string = null) {
     return function (target: Object, propertyKey: string | symbol, parameterIndex: number) {
         let existingParameters: ActionParamDef[] = getActionParams(target, propertyKey)
 
@@ -98,4 +103,4 @@ class ComponentActions{
     }
 }
 
-export {AbstractGraphAction, ActionDef, ActionParam, GraphAction, ComponentActions}
+export {AbstractGraphAction, ActionDef, ActionParam, GraphAction, ComponentActions, ReturnValueInfo}

@@ -15,6 +15,9 @@ function getLiteGraphTypeFromPropertyType(propertyType: PropertyType) {
         case PropertyType.VECTOR2:
             returnType = "vec2"
             break;
+        case PropertyType.SHAPE:
+            returnType = "shape"
+            break;
     }
 
     return returnType

@@ -10,7 +10,7 @@ enum PropertyType {
     NUMBER,
     COLOR,
     BUTTON,
-    REFERENCE,
+    SHAPE,
     ARRAY,
     COMPONENT,
     COLORSTOPARRAY,

@@ -2,7 +2,8 @@ import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
-import {GraphAction} from "../EventGraph/GraphActions";
+import {GraphAction, ReturnValueInfo} from "../EventGraph/GraphActions";
+import {PropertyType} from "hhcommoncomponents";
 
 @Component()
 class ObjectGenerator extends AbstractComponent {
@@ -11,7 +12,7 @@ class ObjectGenerator extends AbstractComponent {
 
     paperShapeGroup: paper.Group
 
-    generatedShapeArray:Array<any> = new Array<BaseShapeJS>()
+    generatedShapeArray: Array<any> = new Array<BaseShapeJS>()
 
     constructor(rawObj?, isMirage = false) {
         super(rawObj, isMirage);
@@ -21,14 +22,14 @@ class ObjectGenerator extends AbstractComponent {
     }
 
     // Objects generated through this method won't sync with original object.
-    @GraphAction(true, PropertyCategory.shape)
-    generateObject(){
-        if(this.targetShape == null)
+    @GraphAction(true, {valueName: "generatedObject", valueType: PropertyType.SHAPE} as ReturnValueInfo)
+    generateObject() {
+        if (this.targetShape == null)
             return
 
         let rawObj = this.targetShape.rawObj
         let duplicatedShape = LoadShapeFromCppShape(rawObj, false, false, true)
-        duplicatedShape.isSelectable = function (){
+        duplicatedShape.isSelectable = function () {
             return false
         }
 
@@ -43,21 +44,21 @@ class ObjectGenerator extends AbstractComponent {
         return duplicatedShape
     }
 
-    animationStopped(){
+    animationStopped() {
         this.removeAllMirateObjects()
     }
 
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
-        for(let generatedShape of this.generatedShapeArray){
+        for (let generatedShape of this.generatedShapeArray) {
             generatedShape.update(true)
         }
     }
 
-    removeAllMirateObjects(){
+    removeAllMirateObjects() {
         // TODO: Really delete these mirage objects?
-        for(let generatedShape of this.generatedShapeArray){
+        for (let generatedShape of this.generatedShapeArray) {
             generatedShape.removePaperObj()
         }
 

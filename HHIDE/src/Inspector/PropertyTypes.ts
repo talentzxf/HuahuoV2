@@ -27,7 +27,7 @@ if(!window["IsTypesRegistered"]){
     RegisterDivGenerator(PropertyType.STRING, stringPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.BUTTON, buttonPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.GROUP, groupPropertyDivGenerator)
-    RegisterDivGenerator(PropertyType.REFERENCE, referencePropertyDivGenerator)
+    RegisterDivGenerator(PropertyType.SHAPE, referencePropertyDivGenerator)
     RegisterDivGenerator(PropertyType.PANEL, panelPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.ARRAY, arrayPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.COMPONENT, componentPropertyDivGenerator)
