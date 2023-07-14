@@ -79,7 +79,7 @@ class EventGraphComponent extends AbstractComponent {
             this.graph.configure(data)
         }
 
-        this.graph.start()
+        // this.graph.start()
         this.graph["onAfterChange"] = this.saveGraph.bind(this)
 
         if(needLoad){

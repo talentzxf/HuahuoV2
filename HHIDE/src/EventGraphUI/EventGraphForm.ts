@@ -7,7 +7,10 @@ import {EventNode, ActionNode} from "hhenginejs";
 import {LGraphCanvas, LiteGraph} from "hhenginejs";
 import {huahuoEngine} from "hhenginejs";
 import {renderEngine2D} from "hhenginejs"
-import {ActionDef} from "hhenginejs/dist/src/EventGraph/GraphActions";
+import {ActionDef} from "hhenginejs";
+import {setupLGraph} from "./LGraphSetup";
+
+setupLGraph()
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -116,7 +119,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         document.removeEventListener("mousemove", this.onDrag.bind(this))
     }
 
-    actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, actionTarget) {
+    actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef:ActionDef, actionTarget) {
         let first_event = contextMenu.getFirstEvent();
         let graph = this.lcanvas.graph
         let lcanvas = this.lcanvas
