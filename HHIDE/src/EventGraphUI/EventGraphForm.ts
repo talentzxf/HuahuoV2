@@ -158,23 +158,27 @@ class EventGraphForm extends HTMLElement implements HHForm {
         let _this = this
         let entries = []
 
-        for (let component of baseShape.getComponents()) {
-            component.getActionDefs().forEach((actionDef) => {
-                let entry = {
-                    value: "actions/actionNode",
-                    content: component.getTypeName() + "/" + actionDef.actionName,
-                    has_submenu: false,
-                    callback: function (value, event, mouseEvent, contextMenu) {
-                        _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, component)
+        let components = baseShape.getComponents()
+
+        if(components.length > 0){
+            for (let component of components) {
+                component.getActionDefs().forEach((actionDef) => {
+                    let entry = {
+                        value: "actions/actionNode",
+                        content: component.getTypeName() + "/" + actionDef.actionName,
+                        has_submenu: false,
+                        callback: function (value, event, mouseEvent, contextMenu) {
+                            _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, component)
+                        }
                     }
-                }
 
-                entries.push(entry)
-            })
+                    entries.push(entry)
+                })
+            }
+
+
+            new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
         }
-
-
-        new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
     }
 
     actionMenu(node, options, e, prev_menu, callback) {

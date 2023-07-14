@@ -12,7 +12,7 @@ class BaseShapeEvents extends EventEmitter{
         let _this = this
 
         this.targetShape.executeAfterPaperItemReady((paperItem)=>{
-            let mouseEvents = ["onMouseMove", "onMouseDown", "onMouseLeave", "onMouseEnter"]
+            let mouseEvents = ["onMouseMove", "onMouseDown", "onMouseLeave", "onMouseEnter", "onMouseUp"]
 
             for(let mouseEvent of mouseEvents){
                 paperItem[mouseEvent] = (evt:MouseEvent)=>{
@@ -36,6 +36,10 @@ class BaseShapeEvents extends EventEmitter{
 
     @GraphEvent()
     onMouseEnter(@EventParam(PropertyType.VECTOR2) point){
+    }
+
+    @GraphEvent()
+    onMouseUp(@EventParam(PropertyType.VECTOR2) point){
     }
 }
 

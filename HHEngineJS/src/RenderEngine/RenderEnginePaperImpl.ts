@@ -156,10 +156,28 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
         view.onMouseMove = (evt: paper.MouseEvent)=>{
             this.onMouseMove(evt.point)
         }
+
+        view.onMouseDown = (evt: paper.MouseEvent)=>{
+            this.onMouseDown(evt.point)
+        }
+
+        view.onMouseUp = (evt: paper.MouseEvent)=>{
+            this.onMouseUp(evt.point)
+        }
     }
 
     @GraphEvent(true)
     onMouseMove(@EventParam(PropertyType.VECTOR2) point: paper.Point){
+
+    }
+
+    @GraphEvent(true)
+    onMouseDown(@EventParam(PropertyType.VECTOR2) point: paper.Point){
+
+    }
+
+    @GraphEvent(true)
+    onMouseUp(@EventParam(PropertyType.VECTOR2) point: paper.Point){
 
     }
 

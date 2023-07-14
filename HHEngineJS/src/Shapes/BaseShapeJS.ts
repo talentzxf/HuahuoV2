@@ -937,7 +937,6 @@ abstract class BaseShapeJS {
                 newObj.add(newSegment)
             }
 
-
             let nearestPoint = newObj.getNearestPoint(localPos)
             let offset = newObj.getOffsetOf(nearestPoint)
 
