@@ -12,8 +12,6 @@ import {ActionDef} from "hhenginejs";
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
 
-LiteGraph.slot_types_default_out["shape"] = ["shape/getComponentByTypeName"]
-
 @CustomElement({
     selector: "hh-event-graph-form"
 })
@@ -50,7 +48,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
             ".litegraph .dialog.settings {" +
             "height: calc( 50% - 20px );" +
             "max-width: 50%;" +
-            "top: 50%" +
+            "top: 30%" +
             "}" +
             "</style>"
 

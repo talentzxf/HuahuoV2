@@ -1,21 +1,14 @@
 import {LiteGraph} from "litegraph.js";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
-
-function wrapFunctionAsExecutableNode(){
-
-}
+import {GetShapeComponentNode} from "./Nodes/GetShapeComponentNode";
 
 function getComponentByTypeName(shape: BaseShapeJS, componentName:string){
     return shape.getComponentByTypeName(componentName)
 }
 
 function setupLGraph(){
-    LiteGraph.wrapFunctionAsNode(
-        "shape/getComponentByTypeName",
-        getComponentByTypeName,
-        ["shape", "string"],
-        "component"
-    )
+    // @ts-ignore
+    LiteGraph.slot_types_default_out["shape"] = [GetShapeComponentNode.getType()]
 }
 
 export {setupLGraph}
