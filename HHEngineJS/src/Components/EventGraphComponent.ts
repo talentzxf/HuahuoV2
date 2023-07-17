@@ -7,6 +7,7 @@ import {eventBus} from "hhcommoncomponents";
 import {EventNode} from "../EventGraph/Nodes/EventNode";
 import {ActionNode} from "../EventGraph/Nodes/ActionNode";
 import {IsValidWrappedObject} from "hhcommoncomponents";
+import {setupLGraph} from "../EventGraph/LGraphSetup";
 
 declare var Module:any;
 
@@ -101,5 +102,7 @@ class EventGraphComponent extends AbstractComponent {
         return this.graph
     }
 }
+
+setupLGraph()
 
 export {EventGraphComponent}

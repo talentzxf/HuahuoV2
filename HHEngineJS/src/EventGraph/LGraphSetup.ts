@@ -1,5 +1,5 @@
-import {LiteGraph} from "hhenginejs";
-import {BaseShapeJS} from "hhenginejs";
+import {LiteGraph} from "litegraph.js";
+import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 
 function wrapFunctionAsExecutableNode(){
 
@@ -14,9 +14,8 @@ function setupLGraph(){
         "shape/getComponentByTypeName",
         getComponentByTypeName,
         ["shape", "string"],
-        ["component"]
+        "component"
     )
-    LiteGraph.slot_types_default_out["shape"] = ["shape/getComponentByTypeName"]
 }
 
 export {setupLGraph}

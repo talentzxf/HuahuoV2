@@ -8,12 +8,11 @@ import {LGraphCanvas, LiteGraph} from "hhenginejs";
 import {huahuoEngine} from "hhenginejs";
 import {renderEngine2D} from "hhenginejs"
 import {ActionDef} from "hhenginejs";
-import {setupLGraph} from "./LGraphSetup";
-
-setupLGraph()
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
+
+LiteGraph.slot_types_default_out["shape"] = ["shape/getComponentByTypeName"]
 
 @CustomElement({
     selector: "hh-event-graph-form"
@@ -47,7 +46,15 @@ class EventGraphForm extends HTMLElement implements HHForm {
         this.containerDiv = document.createElement("div")
         this.containerDiv.innerHTML = CSSUtils.formStyle
 
-        this.containerDiv.innerHTML += "<form id='eventGraphContainer'> " +
+        this.containerDiv.innerHTML += "<style>" +
+            ".litegraph .dialog.settings {" +
+            "height: calc( 50% - 20px );" +
+            "max-width: 50%;" +
+            "top: 50%" +
+            "}" +
+            "</style>"
+
+        this.containerDiv.innerHTML += "<form id='eventGraphContainer' class='litegraph litegraph-editor'> " +
             "   <div style='display: flex; flex-direction: row-reverse'>" +
             "       <div id='closeBtn' >" +
             "           <img class='far fa-circle-xmark'>" +

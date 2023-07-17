@@ -8,6 +8,7 @@ import * as ti from "taichi.js/dist/taichi"
 import {BaseShapeEvents} from "./EventGraph/BaseShapeEvents";
 import {IsValidWrappedObject} from "hhcommoncomponents";
 import {BaseShapeJS} from "./Shapes/BaseShapeJS";
+import {setupLGraph} from "./EventGraph/LGraphSetup";
 // import * as ti from "taichi.js/dist/taichi.dev"
 
 
