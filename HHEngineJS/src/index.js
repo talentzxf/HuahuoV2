@@ -21,6 +21,7 @@ import {ParticleSystemRenderer} from "./Components/ParticleSystemRenderer";
 import {Particles} from "./ParticleSystem/Particles";
 import {BaseShapeActions} from "./EventGraph/BaseShapeActions";
 import {GetShapeComponentNode} from "./EventGraph/Nodes/GetShapeComponentNode";
+import {SetComponentPropertyNode} from "./EventGraph/Nodes/SetComponentPropertyNode"
 import {EventNode} from "./EventGraph/Nodes/EventNode";
 import {ActionNode} from "./EventGraph/Nodes/ActionNode";
 import {StarMirrorShapeJS} from "./Shapes/StarMirrorShapeJS";
@@ -112,6 +113,7 @@ export {
     EventNode,
     ActionNode,
     GetShapeComponentNode,
+    SetComponentPropertyNode,
     LGraphCanvas,
     LiteGraph,
     StarMirrorShapeJS,

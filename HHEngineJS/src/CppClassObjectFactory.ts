@@ -32,6 +32,10 @@ class CppClassObjectFactory{
         return "CustomComponent"
     }
 
+    getAllRegisteredComponents(){
+        return Array.from(this.componentNameComponentPropertyMap.keys())
+    }
+
     getAllCompatibleComponents(targetObj){
         let returnComponentNames = []
         this.componentNameComponentPropertyMap.forEach((componentConfig, componentTypeName)=>{

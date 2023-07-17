@@ -256,6 +256,10 @@ class EngineAPI{
         return clzObjectFactory.getAllCompatibleComponents(targetObj)
     }
 
+    getAllRegisteredComponents(){
+        return clzObjectFactory.getAllRegisteredComponents()
+    }
+
     produceObject(componentName){
         let constructor = clzObjectFactory.GetClassConstructor(componentName)
         let retObj = new constructor()

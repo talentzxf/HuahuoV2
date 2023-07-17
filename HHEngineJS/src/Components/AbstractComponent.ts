@@ -12,12 +12,13 @@ import {subComponentArrayHandler} from "./VariableHandlers/SubComponentArrayHand
 import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariableHandler";
 import {EventEmitter} from "hhcommoncomponents";
 import {AbstractGraphAction, ComponentActions} from "../EventGraph/GraphActions";
+import {addComponentProperties} from "../EventGraph/LGraphSetup";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
 
-function getProperties(target): object[] {
-    let properties: object[] = Reflect.getMetadata(metaDataKey, target)
+function getProperties(target): Array<PropertyDef> {
+    let properties: Array<PropertyDef> = Reflect.getMetadata(metaDataKey, target)
     if (!properties) {
         properties = new Array<PropertyDef>()
         Reflect.defineMetadata(metaDataKey, properties, target)
@@ -37,6 +38,8 @@ function PropertyValue(category: PropertyCategory, initValue = null, config?: Pr
             hide: hide
         }
         properties.push(propertyEntry)
+
+        addComponentProperties(target.constructor.name, properties)
     }
 }
 
@@ -229,10 +232,10 @@ abstract class AbstractComponent extends EventEmitter {
         this.baseShape.removeComponent(this)
     }
 
-    reset(){
+    reset() {
 
     }
 }
 
 
-export {AbstractComponent, PropertyValue, Component}
+export {AbstractComponent, PropertyValue, Component, getProperties}
