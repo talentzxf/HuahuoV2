@@ -3,7 +3,8 @@ import {INodeOutputSlot, LGraphNode, LiteGraph} from "litegraph.js";
 import {huahuoEngine} from "../../EngineAPI";
 
 let titleTemplate = "GetShapeComponent"
-class GetShapeComponentNode extends AbstractNode{
+
+class GetShapeComponentNode extends AbstractNode {
     title = titleTemplate + "(null)"
     desc = "Get component from shape by component type"
 
@@ -12,6 +13,7 @@ class GetShapeComponentNode extends AbstractNode{
 
     executeSlot
     executedSlot
+
     constructor() {
         super();
 
@@ -30,9 +32,9 @@ class GetShapeComponentNode extends AbstractNode{
 
     onConnectInput(inputIndex: number, outputType: INodeOutputSlot["type"], outputSlot: INodeOutputSlot, outputNode: LGraphNode, outputIndex: number): boolean {
         let inputShapeIndex = this.findInputSlot(this.inputShapeSlot.name)
-        if(inputIndex == inputShapeIndex){
+        if (inputIndex == inputShapeIndex) {
             let executedSlot = outputNode.findOutputSlot("Executed")
-            if(executedSlot >= 0){
+            if (executedSlot >= 0) {
                 outputNode.connect(executedSlot, this, "Execute")
             }
         }
@@ -40,20 +42,20 @@ class GetShapeComponentNode extends AbstractNode{
     }
 
     onPropertyChanged(property: string, value: any, prevValue: any): void | boolean {
-        if(property == "componentType"){
+        if (property == "componentType") {
             this.title = titleTemplate + "(" + value + ")"
 
             let component_slot_index = this.findOutputSlot(this.componentOutputSlot.name)
 
-            this.getOutputNodes(component_slot_index)?.forEach((node)=>{
-                if(node["refreshComponentProperties"]){
+            this.getOutputNodes(component_slot_index)?.forEach((node) => {
+                if (node["refreshComponentProperties"]) {
                     node["refreshComponentProperties"](value)
                 }
             })
         }
     }
 
-    static getType(): string{
+    static getType(): string {
         return "shape/getComponent"
     }
 }
