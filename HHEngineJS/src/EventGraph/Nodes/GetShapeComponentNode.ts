@@ -26,9 +26,9 @@ class GetShapeComponentNode extends AbstractNode{
         if(property == "componentType"){
             this.title = titleTemplate + "(" + value + ")"
 
-            let component_slot_index = this.componentOutputSlot.slot_index
+            let component_slot_index = this.findOutputSlot(this.componentOutputSlot.name)
 
-            this.getOutputNodes(component_slot_index).forEach((node)=>{
+            this.getOutputNodes(component_slot_index)?.forEach((node)=>{
                 if(node["refreshComponentProperties"]){
                     node["refreshComponentProperties"](value)
                 }
