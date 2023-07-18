@@ -101,6 +101,16 @@ class EventGraphComponent extends AbstractComponent {
     getGraph() {
         return this.graph
     }
+
+    afterUpdate(force: boolean = false) {
+        super.afterUpdate(force);
+
+        if(huahuoEngine.getActivePlayer().isPlaying){
+            this.graph.start()
+        }else{
+            this.graph.stop()
+        }
+    }
 }
 
 setupLGraph()

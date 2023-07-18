@@ -47,4 +47,19 @@ function getLiteGraphTypeFromPropertyCategory(propertyCategory: PropertyCategory
     return returnType
 }
 
-export {getLiteGraphTypeFromPropertyType, getLiteGraphTypeFromPropertyCategory}
+function convertGraphValueToComponentValue(graphValue, valueType) {
+    let graphValueType = graphValue.constructor.name
+
+    if (graphValueType == "Float32Array") {
+        if (valueType == "vec2") {
+            return {x: graphValue[0], y: graphValue[1]}
+        }
+        if (valueType == "vec3") {
+            return {x: graphValue[0], y: graphValue[1], z: graphValue[2]}
+        }
+    }
+
+    return graphValue
+}
+
+export {getLiteGraphTypeFromPropertyType, getLiteGraphTypeFromPropertyCategory, convertGraphValueToComponentValue}

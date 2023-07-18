@@ -2,7 +2,7 @@ import {AbstractNode} from "./AbstractNode";
 import {INodeOutputSlot, LGraphNode, LiteGraph} from "litegraph.js";
 import {getComponentProperties} from "../LGraphSetup";
 import {PropertyDef} from "../../Components/PropertySheetBuilder";
-import {getLiteGraphTypeFromPropertyCategory} from "../GraphUtils";
+import {convertGraphValueToComponentValue, getLiteGraphTypeFromPropertyCategory} from "../GraphUtils";
 
 class SetComponentPropertyNode extends AbstractNode {
     title = "SetComponentProperty"
@@ -31,8 +31,9 @@ class SetComponentPropertyNode extends AbstractNode {
         let inputComponent = this.getInputData(componentInputSlotIdx)
 
         let inputParameterSlotIdx = this.findInputSlot(this.inputParameterSlot.name)
-        let inputParameterValue = this.getInputData(inputParameterSlotIdx, true)
-        inputComponent[this.inputParameterSlot.name] = inputParameterValue
+        let inputParameterValue = this.getInputData(inputParameterSlotIdx)
+        let convertedParameterValue = convertGraphValueToComponentValue(inputParameterValue, this.inputParameterSlot.type)
+        inputComponent[this.inputParameterSlot.name] = convertedParameterValue
     }
 
     onConnectInput(inputIndex: number, outputType: INodeOutputSlot["type"], outputSlot: INodeOutputSlot, outputNode: LGraphNode, outputIndex: number): boolean {
