@@ -14,6 +14,10 @@ class GetShapeComponentNode extends AbstractNode {
     executeSlot
     executedSlot
 
+    properties: {
+        componentTypeName: string
+    }
+
     constructor() {
         super();
 
@@ -30,6 +34,20 @@ class GetShapeComponentNode extends AbstractNode {
         this.componentOutputSlot = this.addOutput("component", "component")
     }
 
+    onAction(action, param) {
+        let inputShape = this.getInputData(this.findInputSlot(this.inputShapeSlot.name))
+        let component = inputShape.getComponentByTypeName(this.properties.componentTypeName)
+
+        let outputComponentSlot = this.findOutputSlot(this.componentOutputSlot.name)
+        this.setOutputData(outputComponentSlot, component)
+
+        let executedSlotId = this.findOutputSlot(this.executedSlot.name)
+        if (executedSlotId >= 0) {
+            // Trigger output slot
+            this.triggerSlot(executedSlotId, null, null)
+        }
+    }
+
     onConnectInput(inputIndex: number, outputType: INodeOutputSlot["type"], outputSlot: INodeOutputSlot, outputNode: LGraphNode, outputIndex: number): boolean {
         let inputShapeIndex = this.findInputSlot(this.inputShapeSlot.name)
         if (inputIndex == inputShapeIndex) {
@@ -43,13 +61,15 @@ class GetShapeComponentNode extends AbstractNode {
 
     onPropertyChanged(property: string, value: any, prevValue: any): void | boolean {
         if (property == "componentType") {
-            this.title = titleTemplate + "(" + value + ")"
+            this.properties.componentTypeName = value
+
+            this.title = titleTemplate + "(" + this.properties.componentTypeName + ")"
 
             let component_slot_index = this.findOutputSlot(this.componentOutputSlot.name)
 
             this.getOutputNodes(component_slot_index)?.forEach((node) => {
                 if (node["refreshComponentProperties"]) {
-                    node["refreshComponentProperties"](value)
+                    node["refreshComponentProperties"](this.properties.componentTypeName)
                 }
             })
         }

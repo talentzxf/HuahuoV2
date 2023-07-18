@@ -12,6 +12,8 @@ class SetComponentPropertyNode extends AbstractNode{
 
     componentProperties
 
+    inputParameterSlot
+
     executeSlot
     executedSlot
 
@@ -24,8 +26,9 @@ class SetComponentPropertyNode extends AbstractNode{
         this.componentInputSlot = this.addInput("component", "component")
     }
 
+    onAction(action, param){
 
-
+    }
     onConnectInput(inputIndex: number, outputType: INodeOutputSlot["type"], outputSlot: INodeOutputSlot, outputNode: LGraphNode, outputIndex: number): boolean {
         if(this.componentInputSlot == this.inputs[inputIndex]){
             let componentType = outputNode.properties["componentType"]
@@ -37,6 +40,12 @@ class SetComponentPropertyNode extends AbstractNode{
             }
         }
         return true
+    }
+
+    onPropertyChanged(property: string, value: any, prevValue: any): void | boolean {
+        if(property == "propertyName"){
+            
+        }
     }
 
     refreshComponentProperties(componentType: string){

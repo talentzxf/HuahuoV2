@@ -2,10 +2,10 @@ import {HHForm} from "../Utilities/HHForm";
 import {CustomElement} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {getFullEventName} from "hhcommoncomponents";
-import {getEventCategoryMap, getLiteGraphTypeFromPropertyType} from "./Utils"
+import {getEventCategoryMap} from "./Utils"
 import {EventNode, ActionNode} from "hhenginejs";
 import {LGraphCanvas, LiteGraph} from "hhenginejs";
-import {huahuoEngine} from "hhenginejs";
+import {huahuoEngine, getLiteGraphTypeFromPropertyType} from "hhenginejs";
 import {renderEngine2D} from "hhenginejs"
 import {ActionDef} from "hhenginejs";
 
@@ -136,13 +136,6 @@ class EventGraphForm extends HTMLElement implements HHForm {
             for (let paramDef of paramDefs) {
                 let inputSlot = node.addInput(paramDef.paramName, getLiteGraphTypeFromPropertyType(paramDef.paramType))
                 node.addParameterIndexSlotMap(paramDef.paramIndex, inputSlot)
-            }
-
-            if(actionDef.returnValueInfo != null){
-                let returnValueName = actionDef.returnValueInfo.valueName
-                let returnValueType = actionDef.returnValueInfo.valueType
-
-                node.addOutput(returnValueName, getLiteGraphTypeFromPropertyType(returnValueType))
             }
 
             node.pos = lcanvas.convertEventToCanvasOffset(first_event)

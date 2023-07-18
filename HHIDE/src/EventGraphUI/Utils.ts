@@ -1,27 +1,4 @@
-import {PropertyType, splitFullEventName} from "hhcommoncomponents";
-
-function getLiteGraphTypeFromPropertyType(propertyType: PropertyType) {
-    let returnType = ""
-    switch (propertyType) {
-        case PropertyType.NUMBER:
-            returnType = "number"
-            break;
-        case PropertyType.STRING:
-            returnType = "string"
-            break;
-        case PropertyType.BOOLEAN:
-            returnType = "boolean"
-            break;
-        case PropertyType.VECTOR2:
-            returnType = "vec2"
-            break;
-        case PropertyType.SHAPE:
-            returnType = "shape"
-            break;
-    }
-
-    return returnType
-}
+import {splitFullEventName} from "hhcommoncomponents";
 
 function getEventCategoryMap(eventsFullNames): Map<string, Set<object>> {
     let eventCategoryMap: Map<string, Set<object>> = new Map // From Namespace to event name map.
@@ -41,4 +18,4 @@ function getEventCategoryMap(eventsFullNames): Map<string, Set<object>> {
     return eventCategoryMap
 }
 
-export {getLiteGraphTypeFromPropertyType, getEventCategoryMap}
+export {getEventCategoryMap}

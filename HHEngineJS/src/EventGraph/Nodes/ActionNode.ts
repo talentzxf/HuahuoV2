@@ -1,7 +1,8 @@
 import {LiteGraph} from "litegraph.js";
 import {AbstractNode} from "./AbstractNode";
-import {ActionDef} from "../GraphActions";
+import {ActionDef, ReturnValueInfo} from "../GraphActions";
 import {huahuoEngine} from "../../EngineAPI";
+import {getLiteGraphTypeFromPropertyType} from "../GraphUtils";
 
 class ActionNode extends AbstractNode {
     title = "ActionNode"
@@ -12,9 +13,11 @@ class ActionNode extends AbstractNode {
         actionName: "unknownAction",
         paramIdxSlotMap: {},
         maxParamIdx: -1, // -1 means no parameter.
-        onlyRunWhenPlaing: false
+        onlyRunWhenPlaing: false,
+        returnValueInfo: null
     }
 
+    funcOutputSlot
 
     constructor() {
         super();
@@ -26,6 +29,19 @@ class ActionNode extends AbstractNode {
         this.title = actionDef.actionName
         this.properties.actionName = actionDef.actionName
         this.properties.onlyRunWhenPlaing = actionDef.onlyRunWhenPlaing
+        if(actionDef.returnValueInfo){
+            this.properties.returnValueInfo = {
+                valueName: actionDef.returnValueInfo.valueName,
+                valueType: actionDef.returnValueInfo.valueType
+            }
+
+            if(actionDef.returnValueInfo != null){
+                let returnValueName = actionDef.returnValueInfo.valueName
+                let returnValueType = actionDef.returnValueInfo.valueType
+
+                this.funcOutputSlot = this.addOutput(returnValueName, getLiteGraphTypeFromPropertyType(returnValueType))
+            }
+        }
     }
 
     onAction(action, param) {
@@ -50,8 +66,14 @@ class ActionNode extends AbstractNode {
         let actionTarget = this.getEventGraphComponent().getActionTarget(this.id)
 
         let func = actionTarget[this.properties.actionName]
-        if (func)
-            func.apply(actionTarget, callBackParams)
+        if (func){
+            let functionResult = func.apply(actionTarget, callBackParams)
+
+            if(this.properties.returnValueInfo){
+                let outputSlotIndex = this.findOutputSlot(this.funcOutputSlot.name)
+                this.setOutputData(outputSlotIndex, functionResult)
+            }
+        }
 
         let executedSlotId = this.findOutputSlot(this.executedSlot.name)
         if (executedSlotId >= 0) {
