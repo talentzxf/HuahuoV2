@@ -1,5 +1,5 @@
 import {AbstractNode} from "./AbstractNode";
-import {LiteGraph} from "litegraph.js";
+import {INodeOutputSlot, LGraphNode, LiteGraph} from "litegraph.js";
 import {huahuoEngine} from "../../EngineAPI";
 
 let titleTemplate = "GetShapeComponent"
@@ -9,6 +9,9 @@ class GetShapeComponentNode extends AbstractNode{
 
     inputShapeSlot
     componentOutputSlot
+
+    executeSlot
+    executedSlot
     constructor() {
         super();
 
@@ -18,8 +21,22 @@ class GetShapeComponentNode extends AbstractNode{
             values: allComponentNames
         })
 
+        this.executeSlot = this.addInput("Execute", LiteGraph.EVENT)
+        this.executedSlot = this.addOutput("Executed", LiteGraph.EVENT)
+
         this.inputShapeSlot = this.addInput("shape", "shape")
         this.componentOutputSlot = this.addOutput("component", "component")
+    }
+
+    onConnectInput(inputIndex: number, outputType: INodeOutputSlot["type"], outputSlot: INodeOutputSlot, outputNode: LGraphNode, outputIndex: number): boolean {
+        let inputShapeIndex = this.findInputSlot(this.inputShapeSlot.name)
+        if(inputIndex == inputShapeIndex){
+            let executedSlot = outputNode.findOutputSlot("Executed")
+            if(executedSlot >= 0){
+                outputNode.connect(executedSlot, this, "Execute")
+            }
+        }
+        return true
     }
 
     onPropertyChanged(property: string, value: any, prevValue: any): void | boolean {
