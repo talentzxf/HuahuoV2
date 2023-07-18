@@ -12,18 +12,30 @@ class SetComponentPropertyNode extends AbstractNode{
 
     componentProperties
 
+    executeSlot
+    executedSlot
+
     constructor() {
         super();
 
+        this.executeSlot = this.addInput("Execute", LiteGraph.EVENT)
+        this.executedSlot = this.addOutput("Executed", LiteGraph.EVENT)
+
         this.componentInputSlot = this.addInput("component", "component")
     }
+
+
 
     onConnectInput(inputIndex: number, outputType: INodeOutputSlot["type"], outputSlot: INodeOutputSlot, outputNode: LGraphNode, outputIndex: number): boolean {
         if(this.componentInputSlot == this.inputs[inputIndex]){
             let componentType = outputNode.properties["componentType"]
             this.refreshComponentProperties(componentType)
-        }
 
+            let executedSlot = outputNode.findOutputSlot("Executed")
+            if (executedSlot >= 0) {
+                outputNode.connect(executedSlot, this, "Execute")
+            }
+        }
         return true
     }
 
@@ -31,7 +43,7 @@ class SetComponentPropertyNode extends AbstractNode{
         this.componentProperties = getComponentProperties(componentType)
 
         let allPropertyNames = []
-        this.componentProperties.forEach((propertyEntry: PropertyDef)=>{
+        this.componentProperties?.forEach((propertyEntry: PropertyDef)=>{
             allPropertyNames.push(propertyEntry.key)
         })
 
