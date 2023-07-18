@@ -25,23 +25,28 @@ class ActionNode extends AbstractNode {
         this.executedSlot = this.addOutput("Executed", LiteGraph.EVENT)
     }
 
-    setActionDef(actionDef: ActionDef) {
-        this.title = actionDef.actionName
-        this.properties.actionName = actionDef.actionName
-        this.properties.onlyRunWhenPlaing = actionDef.onlyRunWhenPlaing
-        if(actionDef.returnValueInfo){
+    setReturnSlot(returnValueInfo: ReturnValueInfo){
+        if(returnValueInfo){
             this.properties.returnValueInfo = {
-                valueName: actionDef.returnValueInfo.valueName,
-                valueType: actionDef.returnValueInfo.valueType
+                valueName: returnValueInfo.valueName,
+                valueType: returnValueInfo.valueType
             }
 
-            if(actionDef.returnValueInfo != null){
-                let returnValueName = actionDef.returnValueInfo.valueName
-                let returnValueType = actionDef.returnValueInfo.valueType
+            if(returnValueInfo != null){
+                let returnValueName = returnValueInfo.valueName
+                let returnValueType = returnValueInfo.valueType
 
                 this.funcOutputSlot = this.addOutput(returnValueName, getLiteGraphTypeFromPropertyType(returnValueType))
             }
         }
+    }
+
+    setActionDef(actionDef: ActionDef) {
+        this.title = actionDef.actionName
+        this.properties.actionName = actionDef.actionName
+        this.properties.onlyRunWhenPlaing = actionDef.onlyRunWhenPlaing
+
+        this.setReturnSlot(actionDef.returnValueInfo)
     }
 
     onAction(action, param) {
@@ -70,7 +75,7 @@ class ActionNode extends AbstractNode {
             let functionResult = func.apply(actionTarget, callBackParams)
 
             if(this.properties.returnValueInfo){
-                let outputSlotIndex = this.findOutputSlot(this.funcOutputSlot.name)
+                let outputSlotIndex = this.findOutputSlot(this.properties.returnValueInfo.valueName)
                 this.setOutputData(outputSlotIndex, functionResult)
             }
         }
