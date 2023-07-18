@@ -200,7 +200,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         let baseShape = this.targetComponent.baseShape
         let _this = this
-        let actionDefs = baseShape.getAction().getActionDefs()
+        let actionDefs = baseShape.getActor().getActionDefs()
 
         let entries = []
         actionDefs.forEach((actionDef) => {

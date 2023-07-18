@@ -19,7 +19,7 @@ import {NailShapeJS} from "./Shapes/NailShapeJS";
 import {ParticleSystemJS} from "./Shapes/ParticleSystemJS";
 import {ParticleSystemRenderer} from "./Components/ParticleSystemRenderer";
 import {Particles} from "./ParticleSystem/Particles";
-import {BaseShapeActions} from "./EventGraph/BaseShapeActions";
+import {BaseShapeActor} from "./EventGraph/BaseShapeActor";
 import {GetShapeComponentNode} from "./EventGraph/Nodes/GetShapeComponentNode";
 import {SetComponentPropertyNode} from "./EventGraph/Nodes/SetComponentPropertyNode"
 import {EventNode} from "./EventGraph/Nodes/EventNode";
@@ -110,7 +110,7 @@ export {
     ColorStop,
     getNailManager,
     isInheritedFromClzName,
-    BaseShapeActions,
+    BaseShapeActor,
     EventNode,
     ActionNode,
     GetShapeComponentNode,

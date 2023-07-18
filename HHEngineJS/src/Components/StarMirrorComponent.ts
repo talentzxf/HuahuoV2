@@ -4,7 +4,7 @@ import {createDuplication} from "./MirrorComponent";
 import * as paper from "paper";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {FloatPropertyConfig} from "hhcommoncomponents";
-import {BaseShapeActions} from "../EventGraph/BaseShapeActions";
+import {BaseShapeActor} from "../EventGraph/BaseShapeActor";
 
 class ClonedShapeEntry{
     shape: BaseShapeJS
@@ -15,10 +15,6 @@ class ClonedShapeEntry{
 }
 
 function updateEntry(entry: ClonedShapeEntry){
-    // let originalPosition = entry.targetShape.position
-    // let targetPosition = originalPosition.rotate(entry.angle, entry.center)
-    //
-    // entry.shape.getAction().setPosition(targetPosition.x, targetPosition.y)
     if(entry.isUsing){
         let parentGroup = entry.shape.paperShape.parent
 

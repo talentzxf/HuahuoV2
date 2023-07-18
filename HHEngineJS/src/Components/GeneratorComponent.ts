@@ -70,7 +70,7 @@ class GeneratorComponent extends AbstractComponent {
 
                 let currentLength = this.baseShape.getCurveLength() * currentLengthRatio
                 let position = this.paperShapeGroup.globalToLocal(baseShapeJS.localToGlobal(baseShapeJS.getPointAt(currentLength)))
-                duplicatedShape.getAction().setPosition(position.x, position.y)
+                duplicatedShape.getActor().setPosition(position.x, position.y)
 
                 duplicatedShape.update(force)
                 index++

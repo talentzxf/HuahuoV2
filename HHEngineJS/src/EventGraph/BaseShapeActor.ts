@@ -4,7 +4,7 @@ import {PropertyType} from "hhcommoncomponents"
 import {Vector2} from "hhcommoncomponents"
 import {AbstractComponent} from "../Components/AbstractComponent";
 
-class BaseShapeActions extends AbstractGraphAction{
+class BaseShapeActor extends AbstractGraphAction{
     targetShape:BaseShapeJS
 
     position: Vector2 = new Vector2()
@@ -87,4 +87,4 @@ class BaseShapeActions extends AbstractGraphAction{
     }
 }
 
-export {BaseShapeActions }
+export {BaseShapeActor }

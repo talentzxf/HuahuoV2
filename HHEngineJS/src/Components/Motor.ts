@@ -13,7 +13,7 @@ class Motor extends AbstractComponent{
         if(huahuoEngine.getActivePlayer().isPlaying){
             super.afterUpdate(force);
 
-            let action = this.baseShape.getAction()
+            let action = this.baseShape.getActor()
             let currentPosition = this.baseShape.position
             let nextPosition = currentPosition.add(this.velocity)
             action.setPosition(nextPosition.x, nextPosition.y)

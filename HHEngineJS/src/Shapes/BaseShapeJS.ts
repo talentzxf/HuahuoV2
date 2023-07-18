@@ -5,7 +5,7 @@ import * as paper from "paper";
 import {ShapeCenterSelector} from "./ShapeCenterSelector";
 import {ValueChangeHandler} from "./ValueChangeHandler";
 import {AbstractComponent} from "../Components/AbstractComponent";
-import {BaseShapeActions} from "../EventGraph/BaseShapeActions";
+import {BaseShapeActor} from "../EventGraph/BaseShapeActor";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 
 let BASIC_COMPONENTS = "BasicComponents"
@@ -48,15 +48,15 @@ abstract class BaseShapeJS {
 
     private lastRenderFrame = -1
     
-    // Purpose of action is to store temporary results during system running. All the status in the action won't be persisted.
-    private action: BaseShapeActions = new BaseShapeActions(this)
+    // Purpose of actor is to store temporary results during system running. All the status in the actor won't be persisted.
+    private actor: BaseShapeActor = new BaseShapeActor(this)
 
     private get customComponents() {
         return this.customComponentMap.values();
     }
 
-    public getAction() {
-        return this.action
+    public getActor() {
+        return this.actor
     }
 
     set isTransformationPermanent(isPermanent: boolean) {
@@ -80,8 +80,8 @@ abstract class BaseShapeJS {
     }
 
     get pivotPosition(): paper.Point {
-        if (this.action.isPositionValid)
-            return this.action.position
+        if (this.actor.isPositionValid)
+            return this.actor.position
         return this.rawObj.GetGlobalPivotPosition()
     }
 
@@ -247,8 +247,8 @@ abstract class BaseShapeJS {
     }
 
     get rotation(): number {
-        if (this.action.isRotationValid)
-            return this.action.rotation
+        if (this.actor.isRotationValid)
+            return this.actor.rotation
         return this.rawObj.GetRotation()
     }
 
@@ -1182,7 +1182,7 @@ abstract class BaseShapeJS {
     }
 
     resetAction(){
-        this.getAction().reset()
+        this.getActor().reset()
         for(let component of this.customComponents){
             if(component != null)
                 component.reset()

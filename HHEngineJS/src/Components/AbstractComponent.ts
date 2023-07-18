@@ -13,6 +13,7 @@ import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariable
 import {EventEmitter} from "hhcommoncomponents";
 import {AbstractGraphAction, ComponentActions} from "../EventGraph/GraphActions";
 import {addComponentProperties} from "../EventGraph/LGraphSetup";
+import {ComponentActor} from "./ComponentActor";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -58,6 +59,8 @@ abstract class AbstractComponent extends EventEmitter {
     static getMetaDataKey() {
         return metaDataKey
     }
+
+    actor: ComponentActor = new ComponentActor()
 
     componentActions: ComponentActions
 
@@ -166,7 +169,7 @@ abstract class AbstractComponent extends EventEmitter {
 
     // Life cycle function, call back when the component is disabled.
     onComponentDisabled() {
-        this.baseShape.getAction().RemoveActionInvoker(this)
+        this.baseShape.getActor().RemoveActionInvoker(this)
     }
 
     disableComponent() {
@@ -233,7 +236,7 @@ abstract class AbstractComponent extends EventEmitter {
     }
 
     reset() {
-
+        this.actor.reset()
     }
 }
 

@@ -35,16 +35,16 @@ class FollowCurveComponent extends AbstractComponent {
         this.targetShape = followShape
 
         if(followShape != null){
-            this.baseShape.getAction().AddActionInvoker(this)
+            this.baseShape.getActor().AddActionInvoker(this)
 
             let shapePosition = this.targetShape.pivotPosition
-            this.baseShape.getAction().setPosition(shapePosition.x, shapePosition.y)
+            this.baseShape.getActor().setPosition(shapePosition.x, shapePosition.y)
 
             this.targetShape.registerValueChangeHandler("*")(()=>{
                 this.afterUpdate(true)
             })
         } else {
-            this.baseShape.getAction().RemoveActionInvoker(this)
+            this.baseShape.getActor().RemoveActionInvoker(this)
 
             this.valueChangeHandler.callHandlers("targetShape", null)
         }
@@ -72,7 +72,7 @@ class FollowCurveComponent extends AbstractComponent {
 
                 let globalCurvePoint = followTargetShape.localToGlobal(curvePoint)
 
-                this.baseShape.getAction().setPosition(globalCurvePoint.x, globalCurvePoint.y)
+                this.baseShape.getActor().setPosition(globalCurvePoint.x, globalCurvePoint.y)
                 this.baseShape.afterUpdate(force) // Refresh the shape to reflect the change.
             }
         }

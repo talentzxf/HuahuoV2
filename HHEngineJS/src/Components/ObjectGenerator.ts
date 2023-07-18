@@ -36,7 +36,7 @@ class ObjectGenerator extends AbstractComponent {
         duplicatedShape.setSelectedMeta(null)
         duplicatedShape.isMirage = true
 
-        duplicatedShape.getAction().setPosition(this.baseShape.position.x, this.baseShape.position.y)
+        duplicatedShape.getActor().setPosition(this.baseShape.position.x, this.baseShape.position.y)
 
         duplicatedShape.update(true)
         this.generatedShapeArray.push(duplicatedShape)
@@ -72,6 +72,7 @@ class ObjectGenerator extends AbstractComponent {
     }
 
     reset() {
+        super.reset()
         this.cleanUp()
     }
 }

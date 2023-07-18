@@ -33,7 +33,7 @@ class SetComponentPropertyNode extends AbstractNode {
         let inputParameterSlotIdx = this.findInputSlot(this.inputParameterSlot.name)
         let inputParameterValue = this.getInputData(inputParameterSlotIdx)
         let convertedParameterValue = convertGraphValueToComponentValue(inputParameterValue, this.inputParameterSlot.type)
-        inputComponent[this.inputParameterSlot.name] = convertedParameterValue
+        inputComponent.actor.setField(this.inputParameterSlot.name, convertedParameterValue)
     }
 
     onConnectInput(inputIndex: number, outputType: INodeOutputSlot["type"], outputSlot: INodeOutputSlot, outputNode: LGraphNode, outputIndex: number): boolean {

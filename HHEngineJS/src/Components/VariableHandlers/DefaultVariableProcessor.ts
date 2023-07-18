@@ -1,8 +1,9 @@
 import {buildOperator} from "../PropertySheetBuilder";
 import {internalProcessComponent} from "./AbstractVariableHandler";
+import {AbstractComponent} from "../AbstractComponent";
 
 class DefaultVariableProcessor{
-    handleEntry(component, propertyEntry) {
+    handleEntry(component: AbstractComponent, propertyEntry) {
         let operator = buildOperator(propertyEntry.type, component.rawObj)
         operator.registerField(propertyEntry["key"], propertyEntry["initValue"])
 
@@ -12,6 +13,8 @@ class DefaultVariableProcessor{
 
         internalProcessComponent(component, fieldName, {
             getter: ()=>{
+                if(component.actor.hasField(fieldName))
+                    return component.actor.getField(fieldName)
                 return operator.getField(fieldName)
             },
             setter: (val)=>{
