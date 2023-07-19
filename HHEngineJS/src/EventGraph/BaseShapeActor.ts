@@ -1,4 +1,4 @@
-import {AbstractGraphAction, ActionDef, ActionParam, GraphAction} from "./GraphActions";
+import {AbstractGraphAction, ActionDef, ActionParam, GraphAction, ReturnValueInfo} from "./GraphActions";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {PropertyType} from "hhcommoncomponents"
 import {Vector2} from "hhcommoncomponents"
@@ -31,6 +31,14 @@ class BaseShapeActor extends AbstractGraphAction{
         if(this.actionInvokers.size == 0){
             this.reset()
         }
+    }
+
+    @GraphAction(true, {
+        valueName: "position",
+        valueType: "vec2"
+    } as ReturnValueInfo)
+    GetPosition(){
+        return this.targetShape.position
     }
 
     @GraphAction()

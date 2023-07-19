@@ -50,7 +50,8 @@ class SetComponentPropertyNode extends AbstractNode {
     }
 
     onPropertyChanged(property: string, value: any, prevValue: any): void | boolean {
-        if (property == "propertyName") {
+        // If the node is loaded (not created). The component properties will be null and we don't need to run this again.
+        if (this.componentProperties != null && property == "propertyName") {
             let propertyName = value
             let properties = this.componentProperties.filter((property) => {
                 return property.key == propertyName
@@ -62,18 +63,21 @@ class SetComponentPropertyNode extends AbstractNode {
                 let propertyEntry = properties[0]
                 let graphType = getLiteGraphTypeFromPropertyCategory(propertyEntry.type)
 
-                if(this.inputParameterSlot == null){
+                if (this.inputParameterSlot == null) {
                     this.inputParameterSlot = this.addInput(propertyName, graphType)
-                }else{
+                } else {
                     this.inputParameterSlot.name = propertyName
                     this.inputParameterSlot.type = graphType
                 }
-
             }
         }
     }
 
     refreshComponentProperties(componentType: string) {
+        if(this.properties.componentType == componentType)
+            return
+
+        this.properties.componentType = componentType
         this.componentProperties = getComponentProperties(componentType)
 
         let allPropertyNames = []
@@ -89,7 +93,7 @@ class SetComponentPropertyNode extends AbstractNode {
             values: allPropertyNames
         })
 
-        if(this.inputParameterSlot != null){
+        if (this.inputParameterSlot != null) {
             this.inputParameterSlot.name = null
             this.inputParameterSlot.type = null
         }

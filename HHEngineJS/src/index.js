@@ -24,6 +24,7 @@ import {GetShapeComponentNode} from "./EventGraph/Nodes/GetShapeComponentNode";
 import {SetComponentPropertyNode} from "./EventGraph/Nodes/SetComponentPropertyNode"
 import {EventNode} from "./EventGraph/Nodes/EventNode";
 import {ActionNode} from "./EventGraph/Nodes/ActionNode";
+import {Vec2MathOperationNode} from "./EventGraph/UtilityNodes/Vec2MathOperationNode";
 import {StarMirrorShapeJS} from "./Shapes/StarMirrorShapeJS";
 import {Utils} from "./Shapes/Utils";
 import {AbstractComponent} from "./Components/AbstractComponent";
@@ -115,6 +116,7 @@ export {
     ActionNode,
     GetShapeComponentNode,
     SetComponentPropertyNode,
+    Vec2MathOperationNode,
     LGraphCanvas,
     LiteGraph,
     StarMirrorShapeJS,
