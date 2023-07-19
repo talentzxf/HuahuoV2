@@ -59,6 +59,12 @@ function convertGraphValueToComponentValue(graphValue, valueType) {
         }
     }
 
+    if(graphValueType == "Point"){
+        if (valueType == "vec2") {
+            return {x: graphValue["x"], y: graphValue["y"]}
+        }
+    }
+
     return graphValue
 }
 
