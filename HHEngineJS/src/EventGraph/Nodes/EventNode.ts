@@ -1,6 +1,7 @@
 import {LiteGraph, SerializedLGraphNode} from "litegraph.js";
 import {splitFullEventName} from "hhcommoncomponents";
 import {AbstractNode} from "./AbstractNode";
+import {huahuoEngine} from "../../EngineAPI";
 
 class EventNode extends AbstractNode {
     title = "EventNode"
@@ -40,6 +41,9 @@ class EventNode extends AbstractNode {
         this.title = fullEventName
         let _this = this
         this.currentEventHandler = targetEventBus.addEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, (params) => {
+            if(!huahuoEngine.getActivePlayer().isPlaying) // Do not trigger when player is not playing.
+                return
+
             for (let paramIdx = 0; paramIdx < params.length; paramIdx++) {
                 let slot = _this.getParamMap()[paramIdx]
                 if (slot) {
