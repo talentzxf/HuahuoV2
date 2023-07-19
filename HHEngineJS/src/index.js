@@ -30,7 +30,7 @@ import {Utils} from "./Shapes/Utils";
 import {AbstractComponent} from "./Components/AbstractComponent";
 import {PropertyCategory} from "./Components/PropertySheetBuilder"
 import {PropertyDef} from "./Components/PropertySheetBuilder";
-import {Vector2NumberNode} from "./EventGraph/Nodes/Vector2NumberNode";
+import {Vector2NumberNode} from "./EventGraph/UtilityNodes/Vector2NumberNode";
 import {getLiteGraphTypeFromPropertyType} from "./EventGraph/GraphUtils"
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";

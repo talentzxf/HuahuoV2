@@ -30,10 +30,17 @@ class SetComponentPropertyNode extends AbstractNode {
         let componentInputSlotIdx = this.findInputSlot(this.componentInputSlot.name)
         let inputComponent = this.getInputData(componentInputSlotIdx)
 
-        let inputParameterSlotIdx = this.findInputSlot(this.inputParameterSlot.name)
+        let inputParameterSlotIdx = this.findInputSlot(this.properties.propertyName)
+        let parameterSlot = this.inputs[inputParameterSlotIdx]
         let inputParameterValue = this.getInputData(inputParameterSlotIdx)
-        let convertedParameterValue = convertGraphValueToComponentValue(inputParameterValue, this.inputParameterSlot.type)
-        inputComponent.actor.setField(this.inputParameterSlot.name, convertedParameterValue)
+
+        if (inputParameterValue == null)
+            inputParameterValue = this.getInputData(inputParameterSlotIdx, true)
+
+        if (inputParameterValue != null) {
+            let convertedParameterValue = convertGraphValueToComponentValue(inputParameterValue, parameterSlot.type)
+            inputComponent.actor.setField(this.properties.propertyName, convertedParameterValue)
+        }
     }
 
     onConnectInput(inputIndex: number, outputType: INodeOutputSlot["type"], outputSlot: INodeOutputSlot, outputNode: LGraphNode, outputIndex: number): boolean {
@@ -50,31 +57,32 @@ class SetComponentPropertyNode extends AbstractNode {
     }
 
     onPropertyChanged(property: string, value: any, prevValue: any): void | boolean {
-        // If the node is loaded (not created). The component properties will be null and we don't need to run this again.
-        if (this.componentProperties != null && property == "propertyName") {
+        if (property == "propertyName") {
             let propertyName = value
-            let properties = this.componentProperties.filter((property) => {
-                return property.key == propertyName
-            })
+            if (this.componentProperties != null) { // If the node is loaded, it's componentProperties will be null.
+                let properties = this.componentProperties.filter((property) => {
+                    return property.key == propertyName
+                })
 
-            if (properties.length != 1) {
-                console.error("Should have one and only one property:" + propertyName)
-            } else {
-                let propertyEntry = properties[0]
-                let graphType = getLiteGraphTypeFromPropertyCategory(propertyEntry.type)
-
-                if (this.inputParameterSlot == null) {
-                    this.inputParameterSlot = this.addInput(propertyName, graphType)
+                if (properties.length != 1) {
+                    console.error("Should have one and only one property:" + propertyName)
                 } else {
-                    this.inputParameterSlot.name = propertyName
-                    this.inputParameterSlot.type = graphType
+                    let propertyEntry = properties[0]
+                    let graphType = getLiteGraphTypeFromPropertyCategory(propertyEntry.type)
+
+                    if (this.inputParameterSlot == null) {
+                        this.inputParameterSlot = this.addInput(propertyName, graphType)
+                    } else {
+                        this.inputParameterSlot.name = propertyName
+                        this.inputParameterSlot.type = graphType
+                    }
                 }
             }
         }
     }
 
     refreshComponentProperties(componentType: string) {
-        if(this.properties.componentType == componentType)
+        if (this.properties.componentType == componentType)
             return
 
         this.properties.componentType = componentType

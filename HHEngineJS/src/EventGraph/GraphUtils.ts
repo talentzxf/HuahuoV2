@@ -48,6 +48,10 @@ function getLiteGraphTypeFromPropertyCategory(propertyCategory: PropertyCategory
 }
 
 function convertGraphValueToComponentValue(graphValue, valueType) {
+    if(graphValue == null){
+        return null
+    }
+
     let graphValueType = graphValue.constructor.name
 
     if (graphValueType == "Float32Array") {

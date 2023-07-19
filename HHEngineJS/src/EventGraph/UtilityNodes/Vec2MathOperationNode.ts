@@ -32,7 +32,10 @@ class Vec2MathOperationNode extends AbstractNode {
 
     onExecute() {
         let A = convertGraphValueToComponentValue(this.getInputData(0), "vec2")
-        let B = convertGraphValueToComponentValue(this.getInputData(0), "vec2")
+        let B = convertGraphValueToComponentValue(this.getInputData(1), "vec2")
+
+        if(A == null || B == null)
+            return
 
         let res = {
             x: 0.0,
