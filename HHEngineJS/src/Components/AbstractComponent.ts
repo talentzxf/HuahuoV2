@@ -139,6 +139,8 @@ abstract class AbstractComponent extends EventEmitter {
     setBaseShape(baseShape: BaseShapeJS) {
         this.baseShape = baseShape
 
+        // I don't like this, but baseShape will be null in some cases???  Have to manual fix here....
+        this.rawObj.SetBaseShape(baseShape.getRawObject())
         if (!this.isMirage)
             this.enableComponent() // Enable the component after baseShape is set.
     }
