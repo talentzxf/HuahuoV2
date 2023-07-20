@@ -124,7 +124,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         document.removeEventListener("mousemove", this.onDrag.bind(this))
     }
 
-    actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef:ActionDef, actionTarget) {
+    actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef: ActionDef, actionTarget) {
         let first_event = contextMenu.getFirstEvent();
         let graph = this.lcanvas.graph
         let lcanvas = this.lcanvas
@@ -153,7 +153,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         graph.afterChange()
     }
 
-    componentActionMenu(node, options, e, prev_menu, callback){
+    componentActionMenu(node, options, e, prev_menu, callback) {
         if (!this.lcanvas)
             return
 
@@ -168,7 +168,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         let components = baseShape.getComponents()
 
-        if(components.length > 0){
+        if (components.length > 0) {
             for (let component of components) {
                 component.getActionDefs().forEach((actionDef) => {
                     let entry = {
@@ -341,6 +341,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
                 return options
             }
+
+            this.lcanvas.show_inputs_panel = true
 
             // var node_const = LiteGraph.createNode("basic/const");
             // node_const.pos = [200, 200];
