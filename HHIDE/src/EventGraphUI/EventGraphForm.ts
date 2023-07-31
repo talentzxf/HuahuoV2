@@ -8,6 +8,7 @@ import {LGraphCanvas, LiteGraph} from "hhenginejs";
 import {huahuoEngine, getLiteGraphTypeFromPropertyType} from "hhenginejs";
 import {renderEngine2D} from "hhenginejs"
 import {ActionDef} from "hhenginejs";
+import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -314,8 +315,30 @@ class EventGraphForm extends HTMLElement implements HHForm {
         new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
     }
 
+    onInputAdded(inputName: string, inputType: string){
+        console.log("Input added")
+        // TODO: Switch - case?? Looks stupid, need to seed some more elegant way to do this.
+        switch(inputType){
+            case "number":
+                this.targetComponent.rawObj.RegisterFloatValue(inputName, 0.0)
+                break;
+            default:
+                console.log("Unknown property:" + inputType)
+                break;
+        }
+
+        this.targetComponent.updateComponentPropertySheet(this.targetComponent.baseShape.getPropertySheet())
+    }
+
+    onInputRemoved(inputName: string){
+        console.log("Input removed")
+    }
+
     initLGraph(canvas: HTMLCanvasElement) {
         let graph = this.targetComponent.getGraph()
+
+        graph.onInputAdded = this.onInputAdded.bind(this)
+        graph.onInputRemoved = this.onInputRemoved.bind(this)
 
         if (this.lcanvas == null) {
             this.lcanvas = new LGraphCanvas(canvas, graph, {autoresize: false})

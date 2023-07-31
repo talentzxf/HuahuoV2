@@ -20,13 +20,14 @@ function getCustomFieldContentDivGeneratorConstructor(className: string, fieldNa
     return customFieldContentDivGeneratorMap.get(fieldFullName)
 }
 
-class ComponentProxyHandler{
+class ComponentProxyHandler {
     targetComponent: AbstractComponent
 
     functionMap: Map<string, Function> = new Map()
 
     proxy
-    setProxy(proxy){
+
+    setProxy(proxy) {
         this.proxy = proxy
     }
 
@@ -34,28 +35,28 @@ class ComponentProxyHandler{
         this.targetComponent = targetComponent
 
         let _this = this
-        getMethodsAndVariables(this, true).forEach((key)=>{
-            if(typeof _this[key] == "function" &&
+        getMethodsAndVariables(this, true).forEach((key) => {
+            if (typeof _this[key] == "function" &&
                 key != "constructor" &&
                 !key.startsWith("__") &&
-                key != "get"){
+                key != "get") {
                 _this.functionMap.set(key, _this[key].bind(_this))
             }
         })
     }
 
-    getPrototypeOf(target){
+    getPrototypeOf(target) {
         return Object.getPrototypeOf(this.targetComponent);
     }
 
-    get(target, propKey, receiver){
+    get(target, propKey, receiver) {
         const origProperty = target[propKey]
 
         let _this = this
 
-        if(origProperty instanceof Function){
-            return function(...args){
-                if(!_this.functionMap.has(origProperty.name)){
+        if (origProperty instanceof Function) {
+            return function (...args) {
+                if (!_this.functionMap.has(origProperty.name)) {
                     return origProperty.apply(this, args)
                 }
 
@@ -63,21 +64,35 @@ class ComponentProxyHandler{
             }
         }
 
-        if(this[propKey] && this[propKey] instanceof Function){
+        if (this[propKey] && this[propKey] instanceof Function) {
             return this[propKey]
         }
 
         return origProperty
     }
 
-    getProxy(obj){
-        if(obj instanceof ComponentProxyHandler)
+    getProxy(obj) {
+        if (obj instanceof ComponentProxyHandler)
             return obj.proxy
 
         return obj
     }
 
+    updateComponentPropertySheet(propertySheet) {
+        let thisComponent: AbstractComponent = this.getProxy(this)
+        let properties = propertySheet.getProperties()
+        properties.forEach(
+            (entry) => {
+                if (entry.hasOwnProperty("rawObjPtr") && entry["rawObjPtr"] == thisComponent.rawObj.ptr) {
+                    entry = thisComponent.getPropertySheet()
+                }
+            })
+
+        propertySheet.setProperties(properties)
+    }
+
     propertySheetInited = false
+
     initPropertySheet(propertySheet) {
         if (!this.propertySheetInited) {
             this.propertySheetInited = true
@@ -91,7 +106,7 @@ class ComponentProxyHandler{
         }
     }
 
-    detachFromCurrentShape(){
+    detachFromCurrentShape() {
         this.propertySheetInited = false // This shape has been removed from the shape, ret property sheet property.
 
         this.targetComponent.detachFromCurrentShape.apply(this.proxy)
@@ -118,8 +133,8 @@ class ComponentProxyHandler{
             }
         }
 
-        if(!thisComponent.isBuiltIn){ //BuiltIn components can't be deleted.
-            componentConfigSheet.config["deleter"] = ()=>{
+        if (!thisComponent.isBuiltIn) { //BuiltIn components can't be deleted.
+            componentConfigSheet.config["deleter"] = () => {
                 huahuoEngine.dispatchEvent("HHIDE", "DeleteComponent", thisComponent)
             }
         }
@@ -163,8 +178,8 @@ class ComponentProxyHandler{
     }
 }
 
-class EditorComponentProxy{
-    static CreateProxy(component: AbstractComponent){
+class EditorComponentProxy {
+    static CreateProxy(component: AbstractComponent) {
         let proxyHandler = new ComponentProxyHandler(component)
         let proxy = new Proxy(component, proxyHandler)
         proxyHandler.setProxy(proxy)
