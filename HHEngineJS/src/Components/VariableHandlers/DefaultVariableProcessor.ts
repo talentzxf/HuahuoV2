@@ -9,7 +9,7 @@ class DefaultVariableProcessor{
 
         let fieldName = propertyEntry["key"]
 
-        delete this[fieldName] // Undefine the property
+        delete component[fieldName] // Undefine the property
 
         internalProcessComponent(component, fieldName, {
             getter: ()=>{

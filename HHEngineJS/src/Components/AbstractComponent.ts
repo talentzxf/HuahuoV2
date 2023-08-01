@@ -2,7 +2,7 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import "reflect-metadata"
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
 import {PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
-import {PropertyConfig} from "hhcommoncomponents";
+import {EventEmitter, PropertyConfig} from "hhcommoncomponents";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {ComponentConfig} from "./ComponentConfig";
 import {defaultVariableProcessor} from "./VariableHandlers/DefaultVariableProcessor";
@@ -10,8 +10,7 @@ import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
 import {colorStopArrayHandler} from "./VariableHandlers/ColorArrayProcessor";
 import {subComponentArrayHandler} from "./VariableHandlers/SubComponentArrayHandler";
 import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariableHandler";
-import {EventEmitter} from "hhcommoncomponents";
-import {AbstractGraphAction, ComponentActions} from "../EventGraph/GraphActions";
+import {ComponentActions} from "../EventGraph/GraphActions";
 import {addComponentProperties} from "../EventGraph/LGraphSetup";
 import {ComponentActor} from "./ComponentActor";
 
@@ -91,6 +90,27 @@ abstract class AbstractComponent extends EventEmitter {
         this.valueChangeHandler.callHandlers(propertyName, val)
     }
 
+    addProperty(propertyEntry: PropertyDef, needAppendInMeta:boolean = false) {
+        if(needAppendInMeta){
+            let currentProperties = getProperties(this)
+            currentProperties.push(propertyEntry)
+        }
+
+        if (propertyEntry.type == PropertyCategory.shapeArray) {
+            shapeArrayHandler.handleEntry(this, propertyEntry)
+        } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
+            colorStopArrayHandler.handleEntry(this, propertyEntry)
+        } else if (propertyEntry.type == PropertyCategory.subcomponentArray) {
+            // Only Components inherits GroupComponent can have subComponentArray. Cause SubComponentArray itself is a component.
+            //@ts-ignore
+            subComponentArrayHandler.handleEntry(this, propertyEntry)
+        } else if (propertyEntry.type == PropertyCategory.customField) {
+            customFieldVariableHandler.handleEntry(this, propertyEntry)
+        } else {
+            defaultVariableProcessor.handleEntry(this, propertyEntry)
+        }
+    }
+
     constructor(rawObj?, isMirage = false) {
         super()
 
@@ -111,19 +131,7 @@ abstract class AbstractComponent extends EventEmitter {
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
         if (properties) {
             properties.forEach(propertyEntry => {
-                if (propertyEntry.type == PropertyCategory.shapeArray) {
-                    shapeArrayHandler.handleEntry(this, propertyEntry)
-                } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
-                    colorStopArrayHandler.handleEntry(this, propertyEntry)
-                } else if (propertyEntry.type == PropertyCategory.subcomponentArray) {
-                    // Only Components inherits GroupComponent can have subComponentArray. Cause SubComponentArray itself is a component.
-                    //@ts-ignore
-                    subComponentArrayHandler.handleEntry(this, propertyEntry)
-                } else if (propertyEntry.type == PropertyCategory.customField) {
-                    customFieldVariableHandler.handleEntry(this, propertyEntry)
-                } else {
-                    defaultVariableProcessor.handleEntry(this, propertyEntry)
-                }
+                this.addProperty(propertyEntry)
             })
         }
 

@@ -1,13 +1,20 @@
 import {HHForm} from "../Utilities/HHForm";
-import {CustomElement} from "hhcommoncomponents";
+import {CustomElement, getFullEventName} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
-import {getFullEventName} from "hhcommoncomponents";
 import {getEventCategoryMap} from "./Utils"
-import {EventNode, ActionNode} from "hhenginejs";
-import {LGraphCanvas, LiteGraph} from "hhenginejs";
-import {huahuoEngine, getLiteGraphTypeFromPropertyType} from "hhenginejs";
-import {renderEngine2D} from "hhenginejs"
-import {ActionDef} from "hhenginejs";
+import {
+    ActionDef,
+    ActionNode,
+    EventNode,
+    getLiteGraphTypeFromPropertyType,
+    huahuoEngine,
+    LGraphCanvas,
+    LiteGraph,
+    PropertyCategory,
+    renderEngine2D
+} from "hhenginejs";
+import {FloatPropertyConfig, PropertyConfig} from "hhcommoncomponents/dist/src/Properties/PropertyConfig";
+import {PropertyDef} from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 
 let CANVAS_WIDTH = 800
@@ -320,7 +327,13 @@ class EventGraphForm extends HTMLElement implements HHForm {
         // TODO: Switch - case?? Looks stupid, need to seed some more elegant way to do this.
         switch(inputType){
             case "number":
-                this.targetComponent.rawObj.RegisterFloatValue(inputName, 0.0)
+                let propertyDef: PropertyDef = {
+                    key: inputName,
+                    type: PropertyCategory.interpolateFloat,
+                    initValue: 0.0,
+                    hide: false
+                }
+                this.targetComponent.addProperty(propertyDef, true)
                 break;
             default:
                 console.log("Unknown property:" + inputType)
@@ -328,6 +341,9 @@ class EventGraphForm extends HTMLElement implements HHForm {
         }
 
         this.targetComponent.updateComponentPropertySheet(this.targetComponent.baseShape.getPropertySheet())
+
+        // Refresh the component inspector
+        IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, this.targetComponent.baseShape)
     }
 
     onInputRemoved(inputName: string){

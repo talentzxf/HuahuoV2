@@ -82,9 +82,9 @@ class ComponentProxyHandler {
         let thisComponent: AbstractComponent = this.getProxy(this)
         let properties = propertySheet.getProperties()
         properties.forEach(
-            (entry) => {
+            (entry, index) => {
                 if (entry.hasOwnProperty("rawObjPtr") && entry["rawObjPtr"] == thisComponent.rawObj.ptr) {
-                    entry = thisComponent.getPropertySheet()
+                    properties[index] = thisComponent.getPropertySheet()
                 }
             })
 
@@ -100,7 +100,6 @@ class ComponentProxyHandler {
             let thisComponent: AbstractComponent = this.getProxy(this)
 
             let myPropertySheet = this.getPropertySheet()
-            myPropertySheet["rawObjPtr"] = thisComponent.rawObj.ptr
             if (myPropertySheet)
                 propertySheet.addProperty(myPropertySheet)
         }
@@ -173,6 +172,8 @@ class ComponentProxyHandler {
         keyFramePropertySheet["deleter"] = thisComponent.baseShape.deleteComponentKeyFrame(thisComponent.getTypeName()).bind(thisComponent.baseShape)
 
         componentConfigSheet.config.children.push(keyFramePropertySheet)
+
+        componentConfigSheet["rawObjPtr"] = thisComponent.rawObj.ptr
 
         return componentConfigSheet
     }
