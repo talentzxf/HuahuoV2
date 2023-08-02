@@ -25,23 +25,17 @@ import {SetComponentPropertyNode} from "./EventGraph/Nodes/SetComponentPropertyN
 import {EventNode} from "./EventGraph/Nodes/EventNode";
 import {ActionNode} from "./EventGraph/Nodes/ActionNode";
 import {Vec2MathOperationNode} from "./EventGraph/UtilityNodes/Vec2MathOperationNode";
+import {Vec2MathNumberMultiply} from "./EventGraph/UtilityNodes/Vec2MathNumberMultiply";
 import {StarMirrorShapeJS} from "./Shapes/StarMirrorShapeJS";
 import {Utils} from "./Shapes/Utils";
 import {AbstractComponent} from "./Components/AbstractComponent";
-import {PropertyCategory} from "./Components/PropertySheetBuilder"
-import {PropertyDef} from "./Components/PropertySheetBuilder";
-import {Vector2NumberNode} from "./EventGraph/UtilityNodes/Vector2NumberNode";
+import {PropertyCategory, PropertyDef} from "./Components/PropertySheetBuilder"
 import {getLiteGraphTypeFromPropertyType} from "./EventGraph/GraphUtils"
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 import {LGraphCanvas, LiteGraph} from "litegraph.js";
 
 // All non-default components
-import {GeneratorComponent} from "./Components/GeneratorComponent";
-import {ObjectGenerator} from "./Components/ObjectGenerator";
-import {CurveGrowthComponent} from "./Components/CurveGrowthComponent";
-import {RadialGradientComponent} from "./Components/RadialGradientComponent";
-import {FollowCurveComponent} from "./Components/FollowCurveComponent";
 import {EventGraphComponent} from "./Components/EventGraphComponent";
 import {Motor} from "./Components/Motor";
 import {NailComponent} from "./Components/NailComponent";
@@ -117,6 +111,7 @@ export {
     GetShapeComponentNode,
     SetComponentPropertyNode,
     Vec2MathOperationNode,
+    Vec2MathNumberMultiply,
     LGraphCanvas,
     LiteGraph,
     StarMirrorShapeJS,

@@ -1,7 +1,6 @@
 import {AbstractNode} from "../Nodes/AbstractNode";
 import {convertGraphValueToComponentValue} from "../GraphUtils";
 import {LiteGraph} from "litegraph.js";
-import {ActionNode} from "../Nodes/ActionNode";
 
 class Vec2MathOperationNode extends AbstractNode {
     values = ["+", "-"]
