@@ -71,7 +71,12 @@ class SetComponentPropertyNode extends AbstractNode {
                     let graphType = getLiteGraphTypeFromPropertyCategory(propertyEntry.type)
 
                     if (this.inputParameterSlot == null) {
-                        this.inputParameterSlot = this.addInput(propertyName, graphType)
+                        let currentInputSlot = this.findInputSlot(propertyName)
+                        if (currentInputSlot >= 0) {
+                            this.inputParameterSlot = currentInputSlot
+                        } else {
+                            this.inputParameterSlot = this.addInput(propertyName, graphType)
+                        }
                     } else {
                         this.inputParameterSlot.name = propertyName
                         this.inputParameterSlot.type = graphType
