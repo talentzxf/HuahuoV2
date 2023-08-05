@@ -28,5 +28,5 @@ class Vector2NumberNode extends AbstractNode{
 
 }
 
-//LiteGraph.registerNodeType(Vector2NumberNode.getType(), Vector2NumberNode)
+LiteGraph.registerNodeType(Vector2NumberNode.getType(), Vector2NumberNode)
 export {Vector2NumberNode}

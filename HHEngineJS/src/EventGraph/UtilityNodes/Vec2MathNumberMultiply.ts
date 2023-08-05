@@ -61,6 +61,6 @@ class Vec2MathNumberMultiply extends AbstractNode {
 }
 
 
-//LiteGraph.registerNodeType(Vec2MathNumberMultiply.getType(), Vec2MathNumberMultiply)
+LiteGraph.registerNodeType(Vec2MathNumberMultiply.getType(), Vec2MathNumberMultiply)
 
 export {Vec2MathNumberMultiply}
