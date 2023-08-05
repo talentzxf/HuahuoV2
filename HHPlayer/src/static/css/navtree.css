@@ -1,0 +1,21 @@
+.navtree-item span:hover {
+    cursor: default;
+}
+
+.navtree-item span {
+    -webkit-user-select:none;
+    -moz-user-select:-moz-none;
+    -ms-user-select:none;user-select:none
+}
+
+.navtree-item button {
+    background-color: #e7e7e7;
+    color: black;
+    border: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.navtree [selected="true"]{
+    background-color: lightblue;
+}

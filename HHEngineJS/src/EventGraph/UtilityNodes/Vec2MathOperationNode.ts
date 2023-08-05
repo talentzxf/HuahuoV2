@@ -61,6 +61,6 @@ class Vec2MathOperationNode extends AbstractNode {
 }
 
 
-LiteGraph.registerNodeType(Vec2MathOperationNode.getType(), Vec2MathOperationNode)
+// LiteGraph.registerNodeType(Vec2MathOperationNode.getType(), Vec2MathOperationNode)
 
 export {Vec2MathOperationNode}

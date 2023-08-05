@@ -38,6 +38,7 @@ import {LGraphCanvas, LiteGraph} from "litegraph.js";
 // All non-default components
 import {EventGraphComponent} from "./Components/EventGraphComponent";
 import {Motor} from "./Components/Motor";
+import {ObjectGenerator} from "./Components/ObjectGenerator";
 import {NailComponent} from "./Components/NailComponent";
 
 import "./Shapes/LoadShape"
@@ -102,6 +103,7 @@ export {
     NailComponent,
     EventGraphComponent,
     Motor,
+    ObjectGenerator,
     ColorStop,
     getNailManager,
     isInheritedFromClzName,

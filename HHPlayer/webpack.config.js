@@ -61,6 +61,7 @@ module.exports = (env) => {
                 patterns: [
                     {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to: "wasm"},
                     {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
+                    {from: "./static", to: "static"},
                 ]
             }),
             new FileManagerPlugin({
