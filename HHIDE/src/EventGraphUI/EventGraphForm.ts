@@ -350,11 +350,22 @@ class EventGraphForm extends HTMLElement implements HHForm {
         console.log("Input removed")
     }
 
+    onInputNodeAdded(node){
+        console.log("Input node added:" + node)
+    }
+
+    onInputNodeRemoved(node){
+        console.log("Input node removed:" + node)
+    }
+
     initLGraph(canvas: HTMLCanvasElement) {
         let graph = this.targetComponent.getGraph()
 
         graph.onInputAdded = this.onInputAdded.bind(this)
         graph.onInputRemoved = this.onInputRemoved.bind(this)
+
+        graph.onInputNodeAdded = this.onInputNodeAdded.bind(this)
+        graph.onInputNodeRemoved = this.onInputNodeRemoved.bind(this)
 
         if (this.lcanvas == null) {
             this.lcanvas = new LGraphCanvas(canvas, graph, {autoresize: false})
