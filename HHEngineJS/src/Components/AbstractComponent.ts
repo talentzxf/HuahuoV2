@@ -94,6 +94,8 @@ abstract class AbstractComponent extends EventEmitter {
         if(needAppendInMeta){
             let currentProperties = getProperties(this)
             currentProperties.push(propertyEntry)
+
+            this.rawObj.AddAdditionalFieldDef(propertyEntry.key, JSON.stringify(propertyEntry))
         }
 
         if (propertyEntry.type == PropertyCategory.shapeArray) {
@@ -123,6 +125,19 @@ abstract class AbstractComponent extends EventEmitter {
         }
 
         this.rawObj = castObject(rawObj, Module[cppClzName])
+
+        let frameStateCount = this.rawObj.GetFrameStateCount()
+        for(let frameStateIdx = 0; frameStateIdx < frameStateCount; frameStateIdx++){
+            let frameStateRawObj = this.rawObj.GetFrameStateAtIdx(frameStateIdx)
+            let frameStateName = frameStateRawObj.GetName()
+            let frameStateString = this.rawObj.GetAdditionalFieldDef(frameStateName)
+
+            if(frameStateString != null && frameStateString.length > 0){
+                let fieldDef = JSON.parse(frameStateString)
+                const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
+                properties.push(fieldDef)
+            }
+        }
 
         if (!this.rawObj.IsFieldRegistered("isActive")) {
             this.rawObj.RegisterBooleanValue("isActive", true)
