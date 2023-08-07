@@ -3,10 +3,9 @@ import {PropertyCategory} from "./PropertySheetBuilder";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {LGraph} from "litegraph.js";
 import {huahuoEngine} from "../EngineAPI";
-import {eventBus} from "hhcommoncomponents";
+import {capitalizeFirstLetter, eventBus, IsValidWrappedObject} from "hhcommoncomponents";
 import {EventNode} from "../EventGraph/Nodes/EventNode";
 import {ActionNode} from "../EventGraph/Nodes/ActionNode";
-import {IsValidWrappedObject} from "hhcommoncomponents";
 import {setupLGraph} from "../EventGraph/LGraphSetup";
 
 declare var Module:any;
@@ -70,6 +69,22 @@ class EventGraphComponent extends AbstractComponent {
             this.eventGraphJSON = graphString
     }
 
+    getInputValueFunction(propertyName){
+        if(!this.hasOwnProperty(propertyName))
+            return null
+        return this[propertyName]
+    }
+
+    setInputValueFunction(propertyName, propertyValue){
+        if(!this.hasOwnProperty(propertyName))
+            return
+
+        let setterName = "set" + capitalizeFirstLetter(propertyName)
+
+        if(this[setterName])
+            this[setterName](propertyValue)
+    }
+
     constructor(rawObj?, isMirage:boolean = false) {
         let needLoad = rawObj ? true : false;
         super(rawObj, isMirage);
@@ -82,6 +97,9 @@ class EventGraphComponent extends AbstractComponent {
 
         // this.graph.start()
         this.graph["onAfterChange"] = this.saveGraph.bind(this)
+
+        this.graph["getInputValueFunction"] = this.getInputValueFunction.bind(this)
+        this.graph["setInputValueFunction"] = this.setInputValueFunction.bind(this)
 
         if(needLoad){
             let eventNodes = this.graph.findNodesByType(EventNode.getType())

@@ -2,7 +2,6 @@ import {HHForm} from "../Utilities/HHForm";
 import {CustomElement, getFullEventName} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {getEventCategoryMap} from "./Utils"
-import {capitalizeFirstLetter} from "hhcommoncomponents";
 import {
     ActionDef,
     ActionNode,
@@ -12,10 +11,9 @@ import {
     LGraphCanvas,
     LiteGraph,
     PropertyCategory,
+    PropertyDef,
     renderEngine2D
 } from "hhenginejs";
-import {FloatPropertyConfig, PropertyConfig} from "hhcommoncomponents/dist/src/Properties/PropertyConfig";
-import {PropertyDef} from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 
 let CANVAS_WIDTH = 800
@@ -378,22 +376,6 @@ class EventGraphForm extends HTMLElement implements HHForm {
         console.log("Input node removed:" + node)
     }
 
-    getInputValueFunction(propertyName){
-        if(!this.targetComponent.hasOwnProperty(propertyName))
-            return null
-        return this.targetComponent[propertyName]
-    }
-
-    setInputValueFunction(propertyName, propertyValue){
-        if(!this.targetComponent.hasOwnProperty(propertyName))
-            return
-
-        let setterName = "set" + capitalizeFirstLetter(propertyName)
-
-        if(this.targetComponent[setterName])
-            this.targetComponent[setterName](propertyValue)
-    }
-
     initLGraph(canvas: HTMLCanvasElement) {
         let graph = this.targetComponent.getGraph()
 
@@ -402,9 +384,6 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         graph.onInputNodeCreated = this.onInputNodeCreated.bind(this)
         graph.onInputNodeRemoved = this.onInputNodeRemoved.bind(this)
-
-        graph.getInputValueFunction = this.getInputValueFunction.bind(this)
-        graph.setInputValueFunction = this.setInputValueFunction.bind(this)
 
         // Bind all current input nodes
         let inputNodes = graph.findNodesByType("graph/input")
