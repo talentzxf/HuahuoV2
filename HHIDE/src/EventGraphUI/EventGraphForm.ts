@@ -2,6 +2,7 @@ import {HHForm} from "../Utilities/HHForm";
 import {CustomElement, getFullEventName} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {getEventCategoryMap} from "./Utils"
+import {capitalizeFirstLetter} from "hhcommoncomponents";
 import {
     ActionDef,
     ActionNode,
@@ -387,7 +388,10 @@ class EventGraphForm extends HTMLElement implements HHForm {
         if(!this.targetComponent.hasOwnProperty(propertyName))
             return
 
-        this.targetComponent[propertyName] = propertyValue
+        let setterName = "set" + capitalizeFirstLetter(propertyName)
+
+        if(this.targetComponent[setterName])
+            this.targetComponent[setterName](propertyValue)
     }
 
     initLGraph(canvas: HTMLCanvasElement) {
