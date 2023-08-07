@@ -351,25 +351,30 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
     valueChangeHandlerIds: Array<number> = new Array
 
+    setNodeValue(node, value){
+        node.graph.beforeChange()
+
+        node.setProperty("value", value)
+
+        node.graph.change()
+
+        node.graph.afterChange()
+    }
     onInputNodeCreated(node){
-        console.log("Input node added:" + node)
         let propertyName = node.properties.name
-        let propertyType = node.properties.type
 
-        let valueChangeHandlerId = this.targetComponent.registerValueChangeHandler(propertyName, (value)=>{
-            console.log("Node value changed:" + value)
+        let _this = this
+        if(this.targetComponent.hasOwnProperty(propertyName)){
+            let valueChangeHandlerId = this.targetComponent.registerValueChangeHandler(propertyName, (value)=>{
+                _this.setNodeValue(node, value)
+            })
 
-            node.graph.beforeChange()
+            this.valueChangeHandlerIds.push(valueChangeHandlerId)
 
-            node.setProperty("value", value)
-
-            node.graph.change()
-
-            node.graph.afterChange()
-        })
-
-        this.valueChangeHandlerIds.push(valueChangeHandlerId)
-
+            if(node.properties.value != this.targetComponent[propertyName]){
+                this.setNodeValue(node, this.targetComponent[propertyName])
+            }
+        }
     }
 
     onInputNodeRemoved(node){
