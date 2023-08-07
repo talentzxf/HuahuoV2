@@ -364,7 +364,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
             node.setProperty("value", value)
 
-            node.setDirtyCanvas(true, true);
+            node.graph.change()
 
             node.graph.afterChange()
         })
@@ -377,6 +377,19 @@ class EventGraphForm extends HTMLElement implements HHForm {
         console.log("Input node removed:" + node)
     }
 
+    getInputValueFunction(propertyName){
+        if(!this.targetComponent.hasOwnProperty(propertyName))
+            return null
+        return this.targetComponent[propertyName]
+    }
+
+    setInputValueFunction(propertyName, propertyValue){
+        if(!this.targetComponent.hasOwnProperty(propertyName))
+            return
+
+        this.targetComponent[propertyName] = propertyValue
+    }
+
     initLGraph(canvas: HTMLCanvasElement) {
         let graph = this.targetComponent.getGraph()
 
@@ -385,6 +398,15 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         graph.onInputNodeCreated = this.onInputNodeCreated.bind(this)
         graph.onInputNodeRemoved = this.onInputNodeRemoved.bind(this)
+
+        graph.getInputValueFunction = this.getInputValueFunction.bind(this)
+        graph.setInputValueFunction = this.setInputValueFunction.bind(this)
+
+        // Bind all current input nodes
+        let inputNodes = graph.findNodesByType("graph/input")
+        for(let inputNode of inputNodes){
+            this.onInputNodeCreated(inputNode)
+        }
 
         if (this.lcanvas == null) {
             this.lcanvas = new LGraphCanvas(canvas, graph, {autoresize: false})
