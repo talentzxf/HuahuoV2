@@ -350,8 +350,27 @@ class EventGraphForm extends HTMLElement implements HHForm {
         console.log("Input removed")
     }
 
-    onInputNodeAdded(node){
+    valueChangeHandlerIds: Array<number> = new Array
+
+    onInputNodeCreated(node){
         console.log("Input node added:" + node)
+        let propertyName = node.properties.name
+        let propertyType = node.properties.type
+
+        let valueChangeHandlerId = this.targetComponent.registerValueChangeHandler(propertyName, (value)=>{
+            console.log("Node value changed:" + value)
+
+            node.graph.beforeChange()
+
+            node.setProperty("value", value)
+
+            node.setDirtyCanvas(true, true);
+
+            node.graph.afterChange()
+        })
+
+        this.valueChangeHandlerIds.push(valueChangeHandlerId)
+
     }
 
     onInputNodeRemoved(node){
@@ -364,7 +383,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         graph.onInputAdded = this.onInputAdded.bind(this)
         graph.onInputRemoved = this.onInputRemoved.bind(this)
 
-        graph.onInputNodeAdded = this.onInputNodeAdded.bind(this)
+        graph.onInputNodeCreated = this.onInputNodeCreated.bind(this)
         graph.onInputNodeRemoved = this.onInputNodeRemoved.bind(this)
 
         if (this.lcanvas == null) {

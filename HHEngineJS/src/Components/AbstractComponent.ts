@@ -82,8 +82,8 @@ abstract class AbstractComponent extends EventEmitter {
         return this.rawObj
     }
 
-    registerValueChangeHandler(valueNameString: string, callbackFunc: Function) {
-        this.valueChangeHandler.registerValueChangeHandler(valueNameString)(callbackFunc)
+    registerValueChangeHandler(valueNameString: string, callbackFunc: Function): number {
+        return this.valueChangeHandler.registerValueChangeHandler(valueNameString)(callbackFunc)
     }
 
     callHandlers(propertyName: string, val: any) {
