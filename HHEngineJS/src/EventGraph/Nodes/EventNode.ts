@@ -58,9 +58,7 @@ class EventNode extends AbstractNode {
 
             // if _this.graph is null, means the node has already been deleted. Need to remove the event listener
             // TODO: This remove should happen when the node is removed!
-            if(_this.graph){
-                _this.graph.afterChange()
-            }else{
+            if(!_this.graph){
                 targetEventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, _this.currentEventHandler)
             }
         })

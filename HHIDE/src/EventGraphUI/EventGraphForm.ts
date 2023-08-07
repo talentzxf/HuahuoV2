@@ -354,11 +354,14 @@ class EventGraphForm extends HTMLElement implements HHForm {
     setNodeValue(node, value){
         node.graph.beforeChange()
 
-        node.setProperty("value", value)
+        let prevSetInputValueFunction = node.graph.setInputValueFunction
+        node.graph.setInputValueFunction = null
+
+        node.setProperty("value", value) // Avoid impacting real component value.
+
+        node.graph.setInputValueFunction = prevSetInputValueFunction
 
         node.graph.change()
-
-        node.graph.afterChange()
     }
     onInputNodeCreated(node){
         let propertyName = node.properties.name
@@ -383,6 +386,17 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
     initLGraph(canvas: HTMLCanvasElement) {
         let graph = this.targetComponent.getGraph()
+
+        huahuoEngine.getActivePlayer().getEventBus().addEventHandler("Player", "setFrameId", ()=>{
+            let inputNodes = graph.findNodesByType("graph/input")
+            for(let inputNode of inputNodes){
+                let propertyName = inputNode.properties.name
+
+                if(inputNode.properties.value != this.targetComponent[propertyName]){
+                    this.setNodeValue(inputNode, this.targetComponent[propertyName])
+                }
+            }
+        })
 
         graph.onInputAdded = this.onInputAdded.bind(this)
         graph.onInputRemoved = this.onInputRemoved.bind(this)
