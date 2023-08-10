@@ -2,7 +2,6 @@ import {huahuoEngine} from "../EngineAPI";
 import {Vector2} from "hhcommoncomponents";
 import {PropertySheet, PropertyType, Logger} from "hhcommoncomponents"
 import * as paper from "paper";
-import {ShapeCenterSelector} from "./ShapeCenterSelector";
 import {ValueChangeHandler} from "./ValueChangeHandler";
 import {AbstractComponent} from "../Components/AbstractComponent";
 import {BaseShapeActor} from "../EventGraph/BaseShapeActor";
@@ -36,8 +35,6 @@ abstract class BaseShapeJS {
     private parent: BaseShapeJS = null
 
     private bornStoreId: string;
-
-    private shapeCenterSelector: ShapeCenterSelector;
 
     private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
@@ -619,8 +616,6 @@ abstract class BaseShapeJS {
         if (Module[this.getShapeName()]) // If the shape exists in cpp side, do the cast. Otherwise, use default BaseShape.
             this.rawObj = castObject(this.rawObj, Module[this.getShapeName()]);
 
-        this.shapeCenterSelector = new ShapeCenterSelector(this)
-
         // TODO: Should move property related code to IDE, but how???
         this.propertySheet = new PropertySheet();
 
@@ -1136,8 +1131,6 @@ abstract class BaseShapeJS {
         this.selected = false
 
         this.paperItem = null
-        this.shapeCenterSelector.selected = false
-
         for (let component of this.customComponents) {
             if (component == null)
                 continue

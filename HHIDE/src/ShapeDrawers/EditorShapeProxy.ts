@@ -4,6 +4,7 @@ import {getMethodsAndVariables} from "hhcommoncomponents"
 import {defaultShapeDrawer} from "./Shapes"
 import {AbstractComponent} from "hhenginejs/dist/src/Components/AbstractComponent";
 import {EditorComponentProxy} from "../ComponentProxy/ComponentProxy";
+import {ShapeCenterSelector} from "./ShapeCenterSelector";
 
 const BOUNDMARGIN: number = 10
 
@@ -40,6 +41,8 @@ class BaseShapeHandler{
     removePaperObj(){
         this.targetShape.removePaperObj.apply(this.proxy)
         this.updateBoundingBox()
+
+        this.shapeCenterSelector.selected = false
     }
 
     setText(inText: string){
@@ -199,6 +202,11 @@ class BaseShapeHandler{
         return origProperty
     }
 
+    shapeCenterSelector:ShapeCenterSelector = null
+    afterWASMReady(){
+        this.targetShape.afterWASMReady.apply(this.proxy)
+        this.shapeCenterSelector = new ShapeCenterSelector(this.targetShape)
+    }
 }
 class EditorShapeProxy{
     static CreateProxy(baseShape: BaseShapeJS, invokeShapeInit: boolean = true){

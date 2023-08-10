@@ -1,6 +1,6 @@
-import {BaseShapeJS} from "./BaseShapeJS";
-import {PropertySheet, PropertyType} from "hhcommoncomponents";
-import {ValueChangeHandler} from "./ValueChangeHandler";
+import {BaseShapeJS} from "hhenginejs/dist/src/Shapes/BaseShapeJS";
+import {PropertySheet, PropertyType} from "HHCommonComponents";
+import {ValueChangeHandler} from "hhenginejs";
 
 class ShapeCenterSelector {
     private _targetObj: BaseShapeJS;
@@ -89,7 +89,7 @@ class ShapeCenterSelector {
     }
 
     isSelectable() {
-        return true
+        return this._targetObj.isLocked()
     }
 
     getParent() {
