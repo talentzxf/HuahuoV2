@@ -67,6 +67,24 @@ class BaseShapeHandler{
         this.updateBoundingBox()
     }
 
+    _isShowCenterSelector = false
+    isShowCenterSelector(){
+        return this._isShowCenterSelector
+    }
+
+    hideCenterSelector(){
+        this._isShowCenterSelector = false
+        this.shapeCenterSelector.selected = false
+
+        this.updateBoundingBox()
+    }
+
+    showCenterSelector(){
+        this._isShowCenterSelector = true
+
+        this.updateBoundingBox()
+    }
+
     _isLocked = false
     isLocked(){
         return this._isLocked
@@ -159,10 +177,12 @@ class BaseShapeHandler{
                     rotationIndicatorCircle.onMouseLeave = defaultShapeDrawer.onHideRotationIndicator.bind(defaultShapeDrawer)
                 }
 
-                let centerCircle = new paperjs.Path.Circle(targetShape.pivotPosition, 10);
-                centerCircle.fillColor = new paper.Color("red");
-                centerCircle.data.meta = this.shapeCenterSelector;
-                this.boundingBoxGroup.addChild(centerCircle);
+                if(this.isShowCenterSelector()){
+                    let centerCircle = new paperjs.Path.Circle(targetShape.pivotPosition, 10);
+                    centerCircle.fillColor = new paper.Color("red");
+                    centerCircle.data.meta = this.shapeCenterSelector;
+                    this.boundingBoxGroup.addChild(centerCircle);
+                }
             }
 
             if (targetShape.paperItem)

@@ -126,6 +126,26 @@ class Inspector extends HTMLElement{
         return saveAsKeyFrameBtn
     }
 
+    createShowCenterSelectorButton(targetObj){
+        let showCenterSelectorButton = document.createElement("button")
+        showCenterSelectorButton.className = 'btn btn-primary btn-sm'
+        showCenterSelectorButton.innerText = i18n.t("inspector.ShowCenterSelector")
+
+        showCenterSelectorButton.onclick = function(){
+            if(!targetObj.isShowCenterSelector()){
+                showCenterSelectorButton.innerText = i18n.t("inspector.HideCenterSelector")
+
+                targetObj.showCenterSelector()
+            }else{
+                showCenterSelectorButton.innerText = i18n.t("inspector.ShowCenterSelector")
+
+                targetObj.hideCenterSelector()
+            }
+        }
+
+        return showCenterSelectorButton
+    }
+
     createLockButton(targetObj){
         let lockObjectButton = document.createElement("button")
         lockObjectButton.className = "btn btn-primary btn-sm"
@@ -199,6 +219,10 @@ class Inspector extends HTMLElement{
 
                 if(targetObj["isLocked"] && targetObj["isLocked"] instanceof Function){
                     basicFunctionsGroup.appendChild(this.createLockButton(targetObj))
+                }
+
+                if(targetObj["isShowCenterSelector"] && targetObj["isShowCenterSelector"] instanceof Function){
+                    basicFunctionsGroup.appendChild(this.createShowCenterSelectorButton(targetObj))
                 }
 
                 let componentDivs = document.createElement("div")

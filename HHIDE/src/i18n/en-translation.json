@@ -83,6 +83,8 @@
     "SaveAsKeyFrame": "Save as KeyFrame",
     "LockObject": "Lock Object",
     "UnlockObject": "Unlock Object",
+    "ShowCenterSelector": "Show center",
+    "HideCenterSelector": "Hide center",
     "AddComponent": "Add Component",
     "Type": "Type",
     "Name": "Name",

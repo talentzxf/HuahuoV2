@@ -83,6 +83,8 @@
     "SaveAsKeyFrame": "保存为关键帧",
     "LockObject": "锁定形状",
     "UnlockObject": "不锁定形状",
+    "ShowCenterSelector": "显示中心",
+    "HideCenterSelector": "隐藏中心",
     "AddComponent": "添加组件",
     "Type": "类型",
     "Name": "名字",
