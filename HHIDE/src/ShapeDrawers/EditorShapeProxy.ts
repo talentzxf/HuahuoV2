@@ -18,8 +18,10 @@ class BaseShapeHandler{
     proxy
     setProxy(proxy){
         this.proxy = proxy
-    }
 
+        this.shapeCenterSelector = new ShapeCenterSelector(this.proxy)
+    }
+    shapeCenterSelector:ShapeCenterSelector = null
     constructor(targetShape) {
         this.targetShape = targetShape
 
@@ -157,11 +159,10 @@ class BaseShapeHandler{
                     rotationIndicatorCircle.onMouseLeave = defaultShapeDrawer.onHideRotationIndicator.bind(defaultShapeDrawer)
                 }
 
-                let centerCircle = new paperjs.Path.Circle(targetShape.pivotPosition, 10)
-                centerCircle.fillColor = new paper.Color("red")
-                centerCircle.data.meta = targetShape.shapeCenterSelector
-
-                this.boundingBoxGroup.addChild(centerCircle)
+                let centerCircle = new paperjs.Path.Circle(targetShape.pivotPosition, 10);
+                centerCircle.fillColor = new paper.Color("red");
+                centerCircle.data.meta = this.shapeCenterSelector;
+                this.boundingBoxGroup.addChild(centerCircle);
             }
 
             if (targetShape.paperItem)
@@ -171,8 +172,8 @@ class BaseShapeHandler{
                 targetShape.paperItem.selected = false
             if (this.boundingBoxGroup)
                 this.boundingBoxGroup.remove()
-            if (targetShape.shapeCenterSelector)
-                targetShape.shapeCenterSelector.selected = false
+            if (this.shapeCenterSelector)
+                this.shapeCenterSelector.selected = false
         }
     }
 
@@ -200,12 +201,6 @@ class BaseShapeHandler{
         }
 
         return origProperty
-    }
-
-    shapeCenterSelector:ShapeCenterSelector = null
-    afterWASMReady(){
-        this.targetShape.afterWASMReady.apply(this.proxy)
-        this.shapeCenterSelector = new ShapeCenterSelector(this.targetShape)
     }
 }
 class EditorShapeProxy{

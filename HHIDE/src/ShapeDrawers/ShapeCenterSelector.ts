@@ -89,7 +89,8 @@ class ShapeCenterSelector {
     }
 
     isSelectable() {
-        return this._targetObj.isLocked()
+        // @ts-ignore
+        return !this._targetObj.isLocked()
     }
 
     getParent() {
