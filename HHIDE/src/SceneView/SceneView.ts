@@ -153,7 +153,7 @@ class SceneView extends HTMLElement {
             {
                 itemName: i18n.t("编辑帧时间图"),
                 onclick: function (e) {
-                    _this.openFrameEventGraphForm(_this.timeline)
+                    _this.openFrameEventGraphForm()
                 }
             }
         ])
@@ -181,8 +181,8 @@ class SceneView extends HTMLElement {
     }
 
     openFrameEventGraphForm(){
-        let eventGraphForm = formManager.openForm(EventGraphForm)
-        eventGraphForm.setTargetComponent()
+        // let eventGraphForm = formManager.openForm(EventGraphForm)
+        // eventGraphForm.setTargetComponent()
     }
 
     onWheel(evt: WheelEvent) {

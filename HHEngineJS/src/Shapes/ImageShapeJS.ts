@@ -22,6 +22,8 @@ class ImageShapeJS extends AbstractMediaShapeJS {
 
     resourceMD5: string
 
+    firstFrameDims
+
     set isAnimation(isAnimation: boolean) {
         this.rawObj.SetIsAnimation(isAnimation)
     }
@@ -51,11 +53,49 @@ class ImageShapeJS extends AbstractMediaShapeJS {
             let gif = parseGIF(binaryData)
             this.frames = decompressFrames(gif, true)
 
+            // If the disposalType == 2, we need to draw it on top of the previous frame.
+            // That means, we have to draw the gif from beginning to end here to get the real frame data.
+            let tempCanvas = document.createElement("canvas")
+            let tempCtx = tempCanvas.getContext("2d")
+
+            let gifCanvas = document.createElement("canvas")
+            let gifCtx = gifCanvas.getContext("2d", {willReadFrequently: true})
+
+            let frameImageData = null
+
             let elapsedTime = 0.0
             this.worldFrameAnimationFrameMap = new Map<number, number>()
             let animationFrameId = 0
             let lastWorldFrame = -1
+
+            this.firstFrameDims = this.frames[0].dims
+            gifCanvas.width = this.frames[0].dims.width
+            gifCanvas.height = this.frames[1].dims.height
+
+            let needDisposal = false
             for (let frame of this.frames) {
+                let dims = frame.dims
+                if (!frameImageData || dims.width != frameImageData.width || dims.height != frameImageData.height) {
+                    tempCanvas.width = dims.width
+                    tempCanvas.height = dims.height
+                    frameImageData = tempCtx.createImageData(dims.width, dims.height)
+                }
+
+                if (needDisposal) {
+                    gifCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height)
+                    needDisposal = false
+                }
+
+                frameImageData.data.set(frame.patch)
+                tempCtx.putImageData(frameImageData, 0, 0)
+                gifCtx.drawImage(tempCanvas, dims.left, dims.top)
+
+                frame["realImageData"] = gifCtx.getImageData(0, 0, gifCanvas.width, gifCanvas.height).data
+
+                if (frame.disposalType === 2) {
+                    needDisposal = true
+                }
+
                 let elapsedFrames = Math.floor(elapsedTime * GlobalConfig.fps);
 
                 for (let frameId = lastWorldFrame + 1; frameId <= elapsedFrames; frameId++) {
@@ -142,9 +182,9 @@ class ImageShapeJS extends AbstractMediaShapeJS {
                 let raster = this.paperItem as paper.Raster
                 raster.clear()
 
-                let dims = frame.dims
+                let dims = this.firstFrameDims
                 let frameImageData = raster.createImageData(new paper.Size(dims.width, dims.height))
-                frameImageData.data.set(frame.patch)
+                frameImageData.data.set(frame["realImageData"])
                 raster.setImageData(frameImageData, new paper.Point(0, 0))
 
                 this.lastAnimationFrame = playingAnimationFrameId

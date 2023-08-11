@@ -11,3 +11,6 @@
 [submodule "HuahuoEngines"]
 	path = HuahuoEngines
 	url = git@github.com:talentzxf/HuahuoEngines.git
+[submodule "Libs/gifuct-js"]
+	path = Libs/gifuct-js
+	url = git@github.com:talentzxf/gifuct-js.git
