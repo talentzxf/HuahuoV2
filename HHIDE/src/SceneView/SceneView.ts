@@ -10,6 +10,8 @@ import {fileLoader} from "./FileLoader";
 import {findParentContent, findParentPanel, HHSideBar} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
 import {SVGFiles} from "../Utilities/Svgs";
+import {formManager} from "../Utilities/FormManager"
+import {EventGraphForm} from "../EventGraphUI/EventGraphForm";
 
 function allReadyExecute(fn: Function) {
     i18n.ExecuteAfterInited(
@@ -147,6 +149,12 @@ class SceneView extends HTMLElement {
                 onclick: function (e) {
                     _this.markAsAnimationEnd(_this.timeline)
                 }
+            },
+            {
+                itemName: i18n.t("编辑帧时间图"),
+                onclick: function (e) {
+                    _this.openFrameEventGraphForm(_this.timeline)
+                }
             }
         ])
 
@@ -170,6 +178,11 @@ class SceneView extends HTMLElement {
             this.animationPlayer = new EditorPlayer(this)
             huahuoEngine.setActivePlayer(this.animationPlayer)
         }
+    }
+
+    openFrameEventGraphForm(){
+        let eventGraphForm = formManager.openForm(EventGraphForm)
+        eventGraphForm.setTargetComponent()
     }
 
     onWheel(evt: WheelEvent) {
@@ -335,6 +348,7 @@ class SceneView extends HTMLElement {
     }
 
     panningStartPoint: paper.Point
+
     onMouseDown(evt: MouseEvent) {
         // Operating in this sceneview, set the storeId of this sceneview as default.
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId)
@@ -361,7 +375,7 @@ class SceneView extends HTMLElement {
                 this.currentShapeDrawer.onMouseMove(evt)
             }
         } else {
-            if(this.panningStartPoint != null){
+            if (this.panningStartPoint != null) {
                 let curView = (window.paper as any).view
 
                 let currentPoint = curView.viewToProject(new paper.Point(evt.offsetX, evt.offsetY))
