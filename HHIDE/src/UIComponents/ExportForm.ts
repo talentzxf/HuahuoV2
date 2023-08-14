@@ -20,6 +20,11 @@ class ExportImageForm extends BaseForm {
     exportBtn: HTMLButtonElement
     closeBtn: HTMLButtonElement
 
+    scaleInput: HTMLInputElement
+    nameInput: HTMLInputElement
+
+    form: HTMLFormElement
+
     connectedCallback() {
         this.style.position = "absolute"
         this.style.top = "50%"
@@ -49,15 +54,33 @@ class ExportImageForm extends BaseForm {
             "   <div id='preview-canvas-container'>" +
             "       <canvas id='preview-canvas' style='border: 1px solid blue'></canvas>" +
             "   </div>" +
+            "   <div class='input-group mb-3'>" +
+            "       <div class='input-group-prepend'>" +
+            "           <span class='input-group-text' id='basic-addon1'>Scale</span>" +
+            "       </div>" +
+            "       <input id='scale' type='number' style='margin: 0px; height:38px' class='form-control' min='0.1' max='2.0' step='0.1' value='1.0' aria-label='scale' aria-describedby='basic-addon1'>" +
+            "   </div>" +
+            "   <div class='input-group mb-3'>" +
+            "       <div class='input-group-prepend'>" +
+            "           <span class='input-group-text' id='basic-addon2'>Name</span>" +
+            "       </div>" +
+            "       <input id='name' type='text' style='margin: 0px; height:38px' class='form-control' value='huahuo_exported.gif' aria-label='name' aria-describedby='basic-addon2'>" +
+            "   </div>" +
             "   <input style='background-color: #6396D8' id='Export' type='button' value='Export'>" +
             "   <input style='background-color: #6396D8' id='Cancel' type='button' value='Cancel'>" +
             "   </form>"
         this.appendChild(this.listDiv)
 
+        this.form = this.listDiv.querySelector("form")
+
         this.previewCanvas = this.listDiv.querySelector("#preview-canvas")
         this.previewCanvasContainer = this.listDiv.querySelector("#preview-canvas-container")
         this.exportBtn = this.listDiv.querySelector("#Export")
         this.exportBtn.addEventListener("mousedown", this.exportImage.bind(this))
+
+        this.nameInput = this.listDiv.querySelector("#name")
+        this.scaleInput = this.listDiv.querySelector("#scale")
+        this.scaleInput.addEventListener("change", this.onScaleChanged.bind(this))
         this.closeBtn = this.listDiv.querySelector("#closeBtn")
         this.closeBtn.addEventListener("mousedown", this.closeForm.bind(this))
 
@@ -118,6 +141,17 @@ class ExportImageForm extends BaseForm {
         RenderPreviewCanvas(mainStoreId, this.previewAnimationPlayer, this.previewCanvas, frameId)
     }
 
+    onScaleChanged(){
+        let newScale = Number.parseFloat(this.scaleInput.value)
+
+        if(newScale > 1.0){
+            this.style.width = this.clientWidth * newScale + "px"
+
+            this.form.style.width = this.form.clientWidth * newScale + "px"
+        }
+
+    }
+
     exportImage() {
         let mainSceneView: SceneView = document.querySelector("#mainScene")
         let mainStoreId = mainSceneView.storeId
@@ -141,7 +175,16 @@ class ExportImageForm extends BaseForm {
         gif.on("finished", (blob) => {
             console.log("Get the file!")
 
-            saveAs(blob, "huahuo_exported.gif")
+            let name = _this.nameInput.value
+            if(name == null){
+                name = "huahuo_exported.gif"
+            }
+
+            if(!name.endsWith(".gif")){
+                name = name + ".gif"
+            }
+
+            saveAs(blob, name)
         })
 
         let frameId = 0
