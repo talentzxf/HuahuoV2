@@ -25,6 +25,10 @@ class ExportImageForm extends BaseForm {
 
     form: HTMLFormElement
 
+    originalFormWidth: number = 0
+    originalFormHeight: number = 0
+    originalCanvasContainerWidth: number = 0
+
     connectedCallback() {
         this.style.position = "absolute"
         this.style.top = "50%"
@@ -51,9 +55,6 @@ class ExportImageForm extends BaseForm {
             "           <img class='far fa-circle-xmark'>" +
             "       </div>" +
             "   </div>" +
-            "   <div id='preview-canvas-container'>" +
-            "       <canvas id='preview-canvas' style='border: 1px solid blue'></canvas>" +
-            "   </div>" +
             "   <div class='input-group mb-3'>" +
             "       <div class='input-group-prepend'>" +
             "           <span class='input-group-text' id='basic-addon1'>Scale</span>" +
@@ -65,6 +66,9 @@ class ExportImageForm extends BaseForm {
             "           <span class='input-group-text' id='basic-addon2'>Name</span>" +
             "       </div>" +
             "       <input id='name' type='text' style='margin: 0px; height:38px' class='form-control' value='huahuo_exported.gif' aria-label='name' aria-describedby='basic-addon2'>" +
+            "   </div>" +
+            "   <div id='preview-canvas-container'>" +
+            "       <canvas id='preview-canvas' style='border: 1px solid blue'></canvas>" +
             "   </div>" +
             "   <input style='background-color: #6396D8' id='Export' type='button' value='Export'>" +
             "   <input style='background-color: #6396D8' id='Cancel' type='button' value='Cancel'>" +
@@ -83,6 +87,10 @@ class ExportImageForm extends BaseForm {
         this.scaleInput.addEventListener("change", this.onScaleChanged.bind(this))
         this.closeBtn = this.listDiv.querySelector("#closeBtn")
         this.closeBtn.addEventListener("mousedown", this.closeForm.bind(this))
+
+        this.originalFormWidth = this.form.clientWidth
+        this.originalFormHeight = this.form.clientHeight
+        this.originalCanvasContainerWidth = this.previewCanvasContainer.clientWidth
 
         this.previewAnimationPlayer = new Player()
         let prevCanvas = renderEngine2D.getDefaultCanvas()
@@ -144,12 +152,12 @@ class ExportImageForm extends BaseForm {
     onScaleChanged(){
         let newScale = Number.parseFloat(this.scaleInput.value)
 
-        if(newScale > 1.0){
-            this.style.width = this.clientWidth * newScale + "px"
-
-            this.form.style.width = this.form.clientWidth * newScale + "px"
+        if(newScale >= 1.0){
+            this.form.style.width = this.originalFormWidth * newScale + "px"
+            this.previewCanvasContainer.style.width = this.originalCanvasContainerWidth * newScale + "px"
+        }else{
+            this.previewCanvasContainer.style.width = this.originalCanvasContainerWidth * newScale + "px"
         }
-
     }
 
     exportImage() {
