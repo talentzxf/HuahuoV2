@@ -22,6 +22,8 @@ class HHToolBar extends HTMLElement {
     elementListButton: HTMLButtonElement
     uploadButton: HTMLButtonElement
 
+    exportImageButton: HTMLButtonElement
+
     createButton(svgFile, title, onClick){
         let btn = document.createElement("button")
         btn.className = "btn btn-outline-secondary"
@@ -58,6 +60,8 @@ class HHToolBar extends HTMLElement {
             this.uploadButton = this.createButton(SVGFiles.uploadBtn, i18n.t("hint.uploadProject"), ()=>{
                 this.uploadProject()
             })
+
+            this.exportImageButton = this.createButton(SVGFiles.exportImage, i18n.t("hint.exportImage"))
         }.bind(this))
     }
 
