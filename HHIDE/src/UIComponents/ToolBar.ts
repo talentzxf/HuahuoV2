@@ -11,6 +11,7 @@ import {ProjectInfoForm} from "./ProjectInfoForm";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
 import {ExportImageForm} from "./ExportForm";
+import {fileLoader} from "../SceneView/FileLoader";
 
 @CustomElement({
     selector: "hh-tool-bar"
@@ -104,7 +105,13 @@ class HHToolBar extends HTMLElement {
 
         hiddenFileButton.addEventListener("change", (evt) => {
             let fName = hiddenFileButton.value
-            projectManager.load(fName, evt)
+
+            if(fName.endsWith(".hua")){
+                projectManager.load(fName, evt)
+            }else if(fName.match(/\.(jpg|jpeg|png|gif|svg|webp)$/i)){ // Is Image, load image.
+                let file = (<HTMLInputElement>evt.target).files[0];
+                fileLoader.loadImageFile(file)
+            }
         })
     }
 
