@@ -7,6 +7,12 @@ import {RenderPreviewCanvas} from "./ProjectInfoForm";
 import {GlobalConfig} from "hhenginejs";
 import {saveAs} from 'file-saver';
 
+function getPaperJs(){
+    // if(paper.project)
+    //     return paper
+    return window.paper
+}
+
 @CustomElement({
     selector: "hh-export-image"
 })
@@ -28,6 +34,7 @@ class ExportImageForm extends BaseForm {
     originalFormWidth: number = 0
     originalFormHeight: number = 0
     originalCanvasContainerWidth: number = 0
+    originalCanvasContainerHeight: number = 0
 
     connectedCallback() {
         this.style.position = "absolute"
@@ -91,6 +98,7 @@ class ExportImageForm extends BaseForm {
         this.originalFormWidth = this.form.clientWidth
         this.originalFormHeight = this.form.clientHeight
         this.originalCanvasContainerWidth = this.previewCanvasContainer.clientWidth
+        this.originalCanvasContainerHeight = this.previewCanvasContainer.clientHeight
 
         this.previewAnimationPlayer = new Player()
         let prevCanvas = renderEngine2D.getDefaultCanvas()
@@ -138,6 +146,23 @@ class ExportImageForm extends BaseForm {
         this.RedrawFrame()
     }
 
+    waterMarkText = null
+    drawWaterMark(){
+        if(this.waterMarkText == null){
+            let prevCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
+            let paper = getPaperJs()
+            this.waterMarkText = new paper.PointText(new paper.Point(0,100))
+            this.waterMarkText.fontSize = 50
+            this.waterMarkText.fillColor = new paper.Color("black")
+            this.waterMarkText.strokeColor = new paper.Color("black")
+            this.waterMarkText.content = "Created By: https://www.huahuo.online"
+            renderEngine2D.setDefaultCanvas(prevCanvas)
+        }
+
+        this.waterMarkText.position.x = 0
+        this.waterMarkText.position.y = this.previewCanvas.height - this.waterMarkText.getBounds().height
+    }
+
     RedrawFrame(frameId = null) {
         let mainSceneView: SceneView = document.querySelector("#mainScene")
         let mainStoreId = mainSceneView.storeId
@@ -147,6 +172,8 @@ class ExportImageForm extends BaseForm {
         }
 
         RenderPreviewCanvas(mainStoreId, this.previewAnimationPlayer, this.previewCanvas, frameId)
+
+        this.drawWaterMark()
     }
 
     onScaleChanged(){
@@ -205,7 +232,7 @@ class ExportImageForm extends BaseForm {
 
         let captureGifFrameStep = function () {
             _this.previewAnimationPlayer.setFrameId(frameId)
-
+            _this.drawWaterMark()
             gif.addFrame(_this.previewCanvas, {delay: 1000.0 / GlobalConfig.fps, copy: true})
 
             if (frameId < maxFrames) {
