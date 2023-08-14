@@ -10,6 +10,7 @@ import {formManager} from "../Utilities/FormManager";
 import {ProjectInfoForm} from "./ProjectInfoForm";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
+import {ExportImageForm} from "./ExportForm";
 
 @CustomElement({
     selector: "hh-tool-bar"
@@ -61,7 +62,9 @@ class HHToolBar extends HTMLElement {
                 this.uploadProject()
             })
 
-            this.exportImageButton = this.createButton(SVGFiles.exportImage, i18n.t("hint.exportImage"))
+            this.exportImageButton = this.createButton(SVGFiles.exportImage, i18n.t("hint.exportImage"), ()=>{
+                this.exportImage()
+            })
         }.bind(this))
     }
 
@@ -142,6 +145,10 @@ class HHToolBar extends HTMLElement {
 
             form.setTitle(i18n.t("allElements"))
         })
+    }
+
+    exportImage(){
+        formManager.openForm(ExportImageForm)
     }
 }
 

@@ -14,3 +14,6 @@
 [submodule "Libs/gifuct-js"]
 	path = Libs/gifuct-js
 	url = git@github.com:talentzxf/gifuct-js.git
+[submodule "Libs/gif.js"]
+	path = Libs/gif.js
+	url = https://github.com/jnordberg/gif.js.git

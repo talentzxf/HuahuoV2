@@ -2,7 +2,7 @@ import {HHForm} from "../Utilities/HHForm";
 import {CustomElement} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {renderEngine2D, huahuoEngine, Player} from "hhenginejs"
-import {SceneView} from "../SceneView/SceneView";
+import {RenderPreviewCanvas} from "./ProjectInfoForm";
 
 // TODO: A lot of duplication code with ProjectInfoForm.
 @CustomElement({
@@ -11,7 +11,7 @@ import {SceneView} from "../SceneView/SceneView";
 class UploadElementForm extends HTMLElement implements HHForm {
     selector: string;
 
-    onOKAction: (isShareable: boolean, isEditable: boolean)=>void;
+    onOKAction: (isShareable: boolean, isEditable: boolean) => void;
 
     listDiv
     closeBtn: HTMLButtonElement
@@ -119,11 +119,11 @@ class UploadElementForm extends HTMLElement implements HHForm {
         this.cancelBtn.onmouseout = this.mouseOutBtn.bind(this)
     }
 
-    mouseEnter(evt: MouseEvent){
+    mouseEnter(evt: MouseEvent) {
         (evt.target as HTMLElement).style.backgroundColor = '#267ded'
     }
 
-    mouseOutBtn(evt: MouseEvent){
+    mouseOutBtn(evt: MouseEvent) {
         (evt.target as HTMLElement).style.backgroundColor = '#6396D8'
     }
 
@@ -132,8 +132,8 @@ class UploadElementForm extends HTMLElement implements HHForm {
         evt.preventDefault()
 
         if (this.onOKAction) {
-            let isShareable:boolean = this.listDiv.querySelector('input[name="shareable"]:checked').value == "true"
-            let isEditable:boolean = this.listDiv.querySelector('input[name="editable"]:checked').value == "true"
+            let isShareable: boolean = this.listDiv.querySelector('input[name="shareable"]:checked').value == "true"
+            let isEditable: boolean = this.listDiv.querySelector('input[name="editable"]:checked').value == "true"
             this.onOKAction(isShareable, isEditable)
         }
 
@@ -173,26 +173,10 @@ class UploadElementForm extends HTMLElement implements HHForm {
         if (null == this.eleStoreId)
             return
 
-        let prevStore = huahuoEngine.GetCurrentStoreId()
-        let previousCanvas = null
+        let currentLayer = huahuoEngine.GetCurrentLayer()
+        let currentFrameId = currentLayer.GetCurrentFrame()
 
-        try{
-            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.eleStoreId)
-
-            let currentLayer = huahuoEngine.GetCurrentLayer()
-            let currentFrameId = currentLayer.GetCurrentFrame()
-            previousCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
-
-            this.previewAnimationPlayer.storeId = this.eleStoreId
-            this.previewAnimationPlayer.loadShapesFromStore()
-            this.previewAnimationPlayer.setFrameId(currentFrameId)
-        }finally {
-            if (previousCanvas)
-                renderEngine2D.setDefaultCanvas(previousCanvas)
-
-            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStore)
-        }
-
+        RenderPreviewCanvas(this.eleStoreId, this.previewAnimationPlayer, this.previewCanvas, currentFrameId)
     }
 
     closeForm() {

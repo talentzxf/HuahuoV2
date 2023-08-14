@@ -101,6 +101,7 @@ let moduleExports = (env) => {
                     {from: "./src/i18n", to: "i18n"},
                     {from: "./src/test_lgraph.html", to: "test_lgraph.html"},
                     {from: "./static", to: "static"},
+                    {from: "../Libs/gif.js/dist", to:"static/gif.js/dist"},
                     {from: "../Libs/litegraph.js/css", to: "static"}
                 ],
             }),

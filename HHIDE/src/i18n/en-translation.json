@@ -175,7 +175,8 @@
     "undo": "Undo",
     "redo": "Redo",
     "shortcuts": "Configure shortcuts",
-    "library": "Element library"
+    "library": "Element library",
+    "exportImage": "Export Image"
   },
   "project": {
     "delete": "Delete Project",

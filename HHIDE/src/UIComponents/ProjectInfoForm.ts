@@ -1,7 +1,5 @@
 import {CustomElement} from "hhcommoncomponents";
 import {renderEngine2D, Player, huahuoEngine} from "hhenginejs"
-import {CSSUtils} from "../Utilities/CSSUtils";
-import {HHForm} from "../Utilities/HHForm";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {SVGFiles} from "../Utilities/Svgs";
 import {SnapshotUtils} from "../Utilities/SnapshotUtils";
@@ -12,7 +10,7 @@ import {BaseForm} from "./BaseForm";
 @CustomElement({
     selector: "hh-project-info"
 })
-class ProjectInfoForm extends BaseForm{
+class ProjectInfoForm extends BaseForm {
     projectNameInput: HTMLInputElement
     projectDescriptionInput: HTMLTextAreaElement
     previewSceneContainer: HTMLDivElement
@@ -23,22 +21,22 @@ class ProjectInfoForm extends BaseForm{
 
     onOKCallback: Function;
 
-    projectNameCheckImg:HTMLImageElement
+    projectNameCheckImg: HTMLImageElement
     okImg: string = SVGFiles.okImg
     notOkImg: string = SVGFiles.notOKImg
 
     _isNameValid: boolean = false
 
-    set isNameValid(val:boolean){
+    set isNameValid(val: boolean) {
         this._isNameValid = val
-        if(val){
+        if (val) {
             this.projectNameCheckImg.src = this.okImg
-        }else{
+        } else {
             this.projectNameCheckImg.src = this.notOkImg
         }
     }
 
-    connectedCallback(){
+    connectedCallback() {
         super.connectedCallback()
 
         let formDiv = document.createElement("div")
@@ -76,18 +74,18 @@ class ProjectInfoForm extends BaseForm{
 
         this.projectNameInput = this.querySelector("#projectname")
         let _this = this
-        this.projectNameInput.addEventListener("input", (evt)=>{
+        this.projectNameInput.addEventListener("input", (evt) => {
             let candidateName = _this.projectNameInput.value
-            if(_this.validateText(candidateName)){
+            if (_this.validateText(candidateName)) {
 
                 api.checkFileNameExistence(candidateName).then((result) => {
-                    if(result && result.data && result.data["exist"] == false){ // The project name doesn't exist in the system now. Name is valid
+                    if (result && result.data && result.data["exist"] == false) { // The project name doesn't exist in the system now. Name is valid
                         _this.isNameValid = true
-                    }else{
+                    } else {
                         _this.isNameValid = false
                     }
                 })
-            }else{
+            } else {
                 _this.isNameValid = false
             }
         })
@@ -100,12 +98,12 @@ class ProjectInfoForm extends BaseForm{
         let prevCanvas = renderEngine2D.getDefaultCanvas()
         renderEngine2D.init(this.previewCanvas)
 
-        if(prevCanvas) // Restore the previous canvas as default. Or else functionality will be broken.
+        if (prevCanvas) // Restore the previous canvas as default. Or else functionality will be broken.
             renderEngine2D.setDefaultCanvas(prevCanvas)
 
         let [initW, initH] = renderEngine2D.getInitCanvasWH()
 
-        if(initW > 0){
+        if (initW > 0) {
             renderEngine2D.resize(this.previewCanvas, initW, initH)
         }
 
@@ -115,23 +113,23 @@ class ProjectInfoForm extends BaseForm{
         resizeObserver.observe(this.previewSceneContainer)
     }
 
-    validateText(val: string):boolean{
+    validateText(val: string): boolean {
         return /^[a-zA-Z0-9_-]+$/.test(val)
     }
 
-    onOK(evt){
+    onOK(evt) {
         evt.stopPropagation()
         evt.preventDefault()
 
         let projectName = this.projectNameInput.value
-        if(!this.validateText(projectName)){
+        if (!this.validateText(projectName)) {
             return;
         }
 
         let coverPageBinary = SnapshotUtils.takeSnapshot(this.previewCanvas)
         projectInfo.Setup(projectName, this.projectDescriptionInput.value, coverPageBinary)
 
-        if(this.onOKCallback){
+        if (this.onOKCallback) {
             this.onOKCallback()
             this.closeForm()
         }
@@ -141,14 +139,14 @@ class ProjectInfoForm extends BaseForm{
         this.style.display = "none"
     }
 
-    OnResize(){
-        if(window.getComputedStyle(this.parentElement).display == "none")
+    OnResize() {
+        if (window.getComputedStyle(this.parentElement).display == "none")
             return;
 
         let containerWidth = this.previewSceneContainer.clientWidth
         let containerHeight = this.previewSceneContainer.clientHeight
 
-        if(containerWidth <= 0 || containerHeight <= 0)
+        if (containerWidth <= 0 || containerHeight <= 0)
             return
 
         let margin = 0
@@ -169,31 +167,38 @@ class ProjectInfoForm extends BaseForm{
         this.RedrawFrame()
     }
 
-    RedrawFrame(){
-        let prevPlayer = huahuoEngine.getActivePlayer()
-
-        huahuoEngine.setActivePlayer(this.previewAnimationPlayer)
-        let prevStore = huahuoEngine.GetCurrentStoreId()
-
+    RedrawFrame() {
         let mainSceneView: SceneView = document.querySelector("#mainScene")
         let mainStoreId = mainSceneView.storeId
-        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainStoreId) // Only render the main store.i.e. the 1st store.
-
         let currentLayer = huahuoEngine.GetCurrentLayer()
         let currentFrameId = currentLayer.GetCurrentFrame()
-        let previousCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
 
-        this.previewAnimationPlayer.storeId = mainStoreId
-        this.previewAnimationPlayer.loadShapesFromStore()
-        this.previewAnimationPlayer.setFrameId(currentFrameId)
+        RenderPreviewCanvas(mainStoreId, this.previewAnimationPlayer, this.previewCanvas, currentFrameId)
+    }
+}
 
-        if(previousCanvas)
+function RenderPreviewCanvas(storeId, player, canvas, frameId){
+    let prevPlayer = huahuoEngine.getActivePlayer()
+    let prevStore = huahuoEngine.GetCurrentStoreId()
+
+    let previousCanvas = null
+
+    try{
+        huahuoEngine.setActivePlayer(player)
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(storeId) // Only render the main store.i.e. the 1st store.
+        previousCanvas = renderEngine2D.setDefaultCanvas(canvas)
+
+        player.storeId = storeId
+        player.loadShapesFromStore()
+        player.setFrameId(frameId)
+    }finally {
+        if (previousCanvas)
             renderEngine2D.setDefaultCanvas(previousCanvas)
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStore)
-        if(prevPlayer){
+        if (prevPlayer) {
             huahuoEngine.setActivePlayer(prevPlayer)
         }
     }
 }
 
-export {ProjectInfoForm}
+export {ProjectInfoForm, RenderPreviewCanvas}
