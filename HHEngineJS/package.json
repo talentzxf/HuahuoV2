@@ -5,7 +5,7 @@
   "main": "./dist/hhenginejs.bundle",
   "scripts": {
     "build": "webpack",
-    "start": "webpack serve --open"
+    "start": "webpack serve --open --env goal=local"
   },
   "author": "vincentzhang",
   "license": "ISC",
@@ -14,6 +14,7 @@
     "@webgpu/types": "^0.1.26",
     "gifuct-js": "^2.1.2",
     "hhcommoncomponents": "file:../HHCommonComponents",
+    "html-webpack-plugin": "^5.5.3",
     "litegraph.js": "file:../Libs/litegraph.js",
     "paper": "^0.12.15",
     "reflect-metadata": "^0.1.13",
@@ -23,9 +24,13 @@
     "typescript-declaration-webpack-plugin": "^0.2.2",
     "uuid": "^8.3.2",
     "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2"
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.15.1"
   },
   "peerDependencies": {
     "hhcommoncomponents": "file:../HHCommonComponents"
+  },
+  "dependencies": {
+    "copy-webpack-plugin": "^11.0.0"
   }
 }
