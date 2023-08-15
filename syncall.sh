@@ -1,4 +1,5 @@
 git pull
+git submodule update --init --recursive
 cd Libs/litegraph.js
 git checkout master
 git pull

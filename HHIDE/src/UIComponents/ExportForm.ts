@@ -148,19 +148,26 @@ class ExportImageForm extends BaseForm {
 
     waterMarkText = null
     drawWaterMark(){
-        if(this.waterMarkText == null){
-            let prevCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
-            let paper = getPaperJs()
-            this.waterMarkText = new paper.PointText(new paper.Point(0,100))
-            this.waterMarkText.fontSize = 50
-            this.waterMarkText.fillColor = new paper.Color("black")
-            this.waterMarkText.strokeColor = new paper.Color("black")
-            this.waterMarkText.content = "Created By: https://www.huahuo.online"
+        let prevCanvas = renderEngine2D.setDefaultCanvas(this.previewCanvas)
+
+        try{
+            if(this.waterMarkText == null){
+                let paper = getPaperJs()
+                this.waterMarkText = new paper.PointText(new paper.Point(0,100))
+                this.waterMarkText.fontSize = 50
+                this.waterMarkText.fillColor = new paper.Color("black")
+                this.waterMarkText.strokeColor = new paper.Color("black")
+                this.waterMarkText.content = "Created By: https://www.huahuo.online"
+            }
+
+            let globalDim = renderEngine2D.getGlobalPosition(this.previewCanvas.width, this.previewCanvas.height)
+
+            this.waterMarkText.position.x = globalDim.x - this.waterMarkText.getBounds().width
+            this.waterMarkText.position.y = globalDim.y - this.waterMarkText.getBounds().height
+        }finally {
             renderEngine2D.setDefaultCanvas(prevCanvas)
         }
 
-        this.waterMarkText.position.x = 0
-        this.waterMarkText.position.y = this.previewCanvas.height - this.waterMarkText.getBounds().height
     }
 
     RedrawFrame(frameId = null) {
