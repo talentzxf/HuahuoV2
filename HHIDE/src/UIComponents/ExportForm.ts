@@ -101,6 +101,8 @@ class ExportImageForm extends BaseForm {
         this.originalCanvasContainerHeight = this.previewCanvasContainer.clientHeight
 
         this.previewAnimationPlayer = new Player()
+        this.previewAnimationPlayer.isInEditor = false
+
         let prevCanvas = renderEngine2D.getDefaultCanvas()
         renderEngine2D.init(this.previewCanvas, true)
         if (prevCanvas) {
@@ -253,11 +255,11 @@ class ExportImageForm extends BaseForm {
         captureGifFramePromise.then(() => {
             gif.render()
 
+            if(previousCanvas)
+                renderEngine2D.setDefaultCanvas(previousCanvas)
             huahuoEngine.setActivePlayer(prevPlayer)
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(currentStoreId)
             huahuoEngine.getActivePlayer().setFrameId(currentFrameId)
-
-            renderEngine2D.setDefaultCanvas(previousCanvas)
         })
         requestAnimationFrame(captureGifFrameStep)
     }

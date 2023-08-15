@@ -10,6 +10,7 @@
   "author": "vincentzhang",
   "license": "ISC",
   "devDependencies": {
+    "@box2d/core": "^0.10.0",
     "@webgpu/types": "^0.1.26",
     "gifuct-js": "^2.1.2",
     "hhcommoncomponents": "file:../HHCommonComponents",

@@ -1,8 +1,6 @@
-import {BaseShapeJS} from "hhenginejs";
-import {relaxRectangle} from "hhcommoncomponents"
-import {getMethodsAndVariables} from "hhcommoncomponents"
+import {AbstractComponent, BaseShapeJS, huahuoEngine} from "hhenginejs";
+import {getMethodsAndVariables, relaxRectangle} from "hhcommoncomponents"
 import {defaultShapeDrawer} from "./Shapes"
-import {AbstractComponent} from "hhenginejs/dist/src/Components/AbstractComponent";
 import {EditorComponentProxy} from "../ComponentProxy/ComponentProxy";
 import {ShapeCenterSelector} from "./ShapeCenterSelector";
 
@@ -114,7 +112,7 @@ class BaseShapeHandler{
     updateBoundingBox() {
         let targetShape = this.targetShape
 
-        if (targetShape.isSelected) {
+        if (targetShape.isSelected && huahuoEngine.getActivePlayer().isInEditor) {
             {
                 if (this.boundingBoxGroup)
                     this.boundingBoxGroup.remove()

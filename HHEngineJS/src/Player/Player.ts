@@ -7,27 +7,37 @@ import {EventParam} from "hhcommoncomponents";
 import {PropertyType, EventEmitter} from "hhcommoncomponents";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 
-class Player extends EventEmitter{
+class Player extends EventEmitter {
     animationFrame = -1
     animationStartTime = -1
 
     lastAnimateTime = -1
     isPlaying: boolean = false
+
+    _isInEditor: boolean = true
     layerShapesManager: LayerShapesManager;
 
     playStartTime: number = 0
 
     public currentlyPlayingFrameId: number = 0
 
-    set storeId(val: string){
-        if(this.layerShapesManager == null){
+    set isInEditor(val: boolean) {
+        this._isInEditor = val
+    }
+
+    get isInEditor(): boolean {
+        return this._isInEditor
+    }
+
+    set storeId(val: string) {
+        if (this.layerShapesManager == null) {
             this.layerShapesManager = new LayerShapesManager(val)
         }
         this.layerShapesManager.storeId = val
     }
 
-    get storeId():string{
-        if(this.layerShapesManager == null)
+    get storeId(): string {
+        if (this.layerShapesManager == null)
             return null
         return this.layerShapesManager.storeId
     }
@@ -35,40 +45,40 @@ class Player extends EventEmitter{
     constructor(storeId?) {
         super(true) // Player events are global
 
-        if(storeId){
+        if (storeId) {
             this.layerShapesManager = new LayerShapesManager(storeId)
         }
     }
 
-    getLayerShapes(layer){
+    getLayerShapes(layer) {
         return this.layerShapesManager.getLayerShapes(layer)
     }
 
-    loadShapesFromStore(){
+    loadShapesFromStore() {
         return this.layerShapesManager.loadShapesFromStore(null)
     }
 
-    updateAllShapes(force: boolean = false){
+    updateAllShapes(force: boolean = false) {
         this.layerShapesManager.updateAllShapes(force)
     }
 
-    getJSShapeFromRawShape(rawObj, recursive: boolean = false){
-        if(!IsValidWrappedObject(rawObj))
+    getJSShapeFromRawShape(rawObj, recursive: boolean = false) {
+        if (!IsValidWrappedObject(rawObj))
             return null
 
         return this.layerShapesManager.getJSShapeFromRawShape(rawObj, recursive)
     }
 
-    animationFrameStep(timeStamp){
-        if(this.isPlaying){
-            if(this.animationStartTime < 0){
+    animationFrameStep(timeStamp) {
+        if (this.isPlaying) {
+            if (this.animationStartTime < 0) {
                 this.animationStartTime = timeStamp
             }
             let elapsedTime = timeStamp - this.lastAnimateTime
 
             console.log("Elapsed time:" + elapsedTime)
 
-            if(this.lastAnimateTime < 0 || elapsedTime > 1000.0/GlobalConfig.fps){
+            if (this.lastAnimateTime < 0 || elapsedTime > 1000.0 / GlobalConfig.fps) {
                 let store = huahuoEngine.GetStoreById(this.storeId)
                 let activeFrames = store.GetMaxFrameId() + 1;
                 let activePlayTime = activeFrames / GlobalConfig.fps;
@@ -77,7 +87,7 @@ class Player extends EventEmitter{
                 this.setFrameId(frameId)
                 console.log("Rendering")
                 this.lastAnimateTime = timeStamp
-            }else{
+            } else {
                 console.log("Skipped Rendering")
             }
             requestAnimationFrame(this.animationFrameStep.bind(this));
@@ -85,12 +95,12 @@ class Player extends EventEmitter{
     }
 
     @GraphEvent(true)
-    setFrameId(@EventParam(PropertyType.NUMBER) playFrameId){
+    setFrameId(@EventParam(PropertyType.NUMBER) playFrameId) {
         // Update time for all layers in the default store.
         let currentStore = huahuoEngine.GetStoreById(this.storeId)
 
         let layerCount = currentStore.GetLayerCount()
-        for(let layerIdx = 0; layerIdx < layerCount; layerIdx++){
+        for (let layerIdx = 0; layerIdx < layerCount; layerIdx++) {
             let layer = currentStore.GetLayer(layerIdx)
             layer.SetCurrentFrame(playFrameId)
         }
@@ -102,8 +112,8 @@ class Player extends EventEmitter{
         this.currentlyPlayingFrameId = playFrameId
     }
 
-    startPlay(){
-        if(this.storeId == null){
+    startPlay() {
+        if (this.storeId == null) {
             this.storeId = huahuoEngine.GetCurrentStoreId()
         }
 
@@ -115,25 +125,25 @@ class Player extends EventEmitter{
     }
 
     @GraphEvent(true)
-    pausePlay(){
-        if(this.animationFrame){
+    pausePlay() {
+        if (this.animationFrame) {
             cancelAnimationFrame(this.animationFrame)
             this.animationStartTime = -1
-        }else{
+        } else {
             console.log("Error, animation frame is invalid");
         }
 
         this.isPlaying = false
     }
 
-    stopPlay(){
+    stopPlay() {
         this.pausePlay()
         this.setFrameId(0) // Reset to frame 0
         this.resetActions()
     }
 
-    resetActions(){
-        this.layerShapesManager.forEachShapeInStore((shape: BaseShapeJS)=>{
+    resetActions() {
+        this.layerShapesManager.forEachShapeInStore((shape: BaseShapeJS) => {
             shape.resetAction()
         })
     }

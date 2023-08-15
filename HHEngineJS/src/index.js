@@ -36,10 +36,14 @@ import {isInheritedFromClzName} from "./CppClassObjectFactory";
 import {LGraphCanvas, LiteGraph} from "litegraph.js";
 
 // All non-default components
+import {CurveGrowthComponent} from "./Components/CurveGrowthComponent";
 import {EventGraphComponent} from "./Components/EventGraphComponent";
 import {Motor} from "./Components/Motor";
+import {GeneratorComponent} from "./Components/GeneratorComponent";
 import {ObjectGenerator} from "./Components/ObjectGenerator";
 import {NailComponent} from "./Components/NailComponent";
+import {RadialGradientComponent} from "./Components/RadialGradientComponent"
+import {FollowCurveComponent} from "./Components/FollowCurveComponent";
 
 import "./Shapes/LoadShape"
 
@@ -102,6 +106,10 @@ export {
     Particles,
     NailComponent,
     EventGraphComponent,
+    CurveGrowthComponent,
+    FollowCurveComponent,
+    RadialGradientComponent,
+    GeneratorComponent,
     Motor,
     ObjectGenerator,
     ColorStop,
