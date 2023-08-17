@@ -24,15 +24,15 @@ function initTest() {
         let fillComponent = rectangleShape.getComponentByTypeName("FillColorComponent")
         fillComponent["fillColor"] = {red: 1.0, green: 0, blue: 1.0, alpha: 1.0}
 
-        rectangleShape.setStartPoint(new Vector2(10, 10))
+        rectangleShape.setStartPoint(new Vector2(0, 0))
         rectangleShape.setEndPoint(new Vector2(100, 100))
 
         huahuoEngine.GetCurrentLayer().addShape(rectangleShape)
         animationPlayer.setFrameId(60)
 
-        fillComponent["fillColor"] = {red: 0, green: 0, blue: 1.0, alpha: 1.0}
+        // fillComponent["fillColor"] = {red: 0, green: 0, blue: 1.0, alpha: 1.0}
 
-        rectangleShape.position = new paper.Point(0, 500.0)
+        rectangleShape.position = new paper.Point(500.0, 500.0)
 
         animationPlayer.startPlay()
     })
