@@ -38,18 +38,18 @@ class BulletTest {
 
     constructor() {
         // Test box2D engine.
-        this.m_world = b2World.Create({x: 0, y: -10})
+        this.m_world = b2World.Create({x: 0, y: 10})
 
         {
             const body = this.m_world.CreateBody();
 
             const edge = new b2EdgeShape();
 
-            edge.SetTwoSided(new b2Vec2(-10, 0), new b2Vec2(10, 0));
+            edge.SetTwoSided(new b2Vec2(0, 500), new b2Vec2(1000, 500));
             body.CreateFixture({shape: edge});
 
             const shape = new b2PolygonShape();
-            shape.SetAsBox(0.2, 1, new b2Vec2(0.5, 1), 0);
+            shape.SetAsBox(0.2, 1, new b2Vec2(0.5, 800), 0);
             body.CreateFixture({shape});
         }
 
@@ -74,15 +74,15 @@ class BulletTest {
 
             this.m_bullet = this.m_world.CreateBody({
                 type: b2BodyType.b2_dynamicBody,
-                bullet: true,
+                // bullet: true,
                 position: {
-                    x: this.m_x,
+                    x: 100,
                     y: 10,
                 },
             });
             this.m_bullet.CreateFixture({shape: box, density: 100});
 
-            this.m_bullet.SetLinearVelocity(new b2Vec2(0, -50));
+            // this.m_bullet.SetLinearVelocity(new b2Vec2(0, -50));
         }
     }
 
@@ -92,8 +92,8 @@ class BulletTest {
         this.m_body.SetAngularVelocity(0);
 
         this.m_x = b2RandomFloat(-1, 1);
-        this.m_bullet.SetTransformVec(new b2Vec2(this.m_x, 10), 0);
-        this.m_bullet.SetLinearVelocity(new b2Vec2(0, -50));
+        this.m_bullet.SetTransformVec(new b2Vec2(100, 10), 0);
+        // this.m_bullet.SetLinearVelocity(new b2Vec2(0, -50));
         this.m_bullet.SetAngularVelocity(0);
 
         b2Gjk.reset();
@@ -109,9 +109,12 @@ class BulletTest {
 
     Draw(){
         for(let b = this.m_world.GetBodyList(); b; b = b.GetNext()){
-            const xf = b.GetTransform();
+            let shape = b.GetUserData()
+            if(shape){
+                const xf = b.GetTransform();
 
-            console.log(xf);
+                shape.position = new paper.Point(xf.GetPosition().x, xf.GetPosition().y)
+            }
         }
     }
 }
@@ -130,21 +133,31 @@ function initTest() {
 
         rectangleShape.setStartPoint(new Vector2(0, 0))
         rectangleShape.setEndPoint(new Vector2(100, 100))
+        rectangleShape.position = new Vector2(100, 100)
 
         huahuoEngine.GetCurrentLayer().addShape(rectangleShape)
-        animationPlayer.setFrameId(60)
-
-        fillComponent["fillColor"] = {red: 0, green: 0, blue: 1.0, alpha: 1.0}
-
-        rectangleShape.position = new paper.Point(500.0, 500.0)
+        // animationPlayer.setFrameId(60)
+        //
+        // fillComponent["fillColor"] = {red: 0, green: 0, blue: 1.0, alpha: 1.0}
+        //
+        // rectangleShape.position = new paper.Point(500.0, 500.0)
 
         animationPlayer.startPlay()
 
         let bulletTest = new BulletTest()
-        bulletTest.Launch()
-        bulletTest.Step()
+        bulletTest.m_bullet.SetUserData(rectangleShape)
 
-        bulletTest.Draw()
+        bulletTest.Launch()
+
+        let stepFunction = ()=>{
+            bulletTest.Step()
+            bulletTest.Draw()
+
+            requestAnimationFrame(stepFunction)
+        }
+
+        stepFunction()
+
     })
 }
 
