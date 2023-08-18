@@ -38,7 +38,7 @@ class BulletTest {
 
     constructor() {
         // Test box2D engine.
-        this.m_world = b2World.Create({x: 0, y: 10})
+        this.m_world = b2World.Create({x: 0, y: 10000})
 
         {
             const body = this.m_world.CreateBody();

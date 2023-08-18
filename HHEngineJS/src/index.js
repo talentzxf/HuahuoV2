@@ -44,6 +44,7 @@ import {ObjectGenerator} from "./Components/ObjectGenerator";
 import {NailComponent} from "./Components/NailComponent";
 import {RadialGradientComponent} from "./Components/RadialGradientComponent"
 import {FollowCurveComponent} from "./Components/FollowCurveComponent";
+import {RigidBody} from "./Components/Physics/RigidBody";
 
 import "./Shapes/LoadShape"
 
@@ -120,6 +121,7 @@ export {
     FollowCurveComponent,
     RadialGradientComponent,
     GeneratorComponent,
+    RigidBody,
     Motor,
     ObjectGenerator,
     ColorStop,
