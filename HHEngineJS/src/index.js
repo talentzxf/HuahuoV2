@@ -52,16 +52,26 @@ import * as paper from "paper"
 
 let renderEngine2D = new RenderEnginePaperJs()
 
-if (Module.IsWASMInited && Module.IsWASMInited()) {
-    console.log("Init right now")
-    huahuoEngine.OnInit()
-} else {
-    console.log("Init later")
-    Module.onRuntimeInitialized = () => {
-        console.log("Init now!")
+function InitWASM(){
+    if (Module.IsWASMInited && Module.IsWASMInited()) {
+        console.log("Init right now")
         huahuoEngine.OnInit()
+    } else {
+        console.log("Init later")
+        Module.onRuntimeInitialized = () => {
+            console.log("Init now!")
+            huahuoEngine.OnInit()
+        }
     }
 }
+
+if(Module == null){
+    console.log("Module == null?? Init in next tick")
+    setTimeout(InitWASM, 0)
+}else{
+    InitWASM()
+}
+
 
 if (!window["taichiInitBegun"]) {
     window["taichiInitBegun"] = true
