@@ -6,6 +6,7 @@ import {getNailManager} from '../IK/GetNailManager'
 import {EventParam} from "hhcommoncomponents";
 import {PropertyType, EventEmitter} from "hhcommoncomponents";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
+import {getPhysicSystem} from "../PhysicsSystem/PhysicsSystem";
 
 class Player extends EventEmitter {
     animationFrame = -1
@@ -87,6 +88,8 @@ class Player extends EventEmitter {
                 this.setFrameId(frameId)
                 console.log("Rendering")
                 this.lastAnimateTime = timeStamp
+
+                getPhysicSystem().Step()
             } else {
                 console.log("Skipped Rendering")
             }
