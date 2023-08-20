@@ -17,6 +17,7 @@ class PhysicsSystem {
         if(!currentPhysicEnabled){
             let gravity = {x: 0.0, y: 100.0}
             physicsManager.SetGravity(gravity['x'], gravity['y'], 0.0)
+            
 
             // Init the world.
             this.m_world = b2World.Create(gravity)
