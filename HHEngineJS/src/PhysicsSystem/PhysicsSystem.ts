@@ -37,7 +37,11 @@ class PhysicsSystem {
         }, shape.rotation)
 
         let body = this.m_world.CreateBody({
-            type: b2BodyType.b2_dynamicBody
+            type: b2BodyType.b2_dynamicBody,
+            position: {
+                x: shape.position.x,
+                y: shape.position.y
+            }
         })
         body.CreateFixture({
             shape: box,
