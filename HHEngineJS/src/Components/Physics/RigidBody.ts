@@ -7,6 +7,8 @@ import {BaseShapeJS} from "../../Shapes/BaseShapeJS";
 class RigidBody extends AbstractComponent{
     private body: b2Body
 
+    isStatic: boolean = false
+
     setBody(body: b2Body) {
         this.body = body
     }

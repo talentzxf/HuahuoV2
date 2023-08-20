@@ -1,9 +1,7 @@
 import {RigidBody} from "../Components/Physics/RigidBody";
 import {huahuoEngine} from "../EngineAPI";
-import {b2BodyType, b2PolygonShape, b2World} from "@box2d/core";
+import {b2BodyType, b2Gjk, b2PolygonShape, b2Toi, b2World} from "@box2d/core";
 import {GlobalConfig} from "../GlobalConfig";
-import {BaseShapeJS} from "../Shapes/BaseShapeJS";
-import {RectangleJS} from "../Shapes/RectangleJS";
 
 class PhysicsSystem {
     cppPhysicsSystem
@@ -31,13 +29,18 @@ class PhysicsSystem {
 
         // TODO: Create collider component.
         const box = new b2PolygonShape()
-        box.SetAsBox(boundBox.width / 2.0, boundBox.height / 2.0, {
+        box.SetAsBox(boundBox.width, boundBox.height, {
             x: shape.position.x,
             y: shape.position.y
         }, shape.rotation)
 
+        let type = b2BodyType.b2_dynamicBody
+        if(rigidBody.isStatic){
+            type = b2BodyType.b2_staticBody
+        }
+
         let body = this.m_world.CreateBody({
-            type: b2BodyType.b2_dynamicBody,
+            type: type,
             position: {
                 x: shape.position.x,
                 y: shape.position.y
@@ -50,6 +53,11 @@ class PhysicsSystem {
 
         body.SetUserData(rigidBody)
         rigidBody.setBody(body)
+    }
+
+    Reset(){
+        b2Gjk.reset()
+        b2Toi.reset()
     }
 
     Step() {

@@ -49,11 +49,18 @@ function initTest() {
         fillComponent["fillColor"] = {red: 1.0, green: 0, blue: 1.0, alpha: 1.0}
 
         huahuoEngine.GetCurrentLayer().addShape(rectangleShape)
-        // animationPlayer.setFrameId(60)
-        //
-        // fillComponent["fillColor"] = {red: 0, green: 0, blue: 1.0, alpha: 1.0}
-        //
-        // rectangleShape.position = new paper.Point(500.0, 500.0)
+
+        let floor: RectangleJS = new RectangleJS()
+        floor.addComponent(new StrokeComponent())
+        floor.addComponent(new FillColorComponent())
+
+        floor.setStartPoint(new Vector2(0, 480))
+        floor.setEndPoint(new Vector2(500, 500))
+        floor.position = new Vector2(250, 500)
+        let rigidBody = new RigidBody()
+        rigidBody.isStatic = true
+        floor.addComponent(rigidBody)
+        huahuoEngine.GetCurrentLayer().addShape(floor)
 
         animationPlayer.startPlay()
     })
