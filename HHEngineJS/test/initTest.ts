@@ -38,14 +38,15 @@ function initTest() {
         let rectangleShape: RectangleJS = new RectangleJS();
         rectangleShape.addComponent(new StrokeComponent())
         rectangleShape.addComponent(new FillColorComponent())
-        rectangleShape.addComponent(new RigidBody())
-
-        let fillComponent = rectangleShape.getComponentByTypeName("FillColorComponent")
-        fillComponent["fillColor"] = {red: 1.0, green: 0, blue: 1.0, alpha: 1.0}
 
         rectangleShape.setStartPoint(new Vector2(0, 0))
         rectangleShape.setEndPoint(new Vector2(100, 100))
         rectangleShape.position = new Vector2(100, 100)
+
+        rectangleShape.addComponent(new RigidBody())
+
+        let fillComponent = rectangleShape.getComponentByTypeName("FillColorComponent")
+        fillComponent["fillColor"] = {red: 1.0, green: 0, blue: 1.0, alpha: 1.0}
 
         huahuoEngine.GetCurrentLayer().addShape(rectangleShape)
         // animationPlayer.setFrameId(60)

@@ -228,7 +228,14 @@ abstract class BaseShapeJS {
         this.rawObj.SetName(name)
     }
 
+    getBounds(){
+        return this.bounds;
+    }
+
     get bounds(): paper.Rectangle {
+        if(this.paperItem == null)
+            return null
+
         return this.paperItem.bounds
     }
 

@@ -1,11 +1,20 @@
 import {AbstractComponent, Component} from "../AbstractComponent";
+import {getPhysicSystem} from "../../PhysicsSystem/PhysicsSystem";
+import {b2Body} from "@box2d/core";
+import {BaseShapeJS} from "../../Shapes/BaseShapeJS";
 
 @Component({compatibleShapes: ["ElementShapeJS"], maxCount: 1})
 class RigidBody extends AbstractComponent{
-    constructor(rawObj?, isMirage = false) {
-        super(rawObj, isMirage);
+    private body: b2Body
 
-        
+    setBody(body: b2Body) {
+        this.body = body
+    }
+
+    override setBaseShape(baseShape: BaseShapeJS) {
+        super.setBaseShape(baseShape)
+
+        getPhysicSystem().AddRigidBody(this)
     }
 }
 

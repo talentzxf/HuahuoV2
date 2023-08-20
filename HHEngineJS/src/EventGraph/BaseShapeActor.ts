@@ -64,7 +64,7 @@ class BaseShapeActor extends AbstractGraphAction{
     setRotation(@ActionParam(PropertyType.NUMBER) degree: number){
         if(isNaN(degree))
             return
-        this.roation = degree
+        this.rotation = degree
         this.isRotationValid = true
     }
 

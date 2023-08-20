@@ -1,7 +1,9 @@
 import {RigidBody} from "../Components/Physics/RigidBody";
 import {huahuoEngine} from "../EngineAPI";
-import {b2BodyType, b2World} from "@box2d/core";
+import {b2BodyType, b2PolygonShape, b2World} from "@box2d/core";
 import {GlobalConfig} from "../GlobalConfig";
+import {BaseShapeJS} from "../Shapes/BaseShapeJS";
+import {RectangleJS} from "../Shapes/RectangleJS";
 
 class PhysicsSystem {
     cppPhysicsSystem
@@ -25,10 +27,10 @@ class PhysicsSystem {
 
         let shape = rigidBody.baseShape
 
-        let boundBox = shape.bounds
+        let boundBox = shape.getBounds()
 
         // TODO: Create collider component.
-        const box = new byPolygonShape()
+        const box = new b2PolygonShape()
         box.SetAsBox(boundBox.width / 2.0, boundBox.height / 2.0, {
             x: shape.position.x,
             y: shape.position.y
@@ -43,19 +45,20 @@ class PhysicsSystem {
         })
 
         body.SetUserData(rigidBody)
-        rigidBody.body = body
+        rigidBody.setBody(body)
     }
 
     Step() {
-        if(huahuoEngine.GetCurrentStore().IsPhysicsEnabled()){
+        if (huahuoEngine.GetCurrentStore().IsPhysicsEnabled()) {
             this.m_world.Step(1 / GlobalConfig.fps, {
                 velocityIterations: 8,
                 positionIterations: 3
             })
 
-            for(let b = this.m_world.GetBodyList(); b; b = b.GetNext()){
-                let shape = b.GetUserData()
-                if(shape){
+            for (let b = this.m_world.GetBodyList(); b; b = b.GetNext()) {
+                let rigidBody = b.GetUserData()
+                if (rigidBody) {
+                    let shape = rigidBody.baseShape
                     const xf = b.GetTransform();
 
                     shape.getActor().setPosition(xf.GetPosition().x, xf.GetPosition().y)
