@@ -35,34 +35,56 @@ function initTest() {
         prepareEnvironment()
 
         animationPlayer.setFrameId(0)
-        let rectangleShape: RectangleJS = new RectangleJS();
-        rectangleShape.addComponent(new StrokeComponent())
-        rectangleShape.addComponent(new FillColorComponent())
+        {
+            let rectangleShape: RectangleJS = new RectangleJS();
+            rectangleShape.addComponent(new StrokeComponent())
+            rectangleShape.addComponent(new FillColorComponent())
 
-        rectangleShape.setStartPoint(new Vector2(0, 0))
-        rectangleShape.setEndPoint(new Vector2(100, 100))
-        rectangleShape.position = new Vector2(100, 100)
-        rectangleShape.rotation =  46
+            rectangleShape.setStartPoint(new Vector2(0, 0))
+            rectangleShape.setEndPoint(new Vector2(100, 100))
+            rectangleShape.position = new Vector2(100, 100)
+            rectangleShape.rotation = 46
 
-        rectangleShape.addComponent(new RigidBody())
+            rectangleShape.addComponent(new RigidBody())
 
-        let fillComponent = rectangleShape.getComponentByTypeName("FillColorComponent")
-        fillComponent["fillColor"] = {red: 1.0, green: 0, blue: 1.0, alpha: 1.0}
+            let fillComponent = rectangleShape.getComponentByTypeName("FillColorComponent")
+            fillComponent["fillColor"] = {red: 1.0, green: 0, blue: 1.0, alpha: 1.0}
 
-        huahuoEngine.GetCurrentLayer().addShape(rectangleShape)
+            huahuoEngine.GetCurrentLayer().addShape(rectangleShape)
+        }
 
-        let floor: RectangleJS = new RectangleJS()
-        floor.addComponent(new StrokeComponent())
-        floor.addComponent(new FillColorComponent())
+        {
+            let bullet: RectangleJS = new RectangleJS()
+            bullet.addComponent(new StrokeComponent())
+            bullet.addComponent(new FillColorComponent())
+            bullet.setStartPoint(new Vector2(300, 10))
+            bullet.setEndPoint(new Vector2(310, 20))
 
-        floor.setStartPoint(new Vector2(0, 480))
-        floor.setEndPoint(new Vector2(500, 500))
-        floor.position = new Vector2(250, 500)
-        let rigidBody = new RigidBody()
-        rigidBody.isStatic = true
-        floor.addComponent(rigidBody)
-        huahuoEngine.GetCurrentLayer().addShape(floor)
+            let rigidBody = new RigidBody()
+            bullet.addComponent(rigidBody)
+            rigidBody.getBody().SetBullet(true)
+            rigidBody.getBody().SetLinearVelocity({
+                x: -50.0,
+                y: 0.0
+            })
 
+            huahuoEngine.GetCurrentLayer().addShape(bullet)
+        }
+
+
+        {
+            let floor: RectangleJS = new RectangleJS()
+            floor.addComponent(new StrokeComponent())
+            floor.addComponent(new FillColorComponent())
+
+            floor.setStartPoint(new Vector2(0, 480))
+            floor.setEndPoint(new Vector2(500, 500))
+            floor.position = new Vector2(250, 500)
+            let rigidBody = new RigidBody()
+            rigidBody.isStatic = true
+            floor.addComponent(rigidBody)
+            huahuoEngine.GetCurrentLayer().addShape(floor)
+        }
         animationPlayer.startPlay()
     })
 }

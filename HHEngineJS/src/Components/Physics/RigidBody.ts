@@ -13,6 +13,10 @@ class RigidBody extends AbstractComponent{
         this.body = body
     }
 
+    getBody(){
+        return this.body
+    }
+
     override setBaseShape(baseShape: BaseShapeJS) {
         super.setBaseShape(baseShape)
 
