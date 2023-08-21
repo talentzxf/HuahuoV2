@@ -1,14 +1,15 @@
 import {RigidBody} from "../Components/Physics/RigidBody";
 import {huahuoEngine} from "../EngineAPI";
 import {b2BodyType, b2Gjk, b2PolygonShape, b2Toi, b2World} from "@box2d/core";
-import {GlobalConfig} from "../GlobalConfig";
+
+let physicsToHuahuoScale = 50.0
 
 function degToRad(degree: number) {
     return degree / 180 * Math.PI
 }
 
-function radToDeg(rad: number){
-    return rad/Math.PI * 180
+function radToDeg(rad: number) {
+    return rad / Math.PI * 180
 }
 
 class PhysicsSystem {
@@ -23,7 +24,7 @@ class PhysicsSystem {
         let currentPhysicEnabled = store.IsPhysicsEnabled()
         let physicsManager = store.GetPhysicsManager(true)
         if (!currentPhysicEnabled) {
-            let gravity = {x: 0.0, y: 1000.0}
+            let gravity = {x: 0.0, y: 10.0}
             physicsManager.SetGravity(gravity['x'], gravity['y'], 0.0)
 
             // Init the world.
@@ -36,7 +37,11 @@ class PhysicsSystem {
 
         // TODO: Create collider component.
         const box = new b2PolygonShape()
-        box.SetAsBox(boundBox.width / 2.0, boundBox.height / 2.0, {
+
+        // Huahuo use pixels and physics system use meter.
+        // Shirnk physicsToHuahuoScale times to avoid numerical problem.
+
+        box.SetAsBox(boundBox.width/physicsToHuahuoScale / 2.0, boundBox.height/physicsToHuahuoScale / 2.0, {
             x: 0.0,
             y: 0.0,
         }, 0.0)
@@ -55,8 +60,8 @@ class PhysicsSystem {
         })
 
         body.SetTransformVec({
-            x: shape.position.x,
-            y: shape.position.y
+            x: shape.position.x / physicsToHuahuoScale,
+            y: shape.position.y / physicsToHuahuoScale
         }, degToRad(shape.rotation))
 
         body.SetUserData(rigidBody)
@@ -68,11 +73,11 @@ class PhysicsSystem {
         b2Toi.reset()
     }
 
-    lastUpdateTime = 0,
+    lastUpdateTime = 0
 
-    Step() {
+    Step(elapsedTime) {
         if (huahuoEngine.GetCurrentStore().IsPhysicsEnabled()) {
-            this.m_world.Step(1 / GlobalConfig.fps, {
+            this.m_world.Step(elapsedTime, {
                 velocityIterations: 8,
                 positionIterations: 3
             })
@@ -83,7 +88,7 @@ class PhysicsSystem {
                     let shape = rigidBody.baseShape
                     const xf = b.GetTransform();
 
-                    shape.getActor().setPosition(xf.GetPosition().x, xf.GetPosition().y)
+                    shape.getActor().setPosition(xf.GetPosition().x * physicsToHuahuoScale, xf.GetPosition().y * physicsToHuahuoScale)
                     shape.getActor().setRotation(radToDeg(xf.GetAngle()))
                 }
             }
