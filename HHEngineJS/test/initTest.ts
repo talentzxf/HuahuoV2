@@ -42,6 +42,7 @@ function initTest() {
         rectangleShape.setStartPoint(new Vector2(0, 0))
         rectangleShape.setEndPoint(new Vector2(100, 100))
         rectangleShape.position = new Vector2(100, 100)
+        rectangleShape.rotation =  46
 
         rectangleShape.addComponent(new RigidBody())
 

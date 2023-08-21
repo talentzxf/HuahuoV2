@@ -3,6 +3,14 @@ import {huahuoEngine} from "../EngineAPI";
 import {b2BodyType, b2Gjk, b2PolygonShape, b2Toi, b2World} from "@box2d/core";
 import {GlobalConfig} from "../GlobalConfig";
 
+function degToRad(degree: number) {
+    return degree / 180 * Math.PI
+}
+
+function radToDeg(rad: number){
+    return rad/Math.PI * 180
+}
+
 class PhysicsSystem {
     cppPhysicsSystem
 
@@ -15,9 +23,8 @@ class PhysicsSystem {
         let currentPhysicEnabled = store.IsPhysicsEnabled()
         let physicsManager = store.GetPhysicsManager(true)
         if (!currentPhysicEnabled) {
-            let gravity = {x: 0.0, y: 100.0}
+            let gravity = {x: 0.0, y: 1000.0}
             physicsManager.SetGravity(gravity['x'], gravity['y'], 0.0)
-
 
             // Init the world.
             this.m_world = b2World.Create(gravity)
@@ -29,36 +36,39 @@ class PhysicsSystem {
 
         // TODO: Create collider component.
         const box = new b2PolygonShape()
-        box.SetAsBox(boundBox.width, boundBox.height, {
-            x: shape.position.x,
-            y: shape.position.y
-        }, shape.rotation)
+        box.SetAsBox(boundBox.width / 2.0, boundBox.height / 2.0, {
+            x: 0.0,
+            y: 0.0,
+        }, 0.0)
 
         let type = b2BodyType.b2_dynamicBody
-        if(rigidBody.isStatic){
+        if (rigidBody.isStatic) {
             type = b2BodyType.b2_staticBody
         }
 
         let body = this.m_world.CreateBody({
             type: type,
-            position: {
-                x: shape.position.x,
-                y: shape.position.y
-            }
         })
         body.CreateFixture({
             shape: box,
-            density: 1
+            density: 1,
         })
+
+        body.SetTransformVec({
+            x: shape.position.x,
+            y: shape.position.y
+        }, degToRad(shape.rotation))
 
         body.SetUserData(rigidBody)
         rigidBody.setBody(body)
     }
 
-    Reset(){
+    Reset() {
         b2Gjk.reset()
         b2Toi.reset()
     }
+
+    lastUpdateTime = 0,
 
     Step() {
         if (huahuoEngine.GetCurrentStore().IsPhysicsEnabled()) {
@@ -74,7 +84,7 @@ class PhysicsSystem {
                     const xf = b.GetTransform();
 
                     shape.getActor().setPosition(xf.GetPosition().x, xf.GetPosition().y)
-                    shape.getActor().setRotation(xf.GetAngle())
+                    shape.getActor().setRotation(radToDeg(xf.GetAngle()))
                 }
             }
         }

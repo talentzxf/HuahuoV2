@@ -77,7 +77,7 @@ class Player extends EventEmitter {
             }
             let elapsedTime = timeStamp - this.lastAnimateTime
 
-            console.log("Elapsed time:" + elapsedTime)
+            console.log("FPS:" + 1000.0/elapsedTime)
 
             if (this.lastAnimateTime < 0 || elapsedTime > 1000.0 / GlobalConfig.fps) {
                 let store = huahuoEngine.GetStoreById(this.storeId)
@@ -86,12 +86,9 @@ class Player extends EventEmitter {
                 let playTime = (timeStamp - this.animationStartTime + this.playStartTime * 1000.0) / 1000.0 % activePlayTime;
                 let frameId = Math.floor(playTime * GlobalConfig.fps)
                 this.setFrameId(frameId)
-                console.log("Rendering")
                 this.lastAnimateTime = timeStamp
 
                 getPhysicSystem().Step()
-            } else {
-                console.log("Skipped Rendering")
             }
             requestAnimationFrame(this.animationFrameStep.bind(this));
         }
