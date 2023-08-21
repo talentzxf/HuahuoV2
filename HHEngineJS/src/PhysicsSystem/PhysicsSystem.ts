@@ -1,8 +1,30 @@
 import {RigidBody} from "../Components/Physics/RigidBody";
 import {huahuoEngine} from "../EngineAPI";
-import {b2BodyType, b2Gjk, b2PolygonShape, b2Toi, b2World} from "@box2d/core";
+import {b2BodyType, b2Gjk, b2MakeArray, b2PolygonShape, b2Toi, b2Vec2, b2World} from "@box2d/core";
 
-let physicsToHuahuoScale = 50.0
+let physicsToHuahuoScale = 40.0
+
+function getPolygonFromShape(shape, body) {
+    let segments = shape.getSegments()
+    let vertices = b2MakeArray(segments.length, b2Vec2)
+    for (let i = 0; i < segments.length; i++) {
+        let globalPoint = shape.localToGlobal(segments[i].point).multiply(1 / physicsToHuahuoScale)
+        let bodyLocalPoint = {
+            x: 0.0,
+            y: 0.0
+        }
+        body.GetLocalPoint({
+            x: globalPoint.x,
+            y: globalPoint.y
+        }, bodyLocalPoint)
+        vertices[i].Set(bodyLocalPoint.x, bodyLocalPoint.y)
+    }
+
+    let polygonShape = new b2PolygonShape()
+    polygonShape.Set(vertices, segments.length)
+
+    return polygonShape
+}
 
 function degToRad(degree: number) {
     return degree / 180 * Math.PI
@@ -32,20 +54,6 @@ class PhysicsSystem {
         }
 
         let shape = rigidBody.baseShape
-
-        let boundBox = shape.getBounds()
-
-        // TODO: Create collider component.
-        const box = new b2PolygonShape()
-
-        // Huahuo use pixels and physics system use meter.
-        // Shirnk physicsToHuahuoScale times to avoid numerical problem.
-
-        box.SetAsBox(boundBox.width/physicsToHuahuoScale / 2.0, boundBox.height/physicsToHuahuoScale / 2.0, {
-            x: 0.0,
-            y: 0.0,
-        }, 0.0)
-
         let type = b2BodyType.b2_dynamicBody
         if (rigidBody.isStatic) {
             type = b2BodyType.b2_staticBody
@@ -53,16 +61,20 @@ class PhysicsSystem {
 
         let body = this.m_world.CreateBody({
             type: type,
-        })
-        body.CreateFixture({
-            shape: box,
-            density: 1,
+            position: {
+                x: shape.position.x / physicsToHuahuoScale,
+                y: shape.position.y / physicsToHuahuoScale
+            },
+            angle: degToRad(shape.rotation)
         })
 
-        body.SetTransformVec({
-            x: shape.position.x / physicsToHuahuoScale,
-            y: shape.position.y / physicsToHuahuoScale
-        }, degToRad(shape.rotation))
+        let polygonShape = getPolygonFromShape(shape, body)
+
+
+        body.CreateFixture({
+            shape: polygonShape,
+            density: 1,
+        })
 
         body.SetUserData(rigidBody)
         rigidBody.setBody(body)
@@ -88,7 +100,8 @@ class PhysicsSystem {
                     let shape = rigidBody.baseShape
                     const xf = b.GetTransform();
 
-                    shape.getActor().setPosition(xf.GetPosition().x * physicsToHuahuoScale, xf.GetPosition().y * physicsToHuahuoScale)
+                    let globalPosition = new paper.Point(xf.GetPosition().x * physicsToHuahuoScale, xf.GetPosition().y * physicsToHuahuoScale)
+                    shape.getActor().setPosition(globalPosition.x, globalPosition.y)
                     shape.getActor().setRotation(radToDeg(xf.GetAngle()))
                 }
             }

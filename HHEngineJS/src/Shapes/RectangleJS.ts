@@ -9,19 +9,6 @@ class RectangleJS extends BaseSolidShape {
         return new RectangleJS(rawObj)
     }
 
-    override getBounds(): paper.Rectangle {
-        let shapeBounds = super.getBounds()
-
-        if (shapeBounds == null) {
-            let p1 = this.getPaperPoint(this.rawObj.GetStartPoint())
-            let p2 = this.getPaperPoint(this.rawObj.GetEndPoint())
-
-            shapeBounds = new paper.Rectangle(p1.x, p1.y, Math.abs(p2.x - p1.x), Math.abs(p2.y - p1.y))
-        }
-
-        return shapeBounds
-    }
-
     getShapeName(): string {
         return shapeName
     }
