@@ -42,7 +42,7 @@ function initTest() {
 
             rectangleShape.setStartPoint(new Vector2(0, 0))
             rectangleShape.setEndPoint(new Vector2(100, 100))
-            rectangleShape.position = new Vector2(100, 100)
+            rectangleShape.position = new Vector2(80, 100)
             rectangleShape.rotation = 46
 
             rectangleShape.addComponent(new RigidBody())
@@ -57,8 +57,8 @@ function initTest() {
             let bullet: RectangleJS = new RectangleJS()
             bullet.addComponent(new StrokeComponent())
             bullet.addComponent(new FillColorComponent())
-            bullet.setStartPoint(new Vector2(300, 10))
-            bullet.setEndPoint(new Vector2(310, 20))
+            bullet.setStartPoint(new Vector2(500, 10))
+            bullet.setEndPoint(new Vector2(510, 20))
 
             let rigidBody = new RigidBody()
             bullet.addComponent(rigidBody)
@@ -77,9 +77,9 @@ function initTest() {
             floor.addComponent(new StrokeComponent())
             floor.addComponent(new FillColorComponent())
 
-            floor.setStartPoint(new Vector2(0, 480))
-            floor.setEndPoint(new Vector2(500, 500))
-            floor.position = new Vector2(250, 500)
+            floor.setStartPoint(new Vector2(0, 380))
+            floor.setEndPoint(new Vector2(500, 400))
+            floor.position = new Vector2(250, 400)
             let rigidBody = new RigidBody()
             rigidBody.isStatic = true
             floor.addComponent(rigidBody)
