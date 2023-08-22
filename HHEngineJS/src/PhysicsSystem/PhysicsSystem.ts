@@ -1,8 +1,20 @@
 import {RigidBody} from "../Components/Physics/RigidBody";
 import {huahuoEngine} from "../EngineAPI";
-import {b2BodyType, b2Gjk, b2MakeArray, b2PolygonShape, b2Toi, b2Vec2, b2World} from "@box2d/core";
+import {
+    b2BodyType,
+    b2Contact,
+    b2ContactListener, b2GetPointStates,
+    b2Gjk,
+    b2MakeArray, b2Manifold, b2PointState,
+    b2PolygonShape,
+    b2Toi,
+    b2Vec2,
+    b2World, b2WorldManifold
+} from "@box2d/core";
+import {GlobalConfig} from "../GlobalConfig";
+import {ContactPoint, k_maxContactPoints} from "./ContactPoint";
 
-let physicsToHuahuoScale = 40.0
+let physicsToHuahuoScale = GlobalConfig.physicsToHuahuoScale
 
 function getPolygonFromShape(shape, body) {
     let segments = shape.getSegments()
@@ -34,10 +46,11 @@ function radToDeg(rad: number) {
     return rad / Math.PI * 180
 }
 
-class PhysicsSystem {
-    cppPhysicsSystem
 
-    rigidBodies
+
+class PhysicsSystem extends b2ContactListener{
+
+    public readonly m_points = Array.from({ length: k_maxContactPoints }, () => new ContactPoint());
 
     m_world: b2World
 
@@ -51,6 +64,8 @@ class PhysicsSystem {
 
             // Init the world.
             this.m_world = b2World.Create(gravity)
+
+            this.m_world.SetContactListener(this)
         }
 
         let shape = rigidBody.baseShape
@@ -86,6 +101,27 @@ class PhysicsSystem {
     }
 
     lastUpdateTime = 0
+
+    PreSolve(contact: b2Contact, oldManifold: b2Manifold) {
+        super.PreSolve(contact, oldManifold);
+
+        let manifold = contact.GetManifold()
+        if(manifold.pointCount == 0)
+            return
+
+        let state1: b2PointState[] = []
+        let state2: b2PointState[] = []
+        b2GetPointStates(state1, state2, oldManifold, manifold);
+
+        let worldManifold = new b2WorldManifold();
+        contact.GetWorldManifold(worldManifold)
+
+        let body1 = contact.GetFixtureA().GetBody()
+        let body2 = contact.GetFixtureB().GetBody()
+
+        
+
+    }
 
     Step(elapsedTime) {
         if (huahuoEngine.GetCurrentStore().IsPhysicsEnabled()) {

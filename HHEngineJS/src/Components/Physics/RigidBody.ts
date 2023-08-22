@@ -2,9 +2,10 @@ import {AbstractComponent, Component} from "../AbstractComponent";
 import {getPhysicSystem} from "../../PhysicsSystem/PhysicsSystem";
 import {b2Body} from "@box2d/core";
 import {BaseShapeJS} from "../../Shapes/BaseShapeJS";
+import {EventParam, GraphEvent, PropertyType} from "hhcommoncomponents";
 
-@Component({compatibleShapes: ["ElementShapeJS"], maxCount: 1})
-class RigidBody extends AbstractComponent{
+@Component({maxCount: 1})
+class RigidBody extends AbstractComponent {
     private body: b2Body
 
     isStatic: boolean = false
@@ -13,7 +14,7 @@ class RigidBody extends AbstractComponent{
         this.body = body
     }
 
-    getBody(){
+    getBody() {
         return this.body
     }
 
@@ -21,6 +22,11 @@ class RigidBody extends AbstractComponent{
         super.setBaseShape(baseShape)
 
         getPhysicSystem().AddRigidBody(this)
+    }
+
+    @GraphEvent()
+    OnCollide(@EventParam(PropertyType.SHAPE) collidedShape){
+
     }
 }
 
