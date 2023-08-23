@@ -119,8 +119,16 @@ class PhysicsSystem extends b2ContactListener{
         let body1 = contact.GetFixtureA().GetBody()
         let body2 = contact.GetFixtureB().GetBody()
 
-        
+        let rigidBody1 = body1.GetUserData() as RigidBody
+        let rigidBody2 = body2.GetUserData() as RigidBody
 
+        if(rigidBody1){
+            rigidBody1.OnCollide(rigidBody2, worldManifold.points[0])
+        }
+
+        if(rigidBody2){
+            rigidBody2.OnCollide(rigidBody1, worldManifold.points[0])
+        }
     }
 
     Step(elapsedTime) {

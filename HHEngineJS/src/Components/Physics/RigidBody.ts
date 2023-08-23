@@ -25,7 +25,7 @@ class RigidBody extends AbstractComponent {
     }
 
     @GraphEvent()
-    OnCollide(@EventParam(PropertyType.SHAPE) collidedShape){
+    OnCollide(@EventParam(PropertyType.COMPONENT) collidedRigidbody, @EventParam(PropertyType.VECTOR2) collisionPoint){
 
     }
 }
