@@ -85,7 +85,9 @@ class HHEventBus{
         let handlerIdArray = this.eventHandlerIdMap.get(fullEventName)
         for(let handlerId of handlerIdArray){
             if(!this.handlerIdHandlerMap.has(handlerId)){
-                throw new EventBusException("Can't find this handlerId:" + handlerId + " for event:" + fullEventName)
+                // throw new EventBusException("Can't find this handlerId:" + handlerId + " for event:" + fullEventName)
+                console.error("Can't find this handlerId:" + handlerId + " for event:" + fullEventName)
+                continue
             }
 
             let func = this.handlerIdHandlerMap.get(handlerId)
