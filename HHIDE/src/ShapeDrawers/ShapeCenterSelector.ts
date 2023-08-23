@@ -1,5 +1,5 @@
 import {BaseShapeJS} from "hhenginejs/dist/src/Shapes/BaseShapeJS";
-import {PropertySheet, PropertyType} from "HHCommonComponents";
+import {PropertySheet, PropertyType} from "hhcommoncomponents";
 import {ValueChangeHandler} from "hhenginejs";
 
 class ShapeCenterSelector {
