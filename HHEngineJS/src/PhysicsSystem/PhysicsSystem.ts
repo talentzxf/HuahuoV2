@@ -3,13 +3,17 @@ import {huahuoEngine} from "../EngineAPI";
 import {
     b2BodyType,
     b2Contact,
-    b2ContactListener, b2GetPointStates,
+    b2ContactListener,
+    b2GetPointStates,
     b2Gjk,
-    b2MakeArray, b2Manifold, b2PointState,
+    b2MakeArray,
+    b2Manifold,
+    b2PointState,
     b2PolygonShape,
     b2Toi,
     b2Vec2,
-    b2World, b2WorldManifold
+    b2World,
+    b2WorldManifold
 } from "@box2d/core";
 import {GlobalConfig} from "../GlobalConfig";
 import {ContactPoint, k_maxContactPoints} from "./ContactPoint";
@@ -70,7 +74,9 @@ class PhysicsSystem extends b2ContactListener{
 
         let shape = rigidBody.baseShape
         let type = b2BodyType.b2_dynamicBody
-        if (rigidBody.isStatic) {
+        if (rigidBody.rigidBodyType == "kinematic") {
+            type = b2BodyType.b2_kinematicBody
+        } else if (rigidBody.rigidBodyType == "static"){
             type = b2BodyType.b2_staticBody
         }
 
