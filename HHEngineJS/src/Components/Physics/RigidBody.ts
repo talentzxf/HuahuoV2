@@ -36,10 +36,12 @@ class RigidBody extends AbstractComponent {
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
-        if(!Box2dUtils.typeMatches(this.rigidBodyType, this.body.GetType())){
-            let currentRigidBodyType = Box2dUtils.getBodyTypeFromString(this.rigidBodyType)
+        if(this.body){
+            if(!Box2dUtils.typeMatches(this.rigidBodyType, this.body.GetType())){
+                let currentRigidBodyType = Box2dUtils.getBodyTypeFromString(this.rigidBodyType)
 
-            this.body.SetType(currentRigidBodyType)
+                this.body.SetType(currentRigidBodyType)
+            }
         }
     }
 }
