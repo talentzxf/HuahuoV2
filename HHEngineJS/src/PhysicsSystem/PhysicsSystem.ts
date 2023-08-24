@@ -96,6 +96,21 @@ class PhysicsSystem extends b2ContactListener{
     }
 
     Reset() {
+        // Reset all rigidbodies
+        for (let b = this.m_world.GetBodyList(); b; b = b.GetNext()) {
+            let rigidBody = b.GetUserData()
+            if (rigidBody) {
+                let shape = rigidBody.baseShape
+                b.SetTransformVec({
+                    x: shape.position.x/physicsToHuahuoScale,
+                    y: shape.position.y/physicsToHuahuoScale
+                }, 0)
+            }
+
+            b.SetLinearVelocity(b2Vec2.ZERO);
+            b.SetAngularVelocity(0.0)
+        }
+
         b2Gjk.reset()
         b2Toi.reset()
     }

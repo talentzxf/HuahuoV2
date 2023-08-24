@@ -4,7 +4,7 @@ import {b2Body} from "@box2d/core";
 import {BaseShapeJS} from "../../Shapes/BaseShapeJS";
 import {EventParam, GraphEvent, PropertyType} from "hhcommoncomponents";
 
-@Component({maxCount: 1})
+@Component({compatibleShapes: ["BaseSolidShape"], maxCount: 1})
 class RigidBody extends AbstractComponent {
     private body: b2Body
 
@@ -25,7 +25,7 @@ class RigidBody extends AbstractComponent {
     }
 
     @GraphEvent()
-    OnCollide(@EventParam(PropertyType.COMPONENT) collidedRigidbody, @EventParam(PropertyType.VECTOR2) collisionPoint){
+    OnCollide(@EventParam(PropertyType.COMPONENT) collidedRigidbody, @EventParam(PropertyType.VECTOR2) collisionPoint) {
 
     }
 }
