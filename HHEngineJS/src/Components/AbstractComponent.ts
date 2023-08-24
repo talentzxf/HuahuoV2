@@ -263,6 +263,16 @@ abstract class AbstractComponent extends EventEmitter {
     reset() {
         this.actor.reset()
     }
+
+    // Callback from IDE when the component is mounted.
+    onMounted(){
+
+    }
+
+    // Callback from IDE when the component is dismounted from the shape.
+    onDismounted(){
+
+    }
 }
 
 

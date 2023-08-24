@@ -1,15 +1,12 @@
 import {RigidBody} from "../Components/Physics/RigidBody";
 import {huahuoEngine} from "../EngineAPI";
 import {
-    b2BodyType,
     b2Contact,
     b2ContactListener,
     b2GetPointStates,
     b2Gjk,
-    b2MakeArray,
     b2Manifold,
     b2PointState,
-    b2PolygonShape,
     b2Toi,
     b2Vec2,
     b2World,
@@ -18,40 +15,9 @@ import {
 import {GlobalConfig} from "../GlobalConfig";
 import {ContactPoint, k_maxContactPoints} from "./ContactPoint";
 import {Box2dUtils} from "../Components/Physics/Box2dUtils";
+import {radToDeg, degToRad} from "hhcommoncomponents";
 
 let physicsToHuahuoScale = GlobalConfig.physicsToHuahuoScale
-
-function getPolygonFromShape(shape, body) {
-    let segments = shape.getSegments()
-    let vertices = b2MakeArray(segments.length, b2Vec2)
-    for (let i = 0; i < segments.length; i++) {
-        let globalPoint = shape.localToGlobal(segments[i].point).multiply(1 / physicsToHuahuoScale)
-        let bodyLocalPoint = {
-            x: 0.0,
-            y: 0.0
-        }
-        body.GetLocalPoint({
-            x: globalPoint.x,
-            y: globalPoint.y
-        }, bodyLocalPoint)
-        vertices[i].Set(bodyLocalPoint.x, bodyLocalPoint.y)
-    }
-
-    let polygonShape = new b2PolygonShape()
-    polygonShape.Set(vertices, segments.length)
-
-    return polygonShape
-}
-
-function degToRad(degree: number) {
-    return degree / 180 * Math.PI
-}
-
-function radToDeg(rad: number) {
-    return rad / Math.PI * 180
-}
-
-
 
 class PhysicsSystem extends b2ContactListener{
 
@@ -85,7 +51,7 @@ class PhysicsSystem extends b2ContactListener{
             angle: degToRad(shape.rotation)
         })
 
-        let polygonShape = getPolygonFromShape(shape, body)
+        let polygonShape = Box2dUtils.getPolygonFromShape(shape, body)
 
 
         body.CreateFixture({
@@ -106,7 +72,7 @@ class PhysicsSystem extends b2ContactListener{
                 b.SetTransformVec({
                     x: shape.position.x/physicsToHuahuoScale,
                     y: shape.position.y/physicsToHuahuoScale
-                }, 0)
+                }, degToRad(shape.rotation))
             }
 
             b.SetLinearVelocity(b2Vec2.ZERO);

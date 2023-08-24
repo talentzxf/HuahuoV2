@@ -1,4 +1,6 @@
-import {b2BodyType} from "@box2d/core";
+import {b2BodyType, b2MakeArray, b2PolygonShape, b2Vec2} from "@box2d/core";
+import {GlobalConfig} from "../../GlobalConfig";
+let physicsToHuahuoScale = GlobalConfig.physicsToHuahuoScale
 
 class Box2dUtils {
     static typeMatches(stringValue: string, type: b2BodyType): boolean {
@@ -23,6 +25,28 @@ class Box2dUtils {
         }
 
         return null
+    }
+
+    static getPolygonFromShape(shape, body) {
+        let segments = shape.getSegments()
+        let vertices = b2MakeArray(segments.length, b2Vec2)
+        for (let i = 0; i < segments.length; i++) {
+            let globalPoint = shape.localToGlobal(segments[i].point).multiply(1 / physicsToHuahuoScale)
+            let bodyLocalPoint = {
+                x: 0.0,
+                y: 0.0
+            }
+            body.GetLocalPoint({
+                x: globalPoint.x,
+                y: globalPoint.y
+            }, bodyLocalPoint)
+            vertices[i].Set(bodyLocalPoint.x, bodyLocalPoint.y)
+        }
+
+        let polygonShape = new b2PolygonShape()
+        polygonShape.Set(vertices, segments.length)
+
+        return polygonShape
     }
 }
 
