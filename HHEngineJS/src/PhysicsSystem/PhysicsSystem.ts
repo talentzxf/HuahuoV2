@@ -17,6 +17,7 @@ import {
 } from "@box2d/core";
 import {GlobalConfig} from "../GlobalConfig";
 import {ContactPoint, k_maxContactPoints} from "./ContactPoint";
+import {Box2dUtils} from "../Components/Physics/Box2dUtils";
 
 let physicsToHuahuoScale = GlobalConfig.physicsToHuahuoScale
 
@@ -73,12 +74,7 @@ class PhysicsSystem extends b2ContactListener{
         }
 
         let shape = rigidBody.baseShape
-        let type = b2BodyType.b2_dynamicBody
-        if (rigidBody.rigidBodyType == "kinematic") {
-            type = b2BodyType.b2_kinematicBody
-        } else if (rigidBody.rigidBodyType == "static"){
-            type = b2BodyType.b2_staticBody
-        }
+        let type = Box2dUtils.getBodyTypeFromString(rigidBody.rigidBodyType)
 
         let body = this.m_world.CreateBody({
             type: type,

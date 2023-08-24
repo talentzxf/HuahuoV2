@@ -70,6 +70,7 @@
   "EventGraphComponent": "事件图组件",
   "StrokeComponent": "描边颜色",
   "FillColorComponent": "填充颜色",
+  "RigidBody": "刚体",
   "inspector": {
     "CurveInputPrompt": "关键帧:{{frameId}}, 值:{{value}}",
     "Smooth": "平滑特征点",
@@ -140,7 +141,8 @@
       "playSpeed": "播放速度",
       "targetShape": "目标形状",
       "lengthRatio": "长度比例",
-      "velocity": "速度"
+      "velocity": "速度",
+      "rigidBodyType": "刚体类型"
     },
     "nail": {
       "isStatic": "是否静态"

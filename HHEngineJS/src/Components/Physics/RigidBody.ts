@@ -5,6 +5,7 @@ import {BaseShapeJS} from "../../Shapes/BaseShapeJS";
 import {EventParam, GraphEvent, PropertyType} from "hhcommoncomponents";
 import {PropertyCategory} from "../PropertySheetBuilder";
 import {StringProperty} from "hhcommoncomponents";
+import {Box2dUtils} from "./Box2dUtils";
 
 @Component({compatibleShapes: ["BaseSolidShape"], maxCount: 1})
 class RigidBody extends AbstractComponent {
@@ -30,6 +31,16 @@ class RigidBody extends AbstractComponent {
     @GraphEvent()
     OnCollide(@EventParam(PropertyType.COMPONENT) collidedRigidbody, @EventParam(PropertyType.VECTOR2) collisionPoint) {
 
+    }
+
+    afterUpdate(force: boolean = false) {
+        super.afterUpdate(force);
+
+        if(!Box2dUtils.typeMatches(this.rigidBodyType, this.body.GetType())){
+            let currentRigidBodyType = Box2dUtils.getBodyTypeFromString(this.rigidBodyType)
+
+            this.body.SetType(currentRigidBodyType)
+        }
     }
 }
 
