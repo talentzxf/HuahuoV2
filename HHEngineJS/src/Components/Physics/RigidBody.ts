@@ -65,7 +65,8 @@ class RigidBody extends AbstractComponent {
 
     drawPolygonFixture(polygonShape: b2PolygonShape) {
         let _body = this.body
-        function getWorldPoint(localPoint){
+
+        function getWorldPoint(localPoint) {
             let worldPoint = {x: -1, y: -1}
             _body.GetWorldPoint(localPoint, worldPoint)
             return worldPoint
@@ -77,9 +78,15 @@ class RigidBody extends AbstractComponent {
         let paperjs = this.baseShape.getPaperJs()
         if (this.colliderWireframeShape == null) {
             this.colliderWireframeShape = new paperjs.Path({
-                strokeColor: 'black',
-                closed: true
+                strokeColor: 'blue',
+                strokeWidth: 2,
+                closed: true,
             })
+
+            this.colliderWireframeShape.dashArray = [1, 10, 5, 5];
+        } else { // Keep the shape on top of everything
+            let parent = this.colliderWireframeShape.parent
+            parent.addChild(this.colliderWireframeShape)
         }
 
         let currentFrameVertextCount = this.colliderWireframeShape.segments.length
