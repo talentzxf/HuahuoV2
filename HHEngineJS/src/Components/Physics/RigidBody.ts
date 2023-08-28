@@ -45,7 +45,7 @@ class RigidBody extends AbstractComponent {
             }
         })
 
-        shape.registerValueChangeHandler("scaling")(() => {
+        shape.registerValueChangeHandler("segments|scaling")(() => {
             if (huahuoEngine.getActivePlayer().isInEditor && !huahuoEngine.getActivePlayer().isPlaying) {
                 let currentFixture: b2Fixture = body.GetFixtureList()
                 let polygonShape = Box2dUtils.getPolygonFromShape(this.baseShape, this.body)
