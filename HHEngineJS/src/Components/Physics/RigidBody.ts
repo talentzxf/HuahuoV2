@@ -1,6 +1,6 @@
 import {AbstractComponent, Component, PropertyValue} from "../AbstractComponent";
 import {getPhysicSystem} from "../../PhysicsSystem/PhysicsSystem";
-import {b2Body} from "@box2d/core";
+import {b2Body, b2Fixture, b2FixtureProxy} from "@box2d/core";
 import {BaseShapeJS} from "../../Shapes/BaseShapeJS";
 import {EventParam, GraphEvent, PropertyType} from "hhcommoncomponents";
 import {PropertyCategory} from "../PropertySheetBuilder";
@@ -42,6 +42,15 @@ class RigidBody extends AbstractComponent {
                     x: shape.position.x / GlobalConfig.physicsToHuahuoScale,
                     y: shape.position.y / GlobalConfig.physicsToHuahuoScale
                 }, degToRad(shape.rotation))
+            }
+        })
+
+        shape.registerValueChangeHandler("scaling")(() => {
+            if (huahuoEngine.getActivePlayer().isInEditor && !huahuoEngine.getActivePlayer().isPlaying) {
+                let currentFixture: b2Fixture = body.GetFixtureList()
+                let polygonShape = Box2dUtils.getPolygonFromShape(this.baseShape, this.body)
+                body.CreateFixture({shape: polygonShape, density: 1})
+                body.DestroyFixture(currentFixture)
             }
         })
     }

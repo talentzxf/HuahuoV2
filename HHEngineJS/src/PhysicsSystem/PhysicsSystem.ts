@@ -53,7 +53,6 @@ class PhysicsSystem extends b2ContactListener{
 
         let polygonShape = Box2dUtils.getPolygonFromShape(shape, body)
 
-
         body.CreateFixture({
             shape: polygonShape,
             density: 1,
