@@ -19,9 +19,9 @@ import {radToDeg, degToRad} from "hhcommoncomponents";
 
 let physicsToHuahuoScale = GlobalConfig.physicsToHuahuoScale
 
-class PhysicsSystem extends b2ContactListener{
+class PhysicsSystem extends b2ContactListener {
 
-    public readonly m_points = Array.from({ length: k_maxContactPoints }, () => new ContactPoint());
+    public readonly m_points = Array.from({length: k_maxContactPoints}, () => new ContactPoint());
 
     m_world: b2World
 
@@ -66,16 +66,21 @@ class PhysicsSystem extends b2ContactListener{
         // Reset all rigidbodies
         for (let b = this.m_world.GetBodyList(); b; b = b.GetNext()) {
             let rigidBody = b.GetUserData()
+            let shape = null
             if (rigidBody) {
-                let shape = rigidBody.baseShape
+                shape = rigidBody.baseShape
                 b.SetTransformVec({
-                    x: shape.position.x/physicsToHuahuoScale,
-                    y: shape.position.y/physicsToHuahuoScale
+                    x: shape.position.x / physicsToHuahuoScale,
+                    y: shape.position.y / physicsToHuahuoScale
                 }, degToRad(shape.rotation))
             }
 
             b.SetLinearVelocity(b2Vec2.ZERO);
             b.SetAngularVelocity(0.0)
+
+            if (shape) {
+                shape.update()
+            }
         }
 
         b2Gjk.reset()
@@ -88,7 +93,7 @@ class PhysicsSystem extends b2ContactListener{
         super.PreSolve(contact, oldManifold);
 
         let manifold = contact.GetManifold()
-        if(manifold.pointCount == 0)
+        if (manifold.pointCount == 0)
             return
 
         let state1: b2PointState[] = []
@@ -104,11 +109,11 @@ class PhysicsSystem extends b2ContactListener{
         let rigidBody1 = body1.GetUserData() as RigidBody
         let rigidBody2 = body2.GetUserData() as RigidBody
 
-        if(rigidBody1){
+        if (rigidBody1) {
             rigidBody1.OnCollide(rigidBody2, worldManifold.points[0])
         }
 
-        if(rigidBody2){
+        if (rigidBody2) {
             rigidBody2.OnCollide(rigidBody1, worldManifold.points[0])
         }
     }
