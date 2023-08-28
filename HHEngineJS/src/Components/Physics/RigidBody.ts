@@ -60,6 +60,9 @@ class RigidBody extends AbstractComponent {
 
                 this.body.SetType(currentRigidBodyType)
             }
+
+            this.body.SetAwake(this.isComponentActive())
+            console.log("Body IsAwake:" + this.body.IsAwake())
         }
     }
 }
