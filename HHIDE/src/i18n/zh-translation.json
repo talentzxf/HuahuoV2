@@ -142,7 +142,8 @@
       "targetShape": "目标形状",
       "lengthRatio": "长度比例",
       "velocity": "速度",
-      "rigidBodyType": "刚体类型"
+      "rigidBodyType": "刚体类型",
+      "colliderShape": "碰撞体形状"
     },
     "nail": {
       "isStatic": "是否静态"

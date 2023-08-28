@@ -142,7 +142,8 @@
       "targetShape": "Target Shape",
       "lengthRatio": "Length Ratio",
       "velocity": "Velocity",
-      "rigidBodyType": "Type"
+      "rigidBodyType": "Type",
+      "colliderShape": "Collider Shape"
     },
     "nail": {
       "isStatic": "Is Static"
