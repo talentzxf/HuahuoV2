@@ -1,6 +1,6 @@
 import {AbstractComponent, Component, PropertyValue} from "../AbstractComponent";
 import {getPhysicSystem} from "../../PhysicsSystem/PhysicsSystem";
-import {b2Body, b2Fixture, b2PolygonShape, b2ShapeType} from "@box2d/core";
+import {b2Body, b2CircleShape, b2Fixture, b2PolygonShape, b2ShapeType} from "@box2d/core";
 import {BaseShapeJS} from "../../Shapes/BaseShapeJS";
 import {degToRad, EventParam, GraphEvent, PropertyType, StringProperty} from "hhcommoncomponents";
 import {PropertyCategory} from "../PropertySheetBuilder";
@@ -46,14 +46,35 @@ class RigidBody extends AbstractComponent {
             }
         })
 
+        let _this = this
         shape.registerValueChangeHandler("segments|scaling")(() => {
             if (huahuoEngine.getActivePlayer().isInEditor && !huahuoEngine.getActivePlayer().isPlaying) {
-                let currentFixture: b2Fixture = body.GetFixtureList()
-                let polygonShape = Box2dUtils.getPolygonFromShape(this.baseShape, this.body)
-                body.CreateFixture({shape: polygonShape, density: 1})
-                body.DestroyFixture(currentFixture)
+                _this.updateFixture()
             }
         })
+    }
+
+    updateFixture() {
+
+        // Change shape type of this fixture.
+        let shapeType = Box2dUtils.getShapeTypeFromString(this.colliderShape)
+
+        let currentFixture: b2Fixture = this.body.GetFixtureList()
+
+        let fixtureShape = null
+        switch (shapeType) {
+            case b2ShapeType.e_polygon:
+                fixtureShape = Box2dUtils.getPolygonFromShape(this.baseShape, this.body)
+                break;
+            case b2ShapeType.e_circle:
+                fixtureShape = Box2dUtils.getCircleFromShape(this.baseShape, this.body)
+                break;
+        }
+
+        if (fixtureShape) {
+            this.body.CreateFixture({shape: fixtureShape, density: 1})
+            this.body.DestroyFixture(currentFixture)
+        }
     }
 
     @GraphEvent()
@@ -61,54 +82,74 @@ class RigidBody extends AbstractComponent {
 
     }
 
-    colliderWireframeShape: paper.Path
+    colliderWireframeShapePolygon: paper.Path
+    colliderWirreframeShapeCircle : paper.Path
+
+    getWorldPoint(localPoint) {
+        let worldPoint = {x: -1, y: -1}
+        this.body.GetWorldPoint(localPoint, worldPoint)
+        return worldPoint
+    }
+
+    drawCircleFixture(circleShape: b2CircleShape) {
+        if(this.colliderWireframeShapePolygon){
+            this.colliderWireframeShapePolygon.visible = false
+        }
+
+        let paperjs = this.baseShape.getPaperJs()
+
+        if(this.colliderWirreframeShapeCircle != null){
+            this.colliderWirreframeShapeCircle.remove()
+        }
+
+        let position = this.getWorldPoint(circleShape.m_p)
+        this.colliderWirreframeShapeCircle = new paperjs.Path.Circle(
+            new paperjs.Point(position.x * GlobalConfig.physicsToHuahuoScale, position.y * GlobalConfig.physicsToHuahuoScale),
+            circleShape.m_radius * GlobalConfig.physicsToHuahuoScale)
+    }
 
     drawPolygonFixture(polygonShape: b2PolygonShape) {
-        let _body = this.body
-
-        function getWorldPoint(localPoint) {
-            let worldPoint = {x: -1, y: -1}
-            _body.GetWorldPoint(localPoint, worldPoint)
-            return worldPoint
+        if(this.colliderWirreframeShapeCircle){
+            this.colliderWirreframeShapeCircle.visible = false
         }
 
         let vertexCount = polygonShape.m_count;
         let vertices = polygonShape.m_vertices;
 
         let paperjs = this.baseShape.getPaperJs()
-        if (this.colliderWireframeShape == null) {
-            this.colliderWireframeShape = new paperjs.Path({
+        if (this.colliderWireframeShapePolygon == null) {
+            this.colliderWireframeShapePolygon = new paperjs.Path({
                 strokeColor: 'blue',
                 strokeWidth: 2,
                 closed: true,
             })
 
-            this.colliderWireframeShape.dashArray = [1, 10, 5, 5];
+            this.colliderWireframeShapePolygon.dashArray = [1, 10, 5, 5];
         } else { // Keep the shape on top of everything
-            let parent = this.colliderWireframeShape.parent
-            parent.addChild(this.colliderWireframeShape)
+            let parent = this.colliderWireframeShapePolygon.parent
+            parent.addChild(this.colliderWireframeShapePolygon)
         }
 
-        let currentFrameVertextCount = this.colliderWireframeShape.segments.length
+        let currentFrameVertextCount = this.colliderWireframeShapePolygon.segments.length
 
         if (currentFrameVertextCount > vertexCount) {
             // Remove all unneeded vertices.
-            this.colliderWireframeShape.removeSegment(currentFrameVertextCount - vertexCount)
+            this.colliderWireframeShapePolygon.removeSegment(currentFrameVertextCount - vertexCount)
         }
 
         for (let vertexIndex = 0; vertexIndex < currentFrameVertextCount; vertexIndex++) {
-            let shapePoint = getWorldPoint(vertices[vertexIndex])
+            let shapePoint = this.getWorldPoint(vertices[vertexIndex])
 
-            this.colliderWireframeShape.segments[vertexIndex].point.set([
+            this.colliderWireframeShapePolygon.segments[vertexIndex].point.set([
                 shapePoint.x * GlobalConfig.physicsToHuahuoScale,
                 shapePoint.y * GlobalConfig.physicsToHuahuoScale
             ])
         }
 
         for (let vertexIndex = currentFrameVertextCount; vertexIndex < vertexCount; vertexIndex++) {
-            let shapePoint = getWorldPoint(vertices[vertexIndex])
+            let shapePoint = this.getWorldPoint(vertices[vertexIndex])
 
-            this.colliderWireframeShape.add(new paperjs.Point(
+            this.colliderWireframeShapePolygon.add(new paperjs.Point(
                 shapePoint.x * GlobalConfig.physicsToHuahuoScale,
                 shapePoint.y * GlobalConfig.physicsToHuahuoScale
             ))
@@ -131,9 +172,17 @@ class RigidBody extends AbstractComponent {
             // Draw collider wireframe in Editor.
             if (huahuoEngine.getActivePlayer().isInEditor) {
                 let fixture = this.body.GetFixtureList()
+
+                if (!Box2dUtils.shapeTypeMatches(this.colliderShape, fixture.GetShape().GetType())) {
+                    this.updateFixture()
+                }
+
                 switch (fixture.GetType()) {
                     case b2ShapeType.e_polygon:
                         this.drawPolygonFixture(fixture.GetShape() as b2PolygonShape)
+                        break;
+                    case b2ShapeType.e_circle:
+                        this.drawCircleFixture(fixture.GetShape() as b2CircleShape)
                         break;
                 }
             }

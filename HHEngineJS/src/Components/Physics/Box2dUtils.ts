@@ -1,5 +1,6 @@
-import {b2BodyType, b2MakeArray, b2PolygonShape, b2Vec2} from "@box2d/core";
+import {b2BodyType, b2CircleShape, b2MakeArray, b2PolygonShape, b2ShapeType, b2Vec2} from "@box2d/core";
 import {GlobalConfig} from "../../GlobalConfig";
+
 let physicsToHuahuoScale = GlobalConfig.physicsToHuahuoScale
 
 class Box2dUtils {
@@ -14,6 +15,18 @@ class Box2dUtils {
         return false
     }
 
+    static getShapeTypeFromString(stringValue): b2ShapeType {
+        switch (stringValue) {
+            case 'polygon':
+                return b2ShapeType.e_polygon
+            case 'edge':
+                return b2ShapeType.e_edge
+            case 'circle':
+                return b2ShapeType.e_circle
+        }
+        return null
+    }
+
     static getBodyTypeFromString(stringValue): b2BodyType {
         switch (stringValue) {
             case "static":
@@ -25,6 +38,18 @@ class Box2dUtils {
         }
 
         return null
+    }
+
+    static shapeTypeMatches(shapeTypeString: string, shapeType: b2ShapeType): boolean {
+        if (shapeTypeString == "polygon" && shapeType == b2ShapeType.e_polygon) {
+            return true
+        } else if (shapeTypeString == "circle" && shapeType == b2ShapeType.e_circle) {
+            return true
+        } else if (shapeTypeString == "edge" && shapeType == b2ShapeType.e_edge) {
+            return true
+        }
+
+        return false
     }
 
     static getPolygonFromShape(shape, body) {
@@ -47,6 +72,16 @@ class Box2dUtils {
         polygonShape.Set(vertices, segments.length)
 
         return polygonShape
+    }
+
+    static getCircleFromShape(shape, body){
+        let shapeGlobalPosition = shape.localToGlobal(shape.position).multiply(1/physicsToHuahuoScale)
+        let shapeArea = shape.paperShape.area
+        let radius = Math.sqrt(shapeArea/Math.PI)
+
+        let circleShape = new b2CircleShape()
+        circleShape.Set(shapeGlobalPosition, radius/physicsToHuahuoScale)
+        return circleShape
     }
 }
 
