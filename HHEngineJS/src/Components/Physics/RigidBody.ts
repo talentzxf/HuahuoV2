@@ -132,6 +132,8 @@ class RigidBody extends AbstractComponent {
             parent.addChild(this.colliderWireframeShapePolygon)
         }
 
+        this.colliderWireframeShapePolygon.visible = true
+
         let currentFrameVertextCount = this.colliderWireframeShapePolygon.segments.length
 
         if (currentFrameVertextCount > vertexCount) {
