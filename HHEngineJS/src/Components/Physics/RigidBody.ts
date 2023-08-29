@@ -106,6 +106,8 @@ class RigidBody extends AbstractComponent {
         this.colliderWirreframeShapeCircle = new paperjs.Path.Circle(
             new paperjs.Point(position.x * GlobalConfig.physicsToHuahuoScale, position.y * GlobalConfig.physicsToHuahuoScale),
             circleShape.m_radius * GlobalConfig.physicsToHuahuoScale)
+        this.colliderWirreframeShapeCircle.strokeColor = new paper.Color('blue')
+        this.colliderWirreframeShapeCircle.strokeWidth = 2
     }
 
     drawPolygonFixture(polygonShape: b2PolygonShape) {
