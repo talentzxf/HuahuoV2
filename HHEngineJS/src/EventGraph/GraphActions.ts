@@ -1,5 +1,5 @@
-import {PropertyType, getParameterNameAtIdx} from "hhcommoncomponents";
-
+import {getParameterNameAtIdx} from "hhcommoncomponents";
+import {PropertyType} from "hhcommoncomponents";
 const graphActionSymbol = Symbol("graphAction")
 
 class ActionParamDef {
@@ -8,9 +8,16 @@ class ActionParamDef {
     paramIndex: number
 }
 
+class ReturnValueInfo {
+    valueName: string
+    valueType: PropertyType
+}
+
 class ActionDef {
     actionName: string
     paramDefs: ActionParamDef[]
+    onlyRunWhenPlaing: boolean = false
+    returnValueInfo: ReturnValueInfo | null
 }
 
 function getActions(target): object[] {
@@ -23,12 +30,14 @@ function getActions(target): object[] {
     return properties
 }
 
-function GraphAction() {
+function GraphAction(onlyRunWhenPlaing = false, returnValueInfo: ReturnValueInfo | null = null) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         let actions = getActions(target)
         let actionDef: ActionDef = {
             actionName: propertyKey,
-            paramDefs: []
+            paramDefs: [],
+            onlyRunWhenPlaing: onlyRunWhenPlaing,
+            returnValueInfo: returnValueInfo
         }
         actions.push(actionDef)
     }
@@ -75,4 +84,23 @@ abstract class AbstractGraphAction {
     }
 }
 
-export {AbstractGraphAction, ActionDef, ActionParam, GraphAction}
+class ComponentActions{
+    targetComponent: Object
+
+    getActionDefs(): Array<ActionDef>{
+        return getActions(this.targetComponent) as Array<ActionDef>
+    }
+
+    constructor(targetComponent) {
+        this.targetComponent = targetComponent
+
+        let _this = this
+        let actions = getActions(this.targetComponent)
+        actions.forEach((actionDef: ActionDef) => {
+            let actionParams = getActionParams(_this.targetComponent, actionDef.actionName)
+            actionDef.paramDefs = actionParams
+        })
+    }
+}
+
+export {AbstractGraphAction, ActionDef, ActionParam, GraphAction, ComponentActions, ReturnValueInfo}

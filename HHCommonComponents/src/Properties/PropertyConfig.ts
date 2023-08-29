@@ -33,6 +33,10 @@ class SubComponentArrayProperty extends PropertyConfig {
     subComponentTypeName: string;
 }
 
+class ShapeArrayProperty extends PropertyConfig {
+    allowDuplication: boolean = false;
+}
+
 class ComponentProperty extends PropertyConfig {
     children: []
     enabler: Function
@@ -40,6 +44,12 @@ class ComponentProperty extends PropertyConfig {
     isActive: Function
 }
 
-export {PropertyConfig, FloatPropertyConfig, ActionPropertyConfig, SubComponentArrayProperty, CustomFieldConfig, CustomFieldContentDivGenerator, ComponentProperty}
+class StringProperty extends PropertyConfig{
+    options:[]
+}
+
+export {PropertyConfig, FloatPropertyConfig, ActionPropertyConfig,
+    SubComponentArrayProperty, CustomFieldConfig, CustomFieldContentDivGenerator,
+    ComponentProperty, ShapeArrayProperty, StringProperty}
 
 

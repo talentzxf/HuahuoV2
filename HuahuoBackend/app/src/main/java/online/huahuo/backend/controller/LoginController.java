@@ -1,6 +1,6 @@
 package online.huahuo.backend.controller;
 
-import lombok.Data;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.RequiredArgsConstructor;
 import online.huahuo.backend.db.UserDB;
 import online.huahuo.backend.db.UserRepository;
@@ -22,20 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Date;
 import java.util.Optional;
 
-@Data
-class LoginStatus{
-    private String userName;
-    private String failReason;
-    private String jwtToken;
-    private HttpStatus httpStatus;
-}
-
-@Data
-class TokenValidResponse{
-    private String userName;
-    private Boolean isValid;
-}
-
 @RestController
 @RequiredArgsConstructor
 public class LoginController {
@@ -54,7 +40,7 @@ public class LoginController {
     }
 
     @GetMapping("/tokenValid")
-    ResponseEntity<?> isTokenValid(@RequestParam String userName, @RequestParam String jwtToken){
+    ResponseEntity<TokenValidResponse> isTokenValid(@RequestParam String userName, @RequestParam String jwtToken){
         TokenValidResponse tokenValidResponse = new TokenValidResponse();
         tokenValidResponse.setUserName(userName);
         tokenValidResponse.setIsValid(false);
@@ -68,13 +54,13 @@ public class LoginController {
         return new ResponseEntity<>(tokenValidResponse, HttpStatus.OK);
     }
 
+    @SecurityRequirements()
     @PostMapping("/login")
-    ResponseEntity<?> login(@RequestParam(required = false) String userName, @RequestParam(required = false) String password){
+    ResponseEntity<LoginStatus> login(@RequestParam(required = false) String userName, @RequestParam(required = false) String password){
         LoginStatus loginStatus = new LoginStatus();
         if(userName == null || password == null){
             loginStatus.setFailReason("Username or pwd is null");
-            loginStatus.setHttpStatus(HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(loginStatus, loginStatus.getHttpStatus());
+            return new ResponseEntity<>(loginStatus, HttpStatus.BAD_REQUEST);
         }
 
         loginStatus.setUserName(userName);
@@ -82,13 +68,12 @@ public class LoginController {
         UserDB user = userRepository.findByUsername(userName);
         if(user == null){
             loginStatus.setFailReason("Can't find user!");
-            loginStatus.setHttpStatus(HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(loginStatus, loginStatus.getHttpStatus());
+            return new ResponseEntity<>(loginStatus, HttpStatus.BAD_REQUEST);
         }
 
         if(user.getStatus() != UserStatus.ACTIVE){
             loginStatus.setFailReason("User is not active!");
-            return new ResponseEntity<>(loginStatus, loginStatus.getHttpStatus());
+            return new ResponseEntity<>(loginStatus, HttpStatus.BAD_REQUEST);
         }
 
         String token = issueToken(user.getId());
@@ -97,11 +82,9 @@ public class LoginController {
         UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(userName, password);
         SecurityContextHolder.getContext().setAuthentication(authenticationProvider.authenticate(credentials));
 
-        loginStatus.setHttpStatus(HttpStatus.OK);
-
         user.setLastLoginTime(new Date());
         userRepository.save(user);
 
-        return new ResponseEntity<>(loginStatus, loginStatus.getHttpStatus());
+        return new ResponseEntity<>(loginStatus, HttpStatus.OK);
     }
 }

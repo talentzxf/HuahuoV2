@@ -1,30 +1,29 @@
 import {buildOperator} from "../PropertySheetBuilder";
 import {internalProcessComponent} from "./AbstractVariableHandler";
+import {AbstractComponent} from "../AbstractComponent";
 
 class DefaultVariableProcessor{
-    handleEntry(component, propertyEntry) {
+    handleEntry(component: AbstractComponent, propertyEntry) {
         let operator = buildOperator(propertyEntry.type, component.rawObj)
         operator.registerField(propertyEntry["key"], propertyEntry["initValue"])
 
         let fieldName = propertyEntry["key"]
 
-        delete this[fieldName] // Undefine the property
+        delete component[fieldName] // Undefine the property
 
         internalProcessComponent(component, fieldName, {
             getter: ()=>{
+                if(component.actor.hasField(fieldName))
+                    return component.actor.getField(fieldName)
                 return operator.getField(fieldName)
             },
             setter: (val)=>{
-                operator.setField(fieldName, val)
+                return operator.setField(fieldName, val)
             },
             isVariableEqual: (val1, val2)=>{
                 return operator.isEqual(val1, val2)
             }
         })
-
-        // This is a mirage, no need to store.
-        if(!component.isMirage)
-            component[fieldName] = component[fieldName] // Get the variable and save to ensure first frame is recorded in Cpp side.
     }
 }
 

@@ -8,6 +8,8 @@ import {getFullEventName, splitFullEventName} from "./EventBus/EventBus";
 
 import {
     pointsNear,
+    pointsNearHorizontal,
+    pointsNearVertical,
     relaxRectangle,
     getMimeTypeFromDataURI,
     dataURItoBlob,
@@ -22,7 +24,8 @@ import {HHToast} from "./Toast/Toast";
 import {eventBus, GraphEvent} from "./EventBus/EventBus";
 import {mirrorPoint} from "./Math/MathFunctions";
 import {IsValidWrappedObject} from "./WrappedObjectUtils"
-import {CustomFieldConfig, CustomFieldContentDivGenerator} from "./Properties/PropertyConfig";
+import {CustomFieldConfig, CustomFieldContentDivGenerator, ShapeArrayProperty, StringProperty} from "./Properties/PropertyConfig";
+import {capitalizeFirstLetter} from "./Properties/Utils";
 
 if (!window.i18n) {
     window.i18n = new I18nHandler()
@@ -31,12 +34,13 @@ if (!window.i18n) {
 let i18n = window.i18n
 
 export {
-    i18n, ContextMenu, CustomElement, Logger, Vector2, pointsNear,
+    i18n, ContextMenu, CustomElement, Logger, Vector2, pointsNear, pointsNearVertical, pointsNearHorizontal,
     relaxRectangle, PropertySheet, Property, PropertyType, getMimeTypeFromDataURI,
     dataURItoBlob, HHToast, getFileNameFromGZip, eventBus, mirrorPoint,
     IsValidWrappedObject, getMethodsAndVariables,
     CustomFieldContentDivGenerator, CustomFieldConfig,
     GraphEvent, EventParam, EventEmitter, getParameterNameAtIdx,
-    getFullEventName, splitFullEventName
+    getFullEventName, splitFullEventName, ShapeArrayProperty,
+    capitalizeFirstLetter, StringProperty
 }
 

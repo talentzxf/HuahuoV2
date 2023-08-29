@@ -1,4 +1,4 @@
-import {UndoableCommand, ExecutionStackFrame} from "./UndoManager";
+import {UndoableCommand} from "./UndoManager";
 import {BaseShapeJS} from "hhenginejs";
 
 class CreateShapeCommand extends UndoableCommand{
@@ -16,8 +16,7 @@ class CreateShapeCommand extends UndoableCommand{
     }
 
     _UnDoCommand() {
-        this.targetShape.detachFromCurrentLayer()
-        this.targetShape.removePaperObj()
+        this.targetShape.remove()
     }
 
     GetType(): string {

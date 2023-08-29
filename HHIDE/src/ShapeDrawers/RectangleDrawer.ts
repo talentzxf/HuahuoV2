@@ -2,6 +2,7 @@ import {BaseShapeDrawer} from "./BaseShapeDrawer";
 import {huahuoEngine, RectangleJS} from "hhenginejs"
 import {Vector2} from "hhcommoncomponents"
 import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
+import {EditorShapeProxy} from "./EditorShapeProxy";
 
 // This piece of code is almost the same as LineDrawer, maybe we should extract a common base class??
 class RectangleDrawer extends BaseShapeDrawer{
@@ -23,7 +24,7 @@ class RectangleDrawer extends BaseShapeDrawer{
         this.startPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.isDrawing = true
 
-        this.tempShape = new RectangleJS()
+        this.tempShape = EditorShapeProxy.CreateProxy(new RectangleJS())
         this.tempShape.setStartPoint(this.startPosition)
         this.tempShape.setEndPoint(this.startPosition)
     }

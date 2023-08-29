@@ -29,6 +29,10 @@ class EditorPlayer extends Player {
 
             huahuoEngine.GetInstance().RegisterEvent("OnKeyFrameChanged", keyFrameChangedHandler)
 
+            let tryAddKeyFrameHandler = new Module.ScriptEventHandlerImpl()
+            tryAddKeyFrameHandler.handleEvent = _this.onTryAddKeyFrame.bind(_this)
+            huahuoEngine.GetInstance().RegisterEvent("TryAddKeyFrame", tryAddKeyFrameHandler)
+
             let layerUpdatedHandler = new Module.ScriptEventHandlerImpl()
             layerUpdatedHandler.handleEvent = _this.onLayerUpdated.bind(_this)
 
@@ -65,7 +69,7 @@ class EditorPlayer extends Player {
 
     setFrameId(playFrameId, force = false) {
         if (sceneViewManager.getFocusedSceneView() != this.sceneView && force == false) {
-            this.stopPlay() // Lost focus, stop play
+            this.pausePlay() // Lost focus, stop play
         } else {
             super.setFrameId(playFrameId)
 
@@ -76,9 +80,21 @@ class EditorPlayer extends Player {
         }
     }
 
+    // If something is changed, TryAddKeyFrame event will be triggered.
+    onTryAddKeyFrame(args){
+        let layerUpdatedEventArgs = Module.wrapPointer(args, Module.LayerUpdatedEventHandlerArgs)
+        let layer = layerUpdatedEventArgs.GetLayer()
+        if(layer != null){
+            this.timeline.selectLayer(layer)
+
+            this.timeline.redrawCanvas()
+        }
+    }
+
     onKeyFrameChanged(args) {
         let keyframeChangedArgs = Module.wrapPointer(args, Module.KeyFrameChangedEventHandlerArgs)
         let layer = keyframeChangedArgs.GetLayer()
+
         // let frameId = keyframeChangedArgs.GetFrameId()
 
         // Check if this event belongs to this EditorPlayer.

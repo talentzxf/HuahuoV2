@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 public interface StorageService {
-    BinaryFileDB store(String path, MultipartFile file, Boolean forceOverride, Boolean isElement) throws IOException, NoSuchAlgorithmException;
+    BinaryFileDB store(String path, MultipartFile file, String fileName, Boolean forceOverride, Boolean isElement) throws IOException, NoSuchAlgorithmException;
     BinaryFileDB getById(Long projectId);
 
     BinaryFileDB save(BinaryFileDB binaryFileDB);
-    boolean storeCoverPage(String path, Long projectId, MultipartFile coverPageFile, boolean isElement) throws IOException;
+    boolean storeCoverPage(String path, Long projectId, MultipartFile coverPageFile, String fileName, boolean isElement) throws IOException;
+
+    void delete(String path) throws IOException;
 }

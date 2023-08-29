@@ -4,13 +4,14 @@ import {api} from "../RESTApis/RestApi";
 import {Logger} from "hhcommoncomponents";
 import {userInfo} from "./UserInfo";
 import {SVGFiles} from "../Utilities/Svgs";
+import {HHForm} from "../Utilities/HHForm";
+import * as string_decoder from "string_decoder";
+import {BaseForm} from "../UIComponents/BaseForm";
 
 @CustomElement({
     selector: "hh-register-form"
 })
-class RegisterForm extends HTMLElement {
-    closeBtn: HTMLButtonElement
-    form: HTMLFormElement
+class RegisterForm extends BaseForm{
     userNameInput: HTMLInputElement
     passwordInput: HTMLInputElement
     passwordRetypeInput: HTMLInputElement
@@ -50,42 +51,33 @@ class RegisterForm extends HTMLElement {
     }
 
     connectedCallback(){
-        this.innerHTML =
-            "   <form id='registerForm'>" +
-            "   <div style='display: flex; flex-direction: row-reverse'>" +
-            "       <div id='registerFormCloseBtn' >" +
-            "           <img class='far fa-circle-xmark'>" +
-            "       </div>" +
-            "   </div>" +
-            "       <h3>Register Here</h3>" +
-            "       <label for='uname'><b>UserName</b></label>" +
+        super.connectedCallback()
+        let formDiv = document.createElement("div")
+
+        this.modalTitle.innerText = "Register Here"
+
+        formDiv.innerHTML =
+            "       <label for='uname' class='form-label'><b>UserName</b></label>" +
             "       <div style='display: flex; align-items: center'>" +
-            "           <input type='text' placeholder='Enter Username' id='username'> " +
+            "           <input class='form-control' type='text' placeholder='Enter Username' id='username'> " +
             "           <img id='userNameCheckImg' style='width:20px; height:20px'> " +
             "       </div>" +
-            "       <label for='nicknameLabel'><b>NickName</b></label>" +
+            "       <label class='form-label' for='nicknameLabel'><b>NickName</b></label>" +
             "       <div style='display: flex; align-items: center'>" +
-            "           <input type='text' placeholder='Enter NickName' id='nickname'> " +
+            "           <input class='form-control' type='text' placeholder='Enter NickName' id='nickname'> " +
             "           <span style='width:20px; height:20px'> " +
             "       </div>" +
-            "       <label for='pwd'><b>Password</b></label>" +
+            "       <label class='form-label' for='pwd'><b>Password</b></label>" +
             "       <div style='display: flex; align-items: center'>" +
-            "           <input type='password' placeholder='Enter Password' id='password'> " +
+            "           <input class='form-control' type='password' placeholder='Enter Password' id='password'> " +
             "           <img id='passwordCheckImg' style='width:20px; height:20px'> " +
             "       </div>" +
             "       <div style='display: flex; align-items: center'>" +
-            "           <input type='password' placeholder='ReEnter Password' id='password_retype'> " +
+            "           <input class='form-control' type='password' placeholder='ReEnter Password' id='password_retype'> " +
             "           <span style='width:20px; height:20px'> " +
-            "       </div>" +
-            "       <button id='createUserBtn'>Create User</button>" +
-            "   </form>"
+            "       </div>"
 
-        this.form = this.querySelector("#registerForm")
-
-        this.form.addEventListener("submit", function (e) {
-            e.stopPropagation()
-            e.preventDefault()
-        })
+        this.form.appendChild(formDiv)
 
         this.userNameCheckImg = this.querySelector("#userNameCheckImg")
         this.userNameCheckImg.src = this.notOkImg
@@ -105,15 +97,25 @@ class RegisterForm extends HTMLElement {
         this.passwordCheckImg = this.form.querySelector("#passwordCheckImg")
         this.passwordCheckImg.src = this.notOkImg
 
-        this.closeBtn = this.form.querySelector("#registerFormCloseBtn")
-        this.closeBtn.addEventListener("click", this.close.bind(this))
-
-        this.createUserBtn = this.form.querySelector("#createUserBtn")
+        this.createUserBtn = document.createElement("button")
+        this.createUserBtn.className = "btn btn-primary disabled"
+        this.createUserBtn.innerText = "Create User"
+        this.footer.appendChild(this.createUserBtn)
         this.createUserBtn.addEventListener("click", this.onCreateUser.bind(this))
+    }
+
+    checkAndSetSubmitButton(){
+        if(this.isAbleToSubmit){
+            this.createUserBtn.classList.remove("disabled")
+        }else {
+            this.createUserBtn.classList.add("disabled")
+        }
     }
 
     onNickNameKeyDown(e:KeyboardEvent){
         this.nickNameSyncFlag = false
+
+        this.checkAndSetSubmitButton()
     }
 
     onUserNameChanged(e:KeyboardEvent){
@@ -131,10 +133,14 @@ class RegisterForm extends HTMLElement {
 
     userExistCallback(){
         this.isUserNameValid = false
+
+        this.checkAndSetSubmitButton()
     }
 
     userNotExistCallback(){
         this.isUserNameValid = true
+
+        this.checkAndSetSubmitButton()
     }
 
     passwordInputChanged(){
@@ -146,6 +152,8 @@ class RegisterForm extends HTMLElement {
         }else{
             this.isPasswordValid = false
         }
+
+        this.checkAndSetSubmitButton()
     }
 
     onCreateUser(){
@@ -162,13 +170,13 @@ class RegisterForm extends HTMLElement {
                 userInfo.username = username
                 userInfo.password = password
                 api.login()
-                _this.close()
+                _this.closeForm()
             })
         }
     }
 
-    close(){
-        (this.parentElement as LoginForm).closeForm();
+    closeForm(){
+        this.style.display = "none"
     }
 }
 

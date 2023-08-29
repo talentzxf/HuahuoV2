@@ -32,7 +32,7 @@ class GeneratorComponent extends AbstractComponent {
         this.paperShapeGroup.scaling = this.baseShape.scaling
 
         for (let targetShape of this.targetShapeArray) {
-            if(targetShape == null) // The shape might not be loaded yet. But in next cycle, it should have been loaded.
+            if (targetShape == null) // The shape might not be loaded yet. But in next cycle, it should have been loaded.
                 continue
 
             let mirageShapeArray = this.targetShapeGeneratedShapeArrayMap.get(targetShape.rawObj.ptr)
@@ -46,41 +46,38 @@ class GeneratorComponent extends AbstractComponent {
             // Duplicate shapes along the edge.
             for (let currentLengthRatio = 0.0; currentLengthRatio <= this.baseShape.getMaxLengthRatio(); currentLengthRatio += this.generateInterval) {
                 let duplicatedShape = null
-                if(mirageShapeArray.length <= index){
+                if (mirageShapeArray.length <= index) {
                     let rawObj = targetShape.rawObj
-                    duplicatedShape = LoadShapeFromCppShape(rawObj, false, false)
+                    duplicatedShape = LoadShapeFromCppShape(rawObj, false, false, true)
                     duplicatedShape.update(true)
 
-                    duplicatedShape.isSelectable = function(){
+                    duplicatedShape.isSelectable = function () {
                         return false
                     }
 
                     duplicatedShape.setSelectedMeta(null)
                     duplicatedShape.isMirage = true
-                    duplicatedShape.isUpdatePos = false // Do not actively update the position, it will be updated in this component.
                     mirageShapeArray.push(duplicatedShape)
 
-                    targetShape.registerValueChangeHandler("*")(()=>{
+                    targetShape.registerValueChangeHandler("*")(() => {
                         duplicatedShape.update(true)
                     })
 
                     this.paperShapeGroup.addChild(duplicatedShape.paperShape)
-                }else{
+                } else {
                     duplicatedShape = mirageShapeArray[index]
-
-                    if(force){
-                        duplicatedShape.update(force)
-                    }
                 }
 
                 let currentLength = this.baseShape.getCurveLength() * currentLengthRatio
                 let position = this.paperShapeGroup.globalToLocal(baseShapeJS.localToGlobal(baseShapeJS.getPointAt(currentLength)))
-                duplicatedShape.position = position
+                duplicatedShape.getActor().setPosition(position.x, position.y)
+
+                duplicatedShape.update(force)
                 index++
             }
 
             // Remove all other shapes.
-            while(mirageShapeArray.length > index){
+            while (mirageShapeArray.length > index) {
                 let tobeDeletedShape = mirageShapeArray.pop()
                 tobeDeletedShape.removePaperObj()
             }
@@ -90,8 +87,8 @@ class GeneratorComponent extends AbstractComponent {
     cleanUp() {
         super.cleanUp();
 
-        for(let [targetShape, shapeArray] of this.targetShapeGeneratedShapeArrayMap){
-            for(let mirageShape of shapeArray){
+        for (let [targetShape, shapeArray] of this.targetShapeGeneratedShapeArrayMap) {
+            for (let mirageShape of shapeArray) {
                 mirageShape.removePaperObj()
             }
         }

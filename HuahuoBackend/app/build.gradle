@@ -7,16 +7,23 @@ plugins {
     id 'org.springframework.boot' version '2.7.2'
     id 'io.spring.dependency-management' version '1.0.12.RELEASE'
     id 'java'
+    id "org.springdoc.openapi-gradle-plugin" version "1.6.0"
 }
 
+project.mainClassName = "online.huahuo.backend.app.HuahuoApplication"
+
 dependencies {
+    // implementation "io.springfox:springfox-boot-starter:3.0.0"
+
     // Dependency
     implementation 'org.apache.commons:commons-text'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-test'
+    implementation("org.springdoc:springdoc-openapi-ui:1.2.33")
     implementation("com.google.guava:guava:31.1-jre")
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate5', version: '2.15.0'
     implementation project(':utilities')
 
     // Compile time

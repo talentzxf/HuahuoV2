@@ -42,7 +42,8 @@ class LayerShapesManager {
         })
     }
 
-    forEachLayerInStore(store, func: (layer, param?) => void, param?) {
+    forEachLayerInStore(func: (layer, param?) => void, param?) {
+        let store = huahuoEngine.GetStoreById(this.storeId)
         let layerCount = store.GetLayerCount();
 
         for (let i = 0; i < layerCount; i++) {
@@ -59,8 +60,9 @@ class LayerShapesManager {
         }
     }
 
-    forEachShapeInStore(store, func: (shape) => void) {
-        this.forEachLayerInStore(store, (layer) => {
+    forEachShapeInStore(func: (shape) => void) {
+        let store = huahuoEngine.GetStoreById(this.storeId)
+        this.forEachLayerInStore((layer) => {
             this.forEachShapeInLayer(layer, func)
         })
     }
@@ -129,7 +131,7 @@ class LayerShapesManager {
                 let shapes = this.layerShapes.get(layer)
                 for (let shapePtr of shapes.keys()) {
                     let shape = shapes.get(shapePtr)
-                    if (shape.belongStoreId != this.storeId) {
+                    if (shape.belongStoreId.length !=0 && shape.belongStoreId != this.storeId) {
                         shape.removePaperObj()
                         shapes.delete(shapePtr)
                     }
@@ -141,13 +143,11 @@ class LayerShapesManager {
     }
 
     updateAllShapes(force: boolean = false) {
-        let store = huahuoEngine.GetStoreById(this.storeId)
-        this.forEachLayerInStore(store, this.updateLayerShapes.bind(this), force)
+        this.forEachLayerInStore(this.updateLayerShapes.bind(this), force)
     }
 
     hideAllShapes() {
-        let store = huahuoEngine.GetStoreById(this.storeId)
-        this.forEachLayerInStore(store, this.hideLayerShapes.bind(this))
+        this.forEachLayerInStore(this.hideLayerShapes.bind(this))
     }
 }
 

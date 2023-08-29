@@ -19,7 +19,7 @@ function NeedLogin() {
                 loginForm.afterLogin = () => {
                         let realMethodReturn = realMethod.apply(target, args)
 
-                        if(realMethodReturn.constructor.name === "Promise")
+                        if(realMethodReturn && realMethodReturn.constructor.name === "Promise")
                         {
                             realMethodReturn.then((response)=>{
                                 resolveFunction(response)

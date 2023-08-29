@@ -8,7 +8,7 @@ import {huahuoEngine} from "hhenginejs"
     "selector": "hh-timeline"
 })
 class HHTimeline extends HTMLElement {
-    private frameCount: number = 1000
+    private frameCount: number = huahuoEngine.defaultFrameCount
     private canvasScrollContainer: HTMLDivElement = null // This will show the scrollbar.
     private canvasContainer: HTMLDivElement = null; // This will contain the canvas
 
@@ -66,7 +66,8 @@ class HHTimeline extends HTMLElement {
             this.canvasScrollContainer.addEventListener("scroll", this.onScroll.bind(this))
             window.addEventListener("resize", this.Resize.bind(this))
 
-            let titleTimeLineTrack = new TitleTimelineTrack(0, this.frameCount, this.canvas.getContext('2d'), 0, null, "timeline.Frames")
+            let i18n = (window as any).i18n
+            let titleTimeLineTrack = new TitleTimelineTrack(0, this.frameCount, this.canvas.getContext('2d'), 0, null, i18n.t("timeline.Frames"))
             this.titleTrack = titleTimeLineTrack
             // Add one timelinetrack
             this.timelineTracks.push(titleTimeLineTrack)
@@ -134,6 +135,23 @@ class HHTimeline extends HTMLElement {
         }
 
         this.redrawCanvas()
+    }
+
+    setLayerIcons(layer, icons){
+
+        let candidateIcons = icons
+
+        let currentIcons = this.layerIconMap.get(layer)
+        if(currentIcons != null && currentIcons.length > 0){
+            candidateIcons.concat(currentIcons) // TODO: Is add twice a good idea??
+        }
+
+        this.layerIconMap.set(layer, candidateIcons)
+
+        let track = this.getTrackFromLayer(layer)
+        if(track){
+            track.setIcons(candidateIcons)
+        }
     }
 
     addNewTrack(layer = null, icons: Array<any> = null) {
@@ -240,6 +258,21 @@ class HHTimeline extends HTMLElement {
         return true
     }
 
+    selectLayer(layer){
+        let track = this.getTrackFromLayer(layer)
+        if(track != null)
+            this.selectTrack(track.getSeqId(), null)
+    }
+
+    selectTrack(trackSeqId, offsetX){
+        this.timelineTracks[trackSeqId].selectTrack(offsetX);
+
+        if (this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId) {
+            this.timelineTracks[this.selectedTrackSeqId].unSelectTrack();
+        }
+        this.selectedTrackSeqId = trackSeqId;
+    }
+
     onCanvasClick(evt: MouseEvent) {
         let trackSeqId = this.calculateTrackSeqId(evt.offsetY)
         if (trackSeqId < 0 || trackSeqId >= this.timelineTracks.length) {
@@ -252,12 +285,8 @@ class HHTimeline extends HTMLElement {
             if (this.selectedTrackSeqId >= 0) {
                 this.timelineTracks[this.selectedTrackSeqId].clearSelect();
             }
-            this.timelineTracks[trackSeqId].selectTrack(evt.offsetX);
 
-            if (this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId) {
-                this.timelineTracks[this.selectedTrackSeqId].unSelectTrack();
-            }
-            this.selectedTrackSeqId = trackSeqId;
+            this.selectTrack(trackSeqId, evt.offsetX)
         } else {
             this.timelineTracks[trackSeqId].rangeSelect(evt.offsetX);
         }

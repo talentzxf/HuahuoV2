@@ -16,6 +16,14 @@ class Vector2{
         return new Vector2(this.x*s, this.y*s)
     }
 
+    multiplyX(s: number){
+        return new Vector2(this.x * s, this.y)
+    }
+
+    multiplyY(s: number){
+        return new Vector2(this.x, this.y * 2)
+    }
+
     distance(p:Vector2){
         return Math.sqrt( (this.x - p.x ) ** 2 + (this.y - p.y ) ** 2)
     }

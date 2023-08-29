@@ -117,7 +117,7 @@ class PlayerView extends HTMLElement {
 
     onPlayButtonClicked(){
         if(this.animationPlayer.isPlaying){
-            this.animationPlayer.stopPlay()
+            this.animationPlayer.pausePlay()
             this.playButton.src = this.playImg
         }else{
             this.animationPlayer.startPlay()
@@ -136,7 +136,7 @@ class PlayerView extends HTMLElement {
             let resizeObserver = new ResizeObserver(this.OnResize.bind(this))
             resizeObserver.observe(this.canvasContainer)
             this.animationPlayer = new Player();
-            this.animationPlayer.storeId = 1
+            this.animationPlayer.storeId = null
 
             this.style.width = "100%"
             this.style.height = "100%"

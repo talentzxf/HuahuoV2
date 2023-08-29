@@ -10,6 +10,18 @@ import {fileLoader} from "./FileLoader";
 import {findParentContent, findParentPanel, HHSideBar} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
 import {SVGFiles} from "../Utilities/Svgs";
+import {formManager} from "../Utilities/FormManager"
+import {EventGraphForm} from "../EventGraphUI/EventGraphForm";
+
+function allReadyExecute(fn: Function) {
+    i18n.ExecuteAfterInited(
+        () => {
+            huahuoEngine.ExecuteAfterInited(
+                fn
+            )
+        }
+    )
+}
 
 @CustomElement({
     selector: "hh-sceneview"
@@ -31,7 +43,7 @@ class SceneView extends HTMLElement {
     inited: boolean = false;
     timeline: HHTimeline = null;
 
-    setStoreId(storeId: string){
+    setStoreId(storeId: string) {
         this.storeId = storeId
         this.animationPlayer.storeId = storeId
     }
@@ -43,7 +55,7 @@ class SceneView extends HTMLElement {
         // this.canvasContainer.style.height = "100%"
         this.canvasContainer.style.padding = "0"
         this.canvasContainer.style.margin = "0"
-        this.canvasContainer.style.backgroundColor = "gray"
+        this.canvasContainer.style.backgroundColor = "lightgray"
         this.canvasContainer.style.flexBasis = "100%"
         this.canvasContainer.style.overflowY = "auto"
 
@@ -63,13 +75,13 @@ class SceneView extends HTMLElement {
 
         this.ctx = this.canvas.getContext("2d")
 
-        this.canvas.addEventListener("dragover", (e)=>{
+        this.canvas.addEventListener("dragover", (e) => {
             e.stopPropagation()
             e.preventDefault()
             e.dataTransfer.dropEffect = "copy"
         })
 
-        this.canvas.addEventListener("drop", (e)=>{
+        this.canvas.addEventListener("drop", (e) => {
             e.stopPropagation()
             e.preventDefault()
             const fileList = e.dataTransfer.files;
@@ -77,15 +89,30 @@ class SceneView extends HTMLElement {
         })
     }
 
-    OnKeyDown(e:KeyboardEvent){
-        if(e.key == "Escape"){
+    isPanning = false
+
+    OnKeyDown(e: KeyboardEvent) {
+        if (e.key == "Escape") {
             this.endOfDrawingShape(this.currentShapeDrawer)
+        } else {
+            if (e.ctrlKey) {
+                this.canvas.style.cursor = "grabbing"
+                this.isPanning = true
+            }
+        }
+    }
+
+    OnKeyUp(e: KeyboardEvent) {
+        if (!e.ctrlKey) {
+            this.canvas.style.cursor = "default"
+            this.isPanning = false
         }
     }
 
     setupEventsAndCreateFirstTrack() {
         window.addEventListener("resize", this.OnResize.bind(this))
         window.addEventListener("keydown", this.OnKeyDown.bind(this))
+        window.addEventListener("keyup", this.OnKeyUp.bind(this))
 
         let resizeObserver = new ResizeObserver(this.OnResize.bind(this))
         resizeObserver.observe(this.canvasContainer)
@@ -96,53 +123,89 @@ class SceneView extends HTMLElement {
         this.canvas.addEventListener("mousedown", this.onMouseDown.bind(this))
         this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this))
         this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this))
+        this.canvas.addEventListener("wheel", this.onWheel.bind(this))
         this.canvas.addEventListener("dblclick", this.onDbClick.bind(this))
 
+
+        if (this.timeline == null)
+            this.timeline = document.createElement("hh-timeline") as HHTimeline
+
+        this.canvasContainer.insertBefore(this.timeline, this.canvas)
+
         let _this = this
-        huahuoEngine.ExecuteAfterInited(() => {
-            _this.timeline = document.createElement("hh-timeline") as HHTimeline
-            _this.canvasContainer.insertBefore(_this.timeline, _this.canvas)
-
-            let i18n = (window as any).i18n;
-            i18n.ExecuteAfterInited(()=>{
-                _this.timeline.contextMenu.setItems([
-                    {
-                        itemName: i18n.t("contextmenu.mergecells"),
-                        onclick: _this.timeline.mergeCells.bind(_this.timeline)
-                    },
-                    {
-                        itemName: i18n.t("contextmenu.createNewTrack"),
-                        onclick: function(e){
-                            _this.createNewTrack(_this.timeline)
-                        }
-                    },
-                    {
-                        itemName: i18n.t("contextmenu.markAsAnimationEnd"),
-                        onclick: function(e){
-                            _this.markAsAnimationEnd(_this.timeline)
-                        }
-                    }
-                ])
-
-                // If no layer in the store now, create a new track.
-                let layerCount = huahuoEngine.GetCurrentStore().GetLayerCount()
-                if(layerCount == 0)
-                    _this.createNewTrack(_this.timeline)
-                else
-                    _this.timeline.reloadTracks()
-
-                if(_this.animationPlayer == null){
-                    _this.animationPlayer = new EditorPlayer(_this)
-                    huahuoEngine.setActivePlayer(_this.animationPlayer)
+        this.timeline.contextMenu.setItems([
+            {
+                itemName: i18n.t("contextmenu.mergecells"),
+                onclick: _this.timeline.mergeCells.bind(_this.timeline)
+            },
+            {
+                itemName: i18n.t("contextmenu.createNewTrack"),
+                onclick: function (e) {
+                    _this.createNewTrack()
                 }
-            })
-        })
+            },
+            {
+                itemName: i18n.t("contextmenu.markAsAnimationEnd"),
+                onclick: function (e) {
+                    _this.markAsAnimationEnd(_this.timeline)
+                }
+            },
+            {
+                itemName: i18n.t("编辑帧时间图"),
+                onclick: function (e) {
+                    _this.openFrameEventGraphForm()
+                }
+            }
+        ])
+
+        let currentStore = huahuoEngine.GetCurrentStore()
+        // If no layer in the store now, create a new track.
+        let layerCount = currentStore.GetLayerCount()
+        if (layerCount == 0)
+            this.createNewTrack()
+        else {
+            // Set up icons. In some cases, layers are created else where (like in elementCreator) and icons are not setup during layer creation
+            for (let layerId = 0; layerId < layerCount; layerId++) {
+                let layer = currentStore.GetLayer(layerId)
+                let eyeIcon = this.createEyeIcon()
+                this.timeline.setLayerIcons(layer, [eyeIcon])
+            }
+            this.timeline.reloadTracks()
+        }
+
+
+        if (this.animationPlayer == null) {
+            this.animationPlayer = new EditorPlayer(this)
+            huahuoEngine.setActivePlayer(this.animationPlayer)
+        }
     }
 
-    markAsAnimationEnd(timeline: HHTimeline){
+    openFrameEventGraphForm(){
+        // let eventGraphForm = formManager.openForm(EventGraphForm)
+        // eventGraphForm.setTargetComponent()
+    }
+
+    onWheel(evt: WheelEvent) {
+        if (evt.ctrlKey) {
+            evt.stopPropagation()
+            evt.preventDefault()
+
+            let mousePoint = new paper.Point(evt.offsetX, evt.offsetY)
+
+            let curView = (window.paper as any).view
+            let oldZoom = curView.zoom
+            let oldCenter = curView.center
+            evt.deltaY > 0 ? renderEngine2D.zoomOut(1.01) : renderEngine2D.zoomIn(1.01)
+            let newZoom = curView.zoom
+
+            let newViewCenterDelta = (mousePoint.subtract(oldCenter)).multiply(1.0 - oldZoom / newZoom)
+            curView.center = curView.center.add(newViewCenterDelta)
+        }
+    }
+
+    markAsAnimationEnd(timeline: HHTimeline) {
         let titleTrack = timeline.getTrack(0)
-        if(titleTrack == null)
-        {
+        if (titleTrack == null) {
             Logger.error("No title bar??")
             return;
         }
@@ -150,7 +213,7 @@ class SceneView extends HTMLElement {
         console.log("Set max animation frame as:" + cellId)
 
         let firstTrack = timeline.getTrack(1)
-        if(firstTrack == null){
+        if (firstTrack == null) {
             Logger.error("No track in the timeline??")
             return;
         }
@@ -158,26 +221,33 @@ class SceneView extends HTMLElement {
         firstTrack.getLayer().GetObjectStore().UpdateMaxFrameId(cellId, true)
     }
 
-    createNewTrack(timeline){
+    createEyeIcon() {
+        let _this = this
         let eyeIcon = new Image()
         eyeIcon.src = SVGFiles.eyeSvg
-        eyeIcon["onIconClicked"] = function(layer){
+        eyeIcon["onIconClicked"] = function (layer) {
             let currentlyVisible = layer.GetIsVisible()
-            if(currentlyVisible){ // Currently visible
+            if (currentlyVisible) { // Currently visible
                 eyeIcon.src = SVGFiles.eyeSlashSvg
-            }else{
+            } else {
                 eyeIcon.src = SVGFiles.eyeSvg
             }
 
             layer.SetIsVisible(!currentlyVisible)
         }
 
-        eyeIcon.onload = function(){
-            timeline.reloadTracks()
+        eyeIcon.onload = function () {
+            _this.timeline.reloadTracks()
         }
 
-        timeline.reloadTracks()
-        timeline.addNewTrack(null, [eyeIcon])
+        return eyeIcon
+    }
+
+    createNewTrack() {
+        let eyeIcon = this.createEyeIcon()
+        this.timeline.reloadTracks()
+        let track = this.timeline.addNewTrack(null, [eyeIcon])
+        this.timeline.selectTrack(track.getSeqId(), null)
     }
 
     createGizmos() {
@@ -221,8 +291,8 @@ class SceneView extends HTMLElement {
     //     xCoord.strokeWidth = 10
     // }
 
-    connectedCallback() {
-        if(!this.inited){
+    initSceneView() {
+        if (!this.inited) {
             this.style.width = "100%"
             this.style.height = "100%"
 
@@ -230,46 +300,54 @@ class SceneView extends HTMLElement {
             this.createCanvas()
             renderEngine2D.init(this.canvas);
 
-            // (window as any).i18n.ExecuteAfterInited(this.createGizmos.bind(this)) // Need translate here!
+            this.createGizmos()
 
-            // this.drawCoordinate();
             this.setupEventsAndCreateFirstTrack()
 
             defaultShapeDrawer.onBeginToDrawShape(this.canvas)
 
-            let _this = this
-            huahuoEngine.ExecuteAfterInited(() => {
-                _this.storeId = huahuoEngine.GetCurrentStore().GetStoreId()
-                console.log("New store id:" + _this.storeId)
+            this.storeId = huahuoEngine.GetCurrentStore().GetStoreId()
+            console.log("New store id:" + this.storeId)
 
-                if(!_this.animationPlayer){
-                    _this.animationPlayer = new EditorPlayer(_this)
-                    huahuoEngine.setActivePlayer(_this.animationPlayer)
-                }
-                _this.animationPlayer.storeId = _this.storeId
-            })
+            if (!this.animationPlayer) {
+                this.animationPlayer = new EditorPlayer(this)
+                huahuoEngine.setActivePlayer(this.animationPlayer)
+            }
+            this.animationPlayer.storeId = this.storeId
 
             this.inited = true
 
             sceneViewManager.registerSceneView(this)
 
-            huahuoEngine.ExecuteAfterInited(()=>{
-                sceneViewManager.focusSceneView(_this)
-            })
+            sceneViewManager.focusSceneView(this)
 
             // Refresh sidebar content.
             let sidebars = document.querySelectorAll("hh-sidebar")
-            for(let sidebar of sidebars){
+            for (let sidebar of sidebars) {
                 (sidebar as HHSideBar).refreshDockables()
             }
         }
     }
 
-    onDbClick(evt:MouseEvent){
+    connectedCallback() {
+        allReadyExecute(this.initSceneView.bind(this))
+    }
+
+    onDbClick(evt: MouseEvent) {
         if (this.currentShapeDrawer && !this.isPlaying) {
             this.currentShapeDrawer.onDblClick(evt)
         }
     }
+
+    resetDefaultShapeDrawer() {
+        defaultShapeDrawer.onBeginToDrawShape(this.canvas)
+    }
+
+    get isPlaying(): boolean {
+        return null != this.animationPlayer && this.animationPlayer.isPlaying
+    }
+
+    panningStartPoint: paper.Point
 
     onMouseDown(evt: MouseEvent) {
         // Operating in this sceneview, set the storeId of this sceneview as default.
@@ -283,28 +361,37 @@ class SceneView extends HTMLElement {
         let title = content.getTitle()
         panel.selectTab(title.tabIndex)
 
-        if (this.currentShapeDrawer && !this.isPlaying) {
+        if (evt.ctrlKey) {
+            this.isPanning = true
+            this.panningStartPoint = new paper.Point(evt.offsetX, evt.offsetY)
+        } else if (this.currentShapeDrawer && !this.isPlaying) {
             this.currentShapeDrawer.onMouseDown(evt)
         }
     }
 
-    resetDefaultShapeDrawer(){
-        defaultShapeDrawer.onBeginToDrawShape(this.canvas)
-    }
-
-    get isPlaying():boolean{
-        return null != this.animationPlayer && this.animationPlayer.isPlaying
-    }
-
     onMouseMove(evt: MouseEvent) {
-        if (this.currentShapeDrawer && !this.isPlaying) {
-            this.currentShapeDrawer.onMouseMove(evt)
+        if (!this.isPanning) {
+            if (this.currentShapeDrawer && !this.isPlaying) {
+                this.currentShapeDrawer.onMouseMove(evt)
+            }
+        } else {
+            if (this.panningStartPoint != null) {
+                let curView = (window.paper as any).view
+
+                let currentPoint = curView.viewToProject(new paper.Point(evt.offsetX, evt.offsetY))
+                let panningStart = curView.viewToProject(this.panningStartPoint)
+                let delta = panningStart.subtract(currentPoint)
+                curView.center = delta.add(curView.center)
+
+                this.panningStartPoint = new paper.Point(evt.offsetX, evt.offsetY)
+            }
         }
     }
 
     onMouseUp(evt: MouseEvent) {
         if (this.currentShapeDrawer && !this.isPlaying) {
             this.currentShapeDrawer.onMouseUp(evt)
+            this.panningStartPoint = null
         }
     }
 
@@ -319,13 +406,13 @@ class SceneView extends HTMLElement {
     }
 
     OnResize() {
-        if(window.getComputedStyle(this.parentElement).display == "none")
+        if (window.getComputedStyle(this.parentElement).display == "none")
             return;
 
         // Find the panel
         let panel = findParentPanel(this.canvasContainer)
 
-        if(panel == null)  // The scene view might has already been closed
+        if (panel == null)  // The scene view might has already been closed
             return;
 
         // TODO: Move this into HHPanel??
@@ -333,7 +420,7 @@ class SceneView extends HTMLElement {
         let panelHeight = panel.clientHeight
         let titleHeight = panel.querySelector(".title_tabs").clientHeight
 
-        let timelineHeight = this.timeline?this.timeline.canvasScrollContainer.offsetHeight:0;
+        let timelineHeight = this.timeline ? this.timeline.canvasScrollContainer.offsetHeight : 0;
         let contentHeight = panelHeight - titleHeight - timelineHeight;
 
 //        let containerWidth = this.canvasContainer.clientWidth
@@ -362,12 +449,12 @@ class SceneView extends HTMLElement {
         this.canvas.style.top = (containerHeight - canvasHeight) / 2 + "px"
         this.Redraw()
 
-        if(this.gizmoContainer)
+        if (this.gizmoContainer)
             this.gizmoContainer.style.top = this.canvas.offsetHeight + timelineHeight + "px"
 
         // Refresh sidebar content.
         let sidebars = document.querySelectorAll("hh-sidebar")
-        for(let sidebar of sidebars){
+        for (let sidebar of sidebars) {
             (sidebar as HHSideBar).refreshDockables()
         }
     }
@@ -379,7 +466,7 @@ class SceneView extends HTMLElement {
 
         let previousCanvas = renderEngine2D.setDefaultCanvas(this.canvas)
         renderEngine2D.clearBackground()
-        if(previousCanvas)
+        if (previousCanvas)
             renderEngine2D.setDefaultCanvas(previousCanvas)
     }
 

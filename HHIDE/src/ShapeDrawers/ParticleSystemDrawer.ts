@@ -4,6 +4,7 @@ import {Vector2} from "hhcommoncomponents";
 import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {ParticleSystemJS} from "hhenginejs";
 import {huahuoEngine} from "hhenginejs";
+import {EditorShapeProxy} from "./EditorShapeProxy";
 
 class ParticleSystemDrawer extends BaseShapeDrawer {
     name = "Particles"
@@ -24,7 +25,7 @@ class ParticleSystemDrawer extends BaseShapeDrawer {
         this.startPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.isDrawing = true
 
-        this.tempShape = new ParticleSystemJS()
+        this.tempShape = EditorShapeProxy.CreateProxy(new ParticleSystemJS())
         this.tempShape.setStartPoint(this.startPosition)
         this.tempShape.setEndPoint(this.startPosition)
     }

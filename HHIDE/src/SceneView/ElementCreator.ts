@@ -8,6 +8,9 @@ import {sceneViewManager} from "./SceneViewManager";
 import {BaseShapeJS, Utils} from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {elementUploader} from "../RESTApis/ElementUploader";
+import {formManager} from "../Utilities/FormManager";
+import {UploadElementForm} from "../UIComponents/UploadElementForm";
+import {EditorShapeProxy} from "../ShapeDrawers/EditorShapeProxy";
 
 declare var Module:any;
 
@@ -35,9 +38,9 @@ class ElementCreator {
             huahuoEngine.registerEventListener("HHEngine", "onUploadElement", _this.uploadElement.bind(_this))
 
             let storeAddedHandler = new Module.ScriptEventHandlerImpl()
-            storeAddedHandler.handleEvent = _this.OnStoreAdded.bind(_this)
+            storeAddedHandler.handleEvent = _this.OnRootStoreAdded.bind(_this)
 
-            huahuoEngine.GetInstance().RegisterEvent("OnStoreAdded", storeAddedHandler)
+            huahuoEngine.GetInstance().RegisterEvent("OnRootStoreAdded", storeAddedHandler)
 
         })
     }
@@ -47,7 +50,22 @@ class ElementCreator {
     }
 
     uploadElement(element){
-        elementUploader.uploadStore(element.storeId, element.name)
+        let uploadElementForm = formManager.openForm(UploadElementForm)
+        uploadElementForm.setStore(element.storeId, element.name)
+        uploadElementForm.onOKAction = (isShareable, isEditable)=>{
+
+            let store = huahuoEngine.GetStoreById(element.storeId)
+            let storeMeta = store.GetMetaData()
+
+            storeMeta.SetIsEditable(isEditable)
+            let globalPosition = element.position
+            storeMeta.SetElementGlobalPivotCenter(globalPosition.x, globalPosition.y, 0.0)
+
+            let localPosition = element.localPivotPosition
+            storeMeta.SetElementLocalPivotCenter(localPosition.x, localPosition.y, 0.0)
+
+            elementUploader.uploadStore(element.storeId, element.name, isShareable, isEditable)
+        }
     }
 
     onShapeCreated(newShape) {
@@ -60,6 +78,10 @@ class ElementCreator {
         }
 
         newShape.registerValueChangeHandler("index")(() => {
+            elementCreator.dispatchElementChange(newShape.bornStoreId)
+        })
+
+        newShape.registerComponentValueChangeHandler( ()=>{
             elementCreator.dispatchElementChange(newShape.bornStoreId)
         })
     }
@@ -157,11 +179,11 @@ class ElementCreator {
 
     onNewElement(openElementTab: boolean = true, storeId: string = null) {
 
-        let elementId = "NewElement_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+        let elementName = "NewElement_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
 
         // Create shape in the original scene/element
-        let newElementShape = new ElementShapeJS()
-        newElementShape.name = elementId
+        let newElementShape = EditorShapeProxy.CreateProxy(new ElementShapeJS())
+        newElementShape.name = elementName
         newElementShape.createShape()
         newElementShape.position = new paper.Point(0, 0)
         newElementShape.store()
@@ -190,6 +212,9 @@ class ElementCreator {
     }
 
     createElement(shapes: Set<BaseShapeJS>): ElementShapeJS {
+        if(shapes.size == 0)
+            return
+
         let prevStoreId = huahuoEngine.GetCurrentStoreId()
 
         let allRelatedShapes = new Set<BaseShapeJS>()
@@ -228,7 +253,8 @@ class ElementCreator {
 
             let newElement = this.onNewElement(false) as ElementShapeJS
             // Create Layer for the store as we won't open it. (If we open it, timeline track will create it.)
-            huahuoEngine.GetCurrentStore().CreateLayer(newElement.name)
+            let layer = huahuoEngine.GetCurrentStore().CreateLayer(newElement.name)
+            layer.GetTimeLineCellManager().MergeCells(0, huahuoEngine.defaultFrameCount)
 
             // It's much easier to align element with the global coordinate. Or else we need to set the position for all the keyframes
             // of all the underlying shapes!
@@ -271,14 +297,24 @@ class ElementCreator {
         }
     }
 
-    OnStoreAdded(args){
+    OnRootStoreAdded(args){
         let objectStoreAddedEvent = Module.wrapPointer(args, Module.ObjectStoreAddedEvent)
         let store = objectStoreAddedEvent.GetStore()
-        console.log("Store added!!!")
+        console.log("Root Store added!!!")
 
         let newElement = this.onNewElement(false, store.GetStoreId())
         HHToast.info(i18n.t("toast.elementLoaded"))
         newElement.update(true)
+
+        let localPosition = store.GetMetaData().GetElementLocalPivotCenter()
+        newElement.pivotPosition = new paper.Point(localPosition.x, localPosition.y)
+        let globalPosition = store.GetMetaData().GetElementGlobalPivotCenter()
+        newElement.position = new paper.Point(globalPosition.x, globalPosition.y)
+
+        // Update the maxFrameId of the current store.
+        let maxFrameId = store.GetMaxFrameId();
+        huahuoEngine.GetCurrentStore().UpdateMaxFrameId(newElement.bornFrameId + maxFrameId)
+
         huahuoEngine.getActivePlayer().updateAllShapes(true)
     }
 }

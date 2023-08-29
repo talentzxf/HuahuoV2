@@ -124,6 +124,8 @@ class ShortcutsManager{
         }
 
         this.lastPressedTime = Date.now()
+
+        e.stopPropagation()
     }
 }
 

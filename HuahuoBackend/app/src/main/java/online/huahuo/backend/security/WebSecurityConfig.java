@@ -46,6 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         if(disableCSRF){
             httpSecurity.csrf().disable();
             httpSecurity.cors().disable();
+        } else {
+            httpSecurity.csrf().ignoringAntMatchers("/users");
         }
     }
 }

@@ -1,5 +1,6 @@
 package online.huahuo.backend.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.RequiredArgsConstructor;
 import online.huahuo.backend.db.UserDB;
 import online.huahuo.backend.db.UserRole;
@@ -59,8 +60,9 @@ public class UserController {
         return userService.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
+    @SecurityRequirements()
     @PostMapping("/users")
-    ResponseEntity<UserDB> newUser(@RequestHeader(required = false) Boolean isAnonymous, @RequestBody(required = false) UserDB user) throws NoSuchAlgorithmException {
+    ResponseEntity<UserDB> createUser(@RequestHeader(required = false) Boolean isAnonymous, @RequestBody(required = false) UserDB user) throws NoSuchAlgorithmException {
         if (isAnonymous == null && user == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

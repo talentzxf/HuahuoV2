@@ -3,8 +3,9 @@ import {BaseSolidShape} from "./BaseSolidShape";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 
 let shapeName = "RectangleShape"
-class RectangleJS extends BaseSolidShape{
-    static createRectangle(rawObj){
+
+class RectangleJS extends BaseSolidShape {
+    static createRectangle(rawObj) {
         return new RectangleJS(rawObj)
     }
 
@@ -12,7 +13,7 @@ class RectangleJS extends BaseSolidShape{
         return shapeName
     }
 
-    createShape(){
+    createShape() {
         super.createShape()
 
         let p1 = this.getPaperPoint(this.rawObj.GetStartPoint())
@@ -27,14 +28,14 @@ class RectangleJS extends BaseSolidShape{
         super.afterCreateShape()
     }
 
-    setStartPoint(startPoint: Vector2){
+    setStartPoint(startPoint: Vector2) {
         this.rawObj.SetStartPoint(startPoint.x, startPoint.y, 0)
     }
 
-    setEndPoint(endPoint: Vector2){
+    setEndPoint(endPoint: Vector2) {
         this.rawObj.SetEndPoint(endPoint.x, endPoint.y, 0);
 
-        if(this.paperShape != null){
+        if (this.paperShape != null) {
             this.paperShape.remove()
         }
 

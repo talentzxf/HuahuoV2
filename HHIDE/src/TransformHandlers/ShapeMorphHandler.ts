@@ -181,7 +181,7 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
     }
 
     dragging(pos) {
-        if (this.isDragging && this.curSegment != null) {
+        if (this.isDragging && this.curSegment != null && !this.targetShape.isLocked()) {
             let startPoint = new paper.Point(this.startPos.x, this.startPos.y)
             let posPoint = new paper.Point(pos.x, pos.y)
             let localStart = this.targetShape.globalToLocal(startPoint)
@@ -227,7 +227,7 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
     }
 
     dragging(pos) {
-        if (this.isDragging && this.curSegment != null) {
+        if (this.isDragging && this.curSegment != null && !this.targetShape.isLocked()) {
             let startPoint = new paper.Point(this.startPos.x, this.startPos.y)
             let posPoint = new paper.Point(pos.x, pos.y)
             let localStart = this.targetShape.globalToLocal(startPoint)
@@ -258,6 +258,8 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
 class ShapeInsertSegmentHandler extends ShapeMorphHandler {
     beginMove(startPos, hitResult = null, showInspector: boolean = true) {
         super.beginMove(startPos);
+        if(this.targetShape.isLocked())
+            return
 
         if (!this.targetShape.isSegmentSeletable())
             return

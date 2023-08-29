@@ -1,11 +1,11 @@
 import {huahuoEngine} from "../EngineAPI";
-import {Vector2, eventBus} from "hhcommoncomponents";
-import {relaxRectangle, PropertySheet, PropertyType, Logger} from "hhcommoncomponents"
+import {Vector2} from "hhcommoncomponents";
+import {PropertySheet, PropertyType, Logger} from "hhcommoncomponents"
 import * as paper from "paper";
-import {ShapeCenterSelector} from "./ShapeCenterSelector";
 import {ValueChangeHandler} from "./ValueChangeHandler";
 import {AbstractComponent} from "../Components/AbstractComponent";
-import {BaseShapeActions} from "../EventGraph/BaseShapeActions";
+import {BaseShapeActor} from "../EventGraph/BaseShapeActor";
+import {clzObjectFactory} from "../CppClassObjectFactory";
 
 let BASIC_COMPONENTS = "BasicComponents"
 
@@ -15,17 +15,6 @@ declare function castObject(obj: any, clz: any): any;
 
 declare var Module: any;
 
-declare class ShapeFollowCurveFrameState {
-    GetTargetShape()
-
-    GetLengthRatio(): number
-
-    RecordTargetShape(frameId: number, targetCurve)
-
-    RecordLengthRatio(frameId: number, lengthRatio: number)
-}
-
-const BOUNDMARGIN: number = 10
 const eps: number = 0.001
 
 let totallyUpdated: number = 0
@@ -35,11 +24,10 @@ abstract class BaseShapeJS {
     protected paperItem: paper.Item
     protected isSelected = false
 
-    protected boundingBoxGroup = null;
 
     // If this shape is not loaded from (i.e. generated on the fly), we might need to record some information during creation. like it's local pivot position.
     // Or else, just read these information from the file.
-    private isLoadedFromFile: boolean = false;
+    protected isLoadedFromFile: boolean = false;
 
     // This is used for Editor only to set properties.
     protected propertySheet: PropertySheet
@@ -48,34 +36,28 @@ abstract class BaseShapeJS {
 
     private bornStoreId: string;
 
-    private shapeCenterSelector: ShapeCenterSelector;
-
-    private shapeFollowCurveFrameState: ShapeFollowCurveFrameState;
-
     private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
-    private customComponents: Array<AbstractComponent> = new Array<AbstractComponent>()
+    // From ptr to the component.
+    private customComponentMap: Map<number, AbstractComponent> = new Map<number, AbstractComponent>()
 
     private _isMirage: boolean = false
-    private _isUpdatePos: boolean = true
 
     private lastRenderFrame = -1
+    
+    // Purpose of actor is to store temporary results during system running. All the status in the actor won't be persisted.
+    private actor: BaseShapeActor = new BaseShapeActor(this)
 
-    private followCurveEventRegistered = false
+    private get customComponents() {
+        return this.customComponentMap.values();
+    }
 
-    // Purpose of action is to store temporary results during system running. All the status in the action won't be persisted.
-    private action: BaseShapeActions = new BaseShapeActions(this)
-
-    public getAction() {
-        return this.action
+    public getActor() {
+        return this.actor
     }
 
     set isTransformationPermanent(isPermanent: boolean) {
         this.rawObj.SetRecordTransformationOfKeyFrame(isPermanent)
-    }
-
-    set isUpdatePos(val: boolean) {
-        this._isUpdatePos = val
     }
 
     set isMirage(val: boolean) {
@@ -95,19 +77,9 @@ abstract class BaseShapeJS {
     }
 
     get pivotPosition(): paper.Point {
-        if (!this.followCurve) {
-            if (this.action.isPositionValid)
-                return this.action.position
-            return this.rawObj.GetGlobalPivotPosition()
-        }
-
-        let lengthRatio = this.shapeFollowCurveFrameState.GetLengthRatio();
-
-        let totalLength = this.followCurve.length()
-        let targetLength = totalLength * lengthRatio
-
-        let curvePoint = this.followCurve.getPointAt(targetLength)
-        return this.followCurve.localToGlobal(curvePoint)
+        if (this.actor.isPositionValid)
+            return this.actor.position
+        return this.rawObj.GetGlobalPivotPosition()
     }
 
     set pivotPosition(centerPosition: paper.Point) {
@@ -116,25 +88,60 @@ abstract class BaseShapeJS {
         this.paperItem.scaling = new paper.Point(1.0, 1.0)
 
         let localCenterPos = this.paperItem.globalToLocal(centerPosition)
-
         this.rawObj.SetGlobalPivotPosition(centerPosition.x, centerPosition.y, 0.0)
         this.rawObj.SetLocalPivotPosition(localCenterPos.x, localCenterPos.y, 0.0)
 
         this.paperItem.scaling = currentScaling
     }
 
-    addComponent(component: AbstractComponent, persistentTheComponent: boolean = true) {
-        if (persistentTheComponent)
-            this.rawObj.AddFrameState(component.rawObj)
-        component.setBaseShape(this)
-        this.customComponents.push(component)
+    saveAsKeyFrame() {
+        if (this.rawObj)
+            this.rawObj.SaveAsKeyFrame()
+    }
 
-        component.initPropertySheet(this.propertySheet)
+    componentValueChangeHandlers: Array<Function> = new Array()
+
+    addComponent(component: AbstractComponent, persistentTheComponent: boolean = true) {
+        if (this.customComponentMap.has(component.rawObj.ptr)) {
+            return
+        }
+
+        if (persistentTheComponent) {
+            this.rawObj.AddFrameState(component.rawObj)
+        }
+
+        this.customComponentMap.set(component.rawObj.ptr, component)
+        component.setBaseShape(this)
+
+        let _this = this
+        component.registerValueChangeHandler("*", () => {
+            for (let func of _this.componentValueChangeHandlers) {
+                func()
+            }
+        })
+    }
+
+    // If allowNull, performance will be a little better
+    getComponents(allowNulls = false){
+
+        if(allowNulls)
+            return this.customComponents
+
+        let components = []
+        for(let component of this.customComponents){
+            if(component != null)
+                components.push(component)
+        }
+
+        return components
     }
 
     getComponentCountByTypeName(typeName) {
         let returnCount = 0
         for (let component of this.customComponents) {
+            if (component == null)
+                continue
+
             if (component.getTypeName() == typeName) {
                 returnCount++
             }
@@ -144,6 +151,8 @@ abstract class BaseShapeJS {
 
     getComponentByTypeName(typeName) {
         for (let component of this.customComponents) {
+            if (component == null)
+                continue;
             if (component.getTypeName() == typeName) {
                 return component
             }
@@ -161,10 +170,6 @@ abstract class BaseShapeJS {
 
     public setBornStoreId(val: string) {
         this.bornStoreId = val
-    }
-
-    protected isUpdateStrokeColor() {
-        return true;
     }
 
     set paperShape(val: paper.Path) {
@@ -223,7 +228,14 @@ abstract class BaseShapeJS {
         this.rawObj.SetName(name)
     }
 
+    getBounds(){
+        return this.bounds;
+    }
+
     get bounds(): paper.Rectangle {
+        if(this.paperItem == null)
+            return null
+
         return this.paperItem.bounds
     }
 
@@ -239,8 +251,8 @@ abstract class BaseShapeJS {
     }
 
     get rotation(): number {
-        if (this.action.isRotationValid)
-            return this.action.rotation
+        if (this.actor.isRotationValid)
+            return this.actor.rotation
         return this.rawObj.GetRotation()
     }
 
@@ -298,7 +310,6 @@ abstract class BaseShapeJS {
             }
         }
     }
-
     duplicate() {
         let newRawObj = huahuoEngine.DuplicateObject(this.rawObj)
         let shapeLayer = newRawObj.GetLayer()
@@ -332,7 +343,7 @@ abstract class BaseShapeJS {
     }
 
     // The method can only be called after the shape has been created.
-    setParentLocalPosition(val: paper.Point, callHandlers: boolean = true, forceUpdate: boolean = true, isUpdatefollowCurve: boolean = true) {
+    setParentLocalPosition(val: paper.Point, callHandlers: boolean = true, forceUpdate: boolean = true) {
         let currentScaling = this.scaling
 
         try {
@@ -350,15 +361,6 @@ abstract class BaseShapeJS {
 
             this.paperShape.position = nextShapePosition
             this.rawObj.SetGlobalPivotPosition(val.x, val.y, 0.0)
-
-            if (this.followCurve && isUpdatefollowCurve) {
-                let followCurveShape = this.followCurve
-                let length = followCurveShape.getGlobalOffsetOf(val)
-                let lengthPortion = length / followCurveShape.length()
-
-                let frameId = this.getLayer().GetCurrentFrame()
-                this.shapeFollowCurveFrameState.RecordLengthRatio(frameId, lengthPortion)
-            }
 
             if (callHandlers)
                 this.valueChangeHandler.callHandlers("position", val)
@@ -393,8 +395,10 @@ abstract class BaseShapeJS {
 
     set selected(val: boolean) {
         this.isSelected = val
+    }
 
-        this.updateBoundingBox()
+    registerComponentValueChangeHandler(func) {
+        this.componentValueChangeHandlers.push(func)
     }
 
     // Remove these functions later.
@@ -408,41 +412,6 @@ abstract class BaseShapeJS {
 
     callHandlers(propertyName: string, val: any) {
         this.valueChangeHandler.callHandlers(propertyName, val)
-    }
-
-    updateBoundingBox() {
-        if (this.isSelected) {
-            {
-                if (this.boundingBoxGroup)
-                    this.boundingBoxGroup.remove()
-
-                let boundingBox = this.paperItem.bounds;
-
-                let paperjs = this.getPaperJs()
-                this.boundingBoxGroup = new paperjs.Group()
-
-                let boundingBoxRect = new paperjs.Path.Rectangle(relaxRectangle(boundingBox, BOUNDMARGIN))
-                boundingBoxRect.dashArray = [4, 10]
-                boundingBoxRect.strokeColor = new paper.Color("black")
-                this.boundingBoxGroup.addChild(boundingBoxRect)
-
-                let centerCircle = new paperjs.Path.Circle(this.pivotPosition, 10)
-                centerCircle.fillColor = new paper.Color("red")
-                centerCircle.data.meta = this.shapeCenterSelector
-
-                this.boundingBoxGroup.addChild(centerCircle)
-            }
-
-            if (this.paperItem)
-                this.paperItem.selected = true
-        } else {
-            if (this.paperItem)
-                this.paperItem.selected = false
-            if (this.boundingBoxGroup)
-                this.boundingBoxGroup.remove()
-            if (this.shapeCenterSelector)
-                this.shapeCenterSelector.selected = false
-        }
     }
 
     getLayer() {
@@ -564,8 +533,6 @@ abstract class BaseShapeJS {
         if (index != this.rawObj.GetIndex()) { // If index changed, all the shapes in the same layer might also be changed.
             this.storeSameLayerShapeIndices()
         }
-
-        this.updateBoundingBox()
     }
 
     constructor(rawObj?) {
@@ -587,6 +554,13 @@ abstract class BaseShapeJS {
             this.rawObj = rawObj
             this.afterWASMReady()
         }
+    }
+
+    // Should only be called from HHIDE when creating new shapes.
+    // As the addComponent is proxied in Editor.
+    // For player, all components are loaded from file.
+    initShapeFromEditor(){
+
     }
 
     isSelectable() {
@@ -629,95 +603,8 @@ abstract class BaseShapeJS {
         this.update(forceUpdate)
     }
 
-    get followCurve(): BaseShapeJS {
-        let shapeObj = this.shapeFollowCurveFrameState.GetTargetShape()
-        let followCurveShape = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(shapeObj)
-
-        if (followCurveShape && !this.followCurveEventRegistered) {
-            let _this = this
-            followCurveShape.registerValueChangeHandler("position|scaling|rotation")(() => {
-                _this.update(true)
-                eventBus.triggerEvent("HHEngine", "CurveShapeTransformed")
-            })
-
-            this.followCurveEventRegistered = true
-        }
-
-        return followCurveShape
-    }
-
-    set followCurve(target: BaseShapeJS) {
-        let frameId = this.getLayer().GetCurrentFrame()
-
-        if (target != null && target.getRawShape)
-            this.shapeFollowCurveFrameState.RecordTargetShape(frameId, target.getRawShape())
-        else
-            this.shapeFollowCurveFrameState.RecordTargetShape(frameId, null)
-    }
-
     length() {
         return this.paperShape.length
-    }
-
-    getFollowCurve() {
-        return this.followCurve
-    }
-
-    setFollowCurve(curve: BaseShapeJS) {
-        if (curve != this && curve != this.followCurve) {
-            this.followCurve = curve
-            this.setFollowCurveLength(0.0)
-        } else {
-            Logger.error("Can't bind the path !")
-        }
-    }
-
-    unfollowCurve() {
-        this.followCurve = null
-    }
-
-    atFollowCurveStart() {
-        this.setFollowCurveLength(0.0)
-    }
-
-    atFollowCurveEnd() {
-        this.setFollowCurveLength(1.0)
-    }
-
-    getFollowCurveLength() {
-        if (this.followCurve) {
-            return this.followCurve.getGlobalOffsetOf(this.position)
-        }
-    }
-
-    setFollowCurveLength(portion: number) {
-        if (portion < 0.0) portion = 0.0
-        if (portion > 1.0) portion = 1.0
-
-        if (this.followCurve) {
-
-            let totalLength = this.followCurve.length()
-            let targetLength = totalLength * portion
-
-            let curvePoint = this.followCurve.getPointAt(targetLength)
-            this.position = this.followCurve.localToGlobal(curvePoint)
-
-            let frameId = this.getLayer().GetCurrentFrame()
-            this.shapeFollowCurveFrameState.RecordLengthRatio(frameId, portion)
-
-            this.update(true)
-        }
-    }
-
-    getFollowCurveLengthPotion(globalPoint: paper.Point) {
-        if (this.followCurve) {
-            let totalLength = this.followCurve.length()
-            let currentLength = this.followCurve.getGlobalOffsetOf(globalPoint)
-
-            return currentLength / totalLength
-        }
-
-        return -1.0
     }
 
     getName(): string {
@@ -733,12 +620,8 @@ abstract class BaseShapeJS {
     }
 
     afterWASMReady() {
-        this.shapeFollowCurveFrameState = castObject(this.rawObj.GetFrameStateByTypeName("ShapeFollowCurveFrameState"), Module["ShapeFollowCurveFrameState"])
-
         if (Module[this.getShapeName()]) // If the shape exists in cpp side, do the cast. Otherwise, use default BaseShape.
             this.rawObj = castObject(this.rawObj, Module[this.getShapeName()]);
-
-        this.shapeCenterSelector = new ShapeCenterSelector(this)
 
         // TODO: Should move property related code to IDE, but how???
         this.propertySheet = new PropertySheet();
@@ -774,72 +657,18 @@ abstract class BaseShapeJS {
         // Position
         componentConfigSheet.config.children.push({
             key: "inspector.Position",
-            type: PropertyType.GROUP,
+            type: PropertyType.VECTOR2,
+            getter: this.getPosition.bind(this),
+            setter: this.setPosition.bind(this),
+            registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("position"),
+            unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position"),
             config: {
-                children: [
-                    {
-                        key: "inspector.FixedPosition",
-                        type: PropertyType.VECTOR2,
-                        getter: this.getPosition.bind(this),
-                        setter: this.setPosition.bind(this),
-                        registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("position"),
-                        unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position"),
-                        config: {
-                            getKeyFrameCurves: () => {
-                                let transformCompoennt = _this.rawObj.GetTransform()
+                getKeyFrameCurves: () => {
+                    let transformCompoennt = _this.rawObj.GetTransform()
 
-                                return [transformCompoennt.GetVectorKeyFrameCurve("globalPivotPosition", 0),
-                                    transformCompoennt.GetVectorKeyFrameCurve("globalPivotPosition", 1)]
-                            }
-                        }
-                    },
-                    {
-                        key: "inspector.FollowPath",
-                        type: PropertyType.PANEL,
-                        config: {
-                            children: [
-                                {
-                                    key: "inspector.FollowTarget",
-                                    type: PropertyType.REFERENCE,
-                                    getter: this.getFollowCurve.bind(this),
-                                    setter: this.setFollowCurve.bind(this)
-                                },
-                                {
-                                    key: "inspector.Unfollow",
-                                    type: PropertyType.BUTTON,
-                                    config: {
-                                        action: this.unfollowCurve.bind(this)
-                                    }
-                                },
-                                {
-                                    key: "inspector.AtBegin",
-                                    type: PropertyType.BUTTON,
-                                    config: {
-                                        action: this.atFollowCurveStart.bind(this)
-                                    }
-                                },
-                                {
-                                    key: "inspector.AtEnd",
-                                    type: PropertyType.BUTTON,
-                                    config: {
-                                        action: this.atFollowCurveEnd.bind(this)
-                                    }
-                                },
-                                {
-                                    key: "inspector.AtLength",
-                                    type: PropertyType.NUMBER,
-                                    getter: this.getFollowCurveLength.bind(this),
-                                    setter: this.setFollowCurveLength.bind(this),
-                                    registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("position", this.getFollowCurveLengthPotion.bind(this)),
-                                    unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("position"),
-                                    config: {
-                                        step: 0.01
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                ]
+                    return [transformCompoennt.GetVectorKeyFrameCurve("globalPivotPosition", 0),
+                        transformCompoennt.GetVectorKeyFrameCurve("globalPivotPosition", 1)]
+                }
             }
         });
 
@@ -862,8 +691,6 @@ abstract class BaseShapeJS {
         })
 
         let transformFrameStateSheet = this.getComponentConfigSheet(BASIC_COMPONENTS)
-        let followCurveFrameStateSheet = this.getComponentConfigSheet("ShapeFollowCurveFrameState")
-
         componentConfigSheet.config.children.push({
             key: "inspector.property.keyframes",
             type: PropertyType.GROUP,
@@ -871,7 +698,6 @@ abstract class BaseShapeJS {
             config: {
                 children: [
                     transformFrameStateSheet,
-                    followCurveFrameStateSheet
                 ]
             }
         })
@@ -879,7 +705,7 @@ abstract class BaseShapeJS {
         this.propertySheet.addProperty(componentConfigSheet)
     }
 
-    getComponentConfigSheet(componentName) {
+    getComponentConfigSheet(componentName): object {
         let _this = this
         if (componentName == BASIC_COMPONENTS) {
             return {
@@ -943,6 +769,14 @@ abstract class BaseShapeJS {
         }
     }
 
+    getComponentByRawObj(componentRawObj){
+        for(let component of this.customComponents){
+            if(component != null && component.rawObj.ptr == componentRawObj.ptr)
+                return component
+        }
+        return null
+    }
+
     getComponentKeyFrames(componentName) {
         let frameStateRawObj = this.rawObj.GetFrameStateByTypeName(componentName)
         return function () {
@@ -991,7 +825,7 @@ abstract class BaseShapeJS {
         return this.paperShape.length
     }
 
-    getRawShape() {
+    getRawObject() {
         return this.rawObj
     }
 
@@ -1024,8 +858,10 @@ abstract class BaseShapeJS {
 
             let localPos = this.paperShape.globalToLocal(paperPos)
 
-            this.rawObj.SetGlobalPivotPosition(paperPos.x, paperPos.y, 0.0);
-            this.rawObj.SetLocalPivotPosition(localPos.x, localPos.y, 0.0);
+            if(!this.isMirage){
+                this.rawObj.SetGlobalPivotPosition(paperPos.x, paperPos.y, 0.0);
+                this.rawObj.SetLocalPivotPosition(localPos.x, localPos.y, 0.0);
+            }
         }
     }
 
@@ -1043,6 +879,32 @@ abstract class BaseShapeJS {
 
             this.callHandlers("paperItemReady", this.paperItem)
         }
+
+        this.LoadComponents()
+    }
+
+    isLoadingComponents: Boolean = false
+    LoadComponents() {
+        this.isLoadingComponents = true
+        // Create all the component wrapper in the JS side.
+        let componentCount = this.rawObj.GetFrameStateCount()
+        for (let idx = 0; idx < componentCount; idx++) {
+            let componentRawObj = this.rawObj.GetFrameState(idx)
+
+            if (!this.customComponentMap.has(componentRawObj.ptr)) {
+                let component = null
+                let componentConstructor = clzObjectFactory.GetClassConstructor(componentRawObj.GetTypeName())
+                if (componentConstructor) {
+                    component = new componentConstructor(componentRawObj, this.isMirage)
+                    // The component has already been persistented, no need to persistent again.
+                    this.addComponent(component, false)
+                }
+
+                this.customComponentMap.set(componentRawObj.ptr, component)
+            }
+        }
+
+        this.isLoadingComponents = false
     }
 
     getTypeName() {
@@ -1077,7 +939,6 @@ abstract class BaseShapeJS {
                 newObj.add(newSegment)
             }
 
-
             let nearestPoint = newObj.getNearestPoint(localPos)
             let offset = newObj.getOffsetOf(nearestPoint)
 
@@ -1099,8 +960,6 @@ abstract class BaseShapeJS {
         this.rawObj.RemoveSegment(segment.index)
 
         segment.remove()
-
-        this.updateBoundingBox()
 
         this.callHandlers("segment", null)
     }
@@ -1192,9 +1051,7 @@ abstract class BaseShapeJS {
         // Reset the rotation.
         this.paperItem.rotation = this.rotation;
 
-        if (this._isUpdatePos) {
-            this.updatePositionAndRotation()
-        }
+        this.updatePositionAndRotation()
 
         let scaling = this.rawObj.GetScale()
         this.paperItem.scaling = new paper.Point(scaling.x, scaling.y)
@@ -1206,19 +1063,11 @@ abstract class BaseShapeJS {
                 parent.insertChild(this.rawObj.GetIndex(), this.paperItem)
             }
         }
-
-        // Execute after update of all components
-        for (let component of this.customComponents) {
-            if (component.isComponentActive()) {
-                component.afterUpdate(force)
-            }
-        }
     }
 
     hide() {
         this.paperItem.visible = false
         this.selected = false
-        this.updateBoundingBox()
 
         this.callHandlers("shapeHidden", null)
     }
@@ -1239,15 +1088,25 @@ abstract class BaseShapeJS {
 
                 // Execute after update of all components
                 for (let component of this.customComponents) {
+                    if (component == null)
+                        continue
+
                     component.setInvisible()
                 }
 
             } else {
                 this.paperItem.visible = true
                 this.afterUpdate(true)
-            }
 
-            this.updateBoundingBox()
+                // Execute after update of all components
+                for (let component of this.customComponents) {
+                    if (component == null)
+                        continue
+                    if (component.isComponentActive()) {
+                        component.afterUpdate(force)
+                    }
+                }
+            }
 
             this.lastRenderFrame = currentFrame
         }
@@ -1257,24 +1116,32 @@ abstract class BaseShapeJS {
         return new paper.Point(engineV3Point.x, engineV3Point.y)
     }
 
+    isValid(){
+        return this.isRemoved == false
+    }
+
+    isRemoved: boolean = false
+
     remove() {
         // TODO: TODO
-        huahuoEngine.DestroyShape(this.rawObj)
+        // huahuoEngine.DestroyShape(this.rawObj)
+
+        this.detachFromCurrentLayer()
         this.removePaperObj()
+        this.isRemoved = true
 
         this.callHandlers("shapeRemoved", null)
     }
 
     removePaperObj() {
         this.paperItem.remove()
-        if (this.boundingBoxGroup)
-            this.boundingBoxGroup.remove()
         this.selected = false
 
         this.paperItem = null
-        this.shapeCenterSelector.selected = false
-
         for (let component of this.customComponents) {
+            if (component == null)
+                continue
+
             component.cleanUp()
         }
     }
@@ -1285,15 +1152,43 @@ abstract class BaseShapeJS {
 
     // Pass in a set to avoid creation of the set multiple times.
     getReferencedShapes(set: Set<BaseShapeJS>) {
-
-        if (this.followCurve) {
-            set.add(this.followCurve)
-        }
-
         // Get all referenced shapes
         for (let component of this.customComponents) {
+            if (component == null)
+                continue
+
             component.getReferencedShapes(set)
         }
+    }
+
+    removeComponent(component: AbstractComponent) {
+        this.customComponentMap.delete(component.rawObj.ptr)
+        component.rawObj.DetachFromCurrentShape()
+
+
+        let properties = this.getPropertySheet().getProperties()
+
+        let _this = this
+
+        properties = properties.filter(function(entry){
+            if(entry.hasOwnProperty("rawObjPtr") && entry["rawObjPtr"] == component.rawObj.ptr){
+                return false;
+            }
+
+            return true;
+        })
+
+        this.getPropertySheet().setProperties(properties)
+    }
+
+    resetAction(){
+        this.getActor().reset()
+        for(let component of this.customComponents){
+            if(component != null)
+                component.reset()
+        }
+
+        this.update()
     }
 }
 

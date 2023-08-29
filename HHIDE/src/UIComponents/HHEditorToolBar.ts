@@ -10,33 +10,27 @@ class HHEditorToolBar extends HTMLElement {
     redoButton: HTMLButtonElement
     keyboardButton: HTMLButtonElement // Press to configure short cuts
 
+    createButton(svgFile, title, onClick) {
+        let btn = document.createElement("button")
+        btn.className =  "btn btn-outline-secondary"
+        btn.style.width = "40px"
+        btn.style.height = "40px"
+        btn.title = title
+        btn.innerHTML = svgFile
+        btn.addEventListener("click", onClick)
+        this.appendChild(btn)
+        return btn
+    }
+
     connectedCallback() {
+        this.className = "btn-group btn-group-sm"
         i18n.ExecuteAfterInited(function () {
-            this.undoButton = document.createElement("button")
-            this.undoButton.style.width = "30px"
-            this.undoButton.style.height = "30px"
-            this.undoButton.title = i18n.t("hint.undo")
-            this.undoButton.innerHTML = SVGFiles.undoBtn
+            this.undoButton = this.createButton(SVGFiles.undoBtn, i18n.t("hint.undo"), this.undo.bind(this))
 
-            this.redoButton = document.createElement("button")
-            this.redoButton.style.width = "30px"
-            this.redoButton.style.height = "30px"
-            this.redoButton.style.transform = "scaleX(-1)"
-            this.redoButton.title = i18n.t("hint.redo")
-            this.redoButton.innerHTML = SVGFiles.undoBtn
+            this.redoButton = this.createButton(SVGFiles.undoBtn, i18n.t("hint.redo"), this.redo.bind(this))
+            this.redoButton.style.transform = "scaleX(-1)" // Flip
 
-            this.keyboardButton = document.createElement("button")
-            this.keyboardButton.style.width = "30px"
-            this.keyboardButton.style.height = "30px"
-            this.keyboardButton.title = i18n.t("hint.shortcuts")
-            this.keyboardButton.innerHTML = SVGFiles.keyboardBtn
-
-            this.undoButton.addEventListener("click", this.undo.bind(this))
-            this.redoButton.addEventListener("click", this.redo.bind(this))
-            this.keyboardButton.addEventListener("click", this.configureShortcuts.bind(this))
-            this.appendChild(this.undoButton)
-            this.appendChild(this.redoButton)
-            this.appendChild(this.keyboardButton)
+            this.keyboardButton = this.createButton(SVGFiles.keyboardBtn, i18n.t("hint.shortcuts"), this.configureShortcuts.bind(this))
         }.bind(this))
     }
 
@@ -48,7 +42,7 @@ class HHEditorToolBar extends HTMLElement {
         undoManager.ReDo()
     }
 
-    configureShortcuts(){
+    configureShortcuts() {
 
     }
 }

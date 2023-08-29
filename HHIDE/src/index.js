@@ -7,11 +7,13 @@ import {NavTree} from "./UIComponents/NavTree"
 import {DrawToolBar} from "./UIComponents/DrawToolBar";
 import {SceneView} from "./SceneView/SceneView";
 import {Inspector} from "./Inspector/Inspector";
+import {BaseForm} from "./UIComponents/BaseForm"
+
 import {LoginForm} from "./Identity/LoginForm";
 import {RegisterForm} from "./Identity/RegisterForm";
 import {UserInfoBar} from "./Identity/UserInfoBar";
 import {PlayerController} from "./AnimationPlayer/PlayerController";
-import {projectUploader} from "./RESTApis/ProjectUploader";
+import {binaryFileUploader} from "./RESTApis/BinaryFileUploader";
 import {HHToolBar} from "./UIComponents/ToolBar";
 import {ProjectListForm} from "./UIComponents/ProjectListForm";
 import {ProjectInfoForm} from "./UIComponents/ProjectInfoForm";
@@ -22,6 +24,8 @@ import {EventGraphEditorDivGenerator} from "./Inspector/CustomFieldDivGenerators
 import {SelectIconForm} from "./Inspector/CustomFieldDivGenerators/SelectIconForm";
 import {EventNode} from "../../HHEngineJS/src/EventGraph/Nodes/EventNode";
 import {ActionNode} from "../../HHEngineJS/src/EventGraph/Nodes/ActionNode";
+import {FocusSceneViewCommand} from "./RedoUndo/FocusSceneViewCommand";
+import {RemoveComponentCommand} from "./RedoUndo/RemoveComponentCommand"
 
 // Input components
 import {HHFloatInput} from "./Inspector/InputComponents/HHFloatInput";
@@ -50,7 +54,11 @@ import {faTimesCircle} from "@fortawesome/free-regular-svg-icons";
 import {faShapes} from "@fortawesome/free-solid-svg-icons";
 import {init} from "./init"
 
+import "./scss/styles.scss"
+import * as bootstrap from "bootstrap"
+
 import "./i18nInit"
+import {EditorShapeProxy} from "./ShapeDrawers/EditorShapeProxy";
 
 library.add(faMinus)
 library.add(faPlus)

@@ -12,7 +12,7 @@ enum EventNames{
     DRAWSHAPEENDS = "drawShapeEnds",
     OBJECTSELECTED = "objectSelected",
     UNSELECTOBJECTS = "unselectObjects",
-    COMPONENTADDED = "componentAdded",
+    COMPONENTCHANGED = "componentAdded",
     CELLCLICKED = "cellClicked",
     OBJECTDELETED = "objectDeleted",
     FILELOADED = "fileLoaded"

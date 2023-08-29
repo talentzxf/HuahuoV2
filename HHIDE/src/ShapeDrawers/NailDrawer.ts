@@ -5,6 +5,7 @@ import {itemSelectable} from "./ShapeSelector";
 import {NailComponent, NailShapeJS} from "hhenginejs";
 import {getNailManager, isInheritedFromClzName} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
+import {EditorShapeProxy} from "./EditorShapeProxy";
 
 class NailDrawer extends BaseShapeDrawer {
     name = "Nail"
@@ -57,7 +58,7 @@ class NailDrawer extends BaseShapeDrawer {
             }
         }
 
-        let nail = new NailShapeJS()
+        let nail = EditorShapeProxy.CreateProxy(new NailShapeJS())
         for (let shape of hitShapes) {
             nail.addShape(shape, new paper.Point(hitPoint.x, hitPoint.y))
             let nailComponent = shape.getComponentByTypeName("NailComponent")

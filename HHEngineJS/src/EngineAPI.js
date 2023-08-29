@@ -7,7 +7,27 @@ import {dataURItoBlob, eventBus} from "hhcommoncomponents";
 import * as ti from "taichi.js/dist/taichi"
 import {BaseShapeEvents} from "./EventGraph/BaseShapeEvents";
 import {IsValidWrappedObject} from "hhcommoncomponents";
+import {BaseShapeJS} from "./Shapes/BaseShapeJS";
+import {setupLGraph} from "./EventGraph/LGraphSetup";
 // import * as ti from "taichi.js/dist/taichi.dev"
+
+
+// Not sure why, but the instanceof failed in this case...
+function isDerivedFrom(object, clz){
+    if(object instanceof clz)
+        return true
+
+    let targetClassName = clz.name
+    let curObj = object
+    while(curObj != null){
+        if(curObj.constructor.name == targetClassName)
+            return true
+
+        curObj = Object.getPrototypeOf(curObj)
+    }
+
+    return false
+}
 
 class EngineAPI{
     inited = false
@@ -39,8 +59,12 @@ class EngineAPI{
         return this.eventEmitterCache.get(shape)
     }
 
-    getEventBus(shape){
-        return this.getEvent(shape).getEventBus()
+    getEventBus(eventEmitter){
+        if(isDerivedFrom(eventEmitter, BaseShapeJS))
+            return this.getEvent(eventEmitter).getEventBus()
+
+        // Return the global event bus
+        return eventBus
     }
 
     constructor() {
@@ -72,7 +96,8 @@ class EngineAPI{
             return
         }
 
-        await ti.init()
+        // TODO: Enable back when webgpu is supported on mobile phone.
+        // await ti.init()
 
         this.taichiInited = true
 
@@ -103,8 +128,8 @@ class EngineAPI{
         }
     }
 
-    CreateShape(shapeName){
-        return this.cppEngine.CreateShape(shapeName)
+    CreateShape(shapeName, createDefaultComponents = true){
+        return this.cppEngine.CreateShape(shapeName, createDefaultComponents)
     }
 
     DuplicateObject(obj){
@@ -128,8 +153,17 @@ class EngineAPI{
     }
 
     getStoreMaxFrames(storeId){
-        // FrameId starts from 0. So, maxFames = maxFrameId + 1
+        // FrameId starts from 0. So, maxFrames = maxFrameId + 1
         return this.GetStoreById(storeId).GetMaxFrameId() + 1
+    }
+
+    shapeDecorator = null
+    setShapeDecorator(shapeDecoratorFunc){
+        this.shapeDecorator = shapeDecoratorFunc
+    }
+
+    getShapeDecorator(){
+        return this.shapeDecorator
     }
 
     GetStoreById(storeId){
@@ -142,11 +176,12 @@ class EngineAPI{
         if(!layer.addShape){
             layer.addShape = (shape)=>{
                 shape.update()
-                layer.AddShapeInternal(shape.getRawShape())
+                layer.AddShapeInternal(shape.getRawObject())
                 shape.isPermanent = true
+                shape.isDeleted = false
 
                 if(this.activePlayer){
-                    this.activePlayer.getLayerShapes(layer).set(shape.getRawShape().ptr, shape)
+                    this.activePlayer.getLayerShapes(layer).set(shape.getRawObject().ptr, shape)
                 }
 
                 _this.hasShape = true
@@ -221,6 +256,10 @@ class EngineAPI{
         return clzObjectFactory.getAllCompatibleComponents(targetObj)
     }
 
+    getAllRegisteredComponents(){
+        return clzObjectFactory.getAllRegisteredComponents()
+    }
+
     produceObject(componentName){
         let constructor = clzObjectFactory.GetClassConstructor(componentName)
         let retObj = new constructor()
@@ -240,6 +279,10 @@ class EngineAPI{
 
     LoadBinaryResource(fileName, mimeType, data, dataSize){
         return this.cppEngine.LoadBinaryResource(fileName, mimeType, data, dataSize)
+    }
+
+    get defaultFrameCount(){
+        return 1000;
     }
 
     get ti(){

@@ -1,5 +1,5 @@
-import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
-import {PropertyType} from "hhcommoncomponents";
+import {huahuoEngine} from "../EngineAPI";
+import {IsValidWrappedObject} from "hhcommoncomponents";
 
 const eps:number = 0.001;
 
@@ -8,6 +8,7 @@ enum PropertyCategory{
     interpolateColor,
     interpolateVector2,  // vector2 is just vector3 with z = 0
     interpolateVector3,
+    shape, // One reference to a shape.
     shapeArray,
     colorStopArray, // Every color stop is a float->Color mapping entry.
     keyframeArray,
@@ -40,6 +41,8 @@ class BooleanFloatOperator extends CppValueOperator{
 
     setField(fieldName:string, val){
         this.rawObj["SetBooleanValue"](fieldName, val)
+
+        return this.rawObj["GetBooleanValue"](fieldName) == val
     }
 
     isEqual(v1, v2) {
@@ -58,6 +61,9 @@ class InterpolateFloatOperator extends CppValueOperator{
 
     setField(fieldName: string, val) {
         this.rawObj["SetFloatValue"](fieldName, val)
+
+        // TODO: Validate
+        return true;
     }
 
     isEqual(val1, val2){
@@ -85,6 +91,9 @@ class InterpolateColorOperator extends CppValueOperator{
 
     setField(fieldName: string, val) {
         this.rawObj["SetColorValue"](fieldName, val.red, val.green, val.blue, val.alpha)
+
+        // TODO: Validate
+        return true
     }
 
     isEqual(v1, v2) {
@@ -123,6 +132,9 @@ class InterpolateVector2Operator extends CppValueOperator{
         }else{
             this.rawObj["SetVector3Value"](fieldName, vals.x, vals.y, 0.0)
         }
+
+        // TODO: Validate
+        return true
     }
 }
 
@@ -154,6 +166,9 @@ class InterpolateVector3Operator extends CppValueOperator{
         }else{
             this.rawObj["SetVector3Value"](fieldName, vals.x, vals.y, vals.z)
         }
+
+        // TODO: Validate
+        return true
     }
 }
 
@@ -174,7 +189,42 @@ class StringValueOperator extends CppValueOperator{
 
     setField(fieldName: string, val: string) {
         this.rawObj["SetStringValue"](fieldName, val)
+        // TODO: Validate
+        return true
     }
+}
+
+class ShapeValueOperator extends CppValueOperator {
+    getField(fieldName: string) {
+        let rawObj = this.rawObj["GetShapeValue"](fieldName);
+        if(IsValidWrappedObject(rawObj)){
+            return huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
+        }
+        return null;
+    }
+
+    isEqual(v1, v2) {
+        if(v1 == null || v2 == null)
+            return false
+
+        return v1.rawObj.ptr == v2.rawObj.ptr
+    }
+
+    registerField(fieldName: string, initValue) {
+        this.rawObj["RegisterShapeValue"](fieldName, initValue)
+    }
+
+    setField(fieldName: string, val) {
+        if(val != null){
+            if(this.rawObj.GetBaseShape().ptr == val.rawObj.ptr){
+                return false
+            }
+        }
+
+        this.rawObj["SetShapeValue"](fieldName, val.rawObj)
+        return true
+    }
+
 }
 
 function buildOperator(type, rawObj): CppValueOperator{
@@ -191,6 +241,8 @@ function buildOperator(type, rawObj): CppValueOperator{
             return new StringValueOperator(rawObj)
         case PropertyCategory.boolean:
             return new BooleanFloatOperator(rawObj)
+        case PropertyCategory.shape:
+            return new ShapeValueOperator(rawObj)
     }
 
     return null
@@ -204,12 +256,5 @@ class PropertyDef{
     hide: boolean = false
 }
 
-function capitalizeFirstLetter(str){
-    if(str.length == 0)
-        return ""
-
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-export {PropertyCategory, PropertyDef, capitalizeFirstLetter, buildOperator}
+export {PropertyCategory, PropertyDef, buildOperator}
 

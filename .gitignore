@@ -3,6 +3,7 @@ package-lock.json
 node_modules/
 /dist/
 
+*/**/package-lock.json
 */package-lock.json
 */dist/
 

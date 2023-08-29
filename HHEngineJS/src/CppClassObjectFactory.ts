@@ -13,6 +13,7 @@ function isInheritedFromClzName(obj, clzName): boolean{
 }
 
 class CppClassObjectFactory{
+
     clzNameConstructorMap: Map<string, Function> = new Map<string, Function>();
 
     componentNameComponentPropertyMap: Map<string, ComponentConfig> = new Map<string, ComponentConfig>()
@@ -29,6 +30,10 @@ class CppClassObjectFactory{
         if(componentConfig != null && componentConfig.cppClassName)
             return componentConfig.cppClassName
         return "CustomComponent"
+    }
+
+    getAllRegisteredComponents(){
+        return Array.from(this.componentNameComponentPropertyMap.keys())
     }
 
     getAllCompatibleComponents(targetObj){

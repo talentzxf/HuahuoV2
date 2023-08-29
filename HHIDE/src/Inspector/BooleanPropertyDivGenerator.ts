@@ -1,5 +1,7 @@
 import {BasePropertyDesc, BasePropertyDivGenerator} from "./BasePropertyDivGenerator";
 import {Property} from "hhcommoncomponents"
+import {SetFieldValueCommand} from "../RedoUndo/SetFieldValueCommand";
+import {undoManager} from "../RedoUndo/UndoManager";
 
 class BooleanPropertyDesc extends BasePropertyDesc{
     getter
@@ -22,7 +24,12 @@ class BooleanPropertyDesc extends BasePropertyDesc{
     }
 
     inputValueChanged(){
-        this.setter(this.checkBox.checked)
+        let oldValue = this.getter()
+        let newValue = this.checkBox.checked
+
+        let setBooleanValueCommand = new SetFieldValueCommand(this.setter, oldValue, newValue)
+        setBooleanValueCommand.DoCommand()
+        undoManager.PushCommand(setBooleanValueCommand)
     }
 }
 

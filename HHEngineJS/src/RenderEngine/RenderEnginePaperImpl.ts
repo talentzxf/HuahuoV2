@@ -3,20 +3,26 @@ import {view} from "paper";
 import {Logger, Vector2} from "hhcommoncomponents"
 import {RenderEngine2D} from "./RenderEngine2D";
 import {huahuoEngine} from "../EngineAPI";
+import {GraphEvent, EventParam, PropertyType} from "hhcommoncomponents";
+import {EventEmitter} from "hhcommoncomponents";
 
 let bgLayerName = "background"
 let contentLayerName = "content"
 
-class RenderEnginePaperJs implements RenderEngine2D {
+class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
 
     // From canvas to project index
     private canvasPaperMap: Map<HTMLCanvasElement, number> = new Map()
     private canvasOriginalSize: Map<paper.View, [number, number]> = new Map()
 
+    private originalZoomMap: Map<paper.View, number> = new Map()
+
+    private originalViewPosition: Map<paper.View, paper.Point> = new Map()
+
     private isPlayer = false
     private aspectRatio: number = 4 / 3  //  W:H = 4:3
 
-    getInitCanvasWH():[number, number]{
+    getInitCanvasWH(): [number, number] {
         return [huahuoEngine.getProjectWidth(), huahuoEngine.getProjectHeight()]
     }
 
@@ -72,7 +78,7 @@ class RenderEnginePaperJs implements RenderEngine2D {
         })
     }
 
-    public getContentWH(canvasWidth, canvasHeight):[number, number] {
+    public getContentWH(canvasWidth, canvasHeight): [number, number] {
         let returnWidth = canvasWidth
         let returnHeight = canvasWidth / this.aspectRatio
         if (returnHeight > canvasHeight) {
@@ -85,27 +91,33 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
     public zoomIn(step = 1.05) {
         view.zoom *= step;
-        this.clearBackground()
-
         Logger.debug("Current view zoom:" + view.zoom)
     }
 
     public zoomOut(step = 1.05) {
         view.zoom /= step;
-        this.clearBackground()
-
         Logger.debug("Current view zoom:" + view.zoom)
     }
 
     public zoomReset() {
-        view.zoom = 1.0
-        this.clearBackground()
+        if (this.originalZoomMap.has(view)) {
+            view.zoom = this.originalZoomMap.get(view)
+        } else {
+            view.zoom = 1.0
+        }
+
+        if (this.originalViewPosition.has(view)) {
+            view.center = this.originalViewPosition.get(view)
+        } else {
+            view.center = new paper.Point(0, 0)
+        }
     }
 
     public clearBackground() {
 
         let canvasWidth = view.element.width
         let canvasHeight = view.element.height
+
         // Logger.debug("Canvas width:" + canvasWidth + ",height:" + canvasHeight)
 
         if (this.bgLayer) {
@@ -117,12 +129,6 @@ class RenderEnginePaperJs implements RenderEngine2D {
         let yOffset = (canvasHeight - contentHeight) / 2
         let contentRect = this.createViewRectangle(xOffset, yOffset, contentWidth, contentHeight, "white")
         contentRect.sendToBack()
-
-        if (!this.isPlayer) {
-            let bgRect = this.createViewRectangle(0, 0, canvasWidth, canvasHeight, new paper.Color("lightgray"))
-            bgRect.sendToBack()
-        }
-
         this.restoreContentLayer()
     }
 
@@ -133,6 +139,10 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
     public init(canvas: HTMLCanvasElement, isPlayer: boolean = false) {
         console.log("Initing paper!!!!")
+        if (this.canvasPaperMap.get(canvas)) {
+            console.log("Already inited, won't init twice!")
+            return
+        }
 
         this.isPlayer = isPlayer
         paper.setup(canvas)
@@ -142,11 +152,42 @@ class RenderEnginePaperJs implements RenderEngine2D {
         this.clearBackground()
 
         this.canvasPaperMap.set(canvas, paper.project.index)
+
+        view.onMouseMove = (evt: paper.MouseEvent)=>{
+            this.onMouseMove(evt.point)
+        }
+
+        view.onMouseDown = (evt: paper.MouseEvent)=>{
+            this.onMouseDown(evt.point)
+        }
+
+        view.onMouseUp = (evt: paper.MouseEvent)=>{
+            this.onMouseUp(evt.point)
+        }
+    }
+
+    @GraphEvent(true)
+    onMouseMove(@EventParam(PropertyType.VECTOR2) point: paper.Point){
+
+    }
+
+    @GraphEvent(true)
+    onMouseDown(@EventParam(PropertyType.VECTOR2) point: paper.Point){
+
+    }
+
+    @GraphEvent(true)
+    onMouseUp(@EventParam(PropertyType.VECTOR2) point: paper.Point){
+
+    }
+
+    saveProjectCanvasWH(width, height) {
+        huahuoEngine.setProjectWidthHeight(width, height)
     }
 
     resize(canvas: HTMLCanvasElement, width: number, height: number) {
 
-        if(!this.canvasPaperMap.has(canvas)){
+        if (!this.canvasPaperMap.has(canvas)) {
             Logger.error("canvas not registered!!!")
             return
         }
@@ -156,18 +197,18 @@ class RenderEnginePaperJs implements RenderEngine2D {
         let canvasView = canvasPaper.view
 
         if (!this.canvasOriginalSize.has(canvasView)) {
-            if(!this.isPlayer){
+            if (!this.isPlayer) {
                 if (width > 0 && height > 0) {
                     console.log("Added canvas original size here:" + width)
                     this.canvasOriginalSize.set(canvasView, [width, height])
 
-                    if(this.getInitCanvasWH()[0] < 0 ){
+                    if (this.getInitCanvasWH()[0] < 0) {
                         huahuoEngine.setProjectWidthHeight(width, height)
                     }
                 }
-            }else{
+            } else {
                 let originalSize = this.getInitCanvasWH()
-                if(originalSize[0] > 0){
+                if (originalSize[0] > 0) {
                     this.canvasOriginalSize.set(canvasView, originalSize)
 
                     this._resize(width, height, originalSize, canvasView)
@@ -178,9 +219,14 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
             this._resize(width, height, originalSize, canvasView)
         }
+
+        this.clearBackground()
+
+        this.originalZoomMap.set(canvasView, canvasView.zoom)
+        this.originalViewPosition.set(canvasView, canvasView.center)
     }
 
-    private _resize(width, height, originalSize, canvasView: paper.View){
+    private _resize(width, height, originalSize, canvasView: paper.View) {
         let currentContentDim = this.getContentWH(width, height)
         let currentX = (width - currentContentDim[0]) / 2
         let currentY = (height - currentContentDim[1]) / 2
@@ -202,7 +248,7 @@ class RenderEnginePaperJs implements RenderEngine2D {
         canvasView.setViewSize(width, height)
     }
 
-    public getDefaultCanvas(){
+    public getDefaultCanvas() {
         let view: any = paper.project.view
         let originalActiveCanvas = view.getElement()
         return originalActiveCanvas
@@ -212,7 +258,7 @@ class RenderEnginePaperJs implements RenderEngine2D {
         if (this.canvasPaperMap.has(canvas)) {
             let originalActiveCanvas = this.getDefaultCanvas()
 
-            if(originalActiveCanvas == canvas)
+            if (originalActiveCanvas == canvas)
                 return;
 
             let projectIndex = this.canvasPaperMap.get(canvas)
@@ -222,9 +268,9 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
             this.clearBackground()
 
-            if(this.isPlayer){
+            if (this.isPlayer) {
                 let _this = this
-                huahuoEngine.ExecuteAfterInited(()=>{
+                huahuoEngine.ExecuteAfterInited(() => {
                     _this.resize(canvas, canvas.width, canvas.height)
                 })
             }
@@ -234,7 +280,7 @@ class RenderEnginePaperJs implements RenderEngine2D {
         return null
     }
 
-    public getGlobalPosition(viewX:number, viewY:number){
+    public getGlobalPosition(viewX: number, viewY: number): paper.Point {
         return this.getProject().view.viewToProject(new paper.Point(viewX, viewY))
     }
 }

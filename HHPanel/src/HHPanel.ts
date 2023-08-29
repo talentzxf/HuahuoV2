@@ -17,7 +17,7 @@ enum PanelEventNames{
     selector: 'hh-panel',
     template: `<template>
         <div style="display: flex; flex-direction: column; height: 100%; width: 100%">
-            <div class="title_tabs">
+            <div class="title_tabs nav nav-tabs">
             </div>
             <div class="panel_contents" style="flex-basis: 100%;">
             </div>
@@ -195,6 +195,7 @@ class HHPanel extends HTMLElement {
         unselectedTabs.forEach(tab => {
             let content = tab.getContent()
             tab.setAttribute('selected', 'false')
+            tab.classList.remove("active")
             content.selected = false
         })
 
@@ -203,6 +204,8 @@ class HHPanel extends HTMLElement {
             let selectedContent = selectedTab.getContent();
             selectedTab.setAttribute('selected', "true")
             selectedContent.selected = true
+
+            selectedTab.classList.add("active")
 
             let customEvent = new CustomEvent(PanelEventNames.CONTENTSELECTED, {
                 detail: {

@@ -59,8 +59,9 @@ module.exports = (env) => {
         plugins: [
             new CopyPlugin({
                 patterns: [
-                    {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to: "wasm"},
-                    {from: "../HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
+                    {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to: "wasm"},
+                    {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
+                    {from: "./static", to: "static"},
                 ]
             }),
             new FileManagerPlugin({

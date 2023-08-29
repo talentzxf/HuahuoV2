@@ -4,6 +4,10 @@ import {HHColorInput} from "./HHColorInput";
 import {ColorStop} from "hhenginejs";
 import {HHToast, getMethodsAndVariables} from "hhcommoncomponents";
 import {createPenShape, selectedPenCapColor, unselectedPenCapColor} from "./Utils";
+import {ArrayInsertCommand} from "../../RedoUndo/ArrayInsertCommand";
+import {ArrayDeleteCommand} from "../../RedoUndo/ArrayDeleteCommand";
+import {undoManager} from "../../RedoUndo/UndoManager";
+import {SetFieldValueCommand} from "../../RedoUndo/SetFieldValueCommand";
 
 const rectangleOffset = 10
 const canvasWidth = 200
@@ -33,7 +37,7 @@ class Pen {
         }
     }
 
-    set fillColor(val: paper.Color){
+    set fillColor(val: paper.Color) {
         this.colorStop.r = val.red
         this.colorStop.g = val.green
         this.colorStop.b = val.blue
@@ -42,7 +46,7 @@ class Pen {
         this.penBody.fillColor = val
     }
 
-    get fillColor(): paper.Color{
+    get fillColor(): paper.Color {
         return this.penBody.fillColor
     }
 
@@ -70,7 +74,15 @@ class Pen {
         this.paperGroup.position = new paper.Point(colorStop.value * rectangleWidth, rectangleHeight / 2)
     }
 
-    remove(){
+    hide(){
+        this.paperGroup.visible = false
+    }
+
+    show(){
+        this.paperGroup.visible = true
+    }
+
+    remove() {
         this.paperGroup.remove()
     }
 
@@ -101,6 +113,8 @@ class Pen {
     }
 }
 
+let colorStopArrayPtrProjectIdMap = new Map()
+
 @CustomElement({
     selector: "hh-color-stop-array-input"
 })
@@ -114,7 +128,6 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
     rectangle: paper.Path
 
     pens: Array<Pen> = new Array<Pen>()
-    projectId: number = -1
 
     hhColorInput: HHColorInput
     colorTitleSpan: HTMLSpanElement
@@ -137,9 +150,15 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         this.canvas.width = canvasWidth
         this.canvas.height = canvasHeight
 
+        let colorStopArray = this.getter()
+        let colorStopArrayPtr = colorStopArray.ptr
+
         let previousPaperProject = paper.project
         paper.setup(this.canvas)
-        this.projectId = paper.project.index
+        let projectId = paper.project.index
+
+        colorStopArrayPtrProjectIdMap.set(colorStopArrayPtr, projectId)
+
         paper.project.view.translate(new paper.Point(rectangleOffset, 0))
 
         this.rectangle = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(rectangleWidth, rectangleHeight))
@@ -150,7 +169,8 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         previousPaperProject.activate()
 
         let colorTitle = document.createElement("div")
-        this.colorTitleSpan = document.createElement("span")
+        this.colorTitleSpan = document.createElement("label")
+        this.colorTitleSpan.className = "form-label col-md"
 
         this.colorTitleSpan.innerText = "unselected pen"
         colorTitle.appendChild(this.colorTitleSpan)
@@ -170,15 +190,15 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
 
         let kbEventListener = this.onKeyUp.bind(this)
 
-        this.addEventListener("focusin", ()=>{
-            if(this.kbEventAttached == false){
+        this.addEventListener("focusin", () => {
+            if (this.kbEventAttached == false) {
                 document.addEventListener("keyup", kbEventListener)
                 this.kbEventAttached = true
             }
 
         })
 
-        this.addEventListener("focusout", ()=>{
+        this.addEventListener("focusout", () => {
             document.removeEventListener("keyup", kbEventListener)
             this.kbEventAttached = false
         })
@@ -211,55 +231,98 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         })
     }
 
-    onKeyUp(evt: KeyboardEvent){
-        if(evt.code == "Delete"){
+    onKeyUp(evt: KeyboardEvent) {
+        if (evt.code == "Delete") {
 
-            if(this.pens.length <= 2){
+            if (this.pens.length <= 2) {
                 HHToast.warn(i18n.t("toast.insufficientColorStop"))
-            }else{
+            } else {
                 let tobeDeletedPen = this.selectedPen
 
-                this.selectedPen = null
+                if (tobeDeletedPen != null) {
+                    let arrayDeleteCommand = new ArrayDeleteCommand(
+                        () => {
+                            let newlyInsertedPen = this.insertPenByValue(tobeDeletedPen.colorStop.value)
+                            newlyInsertedPen.colorStop.r = tobeDeletedPen.colorStop.r
+                            newlyInsertedPen.colorStop.g = tobeDeletedPen.colorStop.g
+                            newlyInsertedPen.colorStop.b = tobeDeletedPen.colorStop.b
+                            newlyInsertedPen.colorStop.a = tobeDeletedPen.colorStop.a
 
-                this.pens = this.pens.filter( (penInArray)=>{
-                    return penInArray.colorStop.identifier != tobeDeletedPen.colorStop.identifier
-                })
+                            this.updater(newlyInsertedPen.colorStop)
 
-                // TODO: Do we really need to hide the color selector??
-                // this.hhColorInput.hideColorSelector()
-                this.colorTitleSpan.innerText = "unselected pen"
+                            this.refresh()
 
-                this.deleter(tobeDeletedPen.colorStop)
+                            return newlyInsertedPen
+                        },
+                        (pen) => {
+                            this.deletePen(pen)
+                        }
+                    )
 
-                tobeDeletedPen.remove()
+                    this.deletePen(tobeDeletedPen)
+                    undoManager.PushCommand(arrayDeleteCommand)
 
-                this.refresh()
+
+                }
 
                 evt.stopPropagation()
             }
         }
     }
 
-    onRectangeClicked(evt:MouseEvent){
+    insertPenByValue(value) {
+        let insertedColorStopIdentifier = this.inserter(value) // Setter is actually inserter.
+        this.refresh()
+
+        let newlyAddedPen = null
+        for (let pen of this.pens) {
+            if (pen.colorStop.identifier == insertedColorStopIdentifier) {
+                newlyAddedPen = pen
+                this.selectPen(pen)
+                break;
+            }
+        }
+
+        return newlyAddedPen
+    }
+
+    deletePen(tobeDeletedPen) {
+        this.pens = this.pens.filter((penInArray) => {
+            return penInArray.colorStop.identifier != tobeDeletedPen.colorStop.identifier
+        })
+
+        // TODO: Do we really need to hide the color selector??
+        // this.hhColorInput.hideColorSelector()
+
+        this.deleter(tobeDeletedPen.colorStop)
+
+        tobeDeletedPen.remove()
+
+        this.selectPen(this.pens[0]) // Select the first pen to avoid confusion.
+
+        this.refresh()
+    }
+
+    onRectangeClicked(evt: MouseEvent) {
         console.log(evt)
 
         let clickPoint = evt["point"]
         let value = clickPoint.x / rectangleWidth
 
-        let insertedColorStopIdentifier = this.inserter(value) // Setter is actually inserter.
-        this.refresh()
+        let arrayInsertCommand = new ArrayInsertCommand(
+            () => {
+                return this.insertPenByValue(value)
+            },
+            this.deletePen.bind(this)
+        )
 
-        for(let pen of this.pens){
-            if(pen.colorStop.identifier == insertedColorStopIdentifier){
-                this.selectPen(pen)
-                break;
-            }
-        }
+        undoManager.PushCommand(arrayInsertCommand)
+        arrayInsertCommand.DoCommand()
     }
 
-    onPenClicked(evt:MouseEvent){
+    onPenClicked(evt: MouseEvent) {
         console.log(evt)
-        if(!evt.target["data"] || !evt.target["data"]["meta"]){
+        if (!evt.target["data"] || !evt.target["data"]["meta"]) {
             return
         }
 
@@ -267,8 +330,23 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
         this.selectPen(pen)
     }
 
-    onPenMouseDrag(evt: paper.MouseEvent){
-        if(!evt.target["data"] || !evt.target["data"]["meta"]){
+
+    colorStopValueSetterFunctionMap:Map<ColorStop, Function> = new Map()
+    colorStopValueSetter(colorStop){
+
+        if(!this.colorStopValueSetterFunctionMap.has(colorStop.identifier)){
+            this.colorStopValueSetterFunctionMap.set(colorStop.identifier, (value)=>{
+                colorStop.value = value
+                this.updater(colorStop)
+                this.refresh()
+            })
+        }
+
+        return this.colorStopValueSetterFunctionMap.get(colorStop.identifier)
+    }
+
+    onPenMouseDrag(evt: paper.MouseEvent) {
+        if (!evt.target["data"] || !evt.target["data"]["meta"]) {
             return
         }
 
@@ -278,25 +356,31 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
 
         let colorStop = pen.colorStop
         let deltaPortion = (evt["delta"].x / rectangleWidth)
-        colorStop.value += deltaPortion
+
+        let oldValue = colorStop.value
+
+
+        let newValue = oldValue + deltaPortion
 
         // Clamp between 0-1
-        colorStop.value = Math.min(colorStop.value, 1.0)
-        colorStop.value = Math.max(0.0, colorStop.value)
+        newValue = Math.min(newValue, 1.0)
+        newValue = Math.max(0.0, newValue)
 
-        this.updater(colorStop)
-        this.refresh()
+        let setFieldValueCommand = new SetFieldValueCommand(this.colorStopValueSetter(colorStop), oldValue, newValue)
+
+        setFieldValueCommand.DoCommand()
+        undoManager.PushCommand(setFieldValueCommand)
     }
 
     refresh() {
+        let colorStopArray = this.getter()
+        let projectId = colorStopArrayPtrProjectIdMap.get(colorStopArray.ptr)
         let oldProjectId = -1
-        if (paper.project.index != this.projectId) {
+        if (paper.project.index != projectId) {
             oldProjectId = paper.project.index
 
-            paper.projects[this.projectId].activate()
+            paper.projects[projectId].activate()
         }
-
-        let colorStopArray = this.getter()
 
         let penIndex = 0
 
@@ -310,6 +394,7 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
             // Draw pens.
             if (penIndex < this.pens.length) { // Reuse previously created pens
                 pen = this.pens[penIndex]
+                pen.show()
             } else { // Create new pen.
                 pen = new Pen(colorStop)
 
@@ -322,6 +407,10 @@ class HHColorStopArrayInput extends HTMLElement implements RefreshableComponent 
 
             pen.bringToFront()
             penIndex++
+        }
+
+        for(let penIdx = penIndex; penIdx < this.pens.length; penIdx++){
+            this.pens[penIdx].hide()
         }
 
         this.rectangle.fillColor = new paper.Color({

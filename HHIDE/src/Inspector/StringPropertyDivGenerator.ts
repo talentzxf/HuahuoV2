@@ -2,7 +2,7 @@ import {BasePropertyDesc, BasePropertyDivGenerator} from "./BasePropertyDivGener
 import {Property} from "hhcommoncomponents"
 
 class StringPropertyDesc extends BasePropertyDesc{
-    input: HTMLInputElement
+    input: HTMLSelectElement| HTMLInputElement
 
     constructor(property: Property) {
         super(property);
@@ -11,14 +11,30 @@ class StringPropertyDesc extends BasePropertyDesc{
 
         if(!property.setter) // Create Read only properties
         {
-            let div = document.createElement("span")
-            div.innerText = i18n.t(currentValue)
-            this.contentDiv.appendChild(div)
+            this.contentDiv.innerText = i18n.t(currentValue)
+            this.contentDiv.className = "input-group-text"
         }else{ // Create Input
-            this.input = document.createElement("input")
-            this.input.value = i18n.t(currentValue)
-            this.input.addEventListener("keyup", this.inputValueChanged.bind(this))
-            this.contentDiv.append(this.input)
+
+            if(property.config && property.config.options && property.config.options.length > 0){
+                this.input = document.createElement("select")
+                this.input.className = "form-select"
+                for(let option of property.config.options){
+                    let optionEle = document.createElement("option")
+                    optionEle.value = option
+                    optionEle.innerText = option
+                    this.input.appendChild(optionEle)
+                }
+
+                this.input.addEventListener("change", this.inputValueChanged.bind(this))
+
+                this.contentDiv.append(this.input)
+            }else{
+                this.input = document.createElement("input") as HTMLInputElement
+                (this.input as HTMLInputElement).value = i18n.t(currentValue)
+                this.input.className = "form-control"
+                this.input.addEventListener("keyup", this.inputValueChanged.bind(this))
+                this.contentDiv.append(this.input)
+            }
         }
     }
 

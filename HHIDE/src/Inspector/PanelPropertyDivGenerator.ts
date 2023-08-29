@@ -13,6 +13,8 @@ class PanelPropertyDesc extends BasePropertyDesc {
         let panelPropertyDiv = document.createElement("div")
 
         this.contentDiv.appendChild(panelPropertyDiv)
+        panelPropertyDiv.className = "accordion-body"
+        panelPropertyDiv.style.padding = "0px"
 
         if (property.config && property.config.children) {
             // TODO: Avoid duplication with Inspector
@@ -20,12 +22,21 @@ class PanelPropertyDesc extends BasePropertyDesc {
                 if (childProperty.hide) { // Some properties are hidden.
                     continue
                 }
+
+                // In child property, setter is actually inserter if not explicitly set.
+                if(childProperty.inserter && !childProperty.hasOwnProperty("setter")){
+                    childProperty.setter = childProperty.inserter
+                }
                 let divGenerator = GetPropertyDivGenerator(childProperty.type)
                 let propertyDesc = divGenerator.generatePropertyDesc(childProperty)
+                if(propertyDesc.getTitleDiv() != null){
+                    propertyDesc.getTitleDiv().className = "input-group-text"
+                }
 
                 let propertyDiv = GenerateDiv(divGenerator, propertyDesc)
+                propertyDiv.className = "input-group input-group-sm"
 
-                this.contentDiv.appendChild(propertyDiv)
+                panelPropertyDiv.appendChild(propertyDiv)
             }
         }
     }
@@ -49,47 +60,67 @@ function makeDivUnselectable(div: HTMLElement) {
 let visibleColor = "yellow"
 let invisibleColor = "gray"
 
+let currentId = 0;
+
+function getCurrentId(){
+    return "component_content_" + currentId++
+}
+
 class ComponentPropertyDivGenerator extends BasePropertyDivGenerator {
     generatePropertyDesc(property): BasePropertyDesc {
         let propertyDesc = new PanelPropertyDesc(property);
 
         let titleDiv = propertyDesc.getTitleDiv()
-        titleDiv.style.background = visibleColor
+        titleDiv.classList.add("accordion-header")
 
         makeDivUnselectable(titleDiv)
 
         let contentDiv = propertyDesc.getContentDiv()
+        contentDiv.className = "accordion-collapse collapse show"
+        contentDiv.id = getCurrentId()
 
-        let contentVisible = false
+        let titleText = titleDiv.innerText
+        for(let child of titleDiv.children){
+            titleDiv.removeChild(child)
+        }
+        titleDiv.innerText = ""
 
-        titleDiv.setAttribute("isCollapsed", "false")
-        titleDiv.addEventListener("click", function () {
-            contentVisible = !contentVisible
-            if (contentVisible) {
-                titleDiv.style.background = invisibleColor
-                contentDiv.style.display = "none"
+        let collapseButton = document.createElement("button")
+        collapseButton.className = "accordion-button"
+        collapseButton.style.padding = "0px"
 
-                titleDiv.setAttribute("isCollapsed", "true")
-            } else {
-                titleDiv.style.background = visibleColor
-                contentDiv.style.display = "block"
+        collapseButton.setAttribute("data-bs-toggle", "collapse")
+        collapseButton.setAttribute("data-bs-target", "#" + contentDiv.id)
+        collapseButton.setAttribute("aria-expanded", "true")
+        collapseButton.setAttribute("aria-controls", contentDiv.id)
 
-                titleDiv.setAttribute("isCollapsed", "false")
-            }
-        })
+        collapseButton.innerText = titleText
+
+        titleDiv.appendChild(collapseButton)
 
         if (property.config && property.config.isActive) {
-            let activateButtion = document.createElement("input")
-            activateButtion.type = "button"
+            let activateButton = document.createElement("input")
+            activateButton.className = "btn btn-outline-secondary btn-sm"
+            activateButton.type = "button"
             if (property.config.isActive()) {
-                activateButtion.value = i18n.t("Deactivate")
-                activateButtion.onclick = this.deActivateComponent(activateButtion, property).bind(this)
+                activateButton.value = i18n.t("Deactivate")
+                activateButton.onclick = this.deActivateComponent(activateButton, property).bind(this)
             } else {
-                activateButtion.value = i18n.t("Activate")
-                activateButtion.onclick = this.activateComponent(activateButtion, property).bind(this)
+                activateButton.value = i18n.t("Activate")
+                activateButton.onclick = this.activateComponent(activateButton, property).bind(this)
             }
 
-            titleDiv.appendChild(activateButtion)
+            collapseButton.appendChild(activateButton)
+
+            if(property.config && property.config.hasOwnProperty("deleter")){
+                let deleteButton = document.createElement("input")
+                deleteButton.className = "btn btn-outline-secondary btn-sm"
+                deleteButton.type = "button"
+                deleteButton.value = i18n.t("DeleteComponent")
+                deleteButton.onclick = this.deleteComponent(property).bind(this)
+
+                collapseButton.appendChild(deleteButton)
+            }
         }
 
         return propertyDesc
@@ -111,6 +142,13 @@ class ComponentPropertyDivGenerator extends BasePropertyDivGenerator {
             activateButton.value = i18n.t("Activate")
             activateButton.onclick = this.activateComponent(activateButton, property).bind(this)
         }.bind(this)
+    }
+
+    deleteComponent(property){
+        return function (evt: MouseEvent){
+            evt.stopPropagation()
+            property.config.deleter()
+        }
     }
 
     flexDirection(): string {

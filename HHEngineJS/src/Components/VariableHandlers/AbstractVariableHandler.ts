@@ -1,5 +1,5 @@
 import {AbstractComponent} from "../AbstractComponent";
-import {capitalizeFirstLetter} from "../PropertySheetBuilder";
+import {capitalizeFirstLetter} from "hhcommoncomponents";
 
 class VariableHandlerConfig {
     setter?: Function
@@ -20,7 +20,7 @@ function internalProcessComponent(component: AbstractComponent, fieldName: strin
         component[getterName] = config.getter.bind(component)
     }
 
-    let setterName = "set" + capitalizeFirstLetter(fieldName) // Set is actually insert.
+    let setterName = "set" + capitalizeFirstLetter(fieldName)
     if (config.setter) { // Call setter function will trigger events.
         component[setterName] = (val)=>{
             let currentValue = component[fieldName]
@@ -29,11 +29,13 @@ function internalProcessComponent(component: AbstractComponent, fieldName: strin
             }
 
             let retValue = config.setter(val)
-            component.callHandlers(fieldName, val)
-            if (component.baseShape) {
-                component.baseShape.update(true)
+            if(retValue){
+                component.callHandlers(fieldName, val)
+                if (component.baseShape) {
+                    component.baseShape.update(true)
 
-                component.baseShape.callHandlers(fieldName, val)
+                    component.baseShape.callHandlers(fieldName, val)
+                }
             }
 
             return retValue

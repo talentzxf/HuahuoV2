@@ -1,6 +1,7 @@
 import {LiteGraph, SerializedLGraphNode} from "litegraph.js";
-import {splitFullEventName} from "HHCommonComponents";
+import {splitFullEventName} from "hhcommoncomponents";
 import {AbstractNode} from "./AbstractNode";
+import {huahuoEngine} from "../../EngineAPI";
 
 class EventNode extends AbstractNode {
     title = "EventNode"
@@ -40,7 +41,9 @@ class EventNode extends AbstractNode {
         this.title = fullEventName
         let _this = this
         this.currentEventHandler = targetEventBus.addEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, (params) => {
-            console.log(params)
+            if(!huahuoEngine.getActivePlayer().isPlaying) // Do not trigger when player is not playing.
+                return
+
             for (let paramIdx = 0; paramIdx < params.length; paramIdx++) {
                 let slot = _this.getParamMap()[paramIdx]
                 if (slot) {
@@ -55,9 +58,7 @@ class EventNode extends AbstractNode {
 
             // if _this.graph is null, means the node has already been deleted. Need to remove the event listener
             // TODO: This remove should happen when the node is removed!
-            if(_this.graph){
-                _this.graph.afterChange()
-            }else{
+            if(!_this.graph){
                 targetEventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, _this.currentEventHandler)
             }
         })

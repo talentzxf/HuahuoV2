@@ -1,5 +1,7 @@
 import {CustomElement} from "hhcommoncomponents";
 import {HHCurveInput} from "./HHCurveInput";
+import {undoManager} from "../../RedoUndo/UndoManager";
+import {SetFieldValueCommand} from "../../RedoUndo/SetFieldValueCommand";
 
 @CustomElement({
     selector: "hh-float-input"
@@ -20,19 +22,36 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
         this.getter = getter
         this.setter = setter
 
+        let stackDiv = document.createElement("div")
+        stackDiv.style.display = "flex"
+        stackDiv.style.flexDirection = "column"
+        this.appendChild(stackDiv)
+
+
+        let rowDiv = document.createElement("div")
+        rowDiv.style.display = "flex"
+        rowDiv.style.flexDirection = "row"
+
+        stackDiv.appendChild(rowDiv)
+
         this.inputElement = document.createElement("input")
+        this.inputElement.className = "form-control"
+        this.inputElement.style.width = "50%"
         this.inputElement.type = type
 
-        this.inputElement.style.width = "50px"
+        rowDiv.appendChild(this.inputElement)
+
         this.inputElement.addEventListener("change", this.inputValueChanged.bind(this))
-        this.appendChild(this.inputElement)
+
+        this.className = "input-group"
 
         if(this.keyFrameCurveGetter){
             this.curveButton = document.createElement("button")
-            this.appendChild(this.curveButton)
+            this.curveButton.className = "btn btn-outline-secondary"
+            rowDiv.appendChild(this.curveButton)
 
             this.curveInput = new HHCurveInput(this.keyFrameCurveGetter)
-            this.appendChild(this.curveInput)
+            stackDiv.appendChild(this.curveInput)
 
             this.hideCurveInput()
         }
@@ -43,7 +62,7 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
     }
 
     set value(val){
-        this.inputElement.value = val
+        this.inputElement.value = Number.parseFloat(val).toFixed(2)
         if(this.curveInput){
             this.curveInput.refresh()
         }
@@ -66,8 +85,14 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
     }
 
     inputValueChanged(){
-        if(this.setter)
-            this.setter(Number(this.inputElement.value))
+        if(this.setter){
+            let oldValue = Number(this.getter())
+            let newValue = Number(this.inputElement.value)
+
+            let command = new SetFieldValueCommand<number>(this.setter, oldValue, newValue)
+            undoManager.PushCommand(command)
+            command.DoCommand()
+        }
     }
 
     hideCurveInput(){
@@ -88,7 +113,7 @@ class HHFloatInput extends HTMLElement implements RefreshableComponent{
     }
 
     refresh(){
-        this.inputElement.value = this.getter()
+        this.inputElement.value = Number.parseFloat(this.getter()).toFixed(2)
 
         if(this.curveInput){
             this.curveInput.refresh()

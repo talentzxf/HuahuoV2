@@ -19,22 +19,32 @@ import {NailShapeJS} from "./Shapes/NailShapeJS";
 import {ParticleSystemJS} from "./Shapes/ParticleSystemJS";
 import {ParticleSystemRenderer} from "./Components/ParticleSystemRenderer";
 import {Particles} from "./ParticleSystem/Particles";
-import {registerCustomFieldContentDivGeneratorConstructor} from "./Components/AbstractComponent"
-import {BaseShapeActions} from "./EventGraph/BaseShapeActions";
+import {BaseShapeActor} from "./EventGraph/BaseShapeActor";
+import {GetShapeComponentNode} from "./EventGraph/Nodes/GetShapeComponentNode";
+import {SetComponentPropertyNode} from "./EventGraph/Nodes/SetComponentPropertyNode"
 import {EventNode} from "./EventGraph/Nodes/EventNode";
 import {ActionNode} from "./EventGraph/Nodes/ActionNode";
+import {Vec2MathOperationNode} from "./EventGraph/UtilityNodes/Vec2MathOperationNode";
+import {Vec2MathNumberMultiply} from "./EventGraph/UtilityNodes/Vec2MathNumberMultiply";
 import {StarMirrorShapeJS} from "./Shapes/StarMirrorShapeJS";
 import {Utils} from "./Shapes/Utils";
+import {AbstractComponent} from "./Components/AbstractComponent";
+import {PropertyCategory, PropertyDef} from "./Components/PropertySheetBuilder"
+import {getLiteGraphTypeFromPropertyType} from "./EventGraph/GraphUtils"
 
 import {isInheritedFromClzName} from "./CppClassObjectFactory";
 import {LGraphCanvas, LiteGraph} from "litegraph.js";
 
 // All non-default components
-import {GeneratorComponent} from "./Components/GeneratorComponent";
 import {CurveGrowthComponent} from "./Components/CurveGrowthComponent";
-import {RadialGradientComponent} from "./Components/RadialGradientComponent";
 import {EventGraphComponent} from "./Components/EventGraphComponent";
+import {Motor} from "./Components/Motor";
+import {GeneratorComponent} from "./Components/GeneratorComponent";
+import {ObjectGenerator} from "./Components/ObjectGenerator";
 import {NailComponent} from "./Components/NailComponent";
+import {RadialGradientComponent} from "./Components/RadialGradientComponent"
+import {FollowCurveComponent} from "./Components/FollowCurveComponent";
+import {RigidBody} from "./Components/Physics/RigidBody";
 
 import "./Shapes/LoadShape"
 
@@ -43,16 +53,26 @@ import * as paper from "paper"
 
 let renderEngine2D = new RenderEnginePaperJs()
 
-if (Module.IsWASMInited && Module.IsWASMInited()) {
-    console.log("Init right now")
-    huahuoEngine.OnInit()
-} else {
-    console.log("Init later")
-    Module.onRuntimeInitialized = () => {
-        console.log("Init now!")
-        huahuoEngine.OnInit()
+function InitWASM(){
+    if(typeof Module != 'undefined') {
+        if (Module.IsWASMInited && Module.IsWASMInited()) {
+            console.log("Init right now")
+            huahuoEngine.OnInit()
+        } else {
+            console.log("Init later")
+            Module.onRuntimeInitialized = () => {
+                console.log("Init now!")
+                huahuoEngine.OnInit()
+            }
+        }
+    }else{
+        console.log("Module is null?? Init in next tick!")
+        setTimeout(InitWASM, 0)
     }
 }
+
+InitWASM()
+
 
 if (!window["taichiInitBegun"]) {
     window["taichiInitBegun"] = true
@@ -97,15 +117,29 @@ export {
     Particles,
     NailComponent,
     EventGraphComponent,
+    CurveGrowthComponent,
+    FollowCurveComponent,
+    RadialGradientComponent,
+    GeneratorComponent,
+    RigidBody,
+    Motor,
+    ObjectGenerator,
     ColorStop,
     getNailManager,
     isInheritedFromClzName,
-    registerCustomFieldContentDivGeneratorConstructor,
-    BaseShapeActions,
+    BaseShapeActor,
     EventNode,
     ActionNode,
+    GetShapeComponentNode,
+    SetComponentPropertyNode,
+    Vec2MathOperationNode,
+    Vec2MathNumberMultiply,
     LGraphCanvas,
     LiteGraph,
     StarMirrorShapeJS,
-    Utils
+    Utils,
+    AbstractComponent,
+    PropertyCategory,
+    PropertyDef,
+    getLiteGraphTypeFromPropertyType
 }

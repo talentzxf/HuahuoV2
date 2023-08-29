@@ -4,6 +4,7 @@ import {Vector2} from "hhcommoncomponents";
 import {MirrorShapeJS, huahuoEngine} from "hhenginejs";
 import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
 import {setPrompt} from "../init";
+import {EditorShapeProxy} from "./EditorShapeProxy";
 
 // Maybe we should just add a mirror component in the lineshape ???
 class MirrorDrawer extends BaseShapeDrawer {
@@ -46,7 +47,7 @@ class MirrorDrawer extends BaseShapeDrawer {
         this.startPosition = BaseShapeDrawer.getWorldPosFromView(evt.offsetX, evt.offsetY)
         this.isDrawing = true
 
-        this.tempShape = new MirrorShapeJS()
+        this.tempShape = EditorShapeProxy.CreateProxy(new MirrorShapeJS())
         this.tempShape.setStartPoint(this.startPosition)
         this.tempShape.setEndPoint(this.startPosition)
     }

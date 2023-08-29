@@ -1,4 +1,53 @@
+import {huahuoEngine, renderEngine2D, Player} from "hhenginejs";
+
+let hiddenCanvas = document.createElement("canvas")
+let previewPlayer = new Player()
+
 class SnapshotUtils{
+
+    // TODO: Merge all takesnapshot functions here. Avoid code duplication.
+    static async takeSnapShotForStore(storeId): Promise<Blob>{
+        // document.body.appendChild(hiddenCanvas)
+        // hiddenCanvas.style.position = "absolute"
+        // hiddenCanvas.style.left = "0px"
+        // hiddenCanvas.style.top = "0px"
+        // hiddenCanvas.style.border = "1px solid black"
+
+        let previousCanvas = renderEngine2D.getDefaultCanvas()
+        renderEngine2D.init(hiddenCanvas, true)
+
+        let [initW, initH] = renderEngine2D.getInitCanvasWH()
+        let [contentW, contentH] = renderEngine2D.getContentWH(initW, initH)
+        if(initW > 0){
+            renderEngine2D.resize(hiddenCanvas, contentW, contentH)
+        }
+
+        let prevStore = huahuoEngine.GetCurrentStoreId()
+        try{
+            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(storeId)
+
+            let currentLayer = huahuoEngine.GetCurrentLayer()
+            let currentFrameId = currentLayer.GetCurrentFrame()
+            renderEngine2D.setDefaultCanvas(hiddenCanvas)
+
+            previewPlayer.storeId = storeId
+            previewPlayer.loadShapesFromStore()
+            previewPlayer.setFrameId(currentFrameId)
+        }finally {
+            if (previousCanvas)
+                renderEngine2D.setDefaultCanvas(previousCanvas)
+
+            huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStore)
+        }
+
+        return new Promise<Blob>((resolve, reject)=>{
+
+            setTimeout(function(){
+                let resultBlob = SnapshotUtils.takeSnapshot(hiddenCanvas)
+                resolve(resultBlob)
+            }, 10)
+        })
+    }
     static takeSnapshot(canvas:HTMLCanvasElement): Blob{
         let BASE64_MARKER = ";base64,";
         let dataURL = canvas.toDataURL()

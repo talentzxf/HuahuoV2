@@ -1,5 +1,5 @@
 import {Logger, HHToast, getFileNameFromGZip} from "hhcommoncomponents";
-import {huahuoEngine} from "hhenginejs";
+import {huahuoEngine, renderEngine2D} from "hhenginejs";
 import {HHTimeline} from "hhtimeline"
 import {api} from "../RESTApis/RestApi";
 import {gzipSync, gunzipSync} from "fflate"
@@ -28,10 +28,8 @@ class ProjectManager {
 
     loadFromServer(projectId: number) {
         let _this = this
-        return api.downloadProject(projectId).then(function (blob: Blob) {
-            Promise.resolve(blob.arrayBuffer()).then((data) => {
-                _this.loadFromArrayBuffer(data)
-            })
+        return api.downloadProject(projectId).then(function (response: ArrayBuffer) {
+            _this.loadFromArrayBuffer(response["data"])
         })
     }
 
@@ -68,6 +66,10 @@ class ProjectManager {
         let oldStoreId = huahuoEngine.GetCurrentStoreId()
 
         try{
+            let mainSceneViewCanvas = mainSceneView.canvas
+
+            renderEngine2D.saveProjectCanvasWH(mainSceneViewCanvas.width, mainSceneViewCanvas.height)
+
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(mainSceneView.storeId)
             let Uint8Array = Module.writeAllObjectsInMemoryFile()
 

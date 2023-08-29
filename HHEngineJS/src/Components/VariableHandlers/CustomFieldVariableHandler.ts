@@ -1,5 +1,6 @@
 import {GroupComponent} from "../GroupComponent";
-import {buildOperator, capitalizeFirstLetter} from "../PropertySheetBuilder";
+import {buildOperator} from "../PropertySheetBuilder";
+import {capitalizeFirstLetter} from "hhcommoncomponents"
 
 class CustomFieldVariableHandler {
 

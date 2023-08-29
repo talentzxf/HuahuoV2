@@ -2,8 +2,7 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import "reflect-metadata"
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
 import {PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
-import {propertySheetFactory} from "./PropertySheetBuilderFactory"
-import {CustomFieldConfig, PropertyConfig, PropertyType} from "hhcommoncomponents";
+import {EventEmitter, PropertyConfig} from "hhcommoncomponents";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {ComponentConfig} from "./ComponentConfig";
 import {defaultVariableProcessor} from "./VariableHandlers/DefaultVariableProcessor";
@@ -11,27 +10,15 @@ import {shapeArrayHandler} from "./VariableHandlers/ShapeArrayHandler";
 import {colorStopArrayHandler} from "./VariableHandlers/ColorArrayProcessor";
 import {subComponentArrayHandler} from "./VariableHandlers/SubComponentArrayHandler";
 import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariableHandler";
-
-
-// Key is: className#fieldName
-// Value is the constructor of the divContent generator
-let customFieldContentDivGeneratorMap: Map<string, Function> = new Map()
-
-function registerCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string, constructor: Function) {
-    let fieldFullName = className + "#" + fieldName
-    customFieldContentDivGeneratorMap.set(fieldFullName, constructor)
-}
-
-function getCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string): Function {
-    let fieldFullName = className + "#" + fieldName
-    return customFieldContentDivGeneratorMap.get(fieldFullName)
-}
+import {ComponentActions} from "../EventGraph/GraphActions";
+import {addComponentProperties} from "../EventGraph/LGraphSetup";
+import {ComponentActor} from "./ComponentActor";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
 
-function getProperties(target): object[] {
-    let properties: object[] = Reflect.getMetadata(metaDataKey, target)
+function getProperties(target): Array<PropertyDef> {
+    let properties: Array<PropertyDef> = Reflect.getMetadata(metaDataKey, target)
     if (!properties) {
         properties = new Array<PropertyDef>()
         Reflect.defineMetadata(metaDataKey, properties, target)
@@ -51,6 +38,8 @@ function PropertyValue(category: PropertyCategory, initValue = null, config?: Pr
             hide: hide
         }
         properties.push(propertyEntry)
+
+        addComponentProperties(target.constructor.name, properties)
     }
 }
 
@@ -64,10 +53,20 @@ function Component(componentConfig?: ComponentConfig) {
 
 declare function castObject(obj: any, clz: any): any;
 
-class AbstractComponent {
+abstract class AbstractComponent extends EventEmitter {
+
+    static getMetaDataKey() {
+        return metaDataKey
+    }
+
+    actor: ComponentActor = new ComponentActor()
+
+    componentActions: ComponentActions
+
+    isBuiltIn: boolean = false
+
     rawObj: any;
     baseShape: BaseShapeJS;
-    propertySheetInited: boolean = false;
     shapeArrayFieldNames: Set<string> = new Set<string>()
 
     // If this component belongs to a mirage shape, it should also be mirage.
@@ -77,13 +76,46 @@ class AbstractComponent {
     // @PropertyValue(PropertyCategory.boolean, false)
     // isActive
 
-    private valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
+    protected valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
+
+    getRawObject() {
+        return this.rawObj
+    }
+
+    registerValueChangeHandler(valueNameString: string, callbackFunc: Function): number {
+        return this.valueChangeHandler.registerValueChangeHandler(valueNameString)(callbackFunc)
+    }
 
     callHandlers(propertyName: string, val: any) {
         this.valueChangeHandler.callHandlers(propertyName, val)
     }
 
+    addProperty(propertyEntry: PropertyDef, needAppendInMeta:boolean = false) {
+        if(needAppendInMeta){
+            let currentProperties = getProperties(this)
+            currentProperties.push(propertyEntry)
+
+            this.rawObj.AddAdditionalFieldDef(propertyEntry.key, JSON.stringify(propertyEntry))
+        }
+
+        if (propertyEntry.type == PropertyCategory.shapeArray) {
+            shapeArrayHandler.handleEntry(this, propertyEntry)
+        } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
+            colorStopArrayHandler.handleEntry(this, propertyEntry)
+        } else if (propertyEntry.type == PropertyCategory.subcomponentArray) {
+            // Only Components inherits GroupComponent can have subComponentArray. Cause SubComponentArray itself is a component.
+            //@ts-ignore
+            subComponentArrayHandler.handleEntry(this, propertyEntry)
+        } else if (propertyEntry.type == PropertyCategory.customField) {
+            customFieldVariableHandler.handleEntry(this, propertyEntry)
+        } else {
+            defaultVariableProcessor.handleEntry(this, propertyEntry)
+        }
+    }
+
     constructor(rawObj?, isMirage = false) {
+        super()
+
         this.isMirage = isMirage
 
         let cppClzName = clzObjectFactory.getCppClassName(this.constructor.name)
@@ -94,35 +126,46 @@ class AbstractComponent {
 
         this.rawObj = castObject(rawObj, Module[cppClzName])
 
+        let frameStateCount = this.rawObj.GetFrameStateCount()
+        for(let frameStateIdx = 0; frameStateIdx < frameStateCount; frameStateIdx++){
+            let frameStateRawObj = this.rawObj.GetFrameStateAtIdx(frameStateIdx)
+            let frameStateName = frameStateRawObj.GetName()
+            let frameStateString = this.rawObj.GetAdditionalFieldDef(frameStateName)
+
+            if(frameStateString != null && frameStateString.length > 0){
+                let fieldDef = JSON.parse(frameStateString)
+                const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
+                properties.push(fieldDef)
+            }
+        }
+
         if (!this.rawObj.IsFieldRegistered("isActive")) {
             this.rawObj.RegisterBooleanValue("isActive", true)
-            this.enableComponent()
         }
 
         const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
         if (properties) {
             properties.forEach(propertyEntry => {
-                if (propertyEntry.type == PropertyCategory.shapeArray) {
-                    shapeArrayHandler.handleEntry(this, propertyEntry)
-                } else if (propertyEntry.type == PropertyCategory.colorStopArray) {
-                    colorStopArrayHandler.handleEntry(this, propertyEntry)
-                } else if (propertyEntry.type == PropertyCategory.subcomponentArray) {
-                    // Only Components inherits GroupComponent can have subComponentArray. Cause SubComponentArray itself is a component.
-                    //@ts-ignore
-                    subComponentArrayHandler.handleEntry(this, propertyEntry)
-                } else if (propertyEntry.type == PropertyCategory.customField) {
-                    customFieldVariableHandler.handleEntry(this, propertyEntry)
-                } else {
-                    defaultVariableProcessor.handleEntry(this, propertyEntry)
-                }
+                this.addProperty(propertyEntry)
             })
         }
 
         this.rawObj.SetTypeName(this.constructor.name)
+
+        this.componentActions = new ComponentActions(this)
+    }
+
+    getActionDefs() {
+        return this.componentActions.getActionDefs()
     }
 
     setBaseShape(baseShape: BaseShapeJS) {
         this.baseShape = baseShape
+
+        // I don't like this, but baseShape will be null in some cases???  Have to manual fix here....
+        this.rawObj.SetBaseShape(baseShape.getRawObject())
+        if (!this.isMirage)
+            this.enableComponent() // Enable the component after baseShape is set.
     }
 
     afterUpdate(force: boolean = false) {
@@ -144,74 +187,33 @@ class AbstractComponent {
         return this.rawObj.GetBooleanValue("isActive")
     }
 
+    // Life cycle function, call back when the component is enabled.
+    onComponentEnabled() {
+
+    }
+
+    // Life cycle function, call back when the component is disabled.
+    onComponentDisabled() {
+        this.baseShape.getActor().RemoveActionInvoker(this)
+    }
+
     disableComponent() {
         this.rawObj.SetBooleanValue("isActive", false)
+        this.onComponentDisabled()
 
-        if(this.baseShape)
-            this.baseShape.afterUpdate(true)
+        if (this.baseShape)
+            this.baseShape.update(true)
     }
 
     enableComponent() {
         this.rawObj.SetBooleanValue("isActive", true)
+        this.onComponentEnabled()
 
-        if(this.baseShape)
-            this.baseShape.afterUpdate(true)
-    }
-
-    getPropertySheet() {
-        let _this = this
-        let componentConfigSheet = {
-            key: this.getTypeName(),
-            type: PropertyType.COMPONENT,
-            targetObject: this.baseShape,
-            config: {
-                children: [],
-                enabler: () => {
-                    _this.enableComponent()
-                },
-                disabler: () => {
-                    _this.disableComponent()
-                },
-                isActive: () => {
-                    return _this.isComponentActive()
-                }
-            }
-        }
-
-        const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
-        if (properties != null) {
-            for (let propertyMeta of properties) {
-                if (propertyMeta.type == PropertyCategory.customField) {
-                    if (propertyMeta.config == null || propertyMeta.config["contentDivGenerator"] == null) {
-
-                        propertyMeta = {...propertyMeta} // Clone it to avoid affecting other objects. Shallow copy should be enough.
-
-                        let divGeneratorConstructor = getCustomFieldContentDivGeneratorConstructor(this.constructor.name, propertyMeta.key)
-
-                        // @ts-ignore
-                        let contentDivGenerator = new divGeneratorConstructor(this)
-                        propertyMeta.config = {
-                            fieldName: propertyMeta["key"],
-                            contentDivGenerator: contentDivGenerator
-                        } as CustomFieldConfig
-                    }
-                }
-                let propertySheetEntry = propertySheetFactory.createEntry(this, propertyMeta, this.valueChangeHandler)
-                if (propertySheetEntry != null) {
-                    componentConfigSheet.config.children.push(propertySheetEntry)
-                }
-            }
-        }
-
-        let keyFramePropertySheet = propertySheetFactory.createEntryByNameAndCategory("keyframes", PropertyCategory.keyframeArray)
-
-        keyFramePropertySheet["getter"] = this.getKeyFrames.bind(this)
-        keyFramePropertySheet["targetObject"] = this.baseShape
-        keyFramePropertySheet["deleter"] = this.baseShape.deleteComponentKeyFrame(this.getTypeName()).bind(this.baseShape)
-
-        componentConfigSheet.config.children.push(keyFramePropertySheet)
-
-        return componentConfigSheet
+        // Something might be changed, so we need to refresh the shape.
+        // But if the shape or the paper shape has not been created yet, do not refresh it.
+        // TODO: if there're a lot of components, how to avoid update again and again?
+        if (this.baseShape && this.baseShape.paperShape && !this.baseShape.isLoadingComponents)
+            this.baseShape.update(true)
     }
 
     getKeyFrames() {
@@ -225,15 +227,6 @@ class AbstractComponent {
 
     insertKeyFrames(val) {
 
-    }
-
-    initPropertySheet(propertySheet) {
-        if (!this.propertySheetInited) {
-            this.propertySheetInited = true
-            let myPropertySheet = this.getPropertySheet()
-            if (myPropertySheet)
-                propertySheet.addProperty(myPropertySheet)
-        }
     }
 
     cleanUp() {
@@ -255,14 +248,22 @@ class AbstractComponent {
         }
     }
 
-    getKeyFrameCurve(fieldName){
+    getKeyFrameCurve(fieldName) {
         return this.rawObj.GetFloatKeyFrameCurve(fieldName)
     }
 
-    getVector2KeyFrameCurves(fieldName){
+    getVector2KeyFrameCurves(fieldName) {
         return [this.rawObj.GetVectorKeyFrameCurve(fieldName, 0), this.rawObj.GetVectorKeyFrameCurve(fieldName, 1)]
+    }
+
+    detachFromCurrentShape() {
+        this.baseShape.removeComponent(this)
+    }
+
+    reset() {
+        this.actor.reset()
     }
 }
 
 
-export {AbstractComponent, PropertyValue, Component, registerCustomFieldContentDivGeneratorConstructor}
+export {AbstractComponent, PropertyValue, Component, getProperties}

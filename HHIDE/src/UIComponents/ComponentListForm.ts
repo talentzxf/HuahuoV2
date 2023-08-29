@@ -3,6 +3,9 @@ import {HHForm} from "../Utilities/HHForm";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {huahuoEngine} from "hhenginejs";
 import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
+import {elementCreator} from "../SceneView/ElementCreator";
+import {undoManager} from "../RedoUndo/UndoManager";
+import {AddComponentCommand} from "../RedoUndo/AddComponentCommand"
 
 @CustomElement({
     selector:"hh-component-list"
@@ -85,11 +88,13 @@ class ComponentListForm extends HTMLElement implements HHForm{
                 let componentName = componentAddBtn.id.split("_")[1]
                 componentAddBtn.onclick = function(e){
                     e.preventDefault()
-
                     let newComponent = huahuoEngine.produceObject(componentName)
-                    targetObj.addComponent(newComponent)
 
-                    IDEEventBus.getInstance().emit(EventNames.COMPONENTADDED, targetObj)
+                    let addComponentCommand = new AddComponentCommand(targetObj, newComponent)
+                    addComponentCommand.DoCommand()
+
+                    undoManager.PushCommand(addComponentCommand)
+
                     _this.closeForm()
                 }
             }

@@ -58,7 +58,7 @@ class NailShapeJS extends BaseShapeJS{
     // The point is in global world space.
     addShape(targetShape: BaseSolidShape, globalPosition: paper.Point){
         let localPoint = targetShape.globalToLocal(globalPosition)
-        this.rawObj.AddShape(targetShape.getRawShape(), localPoint.x, localPoint.y, 0.0)
+        this.rawObj.AddShape(targetShape.getRawObject(), localPoint.x, localPoint.y, 0.0)
         this.rawObj.SetGlobalPivotPosition(globalPosition.x, globalPosition.y, 0.0)
 
         let _this = this
@@ -84,7 +84,7 @@ class NailShapeJS extends BaseShapeJS{
     }
 
     getLocalPositionInShape(targetShape: BaseShapeJS): paper.Point{
-        let pos = this.rawObj.GetLocalPositionInShape(targetShape.getRawShape())
+        let pos = this.rawObj.GetLocalPositionInShape(targetShape.getRawObject())
         return new paper.Point(pos.x, pos.y)
     }
 

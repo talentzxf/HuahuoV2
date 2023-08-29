@@ -58,6 +58,10 @@ class HHTitle extends HTMLElement implements MovableElement{
 
     connectedCallback() {
         if(!this.inited){
+            this.classList.add("nav-item")
+            this.classList.add("nav-link")
+            this.classList.add("active")
+
             let closableStr = this.getContent().getAttribute("closable")
 
             let closable = true

@@ -25,12 +25,7 @@ class ElementShapeJS extends BaseShapeJS {
     layerFrameMap: Map<any, number> = new Map();
 
     constructor(rawObj) {
-        let needAddComponent = !rawObj
         super(rawObj);
-
-        if (needAddComponent) {
-            this.addComponent(new ElementController())
-        }
 
         this.size = new paper.Point(100, 100)
 
@@ -39,8 +34,10 @@ class ElementShapeJS extends BaseShapeJS {
         console.log("ELement created count:" + elementCreated)
     }
 
-    protected isUpdateStrokeColor(): boolean {
-        return false;
+    override initShapeFromEditor() {
+        super.initShapeFromEditor();
+
+        this.addComponent(new ElementController())
     }
 
     getShapeName(): string {
@@ -100,6 +97,10 @@ class ElementShapeJS extends BaseShapeJS {
         let bornFrame = this.bornFrameId
         let maxFrames = huahuoEngine.getStoreMaxFrames(this.storeId)
 
+        if(maxFrames == 0){
+            return 0;
+        }
+
         return (((currentFrame - bornFrame) * this.getPlaySpeed()) % maxFrames + maxFrames) % maxFrames
     }
 
@@ -114,7 +115,6 @@ class ElementShapeJS extends BaseShapeJS {
             layer.SetCurrentFrame(previousFrame)
         }
     }
-
     override preparePaperItem(force: boolean = false) {
         super.preparePaperItem(force)
 
@@ -131,7 +131,7 @@ class ElementShapeJS extends BaseShapeJS {
             }
 
             let currentLocalFrame = this.calculateLocalFrame()
-            this.layerShapesManager.forEachLayerInStore(store, (layer) => {
+            this.layerShapesManager.forEachLayerInStore((layer) => {
                 this.saveLayerFrame(layer, layer.GetCurrentFrame())
 
                 layer.SetCurrentFrame(currentLocalFrame)
@@ -141,7 +141,7 @@ class ElementShapeJS extends BaseShapeJS {
 
             let somethingIsVisible = false
             let _this = this
-            this.layerShapesManager.forEachShapeInStore(store, (shape) => {
+            this.layerShapesManager.forEachShapeInStore((shape) => {
                 if (shape) {
                     _this.emptyPlaceHolder.remove()
                     if (shape.isVisible()) {
@@ -192,7 +192,15 @@ class ElementShapeJS extends BaseShapeJS {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId)
 
             // 2. Add the shape into current layer of this store. And it will be loaded by the element.
-            huahuoEngine.GetCurrentLayer().AddShapeInternal(shape.getRawShape())
+            huahuoEngine.GetCurrentLayer().AddShapeInternal(shape.getRawObject())
+
+            if(shape.getRawObject().GetTypeName() == shapeName){
+                let maxFrameId = huahuoEngine.GetStoreById((shape as ElementShapeJS).storeId).GetMaxFrameId()
+
+                let currentStore = huahuoEngine.GetStoreById(this.storeId)
+
+                currentStore.UpdateMaxFrameId(shape.bornFrameId + maxFrameId)
+            }
         } finally {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStoreId)
         }
@@ -220,6 +228,9 @@ class ElementShapeJS extends BaseShapeJS {
     }
 
     getPlaySpeed() {
+        if(this.elementController == null)
+            return 1.0
+
         return this.elementController.playSpeed
     }
 

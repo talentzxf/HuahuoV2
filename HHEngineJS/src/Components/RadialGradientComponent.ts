@@ -1,5 +1,6 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
+import {StringProperty} from "hhcommoncomponents";
 
 @Component({compatibleShapes:["BaseSolidShape"], maxCount: 1})
 class RadialGradientComponent extends AbstractComponent{
@@ -8,6 +9,12 @@ class RadialGradientComponent extends AbstractComponent{
 
     @PropertyValue(PropertyCategory.interpolateVector2, {x: 0.0, y: 0.0})
     centerPosition
+
+    @PropertyValue(PropertyCategory.interpolateVector2, {x: 0.0, y: 0.0})
+    destinationPosition
+
+    @PropertyValue(PropertyCategory.stringValue, "radial", {options:["radial", "linear"]} as StringProperty)
+    gradientType
 
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
@@ -22,14 +29,22 @@ class RadialGradientComponent extends AbstractComponent{
         }
 
         let _this = this
-        this.baseShape.paperShape.fillColor = new paper.Color({
+        let fillColorConfig = {
             gradient:{
                 stops: stops,
                 radial: true
             },
             origin: _this.baseShape.paperShape.position.add(this.centerPosition),
-            destination: _this.baseShape.bounds.rightCenter
-        })
+            destination: _this.baseShape.bounds.rightCenter.add(this.destinationPosition)
+        }
+
+        if(this.gradientType == "linear"){
+            fillColorConfig.gradient.radial = false
+        }else{
+            fillColorConfig.gradient.radial = true
+        }
+
+        this.baseShape.paperShape.fillColor = new paper.Color(fillColorConfig)
     }
 }
 

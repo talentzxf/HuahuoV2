@@ -301,8 +301,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.ctx.font = this.trackNameSize + 'px serif'
         let textYOffset = this.yOffset + this.trackNameSize + (this.unitCellHeight - this.trackNameSize) * 0.5
 
-        let i18n = (window as any).i18n
-        this.ctx.fillText(i18n.t(this.trackName), xOffset, textYOffset)
+        this.ctx.fillText(this.trackName, xOffset, textYOffset)
 
         if (this.isSelected) {
 
@@ -377,7 +376,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.isSelected = false
     }
 
-    selectTrack(relativeX: number) {
+    selectTrack(relativeX: number| null) {
         if (!this.selectable)
             return;
 
@@ -392,13 +391,19 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
         this.isSelected = true;
 
-        let absoluteX = this.canvasStartPos + relativeX;
-        let cellId = this.calculateCellIdx(absoluteX);
+        if(relativeX != null){
+            let absoluteX = this.canvasStartPos + relativeX;
+            let cellId = this.calculateCellIdx(absoluteX);
 
-        this.selectCell(cellId)
+            this.selectCell(cellId)
+        }
 
-        if (this.layer)
-            huahuoEngine.GetCurrentStore().SetCurrentLayer(this.layer)
+        if (this.layer){
+            let store = this.layer.GetObjectStore()
+            if(store != null)
+                store.SetCurrentLayer(this.layer)
+        }
+
     }
 
     selectCell(cellId) {

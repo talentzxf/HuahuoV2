@@ -55,7 +55,11 @@ class HHEventBus{
     }
 
     removeEventHandler(namespace: string, evtName: string, handlerId: number){
-        throw "Not Implemented!!!"
+        if(this.handlerIdHandlerMap.has(handlerId)){
+            this.handlerIdHandlerMap.delete(handlerId)
+        }else{
+            console.warn("Trying to remove an nonexistence handlerId:" + handlerId)
+        }
     }
 
     addEventHandler(namespace: string, evtName: string, handler: Function): number{
@@ -103,7 +107,8 @@ function GraphEvent(isGlobal: boolean = false){
         let eventDef: EventDef = {
             eventNameSpace: target.constructor.name,
             eventName: propertyKey,
-            target: target
+            target: target,
+            isGlobal: isGlobal
         }
         events.push(eventDef)
 

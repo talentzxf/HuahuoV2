@@ -10,7 +10,7 @@ enum PropertyType {
     NUMBER,
     COLOR,
     BUTTON,
-    REFERENCE,
+    SHAPE,
     ARRAY,
     COMPONENT,
     COLORSTOPARRAY,
@@ -42,6 +42,10 @@ class PropertySheet {
 
     getProperties() {
         return this.properties
+    }
+
+    setProperties(properties){
+        this.properties = properties
     }
 
     getProperty(key: string) {

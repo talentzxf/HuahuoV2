@@ -1,1 +1,1 @@
-./gradlew bootRun --args='--spring.profiles.active=prod'
+./gradlew bootRun --args='--spring.profiles.active=prod' >> ./logs/backend.log &

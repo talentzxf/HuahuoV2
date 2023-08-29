@@ -4,7 +4,7 @@ import {createDuplication} from "./MirrorComponent";
 import * as paper from "paper";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {FloatPropertyConfig} from "hhcommoncomponents";
-import {BaseShapeActions} from "../EventGraph/BaseShapeActions";
+import {BaseShapeActor} from "../EventGraph/BaseShapeActor";
 
 class ClonedShapeEntry{
     shape: BaseShapeJS
@@ -15,10 +15,6 @@ class ClonedShapeEntry{
 }
 
 function updateEntry(entry: ClonedShapeEntry){
-    // let originalPosition = entry.targetShape.position
-    // let targetPosition = originalPosition.rotate(entry.angle, entry.center)
-    //
-    // entry.shape.getAction().setPosition(targetPosition.x, targetPosition.y)
     if(entry.isUsing){
         let parentGroup = entry.shape.paperShape.parent
 
@@ -62,7 +58,7 @@ class StarMirrorComponent extends AbstractComponent{
     }
 
     getMirroredShapeArray(targetShape: BaseShapeJS):Array<BaseShapeJS>{
-        let rawPtr = targetShape.getRawShape().ptr
+        let rawPtr = targetShape.getRawObject().ptr
 
         if(!this.targetShapeMirroredShapeSetMap.has(rawPtr)){
             this.targetShapeMirroredShapeSetMap.set(rawPtr, new Array<BaseShapeJS>())
@@ -153,7 +149,7 @@ class StarMirrorComponent extends AbstractComponent{
                                 this.mirroredShapeShapeEntryMap.delete(mirroredShape)
                                 mirroredShape.removePaperObj()
                             }
-                            this.targetShapeMirroredShapeSetMap.set(targetShape.getRawShape().ptr, new Array())
+                            this.targetShapeMirroredShapeSetMap.set(targetShape.getRawObject().ptr, new Array())
                         }
 
                         this.updateMirroredShapeArray(targetShape)

@@ -1,6 +1,8 @@
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 import {gzipSync} from "fflate";
 import {api} from "./RestApi";
+import {HHToast} from "hhcommoncomponents";
+import {SnapshotUtils} from "../Utilities/SnapshotUtils";
 
 declare var Module: any
 
@@ -26,11 +28,21 @@ class ElementUploader {
     }
 
     @NeedLogin()
-    uploadStore(storeId, elementName) {
-        let storeData = this.getStoreData(storeId, elementName)
-        let uploadElementPromise = api.uploadProject(storeData, elementName, true)
+    uploadStore(storeId, elementName, isShareable, isEditable) {
+        let elementBlob = this.getStoreData(storeId, elementName)
 
-        return uploadElementPromise
+        api.uploadElement(elementBlob, elementName, storeId, isShareable, isEditable).then((response)=>{
+            if(response && response["data"]){
+                let fileId = response["data"]["binaryFileDB"]["id"]
+
+                SnapshotUtils.takeSnapShotForStore(storeId).then((blob)=>{
+                    let uploadCoverpagePromise = api.uploadProjectCoverPage(fileId, blob, elementName + ".png", true)
+                    uploadCoverpagePromise.then((response)=>{
+                        HHToast.info("Element upload succeeded!")
+                    })
+                })
+            }
+        })
     }
 }
 

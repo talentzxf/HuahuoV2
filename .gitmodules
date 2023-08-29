@@ -8,3 +8,12 @@
 	url = git@github.com:talentzxf/litegraph.js.git
 	branch = master
 	update = merge
+[submodule "HuahuoEngines"]
+	path = HuahuoEngines
+	url = git@github.com:talentzxf/HuahuoEngines.git
+[submodule "Libs/gifuct-js"]
+	path = Libs/gifuct-js
+	url = git@github.com:talentzxf/gifuct-js.git
+[submodule "Libs/gif.js"]
+	path = Libs/gif.js
+	url = https://github.com/jnordberg/gif.js.git

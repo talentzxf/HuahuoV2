@@ -1,7 +1,6 @@
 import {huahuoEngine} from "hhenginejs";
 import {sceneViewManager} from "../SceneView/SceneViewManager";
 import {ShortcutEventNames, shortcutsManager} from "../Shortcuts/ShortcutsManager";
-import {Func} from "mocha";
 
 class ExecutionStackFrame{
     private store
@@ -98,7 +97,7 @@ abstract class TransformCommand extends MergableCommand{
         super.UnDoCommand();
 
         this.targetShape.store()
-        this.targetShape.update(true)
+        this.targetShape.update(true)        
     }
 }
 

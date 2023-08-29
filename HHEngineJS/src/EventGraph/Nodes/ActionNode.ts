@@ -1,5 +1,8 @@
 import {LiteGraph} from "litegraph.js";
 import {AbstractNode} from "./AbstractNode";
+import {ActionDef, ReturnValueInfo} from "../GraphActions";
+import {huahuoEngine} from "../../EngineAPI";
+import {getLiteGraphTypeFromPropertyType} from "../GraphUtils";
 
 class ActionNode extends AbstractNode {
     title = "ActionNode"
@@ -9,9 +12,12 @@ class ActionNode extends AbstractNode {
     properties = {
         actionName: "unknownAction",
         paramIdxSlotMap: {},
-        maxParamIdx: -1 // -1 means no parameter.
+        maxParamIdx: -1, // -1 means no parameter.
+        onlyRunWhenPlaing: false,
+        returnValueInfo: null
     }
 
+    funcOutputSlot
 
     constructor() {
         super();
@@ -19,13 +25,36 @@ class ActionNode extends AbstractNode {
         this.executedSlot = this.addOutput("Executed", LiteGraph.EVENT)
     }
 
-    setActionName(actionName) {
-        this.title = actionName
-        this.properties.actionName = actionName
+    setReturnSlot(returnValueInfo: ReturnValueInfo){
+        if(returnValueInfo){
+            this.properties.returnValueInfo = {
+                valueName: returnValueInfo.valueName,
+                valueType: returnValueInfo.valueType
+            }
+
+            if(returnValueInfo != null){
+                let returnValueName = returnValueInfo.valueName
+                let returnValueType = returnValueInfo.valueType
+
+                this.funcOutputSlot = this.addOutput(returnValueName, getLiteGraphTypeFromPropertyType(returnValueType))
+            }
+        }
+    }
+
+    setActionDef(actionDef: ActionDef) {
+        this.title = actionDef.actionName
+        this.properties.actionName = actionDef.actionName
+        this.properties.onlyRunWhenPlaing = actionDef.onlyRunWhenPlaing
+
+        this.setReturnSlot(actionDef.returnValueInfo)
     }
 
     onAction(action, param) {
-        console.log("Something happened!")
+        // Player is not playing and this action should only run when playing. Return.
+        if(!huahuoEngine.getActivePlayer().isPlaying && this.properties.onlyRunWhenPlaing)
+            return
+
+        console.log("Invoking action node:" + this.properties.actionName)
 
         let callBackParams = []
 
@@ -42,8 +71,14 @@ class ActionNode extends AbstractNode {
         let actionTarget = this.getEventGraphComponent().getActionTarget(this.id)
 
         let func = actionTarget[this.properties.actionName]
-        if (func)
-            func.apply(actionTarget, callBackParams)
+        if (func){
+            let functionResult = func.apply(actionTarget, callBackParams)
+
+            if(this.properties.returnValueInfo){
+                let outputSlotIndex = this.findOutputSlot(this.properties.returnValueInfo.valueName)
+                this.setOutputData(outputSlotIndex, functionResult)
+            }
+        }
 
         let executedSlotId = this.findOutputSlot(this.executedSlot.name)
         if (executedSlotId >= 0) {

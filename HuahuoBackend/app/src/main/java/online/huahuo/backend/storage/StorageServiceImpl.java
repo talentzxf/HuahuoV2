@@ -2,6 +2,7 @@ package online.huahuo.backend.storage;
 
 import lombok.RequiredArgsConstructor;
 import online.huahuo.backend.db.BinaryFileRepository;
+import online.huahuo.backend.db.BinaryFileStatus;
 import online.huahuo.backend.db.FileType;
 import online.huahuo.backend.db.BinaryFileDB;
 import online.huahuo.backend.exception.DuplicateFileException;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -36,22 +38,29 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public BinaryFileDB store(String path, MultipartFile file, Boolean forceOverride, Boolean isElement) throws IOException, NoSuchAlgorithmException {
-        String fileName = file.getOriginalFilename();
+    public BinaryFileDB store(String path, MultipartFile file, String fileName, Boolean forceOverride, Boolean isElement) throws IOException, NoSuchAlgorithmException {
         FileType fileType = isElement ? FileType.ELEMENT : FileType.PROJECT;
-        String savePath = getPath() + path + File.separator + fileType + File.separator;
-        String absoluteFilePath = savePath + fileName + HUAHUO_POSTFIX;
+
+        BinaryFileStatus fileStatus = BinaryFileStatus.INACTIVE;
+        String absoluteFilePath = null;
+        if(file != null){
+            String savePath = getPath() + path + File.separator + fileType + File.separator;
+            absoluteFilePath = savePath + fileName + HUAHUO_POSTFIX;
 
 
-        if (!forceOverride) { // Don't override if the file exists and forceOverride = false.
-            if (new File(absoluteFilePath).exists()) {
-                throw new DuplicateFileException(fileName);
+            if (!forceOverride) { // Don't override if the file exists and forceOverride = false.
+                if (new File(absoluteFilePath).exists()) {
+                    throw new DuplicateFileException(fileName);
+                }
             }
+
+            new File(savePath).mkdirs();
+
+            Files.write(Paths.get(absoluteFilePath), file.getBytes());
+
+            fileStatus = BinaryFileStatus.ACTIVE;
         }
 
-        new File(savePath).mkdirs();
-
-        Files.write(Paths.get(absoluteFilePath), file.getBytes());
 
         // Get the userId from the JWT token.
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -63,20 +72,21 @@ public class StorageServiceImpl implements StorageService {
 
         // TODO: Read the version from the file.
         if (fileDB == null)
-            fileDB = new BinaryFileDB(fileName, file.getContentType(), "0.0.1", username, absoluteFilePath, fileHash, "", fileType);
+            fileDB = new BinaryFileDB(fileName, "0.0.1", username, absoluteFilePath, fileHash, "", fileType);
         else {
+            fileDB.setFullPath(absoluteFilePath);
             fileDB.setChecksum(fileHash);
             fileDB.setModifiedTime(new Date());
         }
+
+        fileDB.setStatus(fileStatus);
 
         return fileRepository.save(fileDB);
     }
 
     @Override
-    public boolean storeCoverPage(String path, Long projectId, MultipartFile coverPageFile, boolean isElement) throws IOException {
+    public boolean storeCoverPage(String path, Long projectId, MultipartFile coverPageFile, String fileName, boolean isElement) throws IOException {
         BinaryFileDB binaryFileDB = fileRepository.getReferenceById(projectId);
-
-        String fileName = coverPageFile.getOriginalFilename();
 
         FileType fileType = isElement ? FileType.ELEMENT : FileType.PROJECT;
         String savePath = getPath() + path + File.separator + fileType + File.separator;
@@ -98,5 +108,11 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public BinaryFileDB save(BinaryFileDB binaryFileDB) {
         return fileRepository.save(binaryFileDB);
+    }
+
+    @Override
+    public void delete(String fullPath) throws IOException {
+        Path fileToBeDeleted = Paths.get(fullPath);
+        Files.delete(fileToBeDeleted);
     }
 }
