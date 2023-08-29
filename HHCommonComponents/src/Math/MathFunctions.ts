@@ -28,4 +28,12 @@ function mirrorPoint(p: Vector2, l1: Vector2, l2: Vector2): Vector2 {
     }
 }
 
-export {mirrorPoint}
+function degToRad(degree: number) {
+    return degree / 180 * Math.PI
+}
+
+function radToDeg(rad: number) {
+    return rad / Math.PI * 180
+}
+
+export {mirrorPoint, degToRad, radToDeg}

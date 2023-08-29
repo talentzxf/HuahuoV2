@@ -75,7 +75,11 @@ class Player extends EventEmitter {
             if (this.animationStartTime < 0) {
                 this.animationStartTime = timeStamp
             }
-            let elapsedTime = timeStamp - this.lastAnimateTime
+
+            let elapsedTime = 0
+            if(this.lastAnimateTime >= 0){
+                elapsedTime = timeStamp - this.lastAnimateTime
+            }
 
             if (this.lastAnimateTime < 0 || elapsedTime > 1000.0 / GlobalConfig.fps) {
                 console.log("FPS:" + 1000.0/elapsedTime)

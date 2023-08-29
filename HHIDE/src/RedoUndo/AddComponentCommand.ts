@@ -24,6 +24,7 @@ class AddComponentCommand extends UndoableCommand{
         // Add the component back.
         this.targetShape.addComponent(this.targetComponent)
         this.targetComponent.enableComponent()
+        this.targetComponent.onMounted()
         elementCreator.dispatchElementChange(this.targetShape.belongStoreId)
 
         IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, this.targetShape)
@@ -33,6 +34,7 @@ class AddComponentCommand extends UndoableCommand{
         // Remove the component.
         this.targetComponent.detachFromCurrentShape()
         this.targetComponent.disableComponent()
+        this.targetComponent.onDismounted()
         elementCreator.dispatchElementChange(this.targetShape.belongStoreId)
 
         IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, this.targetShape)

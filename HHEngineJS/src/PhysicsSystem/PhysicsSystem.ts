@@ -1,56 +1,27 @@
 import {RigidBody} from "../Components/Physics/RigidBody";
 import {huahuoEngine} from "../EngineAPI";
 import {
-    b2BodyType,
     b2Contact,
-    b2ContactListener, b2GetPointStates,
+    b2ContactListener,
+    b2GetPointStates,
     b2Gjk,
-    b2MakeArray, b2Manifold, b2PointState,
-    b2PolygonShape,
+    b2Manifold,
+    b2PointState,
     b2Toi,
     b2Vec2,
-    b2World, b2WorldManifold
+    b2World,
+    b2WorldManifold
 } from "@box2d/core";
 import {GlobalConfig} from "../GlobalConfig";
 import {ContactPoint, k_maxContactPoints} from "./ContactPoint";
+import {Box2dUtils} from "../Components/Physics/Box2dUtils";
+import {radToDeg, degToRad} from "hhcommoncomponents";
 
 let physicsToHuahuoScale = GlobalConfig.physicsToHuahuoScale
 
-function getPolygonFromShape(shape, body) {
-    let segments = shape.getSegments()
-    let vertices = b2MakeArray(segments.length, b2Vec2)
-    for (let i = 0; i < segments.length; i++) {
-        let globalPoint = shape.localToGlobal(segments[i].point).multiply(1 / physicsToHuahuoScale)
-        let bodyLocalPoint = {
-            x: 0.0,
-            y: 0.0
-        }
-        body.GetLocalPoint({
-            x: globalPoint.x,
-            y: globalPoint.y
-        }, bodyLocalPoint)
-        vertices[i].Set(bodyLocalPoint.x, bodyLocalPoint.y)
-    }
+class PhysicsSystem extends b2ContactListener {
 
-    let polygonShape = new b2PolygonShape()
-    polygonShape.Set(vertices, segments.length)
-
-    return polygonShape
-}
-
-function degToRad(degree: number) {
-    return degree / 180 * Math.PI
-}
-
-function radToDeg(rad: number) {
-    return rad / Math.PI * 180
-}
-
-
-
-class PhysicsSystem extends b2ContactListener{
-
-    public readonly m_points = Array.from({ length: k_maxContactPoints }, () => new ContactPoint());
+    public readonly m_points = Array.from({length: k_maxContactPoints}, () => new ContactPoint());
 
     m_world: b2World
 
@@ -69,10 +40,7 @@ class PhysicsSystem extends b2ContactListener{
         }
 
         let shape = rigidBody.baseShape
-        let type = b2BodyType.b2_dynamicBody
-        if (rigidBody.isStatic) {
-            type = b2BodyType.b2_staticBody
-        }
+        let type = Box2dUtils.getBodyTypeFromString(rigidBody.rigidBodyType)
 
         let body = this.m_world.CreateBody({
             type: type,
@@ -83,8 +51,7 @@ class PhysicsSystem extends b2ContactListener{
             angle: degToRad(shape.rotation)
         })
 
-        let polygonShape = getPolygonFromShape(shape, body)
-
+        let polygonShape = Box2dUtils.getPolygonFromShape(shape, body)
 
         body.CreateFixture({
             shape: polygonShape,
@@ -96,6 +63,26 @@ class PhysicsSystem extends b2ContactListener{
     }
 
     Reset() {
+        // Reset all rigidbodies
+        for (let b = this.m_world.GetBodyList(); b; b = b.GetNext()) {
+            let rigidBody = b.GetUserData()
+            let shape = null
+            if (rigidBody) {
+                shape = rigidBody.baseShape
+                b.SetTransformVec({
+                    x: shape.position.x / physicsToHuahuoScale,
+                    y: shape.position.y / physicsToHuahuoScale
+                }, degToRad(shape.rotation))
+            }
+
+            b.SetLinearVelocity(b2Vec2.ZERO);
+            b.SetAngularVelocity(0.0)
+
+            if (shape) {
+                shape.update()
+            }
+        }
+
         b2Gjk.reset()
         b2Toi.reset()
     }
@@ -106,7 +93,7 @@ class PhysicsSystem extends b2ContactListener{
         super.PreSolve(contact, oldManifold);
 
         let manifold = contact.GetManifold()
-        if(manifold.pointCount == 0)
+        if (manifold.pointCount == 0)
             return
 
         let state1: b2PointState[] = []
@@ -122,11 +109,11 @@ class PhysicsSystem extends b2ContactListener{
         let rigidBody1 = body1.GetUserData() as RigidBody
         let rigidBody2 = body2.GetUserData() as RigidBody
 
-        if(rigidBody1){
+        if (rigidBody1) {
             rigidBody1.OnCollide(rigidBody2, worldManifold.points[0])
         }
 
-        if(rigidBody2){
+        if (rigidBody2) {
             rigidBody2.OnCollide(rigidBody1, worldManifold.points[0])
         }
     }

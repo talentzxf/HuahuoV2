@@ -70,6 +70,7 @@
   "EventGraphComponent": "Event Graph Component",
   "StrokeComponent": "Stroke Component",
   "FillColorComponent": "Fill Color Component",
+  "RigidBody": "RigidBody",
   "inspector": {
     "CurveInputPrompt": "FrameId:{{frameId}}, value:{{value}}",
     "Smooth": "Smooth",
@@ -140,7 +141,9 @@
       "playSpeed": "Play Speed",
       "targetShape": "Target Shape",
       "lengthRatio": "Length Ratio",
-      "velocity": "Velocity"
+      "velocity": "Velocity",
+      "rigidBodyType": "Type",
+      "colliderShape": "Collider Shape"
     },
     "nail": {
       "isStatic": "Is Static"

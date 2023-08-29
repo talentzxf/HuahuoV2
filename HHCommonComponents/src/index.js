@@ -5,6 +5,7 @@ import {Vector2} from "./Math/Vector2";
 import {EventParam} from "./EventBus/EventBus";
 import {EventEmitter} from "./EventBus/EventEmitter";
 import {getFullEventName, splitFullEventName} from "./EventBus/EventBus";
+import {radToDeg, degToRad} from "./Math/MathFunctions";
 
 import {
     pointsNear,
@@ -41,6 +42,6 @@ export {
     CustomFieldContentDivGenerator, CustomFieldConfig,
     GraphEvent, EventParam, EventEmitter, getParameterNameAtIdx,
     getFullEventName, splitFullEventName, ShapeArrayProperty,
-    capitalizeFirstLetter, StringProperty
+    capitalizeFirstLetter, StringProperty, radToDeg, degToRad
 }
 

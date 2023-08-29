@@ -81,7 +81,7 @@ function initTest() {
             floor.setEndPoint(new Vector2(500, 400))
             floor.position = new Vector2(250, 400)
             let rigidBody = new RigidBody()
-            rigidBody.isStatic = true
+            rigidBody.rigidBodyType = "static"
             floor.addComponent(rigidBody)
             huahuoEngine.GetCurrentLayer().addShape(floor)
         }
