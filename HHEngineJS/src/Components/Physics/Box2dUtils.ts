@@ -74,21 +74,11 @@ class Box2dUtils {
         return polygonShape
     }
 
-    static getCircleFromShape(shape, body) {
-        let shapeGlobalPosition = shape.localToGlobal(shape.position).multiply(1 / physicsToHuahuoScale)
-        let bodyLocalPoint = {
-            x: 0.0,
-            y: 0.0
-        }
-        body.GetLocalPoint({
-            x: shapeGlobalPosition.x,
-            y: shapeGlobalPosition.y
-        }, bodyLocalPoint)
+    static getCircleFromShape(shape) {
         let shapeArea = shape.paperShape.area
         let radius = Math.sqrt(shapeArea / Math.PI)
 
-        let circleShape = new b2CircleShape()
-        circleShape.Set(bodyLocalPoint, radius / physicsToHuahuoScale)
+        let circleShape = new b2CircleShape(radius/ physicsToHuahuoScale)
         return circleShape
     }
 }

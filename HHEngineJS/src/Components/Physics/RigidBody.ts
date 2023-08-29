@@ -67,7 +67,7 @@ class RigidBody extends AbstractComponent {
                 fixtureShape = Box2dUtils.getPolygonFromShape(this.baseShape, this.body)
                 break;
             case b2ShapeType.e_circle:
-                fixtureShape = Box2dUtils.getCircleFromShape(this.baseShape, this.body)
+                fixtureShape = Box2dUtils.getCircleFromShape(this.baseShape)
                 break;
         }
 
@@ -83,7 +83,7 @@ class RigidBody extends AbstractComponent {
     }
 
     colliderWireframeShapePolygon: paper.Path
-    colliderWirreframeShapeCircle : paper.Path
+    colliderWirreframeShapeCircle: paper.Path
 
     getWorldPoint(localPoint) {
         let worldPoint = {x: -1, y: -1}
@@ -92,13 +92,13 @@ class RigidBody extends AbstractComponent {
     }
 
     drawCircleFixture(circleShape: b2CircleShape) {
-        if(this.colliderWireframeShapePolygon){
+        if (this.colliderWireframeShapePolygon) {
             this.colliderWireframeShapePolygon.visible = false
         }
 
         let paperjs = this.baseShape.getPaperJs()
 
-        if(this.colliderWirreframeShapeCircle != null){
+        if (this.colliderWirreframeShapeCircle != null) {
             this.colliderWirreframeShapeCircle.remove()
         }
 
@@ -111,7 +111,7 @@ class RigidBody extends AbstractComponent {
     }
 
     drawPolygonFixture(polygonShape: b2PolygonShape) {
-        if(this.colliderWirreframeShapeCircle){
+        if (this.colliderWirreframeShapeCircle) {
             this.colliderWirreframeShapeCircle.visible = false
         }
 
@@ -179,6 +179,7 @@ class RigidBody extends AbstractComponent {
 
                 if (!Box2dUtils.shapeTypeMatches(this.colliderShape, fixture.GetShape().GetType())) {
                     this.updateFixture()
+                    fixture = this.body.GetFixtureList()
                 }
 
                 switch (fixture.GetType()) {
