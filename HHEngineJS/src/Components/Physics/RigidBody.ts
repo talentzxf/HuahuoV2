@@ -108,6 +108,7 @@ class RigidBody extends AbstractComponent {
             circleShape.m_radius * GlobalConfig.physicsToHuahuoScale)
         this.colliderWirreframeShapeCircle.strokeColor = new paper.Color('blue')
         this.colliderWirreframeShapeCircle.strokeWidth = 2
+        this.colliderWirreframeShapeCircle.dashArray = [1, 10, 5, 5];
     }
 
     drawPolygonFixture(polygonShape: b2PolygonShape) {
