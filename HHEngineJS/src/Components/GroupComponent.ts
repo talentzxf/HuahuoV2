@@ -50,7 +50,7 @@ class GroupComponent extends AbstractComponent {
 
     getComponentByRawObj(componentRawObj) {
         return this.subComponents.find((component) => {
-            return component.rawObj == componentRawObj
+            return component.rawObj.ptr == componentRawObj.ptr
         })
     }
 
