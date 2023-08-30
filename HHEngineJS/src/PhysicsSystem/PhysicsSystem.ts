@@ -1,6 +1,7 @@
 import {RigidBody} from "../Components/Physics/RigidBody";
 import {huahuoEngine} from "../EngineAPI";
 import {
+    b2BodyType,
     b2Contact,
     b2ContactListener,
     b2GetPointStates,
@@ -15,7 +16,7 @@ import {
 import {GlobalConfig} from "../GlobalConfig";
 import {ContactPoint, k_maxContactPoints} from "./ContactPoint";
 import {Box2dUtils} from "../Components/Physics/Box2dUtils";
-import {radToDeg, degToRad} from "hhcommoncomponents";
+import {degToRad, radToDeg} from "hhcommoncomponents";
 
 let physicsToHuahuoScale = GlobalConfig.physicsToHuahuoScale
 
@@ -131,9 +132,24 @@ class PhysicsSystem extends b2ContactListener {
                     let shape = rigidBody.baseShape
                     const xf = b.GetTransform();
 
-                    let globalPosition = new paper.Point(xf.GetPosition().x * physicsToHuahuoScale, xf.GetPosition().y * physicsToHuahuoScale)
-                    shape.getActor().setPosition(globalPosition.x, globalPosition.y)
-                    shape.getActor().setRotation(radToDeg(xf.GetAngle()))
+                    let globalPosition = {x: 0, y: 0}
+
+                    // if this is dynamic, set the shape position
+                    switch (b.GetType()) {
+                        case b2BodyType.b2_dynamicBody:
+                            globalPosition = new paper.Point(xf.GetPosition().x * physicsToHuahuoScale, xf.GetPosition().y * physicsToHuahuoScale)
+                            shape.getActor().setPosition(globalPosition.x, globalPosition.y)
+                            shape.getActor().setRotation(radToDeg(xf.GetAngle()))
+                            break;
+                        case b2BodyType.b2_staticBody:
+                        case b2BodyType.b2_kinematicBody:
+                            globalPosition = {
+                                x: shape.position.x / physicsToHuahuoScale,
+                                y: shape.position.y / physicsToHuahuoScale
+                            }
+                            b.SetTransformVec(globalPosition, degToRad(shape.rotation))
+                            break;
+                    }
                 }
             }
         }

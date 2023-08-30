@@ -83,6 +83,7 @@ class Player extends EventEmitter {
 
             if (this.lastAnimateTime < 0 || elapsedTime > 1000.0 / GlobalConfig.fps) {
                 console.log("FPS:" + 1000.0/elapsedTime)
+                getPhysicSystem().Step(elapsedTime/1000.0)
                 let store = huahuoEngine.GetStoreById(this.storeId)
                 let activeFrames = store.GetMaxFrameId() + 1;
                 let activePlayTime = activeFrames / GlobalConfig.fps;
@@ -90,8 +91,6 @@ class Player extends EventEmitter {
                 let frameId = Math.floor(playTime * GlobalConfig.fps)
                 this.setFrameId(frameId)
                 this.lastAnimateTime = timeStamp
-
-                getPhysicSystem().Step(elapsedTime/1000.0)
             }
             requestAnimationFrame(this.animationFrameStep.bind(this));
         }
