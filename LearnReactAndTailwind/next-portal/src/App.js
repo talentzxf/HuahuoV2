@@ -15,6 +15,16 @@ function App() {
         <div className="text-center font-eaDisplayText text-white">
           Follow a few steps to wrap up your EA Account(it's quick, we promise)
         </div>
+
+        <div className="flex justify-around">
+          <div className="h-12 w-12 rounded-lg bg-white p-3">
+            <img src="https://eaassets-a.akamaihd.net/resource_signin_ea_com/551.0.20230817.661.974bc46/p/images/google.svg"></img>
+          </div>
+
+          <div className="h-12 w-12 rounded-lg bg-[#1877f2] p-3">
+            <img src="https://eaassets-a.akamaihd.net/resource_signin_ea_com/551.0.20230817.661.974bc46/p/images/facebook.svg"></img>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import {HHForm} from "./HHForm"
+import {createRoot} from "react-dom/client"
 
 // Do I need to write a more robust/flexible UI framework?? Sounds like another big project!
 class FormManager {
@@ -6,6 +7,17 @@ class FormManager {
 
     // Form class name=>Form object map
     formMap: Map<string, HHForm> = new Map()
+
+    reactFormMap: Map<string, Object> = new Map()
+
+    openReactForm(reactFormConstructor){
+        let containerDiv = document.createElement("div")
+
+        let root = createRoot(containerDiv)
+        root.render(reactFormConstructor())
+
+        document.body.appendChild(containerDiv)
+    }
 
     openForm<FormType extends HTMLElement&HHForm>(formConstructor: new ()=>FormType):FormType {
         let form: FormType
