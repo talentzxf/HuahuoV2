@@ -67,7 +67,7 @@ class RigidBody extends AbstractComponent {
                 fixtureShape = Box2dUtils.getPolygonFromShape(this.baseShape, this.body)
                 break;
             case b2ShapeType.e_circle:
-                fixtureShape = Box2dUtils.getCircleFromShape(this.baseShape, this.body)
+                fixtureShape = Box2dUtils.getCircleFromShape(this.baseShape)
                 break;
         }
 
@@ -83,7 +83,7 @@ class RigidBody extends AbstractComponent {
     }
 
     colliderWireframeShapePolygon: paper.Path
-    colliderWirreframeShapeCircle : paper.Path
+    colliderWirreframeShapeCircle: paper.Path
 
     getWorldPoint(localPoint) {
         let worldPoint = {x: -1, y: -1}
@@ -92,13 +92,13 @@ class RigidBody extends AbstractComponent {
     }
 
     drawCircleFixture(circleShape: b2CircleShape) {
-        if(this.colliderWireframeShapePolygon){
+        if (this.colliderWireframeShapePolygon) {
             this.colliderWireframeShapePolygon.visible = false
         }
 
         let paperjs = this.baseShape.getPaperJs()
 
-        if(this.colliderWirreframeShapeCircle != null){
+        if (this.colliderWirreframeShapeCircle != null) {
             this.colliderWirreframeShapeCircle.remove()
         }
 
@@ -106,10 +106,13 @@ class RigidBody extends AbstractComponent {
         this.colliderWirreframeShapeCircle = new paperjs.Path.Circle(
             new paperjs.Point(position.x * GlobalConfig.physicsToHuahuoScale, position.y * GlobalConfig.physicsToHuahuoScale),
             circleShape.m_radius * GlobalConfig.physicsToHuahuoScale)
+        this.colliderWirreframeShapeCircle.strokeColor = new paper.Color('blue')
+        this.colliderWirreframeShapeCircle.strokeWidth = 2
+        this.colliderWirreframeShapeCircle.dashArray = [1, 10, 5, 5];
     }
 
     drawPolygonFixture(polygonShape: b2PolygonShape) {
-        if(this.colliderWirreframeShapeCircle){
+        if (this.colliderWirreframeShapeCircle) {
             this.colliderWirreframeShapeCircle.visible = false
         }
 
@@ -129,6 +132,8 @@ class RigidBody extends AbstractComponent {
             let parent = this.colliderWireframeShapePolygon.parent
             parent.addChild(this.colliderWireframeShapePolygon)
         }
+
+        this.colliderWireframeShapePolygon.visible = true
 
         let currentFrameVertextCount = this.colliderWireframeShapePolygon.segments.length
 
@@ -175,6 +180,7 @@ class RigidBody extends AbstractComponent {
 
                 if (!Box2dUtils.shapeTypeMatches(this.colliderShape, fixture.GetShape().GetType())) {
                     this.updateFixture()
+                    fixture = this.body.GetFixtureList()
                 }
 
                 switch (fixture.GetType()) {

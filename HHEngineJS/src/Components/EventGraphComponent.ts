@@ -59,6 +59,15 @@ class EventGraphComponent extends AbstractComponent {
         if(rawObj == null || !IsValidWrappedObject(rawObj))
             return eventBus
 
+        // This is a component.
+        if(rawObj.GetType().GetName() == "CustomComponent"){
+            let componentRawObj = Module.wrapPointer(rawObj.ptr, Module.CustomComponent)
+            let baseShapeRawObj = componentRawObj.GetBaseShape()
+            let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(baseShapeRawObj)
+            let componentObj = baseShapeObj.getComponentByRawObj(componentRawObj)
+            return huahuoEngine.getEvent(componentObj).getEventBus()
+        }
+
         let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
         return huahuoEngine.getEvent(baseShapeObj).getEventBus()
     }

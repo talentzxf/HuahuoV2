@@ -53,10 +53,15 @@ class EngineAPI{
         return this.deletedShapePtrs.has(shapePtr)
     }
 
-    getEvent(shape){
-        if(!this.eventEmitterCache.has(shape))
-            this.eventEmitterCache.set(shape, new BaseShapeEvents(shape))
-        return this.eventEmitterCache.get(shape)
+    getEvent(eventEmitter){
+        if(!this.eventEmitterCache.has(eventEmitter)){
+            if(eventEmitter.rawObj instanceof Module.BaseShape){
+                this.eventEmitterCache.set(eventEmitter, new BaseShapeEvents(eventEmitter))
+            }else{
+                this.eventEmitterCache.set(eventEmitter, eventEmitter)
+            }
+        }
+        return this.eventEmitterCache.get(eventEmitter)
     }
 
     getEventBus(eventEmitter){
