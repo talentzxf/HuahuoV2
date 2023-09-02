@@ -18,7 +18,7 @@ class FormManager {
             containerDiv.style.display = "block"
             containerDiv.style.top = "50%"
             containerDiv.style.left = "50%"
-            containerDiv.style.transform = "translate(-50%, -50%);"
+            containerDiv.style.transform = "translate(-50%, -50%)"
             containerDiv.style.border = "1px solid blue"
 
             document.body.appendChild(containerDiv)
