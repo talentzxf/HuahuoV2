@@ -27,6 +27,8 @@ import {ActionNode} from "../../HHEngineJS/src/EventGraph/Nodes/ActionNode";
 import {FocusSceneViewCommand} from "./RedoUndo/FocusSceneViewCommand";
 import {RemoveComponentCommand} from "./RedoUndo/RemoveComponentCommand"
 
+import "./index.css"
+
 // Input components
 import {HHFloatInput} from "./Inspector/InputComponents/HHFloatInput";
 import {HHVector2Input} from "./Inspector/InputComponents/HHVector2Input";
