@@ -19,7 +19,7 @@ class FormManager {
             containerDiv.style.top = "50%"
             containerDiv.style.left = "50%"
             containerDiv.style.transform = "translate(-50%, -50%)"
-            
+
             document.body.appendChild(containerDiv)
 
             this.reactRootDiv = createRoot(containerDiv)
