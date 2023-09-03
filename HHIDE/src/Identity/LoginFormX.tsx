@@ -31,7 +31,7 @@ class LoginFormX extends React.Component<LoginProps, LoginState> implements HHRe
         return (
             <div className="flex flex-col items-center justify-center mx-auto">
                 <div
-                    className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                    className="w-full bg-white rounded-lg drop-shadow-2xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <form className="p-4 space-y-4 divide-y divide-gray-300" action="#">
                         <h5 className="p-4 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Login Here
@@ -71,25 +71,22 @@ class LoginFormX extends React.Component<LoginProps, LoginState> implements HHRe
 
                         <div className="p-2 flex flex-row">
                             <button
-                                type="submit"
-                                className="w-full p-1 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300
-                                    font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                className="m-1 p-3 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300
+                                    font-medium rounded-lg text-sm text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                                 onClick={this.onSubmit.bind(this)}
                             >
-                                Sign in
+                                Login
                             </button>
                             <button
-                                type="submit"
-                                className="w-full p-1 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300
-                                    font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                className="m-1 p-3 text-white bg-emerald-600 hover:bg-emerald-700 focus:ring-4 focus:outline-none focus:ring-emerald-300
+                                    font-medium rounded-lg text-sm text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800"
                                 onClick={this.onSubmit.bind(this)}
                             >
                                 Register
                             </button>
                             <button
-                                type="submit"
-                                className="w-full p-1 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300
-                                    font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                className="m-1 p-3 text-white bg-fuchsia-600 hover:bg-fuchsia-700 focus:ring-4 focus:outline-none focus:ring-fuchsia-300
+                                    font-medium rounded-lg text-sm text-center dark:bg-fuchsia-600 dark:hover:bg-fuchsia-700 dark:focus:ring-fuchsia-800"
                                 onClick={this.onSubmit.bind(this)}
                             >
                                 Anonymous Login
