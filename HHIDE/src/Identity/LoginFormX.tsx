@@ -39,13 +39,11 @@ class LoginFormX extends React.Component<LoginProps, LoginState> implements HHRe
                 <div
                     className="w-full bg-white rounded-lg drop-shadow-2xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <form className="p-4 space-y-4 divide-y divide-gray-300" action="#">
-                        <div>
+                        <div className="flex">
                             <h5 className="p-4 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                 Login Here
                             </h5>
-                            <span>
-                                <CloseBtn></CloseBtn>
-                            </span>
+                            <CloseBtn></CloseBtn>
                         </div>
                         <div>
                             <div>
