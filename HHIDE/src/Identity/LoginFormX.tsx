@@ -2,20 +2,22 @@ import * as React from "react"
 import {HHReactForm} from "../Utilities/HHForm";
 import {CloseBtn} from "../UIComponents/CloseBtn";
 
-type LoginProps = {}
-
 type LoginState = {
     username: string
     password: string
+    style: {
+        display: string
+    }
 }
 
-class LoginFormX extends React.Component<LoginProps, LoginState> implements HHReactForm {
+class LoginFormX extends React.Component<any, LoginState> implements HHReactForm {
     state: LoginState = {
         username: "unknown",
-        password: "unknown"
+        password: "unknown",
+        style: {
+            display: "block"
+        }
     }
-
-    props: LoginProps = {}
 
     getButtonClass(color: string) {
         let btnClass: string = `m-1 p-3 text-white bg-${color}-600 hover:bg-${color}-700 focus:ring-4 focus:outline-none focus:ring-${color}-300 ` +
@@ -33,17 +35,30 @@ class LoginFormX extends React.Component<LoginProps, LoginState> implements HHRe
         this.state.username = e.target.value
     }
 
+    onClose() {
+        this.state.style = {
+            display: "none"
+        }
+
+        this.setState(this.state)
+    }
+
+    componentDidMount() {
+        console.log("Component is mounted!")
+    }
+
     render() {
         return (
-            <div className="flex flex-col items-center justify-center mx-auto">
+            <div className="flex flex-col items-center justify-center mx-auto" style={this.state.style}>
                 <div
                     className="w-full bg-white rounded-lg drop-shadow-2xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <form className="p-4 space-y-4 divide-y divide-gray-300" action="#">
-                        <div className="flex">
+                        <div className="flex align-middle">
                             <h5 className="p-4 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                                Login Here
+                                Login
                             </h5>
-                            <CloseBtn></CloseBtn>
+                            <div className="w-full"></div>
+                            <CloseBtn onclick={this.onClose.bind(this)}></CloseBtn>
                         </div>
                         <div>
                             <div>
