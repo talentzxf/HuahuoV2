@@ -26,6 +26,7 @@ class UserInfoBar extends HTMLElement {
             this.usernameSpan.onclick = this.login.bind(this)
         } else {
             this.usernameSpan.innerText = this._username
+            this.usernameSpan.onclick = null
         }
     }
 

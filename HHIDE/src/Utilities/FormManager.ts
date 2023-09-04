@@ -12,6 +12,10 @@ class FormManager {
     containerDiv: HTMLDivElement
 
     openReactForm(reactFormConstructor, props: any = null) {
+        if(this.currentForm){
+            this.currentForm.closeForm()
+        }
+
         if (this.reactRootDiv == null) {
             this.containerDiv = document.createElement("div")
             this.containerDiv.style.position = "absolute"
@@ -45,6 +49,10 @@ class FormManager {
     openForm<FormType extends HTMLElement & HHForm>(formConstructor: new () => FormType): FormType {
         let form: FormType
         let formType = formConstructor.name
+
+        if(this.containerDiv){
+            this.containerDiv.style.display = "none"
+        }
 
         if (typeof this.currentForm === formType) // The form has already been opened
             return this.currentForm as FormType

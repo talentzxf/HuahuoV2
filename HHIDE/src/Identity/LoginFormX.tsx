@@ -54,7 +54,6 @@ class LoginFormX extends React.Component<LoginProps, LoginState> {
                 let loginResponse = await api.login()
 
                 if (userInfo.isLoggedIn) {
-                    // HHToast.info("User:" + userInfo.username + " just logged in!")
                     HHToast.info(i18n.t("toast.userLoginSuccess", {userName: userInfo.username}))
                     this.props?.closeForm() // If logged in successfully, close the form. Or else, leave the form there so user can input username/pwd again.
 
