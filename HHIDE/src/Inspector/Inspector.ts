@@ -1,15 +1,12 @@
-import {CustomElement, Logger, PropertySheet} from "hhcommoncomponents"
-import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
+import {CustomElement, HHToast, Logger, PropertySheet, PropertyType} from "hhcommoncomponents"
+import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {GenerateDiv, GetPropertyDivGenerator} from "./BasePropertyDivGenerator"
 import "./PropertyTypes"
-import {findParentSideBar, findParentPanel} from "hhpanel";
-import {PropertyType} from "hhcommoncomponents";
+import {findParentPanel, findParentSideBar} from "hhpanel";
 import {formManager} from "../Utilities/FormManager";
 import {ComponentListForm} from "../UIComponents/ComponentListForm";
 import {huahuoEngine} from "hhenginejs";
 import {HHRefreshableDiv} from "./InputComponents/HHRefreshableDiv";
-import {HHToast} from "hhcommoncomponents";
-import {saveAs} from "file-saver";
 
 @CustomElement({
     selector: "hh-inspector"

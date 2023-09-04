@@ -6,6 +6,7 @@ import {api} from "../RESTApis/RestApi";
 import {formManager} from "../Utilities/FormManager";
 import {RegisterForm} from "./RegisterForm";
 import {AxiosError} from "axios";
+import {CSSUtils} from "../Utilities/CSSUtils";
 
 type LoginState = {
     username: string
@@ -20,17 +21,17 @@ type LoginProps = {
     closeForm: Function
 }
 
+function getBtnClz(color: string){
+    let btnClz = CSSUtils.getButtonClass(color)
+    btnClz += "p-3 m-1 rounded-lg"
+    return btnClz
+}
+
 class LoginFormX extends React.Component<LoginProps, LoginState> {
     state: LoginState = {
         username: "unknown",
         password: "unknown",
         isVisible: true,
-    }
-
-    getButtonClass(color: string) {
-        let btnClass: string = `m-1 p-3 text-white bg-${color}-600 hover:bg-${color}-700 focus:ring-4 focus:outline-none focus:ring-${color}-300 ` +
-            `font-medium rounded-lg text-sm text-center dark:bg-${color}-600 dark:hover:bg-${color}-700 dark:focus:ring-${color}-800`
-        return btnClass
     }
 
     async _login(anonymousLogin: boolean = false) {
@@ -157,19 +158,19 @@ class LoginFormX extends React.Component<LoginProps, LoginState> {
 
                         <div className="p-2 flex flex-row">
                             <button
-                                className={this.getButtonClass("primary")}
+                                className={getBtnClz("primary")}
                                 onClick={this.onLogin.bind(this)}
                             >
                                 Login
                             </button>
                             <button
-                                className={this.getButtonClass("emerald")}
+                                className={getBtnClz("emerald")}
                                 onClick={this.onRegister.bind(this)}
                             >
                                 Register
                             </button>
                             <button
-                                className={this.getButtonClass("fuchsia")}
+                                className={getBtnClz("fuchsia")}
                                 onClick={this.onAnonymousLogin.bind(this)}
                             >
                                 Anonymous Login

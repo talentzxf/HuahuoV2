@@ -1,4 +1,10 @@
 class CSSUtils {
+    static getButtonClass(color: string) {
+        let btnClass: string = `text-white bg-${color}-600 hover:bg-${color}-700 focus:ring-4 focus:outline-none focus:ring-${color}-300 ` +
+            `font-medium text-sm text-center dark:bg-${color}-600 dark:hover:bg-${color}-700 dark:focus:ring-${color}-800`
+        return btnClass
+    }
+
     static css2obj(css){
         if(!css)
             return {}

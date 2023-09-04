@@ -2,6 +2,9 @@ import {huahuoEngine, renderEngine2D} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
 import {shortcutsManager} from "./Shortcuts/ShortcutsManager";
 import {EditorShapeProxy} from "./ShapeDrawers/EditorShapeProxy";
+import {createRoot, Root} from "react-dom/client"
+import * as React from "react"
+import {InspectorX} from "./Inspector/InspectorX";
 
 function showMainDiv(){
     let loadingElement = document.querySelector("#loading") as HTMLDivElement
@@ -46,6 +49,12 @@ function init(){
             huahuoEngine.setShapeDecorator((shape)=>{
                 return EditorShapeProxy.CreateProxy(shape, false)
             })
+
+            // Attach inspector from react
+            let inspectorDiv = document.getElementById("hh-inspector")
+            let inspectorRoot = createRoot(inspectorDiv)
+            let inspectorElement = React.createElement(InspectorX)
+            inspectorRoot.render(inspectorElement)
         })
     })
 }

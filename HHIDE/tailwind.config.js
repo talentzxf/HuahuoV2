@@ -2,8 +2,8 @@
 module.exports = {
     content: ["./src/**/*.{js,jsx,ts,tsx}"],
     safelist: [
-        {pattern: /bg-(primary|fuchsia|emerald)-/, variants: ['hover']},
-        {pattern: /ring-(primary|fuchsia|emerald)-/, variants: ['focus']},
+        {pattern: /bg-(primary|fuchsia|emerald|teal)-/, variants: ['hover']},
+        {pattern: /ring-(primary|fuchsia|emerald|teal)-/, variants: ['focus']},
     ],
     theme: {
         extend: {
