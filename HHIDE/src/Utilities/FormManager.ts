@@ -1,4 +1,4 @@
-import {HHForm, HHReactForm} from "./HHForm"
+import {HHForm} from "./HHForm"
 import {createRoot, Root} from "react-dom/client"
 import * as React from "react"
 
@@ -8,40 +8,45 @@ class FormManager {
 
     // Form class name=>Form object map
     formMap: Map<string, HHForm> = new Map()
-
-    reactFormMap: Map<string, any> = new Map()
     reactRootDiv: Root = null
+    containerDiv: HTMLDivElement
 
-    openReactForm(reactFormConstructor){
-        if(this.reactRootDiv == null){
-            let containerDiv = document.createElement("div")
-            containerDiv.style.position = "absolute"
-            containerDiv.style.display = "block"
-            containerDiv.style.top = "50%"
-            containerDiv.style.left = "50%"
-            containerDiv.style.transform = "translate(-50%, -50%)"
+    openReactForm(reactFormConstructor, props: any = null) {
+        if (this.reactRootDiv == null) {
+            this.containerDiv = document.createElement("div")
+            this.containerDiv.style.position = "absolute"
+            this.containerDiv.style.display = "block"
+            this.containerDiv.style.top = "50%"
+            this.containerDiv.style.left = "50%"
+            this.containerDiv.style.transform = "translate(-50%, -50%)"
 
-            document.body.appendChild(containerDiv)
+            document.body.appendChild(this.containerDiv)
 
-            this.reactRootDiv = createRoot(containerDiv)
+            this.reactRootDiv = createRoot(this.containerDiv)
         }
 
-        let formNode = this.reactFormMap.get(reactFormConstructor)
-        if(formNode == null){
-            formNode = React.createElement(reactFormConstructor)
-            this.reactFormMap.set(reactFormConstructor, formNode)
+        if (props == null) {
+            props = {}
         }
+
+        let _containerDiv = this.containerDiv
+        props.closeForm = ()=>{
+            _containerDiv.style.display = "none"
+        }
+
+        _containerDiv.style.display = "block"
+        let formNode = React.createElement(reactFormConstructor, props)
 
         this.reactRootDiv.render(formNode)
 
         return formNode
     }
 
-    openForm<FormType extends HTMLElement&HHForm>(formConstructor: new ()=>FormType):FormType {
+    openForm<FormType extends HTMLElement & HHForm>(formConstructor: new () => FormType): FormType {
         let form: FormType
         let formType = formConstructor.name
 
-        if(typeof this.currentForm === formType) // The form has already been opened
+        if (typeof this.currentForm === formType) // The form has already been opened
             return this.currentForm as FormType
 
         if (this.currentForm) {

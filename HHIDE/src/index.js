@@ -9,7 +9,6 @@ import {SceneView} from "./SceneView/SceneView";
 import {Inspector} from "./Inspector/Inspector";
 import {BaseForm} from "./UIComponents/BaseForm"
 
-import {LoginForm} from "./Identity/LoginForm";
 import {RegisterForm} from "./Identity/RegisterForm";
 import {UserInfoBar} from "./Identity/UserInfoBar";
 import {PlayerController} from "./AnimationPlayer/PlayerController";

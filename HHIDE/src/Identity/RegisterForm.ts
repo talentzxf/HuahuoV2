@@ -1,11 +1,7 @@
-import {CustomElement} from "hhcommoncomponents"
-import {LoginForm} from "./LoginForm";
+import {CustomElement, Logger} from "hhcommoncomponents"
 import {api} from "../RESTApis/RestApi";
-import {Logger} from "hhcommoncomponents";
 import {userInfo} from "./UserInfo";
 import {SVGFiles} from "../Utilities/Svgs";
-import {HHForm} from "../Utilities/HHForm";
-import * as string_decoder from "string_decoder";
 import {BaseForm} from "../UIComponents/BaseForm";
 
 @CustomElement({

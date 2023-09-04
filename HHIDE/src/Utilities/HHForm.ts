@@ -3,9 +3,4 @@ interface HHForm{
     closeForm();
 }
 
-interface HHReactForm{
-    closeForm()
-    render()
-}
-
-export {HHForm, HHReactForm}
+export {HHForm}
