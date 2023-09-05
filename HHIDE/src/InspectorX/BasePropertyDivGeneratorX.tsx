@@ -12,7 +12,7 @@ type PropertyEntryState = {}
 
 class PropertyEntry extends React.Component<PropertyEntryProps, PropertyEntryState> {
     getDefaultClassName() {
-        return "flex flex-row w-full items-center align-middle border"
+        return "flex flex-row w-full items-center align-middle border divide-x"
     }
 
     render() {

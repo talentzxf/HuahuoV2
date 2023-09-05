@@ -55,12 +55,14 @@ class FloatPropertyReactGeneratorX extends React.Component<FloatPropertyProps, F
 
         return (
             <PropertyEntry property={property}>
-                <input className={CSSUtils.getInputStyle() + " text-right"}
-                       step={property?.config?.step || 1.0} min={property?.config?.min || null}
-                       max={property?.config?.max || null}
-                       type={property?.config?.elementType || "number"} value={this.state.value}
-                       onChange={this.onInputValueChanged.bind(this)}>
-                </input>
+                <div>
+                    <input className={CSSUtils.getInputStyle() + " text-right"}
+                           step={property?.config?.step || 1.0} min={property?.config?.min || null}
+                           max={property?.config?.max || null}
+                           type={property?.config?.elementType || "number"} value={this.state.value}
+                           onChange={this.onInputValueChanged.bind(this)}>
+                    </input>
+                </div>
             </PropertyEntry>
         );
     }

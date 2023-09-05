@@ -48,7 +48,7 @@ class ComponentPropertyGeneratorX extends React.Component<any, any> {
                     {propertyKey}
                 </button>
 
-                <div className="grid grid-cols-2 gap-x-4">
+                <div className="grid grid-cols-2">
                     {childElements}
                 </div>
 

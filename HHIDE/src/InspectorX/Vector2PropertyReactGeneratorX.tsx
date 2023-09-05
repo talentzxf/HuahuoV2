@@ -32,9 +32,9 @@ class Vector2PropertyReactGeneratorX extends React.Component<Vector2PropertyProp
         return (
             <PropertyEntry property={property}>
                 <div className="flex flex-col">
-                    <div className="flex flex-row">
-                        <label>X</label>
-                        <input className={CSSUtils.getInputStyle() + " text-right"}
+                    <div className="flex flex-row align-middle items-center">
+                        <label htmlFor="input_x">X</label>
+                        <input id="input_x" className={CSSUtils.getInputStyle() + " text-right"}
                                step={property?.config?.step || 1.0} min={property?.config?.min || null}
                                max={property?.config?.max || null}
                                type={property?.config?.elementType || "number"} value={this.state.x}
@@ -42,9 +42,9 @@ class Vector2PropertyReactGeneratorX extends React.Component<Vector2PropertyProp
                         </input>
                     </div>
 
-                    <div className="flex flex-row">
-                        <label>Y</label>
-                        <input className={CSSUtils.getInputStyle() + " text-right"}
+                    <div className="flex flex-row items-center">
+                        <label htmlFor="input_y">Y</label>
+                        <input id="input_y" className={CSSUtils.getInputStyle() + " text-right"}
                                step={property?.config?.step || 1.0} min={property?.config?.min || null}
                                max={property?.config?.max || null}
                                type={property?.config?.elementType || "number"} value={this.state.y}
