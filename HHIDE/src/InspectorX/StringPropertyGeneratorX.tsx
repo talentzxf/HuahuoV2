@@ -35,7 +35,8 @@ class StringPropertyGeneratorX extends React.Component<any, StringPropertyState>
             return <span className="p-1 m-1 text-gray-400"> {textValue} </span>
         } else {
             return (
-                <input className="p-1 m-1" value={this.state.value} onChange={this.onTextChanged.bind(this)}>
+                <input className="p-1 m-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                       value={textValue} onChange={this.onTextChanged.bind(this)}>
                 </input>
             )
         }
