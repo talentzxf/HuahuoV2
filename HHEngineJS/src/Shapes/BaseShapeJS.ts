@@ -653,9 +653,16 @@ abstract class BaseShapeJS {
             setter: this.setName.bind(this)
         })
 
-
-
         let _this = this
+        componentConfigSheet.config.children.push({
+            key: "inspector.Rotation",
+            type: PropertyType.NUMBER,
+            getter: this.getRotation.bind(this),
+            setter: this.setRotation.bind(this),
+            registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("rotation"),
+            unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("rotation")
+        })
+        
         // Position
         componentConfigSheet.config.children.push({
             key: "inspector.Position",
@@ -681,15 +688,6 @@ abstract class BaseShapeJS {
             setter: this.setScaling.bind(this),
             registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("scaling"),
             unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("scaling")
-        })
-
-        componentConfigSheet.config.children.push({
-            key: "inspector.Rotation",
-            type: PropertyType.NUMBER,
-            getter: this.getRotation.bind(this),
-            setter: this.setRotation.bind(this),
-            registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("rotation"),
-            unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("rotation")
         })
 
         let transformFrameStateSheet = this.getComponentConfigSheet(BASIC_COMPONENTS)

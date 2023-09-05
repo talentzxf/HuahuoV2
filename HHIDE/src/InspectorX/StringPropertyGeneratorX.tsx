@@ -45,7 +45,7 @@ class StringPropertyGeneratorX extends React.Component<any, StringPropertyState>
 
     render() {
         return (
-            <PropertyEntry property={this.props.property} className="flex flex-row w-full align-middle">
+            <PropertyEntry property={this.props.property} >
                 {
                     this.getContent()
                 }

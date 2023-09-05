@@ -21,12 +21,6 @@ class FloatPropertyReactGeneratorX extends React.Component<FloatPropertyProps, F
         value: -1.0
     }
 
-    constructor(props) {
-        super(props);
-
-        this.state.value = this.props.property.getter()
-    }
-
     onValueChanged(e) {
         let property = this.props.property
         if (property.setter) {
@@ -49,7 +43,7 @@ class FloatPropertyReactGeneratorX extends React.Component<FloatPropertyProps, F
         }
 
         return (
-            <PropertyEntry className="flex flex-row w-full align-middle" property={property}>
+            <PropertyEntry property={property}>
                 <input className={CSSUtils.getInputStyle() + " text-right"}
                        step={property?.config?.step || 1.0} min={property?.config?.min || null}
                        max={property?.config?.max || null}
