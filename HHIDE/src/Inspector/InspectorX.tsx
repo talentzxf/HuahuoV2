@@ -43,6 +43,7 @@ class CollapseAllBtn extends React.Component<any, CollapseAllBtnState> {
 
 type InspectorProps = {
     closePanel: Function
+    openPanel: Function
 }
 
 type InspectorState = {
@@ -58,9 +59,12 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         super(props);
 
         IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
+
+        this.props?.closePanel()
     }
 
     onItemSelected(propertySheet: PropertySheet, targetObj: any){
+        this.props?.openPanel()
         this.state.selectedObject = targetObj
 
         this.setState(this.state)
