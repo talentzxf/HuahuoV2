@@ -8,7 +8,6 @@ import {CSSUtils} from "../Utilities/CSSUtils";
 const eps: number = 0.01
 
 type FloatPropertyProps = {
-    type?: string
     property: Property
 }
 
@@ -21,7 +20,9 @@ class FloatPropertyReactGeneratorX extends React.Component<FloatPropertyProps, F
         value: -1.0
     }
 
-    onValueChanged(e) {
+    listenerMap: Map<Property, number> = new Map
+
+    onInputValueChanged(e) {
         let property = this.props.property
         if (property.setter) {
             let oldValue = Number(property.getter())
@@ -35,6 +36,11 @@ class FloatPropertyReactGeneratorX extends React.Component<FloatPropertyProps, F
         this.setState(this.state)
     }
 
+    onValueChanged(val){
+        this.state.value = Number(Number(val.toFixed(2)))
+        this.setState(this.state)
+    }
+
     render() {
         let property = this.props.property
 
@@ -42,13 +48,18 @@ class FloatPropertyReactGeneratorX extends React.Component<FloatPropertyProps, F
             this.state.value = Number(Number(property.getter().toFixed(2)))
         }
 
+        if(!this.listenerMap.has(property)){
+            let handlerId = property.registerValueChangeFunc(this.onValueChanged.bind(this))
+            this.listenerMap.set(property, handlerId)
+        }
+
         return (
             <PropertyEntry property={property}>
                 <input className={CSSUtils.getInputStyle() + " text-right"}
                        step={property?.config?.step || 1.0} min={property?.config?.min || null}
                        max={property?.config?.max || null}
-                       type={this.props.type || "number"} value={this.state.value}
-                       onChange={this.onValueChanged.bind(this)}>
+                       type={property?.config?.elementType || "number"} value={this.state.value}
+                       onChange={this.onInputValueChanged.bind(this)}>
                 </input>
             </PropertyEntry>
         );

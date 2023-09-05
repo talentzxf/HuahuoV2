@@ -662,7 +662,7 @@ abstract class BaseShapeJS {
             registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("rotation"),
             unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("rotation")
         })
-        
+
         // Position
         componentConfigSheet.config.children.push({
             key: "inspector.Position",
