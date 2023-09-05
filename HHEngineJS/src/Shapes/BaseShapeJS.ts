@@ -641,17 +641,19 @@ abstract class BaseShapeJS {
         })
 
         componentConfigSheet.config.children.push({
+            key: "inspector.BornFrame",
+            type: PropertyType.STRING,
+            getter: this.getBornFrame.bind(this),
+        })
+
+        componentConfigSheet.config.children.push({
             key: "inspector.Name",
             type: PropertyType.STRING,
             getter: this.getName.bind(this),
             setter: this.setName.bind(this)
         })
 
-        componentConfigSheet.config.children.push({
-            key: "inspector.BornFrame",
-            type: PropertyType.STRING,
-            getter: this.getBornFrame.bind(this),
-        })
+
 
         let _this = this
         // Position

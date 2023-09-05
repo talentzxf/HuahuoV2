@@ -23,7 +23,7 @@ type LoginProps = {
 
 function getBtnClz(color: string){
     let btnClz = CSSUtils.getButtonClass(color)
-    btnClz += "p-3 m-1 rounded-lg"
+    btnClz += " p-3 m-1 rounded-lg"
     return btnClz
 }
 

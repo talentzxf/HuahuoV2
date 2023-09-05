@@ -5,7 +5,7 @@ import {EditorShapeProxy} from "./ShapeDrawers/EditorShapeProxy";
 import {createRoot} from "react-dom/client"
 import {findParentSideBar} from "hhpanel"
 import * as React from "react"
-import {InspectorX} from "./Inspector/InspectorX";
+import {InspectorX} from "./InspectorX/InspectorX";
 
 function showMainDiv() {
     let loadingElement = document.querySelector("#loading") as HTMLDivElement

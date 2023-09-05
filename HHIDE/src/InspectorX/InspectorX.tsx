@@ -95,15 +95,11 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
                               falseStateName={i18n.t("inspector.OpenAll")}></ToggleButton>
                 {
                     this.state?.selectedObject?.addComponent &&
-                    <button className={getBtnClz()}>
-                        Mount Component
-                    </button>
+                    <button className={getBtnClz()}> {i18n.t("inspector.AddComponent")}</button>
                 }
                 {
                     this.state?.selectedObject?.saveAsKeyFrame &&
-                    <button className={getBtnClz()}>
-                        Save as keyframe
-                    </button>
+                    <button className={getBtnClz()}> {i18n.t("inspector.SaveAsKeyFrame")} </button>
                 }
                 <ToggleButton trueStateName={i18n.t("inspector.LockObject")}
                               falseStateName={i18n.t("inspector.UnlockObject")}></ToggleButton>
@@ -122,20 +118,23 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         }
 
 
-        for (let property of propertySheet.properties) {
+        for (let property of propertySheet.getProperties()) {
             if (property.hide)
                 continue
 
             let generator = GetPropertyReactGenerator(property.type)
             if(generator){
-                let reactElement = generator.generateReactElement(property)
+                let reactElement = React.createElement(generator, {
+                    key: Math.random(),
+                    property: property
+                })
 
                 componentElements.push(reactElement)
             }
         }
 
         return (
-            <div>
+            <div className="flex flex-col">
                 {componentElements}
             </div>
         )
