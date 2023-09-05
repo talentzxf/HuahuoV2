@@ -2,6 +2,7 @@ import * as React from "react";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {PropertySheet} from "hhcommoncomponents";
+import {Func} from "mocha";
 
 function getBtnClz(){
     let btnClz = CSSUtils.getButtonClass("teal")
@@ -9,23 +10,38 @@ function getBtnClz(){
     return btnClz
 }
 
-type CollapseAllBtnState = {
+type ToggleButtonState = {
     btnName: string
-    isCollapse: boolean
+    isTrueState: boolean
 }
 
-class CollapseAllBtn extends React.Component<any, CollapseAllBtnState> {
+type ToggleButtonProps = {
+    trueStateName: string
+    falseStateName: string
+    onTrueState?: Function
+    onFalseState?: Function
+}
+
+class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState> {
     state = {
-        btnName: i18n.t("inspector.CollapseAll"),
-        isCollapse: true
+        btnName: "Unknown State",
+        isTrueState: true
+    }
+
+    constructor(props) {
+        super(props);
+
+        this.state.btnName = this.props.trueStateName
     }
 
     onClick(e: Event) {
-        this.state.isCollapse = !this.state.isCollapse
-        if (this.state.isCollapse) {
-            this.state.btnName = i18n.t("inspector.CollapseAll")
+        this.state.isTrueState = !this.state.isTrueState
+        if (this.state.isTrueState) {
+            this.state.btnName = this.props.trueStateName
+            this.props.onTrueState && this.props?.onTrueState()
         } else {
-            this.state.btnName = i18n.t("inspector.OpenAll")
+            this.state.btnName = this.props.falseStateName
+            this.props.onFalseState && this.props?.onFalseState()
         }
 
         this.setState(this.state)
@@ -70,24 +86,31 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         this.setState(this.state)
     }
 
+    createButtonGroup(){
+        return (
+            <div id="buttons" className="inline-flex rounded-md shadow-sm divide-x divide-gray-300">
+                <ToggleButton trueStateName={i18n.t("inspector.CollapseAll")} falseStateName={i18n.t("inspector.OpenAll")}></ToggleButton>
+                {
+                    this.state?.selectedObject?.addComponent &&
+                    <button className={getBtnClz()}>
+                        Mount Component
+                    </button>
+                }
+                {
+                    this.state?.selectedObject?.saveAsKeyFrame &&
+                    <button className={getBtnClz()}>
+                        Save as keyframe
+                    </button>
+                }
+                <ToggleButton trueStateName={i18n.t("inspector.LockObject")} falseStateName={i18n.t("inspector.UnlockObject")}></ToggleButton>
+            </div>
+        )
+    }
+
     render() {
         return (
             <div className="w-full overflow-auto resize">
-                <div id="buttons" className="inline-flex rounded-md shadow-sm divide-x divide-gray-300">
-                    <CollapseAllBtn></CollapseAllBtn>
-                    {
-                        this.state.selectedObject && this.state.selectedObject["addComponent"] &&
-                        <button className={getBtnClz()}>
-                            Mount Component
-                        </button>
-                    }
-                    {
-                        this.state.selectedObject && this.state.selectedObject["saveAsKeyFrame"] &&
-                        <button className={getBtnClz()}>
-                            Save as keyframe
-                        </button>
-                    }
-                </div>
+                {this.createButtonGroup()}
             </div>
         )
     }
