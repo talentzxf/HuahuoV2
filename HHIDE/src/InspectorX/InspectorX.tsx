@@ -118,6 +118,8 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         }
 
 
+        let index = 0
+
         for (let property of propertySheet.getProperties()) {
             if (property.hide)
                 continue
@@ -125,7 +127,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
             let generator = GetPropertyReactGenerator(property.type)
             if(generator){
                 let reactElement = React.createElement(generator, {
-                    key: Math.random(),
+                    key: index++,
                     property: property
                 })
 

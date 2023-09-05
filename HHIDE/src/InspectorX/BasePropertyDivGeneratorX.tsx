@@ -2,15 +2,15 @@ import * as React from "react"
 import {Property, PropertyType} from "hhcommoncomponents";
 
 type PropertyEntryProps = {
-    divStyle?: string
     property: Property,
+    className?: string
     children
 }
 
 type PropertyEntryState = {}
 
 class PropertyEntry extends React.Component<PropertyEntryProps, PropertyEntryState> {
-    getDivStyle() {
+    getDefaultClassName() {
         return "flex flex-row w-full items-center"
     }
 
@@ -21,7 +21,7 @@ class PropertyEntry extends React.Component<PropertyEntryProps, PropertyEntrySta
 
     render() {
         return (
-            <div key={Math.random()} className={this.props.divStyle || this.getDivStyle()}>
+            <div className={this.props.className || this.getDefaultClassName()}>
                 { this.props.children }
             </div>
         )

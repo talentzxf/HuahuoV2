@@ -18,8 +18,11 @@ class StringPropertyGeneratorX extends React.Component<any, StringPropertyState>
     }
 
     onTextChanged(e) {
-        this.props.property.setter(e.target.value)
-        this.state.value = this.props.getter()
+        let property = this.props.property
+
+        property.setter(e.target.value)
+        this.state.value = property.getter()
+
         this.setState(this.state)
     }
 
@@ -29,10 +32,10 @@ class StringPropertyGeneratorX extends React.Component<any, StringPropertyState>
         let textValue = i18n.t(property.getter())
 
         if (!property.setter) {
-            return <span className="text-gray-400"> {textValue} </span>
+            return <span className="p-1 m-1 text-gray-400"> {textValue} </span>
         } else {
             return (
-                <input value={this.state.value} onChange={this.onTextChanged.bind(this)}>
+                <input className="p-1 m-1" value={this.state.value} onChange={this.onTextChanged.bind(this)}>
                 </input>
             )
         }
@@ -42,9 +45,9 @@ class StringPropertyGeneratorX extends React.Component<any, StringPropertyState>
         let property = this.props.property
 
         return (
-            <PropertyEntry property={property} divStyle="flex flex-row">
+            <PropertyEntry property={property} className="flex flex-row w-full align-middle">
                 {
-                    property.key && <span>{i18n.t(property.key)}</span>
+                    property.key && <span className="p-1 m-1">{i18n.t(property.key)}</span>
                 }
                 {
                     this.getContent()
