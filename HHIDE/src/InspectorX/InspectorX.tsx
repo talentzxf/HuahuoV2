@@ -112,7 +112,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
     createComponentGroup() {
         let componentElements = []
         let propertySheet = this.state?.selectedObject?.getPropertySheet()
-        if(propertySheet == null){
+        if (propertySheet == null) {
             this.props.closePanel()
             return null
         }
@@ -125,7 +125,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
                 continue
 
             let generator = GetPropertyReactGenerator(property.type)
-            if(generator){
+            if (generator) {
                 let reactElement = React.createElement(generator, {
                     key: index++,
                     property: property

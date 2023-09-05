@@ -4,7 +4,8 @@ import {Property, PropertyType} from "hhcommoncomponents";
 type PropertyEntryProps = {
     property: Property,
     className?: string
-    children
+    children,
+    noDefaultTitle?: boolean
 }
 
 type PropertyEntryState = {}
@@ -14,15 +15,15 @@ class PropertyEntry extends React.Component<PropertyEntryProps, PropertyEntrySta
         return "flex flex-row w-full items-center"
     }
 
-    generateTitle(propertyKey: string) {
-        return <div className="m-1 p-1 font-bold"> {propertyKey} </div>
-    }
-
-
     render() {
+        let property = this.props.property
+
         return (
             <div className={this.props.className || this.getDefaultClassName()}>
-                { this.props.children }
+                {
+                    !this.props.noDefaultTitle && property.key && <span className="p-1 m-1">{i18n.t(property.key)}</span>
+                }
+                {this.props.children}
             </div>
         )
     }

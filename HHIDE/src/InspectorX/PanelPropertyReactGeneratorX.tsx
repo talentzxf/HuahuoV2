@@ -38,8 +38,10 @@ class ComponentPropertyGeneratorX extends React.Component<any, any> {
         let propertyKey = i18n.t(this.props.property.key)
 
         return (
-            <PropertyEntry className="flex flex-col w-full first:rounded-t-lg last:rounded-b-lg border border-neutral-200 bg-white"
-                           property={this.props.property}>
+            <PropertyEntry
+                className="flex flex-col w-full first:rounded-t-lg last:rounded-b-lg border border-neutral-200 bg-white"
+                property={this.props.property}
+                noDefaultTitle={true}>
 
                 <button className="hover:bg-blue-300 bg-blue-100 w-full focus:ring-4 focus:ring-cyan-300 focus:border-cyan-200 text-left
             focus:outline-none">

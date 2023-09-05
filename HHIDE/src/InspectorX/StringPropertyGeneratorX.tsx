@@ -1,6 +1,7 @@
 import {Property} from "hhcommoncomponents"
 import * as React from "react"
 import {PropertyEntry} from "./BasePropertyDivGeneratorX";
+import {CSSUtils} from "../Utilities/CSSUtils";
 
 type StringPropertyState = {
     value: string
@@ -35,7 +36,7 @@ class StringPropertyGeneratorX extends React.Component<any, StringPropertyState>
             return <span className="p-1 m-1 text-gray-400"> {textValue} </span>
         } else {
             return (
-                <input className="p-1 m-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                <input className={CSSUtils.getInputStyle()}
                        value={textValue} onChange={this.onTextChanged.bind(this)}>
                 </input>
             )
@@ -43,13 +44,8 @@ class StringPropertyGeneratorX extends React.Component<any, StringPropertyState>
     }
 
     render() {
-        let property = this.props.property
-
         return (
-            <PropertyEntry property={property} className="flex flex-row w-full align-middle">
-                {
-                    property.key && <span className="p-1 m-1">{i18n.t(property.key)}</span>
-                }
+            <PropertyEntry property={this.props.property} className="flex flex-row w-full align-middle">
                 {
                     this.getContent()
                 }
