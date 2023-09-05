@@ -2,9 +2,9 @@ import * as React from "react";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {PropertySheet} from "hhcommoncomponents";
-import {Func} from "mocha";
+import {GetPropertyReactGenerator} from "./BasePropertyDivGeneratorX";
 
-function getBtnClz(){
+function getBtnClz() {
     let btnClz = CSSUtils.getButtonClass("teal")
     btnClz += " p-2 first:rounded-l-lg last:rounded-r-lg"
     return btnClz
@@ -73,23 +73,26 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
 
     constructor(props) {
         super(props);
-
-        IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
-
-        this.props?.closePanel()
     }
 
-    onItemSelected(propertySheet: PropertySheet, targetObj: any){
+    onItemSelected(propertySheet: PropertySheet, targetObj: any) {
         this.props?.openPanel()
         this.state.selectedObject = targetObj
 
         this.setState(this.state)
     }
 
-    createButtonGroup(){
+    componentDidMount() {
+        IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
+
+        this.props?.closePanel()
+    }
+
+    createButtonGroup() {
         return (
             <div id="buttons" className="inline-flex rounded-md shadow-sm divide-x divide-gray-300">
-                <ToggleButton trueStateName={i18n.t("inspector.CollapseAll")} falseStateName={i18n.t("inspector.OpenAll")}></ToggleButton>
+                <ToggleButton trueStateName={i18n.t("inspector.CollapseAll")}
+                              falseStateName={i18n.t("inspector.OpenAll")}></ToggleButton>
                 {
                     this.state?.selectedObject?.addComponent &&
                     <button className={getBtnClz()}>
@@ -102,7 +105,38 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
                         Save as keyframe
                     </button>
                 }
-                <ToggleButton trueStateName={i18n.t("inspector.LockObject")} falseStateName={i18n.t("inspector.UnlockObject")}></ToggleButton>
+                <ToggleButton trueStateName={i18n.t("inspector.LockObject")}
+                              falseStateName={i18n.t("inspector.UnlockObject")}></ToggleButton>
+                <ToggleButton trueStateName={i18n.t("inspector.ShowCenterSelector")}
+                              falseStateName={i18n.t("inspector.HideCenterSelector")}></ToggleButton>
+            </div>
+        )
+    }
+
+    createComponentGroup() {
+        let componentElements = []
+        let propertySheet = this.state?.selectedObject?.getPropertySheet()
+        if(propertySheet == null){
+            this.props.closePanel()
+            return null
+        }
+
+
+        for (let property of propertySheet.properties) {
+            if (property.hide)
+                continue
+
+            let generator = GetPropertyReactGenerator(property.type)
+            if(generator){
+                let reactElement = generator.generateReactElement(property)
+
+                componentElements.push(reactElement)
+            }
+        }
+
+        return (
+            <div>
+                {componentElements}
             </div>
         )
     }
@@ -111,6 +145,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         return (
             <div className="w-full overflow-auto resize">
                 {this.createButtonGroup()}
+                {this.createComponentGroup()}
             </div>
         )
     }
