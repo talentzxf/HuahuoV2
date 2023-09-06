@@ -347,25 +347,29 @@ abstract class BaseShapeJS {
         let currentScaling = this.scaling
 
         try {
-            this.paperItem.scaling = new paper.Point(1.0, 1.0)
+            if(this.paperItem != null){
+                this.paperItem.scaling = new paper.Point(1.0, 1.0)
 
-            let curGlobalPivot = this.rawObj.GetGlobalPivotPosition()
-            let curShapePosition = this.paperShape.position
+                let curGlobalPivot = this.rawObj.GetGlobalPivotPosition()
+                let curShapePosition = this.paperShape.position
 
-            let offset = val.subtract(new paper.Point(curGlobalPivot.x, curGlobalPivot.y))
-            let nextShapePosition = curShapePosition.add(offset)
+                let offset = val.subtract(new paper.Point(curGlobalPivot.x, curGlobalPivot.y))
+                let nextShapePosition = curShapePosition.add(offset)
 
-            if (this.paperShape.position.getDistance(nextShapePosition) <= eps) {
-                return
+                if (this.paperShape.position.getDistance(nextShapePosition) <= eps) {
+                    return
+                }
+
+                this.paperShape.position = nextShapePosition
             }
 
-            this.paperShape.position = nextShapePosition
             this.rawObj.SetGlobalPivotPosition(val.x, val.y, 0.0)
-
             if (callHandlers)
                 this.valueChangeHandler.callHandlers("position", val)
         } finally {
-            this.paperItem.scaling = currentScaling
+            if(this.paperItem)
+                this.paperItem.scaling = currentScaling
+
             this.update(forceUpdate)
         }
     }

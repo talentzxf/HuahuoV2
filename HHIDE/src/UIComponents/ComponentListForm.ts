@@ -2,8 +2,6 @@ import {CustomElement} from "hhcommoncomponents";
 import {HHForm} from "../Utilities/HHForm";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {huahuoEngine} from "hhenginejs";
-import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
-import {elementCreator} from "../SceneView/ElementCreator";
 import {undoManager} from "../RedoUndo/UndoManager";
 import {AddComponentCommand} from "../RedoUndo/AddComponentCommand"
 

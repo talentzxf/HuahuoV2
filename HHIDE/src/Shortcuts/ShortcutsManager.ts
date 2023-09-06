@@ -64,6 +64,7 @@ class ShortcutsManager{
 
     init(){
         document.addEventListener("keypress", this.onKeyPressed.bind(this))
+        document.addEventListener("keydown", this.onKeyDown.bind(this))
 
         // Add default shortcuts
         this.registerKeyCodeSeries([{
@@ -112,6 +113,12 @@ class ShortcutsManager{
     }
 
     onKeyPressed(e: KeyboardEvent){
+        console.log("On key press")
+    }
+
+    onKeyDown(e: KeyboardEvent){
+        console.log("On key down")
+
         if(this.currentKeyCodeSeries == null || (Date.now() - this.lastPressedTime) > SHORTKEYINTERVAL * 1000){
             // Reset back to root
             this.currentKeyCodeSeries = this.rootKeyCodeSeries
@@ -121,11 +128,11 @@ class ShortcutsManager{
         if(this.currentKeyCodeSeries != null && this.currentKeyCodeSeries.action != null){
             this.currentKeyCodeSeries.action()
             this.currentKeyCodeSeries = null
+            e.preventDefault()
+            e.stopPropagation()
         }
 
         this.lastPressedTime = Date.now()
-
-        e.stopPropagation()
     }
 }
 

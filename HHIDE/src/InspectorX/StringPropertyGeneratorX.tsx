@@ -33,7 +33,7 @@ class StringPropertyGeneratorX extends React.Component<any, StringPropertyState>
         let textValue = i18n.t(property.getter())
 
         if (!property.setter) {
-            return <span className="p-1 m-1 text-gray-400"> {textValue} </span>
+            return <span className="p-x-1 m-x-1 text-gray-400"> {textValue} </span>
         } else {
             return (
                 <div>

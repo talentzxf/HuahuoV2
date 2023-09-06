@@ -21,7 +21,7 @@ class PropertyEntry extends React.Component<PropertyEntryProps, PropertyEntrySta
         return (
             <div className={this.props.className || this.getDefaultClassName()}>
                 {
-                    !this.props.noDefaultTitle && property.key && <span className="p-1 m-1">{i18n.t(property.key)}</span>
+                    !this.props.noDefaultTitle && property.key && <span className="p-x-1 m-x-1">{i18n.t(property.key)}</span>
                 }
                 {this.props.children}
             </div>
