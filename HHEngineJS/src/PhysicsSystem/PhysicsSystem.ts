@@ -64,6 +64,11 @@ class PhysicsSystem extends b2ContactListener {
     }
 
     Reset() {
+        let store = huahuoEngine.GetCurrentStore()
+        let currentPhysicEnabled = store.IsPhysicsEnabled()
+        if(!currentPhysicEnabled)
+            return
+
         // Reset all rigidbodies
         for (let b = this.m_world.GetBodyList(); b; b = b.GetNext()) {
             let rigidBody = b.GetUserData()

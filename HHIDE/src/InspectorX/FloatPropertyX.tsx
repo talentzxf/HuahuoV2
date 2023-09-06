@@ -3,24 +3,17 @@ import {SetFieldValueCommand} from "../RedoUndo/SetFieldValueCommand";
 import {undoManager} from "../RedoUndo/UndoManager";
 import {Property} from "hhcommoncomponents"
 import {CSSUtils} from "../Utilities/CSSUtils";
-import {PropertyEntry} from "./BasePropertyX";
-
-const eps: number = 0.01
-
-type FloatPropertyProps = {
-    property: Property
-}
+import {eps, PropertyEntry, PropertyProps, registerPropertyChangeListener} from "./BasePropertyX";
+import {PropertyChangeListener} from "./PropertyChangeListener";
 
 type FloatPropertyState = {
     value: number
 }
 
-class FloatPropertyX extends React.Component<FloatPropertyProps, FloatPropertyState> {
+class FloatPropertyX extends React.Component<PropertyProps, FloatPropertyState> implements PropertyChangeListener{
     state: FloatPropertyState = {
         value: -1.0
     }
-
-    listenerMap: Map<Property, number> = new Map
 
     onInputValueChanged(e) {
         let property = this.props.property
@@ -48,10 +41,7 @@ class FloatPropertyX extends React.Component<FloatPropertyProps, FloatPropertySt
             this.state.value = Number(Number(property.getter().toFixed(2)))
         }
 
-        if(!this.listenerMap.has(property)){
-            let handlerId = property.registerValueChangeFunc(this.onValueChanged.bind(this))
-            this.listenerMap.set(property, handlerId)
-        }
+        registerPropertyChangeListener(this, property)
 
         return (
             <PropertyEntry property={property}>

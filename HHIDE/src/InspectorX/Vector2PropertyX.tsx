@@ -3,20 +3,15 @@ import {CSSUtils} from "../Utilities/CSSUtils";
 import {Property} from "hhcommoncomponents"
 import {SetFieldValueCommand} from "../RedoUndo/SetFieldValueCommand";
 import {undoManager} from "../RedoUndo/UndoManager";
-import {PropertyEntry} from "./BasePropertyX";
-
-const eps: number = 0.001
-
-type Vector2PropertyProps = {
-    property: Property
-}
+import {eps, PropertyEntry, PropertyProps, registerPropertyChangeListener} from "./BasePropertyX";
+import {PropertyChangeListener} from "./PropertyChangeListener";
 
 type Vector2PropertyState = {
     x: number,
     y: number
 }
 
-class Vector2PropertyX extends React.Component<Vector2PropertyProps, Vector2PropertyState> {
+class Vector2PropertyX extends React.Component<PropertyProps, Vector2PropertyState> implements PropertyChangeListener{
 
     state: Vector2PropertyState = {
         x: -1.0,
@@ -54,8 +49,6 @@ class Vector2PropertyX extends React.Component<Vector2PropertyProps, Vector2Prop
         this.setState(this.state)
     }
 
-    listenerMap: Map<Property, number> = new Map
-
     render() {
         let property = this.props.property
         let curValue = property.getter()
@@ -67,10 +60,7 @@ class Vector2PropertyX extends React.Component<Vector2PropertyProps, Vector2Prop
             this.state.y = Number(Number(curValue.y).toFixed(2))
         }
 
-        if (!this.listenerMap.has(property)) {
-            let handlerId = property.registerValueChangeFunc(this.onValueChanged.bind(this))
-            this.listenerMap.set(property, handlerId)
-        }
+        registerPropertyChangeListener(this, property)
 
         return (
             <PropertyEntry property={property}>

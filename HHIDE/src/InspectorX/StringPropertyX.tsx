@@ -1,21 +1,21 @@
-import {Property} from "hhcommoncomponents"
 import * as React from "react"
 import {CSSUtils} from "../Utilities/CSSUtils";
-import {PropertyEntry} from "./BasePropertyX";
+import {PropertyEntry, PropertyProps, registerPropertyChangeListener} from "./BasePropertyX";
+import {i18n} from "hhcommoncomponents";
+import {PropertyChangeListener} from "./PropertyChangeListener";
 
 type StringPropertyState = {
     value: string
 }
 
-class StringPropertyX extends React.Component<any, StringPropertyState> {
-    constructor(props) {
-        super(props);
-
-        this.state.value = props.property.getter()
-    }
-
+class StringPropertyX extends React.Component<PropertyProps, StringPropertyState> implements PropertyChangeListener{
     state: StringPropertyState = {
         value: "Unknown"
+    }
+
+    onValueChanged(val: any): void {
+        this.state.value = val
+        this.setState(this.state)
     }
 
     onTextChanged(e) {
@@ -46,6 +46,8 @@ class StringPropertyX extends React.Component<any, StringPropertyState> {
     }
 
     render() {
+        registerPropertyChangeListener(this, this.props.property)
+
         return (
             <PropertyEntry property={this.props.property} >
                 {
@@ -54,5 +56,7 @@ class StringPropertyX extends React.Component<any, StringPropertyState> {
             </PropertyEntry>
         )
     }
+
+
 }
 export {StringPropertyX}
