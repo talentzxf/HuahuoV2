@@ -1,7 +1,7 @@
 import {Property} from "hhcommoncomponents"
 import * as React from "react"
-import {PropertyEntry} from "./BasePropertyDivGeneratorX";
 import {CSSUtils} from "../Utilities/CSSUtils";
+import {PropertyEntry} from "./BasePropertyX";
 
 type StringPropertyState = {
     value: string

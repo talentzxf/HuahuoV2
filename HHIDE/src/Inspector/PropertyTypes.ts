@@ -15,11 +15,12 @@ import {keyFramesPropertyDivGenerator} from "./KeyFramesPropertyDivGenerator";
 import {subComponentsDivGenerator} from "./SubComponentsDivGenerator";
 import {vector3PropertyGenerator} from "./Vector3PropertyDivGenerator";
 import {customFieldDivGenerator} from "./CustomFieldDivGenerator";
-import {RegisterReactGenerator} from "../InspectorX/BasePropertyDivGeneratorX";
 import {ComponentPropertyX, PanelPropertyX,} from "../InspectorX/PanelPropertyX";
 import {StringPropertyX} from "../InspectorX/StringPropertyX";
 import {Vector2PropertyX} from "../InspectorX/Vector2PropertyX";
 import {FloatPropertyX} from "../InspectorX/FloatPropertyX";
+import {RegisterReactGenerator} from "../InspectorX/BasePropertyX";
+import {ColorPropertyX} from "../InspectorX/ColorPropertyX";
 
 // Avoid being imported twice.
 // TODO: Any less dirty approach ??
@@ -41,6 +42,7 @@ if (!window["IsTypesRegistered"]) {
     RegisterDivGenerator(PropertyType.SUBCOMPONENTARRAY, subComponentsDivGenerator)
     RegisterDivGenerator(PropertyType.CUSTOMFIELD, customFieldDivGenerator)
 
+    RegisterReactGenerator(PropertyType.COLOR, ColorPropertyX)
     RegisterReactGenerator(PropertyType.COMPONENT, ComponentPropertyX)
     RegisterReactGenerator(PropertyType.PANEL, PanelPropertyX)
     RegisterReactGenerator(PropertyType.STRING, StringPropertyX)

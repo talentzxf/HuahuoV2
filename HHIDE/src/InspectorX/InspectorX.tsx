@@ -2,8 +2,7 @@ import * as React from "react";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {PropertySheet} from "hhcommoncomponents";
-import {GetPropertyReactGenerator} from "./BasePropertyDivGeneratorX";
-
+import {GetPropertyReactGenerator} from "./BasePropertyX";
 function getBtnClz() {
     let btnClz = CSSUtils.getButtonClass("teal")
     btnClz += " p-2 first:rounded-l-lg last:rounded-r-lg"
