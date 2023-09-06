@@ -3,6 +3,7 @@ import {CSSUtils} from "../Utilities/CSSUtils";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {PropertySheet} from "hhcommoncomponents";
 import {GetPropertyReactGenerator} from "./BasePropertyX";
+import {HHRefreshableDiv} from "../Inspector/InputComponents/HHRefreshableDiv";
 function getBtnClz() {
     let btnClz = CSSUtils.getButtonClass("teal")
     btnClz += " p-2 first:rounded-l-lg last:rounded-r-lg"
@@ -72,6 +73,8 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
 
     constructor(props) {
         super(props);
+
+
     }
 
     onItemSelected(propertySheet: PropertySheet, targetObj: any) {
@@ -81,8 +84,28 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         this.setState(this.state)
     }
 
+    unselectObjects(){
+        this.props?.closePanel()
+    }
+
+    componentChanged(targetObj: any){
+        this.forceUpdate()
+    }
+
+    timelineCellClicked(){
+        this.forceUpdate()
+    }
+
+    objectDeleted(targetObj){
+        this.props?.closePanel()
+    }
+
     componentDidMount() {
         IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
+        IDEEventBus.getInstance().on(EventNames.UNSELECTOBJECTS, this.unselectObjects.bind(this))
+        IDEEventBus.getInstance().on(EventNames.COMPONENTCHANGED, this.componentChanged.bind(this))
+        IDEEventBus.getInstance().on(EventNames.CELLCLICKED, this.timelineCellClicked.bind(this))
+        IDEEventBus.getInstance().on(EventNames.OBJECTDELETED, this.objectDeleted.bind(this))
 
         this.props?.closePanel()
     }
