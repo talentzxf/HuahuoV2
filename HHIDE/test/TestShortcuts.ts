@@ -16,7 +16,7 @@ describe('TestShortcuts manager', ()=> {
             ctrlKey: true,
             code: "KeyZ"
         })
-        shortcutsManager.onKeyPressed(kbEvent)
+        shortcutsManager.onKeyDown(kbEvent)
 
         assert(hasUndone)
 
@@ -30,7 +30,7 @@ describe('TestShortcuts manager', ()=> {
         shortcutsManager.registerShortcutHandler(ShortcutEventNames.REDO, ()=>{
             hasDone = true
         })
-        shortcutsManager.onKeyPressed(kbEvent2)
+        shortcutsManager.onKeyDown(kbEvent2)
         assert(hasUndone == false && hasDone)
     })
 
@@ -55,10 +55,10 @@ describe('TestShortcuts manager', ()=> {
             code: "KeyD"
         })
 
-        shortcutsManager.onKeyPressed(kbEvent1)
-        shortcutsManager.onKeyPressed(kbEvent2)
-        shortcutsManager.onKeyPressed(kbEvent3)
-        shortcutsManager.onKeyPressed(kbEvent4)
+        shortcutsManager.onKeyDown(kbEvent1)
+        shortcutsManager.onKeyDown(kbEvent2)
+        shortcutsManager.onKeyDown(kbEvent3)
+        shortcutsManager.onKeyDown(kbEvent4)
 
         assert(executed)
 
@@ -67,19 +67,19 @@ describe('TestShortcuts manager', ()=> {
             key: "e"
         })
 
-        shortcutsManager.onKeyPressed(kbEvent1)
-        shortcutsManager.onKeyPressed(kbEvent2)
-        shortcutsManager.onKeyPressed(kbEvent3)
-        shortcutsManager.onKeyPressed(kbEvent5)
+        shortcutsManager.onKeyDown(kbEvent1)
+        shortcutsManager.onKeyDown(kbEvent2)
+        shortcutsManager.onKeyDown(kbEvent3)
+        shortcutsManager.onKeyDown(kbEvent5)
 
         assert(executed == false)
 
-        shortcutsManager.onKeyPressed(kbEvent1)
-        shortcutsManager.onKeyPressed(kbEvent2)
-        shortcutsManager.onKeyPressed(kbEvent3)
+        shortcutsManager.onKeyDown(kbEvent1)
+        shortcutsManager.onKeyDown(kbEvent2)
+        shortcutsManager.onKeyDown(kbEvent3)
 
         setTimeout(()=>{
-            shortcutsManager.onKeyPressed(kbEvent4)
+            shortcutsManager.onKeyDown(kbEvent4)
 
             assert(executed == false)
         }, 2000)

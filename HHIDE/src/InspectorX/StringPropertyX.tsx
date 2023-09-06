@@ -7,7 +7,7 @@ type StringPropertyState = {
     value: string
 }
 
-class StringPropertyGeneratorX extends React.Component<any, StringPropertyState> {
+class StringPropertyX extends React.Component<any, StringPropertyState> {
     constructor(props) {
         super(props);
 
@@ -55,4 +55,4 @@ class StringPropertyGeneratorX extends React.Component<any, StringPropertyState>
         )
     }
 }
-export {StringPropertyGeneratorX}
+export {StringPropertyX}

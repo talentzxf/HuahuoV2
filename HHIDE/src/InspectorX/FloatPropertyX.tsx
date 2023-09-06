@@ -1,9 +1,9 @@
 import * as React from "react"
 import {SetFieldValueCommand} from "../RedoUndo/SetFieldValueCommand";
 import {undoManager} from "../RedoUndo/UndoManager";
-import {PropertyEntry} from "./BasePropertyDivGeneratorX";
 import {Property} from "hhcommoncomponents"
 import {CSSUtils} from "../Utilities/CSSUtils";
+import {PropertyEntry} from "./BasePropertyX";
 
 const eps: number = 0.01
 
@@ -15,7 +15,7 @@ type FloatPropertyState = {
     value: number
 }
 
-class FloatPropertyReactGeneratorX extends React.Component<FloatPropertyProps, FloatPropertyState> {
+class FloatPropertyX extends React.Component<FloatPropertyProps, FloatPropertyState> {
     state: FloatPropertyState = {
         value: -1.0
     }
@@ -56,7 +56,7 @@ class FloatPropertyReactGeneratorX extends React.Component<FloatPropertyProps, F
         return (
             <PropertyEntry property={property}>
                 <div>
-                    <input className={CSSUtils.getInputStyle() + " text-right"}
+                    <input className={CSSUtils.getInputStyle()}
                            step={property?.config?.step || 1.0} min={property?.config?.min || null}
                            max={property?.config?.max || null}
                            type={property?.config?.elementType || "number"} value={this.state.value}
@@ -68,4 +68,4 @@ class FloatPropertyReactGeneratorX extends React.Component<FloatPropertyProps, F
     }
 }
 
-export {FloatPropertyReactGeneratorX}
+export {FloatPropertyX}

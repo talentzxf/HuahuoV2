@@ -16,10 +16,10 @@ import {subComponentsDivGenerator} from "./SubComponentsDivGenerator";
 import {vector3PropertyGenerator} from "./Vector3PropertyDivGenerator";
 import {customFieldDivGenerator} from "./CustomFieldDivGenerator";
 import {RegisterReactGenerator} from "../InspectorX/BasePropertyDivGeneratorX";
-import {ComponentPropertyGeneratorX, PanelPropertyReactGeneratorX,} from "../InspectorX/PanelPropertyReactGeneratorX";
-import {StringPropertyGeneratorX} from "../InspectorX/StringPropertyGeneratorX";
-import {Vector2PropertyReactGeneratorX} from "../InspectorX/Vector2PropertyReactGeneratorX";
-import {FloatPropertyReactGeneratorX} from "../InspectorX/FloatPropertyReactGeneratorX";
+import {ComponentPropertyX, PanelPropertyX,} from "../InspectorX/PanelPropertyX";
+import {StringPropertyX} from "../InspectorX/StringPropertyX";
+import {Vector2PropertyX} from "../InspectorX/Vector2PropertyX";
+import {FloatPropertyX} from "../InspectorX/FloatPropertyX";
 
 // Avoid being imported twice.
 // TODO: Any less dirty approach ??
@@ -41,10 +41,10 @@ if (!window["IsTypesRegistered"]) {
     RegisterDivGenerator(PropertyType.SUBCOMPONENTARRAY, subComponentsDivGenerator)
     RegisterDivGenerator(PropertyType.CUSTOMFIELD, customFieldDivGenerator)
 
-    RegisterReactGenerator(PropertyType.COMPONENT, ComponentPropertyGeneratorX)
-    RegisterReactGenerator(PropertyType.PANEL, PanelPropertyReactGeneratorX)
-    RegisterReactGenerator(PropertyType.STRING, StringPropertyGeneratorX)
-    RegisterReactGenerator(PropertyType.NUMBER, FloatPropertyReactGeneratorX)
-    RegisterReactGenerator(PropertyType.VECTOR2, Vector2PropertyReactGeneratorX)
+    RegisterReactGenerator(PropertyType.COMPONENT, ComponentPropertyX)
+    RegisterReactGenerator(PropertyType.PANEL, PanelPropertyX)
+    RegisterReactGenerator(PropertyType.STRING, StringPropertyX)
+    RegisterReactGenerator(PropertyType.NUMBER, FloatPropertyX)
+    RegisterReactGenerator(PropertyType.VECTOR2, Vector2PropertyX)
     window["IsTypeRegistered"] = true
 }

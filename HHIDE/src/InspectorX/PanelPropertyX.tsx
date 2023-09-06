@@ -1,11 +1,11 @@
-import {PropertyEntry, GetPropertyReactGenerator} from "./BasePropertyDivGeneratorX";
 import * as React from "react"
+import {GetPropertyReactGenerator, PropertyEntry} from "./BasePropertyX";
 
-class PanelPropertyReactGeneratorX extends React.Component<any, any> {
+class PanelPropertyX extends React.Component<any, any> {
 
 }
 
-class ComponentPropertyGeneratorX extends React.Component<any, any> {
+class ComponentPropertyX extends React.Component<any, any> {
     render() {
         let property = this.props.property
 
@@ -57,4 +57,4 @@ class ComponentPropertyGeneratorX extends React.Component<any, any> {
     }
 }
 
-export {PanelPropertyReactGeneratorX, ComponentPropertyGeneratorX}
+export {PanelPropertyX, ComponentPropertyX}

@@ -6,7 +6,7 @@ class CSSUtils {
     }
 
     static getInputStyle(){
-        return "p-x-1 m-x-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500"
+        return "p-x-1 m-x-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-right"
     }
 
     static css2obj(css){
