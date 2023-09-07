@@ -15,12 +15,13 @@ import {keyFramesPropertyDivGenerator} from "./KeyFramesPropertyDivGenerator";
 import {subComponentsDivGenerator} from "./SubComponentsDivGenerator";
 import {vector3PropertyGenerator} from "./Vector3PropertyDivGenerator";
 import {customFieldDivGenerator} from "./CustomFieldDivGenerator";
-import {ComponentPropertyX, PanelPropertyX,} from "../InspectorX/PanelPropertyX";
+import {PanelPropertyX,} from "../InspectorX/PanelPropertyX";
 import {StringPropertyX} from "../InspectorX/StringPropertyX";
 import {Vector2PropertyX} from "../InspectorX/Vector2PropertyX";
 import {FloatPropertyX} from "../InspectorX/FloatPropertyX";
 import {RegisterReactGenerator} from "../InspectorX/BasePropertyX";
 import {ColorPropertyX} from "../InspectorX/ColorPropertyX";
+import {ComponentPropertyX} from "../InspectorX/ComponentPropertyX";
 
 // Avoid being imported twice.
 // TODO: Any less dirty approach ??
