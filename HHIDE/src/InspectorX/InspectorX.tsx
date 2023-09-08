@@ -3,9 +3,9 @@ import {CSSUtils} from "../Utilities/CSSUtils";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {PropertySheet} from "hhcommoncomponents";
 import {GetPropertyReactGenerator} from "./BasePropertyX";
-import {HHRefreshableDiv} from "../Inspector/InputComponents/HHRefreshableDiv";
-import {ReactNode} from "react";
-import {ComponentPropertyX} from "./ComponentPropertyX";
+import {formManager} from "../Utilities/FormManager";
+import {huahuoEngine} from "hhenginejs";
+import {ComponentListFormX} from "./ComponentListFormX";
 
 function getBtnClz() {
     let btnClz = CSSUtils.getButtonClass("teal")
@@ -123,6 +123,11 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         }
     }
 
+    addComponent() {
+        let componentNames = huahuoEngine.getAllCompatibleComponents(this.state.selectedObject)
+        formManager.openReactForm(ComponentListFormX, {componentName: componentNames})
+    }
+
     createButtonGroup() {
         return (
             <div id="buttons" className="inline-flex rounded-md shadow-sm divide-x divide-gray-300">
@@ -132,7 +137,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
                               onFalseState={this.closeAll.bind(this)}></ToggleButton>
                 {
                     this.state?.selectedObject?.addComponent &&
-                    <button className={getBtnClz()}> {i18n.t("inspector.AddComponent")}</button>
+                    <button className={getBtnClz()} onClick={this.addComponent.bind(this)}> {i18n.t("inspector.AddComponent")}</button>
                 }
                 {
                     this.state?.selectedObject?.saveAsKeyFrame &&

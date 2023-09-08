@@ -1,5 +1,7 @@
 {
   "helloWorld": "Hello World!",
+  "Login": "Login",
+  "ComponentList": "Component List",
   "notImplemented": "Sorry, this functionality has not been implemented yet!",
   "save": "Save",
   "uploadAndOpen": "Upload and Open",

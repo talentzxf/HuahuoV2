@@ -1,5 +1,7 @@
 {
   "helloWorld": "你好！",
+  "Login": "登录",
+  "ComponentList": "可用组件列表",
   "notImplemented": "对不起，该功能仍在开发中!",
   "save": "保存",
   "uploadAndOpen": "上传并打开",
@@ -43,7 +45,7 @@
   "allElements": "所有可用组件",
   "eventgraph": {
     "resetScale": "重置缩放",
-    "addEventListener" : "监听事件",
+    "addEventListener": "监听事件",
     "addGraphAction": "添加动作",
     "addComponentGraphAction": "添加组件动作"
   },

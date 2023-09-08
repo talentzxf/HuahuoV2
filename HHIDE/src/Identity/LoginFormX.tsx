@@ -21,7 +21,7 @@ type LoginProps = {
     closeForm: Function
 }
 
-function getBtnClz(color: string){
+function getBtnClz(color: string) {
     let btnClz = CSSUtils.getButtonClass(color)
     btnClz += " p-3 m-1 rounded-lg"
     return btnClz
@@ -117,9 +117,8 @@ class LoginFormX extends React.Component<LoginProps, LoginState> {
                     <form className="p-4 space-y-4 divide-y divide-gray-300" action="#">
                         <div className="flex align-middle">
                             <h5 className="px-2 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                                Login
+                                {i18n.t("Login")}
                             </h5>
-                            <div className="w-full"></div>
                             <CloseBtn onclick={this.props?.closeForm}></CloseBtn>
                         </div>
                         <div>
