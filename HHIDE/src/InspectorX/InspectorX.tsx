@@ -4,6 +4,9 @@ import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {PropertySheet} from "hhcommoncomponents";
 import {GetPropertyReactGenerator} from "./BasePropertyX";
 import {HHRefreshableDiv} from "../Inspector/InputComponents/HHRefreshableDiv";
+import {ReactNode} from "react";
+import {ComponentPropertyX} from "./ComponentPropertyX";
+
 function getBtnClz() {
     let btnClz = CSSUtils.getButtonClass("teal")
     btnClz += " p-2 first:rounded-l-lg last:rounded-r-lg"
@@ -71,12 +74,6 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         selectedObject: null,
     }
 
-    constructor(props) {
-        super(props);
-
-
-    }
-
     onItemSelected(propertySheet: PropertySheet, targetObj: any) {
         this.props?.openPanel()
         this.state.selectedObject = targetObj
@@ -84,19 +81,19 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         this.setState(this.state)
     }
 
-    unselectObjects(){
+    unselectObjects() {
         this.props?.closePanel()
     }
 
-    componentChanged(targetObj: any){
+    componentChanged(targetObj: any) {
         this.forceUpdate()
     }
 
-    timelineCellClicked(){
+    timelineCellClicked() {
         this.forceUpdate()
     }
 
-    objectDeleted(targetObj){
+    objectDeleted(targetObj) {
         this.props?.closePanel()
     }
 
@@ -110,11 +107,29 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         this.props?.closePanel()
     }
 
+    componentElementRefs = []
+
+    openAll() {
+        for (let component of this.componentElementRefs) {
+            if(component && component.openSection)
+                component.openSection()
+        }
+    }
+
+    closeAll() {
+        for (let component of this.componentElementRefs) {
+            if(component && component.closeSection)
+                component.closeSection()
+        }
+    }
+
     createButtonGroup() {
         return (
             <div id="buttons" className="inline-flex rounded-md shadow-sm divide-x divide-gray-300">
                 <ToggleButton trueStateName={i18n.t("inspector.CollapseAll")}
-                              falseStateName={i18n.t("inspector.OpenAll")}></ToggleButton>
+                              falseStateName={i18n.t("inspector.OpenAll")}
+                              onTrueState={this.openAll.bind(this)}
+                              onFalseState={this.closeAll.bind(this)}></ToggleButton>
                 {
                     this.state?.selectedObject?.addComponent &&
                     <button className={getBtnClz()}> {i18n.t("inspector.AddComponent")}</button>
@@ -139,9 +154,9 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
             return null
         }
 
-
         let index = 0
 
+        this.componentElementRefs = []
         for (let property of propertySheet.getProperties()) {
             if (property.hide)
                 continue
@@ -150,9 +165,12 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
             if (generator) {
                 let reactElement = React.createElement(generator, {
                     key: index++,
-                    property: property
+                    property: property,
+                    ref: (instance) => {
+                        if(instance != null) // not sure why, but React will pass null instance here, Maybe because the component is deleted?
+                            this.componentElementRefs.push(instance)
+                    }
                 })
-
                 componentElements.push(reactElement)
             }
         }

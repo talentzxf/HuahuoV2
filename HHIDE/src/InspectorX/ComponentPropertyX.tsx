@@ -23,23 +23,30 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
         this.contentRef = React.createRef()
     }
 
-    contentClass: string = "grid grid-cols-2 duration-500 ease-in-out transition-[max-height]"
+    contentClass: string = "grid grid-cols-2 duration-500 ease-in-out transition-[max-height] overflow-hidden"
 
     openSection() {
+        this.state.isOpen = true
         this.state.contentHeight = this.contentRef.current.scrollHeight
         this.state.isTransitioning = true
+
+        this.setState(this.state)
     }
 
-    closeSection() { // Close is tricky, because we don't know the initHeight
+    closeSection() {
+        this.state.isOpen = false
         this.state.contentHeight = 0
         this.state.isTransitioning = true
+
+        this.setState(this.state)
     }
 
     setContentHeight() {
-        if (!this.state.isTransitioning && this.state.contentHeight != this.contentRef.current.scrollHeight) {
-            this.state.contentHeight = this.contentRef.current.scrollHeight
-
-            this.setState(this.state)
+        if (!this.state.isTransitioning) {
+            if (this.state.isOpen && this.state.contentHeight != this.contentRef.current.scrollHeight) {
+                this.state.contentHeight = this.contentRef.current.scrollHeight
+                this.setState(this.state)
+            }
         }
     }
 
@@ -59,11 +66,9 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
         } else {
             this.closeSection()
         }
-
-        this.setState(this.state)
     }
 
-    onAnimationEnd() {
+    onTransitionEnd(e) {
         this.state.isTransitioning = false
         this.setState(this.state)
     }
@@ -114,7 +119,7 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
                     (
                         <div ref={this.contentRef} className={this.contentClass}
                              style={{"maxHeight": this.state.contentHeight}}
-                             onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                             onTransitionEnd={this.onTransitionEnd.bind(this)}>
                             {childElements}
                         </div>
                     )
