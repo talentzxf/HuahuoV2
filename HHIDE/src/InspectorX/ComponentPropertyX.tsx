@@ -1,17 +1,70 @@
 import * as React from "react";
 import {GetPropertyReactGenerator, PropertyEntry, PropertyProps} from "./BasePropertyX";
 
+// Implement Accordion: https://css-tricks.com/using-css-transitions-auto-dimensions/
+
 type ComponentPropertyState = {
     isOpen: boolean
+    contentHeight: number
+    isTransitioning: boolean
 }
 
 class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropertyState> {
     state: ComponentPropertyState = {
-        isOpen: true
+        isOpen: true,
+        contentHeight: 10000,
+        isTransitioning: false
+    }
+
+    contentRef
+
+    constructor(props) {
+        super(props);
+        this.contentRef = React.createRef()
+    }
+
+    contentClass: string = "grid grid-cols-2 duration-500 ease-in-out transition-[max-height]"
+
+    openSection() {
+        this.state.contentHeight = this.contentRef.current.scrollHeight
+        this.state.isTransitioning = true
+    }
+
+    closeSection() { // Close is tricky, because we don't know the initHeight
+        this.state.contentHeight = 0
+        this.state.isTransitioning = true
+    }
+
+    setContentHeight() {
+        if (!this.state.isTransitioning && this.state.contentHeight != this.contentRef.current.scrollHeight) {
+            this.state.contentHeight = this.contentRef.current.scrollHeight
+
+            this.setState(this.state)
+        }
+    }
+
+    componentDidMount() {
+        this.setContentHeight()
+    }
+
+    componentDidUpdate(prevProps: Readonly<PropertyProps>, prevState: Readonly<ComponentPropertyState>, snapshot?: any) {
+        this.setContentHeight()
     }
 
     onClick(e) {
         this.state.isOpen = !this.state.isOpen
+
+        if (this.state.isOpen) {
+            this.openSection()
+        } else {
+            this.closeSection()
+        }
+
+        this.setState(this.state)
+    }
+
+    onAnimationEnd() {
+        this.state.isTransitioning = false
         this.setState(this.state)
     }
 
@@ -58,9 +111,13 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
                 </button>
 
                 {
-                    this.state.isOpen && (<div className="grid grid-cols-2 animate-[fade-in_1s_ease-in-out]">
-                        {childElements}
-                    </div>)
+                    (
+                        <div ref={this.contentRef} className={this.contentClass}
+                             style={{"maxHeight": this.state.contentHeight}}
+                             onAnimationEnd={this.onAnimationEnd.bind(this)}>
+                            {childElements}
+                        </div>
+                    )
                 }
 
             </PropertyEntry>
