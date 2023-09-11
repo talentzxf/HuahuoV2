@@ -49,19 +49,28 @@ class ComponentProxyHandler {
         return Object.getPrototypeOf(this.targetComponent);
     }
 
+    proxyFunctionMap: Map<Function, Function> = new Map()
+
     get(target, propKey, receiver) {
         const origProperty = target[propKey]
 
         let _this = this
 
         if (origProperty instanceof Function) {
-            return function (...args) {
-                if (!_this.functionMap.has(origProperty.name)) {
-                    return origProperty.apply(this, args)
+            let proxiedFunction = this.proxyFunctionMap.get(origProperty)
+            if (proxiedFunction == null) {
+                proxiedFunction = function (...args) {
+                    if (!_this.functionMap.has(origProperty.name)) {
+                        return origProperty.apply(this, args)
+                    }
+
+                    return _this.functionMap.get(origProperty.name).apply(this, args)
                 }
 
-                return _this.functionMap.get(origProperty.name).apply(this, args)
+                this.proxyFunctionMap.set(origProperty, proxiedFunction)
             }
+
+            return proxiedFunction
         }
 
         if (this[propKey] && this[propKey] instanceof Function) {
