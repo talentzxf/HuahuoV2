@@ -67,16 +67,19 @@ type InspectorProps = {
 
 type InspectorState = {
     selectedObject: any
+    property: PropertySheet
 }
 
 class InspectorX extends React.Component<InspectorProps, InspectorState> {
     state: InspectorState = {
         selectedObject: null,
+        property: null
     }
 
-    onItemSelected(propertySheet: PropertySheet, targetObj: any) {
+    onItemSelected(property: PropertySheet, targetObj: any) {
         this.props?.openPanel()
         this.state.selectedObject = targetObj
+        this.state.property = property == null ? targetObj.getPropertySheet() : property
 
         this.setState(this.state)
     }
@@ -128,13 +131,31 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         formManager.openReactForm(ComponentListFormX, {componentNames: componentNames, targetObject: this.state.selectedObject})
     }
 
+    moreThan2Components() {
+        if (this.state?.property == null)
+            return false
+
+        let totalComponentCount = 0;
+        for (let property of this.state.property.getProperties()) {
+            if (property.hide)
+                continue
+
+            if (property.type == PropertySheet.COMPONENT)
+                totalComponentCount++
+        }
+
+        return totalComponentCount > 2
+    }
+
     createButtonGroup() {
         return (
             <div id="buttons" className="inline-flex rounded-md shadow-sm divide-x divide-gray-300">
-                <ToggleButton trueStateName={i18n.t("inspector.CollapseAll")}
-                              falseStateName={i18n.t("inspector.OpenAll")}
-                              onTrueState={this.openAll.bind(this)}
-                              onFalseState={this.closeAll.bind(this)}></ToggleButton>
+                {
+                    this.moreThan2Components() && <ToggleButton trueStateName={i18n.t("inspector.CollapseAll")}
+                                                                falseStateName={i18n.t("inspector.OpenAll")}
+                                                                onTrueState={this.openAll.bind(this)}
+                                                                onFalseState={this.closeAll.bind(this)}></ToggleButton>
+                }
                 {
                     this.state?.selectedObject?.addComponent &&
                     <button className={getBtnClz()}
@@ -144,17 +165,22 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
                     this.state?.selectedObject?.saveAsKeyFrame &&
                     <button className={getBtnClz()}> {i18n.t("inspector.SaveAsKeyFrame")} </button>
                 }
-                <ToggleButton trueStateName={i18n.t("inspector.LockObject")}
-                              falseStateName={i18n.t("inspector.UnlockObject")}></ToggleButton>
-                <ToggleButton trueStateName={i18n.t("inspector.ShowCenterSelector")}
-                              falseStateName={i18n.t("inspector.HideCenterSelector")}></ToggleButton>
+                {
+                    this.state?.selectedObject?.isLocked && <ToggleButton trueStateName={i18n.t("inspector.LockObject")}
+                                                                          falseStateName={i18n.t("inspector.UnlockObject")}></ToggleButton>
+                }
+                {
+                    this.state?.selectedObject?.isShowCenterSelector &&
+                    <ToggleButton trueStateName={i18n.t("inspector.ShowCenterSelector")}
+                                  falseStateName={i18n.t("inspector.HideCenterSelector")}></ToggleButton>
+                }
             </div>
         )
     }
 
     createComponentGroup() {
         let componentElements = []
-        let propertySheet = this.state?.selectedObject?.getPropertySheet()
+        let propertySheet = this.state.property
         if (propertySheet == null) {
             this.props.closePanel()
             return null
