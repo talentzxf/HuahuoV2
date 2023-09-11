@@ -24,7 +24,8 @@ class PropertyEntry extends React.Component<PropertyEntryProps, PropertyEntrySta
         return (
             <div className={this.props.className || this.getDefaultClassName()}>
                 {
-                    !this.props.noDefaultTitle && property.key && <span className="p-x-1 m-x-1">{i18n.t(property.key)}</span>
+                    !this.props.noDefaultTitle && property.key &&
+                    <span className="p-x-1 m-x-1">{i18n.t(property.key)}</span>
                 }
                 {this.props.children}
             </div>
@@ -46,18 +47,19 @@ function GetPropertyReactGenerator(type: PropertyType) {
     return propertyGeneratorMap.get(type)
 }
 
-let propertyChangeListenerMap:Map<PropertyChangeListener, Map<Property, number>> = new Map
-function registerPropertyChangeListener(listener: PropertyChangeListener, property: Property){
-    if(!property.registerValueChangeFunc){
+let propertyChangeListenerMap: Map<PropertyChangeListener, Map<Property, number>> = new Map
+
+function registerPropertyChangeListener(listener: PropertyChangeListener, property: Property) {
+    if (!property.registerValueChangeFunc) {
         return false
     }
 
-    if(!propertyChangeListenerMap.has(listener)){
+    if (!propertyChangeListenerMap.has(listener)) {
         propertyChangeListenerMap.set(listener, new Map<Property, number>())
     }
 
     let listenerMap = propertyChangeListenerMap.get(listener)
-    if(!listenerMap.has(property)){
+    if (!listenerMap.has(property)) {
         let listenerId = property.registerValueChangeFunc(listener.onValueChanged.bind(listener))
         listenerMap.set(property, listenerId)
 
@@ -67,4 +69,11 @@ function registerPropertyChangeListener(listener: PropertyChangeListener, proper
     return false
 }
 
-export {GetPropertyReactGenerator, RegisterReactGenerator, PropertyEntry, PropertyProps, eps, registerPropertyChangeListener}
+export {
+    GetPropertyReactGenerator,
+    RegisterReactGenerator,
+    PropertyEntry,
+    PropertyProps,
+    eps,
+    registerPropertyChangeListener
+}

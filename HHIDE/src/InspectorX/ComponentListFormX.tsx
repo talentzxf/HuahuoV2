@@ -13,7 +13,7 @@ type ComponentListFormProps = FormProps & {
 class ComponentListFormX extends React.Component<ComponentListFormProps, any> {
     onAddComponentClicked(e) {
         e.preventDefault()
-        let componentName = e.target.textContent // TODO: Localize the component name.
+        let componentName = e.target.dataset.componentName
         let newComponent = huahuoEngine.produceObject(componentName)
         let addComponentCommand = new AddComponentCommand(this.props.targetObject, newComponent)
         addComponentCommand.DoCommand()
@@ -43,7 +43,7 @@ class ComponentListFormX extends React.Component<ComponentListFormProps, any> {
                             {
                                 this.props.componentNames.map((item) => {
                                     return (<button key={Math.random()} onClick={this.onAddComponentClicked.bind(this)}
-                                                    className={this.getClassName()}>{item}</button>)
+                                                    className={this.getClassName()} data-component-name={item}>{i18n.t(item)}</button>)
                                 })
                             }
                         </ul>

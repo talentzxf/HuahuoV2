@@ -70,8 +70,10 @@
     "drawStarMirror": "Drawing central symmetric mirror"
   },
   "EventGraphComponent": "Event Graph Component",
+  "GeneratorComponent": "Generator Component",
   "StrokeComponent": "Stroke Component",
   "FillColorComponent": "Fill Color Component",
+  "FollowCurveComponent": "Move Along Curve Edge",
   "RigidBody": "RigidBody",
   "inspector": {
     "CurveInputPrompt": "FrameId:{{frameId}}, value:{{value}}",

@@ -99,6 +99,8 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
                     property: childProperty
                 })
                 childElements.push(childReactElement)
+            }else{
+                console.warn("Unknown generator:" + childProperty.key + " type index:" + childProperty.type)
             }
         }
 

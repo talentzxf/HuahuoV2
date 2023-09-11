@@ -70,8 +70,10 @@
     "drawStarMirror": "绘制中心对称图形"
   },
   "EventGraphComponent": "事件图组件",
+  "GeneratorComponent": "生成器组件",
   "StrokeComponent": "描边颜色",
   "FillColorComponent": "填充颜色",
+  "FollowCurveComponent": "沿着形状边沿运动",
   "RigidBody": "刚体",
   "inspector": {
     "CurveInputPrompt": "关键帧:{{frameId}}, 值:{{value}}",
