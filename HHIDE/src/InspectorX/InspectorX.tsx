@@ -111,21 +111,21 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
 
     openAll() {
         for (let component of this.componentElementRefs) {
-            if(component && component.openSection)
+            if (component && component.openSection)
                 component.openSection()
         }
     }
 
     closeAll() {
         for (let component of this.componentElementRefs) {
-            if(component && component.closeSection)
+            if (component && component.closeSection)
                 component.closeSection()
         }
     }
 
     addComponent() {
         let componentNames = huahuoEngine.getAllCompatibleComponents(this.state.selectedObject)
-        formManager.openReactForm(ComponentListFormX, {componentName: componentNames})
+        formManager.openReactForm(ComponentListFormX, {componentNames: componentNames, targetObject: this.state.selectedObject})
     }
 
     createButtonGroup() {
@@ -137,7 +137,8 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
                               onFalseState={this.closeAll.bind(this)}></ToggleButton>
                 {
                     this.state?.selectedObject?.addComponent &&
-                    <button className={getBtnClz()} onClick={this.addComponent.bind(this)}> {i18n.t("inspector.AddComponent")}</button>
+                    <button className={getBtnClz()}
+                            onClick={this.addComponent.bind(this)}> {i18n.t("inspector.AddComponent")}</button>
                 }
                 {
                     this.state?.selectedObject?.saveAsKeyFrame &&
@@ -172,7 +173,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
                     key: index++,
                     property: property,
                     ref: (instance) => {
-                        if(instance != null) // not sure why, but React will pass null instance here, Maybe because the component is deleted?
+                        if (instance != null) // not sure why, but React will pass null instance here, Maybe because the component is deleted?
                             this.componentElementRefs.push(instance)
                     }
                 })

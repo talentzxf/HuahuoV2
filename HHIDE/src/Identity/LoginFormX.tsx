@@ -3,7 +3,7 @@ import {CloseBtn} from "../UIComponents/CloseBtn";
 import {userInfo} from "./UserInfo";
 import {HHToast, Logger} from "hhcommoncomponents";
 import {api} from "../RESTApis/RestApi";
-import {formManager} from "../Utilities/FormManager";
+import {formManager, FormProps} from "../Utilities/FormManager";
 import {RegisterForm} from "./RegisterForm";
 import {AxiosError} from "axios";
 import {CSSUtils} from "../Utilities/CSSUtils";
@@ -14,11 +14,10 @@ type LoginState = {
     isVisible: boolean
 }
 
-type LoginProps = {
+type LoginProps = FormProps & {
     afterLogin: Function
     onError: Function
     onLoginFailed: Function
-    closeForm: Function
 }
 
 function getBtnClz(color: string) {

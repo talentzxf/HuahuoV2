@@ -2,6 +2,10 @@ import {HHForm} from "./HHForm"
 import {createRoot, Root} from "react-dom/client"
 import * as React from "react"
 
+type FormProps = {
+    closeForm: Function
+}
+
 // Do I need to write a more robust/flexible UI framework?? Sounds like another big project!
 class FormManager {
     currentForm: HHForm = null
@@ -83,4 +87,4 @@ class FormManager {
 }
 
 let formManager = new FormManager()
-export {formManager}
+export {formManager, FormProps}

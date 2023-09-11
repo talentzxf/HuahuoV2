@@ -1,7 +1,32 @@
 import * as React from "react"
 import {CloseBtn} from "../UIComponents/CloseBtn";
+import {FormProps} from "../Utilities/FormManager";
+import {huahuoEngine} from "hhenginejs";
+import {AddComponentCommand} from "../RedoUndo/AddComponentCommand";
+import {undoManager} from "../RedoUndo/UndoManager";
 
-class ComponentListFormX extends React.Component<any, any> {
+type ComponentListFormProps = FormProps & {
+    componentNames: string[],
+    targetObject: any
+}
+
+class ComponentListFormX extends React.Component<ComponentListFormProps, any> {
+    onAddComponentClicked(e) {
+        e.preventDefault()
+        let componentName = e.target.textContent // TODO: Localize the component name.
+        let newComponent = huahuoEngine.produceObject(componentName)
+        let addComponentCommand = new AddComponentCommand(this.props.targetObject, newComponent)
+        addComponentCommand.DoCommand()
+
+        undoManager.PushCommand(addComponentCommand)
+
+        this.props.closeForm()
+    }
+
+    getClassName() {
+        return "block w-full cursor-pointer rounded-lg p-4 text-left transition duration-500 hover:bg-primary-100 hover:text-neutral-500 focus:ring-0 dark:hover:bg-neutral-600 dark:hover:text-neutral-200"
+    }
+
     render() {
         return (
             <div className="flex flex-col items-center justify-center mx-auto">
@@ -14,6 +39,14 @@ class ComponentListFormX extends React.Component<any, any> {
                             </h5>
                             <CloseBtn onclick={this.props?.closeForm}></CloseBtn>
                         </div>
+                        <ul className="grid grid-cols-2">
+                            {
+                                this.props.componentNames.map((item) => {
+                                    return (<button key={Math.random()} onClick={this.onAddComponentClicked.bind(this)}
+                                                    className={this.getClassName()}>{item}</button>)
+                                })
+                            }
+                        </ul>
                     </form>
                 </div>
             </div>
