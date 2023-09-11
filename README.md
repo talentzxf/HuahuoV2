@@ -12,7 +12,12 @@ Build:
 6. cd HHIDE
 7. npm run start
 
+Short term todos:
+1. GeneratorComponent, set interval for each shape.
+
 TODOs:
 1. Onion skin view.
 2. Bone Animation
 3. AIGC !!!!
+4. SDK to let user make own components.
+ 

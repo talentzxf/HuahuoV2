@@ -1,8 +1,9 @@
 import * as React from "react"
-import {GetPropertyReactGenerator, PropertyEntry, PropertyProps} from "./BasePropertyX";
+import {GetPropertyReactGenerator, PropertyEntry, PropertyProps, registerPropertyChangeListener} from "./BasePropertyX";
 import {CSSUtils} from "../Utilities/CSSUtils";
+import {PropertyChangeListener} from "./PropertyChangeListener";
 
-class ArrayPropertyX extends React.Component<PropertyProps, any> {
+class ArrayPropertyX extends React.Component<PropertyProps, any> implements PropertyChangeListener {
     onClicked(e: Event) {
         e.preventDefault()
         e.stopPropagation()
@@ -22,7 +23,7 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> {
                 key: idx,
                 property: {
                     setter: (shape) => {
-                        property.updater(idx, shape)
+                        return property.updater(idx, shape)
                     },
                     getter: () => {
                         return childElement
@@ -36,6 +37,8 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> {
 
     render() {
         let property = this.props.property
+
+        registerPropertyChangeListener(this, property)
 
         let idx = 0
         let reactElements = []
@@ -59,6 +62,10 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> {
                 </div>
             </PropertyEntry>
         )
+    }
+
+    onValueChanged(val: any): void {
+        this.forceUpdate()
     }
 }
 

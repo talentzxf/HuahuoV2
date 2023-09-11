@@ -39,7 +39,12 @@ class ShapeArrayHandler {
                 return new FieldShapeArrayIterable(component.rawObj.GetShapeArrayValue(fieldName))
             },
             updater: (idx, shape): boolean => {
-                return component.rawObj.GetShapeArrayValueForWrite(fieldName).UpdateShape(idx, shape)
+                let returnValue = component.rawObj.GetShapeArrayValueForWrite(fieldName).UpdateShape(idx, shape == null ? 0 : shape.getRawObject())
+                if (component.baseShape)
+                    component.baseShape.update(true)
+                component.callHandlers(fieldName, null) // Call handlers, so inspector can get the notification and update.
+
+                return returnValue
             },
             contains: (val: BaseShapeJS) => {
                 if (!IsValidWrappedObject(component.rawObj.GetShapeArrayValue(fieldName))) {
@@ -64,7 +69,7 @@ class ShapeArrayHandler {
 
                 if (component.baseShape)
                     component.baseShape.update(true)
-                component.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
+                component.callHandlers(fieldName, null) // Call handlers, so inspector can get the notification and update.
 
                 return shapeIdx
             },
@@ -73,7 +78,7 @@ class ShapeArrayHandler {
                 if (component.baseShape)
                     component.baseShape.update(true)
 
-                component.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
+                component.callHandlers(fieldName, null) // Call handlers, so inspector can get the notification and update.
             }
         })
     }

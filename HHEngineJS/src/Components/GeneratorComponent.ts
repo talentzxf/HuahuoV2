@@ -2,6 +2,7 @@ import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {FloatPropertyConfig} from "hhcommoncomponents";
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
+import {IsValidWrappedObject} from "hhcommoncomponents";
 
 //TODO: Move all these non default components into another sub-project
 @Component()
@@ -31,9 +32,13 @@ class GeneratorComponent extends AbstractComponent {
         this.paperShapeGroup.rotation = this.baseShape.rotation
         this.paperShapeGroup.scaling = this.baseShape.scaling
 
+        let usedShapes = new Set()
+
         for (let targetShape of this.targetShapeArray) {
-            if (targetShape == null) // The shape might not be loaded yet. But in next cycle, it should have been loaded.
+            if (targetShape == null || !IsValidWrappedObject(targetShape.rawObj)) // The shape might not be loaded yet. But in next cycle, it should have been loaded.
                 continue
+
+            usedShapes.add(targetShape.rawObj.ptr)
 
             let mirageShapeArray = this.targetShapeGeneratedShapeArrayMap.get(targetShape.rawObj.ptr)
             if (mirageShapeArray == null) {
@@ -80,6 +85,16 @@ class GeneratorComponent extends AbstractComponent {
             while (mirageShapeArray.length > index) {
                 let tobeDeletedShape = mirageShapeArray.pop()
                 tobeDeletedShape.removePaperObj()
+            }
+        }
+
+        for (let [targetShapePtr, shapeArray] of this.targetShapeGeneratedShapeArrayMap) {
+            if (!usedShapes.has(targetShapePtr)) {
+                for (let miragetShape of shapeArray) {
+                    miragetShape.removePaperObj()
+                }
+
+                this.targetShapeGeneratedShapeArrayMap.delete(targetShapePtr)
             }
         }
     }
