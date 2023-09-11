@@ -1,5 +1,7 @@
 import * as React from "react";
-import {GetPropertyReactGenerator, PropertyEntry, PropertyProps} from "./BasePropertyX";
+import {GetPropertyReactGenerator, PropertyEntry, PropertyProps, registerPropertyChangeListener} from "./BasePropertyX";
+import {PropertyChangeListener} from "./PropertyChangeListener";
+import {i18n} from "hhcommoncomponents";
 
 // Implement Accordion: https://css-tricks.com/using-css-transitions-auto-dimensions/
 
@@ -42,6 +44,9 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
     }
 
     setContentHeight() {
+        if(this.contentRef.current == null) // Not sure why this happens?
+            return
+
         if (!this.state.isTransitioning) {
             if (this.state.isOpen && this.state.contentHeight != this.contentRef.current.scrollHeight) {
                 this.state.contentHeight = this.contentRef.current.scrollHeight
@@ -92,6 +97,14 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
                 childProperty.setter = childProperty.inserter
             }
 
+            if (childProperty.registerValueChangeFunc) {
+                childProperty.registerValueChangeFunc(
+                    () => {
+                        requestAnimationFrame(this.setContentHeight.bind(this))
+                    }
+                ) // The height maybe changed for each component, need recalculated in next frame.
+            }
+
             let generator = GetPropertyReactGenerator(childProperty.type)
             if (generator) {
                 let childReactElement = React.createElement(generator, {
@@ -99,7 +112,7 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
                     property: childProperty
                 })
                 childElements.push(childReactElement)
-            }else{
+            } else {
                 console.warn("Unknown generator:" + childProperty.key + " type index:" + childProperty.type)
             }
         }

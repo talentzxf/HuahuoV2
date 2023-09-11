@@ -6,12 +6,18 @@ class PropertyConfig {
 
 interface CustomFieldContentDivGenerator {
     refresh()
+
     generateDiv(property: Property): HTMLDivElement
+}
+
+interface CustomFieldContentXGenerator {
+    generateReactNode(property: Property)
 }
 
 class CustomFieldConfig extends PropertyConfig {
     fieldName: string
-    contentDivGenerator?: Function
+    targetComponent?: any
+    contentGenerator?: any
 }
 
 class FloatPropertyConfig extends PropertyConfig {
@@ -44,12 +50,14 @@ class ComponentProperty extends PropertyConfig {
     isActive: Function
 }
 
-class StringProperty extends PropertyConfig{
-    options:[]
+class StringProperty extends PropertyConfig {
+    options: []
 }
 
-export {PropertyConfig, FloatPropertyConfig, ActionPropertyConfig,
+export {
+    PropertyConfig, FloatPropertyConfig, ActionPropertyConfig,
     SubComponentArrayProperty, CustomFieldConfig, CustomFieldContentDivGenerator,
-    ComponentProperty, ShapeArrayProperty, StringProperty}
+    ComponentProperty, ShapeArrayProperty, StringProperty, CustomFieldContentXGenerator
+}
 
 

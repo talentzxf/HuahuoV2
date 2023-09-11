@@ -29,11 +29,16 @@ class RigidBody extends AbstractComponent {
     override setBaseShape(baseShape: BaseShapeJS) {
         super.setBaseShape(baseShape)
 
-        getPhysicSystem().AddRigidBody(this)
+        if (!baseShape.isMirage) {
+            getPhysicSystem().AddRigidBody(this)
+        }
     }
 
     onMounted() {
         super.onMounted();
+
+        if (this.baseShape.isMirage)
+            return
 
         let shape = this.baseShape
         let body = this.body
@@ -163,6 +168,9 @@ class RigidBody extends AbstractComponent {
 
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
+
+        if (this.isMirage) // Do nothing for migrate shapes.
+            return
 
         if (this.body) {
             if (!Box2dUtils.typeMatches(this.rigidBodyType, this.body.GetType())) {

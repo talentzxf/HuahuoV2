@@ -24,6 +24,7 @@ import {ColorPropertyX} from "../InspectorX/ColorPropertyX";
 import {ComponentPropertyX} from "../InspectorX/ComponentPropertyX";
 import {ArrayPropertyX} from "../InspectorX/ArrayPropertyX";
 import {ShapePropertyX} from "../InspectorX/ShapePropertyX";
+import {CustomFieldPropertyX} from "../InspectorX/CustomFieldPropertyX";
 
 // Avoid being imported twice.
 // TODO: Any less dirty approach ??
@@ -53,5 +54,6 @@ if (!window["IsTypesRegistered"]) {
     RegisterReactGenerator(PropertyType.VECTOR2, Vector2PropertyX)
     RegisterReactGenerator(PropertyType.ARRAY, ArrayPropertyX)
     RegisterReactGenerator(PropertyType.SHAPE, ShapePropertyX)
+    RegisterReactGenerator(PropertyType.CUSTOMFIELD, CustomFieldPropertyX)
     window["IsTypeRegistered"] = true
 }

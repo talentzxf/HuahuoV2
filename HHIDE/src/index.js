@@ -18,8 +18,7 @@ import {ProjectListForm} from "./UIComponents/ProjectListForm";
 import {ProjectInfoForm} from "./UIComponents/ProjectInfoForm";
 import {HHEditorToolBar} from "./UIComponents/HHEditorToolBar";
 import {HHHistoryCommandList} from "./UIComponents/HHHistoryCommandList"
-import {IconSelectDivGenerator} from "./Inspector/CustomFieldDivGenerators/IconSelectDivGenerator"
-import {EventGraphEditorDivGenerator} from "./Inspector/CustomFieldDivGenerators/EventGraphEditorDivGenerator"
+import {EventGraphEditorX} from "./InspectorX/CustomFieldReactGenerator/EventGraphEditorX"
 import {SelectIconForm} from "./Inspector/CustomFieldDivGenerators/SelectIconForm";
 import {EventNode} from "../../HHEngineJS/src/EventGraph/Nodes/EventNode";
 import {ActionNode} from "../../HHEngineJS/src/EventGraph/Nodes/ActionNode";

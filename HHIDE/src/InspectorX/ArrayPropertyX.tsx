@@ -53,9 +53,9 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> implements Prop
         }
 
         return (
-            <PropertyEntry property={property}>
+            <PropertyEntry className="col-span-2" property={property}>
                 <button className={CSSUtils.getButtonClass("indigo")} onClick={this.onClicked.bind(this)}>+</button>
-                <div>
+                <div className="grid grid-cols-2 gap-2">
                     {
                         reactElements
                     }

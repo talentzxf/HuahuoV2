@@ -897,6 +897,7 @@ abstract class BaseShapeJS {
 
             if (!this.customComponentMap.has(componentRawObj.ptr)) {
                 let component = null
+
                 let componentConstructor = clzObjectFactory.GetClassConstructor(componentRawObj.GetTypeName())
                 if (componentConstructor) {
                     component = new componentConstructor(componentRawObj, this.isMirage)

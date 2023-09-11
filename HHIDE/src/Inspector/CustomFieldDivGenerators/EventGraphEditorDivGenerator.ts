@@ -1,9 +1,7 @@
-import {CustomFieldContentDivGenerator} from "hhcommoncomponents";
+import {CustomFieldContentDivGenerator, Property} from "hhcommoncomponents";
 import {EventGraphComponent} from "hhenginejs";
-import {Property} from "hhcommoncomponents";
 import {formManager} from "../../Utilities/FormManager";
 import {EventGraphForm} from "../../EventGraphUI/EventGraphForm";
-import {registerCustomFieldContentDivGeneratorConstructor} from "../../ComponentProxy/ComponentProxy";
 
 class EventGraphEditorDivGenerator implements CustomFieldContentDivGenerator{
     targetComponent: EventGraphComponent
@@ -27,5 +25,5 @@ class EventGraphEditorDivGenerator implements CustomFieldContentDivGenerator{
     }
 }
 
-registerCustomFieldContentDivGeneratorConstructor(EventGraphComponent.name, "eventGraph", EventGraphEditorDivGenerator)
+// registerCustomFieldContentDivGeneratorConstructor(EventGraphComponent.name, "eventGraph", EventGraphEditorDivGenerator)
 export {EventGraphEditorDivGenerator}

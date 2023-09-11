@@ -6,6 +6,7 @@ import {EventParam} from "./EventBus/EventBus";
 import {EventEmitter} from "./EventBus/EventEmitter";
 import {getFullEventName, splitFullEventName} from "./EventBus/EventBus";
 import {radToDeg, degToRad} from "./Math/MathFunctions";
+import {CustomFieldContentXGenerator} from "./Properties/PropertyConfig";
 
 import {
     pointsNear,
@@ -25,7 +26,12 @@ import {HHToast} from "./Toast/Toast";
 import {eventBus, GraphEvent} from "./EventBus/EventBus";
 import {mirrorPoint} from "./Math/MathFunctions";
 import {IsValidWrappedObject} from "./WrappedObjectUtils"
-import {CustomFieldConfig, CustomFieldContentDivGenerator, ShapeArrayProperty, StringProperty} from "./Properties/PropertyConfig";
+import {
+    CustomFieldConfig,
+    CustomFieldContentDivGenerator,
+    ShapeArrayProperty,
+    StringProperty
+} from "./Properties/PropertyConfig";
 import {capitalizeFirstLetter} from "./Properties/Utils";
 
 if (!window.i18n) {
@@ -42,6 +48,6 @@ export {
     CustomFieldContentDivGenerator, CustomFieldConfig,
     GraphEvent, EventParam, EventEmitter, getParameterNameAtIdx,
     getFullEventName, splitFullEventName, ShapeArrayProperty,
-    capitalizeFirstLetter, StringProperty, radToDeg, degToRad
+    capitalizeFirstLetter, StringProperty, radToDeg, degToRad, CustomFieldContentXGenerator
 }
 

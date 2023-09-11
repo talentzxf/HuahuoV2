@@ -1,11 +1,8 @@
-import {CustomFieldContentDivGenerator} from "hhcommoncomponents";
+import {CustomFieldContentDivGenerator, Property} from "hhcommoncomponents";
 import {formManager} from "../../Utilities/FormManager";
 import {SelectIconForm} from "./SelectIconForm";
-import {Property} from "hhcommoncomponents";
 import {AbstractComponent} from "hhenginejs";
-import {Particles} from "hhenginejs";
 import {HHRefreshableIconComponent} from "../InputComponents/HHRefreshableIconComponent";
-import {registerCustomFieldContentDivGeneratorConstructor} from "../../ComponentProxy/ComponentProxy";
 
 class IconSelectDivGenerator implements CustomFieldContentDivGenerator{
     targetComponent: AbstractComponent
@@ -59,6 +56,6 @@ class IconSelectDivGenerator implements CustomFieldContentDivGenerator{
 }
 
 // TODO: How to get the field name in a more elegant way ??
-registerCustomFieldContentDivGeneratorConstructor(Particles.name, "particleShape", IconSelectDivGenerator)
+// registerCustomFieldContentDivGeneratorConstructor(Particles.name, "particleShape", IconSelectDivGenerator)
 
 export {IconSelectDivGenerator}

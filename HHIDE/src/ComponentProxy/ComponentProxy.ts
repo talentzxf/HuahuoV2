@@ -7,17 +7,16 @@ import {CustomFieldConfig} from "hhcommoncomponents";
 import {propertySheetFactory} from "./PropertySheetBuilderFactory";
 
 // Key is: className#fieldName
-// Value is the constructor of the divContent generator
-let customFieldContentDivGeneratorMap: Map<string, Function> = new Map()
-
-function registerCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string, constructor: Function) {
-    let fieldFullName = className + "#" + fieldName
-    customFieldContentDivGeneratorMap.set(fieldFullName, constructor)
+// Value is the React.Component of this field
+let customFieldContentXMap: Map<string, React.Component> = new Map()
+function registerCustomFieldPropertyX(className: string, fieldName: string, reactComponent){
+    let fieldFulleName = className + "#" + fieldName
+    customFieldContentXMap.set(fieldFulleName, reactComponent)
 }
 
-function getCustomFieldContentDivGeneratorConstructor(className: string, fieldName: string): Function {
+function getCustomFieldXComponent(className: string, fieldName: string): React.Component {
     let fieldFullName = className + "#" + fieldName
-    return customFieldContentDivGeneratorMap.get(fieldFullName)
+    return customFieldContentXMap.get(fieldFullName)
 }
 
 class ComponentProxyHandler {
@@ -151,19 +150,18 @@ class ComponentProxyHandler {
         if (properties != null) {
             for (let propertyMeta of properties) {
                 if (propertyMeta.type == PropertyCategory.customField) {
-                    if (propertyMeta.config == null || propertyMeta.config["contentDivGenerator"] == null) {
+                    if (propertyMeta.config == null || propertyMeta.config["contentGenerator"] == null) {
 
                         propertyMeta = {...propertyMeta} // Clone it to avoid affecting other objects. Shallow copy should be enough.
 
                         let constructorName = Object.getPrototypeOf(thisComponent).constructor.name
 
-                        let divGeneratorConstructor = getCustomFieldContentDivGeneratorConstructor(constructorName, propertyMeta.key)
+                        let reactComponent = getCustomFieldXComponent(constructorName, propertyMeta.key)
 
-                        // @ts-ignore
-                        let contentDivGenerator = new divGeneratorConstructor(thisComponent)
                         propertyMeta.config = {
                             fieldName: propertyMeta["key"],
-                            contentDivGenerator: contentDivGenerator
+                            targetComponent: this,
+                            contentGenerator: reactComponent
                         } as CustomFieldConfig
                     }
                 }
@@ -198,4 +196,4 @@ class EditorComponentProxy {
     }
 }
 
-export {EditorComponentProxy, registerCustomFieldContentDivGeneratorConstructor}
+export {EditorComponentProxy, registerCustomFieldPropertyX}
