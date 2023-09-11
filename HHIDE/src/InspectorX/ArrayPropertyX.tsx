@@ -1,27 +1,33 @@
 import * as React from "react"
 import {GetPropertyReactGenerator, PropertyEntry, PropertyProps} from "./BasePropertyX";
 import {CSSUtils} from "../Utilities/CSSUtils";
-import {ReactNode} from "react";
 
-// TODO: Havn't tested yet.
 class ArrayPropertyX extends React.Component<PropertyProps, any> {
-    placeHolderElement: ReactNode = null
-
     onClicked(e: Event) {
         e.preventDefault()
         e.stopPropagation()
 
-        if (this.placeHolderElement == null) {
-            this.placeHolderElement = this.createElement()
-        }
+        let property = this.props.property
+        property.inserter(property.initValue)
+
+        this.forceUpdate()
     }
 
-    createElement() {
-        let elementType = this.props.property.elementType
+    createReactNode(childElement, idx) {
+        let property = this.props.property
+        let elementType = property.elementType
         let generator = GetPropertyReactGenerator(elementType)
         if (generator) {
             return React.createElement(generator, {
-                key: Math.random()
+                key: idx,
+                property: {
+                    setter: (shape) => {
+                        property.updater(idx, shape)
+                    },
+                    getter: () => {
+                        return childElement
+                    }
+                }
             })
         }
 
@@ -31,13 +37,13 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> {
     render() {
         let property = this.props.property
 
-        let index = 0
-        let lis = []
+        let idx = 0
+        let reactElements = []
         let childElements = property.getter()
         for (let element of childElements) {
-            let ele = this.createElement()
+            let ele = this.createReactNode(element, idx++)
             if (ele) {
-                childElements.push(ele)
+                reactElements.push(ele)
             } else {
                 console.warn("Unknown generator:" + element.property.key + " type index:" + element.property.type)
             }
@@ -48,10 +54,7 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> {
                 <button className={CSSUtils.getButtonClass("indigo")} onClick={this.onClicked.bind(this)}>+</button>
                 <div>
                     {
-                        this.placeHolderElement
-                    }
-                    {
-                        childElements
+                        reactElements
                     }
                 </div>
             </PropertyEntry>

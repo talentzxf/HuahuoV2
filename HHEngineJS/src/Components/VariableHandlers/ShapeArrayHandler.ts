@@ -34,11 +34,12 @@ class ShapeArrayHandler {
         component.shapeArrayFieldNames.add(fieldName)
         component.rawObj.RegisterShapeArrayValue(fieldName)
 
-        let inserterName = "insert" + capitalizeFirstLetter(fieldName)
-
         internalProcessComponent(component, fieldName, {
             getter: () => {
                 return new FieldShapeArrayIterable(component.rawObj.GetShapeArrayValue(fieldName))
+            },
+            updater: (idx, shape): boolean => {
+                return component.rawObj.GetShapeArrayValueForWrite(fieldName).UpdateShape(idx, shape)
             },
             contains: (val: BaseShapeJS) => {
                 if (!IsValidWrappedObject(component.rawObj.GetShapeArrayValue(fieldName))) {
@@ -48,24 +49,24 @@ class ShapeArrayHandler {
                 return component.rawObj.GetShapeArrayValue(fieldName).ContainShape(val.getRawObject())
             },
             inserter: (val: BaseShapeJS) => {
-                if(val == component.baseShape) // This will cause stack overflow.
-                    return false
+                if (val == component.baseShape) // This will cause stack overflow.
+                    return -1
 
                 if (!IsValidWrappedObject(component.rawObj.GetShapeArrayValue(fieldName))) {
                     component.rawObj.CreateShapeArrayValue(fieldName)
-                } else if(!propertyEntry.config.allowDuplication){
-                    if( component.rawObj.GetShapeArrayValue(fieldName).ContainShape(val.getRawObject())){
-                        return false
+                } else if (!propertyEntry.config.allowDuplication) {
+                    if (val && component.rawObj.GetShapeArrayValue(fieldName).ContainShape(val.getRawObject())) {
+                        return -1
                     }
                 }
 
-                component.rawObj.GetShapeArrayValueForWrite(fieldName).InsertShape(val.getRawObject())
+                let shapeIdx = component.rawObj.GetShapeArrayValueForWrite(fieldName).InsertShape(val == null ? 0 : val.getRawObject())
 
                 if (component.baseShape)
                     component.baseShape.update(true)
                 component.callHandlers(fieldName, null) // Is the val parameter really matters in this case?
 
-                return true
+                return shapeIdx
             },
             deleter: (val) => {
                 component.rawObj.GetShapeArrayValue(fieldName).DeleteShape(val)
