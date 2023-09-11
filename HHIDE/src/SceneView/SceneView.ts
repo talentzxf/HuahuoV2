@@ -12,6 +12,7 @@ import {sceneViewManager} from "./SceneViewManager";
 import {SVGFiles} from "../Utilities/Svgs";
 import {formManager} from "../Utilities/FormManager"
 import {EventGraphForm} from "../EventGraphUI/EventGraphForm";
+import {CSSUtils} from "../Utilities/CSSUtils";
 
 function allReadyExecute(fn: Function) {
     i18n.ExecuteAfterInited(
@@ -180,7 +181,7 @@ class SceneView extends HTMLElement {
         }
     }
 
-    openFrameEventGraphForm(){
+    openFrameEventGraphForm() {
         // let eventGraphForm = formManager.openForm(EventGraphForm)
         // eventGraphForm.setTargetComponent()
     }
@@ -252,12 +253,14 @@ class SceneView extends HTMLElement {
 
     createGizmos() {
         this.gizmoContainer = document.createElement("div")
+        this.gizmoContainer.className = "divide-y"
         this.gizmoContainer.style.position = "absolute"
         this.gizmoContainer.style.display = "flex"
         this.gizmoContainer.style.flexDirection = "column"
         this.appendChild(this.gizmoContainer)
 
         this.zoomInBtn = document.createElement("button")
+        this.zoomInBtn.className = CSSUtils.getButtonClass("violet") + "ease-linear transition-all rounded-t text-lg hover:text-2xl p-2"
         this.zoomInBtn.innerHTML = (window as any).i18n.t("zoomin")
         this.zoomInBtn.style.userSelect = 'none'
         this.zoomInBtn.onclick = () => {
@@ -266,6 +269,7 @@ class SceneView extends HTMLElement {
         this.gizmoContainer.appendChild(this.zoomInBtn)
 
         this.zoomOutBtn = document.createElement("button")
+        this.zoomOutBtn.className = CSSUtils.getButtonClass("violet") + "ease-linear transition-all text-lg hover:text-2xl p-2"
         this.zoomOutBtn.innerHTML = (window as any).i18n.t("zoomout")
         this.zoomOutBtn.style.userSelect = 'none'
         this.zoomOutBtn.onclick = () => {
@@ -274,6 +278,7 @@ class SceneView extends HTMLElement {
         this.gizmoContainer.appendChild(this.zoomOutBtn)
 
         this.zoomResetBtn = document.createElement("button")
+        this.zoomResetBtn.className = CSSUtils.getButtonClass("violet") + "ease-linear transition-all rounded-b hover:text-2xl p-2"
         this.zoomResetBtn.innerHTML = (window as any).i18n.t("reset")
         this.zoomResetBtn.style.userSelect = 'none'
         this.zoomResetBtn.onclick = () => {
@@ -450,7 +455,7 @@ class SceneView extends HTMLElement {
         this.Redraw()
 
         if (this.gizmoContainer)
-            this.gizmoContainer.style.top = this.canvas.offsetHeight + timelineHeight + "px"
+            this.gizmoContainer.style.top = this.canvas.offsetHeight + timelineHeight - this.gizmoContainer.clientHeight + "px"
 
         // Refresh sidebar content.
         let sidebars = document.querySelectorAll("hh-sidebar")
