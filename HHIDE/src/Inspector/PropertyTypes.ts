@@ -22,6 +22,7 @@ import {ComponentPropertyX} from "../InspectorX/ComponentPropertyX";
 import {ArrayPropertyX} from "../InspectorX/ArrayPropertyX";
 import {ShapePropertyX} from "../InspectorX/ShapePropertyX";
 import {CustomFieldPropertyX} from "../InspectorX/CustomFieldPropertyX";
+import {ButtonPropertyX} from "../InspectorX/ButtonPropertyX";
 
 // Avoid being imported twice.
 // TODO: Any less dirty approach ??
@@ -29,7 +30,6 @@ if (!window["IsTypesRegistered"]) {
     RegisterDivGenerator(PropertyType.BOOLEAN, booleanPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.VECTOR3, vector3PropertyGenerator)
     RegisterDivGenerator(PropertyType.STRING, stringPropertyDivGenerator)
-    RegisterDivGenerator(PropertyType.BUTTON, buttonPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.GROUP, groupPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.SHAPE, referencePropertyDivGenerator)
     RegisterDivGenerator(PropertyType.PANEL, panelPropertyDivGenerator)
@@ -41,6 +41,7 @@ if (!window["IsTypesRegistered"]) {
     RegisterDivGenerator(PropertyType.CUSTOMFIELD, customFieldDivGenerator)
 
     RegisterReactGenerator(PropertyType.COLOR, ColorPropertyX)
+    RegisterReactGenerator(PropertyType.BUTTON, ButtonPropertyX)
     RegisterReactGenerator(PropertyType.COMPONENT, ComponentPropertyX)
     RegisterReactGenerator(PropertyType.PANEL, PanelPropertyX)
     RegisterReactGenerator(PropertyType.STRING, StringPropertyX)
