@@ -12,6 +12,7 @@ import {projectInfo} from "../SceneView/ProjectInfo";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
 import {ExportImageForm} from "./ExportForm";
 import {fileLoader} from "../SceneView/FileLoader";
+import {ProjectListFormX} from "./ProjectListFormX";
 
 @CustomElement({
     selector: "hh-tool-bar"
@@ -123,11 +124,16 @@ class HHToolBar extends HTMLElement {
     listProjects(pageNo: number = 0, pageSize: number = 10) {
         let _this = this
         api.listProjects((listProjectResult) => {
-            let form = formManager.openForm(ProjectListForm)
             let totalPage = listProjectResult.totalCount / pageSize
-            form.setUpdateListFunctor(_this.listProjects.bind(_this))
-            form.updateList(totalPage, pageNo, pageSize, listProjectResult.binaryFiles)
-            form.setTitle(i18n.t("yourProjects"))
+
+            // let form = formManager.openForm(ProjectListForm)
+            let form = formManager.openReactForm(ProjectListFormX, {
+                updateListFunction: _this.listProjects.bind(_this),
+                title: i18n.t("yourProjects"),
+                totalPage: totalPage,
+                pageNo: pageNo,
+                pageSize: pageSize
+            })
         }, pageNo, pageSize)
     }
 
