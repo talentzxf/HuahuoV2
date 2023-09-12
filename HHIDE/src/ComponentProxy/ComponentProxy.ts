@@ -9,7 +9,8 @@ import {propertySheetFactory} from "./PropertySheetBuilderFactory";
 // Key is: className#fieldName
 // Value is the React.Component of this field
 let customFieldContentXMap: Map<string, React.Component> = new Map()
-function registerCustomFieldPropertyX(className: string, fieldName: string, reactComponent){
+
+function registerCustomFieldPropertyX(className: string, fieldName: string, reactComponent) {
     let fieldFulleName = className + "#" + fieldName
     customFieldContentXMap.set(fieldFulleName, reactComponent)
 }
@@ -73,7 +74,7 @@ class ComponentProxyHandler {
         }
 
         if (this[propKey] && this[propKey] instanceof Function) {
-            return this[propKey]
+            return this[propKey].bind(this)
         }
 
         return origProperty
@@ -188,6 +189,10 @@ class ComponentProxyHandler {
 
 class EditorComponentProxy {
     static CreateProxy(component: AbstractComponent) {
+        if (component.getProxy != null) { // Already proxied.
+            return component
+        }
+
         let proxyHandler = new ComponentProxyHandler(component)
         let proxy = new Proxy(component, proxyHandler)
         proxyHandler.setProxy(proxy)

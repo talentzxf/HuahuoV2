@@ -4,6 +4,7 @@ import {FormProps} from "../Utilities/FormManager";
 import {huahuoEngine} from "hhenginejs";
 import {AddComponentCommand} from "../RedoUndo/AddComponentCommand";
 import {undoManager} from "../RedoUndo/UndoManager";
+import {EditorComponentProxy} from "../ComponentProxy/ComponentProxy";
 
 type ComponentListFormProps = FormProps & {
     componentNames: string[],
@@ -15,7 +16,10 @@ class ComponentListFormX extends React.Component<ComponentListFormProps, any> {
         e.preventDefault()
         let componentName = e.target.dataset.componentName
         let newComponent = huahuoEngine.produceObject(componentName)
-        let addComponentCommand = new AddComponentCommand(this.props.targetObject, newComponent)
+
+        let proxiedComponent = EditorComponentProxy.CreateProxy(newComponent)
+
+        let addComponentCommand = new AddComponentCommand(this.props.targetObject, proxiedComponent)
         addComponentCommand.DoCommand()
 
         undoManager.PushCommand(addComponentCommand)
