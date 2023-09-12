@@ -6,6 +6,7 @@ import {GetPropertyReactGenerator} from "./BasePropertyX";
 import {formManager} from "../Utilities/FormManager";
 import {huahuoEngine} from "hhenginejs";
 import {ComponentListFormX} from "./ComponentListFormX";
+import {HHToast} from "hhcommoncomponents";
 
 function getBtnClz() {
     let btnClz = CSSUtils.getButtonClass("teal")
@@ -163,7 +164,10 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
                 }
                 {
                     this.state?.selectedObject?.saveAsKeyFrame &&
-                    <button className={getBtnClz()}> {i18n.t("inspector.SaveAsKeyFrame")} </button>
+                    <button className={getBtnClz()} onClick={() => {
+                        this.state.selectedObject.saveAsKeyFrame()
+                        HHToast.info(i18n.t("toast.keyframeSaved"))
+                    }}> {i18n.t("inspector.SaveAsKeyFrame")} </button>
                 }
                 {
                     this.state?.selectedObject?.isLocked && <ToggleButton trueStateName={i18n.t("inspector.LockObject")}
