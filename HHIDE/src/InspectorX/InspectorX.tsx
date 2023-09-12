@@ -15,7 +15,6 @@ function getBtnClz() {
 }
 
 type ToggleButtonState = {
-    btnName: string
     isTrueState: boolean
 }
 
@@ -24,27 +23,23 @@ type ToggleButtonProps = {
     falseStateName: string
     onTrueState?: Function
     onFalseState?: Function
+    getCurrentState?: Function
 }
 
 class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState> {
     state = {
-        btnName: "Unknown State",
         isTrueState: true
     }
 
     constructor(props) {
         super(props);
-
-        this.state.btnName = this.props.trueStateName
     }
 
     onClick(e: Event) {
         this.state.isTrueState = !this.state.isTrueState
         if (this.state.isTrueState) {
-            this.state.btnName = this.props.trueStateName
             this.props.onTrueState && this.props?.onTrueState()
         } else {
-            this.state.btnName = this.props.falseStateName
             this.props.onFalseState && this.props?.onFalseState()
         }
 
@@ -52,10 +47,15 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
     }
 
     render() {
+
+        if (this.props.getCurrentState) {
+            this.state.isTrueState = this.props.getCurrentState()
+        }
+
         return (
             <button className={getBtnClz()}
                     onClick={this.onClick.bind(this)}>
-                {this.state.btnName}
+                {this.state.isTrueState ? this.props.trueStateName : this.props.falseStateName}
             </button>
         )
     }
@@ -149,6 +149,8 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
     }
 
     createButtonGroup() {
+        let targetObject = this.state.selectedObject
+
         return (
             <div id="buttons" className="inline-flex rounded-md shadow-sm divide-x divide-gray-300">
                 {
@@ -165,18 +167,32 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
                 {
                     this.state?.selectedObject?.saveAsKeyFrame &&
                     <button className={getBtnClz()} onClick={() => {
-                        this.state.selectedObject.saveAsKeyFrame()
+                        targetObject.saveAsKeyFrame()
                         HHToast.info(i18n.t("toast.keyframeSaved"))
                     }}> {i18n.t("inspector.SaveAsKeyFrame")} </button>
                 }
                 {
                     this.state?.selectedObject?.isLocked && <ToggleButton trueStateName={i18n.t("inspector.LockObject")}
-                                                                          falseStateName={i18n.t("inspector.UnlockObject")}></ToggleButton>
+                                                                          falseStateName={i18n.t("inspector.UnlockObject")}
+                                                                          onTrueState={() => {
+                                                                              targetObject.setIsLocked(false)
+                                                                          }}
+                                                                          onFalseState={() => {
+                                                                              targetObject.setIsLocked(true)
+                                                                          }}
+                                                                          getCurrentState={() => {
+                                                                              return !targetObject.isLocked()
+                                                                          }}></ToggleButton>
                 }
                 {
                     this.state?.selectedObject?.isShowCenterSelector &&
                     <ToggleButton trueStateName={i18n.t("inspector.ShowCenterSelector")}
-                                  falseStateName={i18n.t("inspector.HideCenterSelector")}></ToggleButton>
+                                  falseStateName={i18n.t("inspector.HideCenterSelector")}
+                                  onTrueState={targetObject.hideCenterSelector}
+                                  onFalseState={targetObject.showCenterSelector}
+                                  getCurrentState={() => {
+                                      return !targetObject.isShowCenterSelector()
+                                  }}></ToggleButton>
                 }
             </div>
         )
