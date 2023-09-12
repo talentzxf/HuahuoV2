@@ -238,11 +238,15 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
     }
 
     onValueChanged(val: any): void {
+        console.log(val)
     }
 
     refresh() {
         let colorStopArray = this.props.property.getter()
         let projectId = colorStopArrayPtrProjectIdMap.get(colorStopArray.ptr)
+        if (projectId == null) // Won't update the canvas when first mounted (paper.project has not been created yet).
+            return
+
         let oldProjectId = -1
         if (paper.project.index != projectId) {
             oldProjectId = paper.project.index
@@ -379,6 +383,9 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
 
     render() {
         registerPropertyChangeListener(this, this.props.property)
+
+        // Refresh pen colors.
+        this.refresh()
 
         return (
             <PropertyEntry className="col-span-2" onKeyUp={this.onKeyUp.bind(this)} property={this.props.property}>
