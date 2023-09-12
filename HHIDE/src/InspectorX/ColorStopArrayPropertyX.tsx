@@ -191,17 +191,23 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
 
     colorStopValueSetterFunctionMap: Map<ColorStop, Function> = new Map()
 
-    colorStopValueSetter(colorStop) {
+    colorStopValueSetter(colorStopIdentifier: number) {
+        if (!this.colorStopValueSetterFunctionMap.has(colorStopIdentifier)) {
+            this.colorStopValueSetterFunctionMap.set(colorStopIdentifier, (value) => {
+                let pens = this.pens.filter((penInArray) => {
+                    return penInArray.colorStop.identifier == colorStopIdentifier
+                })
+                if (pens.length != 1)
+                    return
 
-        if (!this.colorStopValueSetterFunctionMap.has(colorStop.identifier)) {
-            this.colorStopValueSetterFunctionMap.set(colorStop.identifier, (value) => {
+                let colorStop = pens[0].colorStop
                 colorStop.value = value
                 this.props.property.updater(colorStop)
                 this.refresh()
             })
         }
 
-        return this.colorStopValueSetterFunctionMap.get(colorStop.identifier)
+        return this.colorStopValueSetterFunctionMap.get(colorStopIdentifier)
     }
 
     onPenMouseDrag(evt: paper.MouseEvent) {
@@ -225,7 +231,7 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
         newValue = Math.min(newValue, 1.0)
         newValue = Math.max(0.0, newValue)
 
-        let setFieldValueCommand = new SetFieldValueCommand(this.colorStopValueSetter(colorStop), oldValue, newValue)
+        let setFieldValueCommand = new SetFieldValueCommand(this.colorStopValueSetter(colorStop.identifier), oldValue, newValue)
 
         setFieldValueCommand.DoCommand()
         undoManager.PushCommand(setFieldValueCommand)
