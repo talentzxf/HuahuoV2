@@ -110,7 +110,8 @@ class ProjectListFormX extends React.Component<any, any> {
                             </div>
                         </div>
 
-                        <nav aria-label="Page navigation example">
+                        <div aria-label="Page navigation" className="flex">
+                            <div className="w-full"></div>
                             <ul className="flex items-center -space-x-px h-8 text-sm">
                                 <li>
                                     <a
@@ -200,7 +201,8 @@ class ProjectListFormX extends React.Component<any, any> {
                                     </a>
                                 </li>
                             </ul>
-                        </nav>
+                            <div className="w-full"></div>
+                        </div>
                     </form>
                 </div>
             </div>
