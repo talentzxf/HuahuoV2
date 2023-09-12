@@ -115,7 +115,7 @@ class Pen {
     }
 }
 
-let colorStopArrayPtrProjectIdMap = new Map()
+let canvasPaperProjectMap = new Map()
 
 type ColorStopArrayPropertyState = {
     colorTitle: string
@@ -159,14 +159,14 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
     documentMouseDownFunction
 
     componentDidMount() {
-        let property = this.props.property
-        let colorStopArray = property.getter()
-        let colorStopArrayPtr = colorStopArray.ptr
+        if (this.canvasRef.current == null)
+            return
 
+        let property = this.props.property
         let previousPaperProject = paper.project
         paper.setup(this.canvasRef.current)
         let projectId = paper.project.index
-        colorStopArrayPtrProjectIdMap.set(colorStopArrayPtr, projectId)
+        canvasPaperProjectMap.set(this.canvasRef.current, projectId)
         paper.project.view.translate(new paper.Point(rectangleOffset, 0))
 
         this.rectangle = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(rectangleWidth, rectangleHeight))
@@ -278,12 +278,16 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
     }
 
     refresh() {
+        if (this.canvasRef.current == null) {
+            return
+        }
+
         let colorStopArray = this.props.property.getter()
-        let projectId = colorStopArrayPtrProjectIdMap.get(colorStopArray.ptr)
+        let projectId = canvasPaperProjectMap.get(this.canvasRef.current)
         if (projectId == null) // Won't update the canvas when first mounted (paper.project has not been created yet).
             return
 
-        let oldProjectId = -1
+        let oldProjectId: number = -1
         if (paper.project.index != projectId) {
             oldProjectId = paper.project.index
 
