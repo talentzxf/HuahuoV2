@@ -4,9 +4,8 @@ import {PropertyChangeListener} from "./PropertyChangeListener";
 
 const eps = 0.01
 
-type PropertyEntryProps = {
+interface PropertyEntryProps extends React.HTMLAttributes<HTMLDivElement> {
     property: Property,
-    className?: string
     children,
     noDefaultTitle?: boolean
 }
@@ -19,15 +18,15 @@ class PropertyEntry extends React.Component<PropertyEntryProps, PropertyEntrySta
     }
 
     render() {
-        let property = this.props.property
+        let {property, noDefaultTitle, children, ...rest} = this.props
 
         return (
-            <div className={this.props.className || this.getDefaultClassName()}>
+            <div className={this.props.className || this.getDefaultClassName()} {...rest}>
                 {
-                    !this.props.noDefaultTitle && property.key &&
-                    <span className="p-x-1 m-x-1">{i18n.t(property.key)}</span>
+                    !noDefaultTitle && property.key &&
+                    <span className="px-1 mx-1">{i18n.t(property.key)}</span>
                 }
-                {this.props.children}
+                {children}
             </div>
         )
     }

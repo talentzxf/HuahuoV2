@@ -74,6 +74,7 @@
   "StrokeComponent": "Stroke Component",
   "FillColorComponent": "Fill Color Component",
   "FollowCurveComponent": "Move Along Curve Edge",
+  "RadialGradientComponent": "Gradient Color",
   "RigidBody": "RigidBody",
   "inspector": {
     "CurveInputPrompt": "FrameId:{{frameId}}, value:{{value}}",

@@ -74,6 +74,7 @@
   "StrokeComponent": "描边颜色",
   "FillColorComponent": "填充颜色",
   "FollowCurveComponent": "沿着形状边沿运动",
+  "RadialGradientComponent": "渐变色组件",
   "RigidBody": "刚体",
   "inspector": {
     "CurveInputPrompt": "关键帧:{{frameId}}, 值:{{value}}",

@@ -1,7 +1,6 @@
 import * as React from "react"
 import reactCss from "reactcss"
 import {SketchPicker} from 'react-color'
-import {Property} from "hhcommoncomponents"
 import {SetFieldValueCommand} from "../RedoUndo/SetFieldValueCommand";
 import {undoManager} from "../RedoUndo/UndoManager";
 import {eps, PropertyEntry, PropertyProps, registerPropertyChangeListener} from "./BasePropertyX";
