@@ -8,7 +8,7 @@ type StringPropertyState = {
     value: string
 }
 
-class StringPropertyX extends React.Component<PropertyProps, StringPropertyState> implements PropertyChangeListener{
+class StringPropertyX extends React.Component<PropertyProps, StringPropertyState> implements PropertyChangeListener {
     state: StringPropertyState = {
         value: "Unknown"
     }
@@ -27,7 +27,7 @@ class StringPropertyX extends React.Component<PropertyProps, StringPropertyState
         this.setState(this.state)
     }
 
-    getContent(){
+    getContent() {
         let property = this.props.property
 
         let textValue = i18n.t(property.getter())
@@ -35,13 +35,26 @@ class StringPropertyX extends React.Component<PropertyProps, StringPropertyState
         if (!property.setter) {
             return <span className="p-x-1 m-x-1 text-gray-400"> {textValue} </span>
         } else {
-            return (
-                <div>
-                    <input className={CSSUtils.getInputStyle()}
-                           value={textValue} onChange={this.onTextChanged.bind(this)}>
-                    </input>
-                </div>
-            )
+            if (property.config && property.config.options && property.config.options.length > 0) {
+                return (
+                    <select onChange={this.onTextChanged.bind(this)}>
+                        {
+                            property.config.options.map((option: string, idx: number) => {
+                                return (<option key={idx} value={option}>{option}</option>)
+                            })
+                        }
+                    </select>
+                )
+
+            } else {
+                return (
+                    <div>
+                        <input className={CSSUtils.getInputStyle()}
+                               value={textValue} onChange={this.onTextChanged.bind(this)}>
+                        </input>
+                    </div>
+                )
+            }
         }
     }
 
@@ -49,7 +62,7 @@ class StringPropertyX extends React.Component<PropertyProps, StringPropertyState
         registerPropertyChangeListener(this, this.props.property)
 
         return (
-            <PropertyEntry property={this.props.property} >
+            <PropertyEntry property={this.props.property}>
                 {
                     this.getContent()
                 }
@@ -59,4 +72,5 @@ class StringPropertyX extends React.Component<PropertyProps, StringPropertyState
 
 
 }
+
 export {StringPropertyX}

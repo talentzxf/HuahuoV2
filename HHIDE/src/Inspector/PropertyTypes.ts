@@ -1,7 +1,5 @@
 import {RegisterDivGenerator} from "./BasePropertyDivGenerator";
 import {PropertyType} from "hhcommoncomponents"
-import {stringPropertyDivGenerator} from "./StringPropertyDivGenerator";
-import {buttonPropertyDivGenerator} from "./ButtonPropertyDivGenerator";
 import {groupPropertyDivGenerator} from "./GroupPropertyDivGenerator";
 import {referencePropertyDivGenerator} from "./ReferencePropertyDivGenerator";
 import {componentPropertyDivGenerator, panelPropertyDivGenerator} from "./PanelPropertyDivGenerator";
@@ -29,7 +27,6 @@ import {ButtonPropertyX} from "../InspectorX/ButtonPropertyX";
 if (!window["IsTypesRegistered"]) {
     RegisterDivGenerator(PropertyType.BOOLEAN, booleanPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.VECTOR3, vector3PropertyGenerator)
-    RegisterDivGenerator(PropertyType.STRING, stringPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.GROUP, groupPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.SHAPE, referencePropertyDivGenerator)
     RegisterDivGenerator(PropertyType.PANEL, panelPropertyDivGenerator)
