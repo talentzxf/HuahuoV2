@@ -28,13 +28,7 @@ import {RemoveComponentCommand} from "./RedoUndo/RemoveComponentCommand"
 import "./index.css"
 
 // Input components
-import {HHFloatInput} from "./Inspector/InputComponents/HHFloatInput";
-import {HHVector2Input} from "./Inspector/InputComponents/HHVector2Input";
-import {HHColorInput} from "./Inspector/InputComponents/HHColorInput";
-import {HHColorStopArrayInput} from "./Inspector/InputComponents/HHColorStopArray";
 import {HHRefreshableDiv} from "./Inspector/InputComponents/HHRefreshableDiv";
-
-import "vanilla-colorful"
 
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";

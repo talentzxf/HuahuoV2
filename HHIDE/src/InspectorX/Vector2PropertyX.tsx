@@ -11,7 +11,7 @@ type Vector2PropertyState = {
     y: number
 }
 
-class Vector2PropertyX extends React.Component<PropertyProps, Vector2PropertyState> implements PropertyChangeListener{
+class Vector2PropertyX extends React.Component<PropertyProps, Vector2PropertyState> implements PropertyChangeListener {
 
     state: Vector2PropertyState = {
         x: -1.0,
@@ -20,10 +20,17 @@ class Vector2PropertyX extends React.Component<PropertyProps, Vector2PropertySta
 
     valueFieldChanged(val: string, fieldName: string) {
         let property = this.props.property
-        let currentValue = property.getter()
+        let currentValueOrigin = property.getter()
 
         if (property.setter) {
-            let newValue = currentValue.clone()
+            let currentValue = {
+                x: currentValueOrigin.x,
+                y: currentValueOrigin.y
+            }
+            let newValue = {
+                x: currentValueOrigin.x,
+                y: currentValueOrigin.y
+            }
             newValue[fieldName] = Number(val)
 
             let command = new SetFieldValueCommand(property.setter, currentValue, newValue)

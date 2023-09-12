@@ -2,7 +2,6 @@ import {RegisterDivGenerator} from "./BasePropertyDivGenerator";
 import {PropertyType} from "hhcommoncomponents"
 import {groupPropertyDivGenerator} from "./GroupPropertyDivGenerator";
 import {panelPropertyDivGenerator} from "./PanelPropertyDivGenerator";
-import {colorStopArrayPropertyDivGenerator} from "./ColorStopArrayPropertyDivGenerator";
 import {booleanPropertyDivGenerator} from "./BooleanPropertyDivGenerator";
 import {keyFramesPropertyDivGenerator} from "./KeyFramesPropertyDivGenerator";
 import {subComponentsDivGenerator} from "./SubComponentsDivGenerator";
@@ -27,7 +26,6 @@ if (!window["IsTypesRegistered"]) {
     RegisterDivGenerator(PropertyType.VECTOR3, vector3PropertyGenerator)
     RegisterDivGenerator(PropertyType.GROUP, groupPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.PANEL, panelPropertyDivGenerator)
-    RegisterDivGenerator(PropertyType.COLORSTOPARRAY, colorStopArrayPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.KEYFRAMES, keyFramesPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.SUBCOMPONENTARRAY, subComponentsDivGenerator)
 
