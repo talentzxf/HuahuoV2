@@ -70,12 +70,14 @@
     "drawStarMirror": "绘制中心对称图形"
   },
   "EventGraphComponent": "事件图组件",
-  "GeneratorComponent": "生成器组件",
+  "GeneratorComponent": "沿边沿生成组件",
   "StrokeComponent": "描边颜色",
   "FillColorComponent": "填充颜色",
-  "FollowCurveComponent": "沿着形状边沿运动",
+  "FollowCurveComponent": "沿边沿运动组件",
   "RadialGradientComponent": "渐变色组件",
   "RigidBody": "刚体",
+  "Motor": "马达组件",
+  "ObjectGenerator": "形状生成器",
   "inspector": {
     "CurveInputPrompt": "关键帧:{{frameId}}, 值:{{value}}",
     "Smooth": "平滑特征点",

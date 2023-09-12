@@ -76,6 +76,8 @@
   "FollowCurveComponent": "Move Along Curve Edge",
   "RadialGradientComponent": "Gradient Color",
   "RigidBody": "RigidBody",
+  "Motor": "Motor",
+  "ObjectGenerator": "Object Generator",
   "inspector": {
     "CurveInputPrompt": "FrameId:{{frameId}}, value:{{value}}",
     "Smooth": "Smooth",
