@@ -9,12 +9,13 @@ import {undoManager} from "../RedoUndo/UndoManager";
 import {ColorPropertyX} from "./ColorPropertyX";
 import {ArrayDeleteCommand} from "../RedoUndo/ArrayDeleteCommand";
 import {HHToast} from "hhcommoncomponents";
+import {ArrayInsertCommand} from "../RedoUndo/ArrayInsertCommand";
 
 const rectangleOffset = 10
-const canvasWidth = 200
+const canvasWidth = 400
 const canvasHeight = 20
 
-const rectangleWidth = 150
+const rectangleWidth = 300
 const rectangleHeight = 20
 
 class Pen {
@@ -125,7 +126,8 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
         colorTitle: "unselected pen"
     }
 
-    canvasRef
+    canvasRef: React.RefObject<any>
+    propertyRef: React.RefObject<any>
     rectangle: paper.Path.Rectangle
 
     pens: Array<Pen> = new Array<Pen>()
@@ -134,12 +136,27 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
 
     constructor(props) {
         super(props);
+
         this.canvasRef = React.createRef()
+        this.propertyRef = React.createRef()
     }
 
-    onRectangleClicked() {
+    onRectangleClicked(evt: MouseEvent) {
+        let clickPoint = evt["point"]
+        let value = clickPoint.x / rectangleWidth
 
+        let arrayInsertCommand = new ArrayInsertCommand(
+            () => {
+                return this.insertPenByValue(value)
+            },
+            this.deletePen.bind(this)
+        )
+
+        undoManager.PushCommand(arrayInsertCommand)
+        arrayInsertCommand.DoCommand()
     }
+
+    documentMouseDownFunction
 
     componentDidMount() {
         let property = this.props.property
@@ -160,6 +177,25 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
         // Select the first pen
         if (this.pens.length > 0)
             this.selectPen(this.pens[0])
+
+        this.documentMouseDownFunction = this.onDocumentMouseDown.bind(this)
+        document.addEventListener("mousedown", this.documentMouseDownFunction)
+    }
+
+    componentWillUnmount() {
+        if (this.documentMouseDownFunction)
+            document.removeEventListener("mousedown", this.documentMouseDownFunction)
+        this.onLoseFocus()
+    }
+
+    onDocumentMouseDown(e: MouseEvent) {
+        if (this.propertyRef.current == e.target || this.canvasRef.current == e.target) {
+            this.onFocus()
+            e.stopPropagation()
+
+        } else {
+            this.onLoseFocus()
+        }
     }
 
     selectPen(selectedPen: Pen) {
@@ -381,6 +417,26 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
         }
     }
 
+    kbEventAttached: boolean = false
+
+    onKeyUpFunction
+
+    onFocus() {
+        if (this.kbEventAttached == false) {
+            this.onKeyUpFunction = this.onKeyUp.bind(this)
+            document.addEventListener("keyup", this.onKeyUpFunction)
+            this.kbEventAttached = true
+        }
+    }
+
+    onLoseFocus() {
+        if (this.onKeyUpFunction) {
+            document.removeEventListener("keyup", this.onKeyUpFunction)
+        }
+
+        this.kbEventAttached = false
+    }
+
     render() {
         registerPropertyChangeListener(this, this.props.property)
 
@@ -388,7 +444,7 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
         this.refresh()
 
         return (
-            <PropertyEntry className="col-span-2" onKeyUp={this.onKeyUp.bind(this)} property={this.props.property}>
+            <PropertyEntry ref={this.propertyRef} className="col-span-2" property={this.props.property}>
                 <label className="mx-1 px-1">{this.state.colorTitle}</label>
                 <ColorPropertyX property={{
                     getter: () => {
@@ -398,7 +454,8 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
                     },
                     setter: this.colorStopColorChanged.bind(this)
                 }}></ColorPropertyX>
-                <canvas ref={this.canvasRef} width={canvasWidth} height={canvasHeight} style={{
+                <canvas ref={this.canvasRef}
+                        width={canvasWidth} height={canvasHeight} style={{
                     width: canvasWidth + "px",
                     height: canvasHeight + "px"
                 }}></canvas>
