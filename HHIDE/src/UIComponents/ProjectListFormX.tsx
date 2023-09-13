@@ -1,17 +1,93 @@
 import * as React from "react"
 import {CloseBtn} from "./CloseBtn";
 import {FormProps} from "../Utilities/FormManager";
+import {api} from "../RESTApis/RestApi"
 
 type ProjectListProps = FormProps & {
-    updateListFunction: Function
     title: string
-    totalPage: number
-    pageNo: number
     pageSize: number
 }
 
-class ProjectListFormX extends React.Component<any, any> {
+type BinaryFile = {
+    name: string
+    description: string
+    id: number
+    createdBy: string
+}
+
+type ProjectListState = {
+    loaded: boolean
+    totalPage: number
+    currentPage: number
+    binaryFiles?: BinaryFile[]
+}
+
+class ProjectListFormX extends React.Component<ProjectListProps, ProjectListState> {
+    state: ProjectListState = {
+        loaded: false,
+        totalPage: -1,
+        currentPage: 1,
+        binaryFiles: []
+    }
+
+    refreshPage() {
+        api.listProjects((result) => {
+            this.state.loaded = true
+            this.state.totalPage = result.totalCount / this.props.pageSize
+            this.state.binaryFiles = result.binaryFiles
+
+            this.setState(this.state)
+
+        }, this.state.currentPage - 1, this.props.pageSize) // In API, pageNo starts from 0. But in the front end, pageNo starts from 1.
+    }
+
+    componentDidMount() {
+        this.refreshPage()
+    }
+
+    selectPage(e) {
+        let pageNumber = Number(e.target.dataset.pageNumber) + 1
+        this.state.currentPage = pageNumber
+        this.refreshPage()
+    }
+
     render() {
+        let binaryFileItems = []
+        for (let binaryFile of this.state.binaryFiles) {
+            let binaryUIItem =
+                (<div key={binaryFile.id}>
+                    <img
+                        className="h-auto max-w-full rounded-lg"
+                        src={api.getBinaryFileCoverPageUrl(binaryFile.id)}
+                        alt="Alt Alt"
+                    />
+                </div>)
+            binaryFileItems.push(binaryUIItem)
+        }
+
+        let currentClassName = "z-10 flex items-center justify-center px-3 h-8 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+        let notCurrentClassName = "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+        let pageLis = []
+        for (let pageNo = 0; pageNo < this.state.totalPage; pageNo++) {
+            let liClass = notCurrentClassName
+            if (pageNo == this.state.currentPage - 1) {
+                liClass = currentClassName
+            }
+
+            let liEle = (<li key={pageNo}>
+                <a
+                    href="#"
+                    className={liClass}
+                    data-page-number={pageNo}
+                    onClick={this.selectPage.bind(this)}
+                >
+                    {pageNo + 1}
+                </a>
+            </li>)
+
+            pageLis.push(liEle)
+        }
+
         return (
             <div className="flex flex-col items-center justify-center mx-auto">
                 <div
@@ -24,90 +100,7 @@ class ProjectListFormX extends React.Component<any, any> {
                             <CloseBtn onclick={this.props?.closeForm}></CloseBtn>
                         </div>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <div>
-                                <img
-                                    className="h-auto max-w-full rounded-lg"
-                                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image.jpg"
-                                    alt=""
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    className="h-auto max-w-full rounded-lg"
-                                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg"
-                                    alt=""
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    className="h-auto max-w-full rounded-lg"
-                                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg"
-                                    alt=""
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    className="h-auto max-w-full rounded-lg"
-                                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg"
-                                    alt=""
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    className="h-auto max-w-full rounded-lg"
-                                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg"
-                                    alt=""
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    className="h-auto max-w-full rounded-lg"
-                                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg"
-                                    alt=""
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    className="h-auto max-w-full rounded-lg"
-                                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-6.jpg"
-                                    alt=""
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    className="h-auto max-w-full rounded-lg"
-                                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-7.jpg"
-                                    alt=""
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    className="h-auto max-w-full rounded-lg"
-                                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-8.jpg"
-                                    alt=""
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    className="h-auto max-w-full rounded-lg"
-                                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-9.jpg"
-                                    alt=""
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    className="h-auto max-w-full rounded-lg"
-                                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-10.jpg"
-                                    alt=""
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    className="h-auto max-w-full rounded-lg"
-                                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-11.jpg"
-                                    alt=""
-                                />
-                            </div>
+                            {binaryFileItems}
                         </div>
 
                         <div aria-label="Page navigation" className="flex">
@@ -136,47 +129,11 @@ class ProjectListFormX extends React.Component<any, any> {
                                         </svg>
                                     </a>
                                 </li>
-                                <li>
-                                    <a
-                                        href="#"
-                                        className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                    >
-                                        1
-                                    </a>
-                                </li>
-                                <li>
-                                    <a
-                                        href="#"
-                                        className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                    >
-                                        2
-                                    </a>
-                                </li>
-                                <li>
-                                    <a
-                                        href="#"
-                                        aria-current="page"
-                                        className="z-10 flex items-center justify-center px-3 h-8 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-                                    >
-                                        3
-                                    </a>
-                                </li>
-                                <li>
-                                    <a
-                                        href="#"
-                                        className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                    >
-                                        4
-                                    </a>
-                                </li>
-                                <li>
-                                    <a
-                                        href="#"
-                                        className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                    >
-                                        5
-                                    </a>
-                                </li>
+
+                                {
+                                    pageLis
+                                }
+
                                 <li>
                                     <a
                                         href="#"

@@ -27,7 +27,7 @@ class HHToolBar extends HTMLElement {
 
     exportImageButton: HTMLButtonElement
 
-    createButton(svgFile, title, onClick){
+    createButton(svgFile, title, onClick) {
         let btn = document.createElement("button")
         btn.className = "btn btn-outline-secondary"
         btn.style.width = "40px"
@@ -52,19 +52,19 @@ class HHToolBar extends HTMLElement {
 
             this.previewButton = this.createButton(SVGFiles.previewBtn, i18n.t("hint.preview"), this.uploadAndOpenPlayer.bind(this))
 
-            this.elementListButton = this.createButton(SVGFiles.elementListButton, i18n.t("hint.library"), ()=>{
+            this.elementListButton = this.createButton(SVGFiles.elementListButton, i18n.t("hint.library"), () => {
                 this.listElements()
             })
 
-            this.projectListButton = this.createButton(SVGFiles.projectListBtn, i18n.t("hint.listProject"), ()=>{
+            this.projectListButton = this.createButton(SVGFiles.projectListBtn, i18n.t("hint.listProject"), () => {
                 this.listProjects()
             })
 
-            this.uploadButton = this.createButton(SVGFiles.uploadBtn, i18n.t("hint.uploadProject"), ()=>{
+            this.uploadButton = this.createButton(SVGFiles.uploadBtn, i18n.t("hint.uploadProject"), () => {
                 this.uploadProject()
             })
 
-            this.exportImageButton = this.createButton(SVGFiles.exportImage, i18n.t("hint.exportImage"), ()=>{
+            this.exportImageButton = this.createButton(SVGFiles.exportImage, i18n.t("hint.exportImage"), () => {
                 this.exportImage()
             })
         }.bind(this))
@@ -107,9 +107,9 @@ class HHToolBar extends HTMLElement {
         hiddenFileButton.addEventListener("change", (evt) => {
             let fName = hiddenFileButton.value
 
-            if(fName.endsWith(".hua")){
+            if (fName.endsWith(".hua")) {
                 projectManager.load(fName, evt)
-            }else if(fName.match(/\.(jpg|jpeg|png|gif|svg|webp)$/i)){ // Is Image, load image.
+            } else if (fName.match(/\.(jpg|jpeg|png|gif|svg|webp)$/i)) { // Is Image, load image.
                 let file = (<HTMLInputElement>evt.target).files[0];
                 fileLoader.loadImageFile(file)
             }
@@ -121,23 +121,14 @@ class HHToolBar extends HTMLElement {
     }
 
     @NeedLogin()
-    listProjects(pageNo: number = 0, pageSize: number = 10) {
-        let _this = this
-        api.listProjects((listProjectResult) => {
-            let totalPage = listProjectResult.totalCount / pageSize
-
-            // let form = formManager.openForm(ProjectListForm)
-            let form = formManager.openReactForm(ProjectListFormX, {
-                updateListFunction: _this.listProjects.bind(_this),
-                title: i18n.t("yourProjects"),
-                totalPage: totalPage,
-                pageNo: pageNo,
-                pageSize: pageSize
-            })
-        }, pageNo, pageSize)
+    listProjects(pageSize: number = 12) {
+        formManager.openReactForm(ProjectListFormX, {
+            title: i18n.t("yourProjects"),
+            pageSize: pageSize
+        })
     }
 
-    deleteElement(elementId){
+    deleteElement(elementId) {
 
     }
 
@@ -160,7 +151,7 @@ class HHToolBar extends HTMLElement {
         })
     }
 
-    exportImage(){
+    exportImage() {
         formManager.openForm(ExportImageForm)
     }
 }

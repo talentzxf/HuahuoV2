@@ -41,7 +41,6 @@ class BinaryFileCallStatus {
 }
 
 
-
 @Data
 class BinaryFileExistResponse {
     private String fileName;
@@ -63,7 +62,7 @@ public class BinaryFileController {
     @PreAuthorize("hasRole('CREATOR')")
     @ResponseBody
     @PostMapping(value = "/binaryfiles/upload",
-    consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public BinaryFileCallStatus uploadFile(@RequestParam MultipartFile file,
                                            @RequestParam String fileName,
                                            @RequestParam(required = false, defaultValue = "true") Boolean forceOverride,
@@ -78,7 +77,7 @@ public class BinaryFileController {
 
     @ResponseBody
     @PutMapping(value = "/binaryfiles/{fileId}/description",
-        consumes = "text/plain")
+            consumes = "text/plain")
     public BinaryFileCallStatus updateBinaryFileDescription(@PathVariable Long fileId, @RequestBody String description) {
         BinaryFileDB fileDB = storageService.getById(fileId);
         fileDB.setDescription(description);
@@ -90,7 +89,7 @@ public class BinaryFileController {
 
     @ResponseBody
     @GetMapping(value = "/binaryfiles/{fileId}",
-        produces = "application/octet-stream")
+            produces = "application/octet-stream")
     public ResponseEntity<Resource> downloadBinaryFile(@PathVariable Long fileId) throws IOException {
         BinaryFileDB fileDB = storageService.getById(fileId);
 
@@ -114,28 +113,34 @@ public class BinaryFileController {
     @ResponseBody
     @PreAuthorize("hasRole('READER')")
     @GetMapping("/binaryfiles")
-    public ResponseEntity<ListBinaryFileResult> listBinaryFiles(@RequestParam(defaultValue = "0") int pageNumber,
-                                                                @RequestParam(defaultValue = "10") int pageSize,
-                                                                @RequestParam(defaultValue = "false") Boolean isElement ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+    public ResponseEntity listBinaryFiles(@RequestParam(defaultValue = "0") int pageNumber,
+                                          @RequestParam(defaultValue = "10") int pageSize,
+                                          @RequestParam(defaultValue = "false") Boolean isElement) {
+        try {
 
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-        FileType fileType = isElement?FileType.ELEMENT:FileType.PROJECT;
-        List<BinaryFileDB> resultList = null;
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
 
-        if(fileType == FileType.PROJECT)
-            resultList = binaryFileRepository.findByCreatedByAndFileTypeAndStatus(username, fileType, BinaryFileStatus.ACTIVE, pageable);
-        else
-            resultList = binaryFileRepository.findByFileTypeAndStatus(fileType, BinaryFileStatus.ACTIVE, pageable);
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-        int totalFileCount = binaryFileRepository.countByCreatedByAndFileTypeAndStatus(username, fileType, BinaryFileStatus.ACTIVE);
-        ListBinaryFileResult listBinaryFileResult = new ListBinaryFileResult();
-        listBinaryFileResult.setBinaryFiles(resultList);
-        listBinaryFileResult.setTotalCount(totalFileCount);
-        return ResponseEntity.ok()
-                .body(listBinaryFileResult);
+            FileType fileType = isElement ? FileType.ELEMENT : FileType.PROJECT;
+            List<BinaryFileDB> resultList = null;
+
+            if (fileType == FileType.PROJECT)
+                resultList = binaryFileRepository.findByCreatedByAndFileTypeAndStatus(username, fileType, BinaryFileStatus.ACTIVE, pageable);
+            else
+                resultList = binaryFileRepository.findByFileTypeAndStatus(fileType, BinaryFileStatus.ACTIVE, pageable);
+
+            int totalFileCount = binaryFileRepository.countByCreatedByAndFileTypeAndStatus(username, fileType, BinaryFileStatus.ACTIVE);
+            ListBinaryFileResult listBinaryFileResult = new ListBinaryFileResult();
+            listBinaryFileResult.setBinaryFiles(resultList);
+            listBinaryFileResult.setTotalCount(totalFileCount);
+            return ResponseEntity.ok()
+                    .body(listBinaryFileResult);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @ResponseBody
@@ -159,7 +164,7 @@ public class BinaryFileController {
     }
 
     @ResponseBody
-    @PostMapping(value =  "/binaryfiles/{fileId}/coverPage",
+    @PostMapping(value = "/binaryfiles/{fileId}/coverPage",
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public BinaryFileCallStatus uploadCoverPage(@RequestParam MultipartFile coverPageFile,
                                                 @RequestParam String fileName,
@@ -197,20 +202,20 @@ public class BinaryFileController {
         String username = authentication.getName();
 
         BinaryFileDB binaryFileDB = binaryFileRepository.findById(fileId).get();
-        if(!binaryFileDB.getCreatedBy().equals(username)){
+        if (!binaryFileDB.getCreatedBy().equals(username)) {
             return ResponseEntity.badRequest().body("Binary file creator mismatch!");
         }
 
         String fileDataPath = binaryFileDB.getFullPath();
         String fileDoverPathPath = binaryFileDB.getCoverPagePath();
 
-        try{
+        try {
             Files.delete(Path.of(fileDataPath));
             Files.delete(Path.of(fileDoverPathPath));
-        }finally {
-            if(binaryFileDB.getFileType().equals(FileType.ELEMENT)){
+        } finally {
+            if (binaryFileDB.getFileType().equals(FileType.ELEMENT)) {
                 ElementDB elementDB = elementRepository.getByBinaryFileDB(binaryFileDB);
-                if(elementDB != null){
+                if (elementDB != null) {
                     String elementId = elementDB.getElementId();
                     elementRepository.deleteById(elementId);
                 }
@@ -222,7 +227,7 @@ public class BinaryFileController {
         return ResponseEntity.ok("Binary file successfully deleted!");
     }
 
-    public ResponseEntity JumpToNotFoundImage(){
+    public ResponseEntity JumpToNotFoundImage() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/binaryfiles/coverPageNotFound");
 
@@ -238,7 +243,7 @@ public class BinaryFileController {
         try {
             BinaryFileDB fileDB = storageService.getById(fileId);
             String fullPath = fileDB.getCoverPagePath();
-            if(fullPath == null)
+            if (fullPath == null)
                 return JumpToNotFoundImage();
 
             byte[] fileData = Files.readAllBytes(Paths.get(fullPath));
