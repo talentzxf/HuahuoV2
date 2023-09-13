@@ -14,7 +14,6 @@ import {UserInfoBar} from "./Identity/UserInfoBar";
 import {PlayerController} from "./AnimationPlayer/PlayerController";
 import {binaryFileUploader} from "./RESTApis/BinaryFileUploader";
 import {HHToolBar} from "./UIComponents/ToolBar";
-import {ProjectListForm} from "./UIComponents/ProjectListForm";
 import {ProjectInfoForm} from "./UIComponents/ProjectInfoForm";
 import {HHEditorToolBar} from "./UIComponents/HHEditorToolBar";
 import {HHHistoryCommandList} from "./UIComponents/HHHistoryCommandList"

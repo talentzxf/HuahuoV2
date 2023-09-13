@@ -109,10 +109,10 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
 
             let fileInfoRef = React.createRef<HTMLDivElement>()
             let imgRef = React.createRef<HTMLImageElement>()
-            let imgClass = "h-auto max-w-full rounded-lg hover:cursor-pointer transition-all ease-in-out"
+            let imgClass = "h-auto max-w-full rounded-lg transition-all ease-in-out"
 
             let binaryUIItem =
-                (<div key={binaryFile.id} className="relative"
+                (<div key={binaryFile.id} className="relative hover:cursor-pointer"
                       onMouseEnter={() => {
                           fileInfoRef.current.className = "select-none block absolute left-0 top-0 flex flex-col"
                           imgRef.current.className = imgClass + " opacity-50"
@@ -120,13 +120,13 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
                       onMouseLeave={() => {
                           fileInfoRef.current.className = "hidden"
                           imgRef.current.className = imgClass + " opacity-100"
-                      }}>
+                      }}
+                      data-binary-file-id={binaryFile.id}
+                      onClick={this.loadProject.bind(this)}>
                     <img
                         ref={imgRef}
                         className={imgClass}
                         src={api.getBinaryFileCoverPageUrl(binaryFile.id)}
-                        data-binary-file-id={binaryFile.id}
-                        onClick={this.loadProject.bind(this)}
                         alt="Alt Alt"
                     />
 
@@ -187,11 +187,11 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
         } while (pageNo < this.state.totalPage)
 
         return (
-            <div className="select-none flex flex-col items-center justify-center mx-auto min-w-[800px]">
+            <div className="select-none flex flex-col items-center justify-center mx-auto">
                 <div
                     className="bg-white rounded-lg drop-shadow-2xl dark:border md:mt-0 sm:max-w-md xl:p-0
-                        dark:bg-gray-800 dark:border-gray-700 min-w-[800px]">
-                    <form className="p-4 space-y-4 divide-y divide-gray-300 w-[800px]" action="#">
+                        dark:bg-gray-800 dark:border-gray-700">
+                    <form className="p-4 space-y-4 divide-y divide-gray-300" action="#">
                         <div className="flex align-middle">
                             <h5 className="px-2 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                 {i18n.t(this.props.title)}

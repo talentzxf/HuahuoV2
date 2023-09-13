@@ -42,6 +42,10 @@
   "DeleteComponent": "删除组件",
   "edit": "编辑",
   "yourProjects": "你的项目列表",
+  "ProjectInfo": "项目信息",
+  "ProjectName": "项目名称",
+  "ProjectDescription": "项目描述",
+  "ProjectPreview": "项目预览",
   "allElements": "所有可用组件",
   "eventgraph": {
     "resetScale": "重置缩放",

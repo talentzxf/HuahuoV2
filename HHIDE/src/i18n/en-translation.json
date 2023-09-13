@@ -42,10 +42,14 @@
   "DeleteComponent": "Delete",
   "edit": "edit",
   "yourProjects": "Your Projects",
+  "ProjectInfo": "Project Info",
+  "ProjectName": "Project Name",
+  "ProjectDescription": "Project Description",
+  "ProjectPreview": "Project Preview",
   "allElements": "All Elements",
   "eventgraph": {
     "resetScale": "Reset Scale",
-    "addEventListener" : "Add Event Receiver",
+    "addEventListener": "Add Event Receiver",
     "addGraphAction": "Add Graph Action",
     "addComponentGraphAction": "Add Component Graph Action"
   },
@@ -196,7 +200,7 @@
   "component": {
     "nothing": "No suitable component found!"
   },
-  "colorstops":{
+  "colorstops": {
     "pen": {
       "name": "Pen index: {{index}}"
     }

@@ -12,6 +12,7 @@ import {projectManager} from "../HuaHuoEngine/ProjectManager";
 import {ExportImageForm} from "./ExportForm";
 import {fileLoader} from "../SceneView/FileLoader";
 import {ProjectListFormX} from "./ProjectListFormX";
+import {ProjectInfoFormX} from "./ProjectInfoFormX";
 
 @CustomElement({
     selector: "hh-tool-bar"
@@ -72,14 +73,20 @@ class HHToolBar extends HTMLElement {
     @NeedLogin()
     uploadProject(afterAction: Function = null) {
         if (!projectInfo.inited) {
-            // Prompt the Project description page.
-            let storeInforForm = formManager.openForm(ProjectInfoForm)
-            storeInforForm.onOKCallback = () => {
-                binaryFileUploader.upload().then((response) => {
-                    if (afterAction)
-                        afterAction(response.data)
-                })
-            }
+            // // Prompt the Project description page.
+            // let storeInforForm = formManager.openForm(ProjectInfoForm)
+            // storeInforForm.onOKCallback = () => {
+            //     binaryFileUploader.upload().then((response) => {
+            //         if (afterAction)
+            //             afterAction(response.data)
+            //     })
+            // }
+            formManager.openReactForm(ProjectInfoFormX, {
+                afterAction: ()=>{
+
+                }
+            })
+
         } else {
             binaryFileUploader.upload().then((response) => {
                 if (afterAction)
@@ -134,7 +141,7 @@ class HHToolBar extends HTMLElement {
     }
 
     @NeedLogin()
-    listElements(pageSize: number = 10) {
+    listElements(pageSize: number = 12) {
         formManager.openReactForm(ProjectListFormX, {
             title: i18n.t("allElements"),
             pageSize: pageSize,
