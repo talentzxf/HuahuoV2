@@ -2,7 +2,7 @@ import {HHForm} from "../Utilities/HHForm";
 import {CustomElement} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {renderEngine2D, huahuoEngine, Player} from "hhenginejs"
-import {RenderPreviewCanvas} from "./ProjectInfoForm";
+import {RenderPreviewCanvas} from "./ProjectInfoFormX";
 
 // TODO: A lot of duplication code with ProjectInfoForm.
 @CustomElement({

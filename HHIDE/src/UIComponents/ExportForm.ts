@@ -3,7 +3,7 @@ import {CustomElement} from "hhcommoncomponents";
 import {Player, renderEngine2D, huahuoEngine} from "hhenginejs"
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {SceneView} from "../SceneView/SceneView";
-import {RenderPreviewCanvas} from "./ProjectInfoForm";
+import {RenderPreviewCanvas} from "./ProjectInfoFormX";
 import {GlobalConfig} from "hhenginejs";
 import {saveAs} from 'file-saver';
 

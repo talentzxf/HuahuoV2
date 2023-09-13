@@ -2,24 +2,111 @@ import * as React from "react"
 import {CloseBtn} from "./CloseBtn";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {SVGFiles} from "../Utilities/Svgs";
+import {api} from "../RESTApis/RestApi";
+import {Player, renderEngine2D} from "hhenginejs";
+import {SceneView} from "../SceneView/SceneView";
 
 type ProjectInfoState = {
     projectName: string
     projectDescription: string
+    isNameValid: boolean
+}
+
+function validateText(val: string): boolean {
+    return /^[a-zA-Z0-9_-]+$/.test(val)
+}
+
+function getButtonClass(color: string) {
+    let btnClass: string = `text-white bg-${color}-600 hover:bg-${color}-700 focus:ring-4 focus:outline-none focus:ring-${color}-300 ` +
+        `font-medium text-center dark:bg-${color}-600 dark:hover:bg-${color}-700 dark:focus:ring-${color}-800 px-10 mt-5`
+    return btnClass
+}
+
+function RenderPreviewCanvas(storeId, player, canvas, frameId) {
+    let prevPlayer = huahuoEngine.getActivePlayer()
+    let prevStore = huahuoEngine.GetCurrentStoreId()
+
+    let previousCanvas = null
+
+    try {
+        huahuoEngine.setActivePlayer(player)
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(storeId) // Only render the main store.i.e. the 1st store.
+        previousCanvas = renderEngine2D.setDefaultCanvas(canvas)
+
+        player.storeId = storeId
+        player.loadShapesFromStore()
+        player.setFrameId(frameId)
+    } finally {
+        if (previousCanvas)
+            renderEngine2D.setDefaultCanvas(previousCanvas)
+        huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(prevStore)
+        if (prevPlayer) {
+            huahuoEngine.setActivePlayer(prevPlayer)
+        }
+    }
 }
 
 class ProjectInfoFormX extends React.Component<any, any> {
     state: ProjectInfoState = {
-        projectName: null,
-        projectDescription: null
+        projectName: "",
+        projectDescription: "",
+        isNameValid: false
+    }
+
+    previewCanvasRef
+    previewAnimationPlayer = new Player()
+
+    constructor(props) {
+        super(props);
+
+        this.previewCanvasRef = React.createRef()
     }
 
     onProjectNameChange(e) {
-        this.state.projectName = e.currentTarget.value
+        let projectNameCandidate = e.currentTarget.value
+        this.state.projectName = projectNameCandidate
+        if (validateText(projectNameCandidate)) {
+            api.checkFileNameExistence(projectNameCandidate).then((result) => {
+                if (result && result.data && result.data["exist"] == false) { // The project name doesn't exist in the system now. Name is valid
+                    this.state.isNameValid = true
+                } else {
+                    this.state.isNameValid = false
+                }
+
+                this.setState(this.state)
+            })
+        } else {
+            this.state.isNameValid = false
+            this.setState(this.state)
+        }
     }
 
     onProjectDescriptionChange(e) {
         this.state.projectDescription = e.currentTarget.value
+    }
+
+    componentDidMount() {
+        let prevCanvas = renderEngine2D.getDefaultCanvas()
+        renderEngine2D.init(this.previewCanvasRef.current)
+
+        if (prevCanvas) // Restore the previous canvas as default. Or else functionality will be broken.
+            renderEngine2D.setDefaultCanvas(prevCanvas)
+
+        let [initW, initH] = renderEngine2D.getInitCanvasWH()
+
+        if (initW > 0) {
+            renderEngine2D.resize(this.previewCanvasRef.current, initW, initH)
+        }
+        this.RedrawFrame()
+    }
+
+    RedrawFrame() {
+        let mainSceneView: SceneView = document.querySelector("#mainScene")
+        let mainStoreId = mainSceneView.storeId
+        let currentLayer = huahuoEngine.GetCurrentLayer()
+        let currentFrameId = currentLayer.GetCurrentFrame()
+
+        RenderPreviewCanvas(mainStoreId, this.previewAnimationPlayer, this.previewCanvasRef.current, currentFrameId)
     }
 
     render() {
@@ -41,7 +128,8 @@ class ProjectInfoFormX extends React.Component<any, any> {
                                 <input className={CSSUtils.getInputStyle() + " w-full"}
                                        placeholder="Enter Project Name" onChange={this.onProjectNameChange.bind(this)}
                                        value={this.state.projectName}/>
-                                <img className="w-[20px] h-[20px]" src={SVGFiles.notOKImg}/>
+                                <img className="w-[20px] h-[20px]"
+                                     src={this.state.isNameValid ? SVGFiles.okImg : SVGFiles.notOKImg}/>
                             </div>
                             <label className="font-bold">{i18n.t("ProjectDescription")}</label>
                             <textarea placeholder="Enter Project Description"
@@ -50,11 +138,13 @@ class ProjectInfoFormX extends React.Component<any, any> {
                                       onChange={this.onProjectDescriptionChange.bind(this)}></textarea>
                             <label className="font-bold">{i18n.t("ProjectPreview")}</label>
                             <div className="w-[300px] h-auto">
-                                <canvas className="border-cyan-200 border-2"></canvas>
+                                <canvas ref={this.previewCanvasRef} className="border-cyan-200 border-2"></canvas>
                             </div>
                         </div>
-                        <div className="w-full">
-                            <button className={CSSUtils.getButtonClass("primary")}>OK</button>
+                        <div className="w-full flex flex-row">
+                            <div className="w-full"></div>
+                            <button className={getButtonClass("primary") + " text-lg rounded"}>OK</button>
+                            <div className="w-full"></div>
                         </div>
                     </form>
                 </div>
@@ -63,4 +153,4 @@ class ProjectInfoFormX extends React.Component<any, any> {
     }
 }
 
-export {ProjectInfoFormX}
+export {ProjectInfoFormX, RenderPreviewCanvas}
