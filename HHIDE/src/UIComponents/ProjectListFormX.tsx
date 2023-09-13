@@ -6,11 +6,14 @@ import {projectManager} from "../HuaHuoEngine/ProjectManager";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {huahuoEngine} from "hhenginejs";
 import {HHToast} from "hhcommoncomponents";
+import {userInfo} from "../Identity/UserInfo";
+import {CSSUtils} from "../Utilities/CSSUtils";
 
 type ProjectListProps = FormProps & {
     title: string
     pageSize: number
     listUpdateFunction: Function
+    writeAuthInfo: boolean
 }
 
 type BinaryFile = {
@@ -18,6 +21,7 @@ type BinaryFile = {
     description: string
     id: number
     createdBy: string
+    createTime: string
 }
 
 type ProjectListState = {
@@ -81,20 +85,70 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
         this.refreshPage()
     }
 
+    deleteProject(e) {
+        e.stopPropagation()
+        e.preventDefault()
+
+        let projectId = Number(e.currentTarget.dataset.binaryFileId)
+
+        let project: any = this.projectInfoMap.get(projectId)
+        let confirmResult = window.confirm("Are you sure to delete project:" + project.name + "?")
+        if (confirmResult) {
+            api.deleteBinaryFile(projectId).then(() => {
+                HHToast.info(i18n.t("project.deleted", {projectName: project.name}))
+                this.refreshPage()
+            })
+        }
+    }
+
     render() {
         this.projectInfoMap.clear()
 
         let binaryFileItems = []
         for (let binaryFile of this.state.binaryFiles) {
+
+            let fileInfoRef = React.createRef<HTMLDivElement>()
+            let imgRef = React.createRef<HTMLImageElement>()
+            let imgClass = "h-auto max-w-full rounded-lg hover:cursor-pointer transition-all ease-in-out"
+
             let binaryUIItem =
-                (<div key={binaryFile.id}>
+                (<div key={binaryFile.id} className="relative"
+                      onMouseEnter={() => {
+                          fileInfoRef.current.className = "select-none block absolute left-0 top-0 flex flex-col"
+                          imgRef.current.className = imgClass + " opacity-50"
+                      }}
+                      onMouseLeave={() => {
+                          fileInfoRef.current.className = "hidden"
+                          imgRef.current.className = imgClass + " opacity-100"
+                      }}>
                     <img
-                        className="h-auto max-w-full rounded-lg hover:cursor-pointer"
+                        ref={imgRef}
+                        className={imgClass}
                         src={api.getBinaryFileCoverPageUrl(binaryFile.id)}
                         data-binary-file-id={binaryFile.id}
                         onClick={this.loadProject.bind(this)}
                         alt="Alt Alt"
                     />
+
+                    <div ref={fileInfoRef} className="hidden" data-binary-file-id={binaryFile.id}>
+                        <span className="text-base font-bold">{binaryFile.name}</span>
+                        {
+                            this.props.writeAuthInfo && (
+                                <span className="text-base">{binaryFile.createdBy}</span>
+                            )
+                        }
+                        <span className="text-xs">{binaryFile.createTime.split("T")[0]}</span>
+                        <span
+                            className="text-xs">{binaryFile.description.length > 0 ? binaryFile.description : "No Description"}</span>
+                        {
+                            (binaryFile.createdBy == userInfo.username) && (
+                                <button className={CSSUtils.getButtonClass("primary")} data-binary-file-id={binaryFile.id}
+                                        onClick={this.deleteProject.bind(this)}>
+                                    {i18n.t("project.delete")}
+                                </button>
+                            )
+                        }
+                    </div>
                 </div>)
             binaryFileItems.push(binaryUIItem)
 
@@ -133,10 +187,11 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
         } while (pageNo < this.state.totalPage)
 
         return (
-            <div className="flex flex-col items-center justify-center mx-auto md:min-w-[800px]">
+            <div className="select-none flex flex-col items-center justify-center mx-auto min-w-[800px]">
                 <div
-                    className="w-full bg-white rounded-lg drop-shadow-2xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                    <form className="p-4 space-y-4 divide-y divide-gray-300" action="#">
+                    className="bg-white rounded-lg drop-shadow-2xl dark:border md:mt-0 sm:max-w-md xl:p-0
+                        dark:bg-gray-800 dark:border-gray-700 min-w-[800px]">
+                    <form className="p-4 space-y-4 divide-y divide-gray-300 w-[800px]" action="#">
                         <div className="flex align-middle">
                             <h5 className="px-2 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                 {i18n.t(this.props.title)}

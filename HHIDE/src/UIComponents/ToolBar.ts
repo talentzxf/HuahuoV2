@@ -5,7 +5,6 @@ import {binaryFileUploader} from "../RESTApis/BinaryFileUploader";
 import huahuoProperties from "/dist/hhide.properties";
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 import {api} from "../RESTApis/RestApi"
-import {ProjectListForm} from "./ProjectListForm";
 import {formManager} from "../Utilities/FormManager";
 import {ProjectInfoForm} from "./ProjectInfoForm";
 import {projectInfo} from "../SceneView/ProjectInfo";
@@ -125,7 +124,8 @@ class HHToolBar extends HTMLElement {
         formManager.openReactForm(ProjectListFormX, {
             title: i18n.t("yourProjects"),
             pageSize: pageSize,
-            listUpdateFunction: api.listProjects.bind(api)
+            listUpdateFunction: api.listProjects.bind(api),
+            writeAuthInfo: false
         })
     }
 
@@ -138,7 +138,8 @@ class HHToolBar extends HTMLElement {
         formManager.openReactForm(ProjectListFormX, {
             title: i18n.t("allElements"),
             pageSize: pageSize,
-            listUpdateFunction: api.listElements.bind(api)
+            listUpdateFunction: api.listElements.bind(api),
+            writeAuthInfo: true
         })
     }
 
