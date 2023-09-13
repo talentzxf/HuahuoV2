@@ -1,8 +1,27 @@
 import * as React from "react"
 import {CloseBtn} from "./CloseBtn";
 import {CSSUtils} from "../Utilities/CSSUtils";
+import {SVGFiles} from "../Utilities/Svgs";
+
+type ProjectInfoState = {
+    projectName: string
+    projectDescription: string
+}
 
 class ProjectInfoFormX extends React.Component<any, any> {
+    state: ProjectInfoState = {
+        projectName: null,
+        projectDescription: null
+    }
+
+    onProjectNameChange(e) {
+        this.state.projectName = e.currentTarget.value
+    }
+
+    onProjectDescriptionChange(e) {
+        this.state.projectDescription = e.currentTarget.value
+    }
+
     render() {
         return (
             <div className="select-none flex flex-col items-center justify-center mx-auto">
@@ -19,12 +38,16 @@ class ProjectInfoFormX extends React.Component<any, any> {
                         <div className="w-full flex flex-col">
                             <label className="font-bold">{i18n.t("ProjectName")}</label>
                             <div className="flex items-center">
-                                <input className={CSSUtils.getInputStyle()} placeholder="Enter Project Name"/>
-                                <img className="w-[20px] h-[20px]"/>
+                                <input className={CSSUtils.getInputStyle() + " w-full"}
+                                       placeholder="Enter Project Name" onChange={this.onProjectNameChange.bind(this)}
+                                       value={this.state.projectName}/>
+                                <img className="w-[20px] h-[20px]" src={SVGFiles.notOKImg}/>
                             </div>
                             <label className="font-bold">{i18n.t("ProjectDescription")}</label>
                             <textarea placeholder="Enter Project Description"
-                                      className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+                                      className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                      value={this.state.projectDescription}
+                                      onChange={this.onProjectDescriptionChange.bind(this)}></textarea>
                             <label className="font-bold">{i18n.t("ProjectPreview")}</label>
                             <div className="w-[300px] h-auto">
                                 <canvas className="border-cyan-200 border-2"></canvas>
