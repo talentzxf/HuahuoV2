@@ -2,6 +2,10 @@ import * as React from "react"
 import {CloseBtn} from "./CloseBtn";
 import {FormProps} from "../Utilities/FormManager";
 import {api} from "../RESTApis/RestApi"
+import {projectManager} from "../HuaHuoEngine/ProjectManager";
+import {projectInfo} from "../SceneView/ProjectInfo";
+import {huahuoEngine} from "hhenginejs";
+import {HHToast} from "hhcommoncomponents";
 
 type ProjectListProps = FormProps & {
     title: string
@@ -30,6 +34,8 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
         binaryFiles: []
     }
 
+    projectInfoMap: Map<number, BinaryFile> = new Map
+
     refreshPage() {
         api.listProjects((result) => {
             this.state.loaded = true
@@ -45,6 +51,26 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
         this.refreshPage()
     }
 
+    loadProject(e) {
+        let binaryFileId = e.target.dataset.binaryFileId
+        if (!huahuoEngine.hasShape) {
+            let project: any = this.projectInfoMap.get(Number(binaryFileId))
+            if (project == null) {
+                return
+            }
+
+            // Store is clean, directly load the project
+            projectManager.loadFromServer(binaryFileId).then(() => {
+                projectInfo.Setup(project.name, project.description, null)
+
+                if (this.props.closeForm)
+                    this.props.closeForm()
+            })
+        } else { // Ask the user if he/she wants to clear the current store. TODO: Can we merge the two stores in the future??
+            HHToast.warn("Can't merge project, not implemented!!!")
+        }
+    }
+
     selectPage(e) {
         let pageNumber = Number(e.target.dataset.pageNumber) + 1
         this.state.currentPage = pageNumber
@@ -52,17 +78,23 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
     }
 
     render() {
+        this.projectInfoMap.clear()
+
         let binaryFileItems = []
         for (let binaryFile of this.state.binaryFiles) {
             let binaryUIItem =
                 (<div key={binaryFile.id}>
                     <img
-                        className="h-auto max-w-full rounded-lg"
+                        className="h-auto max-w-full rounded-lg hover:cursor-pointer"
                         src={api.getBinaryFileCoverPageUrl(binaryFile.id)}
+                        data-binary-file-id={binaryFile.id}
+                        onClick={this.loadProject.bind(this)}
                         alt="Alt Alt"
                     />
                 </div>)
             binaryFileItems.push(binaryUIItem)
+
+            this.projectInfoMap.set(binaryFile.id, binaryFile)
         }
 
         let currentClassName = "z-10 flex items-center justify-center px-3 h-8 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
@@ -89,7 +121,7 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
         }
 
         return (
-            <div className="flex flex-col items-center justify-center mx-auto">
+            <div className="flex flex-col items-center justify-center mx-auto md:min-w-[800px]">
                 <div
                     className="w-full bg-white rounded-lg drop-shadow-2xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <form className="p-4 space-y-4 divide-y divide-gray-300" action="#">
