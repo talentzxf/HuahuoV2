@@ -97,11 +97,11 @@ class LoginFormX extends React.Component<LoginProps, LoginState> {
     }
 
     onUserNameChanged(e) {
-        this.state.username = e.target.value
+        this.state.username = e.currentTarget.value
     }
 
     onPasswordChanged(e) {
-        this.state.password = e.target.value
+        this.state.password = e.currentTarget.value
     }
 
     componentDidMount() {

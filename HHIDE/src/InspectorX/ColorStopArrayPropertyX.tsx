@@ -217,11 +217,11 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
 
     onPenClicked(evt: MouseEvent) {
         console.log(evt)
-        if (!evt.target["data"] || !evt.target["data"]["meta"]) {
+        if (!evt.currentTarget["data"] || !evt.currentTarget["data"]["meta"]) {
             return
         }
 
-        let pen = evt.target["data"]["meta"] as Pen
+        let pen = evt.currentTarget["data"]["meta"] as Pen
         this.selectPen(pen)
     }
 
@@ -247,11 +247,11 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
     }
 
     onPenMouseDrag(evt: paper.MouseEvent) {
-        if (!evt.target["data"] || !evt.target["data"]["meta"]) {
+        if (!evt.currentTarget["data"] || !evt.currentTarget["data"]["meta"]) {
             return
         }
 
-        let pen = evt.target["data"]["meta"] as Pen
+        let pen = evt.currentTarget["data"]["meta"] as Pen
 
         this.selectPen(pen)
 

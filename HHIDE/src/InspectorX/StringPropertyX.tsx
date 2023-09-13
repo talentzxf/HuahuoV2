@@ -21,7 +21,7 @@ class StringPropertyX extends React.Component<PropertyProps, StringPropertyState
     onTextChanged(e) {
         let property = this.props.property
 
-        property.setter(e.target.value)
+        property.setter(e.currentTarget.value)
         this.state.value = property.getter()
 
         this.setState(this.state)

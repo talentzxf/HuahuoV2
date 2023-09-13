@@ -19,7 +19,7 @@ class FloatPropertyX extends React.Component<PropertyProps, FloatPropertyState> 
         let property = this.props.property
         if (property.setter) {
             let oldValue = Number(property.getter())
-            let newValue = Number(e.target.value)
+            let newValue = Number(e.currentTarget.value)
             let command = new SetFieldValueCommand(property.setter, oldValue, newValue)
             undoManager.PushCommand(command)
             command.DoCommand()

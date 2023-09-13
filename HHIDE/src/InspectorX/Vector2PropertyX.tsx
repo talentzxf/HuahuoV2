@@ -43,11 +43,11 @@ class Vector2PropertyX extends React.Component<PropertyProps, Vector2PropertySta
     }
 
     onInputXValueChanged(e) {
-        this.valueFieldChanged(e.target.value, "x")
+        this.valueFieldChanged(e.currentTarget.value, "x")
     }
 
     onInputYValueChanged(e) {
-        this.valueFieldChanged(e.target.value, "y")
+        this.valueFieldChanged(e.currentTarget.value, "y")
     }
 
     onValueChanged(val) {

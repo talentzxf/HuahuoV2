@@ -14,7 +14,7 @@ type ComponentListFormProps = FormProps & {
 class ComponentListFormX extends React.Component<ComponentListFormProps, any> {
     onAddComponentClicked(e) {
         e.preventDefault()
-        let componentName = e.target.dataset.componentName
+        let componentName = e.currentTarget.dataset.componentName
         let newComponent = huahuoEngine.produceObject(componentName)
 
         let proxiedComponent = EditorComponentProxy.CreateProxy(newComponent)

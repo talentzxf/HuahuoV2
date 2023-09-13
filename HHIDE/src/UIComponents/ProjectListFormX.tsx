@@ -30,7 +30,7 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
     state: ProjectListState = {
         loaded: false,
         totalPage: -1,
-        currentPage: 1,
+        currentPage: 1, // Starting from 1
         binaryFiles: []
     }
 
@@ -39,7 +39,7 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
     refreshPage() {
         api.listProjects((result) => {
             this.state.loaded = true
-            this.state.totalPage = result.totalCount / this.props.pageSize
+            this.state.totalPage = Math.ceil(result.totalCount / this.props.pageSize)
             this.state.binaryFiles = result.binaryFiles
 
             this.setState(this.state)
@@ -52,7 +52,7 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
     }
 
     loadProject(e) {
-        let binaryFileId = e.target.dataset.binaryFileId
+        let binaryFileId = e.currentTarget.dataset.binaryFileId
         if (!huahuoEngine.hasShape) {
             let project: any = this.projectInfoMap.get(Number(binaryFileId))
             if (project == null) {
@@ -72,7 +72,10 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
     }
 
     selectPage(e) {
-        let pageNumber = Number(e.target.dataset.pageNumber) + 1
+        if (!e.currentTarget.dataset.hasOwnProperty("pageNumber"))
+            return
+
+        let pageNumber = Number(e.currentTarget.dataset.pageNumber)
         this.state.currentPage = pageNumber
         this.refreshPage()
     }
@@ -100,17 +103,23 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
         let currentClassName = "z-10 flex items-center justify-center px-3 h-8 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
         let notCurrentClassName = "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
         let pageLis = []
+
+        let prevPageNo = -1
+        let nextPageNo = -1
         for (let pageNo = 0; pageNo < this.state.totalPage; pageNo++) {
             let liClass = notCurrentClassName
             if (pageNo == this.state.currentPage - 1) {
                 liClass = currentClassName
+
+                prevPageNo = pageNo == 0 ? 1 : pageNo
+                nextPageNo = pageNo + 1 >= this.state.totalPage ? pageNo + 1 : pageNo + 2
             }
 
             let liEle = (<li key={pageNo}>
                 <a
                     href="#"
                     className={liClass}
-                    data-page-number={pageNo}
+                    data-page-number={pageNo + 1} // data-page-number starts from 1.
                     onClick={this.selectPage.bind(this)}
                 >
                     {pageNo + 1}
@@ -141,6 +150,8 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
                                 <li>
                                     <a
                                         href="#"
+                                        data-page-number={prevPageNo}
+                                        onClick={this.selectPage.bind(this)}
                                         className="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                                     >
                                         <span className="sr-only">Previous</span>
@@ -170,6 +181,8 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
                                     <a
                                         href="#"
                                         className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                        data-page-number={nextPageNo}
+                                        onClick={this.selectPage.bind(this)}
                                     >
                                         <span className="sr-only">Next</span>
                                         <svg
