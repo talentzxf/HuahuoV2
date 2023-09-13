@@ -29,9 +29,11 @@ class FormManager {
             this.containerDiv.style.transform = "translate(-50%, -50%)"
 
             document.body.appendChild(this.containerDiv)
-
-            this.reactRootDiv = createRoot(this.containerDiv)
+        }else{
+            this.reactRootDiv.unmount()
         }
+
+        this.reactRootDiv = createRoot(this.containerDiv)
 
         if (props == null) {
             props = {}

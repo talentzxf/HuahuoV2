@@ -137,8 +137,13 @@ class RestApi {
         })
     }
 
-    async listElements(pageNo: number = 0, pageSize: number = 10) {
-        return this.fileController.listBinaryFiles(pageNo, pageSize, true, this.getAuthHeader())
+    async listElements(callBack: Function, pageNo: number = 0, pageSize: number = 10) {
+        let apiCallPromise = this.fileController.listBinaryFiles(pageNo, pageSize, true, this.getAuthHeader())
+        apiCallPromise.then((projects) => {
+            callBack(projects.data)
+        }).catch((ex) => {
+            HHToast.error("Exception happened when listing elements!" + ex)
+        })
     }
 
     async updateProjectDescription(fileId, description) {

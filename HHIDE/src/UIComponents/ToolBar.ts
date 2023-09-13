@@ -124,7 +124,8 @@ class HHToolBar extends HTMLElement {
     listProjects(pageSize: number = 12) {
         formManager.openReactForm(ProjectListFormX, {
             title: i18n.t("yourProjects"),
-            pageSize: pageSize
+            pageSize: pageSize,
+            listUpdateFunction: api.listProjects.bind(api)
         })
     }
 
@@ -133,21 +134,11 @@ class HHToolBar extends HTMLElement {
     }
 
     @NeedLogin()
-    listElements(pageNo: number = 0, pageSize: number = 10) {
-        let _this = this
-        api.listElements(pageNo, pageSize).then((response) => {
-
-
-            let listElementResult = response.data
-            let form = formManager.openForm(ProjectListForm)
-            let totalPage = listElementResult.totalCount / pageSize
-            form.setUpdateListFunctor(_this.listElements.bind(_this))
-
-            form.updateList(totalPage, pageNo, pageSize, listElementResult.binaryFiles, (elementId) => {
-                projectManager.loadFromServer(elementId)
-            }, true)
-
-            form.setTitle(i18n.t("allElements"))
+    listElements(pageSize: number = 10) {
+        formManager.openReactForm(ProjectListFormX, {
+            title: i18n.t("allElements"),
+            pageSize: pageSize,
+            listUpdateFunction: api.listElements.bind(api)
         })
     }
 

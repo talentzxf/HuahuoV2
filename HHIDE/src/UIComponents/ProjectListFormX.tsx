@@ -10,6 +10,7 @@ import {HHToast} from "hhcommoncomponents";
 type ProjectListProps = FormProps & {
     title: string
     pageSize: number
+    listUpdateFunction: Function
 }
 
 type BinaryFile = {
@@ -37,7 +38,7 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
     projectInfoMap: Map<number, BinaryFile> = new Map
 
     refreshPage() {
-        api.listProjects((result) => {
+        this.props.listUpdateFunction((result) => {
             this.state.loaded = true
             this.state.totalPage = Math.ceil(result.totalCount / this.props.pageSize)
             this.state.binaryFiles = result.binaryFiles
@@ -104,9 +105,10 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
         let notCurrentClassName = "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
         let pageLis = []
 
-        let prevPageNo = -1
-        let nextPageNo = -1
-        for (let pageNo = 0; pageNo < this.state.totalPage; pageNo++) {
+        let prevPageNo = 1
+        let nextPageNo = 1
+        let pageNo = 0
+        do {
             let liClass = notCurrentClassName
             if (pageNo == this.state.currentPage - 1) {
                 liClass = currentClassName
@@ -127,7 +129,8 @@ class ProjectListFormX extends React.Component<ProjectListProps, ProjectListStat
             </li>)
 
             pageLis.push(liEle)
-        }
+            pageNo++
+        } while (pageNo < this.state.totalPage)
 
         return (
             <div className="flex flex-col items-center justify-center mx-auto md:min-w-[800px]">
