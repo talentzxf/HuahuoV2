@@ -1,12 +1,11 @@
 import * as React from "react";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
-import {PropertySheet} from "hhcommoncomponents";
+import {HHToast, PropertySheet, PropertyType} from "hhcommoncomponents";
 import {GetPropertyReactGenerator} from "./BasePropertyX";
 import {formManager} from "../Utilities/FormManager";
 import {huahuoEngine} from "hhenginejs";
 import {ComponentListFormX} from "./ComponentListFormX";
-import {HHToast} from "hhcommoncomponents";
 
 function getBtnClz() {
     let btnClz = CSSUtils.getButtonClass("teal")
@@ -141,7 +140,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
             if (property.hide)
                 continue
 
-            if (property.type == PropertySheet.COMPONENT)
+            if (property.type == PropertyType.COMPONENT)
                 totalComponentCount++
         }
 
