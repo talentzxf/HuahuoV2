@@ -5,16 +5,11 @@ import {SVGFiles} from "../Utilities/Svgs";
 import {api} from "../RESTApis/RestApi";
 import {Player, renderEngine2D} from "hhenginejs";
 import {SceneView} from "../SceneView/SceneView";
-
-type ProjectInfoState = {
-    projectName: string
-    projectDescription: string
-    isNameValid: boolean
-    canvasWidth: number
-    canvasHeight: number
-    canvasDisplayWidth: number
-    canvasDisplayHeight: number
-}
+import {SnapshotUtils} from "../Utilities/SnapshotUtils";
+import {projectInfo} from "../SceneView/ProjectInfo";
+import {HHToast} from "hhcommoncomponents/dist/src";
+import {FormProps} from "../Utilities/FormManager";
+import {binaryFileUploader} from "../RESTApis/BinaryFileUploader";
 
 function validateText(val: string): boolean {
     return /^[a-zA-Z0-9_-]+$/.test(val)
@@ -50,7 +45,21 @@ function RenderPreviewCanvas(storeId, player, canvas, frameId) {
     }
 }
 
-class ProjectInfoFormX extends React.Component<any, any> {
+type ProjectInfoState = {
+    projectName: string
+    projectDescription: string
+    isNameValid: boolean
+    canvasWidth: number
+    canvasHeight: number
+    canvasDisplayWidth: number
+    canvasDisplayHeight: number
+}
+
+type ProjectInfoFormProps = FormProps & {
+    onOKCallback?: Function
+}
+
+class ProjectInfoFormX extends React.Component<ProjectInfoFormProps, ProjectInfoState> {
     state: ProjectInfoState = {
         projectName: "",
         projectDescription: "",
@@ -91,6 +100,7 @@ class ProjectInfoFormX extends React.Component<any, any> {
 
     onProjectDescriptionChange(e) {
         this.state.projectDescription = e.currentTarget.value
+        this.setState(this.state)
     }
 
     componentDidMount() {
@@ -125,6 +135,26 @@ class ProjectInfoFormX extends React.Component<any, any> {
         let currentFrameId = currentLayer.GetCurrentFrame()
 
         RenderPreviewCanvas(mainStoreId, this.previewAnimationPlayer, this.previewCanvasRef.current, currentFrameId)
+    }
+
+    onOK(e) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        let projectName = this.state.projectName
+        if (!this.validateText(projectName)) {
+            HHToast.warn("Invalid Project Name:" + projectName)
+            return;
+        }
+
+        let coverPageBinary = SnapshotUtils.takeSnapshot(this.previewCanvas)
+        projectInfo.Setup(projectName, this.state.projectDescription, coverPageBinary)
+
+        if (this.props.onOKCallback) {
+            this.props.onOKCallback()
+        }
+
+        this.props?.closeForm()
     }
 
     render() {
@@ -169,7 +199,9 @@ class ProjectInfoFormX extends React.Component<any, any> {
                         </div>
                         <div className="w-full flex flex-row">
                             <div className="w-full"></div>
-                            <button className={getButtonClass("primary") + " text-lg rounded"}>OK</button>
+                            <button className={getButtonClass("primary") + " text-lg rounded"}
+                                    onClick={this.onOK.bind(this)}>OK
+                            </button>
                             <div className="w-full"></div>
                         </div>
                     </form>

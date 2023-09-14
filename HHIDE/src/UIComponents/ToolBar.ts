@@ -73,17 +73,12 @@ class HHToolBar extends HTMLElement {
     @NeedLogin()
     uploadProject(afterAction: Function = null) {
         if (!projectInfo.inited) {
-            // // Prompt the Project description page.
-            // let storeInforForm = formManager.openForm(ProjectInfoForm)
-            // storeInforForm.onOKCallback = () => {
-            //     binaryFileUploader.upload().then((response) => {
-            //         if (afterAction)
-            //             afterAction(response.data)
-            //     })
-            // }
             formManager.openReactForm(ProjectInfoFormX, {
-                afterAction: ()=>{
-
+                afterAction: () => {
+                    binaryFileUploader.upload().then((response) => {
+                        if (afterAction)
+                            afterAction(response.data)
+                    })
                 }
             })
 
