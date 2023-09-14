@@ -10,6 +10,10 @@ type ProjectInfoState = {
     projectName: string
     projectDescription: string
     isNameValid: boolean
+    canvasWidth: number
+    canvasHeight: number
+    canvasDisplayWidth: number
+    canvasDisplayHeight: number
 }
 
 function validateText(val: string): boolean {
@@ -50,7 +54,11 @@ class ProjectInfoFormX extends React.Component<any, any> {
     state: ProjectInfoState = {
         projectName: "",
         projectDescription: "",
-        isNameValid: false
+        isNameValid: false,
+        canvasWidth: 300,
+        canvasHeight: 300,
+        canvasDisplayWidth: 300,
+        canvasDisplayWidth: 300
     }
 
     previewCanvasRef
@@ -95,9 +103,19 @@ class ProjectInfoFormX extends React.Component<any, any> {
         let [initW, initH] = renderEngine2D.getInitCanvasWH()
 
         if (initW > 0) {
+
+            let [resultW, resultH] = renderEngine2D.getContentWH(initW, initH)
+
+            this.state.canvasWidth = initW
+            this.state.canvasHeight = initH * initW / resultW
+            this.state.canvasDisplayWidth = Math.floor(this.state.canvasWidth / 5.0)
+            this.state.canvasDisplayHeight = Math.floor(this.state.canvasHeight / 5.0)
+
             renderEngine2D.resize(this.previewCanvasRef.current, initW, initH)
         }
         this.RedrawFrame()
+
+        this.setState(this.state)
     }
 
     RedrawFrame() {
@@ -137,8 +155,16 @@ class ProjectInfoFormX extends React.Component<any, any> {
                                       value={this.state.projectDescription}
                                       onChange={this.onProjectDescriptionChange.bind(this)}></textarea>
                             <label className="font-bold">{i18n.t("ProjectPreview")}</label>
-                            <div className="w-[300px] h-auto">
-                                <canvas ref={this.previewCanvasRef} className="border-cyan-200 border-2"></canvas>
+                            <div>
+                                <canvas ref={this.previewCanvasRef}
+                                        className={`border-cyan-200 border-2`}
+                                        style={{
+                                            width: `${this.state.canvasDisplayWidth}px`,
+                                            height: `${this.state.canvasDisplayHeight}px`
+                                        }}
+                                        width={this.state.canvasWidth}
+                                        height={this.state.canvasHeight}
+                                ></canvas>
                             </div>
                         </div>
                         <div className="w-full flex flex-row">
