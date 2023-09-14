@@ -7,9 +7,8 @@ import {Player, renderEngine2D} from "hhenginejs";
 import {SceneView} from "../SceneView/SceneView";
 import {SnapshotUtils} from "../Utilities/SnapshotUtils";
 import {projectInfo} from "../SceneView/ProjectInfo";
-import {HHToast} from "hhcommoncomponents/dist/src";
+import {HHToast} from "hhcommoncomponents";
 import {FormProps} from "../Utilities/FormManager";
-import {binaryFileUploader} from "../RESTApis/BinaryFileUploader";
 
 function validateText(val: string): boolean {
     return /^[a-zA-Z0-9_-]+$/.test(val)
@@ -142,12 +141,12 @@ class ProjectInfoFormX extends React.Component<ProjectInfoFormProps, ProjectInfo
         e.stopPropagation()
 
         let projectName = this.state.projectName
-        if (!this.validateText(projectName)) {
+        if (!validateText(projectName)) {
             HHToast.warn("Invalid Project Name:" + projectName)
             return;
         }
 
-        let coverPageBinary = SnapshotUtils.takeSnapshot(this.previewCanvas)
+        let coverPageBinary = SnapshotUtils.takeSnapshot(this.previewCanvasRef.current)
         projectInfo.Setup(projectName, this.state.projectDescription, coverPageBinary)
 
         if (this.props.onOKCallback) {

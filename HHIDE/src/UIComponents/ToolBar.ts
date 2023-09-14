@@ -6,7 +6,6 @@ import huahuoProperties from "/dist/hhide.properties";
 import {NeedLogin} from "../Identity/NeedLoginAnnotation";
 import {api} from "../RESTApis/RestApi"
 import {formManager} from "../Utilities/FormManager";
-import {ProjectInfoForm} from "./ProjectInfoForm";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {projectManager} from "../HuaHuoEngine/ProjectManager";
 import {ExportImageForm} from "./ExportForm";
