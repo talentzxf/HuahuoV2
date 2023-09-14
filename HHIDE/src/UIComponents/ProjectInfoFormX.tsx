@@ -3,7 +3,7 @@ import {CloseBtn} from "./CloseBtn";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {SVGFiles} from "../Utilities/Svgs";
 import {api} from "../RESTApis/RestApi";
-import {Player, renderEngine2D} from "hhenginejs";
+import {huahuoEngine, Player, renderEngine2D} from "hhenginejs";
 import {SceneView} from "../SceneView/SceneView";
 import {SnapshotUtils} from "../Utilities/SnapshotUtils";
 import {projectInfo} from "../SceneView/ProjectInfo";
@@ -66,7 +66,7 @@ class ProjectInfoFormX extends React.Component<ProjectInfoFormProps, ProjectInfo
         canvasWidth: 300,
         canvasHeight: 300,
         canvasDisplayWidth: 300,
-        canvasDisplayWidth: 300
+        canvasDisplayHeight: 300
     }
 
     previewCanvasRef

@@ -10,8 +10,6 @@ class DrawToolBar extends HTMLElement {
     private shapeButtonMap: Map<BaseShapeDrawer, HTMLButtonElement> = new Map
     private currentActiveDrawer: BaseShapeDrawer = null
 
-    private defaultDrawer: BaseShapeDrawer = null
-
     private buttonContainer: HTMLDivElement
     private secondaryDrawToolBar: HTMLDivElement
 
@@ -24,7 +22,6 @@ class DrawToolBar extends HTMLElement {
     }
 
     initializeTools() {
-
         this.buttonContainer = document.createElement("div")
         this.buttonContainer.className = "btn-group btn-group-sm"
         this.appendChild(this.buttonContainer)
@@ -35,15 +32,13 @@ class DrawToolBar extends HTMLElement {
 
         for (let shape of shapes) {
             this.createButton(shape)
-            if (shape.isDefaultDrawer())
-                this.defaultDrawer = shape;
         }
 
         IDEEventBus.getInstance().on(EventNames.DRAWSHAPEBEGINS, this.onDrawShapeBegins.bind(this))
         IDEEventBus.getInstance().on(EventNames.DRAWSHAPEENDS, this.onEndOfDrawingShape.bind(this))
     }
 
-    getSecondaryToolBar(): HTMLDivElement{
+    getSecondaryToolBar(): HTMLDivElement {
         return this.secondaryDrawToolBar
     }
 

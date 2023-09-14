@@ -1,5 +1,5 @@
 import * as React from "react"
-import {PropertyProps} from "./BasePropertyX";
+import {PropertyEntry, PropertyProps} from "./BasePropertyX";
 
 class CustomFieldPropertyX extends React.Component<PropertyProps, any> {
     render() {
@@ -9,9 +9,9 @@ class CustomFieldPropertyX extends React.Component<PropertyProps, any> {
             let newElement = React.createElement(property.config.contentGenerator, {
                 property: property
             })
-            return (<div>
+            return (<PropertyEntry property={this.props.property}>
                 {newElement}
-            </div>)
+            </PropertyEntry>)
         }
 
         return null

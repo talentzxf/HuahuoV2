@@ -7,7 +7,6 @@ import {PropertyProps} from "../BasePropertyX";
 import {CSSUtils} from "../../Utilities/CSSUtils";
 
 class EventGraphEditorX extends React.Component<PropertyProps, any> {
-
     render() {
         let targetComponent = this.props.property.config.targetComponent
         return (<button className={CSSUtils.getButtonClass("indigo")} type="button" onClick={() => {

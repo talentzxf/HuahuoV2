@@ -161,7 +161,7 @@ class ComponentProxyHandler {
 
                         propertyMeta.config = {
                             fieldName: propertyMeta["key"],
-                            targetComponent: this,
+                            targetComponent: this.proxy,
                             contentGenerator: reactComponent
                         } as CustomFieldConfig
                     }
