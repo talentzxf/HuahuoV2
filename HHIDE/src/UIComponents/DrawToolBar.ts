@@ -2,6 +2,9 @@ import {shapes} from "../ShapeDrawers/Shapes";
 import {CustomElement, Logger} from "hhcommoncomponents"
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
+import {createRoot} from "react-dom/client"
+import {DrawToolBarX} from "./DrawToolBarX";
+import * as React from "react"
 
 @CustomElement({
     selector: "hh-draw-toolbar"
@@ -43,7 +46,12 @@ class DrawToolBar extends HTMLElement {
     }
 
     connectedCallback() {
-        (window as any).i18n.ExecuteAfterInited(this.initializeTools.bind(this))
+        // (window as any).i18n.ExecuteAfterInited(this.initializeTools.bind(this))
+
+        // Attach React component
+        let reactRoot = createRoot(this)
+        let toolBarX = React.createElement(DrawToolBarX)
+        reactRoot.render(toolBarX)
     }
 
     getButtonFromDrawer(drawer: BaseShapeDrawer) {
