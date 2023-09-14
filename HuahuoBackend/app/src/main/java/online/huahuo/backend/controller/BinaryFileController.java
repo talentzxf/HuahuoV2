@@ -1,8 +1,5 @@
 package online.huahuo.backend.controller;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -128,9 +125,9 @@ public class BinaryFileController {
             List<BinaryFileDB> resultList = null;
 
             if (fileType == FileType.PROJECT)
-                resultList = binaryFileRepository.findByCreatedByAndFileTypeAndStatus(username, fileType, BinaryFileStatus.ACTIVE, pageable);
+                resultList = binaryFileRepository.findByCreatedByAndFileTypeAndStatusOrderByModifiedTimeDesc(username, fileType, BinaryFileStatus.ACTIVE, pageable);
             else
-                resultList = binaryFileRepository.findByFileTypeAndStatus(fileType, BinaryFileStatus.ACTIVE, pageable);
+                resultList = binaryFileRepository.findByFileTypeAndStatusOrderByModifiedTimeDesc(fileType, BinaryFileStatus.ACTIVE, pageable);
 
             int totalFileCount = binaryFileRepository.countByCreatedByAndFileTypeAndStatus(username, fileType, BinaryFileStatus.ACTIVE);
             ListBinaryFileResult listBinaryFileResult = new ListBinaryFileResult();
