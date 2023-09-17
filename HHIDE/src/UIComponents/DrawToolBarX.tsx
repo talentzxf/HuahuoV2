@@ -17,13 +17,13 @@ class DrawToolBarX extends React.Component<any, DrawToolBarXState> {
         let shapeDrawName = e.currentTarget.dataset.buttonShapeName
         let shapeDrawer = this.shapeDrawerNameShapeMap.get(shapeDrawName)
 
+        IDEEventBus.getInstance().emit(EventNames.DRAWSHAPEBEGINS, shapeDrawer)
+
         if (this.state.currentActiveDrawer == shapeDrawer)
             return;
 
         this.state.currentActiveDrawer = shapeDrawer
         this.state.currentActiveDrawer.isSelected = true
-
-        IDEEventBus.getInstance().emit(EventNames.DRAWSHAPEBEGINS, shapeDrawer)
 
         this.setState(this.state)
     }
@@ -49,7 +49,7 @@ class DrawToolBarX extends React.Component<any, DrawToolBarXState> {
                         backgroundColor: (this.state.currentActiveDrawer == shapeDrawer) ? "#42b983" : "white"
                     }} onClick={this.onClick.bind(this)} data-button-shape-name={shapeDrawer.name}>
                         <img src={imgSrc}
-                             className={imgClass + " m-3 w-6 hover:m-1 hover:w-8 h-6 hover:h-8 transition-all ease-in-out"}
+                             className={imgClass + " m-2 w-6 hover:m-1 hover:w-8 h-6 hover:h-8 transition-all ease-in-out"}
                              title={i18n.t(shapeDrawer.name)}/>
                     </button>
                 ))
