@@ -74,7 +74,7 @@ class DrawToolBar extends HTMLElement {
             return;
 
         if (this.currentActiveDrawer) {
-            this.currentActiveDrawer.isSelected = false;
+            // this.currentActiveDrawer.isSelected = false;
             let currentActiveButton = this.getButtonFromDrawer(this.currentActiveDrawer)
             this.setButtonBackgroundColor(currentActiveButton, false)
         }
@@ -100,7 +100,7 @@ class DrawToolBar extends HTMLElement {
 
         let button = document.createElement('button')
         button.className = "btn btn-outline-secondary"
-        button.onclick = shape.onClicked.bind(shape)
+        // button.onclick = shape.onClicked.bind(shape)
         button.appendChild(img)
         this.buttonContainer.appendChild(button)
 
