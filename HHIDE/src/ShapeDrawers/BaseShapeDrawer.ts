@@ -1,8 +1,7 @@
-import {Logger, Vector2} from "hhcommoncomponents";
-import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
-import {renderEngine2D} from "hhenginejs"
-import {BaseShapeJS} from "hhenginejs";
+import {Vector2} from "hhcommoncomponents";
+import {BaseShapeJS, renderEngine2D} from "hhenginejs"
 import {LayerUtils} from "../SceneView/Layer";
+import {ReactNode} from "react";
 
 class BaseShapeDrawer {
     name = "unknown_shape"
@@ -14,6 +13,10 @@ class BaseShapeDrawer {
 
     canvasWidth = -1;
     canvasHeight = -1;
+
+    getSecondaryDrawToolBar(): ReactNode{
+        return null
+    }
 
     get isSelected() {
         return this._isSelected

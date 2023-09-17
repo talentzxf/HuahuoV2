@@ -1,16 +1,18 @@
 import * as React from "react"
+import {ReactNode} from "react"
 import {shapes} from "../ShapeDrawers/Shapes";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
-import {DrawToolBar} from "./DrawToolBar";
 
 type DrawToolBarXState = {
     currentActiveDrawer: BaseShapeDrawer
+    secondaryToolBar: ReactNode
 }
 
 class DrawToolBarX extends React.Component<any, DrawToolBarXState> {
     state: DrawToolBarXState = {
-        currentActiveDrawer: null
+        currentActiveDrawer: null,
+        secondaryToolBar: null
     }
 
     onClick(e) {
@@ -25,7 +27,21 @@ class DrawToolBarX extends React.Component<any, DrawToolBarXState> {
         this.state.currentActiveDrawer = shapeDrawer
         this.state.currentActiveDrawer.isSelected = true
 
+        let secondaryToolBar = shapeDrawer.getSecondaryDrawToolBar()
+        if (secondaryToolBar) {
+            this.state.secondaryToolBar = secondaryToolBar
+        } else {
+            this.state.secondaryToolBar = null
+        }
+
         this.setState(this.state)
+    }
+
+    getSecondaryToolbarClass() {
+        if (this.state.secondaryToolBar == null) {
+            return "hidden"
+        }
+        return "block"
     }
 
     shapeDrawerNameShapeMap = new Map
@@ -50,7 +66,7 @@ class DrawToolBarX extends React.Component<any, DrawToolBarXState> {
                     }} onClick={this.onClick.bind(this)} data-button-shape-name={shapeDrawer.name}>
                         <img src={imgSrc}
                              className={imgClass + " m-2 w-6 hover:m-1 hover:w-8 h-6 hover:h-8 transition-all ease-in-out"}
-                             title={i18n.t(shapeDrawer.name)}/>
+                             title={i18n.t(shapeDrawer.name)} alt={i18n.t(shapeDrawer.name)}/>
                     </button>
                 ))
         }
@@ -59,6 +75,11 @@ class DrawToolBarX extends React.Component<any, DrawToolBarXState> {
             {
                 toolBars
             }
+            <div id="secondaryToolBar" className={this.getSecondaryToolbarClass()}>
+                {
+                    this.state.secondaryToolBar
+                }
+            </div>
         </div>)
     }
 }
