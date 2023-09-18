@@ -46,7 +46,7 @@ class FloatPropertyX extends React.Component<PropertyProps, FloatPropertyState> 
         return (
             <PropertyEntry property={property}>
                 <div>
-                    <input className={CSSUtils.getInputStyle()}
+                    <input className={CSSUtils.getInputStyle("w-20")}
                            step={property?.config?.step || 1.0} min={property?.config?.min || null}
                            max={property?.config?.max || null}
                            type={property?.config?.elementType || "number"} value={this.state.value}

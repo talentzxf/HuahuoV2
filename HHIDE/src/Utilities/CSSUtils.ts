@@ -5,8 +5,8 @@ class CSSUtils {
         return btnClass
     }
 
-    static getInputStyle(){
-        return "px-1 mx-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-right"
+    static getInputStyle(width = "w-32"){
+        return "px-1 mx-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-right " + width
     }
 
     static css2obj(css){

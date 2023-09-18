@@ -151,48 +151,53 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         let targetObject = this.state.selectedObject
 
         return (
-            <div id="buttons" className="inline-flex rounded-md shadow-sm divide-x divide-gray-300">
-                {
-                    this.moreThan2Components() && <ToggleButton trueStateName={i18n.t("inspector.CollapseAll")}
-                                                                falseStateName={i18n.t("inspector.OpenAll")}
-                                                                onTrueState={this.openAll.bind(this)}
-                                                                onFalseState={this.closeAll.bind(this)}></ToggleButton>
-                }
-                {
-                    this.state?.selectedObject?.addComponent &&
-                    <button className={getBtnClz()}
-                            onClick={this.addComponent.bind(this)}> {i18n.t("inspector.AddComponent")}</button>
-                }
-                {
-                    this.state?.selectedObject?.saveAsKeyFrame &&
-                    <button className={getBtnClz()} onClick={() => {
-                        targetObject.saveAsKeyFrame()
-                        HHToast.info(i18n.t("toast.keyframeSaved"))
-                    }}> {i18n.t("inspector.SaveAsKeyFrame")} </button>
-                }
-                {
-                    this.state?.selectedObject?.isLocked && <ToggleButton trueStateName={i18n.t("inspector.LockObject")}
-                                                                          falseStateName={i18n.t("inspector.UnlockObject")}
-                                                                          onTrueState={() => {
-                                                                              targetObject.setIsLocked(false)
-                                                                          }}
-                                                                          onFalseState={() => {
-                                                                              targetObject.setIsLocked(true)
-                                                                          }}
-                                                                          getCurrentState={() => {
-                                                                              return !targetObject.isLocked()
-                                                                          }}></ToggleButton>
-                }
-                {
-                    this.state?.selectedObject?.isShowCenterSelector &&
-                    <ToggleButton trueStateName={i18n.t("inspector.ShowCenterSelector")}
-                                  falseStateName={i18n.t("inspector.HideCenterSelector")}
-                                  onTrueState={targetObject.hideCenterSelector}
-                                  onFalseState={targetObject.showCenterSelector}
-                                  getCurrentState={() => {
-                                      return !targetObject.isShowCenterSelector()
-                                  }}></ToggleButton>
-                }
+            <div id="buttons" className="inline-flex rounded-md shadow-sm divide-x divide-gray-300 flex flex-col">
+                <div className="flex flex-row">
+                    {
+                        this.moreThan2Components() && <ToggleButton trueStateName={i18n.t("inspector.CollapseAll")}
+                                                                    falseStateName={i18n.t("inspector.OpenAll")}
+                                                                    onTrueState={this.openAll.bind(this)}
+                                                                    onFalseState={this.closeAll.bind(this)}></ToggleButton>
+                    }
+                    {
+                        this.state?.selectedObject?.addComponent &&
+                        <button className={getBtnClz()}
+                                onClick={this.addComponent.bind(this)}> {i18n.t("inspector.AddComponent")}</button>
+                    }
+                    {
+                        this.state?.selectedObject?.saveAsKeyFrame &&
+                        <button className={getBtnClz()} onClick={() => {
+                            targetObject.saveAsKeyFrame()
+                            HHToast.info(i18n.t("toast.keyframeSaved"))
+                        }}> {i18n.t("inspector.SaveAsKeyFrame")} </button>
+                    }
+                </div>
+                <div className="flex flex-row">
+                    {
+                        this.state?.selectedObject?.isLocked &&
+                        <ToggleButton trueStateName={i18n.t("inspector.LockObject")}
+                                      falseStateName={i18n.t("inspector.UnlockObject")}
+                                      onTrueState={() => {
+                                          targetObject.setIsLocked(false)
+                                      }}
+                                      onFalseState={() => {
+                                          targetObject.setIsLocked(true)
+                                      }}
+                                      getCurrentState={() => {
+                                          return !targetObject.isLocked()
+                                      }}></ToggleButton>
+                    }
+                    {
+                        this.state?.selectedObject?.isShowCenterSelector &&
+                        <ToggleButton trueStateName={i18n.t("inspector.ShowCenterSelector")}
+                                      falseStateName={i18n.t("inspector.HideCenterSelector")}
+                                      onTrueState={targetObject.hideCenterSelector}
+                                      onFalseState={targetObject.showCenterSelector}
+                                      getCurrentState={() => {
+                                          return !targetObject.isShowCenterSelector()
+                                      }}></ToggleButton>
+                    }
+                </div>
             </div>
         )
     }
