@@ -17,10 +17,15 @@ class UserInfoBarX extends React.Component<any, UserInfoBarState> {
     }
 
     setUserName(val: string) {
-        this.state.username = val
-        if(val){
-            this
+        if(!val){
+            this.state.username = i18n.t("not_logged_in")
+            this.state.isLoggedIn = false
+        } else {
+            this.state.username = val
+            this.state.isLoggedIn = true
         }
+
+        this.setState(this.state)
     }
 
     componentDidMount() {
@@ -29,10 +34,12 @@ class UserInfoBarX extends React.Component<any, UserInfoBarState> {
 
     render() {
         return (<>
-            <span></span>
+            <span>{this.state.username}</span>
             {imgButton(SVGFiles.signInBtn, i18n.t("Login"), () => {
                 formManager.openReactForm(LoginFormX)
             })}
         </>)
     }
 }
+
+export {UserInfoBarX}
