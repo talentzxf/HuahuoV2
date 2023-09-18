@@ -8,12 +8,12 @@ import * as React from "react"
 })
 class DrawToolBar extends HTMLElement {
     connectedCallback() {
-        // (window as any).i18n.ExecuteAfterInited(this.initializeTools.bind(this))
-
-        // Attach React component
-        let reactRoot = createRoot(this)
-        let toolBarX = React.createElement(DrawToolBarX)
-        reactRoot.render(toolBarX)
+        (window as any).i18n.ExecuteAfterInited(() => {
+            // Attach React component
+            let reactRoot = createRoot(this)
+            let toolBarX = React.createElement(DrawToolBarX)
+            reactRoot.render(toolBarX)
+        })
     }
 }
 

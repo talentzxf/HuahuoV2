@@ -1,6 +1,6 @@
 import {CustomElement, Logger} from "hhcommoncomponents"
-import {renderEngine2D, huahuoEngine} from "hhenginejs"
-import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
+import {huahuoEngine, renderEngine2D} from "hhenginejs"
+import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {HHTimeline} from "hhtimeline"
 import {ResizeObserver} from 'resize-observer';
@@ -10,8 +10,6 @@ import {fileLoader} from "./FileLoader";
 import {findParentContent, findParentPanel, HHSideBar} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
 import {SVGFiles} from "../Utilities/Svgs";
-import {formManager} from "../Utilities/FormManager"
-import {EventGraphForm} from "../EventGraphUI/EventGraphForm";
 import {CSSUtils} from "../Utilities/CSSUtils";
 
 function allReadyExecute(fn: Function) {
@@ -437,6 +435,9 @@ class SceneView extends HTMLElement {
         let margin = 15
         let canvasWidth = containerWidth - margin
         let canvasHeight = containerHeight - margin
+
+        if(this.canvas.width == canvasWidth && this.canvas.height == canvasHeight)
+            return
 
         renderEngine2D.resize(this.canvas, canvasWidth, canvasHeight)
 
