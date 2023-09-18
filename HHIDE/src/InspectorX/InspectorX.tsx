@@ -9,7 +9,7 @@ import {ComponentListFormX} from "./ComponentListFormX";
 
 function getBtnClz() {
     let btnClz = CSSUtils.getButtonClass("teal")
-    btnClz += " p-2 first:rounded-l-lg last:rounded-r-lg"
+    btnClz += " p-2 first:rounded-l-lg last:rounded-r-lg border-solid border-2 border-sky-500"
     return btnClz
 }
 

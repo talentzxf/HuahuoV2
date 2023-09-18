@@ -61,7 +61,7 @@ class DrawToolBarX extends React.Component<any, DrawToolBarXState> {
 
             toolBars.push(
                 (
-                    <button style={{
+                    <button key={shapeDrawer.name} style={{
                         backgroundColor: (this.state.currentActiveDrawer == shapeDrawer) ? "#42b983" : "white"
                     }} onClick={this.onClick.bind(this)} data-button-shape-name={shapeDrawer.name}>
                         <img src={imgSrc}

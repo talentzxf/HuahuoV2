@@ -41,7 +41,6 @@ class HHToolBar extends HTMLElement {
     constructor() {
         super();
 
-
         this.className = "btn-group btn-group-sm"
 
         i18n.ExecuteAfterInited(function () {

@@ -22,6 +22,7 @@ import {EventNode} from "../../HHEngineJS/src/EventGraph/Nodes/EventNode";
 import {ActionNode} from "../../HHEngineJS/src/EventGraph/Nodes/ActionNode";
 import {FocusSceneViewCommand} from "./RedoUndo/FocusSceneViewCommand";
 import {RemoveComponentCommand} from "./RedoUndo/RemoveComponentCommand"
+import {HHMainMenu} from "./UIComponents/MainMenu";
 
 import "./index.css"
 
