@@ -13,7 +13,6 @@ import {RegisterForm} from "./Identity/RegisterForm";
 import {UserInfoBar} from "./Identity/UserInfoBar";
 import {PlayerController} from "./AnimationPlayer/PlayerController";
 import {binaryFileUploader} from "./RESTApis/BinaryFileUploader";
-import {HHEditorToolBar} from "./UIComponents/HHEditorToolBar";
 import {HHHistoryCommandList} from "./UIComponents/HHHistoryCommandList"
 import {EventGraphEditorX} from "./InspectorX/CustomFieldReactGenerator/EventGraphEditorX"
 import {SelectIconForm} from "./Inspector/CustomFieldDivGenerators/SelectIconForm";

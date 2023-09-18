@@ -47,6 +47,11 @@
   "ProjectDescription": "项目描述",
   "ProjectPreview": "项目预览",
   "allElements": "所有可用组件",
+  "playerController": {
+    "Play": "播放",
+    "Stop": "停止",
+    "Pause": "暂停"
+  },
   "eventgraph": {
     "resetScale": "重置缩放",
     "addEventListener": "监听事件",

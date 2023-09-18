@@ -47,6 +47,11 @@
   "ProjectDescription": "Project Description",
   "ProjectPreview": "Project Preview",
   "allElements": "All Elements",
+  "playerController": {
+    "Play": "Play",
+    "Stop": "Stop",
+    "Pause": "Pause"
+  },
   "eventgraph": {
     "resetScale": "Reset Scale",
     "addEventListener": "Add Event Receiver",

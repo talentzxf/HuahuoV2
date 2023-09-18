@@ -1,6 +1,7 @@
 import * as React from "react"
 import {ToolBarX} from "./ToolBarX";
 import {EditorToolBarX} from "./EditorToolBarX";
+import {PlayerControllerX} from "../AnimationPlayer/PlayerControllerX";
 
 function getButtonClz() {
     return "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold " +
@@ -25,6 +26,7 @@ class MainMenuX extends React.Component<any, any> {
             <div className="flex flex-row">
                 <ToolBarX></ToolBarX>
                 <EditorToolBarX></EditorToolBarX>
+                <PlayerControllerX></PlayerControllerX>
             </div>
         )
     }

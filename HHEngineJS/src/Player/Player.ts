@@ -13,7 +13,13 @@ class Player extends EventEmitter {
     animationStartTime = -1
 
     lastAnimateTime = -1
+
+    // isPlaying == false && isPaused == false.  The animation stop at the beginning
+    // isPlaying == false && isPaused == true.   The animation stopped at a certain frame.
+    // isPlaying == true && isPaused == false.   The animation is playing.
+    // isPlaying == true && isPaused == true.  Illegal state.
     isPlaying: boolean = false
+    isPaused: boolean = false
 
     _isInEditor: boolean = true
     layerShapesManager: LayerShapesManager;
@@ -77,13 +83,13 @@ class Player extends EventEmitter {
             }
 
             let elapsedTime = 0
-            if(this.lastAnimateTime >= 0){
+            if (this.lastAnimateTime >= 0) {
                 elapsedTime = timeStamp - this.lastAnimateTime
             }
 
             if (this.lastAnimateTime < 0 || elapsedTime > 1000.0 / GlobalConfig.fps) {
-                console.log("FPS:" + 1000.0/elapsedTime)
-                getPhysicSystem().Step(elapsedTime/1000.0)
+                console.log("FPS:" + 1000.0 / elapsedTime)
+                getPhysicSystem().Step(elapsedTime / 1000.0)
                 let store = huahuoEngine.GetStoreById(this.storeId)
                 let activeFrames = store.GetMaxFrameId() + 1;
                 let activePlayTime = activeFrames / GlobalConfig.fps;
@@ -124,6 +130,7 @@ class Player extends EventEmitter {
         this.lastAnimateTime = -1
         this.animationFrame = requestAnimationFrame(this.animationFrameStep.bind(this));
         this.isPlaying = true
+        this.isPaused = false
     }
 
     @GraphEvent(true)
@@ -135,6 +142,7 @@ class Player extends EventEmitter {
             console.log("Error, animation frame is invalid");
         }
 
+        this.isPaused = true
         this.isPlaying = false
     }
 
@@ -143,6 +151,8 @@ class Player extends EventEmitter {
         this.setFrameId(0) // Reset to frame 0
         this.resetActions()
         getPhysicSystem().Reset()
+
+        this.isPaused = false
     }
 
     resetActions() {
