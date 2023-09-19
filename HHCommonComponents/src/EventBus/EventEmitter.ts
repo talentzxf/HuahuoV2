@@ -36,6 +36,10 @@ class EventEmitter{
         })
     }
 
+    getEventEmitterName(){
+        return null
+    }
+
     getEventBus(){
         return this.eventBus
     }

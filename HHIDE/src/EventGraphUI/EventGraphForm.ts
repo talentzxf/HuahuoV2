@@ -16,8 +16,8 @@ import {
 } from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 
-let CANVAS_WIDTH = 1024
-let CANVAS_HEIGHT = 768
+let CANVAS_WIDTH = 800
+let CANVAS_HEIGHT = 600
 
 @CustomElement({
     selector: "hh-event-graph-form"

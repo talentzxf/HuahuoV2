@@ -2,8 +2,9 @@ import {EventDef, getEvents} from "./EventEmitter";
 import {PropertyType} from "../Properties/PropertySheet";
 import {getParameterNameAtIdx} from "../Utils";
 
-class EventBusException{
-    msg:string = "Unknoww Event Bus Exception"
+class EventBusException {
+    msg: string = "Unknoww Event Bus Exception"
+
     constructor(msg) {
         this.msg = msg
     }
@@ -11,11 +12,11 @@ class EventBusException{
 
 const namespaceSeparator = ":"
 
-function getFullEventName(namespace:string, evtName:string){
+function getFullEventName(namespace: string, evtName: string) {
     return namespace + namespaceSeparator + evtName
 }
 
-function splitFullEventName(fullEventName: string){
+function splitFullEventName(fullEventName: string) {
     let splittedEventName = fullEventName.split(namespaceSeparator)
     return {
         namespace: splittedEventName[0],
@@ -23,7 +24,7 @@ function splitFullEventName(fullEventName: string){
     }
 }
 
-class HHEventBus{
+class HHEventBus {
 
     maxHandlerId: number = 0
     handlerIdHandlerMap: Map<number, Function> = new Map()
@@ -31,40 +32,40 @@ class HHEventBus{
     eventHandlerParamArrayMap: Map<string, EventParamDef[]> = new Map()
     namespaceHandlerIdMap: Map<string, Set<number>> = new Map()
 
-    public getAllEvents(){
+    public getAllEvents() {
         return this.eventHandlerIdMap.keys()
     }
 
-    public registerEvent(namespace: string, evtName:string, params: EventParamDef[] = null){
-        if(evtName.indexOf(namespaceSeparator) != -1)
+    public registerEvent(namespace: string, evtName: string, params: EventParamDef[] = null) {
+        if (evtName.indexOf(namespaceSeparator) != -1)
             throw new EventBusException("InvalidEventName:" + evtName)
 
         let fullEventName = getFullEventName(namespace, evtName)
-        if(this.eventHandlerIdMap.has(fullEventName))
+        if (this.eventHandlerIdMap.has(fullEventName))
             return
 
         this.eventHandlerIdMap.set(fullEventName, new Set<number>())
 
-        if(params && params.length > 0){
+        if (params && params.length > 0) {
             this.eventHandlerParamArrayMap.set(fullEventName, params)
         }
     }
 
-    getEventParameters(fullEventName: string){
+    getEventParameters(fullEventName: string) {
         return this.eventHandlerParamArrayMap.get(fullEventName)
     }
 
-    removeEventHandler(namespace: string, evtName: string, handlerId: number){
-        if(this.handlerIdHandlerMap.has(handlerId)){
+    removeEventHandler(namespace: string, evtName: string, handlerId: number) {
+        if (this.handlerIdHandlerMap.has(handlerId)) {
             this.handlerIdHandlerMap.delete(handlerId)
-        }else{
+        } else {
             console.warn("Trying to remove an nonexistence handlerId:" + handlerId)
         }
     }
 
-    addEventHandler(namespace: string, evtName: string, handler: Function): number{
+    addEventHandler(namespace: string, evtName: string, handler: Function): number {
         let fullEventName = getFullEventName(namespace, evtName)
-        if(!this.eventHandlerIdMap.has(fullEventName)){
+        if (!this.eventHandlerIdMap.has(fullEventName)) {
             this.registerEvent(namespace, evtName)
         }
 
@@ -76,15 +77,15 @@ class HHEventBus{
         return handlerId
     }
 
-    triggerEvent(namespace: string, evtName: string, ...evtParams){
+    triggerEvent(namespace: string, evtName: string, ...evtParams) {
         let fullEventName = getFullEventName(namespace, evtName)
-        if(!this.eventHandlerIdMap.has(fullEventName)){
+        if (!this.eventHandlerIdMap.has(fullEventName)) {
             return
         }
 
         let handlerIdArray = this.eventHandlerIdMap.get(fullEventName)
-        for(let handlerId of handlerIdArray){
-            if(!this.handlerIdHandlerMap.has(handlerId)){
+        for (let handlerId of handlerIdArray) {
+            if (!this.handlerIdHandlerMap.has(handlerId)) {
                 // throw new EventBusException("Can't find this handlerId:" + handlerId + " for event:" + fullEventName)
                 console.error("Can't find this handlerId:" + handlerId + " for event:" + fullEventName)
                 continue
@@ -97,17 +98,20 @@ class HHEventBus{
 }
 
 let eventBus = window["eventBus"]
-if(!window["eventBus"]){
+if (!window["eventBus"]) {
     eventBus = new HHEventBus()
     window["eventBus"] = eventBus
 }
 
-function GraphEvent(isGlobal: boolean = false){
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor){
+function GraphEvent(isGlobal: boolean = false) {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+
+        let eventNameSpace = target.getEventEmitterName() || target.constructor.name
+
         // Register the event
         let events = getEvents(target)
         let eventDef: EventDef = {
-            eventNameSpace: target.constructor.name,
+            eventNameSpace: eventNameSpace,
             eventName: propertyKey,
             target: target,
             isGlobal: isGlobal
@@ -115,11 +119,11 @@ function GraphEvent(isGlobal: boolean = false){
         events.push(eventDef)
 
         let originalMethod = descriptor.value
-        descriptor.value = function(...args:any[]){
+        descriptor.value = function (...args: any[]) {
             let executeResult = originalMethod.apply(this, args)
             this.getEventBus().triggerEvent(target.constructor.name, propertyKey, args)
 
-            if(isGlobal) // If this is a global event, trigger the event in the global namespace.
+            if (isGlobal) // If this is a global event, trigger the event in the global namespace.
                 eventBus.triggerEvent(target.constructor.name, propertyKey, args)
             return executeResult
         }
@@ -136,7 +140,7 @@ class EventParamDef {
     paramIndex: number
 }
 
-function getEventParams(target, functionName){
+function getEventParams(target, functionName) {
     return Reflect.getMetadata(eventParameterSymbol, target, functionName) || []
 }
 
@@ -146,8 +150,8 @@ function getEventParams(target, functionName){
  * @param name There's no convenient way to get the parameter name from the JS runtime. So pass this parameter. If not set, we will try to get it from the function, but that might fail.
  * @constructor
  */
-function EventParam(type: PropertyType, name: string = null){
-    return function(target: Object, propertyKey: string | symbol, parameterIndex: number){
+function EventParam(type: PropertyType, name: string = null) {
+    return function (target: Object, propertyKey: string | symbol, parameterIndex: number) {
         let existingParameters: EventParamDef[] = getEventParams(target, propertyKey)
 
         let paramName = name || getParameterNameAtIdx(target[propertyKey], parameterIndex)

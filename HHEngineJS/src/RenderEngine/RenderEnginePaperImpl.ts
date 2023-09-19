@@ -22,6 +22,10 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
     private isPlayer = false
     private aspectRatio: number = 4 / 3  //  W:H = 4:3
 
+    override getEventEmitterName() {
+        return "Canvas"
+    }
+
     getInitCanvasWH(): [number, number] {
         return [huahuoEngine.getProjectWidth(), huahuoEngine.getProjectHeight()]
     }
@@ -153,31 +157,31 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
 
         this.canvasPaperMap.set(canvas, paper.project.index)
 
-        view.onMouseMove = (evt: paper.MouseEvent)=>{
+        view.onMouseMove = (evt: paper.MouseEvent) => {
             this.onMouseMove(evt.point)
         }
 
-        view.onMouseDown = (evt: paper.MouseEvent)=>{
+        view.onMouseDown = (evt: paper.MouseEvent) => {
             this.onMouseDown(evt.point)
         }
 
-        view.onMouseUp = (evt: paper.MouseEvent)=>{
+        view.onMouseUp = (evt: paper.MouseEvent) => {
             this.onMouseUp(evt.point)
         }
     }
 
     @GraphEvent(true)
-    onMouseMove(@EventParam(PropertyType.VECTOR2) point: paper.Point){
+    onMouseMove(@EventParam(PropertyType.VECTOR2) point: paper.Point) {
 
     }
 
     @GraphEvent(true)
-    onMouseDown(@EventParam(PropertyType.VECTOR2) point: paper.Point){
+    onMouseDown(@EventParam(PropertyType.VECTOR2) point: paper.Point) {
 
     }
 
     @GraphEvent(true)
-    onMouseUp(@EventParam(PropertyType.VECTOR2) point: paper.Point){
+    onMouseUp(@EventParam(PropertyType.VECTOR2) point: paper.Point) {
 
     }
 
