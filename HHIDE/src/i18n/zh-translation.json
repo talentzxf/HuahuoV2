@@ -68,7 +68,10 @@
     "onMouseEnter": "鼠标进入",
     "onMouseUp": "鼠标松开",
     "setFrameId": "设置帧",
-    "pausePlay": "暂停播放"
+    "pausePlay": "暂停播放",
+    "Execute": "执行",
+    "point": "点",
+    "playFrameId": "帧号"
   },
   "contextmenu": {
     "sendToBack": "放到下面",

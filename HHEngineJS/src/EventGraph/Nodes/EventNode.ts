@@ -2,6 +2,7 @@ import {LiteGraph, SerializedLGraphNode} from "litegraph.js";
 import {splitFullEventName} from "hhcommoncomponents";
 import {AbstractNode} from "./AbstractNode";
 import {huahuoEngine} from "../../EngineAPI";
+import {i18n} from "hhcommoncomponents";
 
 class EventNode extends AbstractNode {
     title = "EventNode"
@@ -16,7 +17,9 @@ class EventNode extends AbstractNode {
 
     constructor() {
         super();
-        this.addOutput("Execute", LiteGraph.EVENT)
+        this.addOutput("Execute", LiteGraph.EVENT, {
+            label: i18n.t("eventgraph.Execute")
+        })
     }
 
     addParameterIndexSlotMap(paramIdx, outputSlot) {
@@ -41,7 +44,7 @@ class EventNode extends AbstractNode {
         this.title = title || fullEventName
         let _this = this
         this.currentEventHandler = targetEventBus.addEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, (params) => {
-            if(!huahuoEngine.getActivePlayer().isPlaying) // Do not trigger when player is not playing.
+            if (!huahuoEngine.getActivePlayer().isPlaying) // Do not trigger when player is not playing.
                 return
 
             for (let paramIdx = 0; paramIdx < params.length; paramIdx++) {
@@ -58,7 +61,7 @@ class EventNode extends AbstractNode {
 
             // if _this.graph is null, means the node has already been deleted. Need to remove the event listener
             // TODO: This remove should happen when the node is removed!
-            if(!_this.graph){
+            if (!_this.graph) {
                 targetEventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, _this.currentEventHandler)
             }
         })

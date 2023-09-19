@@ -22,7 +22,7 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
     private isPlayer = false
     private aspectRatio: number = 4 / 3  //  W:H = 4:3
 
-    override getEventEmitterName() {
+    getEventEmitterName() {
         return "Canvas"
     }
 

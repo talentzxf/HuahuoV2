@@ -318,7 +318,9 @@ class EventGraphForm extends HTMLElement implements HHForm {
                                 if (node) {
                                     let paramDefs = huahuoEngine.getEventBus(eventObject["eventSource"]).getEventParameters(fullEventName) || []
                                     for (let paramDef of paramDefs) {
-                                        let outputSlot = node.addOutput(paramDef.parameterName, getLiteGraphTypeFromPropertyType(paramDef.parameterType))
+                                        let outputSlot = node.addOutput(paramDef.parameterName, getLiteGraphTypeFromPropertyType(paramDef.parameterType), {
+                                            label: i18n.t(eventGraphPrefix + paramDef.parameterName)
+                                        })
                                         node.addParameterIndexSlotMap(paramDef.paramIndex, outputSlot)
                                     }
 
