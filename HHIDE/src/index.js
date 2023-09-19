@@ -10,7 +10,6 @@ import {Inspector} from "./Inspector/Inspector";
 import {BaseForm} from "./UIComponents/BaseForm"
 
 import {RegisterForm} from "./Identity/RegisterForm";
-import {UserInfoBar} from "./Identity/UserInfoBar";
 import {binaryFileUploader} from "./RESTApis/BinaryFileUploader";
 import {HHHistoryCommandList} from "./UIComponents/HHHistoryCommandList"
 import {EventGraphEditorX} from "./InspectorX/CustomFieldReactGenerator/EventGraphEditorX"
