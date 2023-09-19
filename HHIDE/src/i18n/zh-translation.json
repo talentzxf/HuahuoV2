@@ -1,6 +1,7 @@
 {
   "helloWorld": "你好！",
   "Login": "登录",
+  "Login": "登出",
   "ComponentList": "可用组件列表",
   "notImplemented": "对不起，该功能仍在开发中!",
   "save": "保存",

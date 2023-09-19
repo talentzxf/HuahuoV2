@@ -2,7 +2,7 @@ import {huahuoEngine} from "hhenginejs";
 import {sceneViewManager} from "../SceneView/SceneViewManager";
 import {ShortcutEventNames, shortcutsManager} from "../Shortcuts/ShortcutsManager";
 
-class ExecutionStackFrame{
+class ExecutionStackFrame {
     private store
     private layer
     private frameId
@@ -15,38 +15,41 @@ class ExecutionStackFrame{
         this.player = sceneViewManager.getFocusedViewAnimationPlayer()
     }
 
-    restore(){
+    restore() {
         this.layer.SetCurrentFrame(this.frameId)
         this.store.SetCurrentLayer(this.layer)
         huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.store.GetStoreId())
 
-        this.player.updateAllShapes()
+        this.player?.updateAllShapes()
     }
 
-    equals(otherFrame: ExecutionStackFrame){
+    equals(otherFrame: ExecutionStackFrame) {
         return this.store == otherFrame.store && this.frameId == otherFrame.frameId && this.store == otherFrame.store
     }
 }
 
 abstract class UndoableCommand {
     abstract GetType(): string
+
     abstract _DoCommand()
+
     abstract _UnDoCommand()
 
     private stackFrame: ExecutionStackFrame
+
     constructor() {
         this.stackFrame = new ExecutionStackFrame()
     }
 
-    stackFrameEqual(anotherCommand: UndoableCommand):boolean{
+    stackFrameEqual(anotherCommand: UndoableCommand): boolean {
         return this.stackFrame.equals(anotherCommand.stackFrame)
     }
 
-    toString(){
+    toString() {
         return i18n.t(this.GetType())
     }
 
-    private ExecuteCommand(func){
+    private ExecuteCommand(func) {
         // let stackFrame: ExecutionStackFrame = new ExecutionStackFrame()
         // try{
         //     this.stackFrame.restore() // Return to the status when the command is created.
@@ -58,29 +61,29 @@ abstract class UndoableCommand {
         func()
     }
 
-    public DoCommand(){
+    public DoCommand() {
         this.ExecuteCommand(this._DoCommand.bind(this))
     }
 
-    public UnDoCommand(){
+    public UnDoCommand() {
         this.ExecuteCommand(this._UnDoCommand.bind(this))
     }
 }
 
-abstract class MergableCommand extends UndoableCommand{
-    abstract MergeCommand(anotherCommand:MergableCommand): boolean
+abstract class MergableCommand extends UndoableCommand {
+    abstract MergeCommand(anotherCommand: MergableCommand): boolean
 }
 
-abstract class TransformCommand extends MergableCommand{
+abstract class TransformCommand extends MergableCommand {
     targetShape
 
-    override toString(){
+    override toString() {
         let cmdString = super.toString()
 
         let translatedTypeName = i18n.t(this.targetShape.getTypeName())
 
         cmdString += ":" + "[" + translatedTypeName + "]"
-        if(this.targetShape.name)
+        if (this.targetShape.name)
             cmdString += this.targetShape.name
 
         return cmdString
@@ -97,11 +100,11 @@ abstract class TransformCommand extends MergableCommand{
         super.UnDoCommand();
 
         this.targetShape.store()
-        this.targetShape.update(true)        
+        this.targetShape.update(true)
     }
 }
 
-function commandIsMergable(cmd:UndoableCommand){
+function commandIsMergable(cmd: UndoableCommand) {
     return (<MergableCommand>cmd).MergeCommand !== undefined
 }
 
@@ -123,38 +126,38 @@ class UndoManager {
         })
     }
 
-    registerListener(listener){
+    registerListener(listener) {
         this.listeners.push(listener)
     }
 
-    getCommands(){
+    getCommands() {
         return this.undoCommandStack
     }
 
-    isValidIndex(idx):boolean{
+    isValidIndex(idx): boolean {
         return idx >= 0 && idx <= this.undoCommandStack.length - 1
     }
 
-    getUndoIndex(){
-        if(this.undoCommandStack.length == 0)
+    getUndoIndex() {
+        if (this.undoCommandStack.length == 0)
             return -1
-        if(this.currentCmdIdx == this.undoCommandStack.length)
+        if (this.currentCmdIdx == this.undoCommandStack.length)
             return this.currentCmdIdx
 
         return this.currentCmdIdx
     }
 
-    getDisplayIndex(){
-        if(this.currentCmdIdx == -1)
+    getDisplayIndex() {
+        if (this.currentCmdIdx == -1)
             return 0
-        if(this.currentCmdIdx == this.undoCommandStack.length)
+        if (this.currentCmdIdx == this.undoCommandStack.length)
             return this.undoCommandStack.length - 1
 
         return this.currentCmdIdx
     }
 
-    invokeListeners(){
-        for(let listener of this.listeners){
+    invokeListeners() {
+        for (let listener of this.listeners) {
             listener()
         }
     }
@@ -162,16 +165,16 @@ class UndoManager {
     PushCommand(cmd: UndoableCommand) {
         // Discard all commands behind current index
         while (this.currentCmdIdx < this.undoCommandStack.length - 1
-            &&this.undoCommandStack.length != 0) {
+        && this.undoCommandStack.length != 0) {
             this.undoCommandStack.pop()
         }
 
         let undoCmdIdx = this.getUndoIndex()
 
-        if(this.isValidIndex(undoCmdIdx)){
+        if (this.isValidIndex(undoCmdIdx)) {
             let currentDoneCommand = this.undoCommandStack[undoCmdIdx]
-            if(commandIsMergable(currentDoneCommand) && commandIsMergable(cmd)){
-                if( (currentDoneCommand as MergableCommand).MergeCommand(cmd as MergableCommand) ){ // The new command is merged into previous command.
+            if (commandIsMergable(currentDoneCommand) && commandIsMergable(cmd)) {
+                if ((currentDoneCommand as MergableCommand).MergeCommand(cmd as MergableCommand)) { // The new command is merged into previous command.
                     return
                 }
             }
@@ -184,22 +187,22 @@ class UndoManager {
     }
 
     UnDo() {
-        if(this.currentCmdIdx == this.undoCommandStack.length){ // At the top, can only undo the last command.
-            this.currentCmdIdx = Math.max(this.currentCmdIdx - 1 , -1 )
+        if (this.currentCmdIdx == this.undoCommandStack.length) { // At the top, can only undo the last command.
+            this.currentCmdIdx = Math.max(this.currentCmdIdx - 1, -1)
         }
 
-        if(this.isValidIndex(this.currentCmdIdx)){
+        if (this.isValidIndex(this.currentCmdIdx)) {
             let currentCommand = this.undoCommandStack[this.currentCmdIdx]
             currentCommand.UnDoCommand()
         }
-        this.currentCmdIdx = Math.max(this.currentCmdIdx - 1 , -1 )
+        this.currentCmdIdx = Math.max(this.currentCmdIdx - 1, -1)
 
         this.invokeListeners()
     }
 
     ReDo() {
-        this.currentCmdIdx = Math.min(this.currentCmdIdx + 1 , this.undoCommandStack.length)
-        if(this.isValidIndex(this.currentCmdIdx)){
+        this.currentCmdIdx = Math.min(this.currentCmdIdx + 1, this.undoCommandStack.length)
+        if (this.isValidIndex(this.currentCmdIdx)) {
             let currentCommand = this.undoCommandStack[this.currentCmdIdx]
             currentCommand.DoCommand()
         }

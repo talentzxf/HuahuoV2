@@ -25,10 +25,19 @@ class MainMenuX extends React.Component<any, any> {
     render() {
         return (
             <div className="flex flex-row">
-                <ToolBarX></ToolBarX>
-                <EditorToolBarX></EditorToolBarX>
-                <PlayerControllerX></PlayerControllerX>
-                <UserInfoBarX></UserInfoBarX>
+                <div className="w-[20%]">
+                    <ToolBarX></ToolBarX>
+                </div>
+                <div className="w-[20%]">
+                    <EditorToolBarX></EditorToolBarX>
+                </div>
+                <div className="w-[30%]">
+                    <PlayerControllerX></PlayerControllerX>
+                </div>
+                <div className="w-full">
+                    <UserInfoBarX></UserInfoBarX>
+                </div>
+
             </div>
         )
     }

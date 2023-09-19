@@ -6,7 +6,7 @@ import {HHToast} from "hhcommoncomponents";
 
 class EditorToolBarX extends React.Component<any, any> {
     render() {
-        return (<div className="w-[25%]">
+        return (<div>
             {imgButton(SVGFiles.undoBtn, i18n.t("hint.undo"), () => {
                 undoManager.UnDo()
             })}

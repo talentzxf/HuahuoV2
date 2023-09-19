@@ -17,7 +17,7 @@ class UserInfoBarX extends React.Component<any, UserInfoBarState> {
     }
 
     setUserName(val: string) {
-        if(!val){
+        if (!val) {
             this.state.username = i18n.t("not_logged_in")
             this.state.isLoggedIn = false
         } else {
@@ -32,13 +32,29 @@ class UserInfoBarX extends React.Component<any, UserInfoBarState> {
         userInfo.addLoginEventHandler(this.setUserName.bind(this))
     }
 
+    login() {
+        formManager.openReactForm(LoginFormX)
+    }
+
+    logout() {
+        userInfo.logout()
+        this.setUserName(null)
+    }
+
     render() {
-        return (<>
-            <span>{this.state.username}</span>
-            {imgButton(SVGFiles.signInBtn, i18n.t("Login"), () => {
-                formManager.openReactForm(LoginFormX)
-            })}
-        </>)
+        let loginButton = imgButton(SVGFiles.signInBtn, i18n.t("Login"), () => {
+            this.login()
+        })
+
+        let logoutButton = imgButton(SVGFiles.logoutBtn, i18n.t("Logout"), () => {
+            this.logout()
+        })
+        return (<div className="flex flex-row-reverse">
+            {this.state.isLoggedIn ? logoutButton : loginButton}
+            <span style={this.state.isLoggedIn ? null : {
+                cursor: "pointer"
+            }} onClick={this.state.isLoggedIn ? null : this.login.bind(this)}>{this.state.username}</span>
+        </div>)
     }
 }
 

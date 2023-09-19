@@ -29,8 +29,8 @@ class PlayerControllerX extends React.Component<any, PlayerControllerState> {
 
     syncStateWithPlayer() {
         let player = sceneViewManager.getFocusedViewAnimationPlayer()
-        this.state.isPaused = player.isPaused
-        this.state.isPlaying = player.isPlaying
+        this.state.isPaused = player?.isPaused
+        this.state.isPlaying = player?.isPlaying
     }
 
     render() {
@@ -39,30 +39,30 @@ class PlayerControllerX extends React.Component<any, PlayerControllerState> {
         this.syncStateWithPlayer()
 
         let playButton = imgButton(SVGFiles.playBtn, i18n.t("playerController.Play"), () => {
-            player.startPlay()
+            player?.startPlay()
             this.syncStateWithPlayer()
             this.setState(this.state)
         })
         let stopButton = imgButton(SVGFiles.stopBtn, i18n.t("playerController.Stop"), () => {
-            sceneViewManager.getFocusedViewAnimationPlayer().stopPlay()
+            player?.stopPlay()
             this.syncStateWithPlayer()
             this.setState(this.state)
         })
 
         let pauseButton = imgButton(SVGFiles.pauseBtn, i18n.t("playerController.Pause"), () => {
-            sceneViewManager.getFocusedViewAnimationPlayer().pausePlay()
+            player?.pausePlay()
             this.syncStateWithPlayer()
             this.setState(this.state)
         })
 
         return (
-            <>
+            <div className="flex flex-row">
                 <span>{this.state.projectName}</span>
                 <div>
                     {this.state.isPlaying ? pauseButton : playButton}
                     {this.state.isPlaying ? (this.state.isPaused ? playButton : stopButton) : null}
                 </div>
-            </>
+            </div>
         )
     }
 }

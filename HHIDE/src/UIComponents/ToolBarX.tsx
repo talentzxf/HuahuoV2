@@ -70,7 +70,7 @@ class ToolBarX extends React.Component<any, any> {
     uploadProject(afterAction: Function = null) {
         if (!projectInfo.inited) {
             formManager.openReactForm(ProjectInfoFormX, {
-                afterAction: () => {
+                onOKCallback: () => {
                     binaryFileUploader.upload().then((response) => {
                         if (afterAction)
                             afterAction(response.data)
@@ -101,23 +101,21 @@ class ToolBarX extends React.Component<any, any> {
     render() {
         return (
             <div className="flex flex-row">
-                <div className="px-2 flex flex-row">
-                    {imgButton(SVGFiles.saveBtn, i18n.t("hint.saveLocal"), this.save.bind(this))}
-                    {imgButton(SVGFiles.loadBtn, i18n.t("hint.loadLocal"), this.onFileSelected.bind(this))}
-                    {imgButton(SVGFiles.previewBtn, i18n.t("hint.preview"), this.uploadAndOpenPlayer.bind(this))}
-                    {imgButton(SVGFiles.elementListButton, i18n.t("hint.library"), () => {
-                        this.listElements()
-                    })}
-                    {imgButton(SVGFiles.projectListBtn, i18n.t("hint.listProject"), () => {
-                        this.listProjects()
-                    })}
-                    {imgButton(SVGFiles.uploadBtn, i18n.t("hint.uploadProject"), () => {
-                        this.uploadProject()
-                    })}
-                    {imgButton(SVGFiles.exportImage, i18n.t("hint.exportImage"), () => {
-                        this.exportImage()
-                    })}
-                </div>
+                {imgButton(SVGFiles.saveBtn, i18n.t("hint.saveLocal"), this.save.bind(this))}
+                {imgButton(SVGFiles.loadBtn, i18n.t("hint.loadLocal"), this.onFileSelected.bind(this))}
+                {imgButton(SVGFiles.previewBtn, i18n.t("hint.preview"), this.uploadAndOpenPlayer.bind(this))}
+                {imgButton(SVGFiles.elementListButton, i18n.t("hint.library"), () => {
+                    this.listElements()
+                })}
+                {imgButton(SVGFiles.projectListBtn, i18n.t("hint.listProject"), () => {
+                    this.listProjects()
+                })}
+                {imgButton(SVGFiles.uploadBtn, i18n.t("hint.uploadProject"), () => {
+                    this.uploadProject()
+                })}
+                {imgButton(SVGFiles.exportImage, i18n.t("hint.exportImage"), () => {
+                    this.exportImage()
+                })}
             </div>
         )
     }
