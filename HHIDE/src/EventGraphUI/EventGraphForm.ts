@@ -16,8 +16,8 @@ import {
 } from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 
-let CANVAS_WIDTH = 800
-let CANVAS_HEIGHT = 600
+let CANVAS_WIDTH = 1024
+let CANVAS_HEIGHT = 768
 
 @CustomElement({
     selector: "hh-event-graph-form"
@@ -34,6 +34,24 @@ class EventGraphForm extends HTMLElement implements HHForm {
     targetComponent
 
     setTargetComponent(targetComponent) {
+        if (this.targetComponent != null) {
+            if (this.setFrameIdHandler != -1) {
+                huahuoEngine.getActivePlayer().getEventBus().addEventHandler("Player", "setFrameId", this.setFrameIdHandler)
+                this.setFrameIdHandler = -1
+
+                let oldGraph = this.targetComponent.getGraph()
+                oldGraph.onInputAdded = null
+                oldGraph.onInputRemoved = null
+
+                oldGraph.onInputNodeCreated = null
+                oldGraph.onInputNodeRemoved = null
+
+                for(let valueChangeHandler of this.valueChangeHandlerIds){
+                    this.targetComponent.unregisterValueChangeHandlerFromAllValues(valueChangeHandler)
+                }
+            }
+        }
+
         this.targetComponent = targetComponent
 
         this.initLGraph(this.canvas)
@@ -254,9 +272,9 @@ class EventGraphForm extends HTMLElement implements HHForm {
         }
 
         // Build up component events
-        this.targetComponent.baseShape.getComponents().forEach((component)=>{
+        this.targetComponent.baseShape.getComponents().forEach((component) => {
             let componentEvents = huahuoEngine.getEvent(component).getEvents()
-            for(let eventName of componentEvents){
+            for (let eventName of componentEvents) {
                 eventNameEventBusMap.set(eventName, component)
             }
         })
@@ -330,10 +348,10 @@ class EventGraphForm extends HTMLElement implements HHForm {
         new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
     }
 
-    onInputAdded(inputName: string, inputType: string){
+    onInputAdded(inputName: string, inputType: string) {
         console.log("Input added")
         // TODO: Switch - case?? Looks stupid, need to seed some more elegant way to do this.
-        switch(inputType){
+        switch (inputType) {
             case "number":
                 let propertyDef: PropertyDef = {
                     key: inputName,
@@ -354,13 +372,13 @@ class EventGraphForm extends HTMLElement implements HHForm {
         IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, this.targetComponent.baseShape)
     }
 
-    onInputRemoved(inputName: string){
+    onInputRemoved(inputName: string) {
         console.log("Input removed")
     }
 
     valueChangeHandlerIds: Array<number> = new Array
 
-    setNodeValue(node, value){
+    setNodeValue(node, value) {
         node.graph.beforeChange()
 
         let prevSetInputValueFunction = node.graph.setInputValueFunction
@@ -372,36 +390,39 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         node.graph.change()
     }
-    onInputNodeCreated(node){
+
+    onInputNodeCreated(node) {
         let propertyName = node.properties.name
 
         let _this = this
-        if(this.targetComponent.hasOwnProperty(propertyName)){
-            let valueChangeHandlerId = this.targetComponent.registerValueChangeHandler(propertyName, (value)=>{
+        if (this.targetComponent.hasOwnProperty(propertyName)) {
+            let valueChangeHandlerId = this.targetComponent.registerValueChangeHandler(propertyName, (value) => {
                 _this.setNodeValue(node, value)
             })
 
             this.valueChangeHandlerIds.push(valueChangeHandlerId)
 
-            if(node.properties.value != this.targetComponent[propertyName]){
+            if (node.properties.value != this.targetComponent[propertyName]) {
                 this.setNodeValue(node, this.targetComponent[propertyName])
             }
         }
     }
 
-    onInputNodeRemoved(node){
+    onInputNodeRemoved(node) {
         console.log("Input node removed:" + node)
     }
+
+    setFrameIdHandler = -1
 
     initLGraph(canvas: HTMLCanvasElement) {
         let graph = this.targetComponent.getGraph()
 
-        huahuoEngine.getActivePlayer().getEventBus().addEventHandler("Player", "setFrameId", ()=>{
+        this.setFrameIdHandler = huahuoEngine.getActivePlayer().getEventBus().addEventHandler("Player", "setFrameId", () => {
             let inputNodes = graph.findNodesByType("graph/input")
-            for(let inputNode of inputNodes){
+            for (let inputNode of inputNodes) {
                 let propertyName = inputNode.properties.name
 
-                if(inputNode.properties.value != this.targetComponent[propertyName]){
+                if (inputNode.properties.value != this.targetComponent[propertyName]) {
                     this.setNodeValue(inputNode, this.targetComponent[propertyName])
                 }
             }
@@ -415,7 +436,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         // Bind all current input nodes
         let inputNodes = graph.findNodesByType("graph/input")
-        for(let inputNode of inputNodes){
+        for (let inputNode of inputNodes) {
             this.onInputNodeCreated(inputNode)
         }
 
@@ -458,6 +479,9 @@ class EventGraphForm extends HTMLElement implements HHForm {
             // node_const.connect(0, node_watch, 0);
 
             LiteGraph["release_link_on_empty_shows_menu"] = true
+
+            this.lcanvas.title_texts.GraphInputs = i18n.t("eventgraph.GraphInputs")
+
         } else
             this.lcanvas.setGraph(graph)
     }

@@ -57,7 +57,8 @@
     "resetScale": "重置缩放",
     "addEventListener": "监听事件",
     "addGraphAction": "添加动作",
-    "addComponentGraphAction": "添加组件动作"
+    "addComponentGraphAction": "添加组件动作",
+    "GraphInputs": "事件图输入"
   },
   "contextmenu": {
     "sendToBack": "放到下面",

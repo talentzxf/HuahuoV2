@@ -144,7 +144,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
                 totalComponentCount++
         }
 
-        return totalComponentCount > 2
+        return totalComponentCount >= 2
     }
 
     createButtonGroup() {

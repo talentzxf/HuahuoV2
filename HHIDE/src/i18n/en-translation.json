@@ -57,7 +57,8 @@
     "resetScale": "Reset Scale",
     "addEventListener": "Add Event Receiver",
     "addGraphAction": "Add Graph Action",
-    "addComponentGraphAction": "Add Component Graph Action"
+    "addComponentGraphAction": "Add Component Graph Action",
+    "GraphInputs": "Graph Inputs"
   },
   "contextmenu": {
     "sendToBack": "Send To Back",

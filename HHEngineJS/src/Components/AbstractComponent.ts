@@ -86,12 +86,16 @@ abstract class AbstractComponent extends EventEmitter {
         return this.valueChangeHandler.registerValueChangeHandler(valueNameString)(callbackFunc)
     }
 
+    unregisterValueChangeHandlerFromAllValues(id) {
+        this.valueChangeHandler.unregisterValueChangeHandlerFromAllValues(id)
+    }
+
     callHandlers(propertyName: string, val: any) {
         this.valueChangeHandler.callHandlers(propertyName, val)
     }
 
-    addProperty(propertyEntry: PropertyDef, needAppendInMeta:boolean = false) {
-        if(needAppendInMeta){
+    addProperty(propertyEntry: PropertyDef, needAppendInMeta: boolean = false) {
+        if (needAppendInMeta) {
             let currentProperties = getProperties(this)
             currentProperties.push(propertyEntry)
 
@@ -127,12 +131,12 @@ abstract class AbstractComponent extends EventEmitter {
         this.rawObj = castObject(rawObj, Module[cppClzName])
 
         let frameStateCount = this.rawObj.GetFrameStateCount()
-        for(let frameStateIdx = 0; frameStateIdx < frameStateCount; frameStateIdx++){
+        for (let frameStateIdx = 0; frameStateIdx < frameStateCount; frameStateIdx++) {
             let frameStateRawObj = this.rawObj.GetFrameStateAtIdx(frameStateIdx)
             let frameStateName = frameStateRawObj.GetName()
             let frameStateString = this.rawObj.GetAdditionalFieldDef(frameStateName)
 
-            if(frameStateString != null && frameStateString.length > 0){
+            if (frameStateString != null && frameStateString.length > 0) {
                 let fieldDef = JSON.parse(frameStateString)
                 const properties: PropertyDef[] = Reflect.getMetadata(metaDataKey, this)
                 properties.push(fieldDef)
@@ -265,12 +269,12 @@ abstract class AbstractComponent extends EventEmitter {
     }
 
     // Callback from IDE when the component is mounted.
-    onMounted(){
+    onMounted() {
 
     }
 
     // Callback from IDE when the component is dismounted from the shape.
-    onDismounted(){
+    onDismounted() {
 
     }
 }

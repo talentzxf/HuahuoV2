@@ -1,4 +1,4 @@
-class ValueChangeHandler{
+class ValueChangeHandler {
     public static wildCard = "*"
 
     private valueChangeHandlersMap: Map<string, Map<number, Function>> = new Map()
@@ -6,10 +6,10 @@ class ValueChangeHandler{
 
     private handlerId: number = 0 // always increment
 
-    mergeMap(map1, map2): Map<number, Function>{
-        if(map1 == null || map1.entries == null)
+    mergeMap(map1, map2): Map<number, Function> {
+        if (map1 == null || map1.entries == null)
             return map2
-        if(map2 == null || map2.entries == null)
+        if (map2 == null || map2.entries == null)
             return map1
 
         return new Map([...map1.entries(), ...map2.entries()])
@@ -25,11 +25,11 @@ class ValueChangeHandler{
 
             let mergedHandlerMap = this.mergeMap(propertyMap, wildCardHandlerMap)
 
-            if(mergedHandlerMap){
+            if (mergedHandlerMap) {
                 for (let [handlerId, handler] of mergedHandlerMap) {
                     let preprocessor = this.valueChangeHandlersPreProcessorMap.get(handlerId)
 
-                    if(preprocessor)
+                    if (preprocessor)
                         handler(preprocessor(val))
                     else
                         handler(val)
@@ -44,14 +44,14 @@ class ValueChangeHandler{
             let valueNames = valueNameString.split("|") // Use | to subscribe multiple events.
 
             let returnIds = []
-            for(let valueName of valueNames){
+            for (let valueName of valueNames) {
                 if (!this.valueChangeHandlersMap.has(valueName)) {
                     this.valueChangeHandlersMap.set(valueName, new Map<Number, Map<number, Function>>())
                 }
 
                 let id = this.handlerId
                 this.valueChangeHandlersMap.get(valueName).set(id, valueChangedHandler)
-                if(preProcessor)
+                if (preProcessor)
                     this.valueChangeHandlersPreProcessorMap.set(id, preProcessor)
                 this.handlerId++
 
@@ -62,13 +62,23 @@ class ValueChangeHandler{
         }.bind(this)
     }
 
+    unregisterValueChangeHandlerFromAllValues(handlerId) {
+        for (let [valueName, valueChangeHandlerMap] of this.valueChangeHandlersMap) {
+            valueChangeHandlerMap.delete(handlerId)
+        }
+
+        if(this.valueChangeHandlersPreProcessorMap.has(handlerId)){
+            this.valueChangeHandlersPreProcessorMap.delete(handlerId)
+        }
+    }
+
     unregisterValueChangeHandler(valueName: string) {
         return function (handlerId: number) {
             if (this.valueChangeHandlersMap.has(valueName)) {
                 let valueChangeHandlerMap = this.valueChangeHandlersMap.get(valueName)
                 valueChangeHandlerMap.delete(handlerId)
 
-                if(this.valueChangeHandlersPreProcessorMap.has(handlerId)){
+                if (this.valueChangeHandlersPreProcessorMap.has(handlerId)) {
                     valueChangeHandlerMap.delete(handlerId)
                 }
             }
