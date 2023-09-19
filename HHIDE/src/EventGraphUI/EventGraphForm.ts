@@ -18,6 +18,7 @@ import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
+let eventGraphPrefix = "eventgraph."
 
 @CustomElement({
     selector: "hh-event-graph-form"
@@ -46,7 +47,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 oldGraph.onInputNodeCreated = null
                 oldGraph.onInputNodeRemoved = null
 
-                for(let valueChangeHandler of this.valueChangeHandlerIds){
+                for (let valueChangeHandler of this.valueChangeHandlerIds) {
                     this.targetComponent.unregisterValueChangeHandlerFromAllValues(valueChangeHandler)
                 }
             }
@@ -99,7 +100,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         form.appendChild(this.canvas)
 
         let resetScaleButton = document.createElement("button")
-        resetScaleButton.innerText = i18n.t("eventgraph.resetScale")
+        resetScaleButton.innerText = i18n.t(eventGraphPrefix + "resetScale")
         resetScaleButton.style.width = "100px"
         this.appendChild(this.containerDiv)
 
@@ -294,15 +295,16 @@ class EventGraphForm extends HTMLElement implements HHForm {
         namespaceCategories.forEach((eventObjects, namespace) => {
             let entry = {
                 value: namespace,
-                content: namespace,
+                content: i18n.t(eventGraphPrefix + namespace),
                 has_submenu: true,
                 callback: function (value, event, mouseEvent, contextMenu) {
                     let eventEntries = []
 
                     eventObjects.forEach((eventObject: object) => {
+                        let eventName = i18n.t(eventGraphPrefix + eventObject["eventName"])
                         let eventEntry = {
                             value: "events/eventNode",
-                            content: eventObject["eventName"],
+                            content: eventName,
                             has_submenu: false,
                             callback: function (value, event, mouseEvent, contextMenu) {
                                 let fullEventName = getFullEventName(namespace, eventObject["eventName"])
@@ -326,7 +328,18 @@ class EventGraphForm extends HTMLElement implements HHForm {
                                     _this.targetComponent.linkNodeWithTarget(node.id, eventObject["eventSource"])
                                     node.setEventGraphComponent(_this.targetComponent)
 
-                                    node.setupEvent(fullEventName)
+                                    let splitedStrings: string[] = fullEventName.split(":")
+                                    let resultTitle = ""
+                                    let idx = 0
+                                    for (let str of splitedStrings) {
+                                        resultTitle += i18n.t(eventGraphPrefix + str)
+
+                                        idx++
+                                        if (idx < splitedStrings.length)
+                                            resultTitle += ":"
+                                    }
+
+                                    node.setupEvent(fullEventName, resultTitle)
                                 }
 
                                 if (callback)

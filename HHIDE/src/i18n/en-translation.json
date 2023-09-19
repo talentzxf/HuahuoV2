@@ -58,7 +58,17 @@
     "addEventListener": "Add Event Receiver",
     "addGraphAction": "Add Graph Action",
     "addComponentGraphAction": "Add Component Graph Action",
-    "GraphInputs": "Graph Inputs"
+    "GraphInputs": "Graph Inputs",
+    "Canvas": "Canvas",
+    "Player": "Player",
+    "BaseShapeEvents": "Shape Events",
+    "onMouseMove": "Mouse Move",
+    "onMouseDown": "Mouse Down",
+    "onMouseLeave": "Mouse Leave",
+    "onMouseEnter": "Mouse Enter",
+    "onMouseUp": "Mouse Up",
+    "setFrameId": "FrameChange",
+    "pausePlay": "Pause Play"
   },
   "contextmenu": {
     "sendToBack": "Send To Back",

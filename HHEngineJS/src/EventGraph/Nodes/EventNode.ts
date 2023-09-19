@@ -28,7 +28,7 @@ class EventNode extends AbstractNode {
     }
 
     // TODO: The event bus might not be the global one.
-    setupEvent(fullEventName: string) {
+    setupEvent(fullEventName: string, title = null) {
 
         let targetEventBus = this.getEventGraphComponent().getEventBus(this.id)
 
@@ -38,7 +38,7 @@ class EventNode extends AbstractNode {
         }
 
         this.properties.fullEventName = fullEventName
-        this.title = fullEventName
+        this.title = title || fullEventName
         let _this = this
         this.currentEventHandler = targetEventBus.addEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, (params) => {
             if(!huahuoEngine.getActivePlayer().isPlaying) // Do not trigger when player is not playing.

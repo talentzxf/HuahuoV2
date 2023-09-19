@@ -58,7 +58,17 @@
     "addEventListener": "监听事件",
     "addGraphAction": "添加动作",
     "addComponentGraphAction": "添加组件动作",
-    "GraphInputs": "事件图输入"
+    "GraphInputs": "事件图输入",
+    "Canvas": "画布",
+    "Player": "播放器",
+    "BaseShapeEvents": "自身事件",
+    "onMouseMove": "鼠标移动",
+    "onMouseDown": "鼠标按下",
+    "onMouseLeave": "鼠标离开",
+    "onMouseEnter": "鼠标进入",
+    "onMouseUp": "鼠标松开",
+    "setFrameId": "设置帧",
+    "pausePlay": "暂停播放"
   },
   "contextmenu": {
     "sendToBack": "放到下面",
