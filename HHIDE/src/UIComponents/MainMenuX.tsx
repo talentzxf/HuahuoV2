@@ -24,7 +24,7 @@ function imgButton(icon, title: string, onClick = null, style = null) {
 class MainMenuX extends React.Component<any, any> {
     render() {
         return (
-            <div className="flex flex-row">
+            <div className="flex flex-row select-none text-white">
                 <div className="w-[20%]">
                     <ToolBarX></ToolBarX>
                 </div>

@@ -6,7 +6,7 @@ import {ChainCallback} from "./draggable/ResponsibleChain";
 
 const DOCKABLEMARGIN = 20;
 
-enum DIRECTIONS{
+enum DIRECTIONS {
     LEFT = 0,
     RIGHT = 1,
     TOP = 2,
@@ -62,14 +62,11 @@ class HHSideBar extends HTMLElement implements MovableElement {
 
         this.insertBefore(this.titleBar, this.content)
         this.titleBar.style.display = "flex"
-        this.titleBar.style.background = "lightgray"
+        this.titleBar.style.background = "#0369a1"
+        this.titleBar.style.color = "white"
         this.titleBar.style.userSelect = "none"
         this.titleBar.classList.add("title_tabs")
-        this.titleBar.style.webkitUserSelect = "none"
-        this.titleBar.style["ms-user-select"] = "none"
-        this.titleBar.style["moz-user-select"] = "none"
-        this.titleBar.style["webkit-touch-callout"] = "none"
-        this.titleBar.style["khtml-user-select"] = "none"
+        this.titleBar.classList.add("select-none")
 
         this.titleBar.classList.add("bg-info")
 
@@ -86,15 +83,14 @@ class HHSideBar extends HTMLElement implements MovableElement {
         this.refreshDockables()
 
         let allowedDockDirectionStr = this.getAttribute("allowedDockDirection")
-        let allowedDockDirections = allowedDockDirectionStr == null ? []: allowedDockDirectionStr.split(",")
-        if(allowedDockDirections.length == 0 || allowedDockDirections[0] == "all")
-        {
-            for(let idx:number = 0 ; idx < this.allowedDirectionBoolean.length; idx++){
+        let allowedDockDirections = allowedDockDirectionStr == null ? [] : allowedDockDirectionStr.split(",")
+        if (allowedDockDirections.length == 0 || allowedDockDirections[0] == "all") {
+            for (let idx: number = 0; idx < this.allowedDirectionBoolean.length; idx++) {
                 this.allowedDirectionBoolean[idx] = true
             }
         }
 
-        for(let allowedDockDirection of allowedDockDirections){
+        for (let allowedDockDirection of allowedDockDirections) {
             let dirNameUpper = allowedDockDirection.toUpperCase()
             let dirIdx = DIRECTIONS[dirNameUpper]
             this.allowedDirectionBoolean[dirIdx] = true
@@ -103,7 +99,7 @@ class HHSideBar extends HTMLElement implements MovableElement {
         this.createTitleButtons()
     }
 
-    createTitleButtons(){
+    createTitleButtons() {
         let titleToolBar = document.createElement("div")
         titleToolBar.style.display = "flex"
         titleToolBar.style.flexDirection = "row-reverse"
@@ -123,14 +119,14 @@ class HHSideBar extends HTMLElement implements MovableElement {
         return ele.offsetWidth > 0 && ele.offsetHeight > 0
     }
 
-    maximizeContent(){
+    maximizeContent() {
         this.minimizeButton.value = "-"
         this.content.style.display = "block"
         this.minimizeButton.onclick = this.minimizeContent.bind(this)
         this.refreshDockables()
     }
 
-    minimizeContent(){
+    minimizeContent() {
         this.minimizeButton.value = "+"
         this.content.style.display = "none"
         this.minimizeButton.onclick = this.maximizeContent.bind(this)
@@ -175,19 +171,18 @@ class HHSideBar extends HTMLElement implements MovableElement {
         }
     }
 
-    hasOverlap(rect1: DOMRect, rect2: DOMRect){
+    hasOverlap(rect1: DOMRect, rect2: DOMRect) {
         // Either one of the rectanges is a line
-        if(rect1.width == 0 || rect1.height == 0 || rect2.width == 0 || rect2.height == 0)
+        if (rect1.width == 0 || rect1.height == 0 || rect2.width == 0 || rect2.height == 0)
             return false;
 
         // Either one is in the left of another one.
-        if(rect1.x > rect2.x + rect2.width || rect1.x + rect1.width < rect2.x){
+        if (rect1.x > rect2.x + rect2.width || rect1.x + rect1.width < rect2.x) {
             return false
         }
 
         // Either one is on top of another
-        if(rect1.y > rect2.y + rect2.height || rect1.y + rect1.height < rect2.y)
-        {
+        if (rect1.y > rect2.y + rect2.height || rect1.y + rect1.height < rect2.y) {
             return false
         }
 
@@ -207,7 +202,7 @@ class HHSideBar extends HTMLElement implements MovableElement {
             // Check if these two rects has overlap
             let targetRect: DOMRect = target.getBoundingClientRect()
 
-            if(!_this.hasOverlap(clientRect, targetRect))
+            if (!_this.hasOverlap(clientRect, targetRect))
                 return false
 
             // Dock at top

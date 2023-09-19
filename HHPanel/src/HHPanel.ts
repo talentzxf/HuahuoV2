@@ -8,7 +8,7 @@ import {CustomElement, Logger} from "hhcommoncomponents";
 import {Vector2D} from "./math/Vector2D";
 import {ShadowPanelManager} from "./draggable/ShadowPanelManager";
 
-enum PanelEventNames{
+enum PanelEventNames {
     CONTENTSELECTED = "ContentSelected",
     TABCLOSED = "TabClosed"
 }
@@ -25,7 +25,9 @@ enum PanelEventNames{
     </template>`,
     style: `        
         .title_tabs{
-            padding:5px
+            padding:1px;
+            display: flex;
+            flex-direction: row;
         }
         
         .title_tabs hh-title{
@@ -34,12 +36,14 @@ enum PanelEventNames{
         }
         
         .title_tabs hh-title[selected='true'] {
-            background-color: gray;
+            background-color: #3b82f6;
             border-bottom: 3px blue solid;
+            color: rgb(255 255 255);
         }
         
         .title_tabs hh-title[selected='false'] {
-            background-color: darkgray;
+            background-color: #38bdf8;
+            color: rgb(0 0 0);
         }
         
         .panel_contents {
@@ -59,14 +63,14 @@ class HHPanel extends HTMLElement {
     private _contentNodes: NodeListOf<HHContent>
     private _tabs: HTMLElement
     private _contents: HTMLElement
-    private mInited:Boolean = false
+    private mInited: Boolean = false
 
-    public get maxTabId():number{
+    public get maxTabId(): number {
         let curMaxTitleId = -1
         let titles = this._tabs.querySelectorAll('hh-title')
 
-        titles.forEach((titleBar:HHTitle) => {
-            if(titleBar.tabIndex > curMaxTitleId){
+        titles.forEach((titleBar: HHTitle) => {
+            if (titleBar.tabIndex > curMaxTitleId) {
                 curMaxTitleId = titleBar.tabIndex
             }
         })
@@ -78,12 +82,12 @@ class HHPanel extends HTMLElement {
         super();
     }
 
-    isValidTabIndex(tabIndex: number){
+    isValidTabIndex(tabIndex: number) {
         let titles = this._tabs.querySelectorAll('hh-title')
 
         let found = false
-        titles.forEach((titleBar:HHTitle) => {
-            if(titleBar.tabIndex == tabIndex){
+        titles.forEach((titleBar: HHTitle) => {
+            if (titleBar.tabIndex == tabIndex) {
                 found = true
             }
         })
@@ -200,7 +204,7 @@ class HHPanel extends HTMLElement {
         })
 
         let selectedTab = this.querySelector('hh-title[tabindex="' + tabindex + '"]') as HHTitle
-        if(selectedTab){
+        if (selectedTab) {
             let selectedContent = selectedTab.getContent();
             selectedTab.setAttribute('selected', "true")
             selectedContent.selected = true
@@ -220,7 +224,7 @@ class HHPanel extends HTMLElement {
         }
     }
 
-    closeTab(tabIndex: number){
+    closeTab(tabIndex: number) {
         let selectedTab = this.querySelector('hh-title[tabindex="' + tabIndex + '"]') as HHTitle
         let content = selectedTab.getContent()
 
@@ -238,14 +242,14 @@ class HHPanel extends HTMLElement {
 
         // TODO:   If this is the last of this panel, delete the panel and it's container. Question: How to handle splitter??
 
-        if(this.getTitleCount() == 0){
+        if (this.getTitleCount() == 0) {
             let oldParent = this.parentElement
             OccupiedTitleManager.getInstance().removeElementWithSplitter(this)
             OccupiedTitleManager.getInstance().recursivelyRemoveEmptyParents(oldParent)
         }
     }
 
-    addContent(node: HHContent){
+    addContent(node: HHContent) {
         let tabId = this.maxTabId + 1
 
         let title = node.getAttribute('title') || 'No Title'
@@ -287,11 +291,11 @@ class HHPanel extends HTMLElement {
         this._tabs = this.querySelector('.title_tabs');
         this._contents = this.querySelector('.panel_contents')
 
-        if(this.getAttribute("dockable")){
+        if (this.getAttribute("dockable")) {
             this._contents.classList.add("dockable")
         }
 
-        if(this.getAttribute("content-style")){
+        if (this.getAttribute("content-style")) {
             let style = this.getAttribute("content-style")
             this._contents.style.cssText = style
         }
@@ -304,7 +308,7 @@ class HHPanel extends HTMLElement {
             }
         )
 
-        if(_this._tabs.querySelector('hh-title'))
+        if (_this._tabs.querySelector('hh-title'))
             _this.selectTab(0)
 
         TabMover.getInstance().AddFront(this.onTitleMoving.bind(this))
@@ -318,7 +322,7 @@ class HHPanel extends HTMLElement {
     }
 
     connectedCallback() {
-        if(!this.mInited){
+        if (!this.mInited) {
             this.initPanel()
             this.mInited = true
         }
