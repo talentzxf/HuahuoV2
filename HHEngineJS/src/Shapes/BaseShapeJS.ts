@@ -44,7 +44,7 @@ abstract class BaseShapeJS {
     private _isMirage: boolean = false
 
     private lastRenderFrame = -1
-    
+
     // Purpose of actor is to store temporary results during system running. All the status in the actor won't be persisted.
     private actor: BaseShapeActor = new BaseShapeActor(this)
 
@@ -122,14 +122,14 @@ abstract class BaseShapeJS {
     }
 
     // If allowNull, performance will be a little better
-    getComponents(allowNulls = false){
+    getComponents(allowNulls = false) {
 
-        if(allowNulls)
+        if (allowNulls)
             return this.customComponents
 
         let components = []
-        for(let component of this.customComponents){
-            if(component != null)
+        for (let component of this.customComponents) {
+            if (component != null)
                 components.push(component)
         }
 
@@ -228,12 +228,12 @@ abstract class BaseShapeJS {
         this.rawObj.SetName(name)
     }
 
-    getBounds(){
+    getBounds() {
         return this.bounds;
     }
 
     get bounds(): paper.Rectangle {
-        if(this.paperItem == null)
+        if (this.paperItem == null)
             return null
 
         return this.paperItem.bounds
@@ -310,6 +310,7 @@ abstract class BaseShapeJS {
             }
         }
     }
+
     duplicate() {
         let newRawObj = huahuoEngine.DuplicateObject(this.rawObj)
         let shapeLayer = newRawObj.GetLayer()
@@ -347,7 +348,7 @@ abstract class BaseShapeJS {
         let currentScaling = this.scaling
 
         try {
-            if(this.paperItem != null){
+            if (this.paperItem != null) {
                 this.paperItem.scaling = new paper.Point(1.0, 1.0)
 
                 let curGlobalPivot = this.rawObj.GetGlobalPivotPosition()
@@ -367,7 +368,7 @@ abstract class BaseShapeJS {
             if (callHandlers)
                 this.valueChangeHandler.callHandlers("position", val)
         } finally {
-            if(this.paperItem)
+            if (this.paperItem)
                 this.paperItem.scaling = currentScaling
 
             this.update(forceUpdate)
@@ -563,7 +564,7 @@ abstract class BaseShapeJS {
     // Should only be called from HHIDE when creating new shapes.
     // As the addComponent is proxied in Editor.
     // For player, all components are loaded from file.
-    initShapeFromEditor(){
+    initShapeFromEditor() {
 
     }
 
@@ -773,9 +774,9 @@ abstract class BaseShapeJS {
         }
     }
 
-    getComponentByRawObj(componentRawObj){
-        for(let component of this.customComponents){
-            if(component != null && component.rawObj.ptr == componentRawObj.ptr)
+    getComponentByRawObj(componentRawObj) {
+        for (let component of this.customComponents) {
+            if (component != null && component.rawObj.ptr == componentRawObj.ptr)
                 return component
         }
         return null
@@ -862,7 +863,7 @@ abstract class BaseShapeJS {
 
             let localPos = this.paperShape.globalToLocal(paperPos)
 
-            if(!this.isMirage){
+            if (!this.isMirage) {
                 this.rawObj.SetGlobalPivotPosition(paperPos.x, paperPos.y, 0.0);
                 this.rawObj.SetLocalPivotPosition(localPos.x, localPos.y, 0.0);
             }
@@ -888,6 +889,7 @@ abstract class BaseShapeJS {
     }
 
     isLoadingComponents: Boolean = false
+
     LoadComponents() {
         this.isLoadingComponents = true
         // Create all the component wrapper in the JS side.
@@ -1079,6 +1081,10 @@ abstract class BaseShapeJS {
 
     update(force: boolean = false) {
         let currentFrame = this.getLayer().GetCurrentFrame()
+        if (currentFrame == this.bornFrameId) {
+            this.callHandlers("onBornFrame", null)
+        }
+
         // if (force || currentFrame != this.lastRenderFrame) { // TODO: Because of event graph, we might still need to update here.
         {
             totallyUpdated++
@@ -1121,7 +1127,7 @@ abstract class BaseShapeJS {
         return new paper.Point(engineV3Point.x, engineV3Point.y)
     }
 
-    isValid(){
+    isValid() {
         return this.isRemoved == false
     }
 
@@ -1175,8 +1181,8 @@ abstract class BaseShapeJS {
 
         let _this = this
 
-        properties = properties.filter(function(entry){
-            if(entry.hasOwnProperty("rawObjPtr") && entry["rawObjPtr"] == component.rawObj.ptr){
+        properties = properties.filter(function (entry) {
+            if (entry.hasOwnProperty("rawObjPtr") && entry["rawObjPtr"] == component.rawObj.ptr) {
                 return false;
             }
 
@@ -1186,10 +1192,10 @@ abstract class BaseShapeJS {
         this.getPropertySheet().setProperties(properties)
     }
 
-    resetAction(){
+    resetAction() {
         this.getActor().reset()
-        for(let component of this.customComponents){
-            if(component != null)
+        for (let component of this.customComponents) {
+            if (component != null)
                 component.reset()
         }
 

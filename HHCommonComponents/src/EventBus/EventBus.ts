@@ -58,6 +58,8 @@ class HHEventBus {
     removeEventHandler(namespace: string, evtName: string, handlerId: number) {
         if (this.handlerIdHandlerMap.has(handlerId)) {
             this.handlerIdHandlerMap.delete(handlerId)
+
+            this.eventHandlerIdMap.get(getFullEventName(namespace, evtName)).delete(handlerId)
         } else {
             console.warn("Trying to remove an nonexistence handlerId:" + handlerId)
         }
@@ -121,10 +123,11 @@ function GraphEvent(isGlobal: boolean = false) {
         let originalMethod = descriptor.value
         descriptor.value = function (...args: any[]) {
             let executeResult = originalMethod.apply(this, args)
-            this.getEventBus().triggerEvent(target.constructor.name, propertyKey, args)
+            let eventNameSpace = target.getEventEmitterName() || target.constructor.name
+            this.getEventBus().triggerEvent(eventNameSpace, propertyKey, args)
 
             if (isGlobal) // If this is a global event, trigger the event in the global namespace.
-                eventBus.triggerEvent(target.constructor.name, propertyKey, args)
+                eventBus.triggerEvent(eventNameSpace, propertyKey, args)
             return executeResult
         }
     }

@@ -1,12 +1,13 @@
 import {AbstractComponent, Component, PropertyValue} from "../AbstractComponent";
 import {getPhysicSystem} from "../../PhysicsSystem/PhysicsSystem";
-import {b2Body, b2CircleShape, b2Fixture, b2PolygonShape, b2ShapeType} from "@box2d/core";
+import {b2Body, b2CircleShape, b2Fixture, b2PolygonShape, b2ShapeType, XY} from "@box2d/core";
 import {BaseShapeJS} from "../../Shapes/BaseShapeJS";
 import {degToRad, EventParam, GraphEvent, PropertyType, StringProperty} from "hhcommoncomponents";
 import {PropertyCategory} from "../PropertySheetBuilder";
 import {Box2dUtils} from "./Box2dUtils";
 import {GlobalConfig} from "../../GlobalConfig";
 import {huahuoEngine} from "../../EngineAPI";
+import {ActionParam, GraphAction} from "../../EventGraph/GraphActions";
 
 @Component({compatibleShapes: ["BaseSolidShape"], maxCount: 1})
 class RigidBody extends AbstractComponent {
@@ -164,6 +165,14 @@ class RigidBody extends AbstractComponent {
                 shapePoint.y * GlobalConfig.physicsToHuahuoScale
             ))
         }
+    }
+
+    @GraphAction(true)
+    setVelocity(@ActionParam(PropertyType.VECTOR2) velocity: XY) {
+        this.getBody().SetLinearVelocity({
+            x: velocity.x,
+            y: velocity.y
+        })
     }
 
     afterUpdate(force: boolean = false) {

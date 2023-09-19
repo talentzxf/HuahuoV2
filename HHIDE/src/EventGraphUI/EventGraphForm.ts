@@ -35,9 +35,9 @@ class EventGraphForm extends HTMLElement implements HHForm {
     targetComponent
 
     setTargetComponent(targetComponent) {
-        if (this.targetComponent != null) {
+        if (this.targetComponent != null && this.targetComponent != targetComponent) {
             if (this.setFrameIdHandler != -1) {
-                huahuoEngine.getActivePlayer().getEventBus().addEventHandler("Player", "setFrameId", this.setFrameIdHandler)
+                huahuoEngine.getActivePlayer().getEventBus().removeEventHandler("Player", "setFrameId", this.setFrameIdHandler)
                 this.setFrameIdHandler = -1
 
                 let oldGraph = this.targetComponent.getGraph()
