@@ -83,7 +83,8 @@
     "mergecells": "Merge selected cells",
     "createNewTrack": "Create New Track",
     "groupAsElement": "Convert to Element",
-    "markAsAnimationEnd": "Mark as Animation End"
+    "markAsAnimationEnd": "Mark as Animation End",
+    "editFrameEventGraph": "Edit Frame Event Graph"
   },
   "statusbar": {
     "mousePosition": "Mouse position:{{mouseX}},{{mouseY}}",

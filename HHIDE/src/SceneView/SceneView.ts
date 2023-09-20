@@ -11,6 +11,8 @@ import {findParentContent, findParentPanel, HHSideBar} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
 import {SVGFiles} from "../Utilities/Svgs";
 import {CSSUtils} from "../Utilities/CSSUtils";
+import {formManager} from "../Utilities/FormManager";
+import {EventGraphForm} from "../EventGraphUI/EventGraphForm";
 
 function allReadyExecute(fn: Function) {
     i18n.ExecuteAfterInited(
@@ -150,7 +152,7 @@ class SceneView extends HTMLElement {
                 }
             },
             {
-                itemName: i18n.t("编辑帧时间图"),
+                itemName: i18n.t("contextmenu.editFrameEventGraph"),
                 onclick: function (e) {
                     _this.openFrameEventGraphForm()
                 }
@@ -180,7 +182,7 @@ class SceneView extends HTMLElement {
     }
 
     openFrameEventGraphForm() {
-        // let eventGraphForm = formManager.openForm(EventGraphForm)
+        let eventGraphForm = formManager.openForm(EventGraphForm)
         // eventGraphForm.setTargetComponent()
     }
 
@@ -436,7 +438,7 @@ class SceneView extends HTMLElement {
         let canvasWidth = containerWidth - margin
         let canvasHeight = containerHeight - margin
 
-        if(this.canvas.width == canvasWidth && this.canvas.height == canvasHeight)
+        if (this.canvas.width == canvasWidth && this.canvas.height == canvasHeight)
             return
 
         renderEngine2D.resize(this.canvas, canvasWidth, canvasHeight)

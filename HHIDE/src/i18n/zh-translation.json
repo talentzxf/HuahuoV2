@@ -83,7 +83,8 @@
     "mergecells": "合并帧",
     "createNewTrack": "创建新轨道",
     "groupAsElement": "转换为组件",
-    "markAsAnimationEnd": "设为动画结束帧"
+    "markAsAnimationEnd": "设为动画结束帧",
+    "editFrameEventGraph": "编辑帧事件图"
   },
   "statusbar": {
     "mousePosition": "鼠标位置:{{mouseX}},{{mouseY}}",
