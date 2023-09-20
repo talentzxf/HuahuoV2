@@ -26,6 +26,9 @@ import {EventNode} from "./EventGraph/Nodes/EventNode";
 import {ActionNode} from "./EventGraph/Nodes/ActionNode";
 import {Vec2MathOperationNode} from "./EventGraph/UtilityNodes/Vec2MathOperationNode";
 import {Vec2MathNumberMultiply} from "./EventGraph/UtilityNodes/Vec2MathNumberMultiply";
+import {Vector2NumberNode} from "./EventGraph/UtilityNodes/Vector2NumberNode";
+import {ConstVec2Node} from "./EventGraph/UtilityNodes/ConstVec2Node";
+
 import {StarMirrorShapeJS} from "./Shapes/StarMirrorShapeJS";
 import {Utils} from "./Shapes/Utils";
 import {AbstractComponent} from "./Components/AbstractComponent";
@@ -53,8 +56,8 @@ import * as paper from "paper"
 
 let renderEngine2D = new RenderEnginePaperJs()
 
-function InitWASM(){
-    if(typeof Module != 'undefined') {
+function InitWASM() {
+    if (typeof Module != 'undefined') {
         if (Module.IsWASMInited && Module.IsWASMInited()) {
             console.log("Init right now")
             huahuoEngine.OnInit()
@@ -65,7 +68,7 @@ function InitWASM(){
                 huahuoEngine.OnInit()
             }
         }
-    }else{
+    } else {
         console.log("Module is null?? Init in next tick!")
         setTimeout(InitWASM, 0)
     }
@@ -134,6 +137,8 @@ export {
     SetComponentPropertyNode,
     Vec2MathOperationNode,
     Vec2MathNumberMultiply,
+    ConstVec2Node,
+    Vector2NumberNode,
     LGraphCanvas,
     LiteGraph,
     StarMirrorShapeJS,

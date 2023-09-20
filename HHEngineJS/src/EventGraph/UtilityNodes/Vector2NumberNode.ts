@@ -1,6 +1,5 @@
 import {AbstractNode} from "../Nodes/AbstractNode";
 import {LiteGraph} from "litegraph.js";
-import {ActionNode} from "../Nodes/ActionNode";
 
 class Vector2NumberNode extends AbstractNode{
     title = "Vector2Number"
