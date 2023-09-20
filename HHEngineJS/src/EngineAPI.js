@@ -1,26 +1,22 @@
-import {Logger} from "hhcommoncomponents"
+import {dataURItoBlob, eventBus, getMimeTypeFromDataURI, IsValidWrappedObject, Logger} from "hhcommoncomponents"
 import {clzObjectFactory} from "./CppClassObjectFactory";
-import {getMimeTypeFromDataURI} from "hhcommoncomponents";
-import {dataURItoBlob, eventBus} from "hhcommoncomponents";
 
 // @ts-ignore
 import * as ti from "taichi.js/dist/taichi"
 import {BaseShapeEvents} from "./EventGraph/BaseShapeEvents";
-import {IsValidWrappedObject} from "hhcommoncomponents";
 import {BaseShapeJS} from "./Shapes/BaseShapeJS";
-import {setupLGraph} from "./EventGraph/LGraphSetup";
 // import * as ti from "taichi.js/dist/taichi.dev"
 
 
 // Not sure why, but the instanceof failed in this case...
-function isDerivedFrom(object, clz){
-    if(object instanceof clz)
+function isDerivedFrom(object, clz) {
+    if (object instanceof clz)
         return true
 
     let targetClassName = clz.name
     let curObj = object
-    while(curObj != null){
-        if(curObj.constructor.name == targetClassName)
+    while (curObj != null) {
+        if (curObj.constructor.name == targetClassName)
             return true
 
         curObj = Object.getPrototypeOf(curObj)
@@ -29,7 +25,7 @@ function isDerivedFrom(object, clz){
     return false
 }
 
-class EngineAPI{
+class EngineAPI {
     inited = false
 
     PendingInitFunctions = []
@@ -49,23 +45,23 @@ class EngineAPI{
 
     deletedShapePtrs = new Set
 
-    isPtrDeleted(shapePtr){
+    isPtrDeleted(shapePtr) {
         return this.deletedShapePtrs.has(shapePtr)
     }
 
-    getEvent(eventEmitter){
-        if(!this.eventEmitterCache.has(eventEmitter)){
-            if(eventEmitter.rawObj instanceof Module.BaseShape){
+    getEvent(eventEmitter) {
+        if (!this.eventEmitterCache.has(eventEmitter)) {
+            if (eventEmitter.rawObj instanceof Module.BaseShape) {
                 this.eventEmitterCache.set(eventEmitter, new BaseShapeEvents(eventEmitter))
-            }else{
+            } else {
                 this.eventEmitterCache.set(eventEmitter, eventEmitter)
             }
         }
         return this.eventEmitterCache.get(eventEmitter)
     }
 
-    getEventBus(eventEmitter){
-        if(isDerivedFrom(eventEmitter, BaseShapeJS))
+    getEventBus(eventEmitter) {
+        if (isDerivedFrom(eventEmitter, BaseShapeJS))
             return this.getEvent(eventEmitter).getEventBus()
 
         // Return the global event bus
@@ -76,28 +72,28 @@ class EngineAPI{
         Logger.info("Creating Engine API!!!!")
     }
 
-    setActivePlayer(activePlayer){
+    setActivePlayer(activePlayer) {
         this.activePlayer = activePlayer
     }
 
-    getActivePlayer(){
+    getActivePlayer() {
         return this.activePlayer
     }
 
-    ExecuteAfterInited(func){
-        if(this.inited){
+    ExecuteAfterInited(func) {
+        if (this.inited) {
             return func();
         }
 
         this.PendingInitFunctions.push(func);
     }
 
-    GetInstance(){
+    GetInstance() {
         return this.cppEngine;
     }
 
-    async OnTaichiInit(){
-        if(this.taichiInited){
+    async OnTaichiInit() {
+        if (this.taichiInited) {
             return
         }
 
@@ -108,15 +104,15 @@ class EngineAPI{
 
         Logger.info("Taichi Inited!!!!")
 
-        if(this.inited && this.taichiInited){
-            this.PendingInitFunctions.forEach(func=>{
+        if (this.inited && this.taichiInited) {
+            this.PendingInitFunctions.forEach(func => {
                 func();
             })
         }
     }
 
-    OnInit(){
-        if(this.inited)
+    OnInit() {
+        if (this.inited)
             return;
 
         Module.HuaHuoEngine.prototype.InitEngine();
@@ -126,177 +122,162 @@ class EngineAPI{
 
         // Not sure why, but requestDevice of WebGPU always stuck??
         // if(this.inited && this.taichiInited){
-        if(this.inited){
-            this.PendingInitFunctions.forEach(func=>{
+        if (this.inited) {
+            this.PendingInitFunctions.forEach(func => {
                 func();
             })
         }
     }
 
-    CreateShape(shapeName, createDefaultComponents = true){
+    CreateShape(shapeName, createDefaultComponents = true) {
         return this.cppEngine.CreateShape(shapeName, createDefaultComponents)
     }
 
-    DuplicateObject(obj){
+    DuplicateObject(obj) {
         return this.cppEngine.DuplicateShape(obj)
     }
 
-    GetPersistentManager(){
+    GetPersistentManager() {
         return Module.PersistentManager.prototype.GetPersistentManager()
     }
 
-    GetDefaultObjectStoreManager(){
+    GetDefaultObjectStoreManager() {
         return Module.ObjectStoreManager.prototype.GetDefaultObjectStoreManager()
     }
 
-    GetCurrentStore(){
+    GetCurrentStore() {
         return this.GetDefaultObjectStoreManager().GetCurrentStore()
     }
 
-    GetCurrentStoreId(){
+    GetCurrentStoreId() {
         return this.GetCurrentStore().GetStoreId()
     }
 
-    getStoreMaxFrames(storeId){
+    getStoreMaxFrames(storeId) {
         // FrameId starts from 0. So, maxFrames = maxFrameId + 1
         return this.GetStoreById(storeId).GetMaxFrameId() + 1
     }
 
     shapeDecorator = null
-    setShapeDecorator(shapeDecoratorFunc){
+
+    setShapeDecorator(shapeDecoratorFunc) {
         this.shapeDecorator = shapeDecoratorFunc
     }
 
-    getShapeDecorator(){
+    getShapeDecorator() {
         return this.shapeDecorator
     }
 
-    GetStoreById(storeId){
+    GetStoreById(storeId) {
         return this.GetDefaultObjectStoreManager().GetStoreById(storeId)
     }
 
-    GetCurrentLayer(){
-        let _this = this
+    GetCurrentLayer() {
         let layer = this.GetCurrentStore().GetCurrentLayer();
-        if(!layer.addShape){
-            layer.addShape = (shape)=>{
-                shape.update()
-                layer.AddShapeInternal(shape.getRawObject())
-                shape.isPermanent = true
-                shape.isDeleted = false
-
-                if(this.activePlayer){
-                    this.activePlayer.getLayerShapes(layer).set(shape.getRawObject().ptr, shape)
-                }
-
-                _this.hasShape = true
-
-                Logger.debug("Currently there're:" + layer.GetShapeCount() + " shapes in the layer.")
-            }
-        }
+        LayerUtils.initLayer(layer)
         return layer
     }
 
-    RegisterElementShape(storeId, element){
-        if(!this.storeIdElementShapeMap[storeId]){
+    RegisterElementShape(storeId, element) {
+        if (!this.storeIdElementShapeMap[storeId]) {
             this.storeIdElementShapeMap[storeId] = new Set()
         }
 
         this.storeIdElementShapeMap[storeId].add(element)
     }
 
-    GetElementShapeByStoreId(storeId){
+    GetElementShapeByStoreId(storeId) {
         return this.storeIdElementShapeMap[storeId]
     }
 
-    registerElementParent(childId, parentId){
+    registerElementParent(childId, parentId) {
         this.elementIdParentId[childId] = parentId
     }
 
-    getElementParentByStoreId(childId){
+    getElementParentByStoreId(childId) {
         return this.elementIdParentId[childId]
     }
 
-    registerEventListener(namespace, eventName, func){
+    registerEventListener(namespace, eventName, func) {
         return eventBus.addEventHandler(namespace, eventName, func)
     }
 
-    unregisterEventListener(namespace, eventName, handlerId){
+    unregisterEventListener(namespace, eventName, handlerId) {
         eventBus.removeEventHandler(namespace, eventName, handlerId)
     }
 
-    dispatchEvent(namespace, eventName, ...params){
+    dispatchEvent(namespace, eventName, ...params) {
         eventBus.triggerEvent(namespace, eventName, ...params)
     }
 
-    isValidShape(shape){
-        if(!IsValidWrappedObject(shape.rawObj))
+    isValidShape(shape) {
+        if (!IsValidWrappedObject(shape.rawObj))
             return false
-        if(this.isPtrDeleted(shape.rawObj.ptr))
+        if (this.isPtrDeleted(shape.rawObj.ptr))
             return false
 
         return true
     }
 
-    DestroyShape(rawShape){
-        if(!this.isPtrDeleted(rawShape.ptr)){
+    DestroyShape(rawShape) {
+        if (!this.isPtrDeleted(rawShape.ptr)) {
             this.deletedShapePtrs.add(rawShape.ptr)
             this.cppEngine.DestroyShape(rawShape)
         }
     }
 
-    getProjectWidth(){
+    getProjectWidth() {
         return this.GetDefaultObjectStoreManager().GetCanvasWidth();
     }
 
-    getProjectHeight(){
+    getProjectHeight() {
         return this.GetDefaultObjectStoreManager().GetCanvasHeight();
     }
 
-    setProjectWidthHeight(width, height){
+    setProjectWidthHeight(width, height) {
         this.GetDefaultObjectStoreManager().SetCanvasWH(width, height)
     }
 
-    getAllCompatibleComponents(targetObj){
+    getAllCompatibleComponents(targetObj) {
         return clzObjectFactory.getAllCompatibleComponents(targetObj)
     }
 
-    getAllRegisteredComponents(){
+    getAllRegisteredComponents() {
         return clzObjectFactory.getAllRegisteredComponents()
     }
 
-    produceObject(componentName){
+    produceObject(componentName) {
         let constructor = clzObjectFactory.GetClassConstructor(componentName)
         let retObj = new constructor()
         return retObj
     }
-    
-    SetBinaryResource(resourceName, resourceData){
+
+    SetBinaryResource(resourceName, resourceData) {
         let mimeType = getMimeTypeFromDataURI(resourceData)
 
         let binaryData = dataURItoBlob(resourceData)
         this.cppEngine.SetFileData(resourceName, mimeType, binaryData, binaryData.length)
     }
 
-    IsBinaryResourceExist(resourceMD5){
+    IsBinaryResourceExist(resourceMD5) {
         return this.cppEngine.IsBinaryResourceExist(resourceMD5)
     }
 
-    LoadBinaryResource(fileName, mimeType, data, dataSize){
+    LoadBinaryResource(fileName, mimeType, data, dataSize) {
         return this.cppEngine.LoadBinaryResource(fileName, mimeType, data, dataSize)
     }
 
-    get defaultFrameCount(){
+    get defaultFrameCount() {
         return 1000;
     }
 
-    get ti(){
+    get ti() {
         return ti
     }
 }
 
 let huahuoEngine = window.huahuoEngine
-if(!window.huahuoEngine){
+if (!window.huahuoEngine) {
     huahuoEngine = new EngineAPI()
     window.huahuoEngine = huahuoEngine
 }
