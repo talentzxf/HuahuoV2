@@ -2,7 +2,7 @@ import {AbstractNode} from "../Nodes/AbstractNode";
 import {LiteGraph} from "litegraph.js";
 
 class ConstVec2Node extends AbstractNode {
-    title = "Const Vec2 Node"
+    title = "Const Vector2"
     desc = "Create a const vec2 node"
 
     xWidget
