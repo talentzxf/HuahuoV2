@@ -73,7 +73,7 @@ class PhysicsSystem extends b2ContactListener {
         for (let b = this.m_world.GetBodyList(); b; b = b.GetNext()) {
             let rigidBody = b.GetUserData()
             let shape = null
-            if (rigidBody) {
+            if (rigidBody) { // TODO: Duplicate with rigidBody->reset()
                 shape = rigidBody.baseShape
                 b.SetTransformVec({
                     x: shape.position.x / physicsToHuahuoScale,

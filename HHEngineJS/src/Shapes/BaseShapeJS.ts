@@ -577,7 +577,13 @@ abstract class BaseShapeJS {
     }
 
     // Not sure how to pass getter/setter as functor.
-    private getPosition() {
+    public getPosition(needAction: boolean = true) {
+        if (needAction)
+            return this.position
+
+        let rawObjPosition = this.rawObj.GetGlobalPivotPosition()
+        return new paper.Point(rawObjPosition.x, rawObjPosition.y)
+
         return this.position
     }
 
@@ -593,8 +599,11 @@ abstract class BaseShapeJS {
         this.scaling = new paper.Point(x, y)
     }
 
-    private getRotation(): number {
-        return this.rotation
+    public getRotation(needAction: boolean = true): number {
+        if (needAction)
+            return this.rotation
+
+        return this.rawObj.GetRotation()
     }
 
     public setRotation(val: number, callHandlers: boolean = true, forceUpdate: boolean = true) {

@@ -71,7 +71,8 @@
     "pausePlay": "Pause Play",
     "Execute": "Execute",
     "point": "point",
-    "playFrameId": "FrameId"
+    "playFrameId": "FrameId",
+    "onBornFrame": "onBorn"
   },
   "contextmenu": {
     "sendToBack": "Send To Back",

@@ -1,6 +1,6 @@
 import {AbstractComponent, Component, PropertyValue} from "../AbstractComponent";
 import {getPhysicSystem} from "../../PhysicsSystem/PhysicsSystem";
-import {b2Body, b2CircleShape, b2Fixture, b2PolygonShape, b2ShapeType, XY} from "@box2d/core";
+import {b2Body, b2CircleShape, b2Fixture, b2PolygonShape, b2ShapeType, b2Vec2, XY} from "@box2d/core";
 import {BaseShapeJS} from "../../Shapes/BaseShapeJS";
 import {degToRad, EventParam, GraphEvent, PropertyType, StringProperty} from "hhcommoncomponents";
 import {PropertyCategory} from "../PropertySheetBuilder";
@@ -8,6 +8,8 @@ import {Box2dUtils} from "./Box2dUtils";
 import {GlobalConfig} from "../../GlobalConfig";
 import {huahuoEngine} from "../../EngineAPI";
 import {ActionParam, GraphAction} from "../../EventGraph/GraphActions";
+
+let physicsToHuahuoScale = GlobalConfig.physicsToHuahuoScale
 
 @Component({compatibleShapes: ["BaseSolidShape"], maxCount: 1})
 class RigidBody extends AbstractComponent {
@@ -173,6 +175,17 @@ class RigidBody extends AbstractComponent {
             x: velocity.x,
             y: velocity.y
         })
+    }
+
+    @GraphAction(true)
+    reset() {
+        let shape = this.baseShape
+        this.getBody().SetLinearVelocity(b2Vec2.ZERO)
+        this.getBody().SetAngularVelocity(0)
+        this.getBody().SetTransformVec({
+            x: shape.getPosition(false).x / physicsToHuahuoScale,
+            y: shape.getPosition(false).y / physicsToHuahuoScale,
+        }, degToRad(shape.getRotation(false)))
     }
 
     afterUpdate(force: boolean = false) {
