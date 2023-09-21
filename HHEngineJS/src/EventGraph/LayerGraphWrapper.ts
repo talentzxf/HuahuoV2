@@ -1,4 +1,4 @@
-import {LGraph} from "../Components/EventGraphComponent"
+import {LGraph} from "litegraph.js";
 
 class LayerGraphWrapper {
     graphParams
