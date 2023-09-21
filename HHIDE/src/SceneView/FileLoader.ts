@@ -1,7 +1,7 @@
 import {Logger} from "hhcommoncomponents"
 import {ImageShapeJS, huahuoEngine, AudioShapeJS} from "hhenginejs"
 import {dataURItoBlob, getMimeTypeFromDataURI} from "hhcommoncomponents";
-import {LayerUtils} from "./Layer";
+import {EditorLayerUtils} from "./Layer";
 import {EditorShapeProxy} from "../ShapeDrawers/EditorShapeProxy";
 
 let md5 = require("js-md5")
@@ -37,7 +37,7 @@ class FileLoader {
                     imageShape.isAnimation = fileExtension == "gif"
                     imageShape.createShape()
 
-                    LayerUtils.addShapeToCurrentLayer(imageShape)
+                    EditorLayerUtils.addShapeToCurrentLayer(imageShape)
 
                 })
             }

@@ -1,6 +1,6 @@
 import {Vector2} from "hhcommoncomponents";
 import {BaseShapeJS, renderEngine2D} from "hhenginejs"
-import {LayerUtils} from "../SceneView/Layer";
+import {EditorLayerUtils} from "../SceneView/Layer";
 import {ReactNode} from "react";
 
 class BaseShapeDrawer {
@@ -43,7 +43,7 @@ class BaseShapeDrawer {
     }
 
     addShapeToCurrentLayer(shape: BaseShapeJS) {
-        LayerUtils.addShapeToCurrentLayer(shape)
+        EditorLayerUtils.addShapeToCurrentLayer(shape)
     }
 
     onMouseUp(evt: MouseEvent) {

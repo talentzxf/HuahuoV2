@@ -185,7 +185,7 @@ class SceneView extends HTMLElement {
         let eventGraphForm = formManager.openForm(EventGraphForm)
 
         let currentLayer = huahuoEngine.GetCurrentLayer()
-        let frameId = currentLayer.GetFrameId()
+        let frameId = currentLayer.GetCurrentFrame()
 
         let frameEventGraphWrapperObject = huahuoEngine.getWrappedGraphObjectForLayer(currentLayer, frameId, true)
         eventGraphForm.setTargetComponent(frameEventGraphWrapperObject)

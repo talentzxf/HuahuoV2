@@ -1,4 +1,4 @@
-import {LGraph} from "litegraph.js";
+import {LGraph} from "../Components/EventGraphComponent"
 
 class LayerGraphWrapper {
     graphParams
@@ -17,6 +17,10 @@ class LayerGraphWrapper {
         }
 
         this.graph["onAfterChange"] = this.saveGraph.bind(this)
+    }
+
+    getGraph() {
+        return this.graph
     }
 
     saveGraph() {
