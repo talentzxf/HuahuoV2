@@ -5,6 +5,7 @@ import {clzObjectFactory} from "./CppClassObjectFactory";
 import * as ti from "taichi.js/dist/taichi"
 import {BaseShapeEvents} from "./EventGraph/BaseShapeEvents";
 import {BaseShapeJS} from "./Shapes/BaseShapeJS";
+import {LayerGraphWrapper} from "./EventGraph/LayerGraphWrapper";
 // import * as ti from "taichi.js/dist/taichi.dev"
 
 
@@ -265,6 +266,27 @@ class EngineAPI {
 
     LoadBinaryResource(fileName, mimeType, data, dataSize) {
         return this.cppEngine.LoadBinaryResource(fileName, mimeType, data, dataSize)
+    }
+
+    layerGraphWrapperObjMap = new Map()
+
+    getWrappedGraphObjectForLayer(layer, frameId, createIfNotExist = false) {
+        let frameEventGraph = layer.GetFrameEventGraphParam(frameId, createIfNotExist)
+
+        if (null == layer.GetFrameEventGraphParam(frameId)) {
+                return null;
+        }
+
+        if (!this.layerGraphWrapperObjMap.has(layer)) {
+            this.layerGraphWrapperObjMap.set(new Map)
+        }
+
+        let frameIdGraphMap = this.layerGraphWrapperObjMap.get(layer)
+        if (!frameIdGraphMap.contain(frameId)) {
+            frameIdGraphMap.set(frameId, new LayerGraphWrapper(frameEventGraph))
+        }
+
+        return frameIdGraphMap.get(frameId)
     }
 
     get defaultFrameCount() {

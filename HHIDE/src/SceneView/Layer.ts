@@ -3,7 +3,7 @@ import {undoManager} from "../RedoUndo/UndoManager";
 import {elementCreator} from "./ElementCreator";
 import {huahuoEngine, BaseShapeJS} from "hhenginejs";
 import {Logger} from "hhcommoncomponents";
-import {LayerGraphWrapper} from "./LayerGraphWrapper";
+import {LayerGraphWrapper} from "../../../HHEngineJS/src/EventGraph/LayerGraphWrapper";
 
 class LayerUtils {
     static addShapeToCurrentLayer(shape: BaseShapeJS) {
@@ -35,20 +35,6 @@ class LayerUtils {
                 huahuoEngine.hasShape = true
 
                 Logger.debug("Currently there're:" + layer.GetShapeCount() + " shapes in the layer.")
-            }
-
-            layer.getGraphObject = (frameId, createIfNoExisted = false) => {
-                if (layer.hasOwnProperty("graphObject"))
-                    return layer.graphObject
-
-                let eventGraphParam = layer.GetFrameEventGraphParam(frameId, createIfNoExisted)
-                if (eventGraphParam != null) {
-                    layer.graphObject = new LayerGraphWrapper(eventGraphParam)
-
-                    return layer.graphObject
-                }
-
-                return null
             }
 
             layer.inited = true
