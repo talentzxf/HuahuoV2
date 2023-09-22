@@ -13,7 +13,6 @@
     "@box2d/core": "^0.10.0",
     "@webgpu/types": "^0.1.26",
     "gifuct-js": "^2.1.2",
-    "hhcommoncomponents": "file:../HHCommonComponents",
     "html-webpack-plugin": "^5.5.3",
     "litegraph.js": "file:../Libs/litegraph.js",
     "paper": "^0.12.15",
