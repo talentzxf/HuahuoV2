@@ -13,7 +13,7 @@ module.exports = {
             type: "umd"
         }
     },
-    module:{
+    module: {
         rules: [
             {
                 test: /\.tsx?$/,
@@ -22,7 +22,10 @@ module.exports = {
             },
         ]
     },
-    resolve:{
+    externals: {
+        "hhcommoncomponents": "hhcommoncomponents"
+    },
+    resolve: {
         extensions: ['.tsx', '.ts', '.js']
     },
     devServer: {

@@ -30,6 +30,9 @@ let webpackConfig = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js']
     },
+    externals: {
+        "hhcommoncomponents": "hhcommoncomponents"
+    },
     devServer: {
         static: {
             directory: path.join(__dirname, "dist"),

@@ -57,13 +57,11 @@
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.7.4"
   },
-  "peerDependencies": {
+  "dependencies": {
     "hhcommoncomponents": "file:../HHCommonComponents",
     "hhenginejs": "file:../HHEngineJS",
     "hhpanel": "file:../HHPanel",
-    "hhtimeline": "file:../HHTimeLine"
-  },
-  "dependencies": {
+    "hhtimeline": "file:../HHTimeLine",
     "@popperjs/core": "^2.11.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

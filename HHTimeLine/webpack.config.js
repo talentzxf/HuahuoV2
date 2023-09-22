@@ -22,6 +22,10 @@ module.exports = {
             },
         ]
     },
+    externals:{
+        "hhcommoncomponents": "hhcommoncomponents",
+        "hhenginejs": "hhenginejs"
+    },
     resolve:{
         extensions: ['.tsx', '.ts', '.js']
     },
@@ -38,5 +42,5 @@ module.exports = {
             template: 'src/index.ejs',
             // inject: false
         }),
-    ]
+    ],
 };
