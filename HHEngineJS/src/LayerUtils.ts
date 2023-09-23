@@ -49,6 +49,31 @@ class LayerUtils {
 
         return frameIdGraphMap.get(frameId)
     }
+
+    layerFrameIdCallbacks = new Map
+
+    executePlayFrameCallbacks(layer, frameId) {
+        if (this.layerFrameIdCallbacks.has(layer.ptr)) {
+            if (this.layerFrameIdCallbacks.get(layer.ptr).has(frameId)) {
+                let fnArray = this.layerFrameIdCallbacks.get(layer.ptr).get(frameId)
+                for (let fn of fnArray) {
+                    fn()
+                }
+            }
+        }
+    }
+
+    addPlayFrameCallbacks(layer, frameId, callback) {
+        if (!this.layerFrameIdCallbacks.has(layer.ptr)) {
+            this.layerFrameIdCallbacks.set(layer.ptr, new Map)
+        }
+
+        if (!this.layerFrameIdCallbacks.get(layer.ptr).has(frameId)) {
+            this.layerFrameIdCallbacks.get(layer.ptr).set(frameId, new Array)
+        }
+
+        this.layerFrameIdCallbacks.get(layer.ptr).get(frameId).push(callback)
+    }
 }
 
 let layerUtils = window["layerUtils"]

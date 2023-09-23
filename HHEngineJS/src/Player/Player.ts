@@ -7,6 +7,8 @@ import {EventParam} from "hhcommoncomponents";
 import {PropertyType, EventEmitter} from "hhcommoncomponents";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {getPhysicSystem} from "../PhysicsSystem/PhysicsSystem";
+import {LGraph} from "litegraph.js";
+import {layerUtils} from "../LayerUtils";
 
 class Player extends EventEmitter {
     animationFrame = -1
@@ -111,6 +113,8 @@ class Player extends EventEmitter {
         for (let layerIdx = 0; layerIdx < layerCount; layerIdx++) {
             let layer = currentStore.GetLayer(layerIdx)
             layer.SetCurrentFrame(playFrameId)
+
+            layerUtils.executePlayFrameCallbacks(layer, playFrameId)
         }
 
         this.updateAllShapes(true)
