@@ -272,19 +272,26 @@ class EventGraphForm extends HTMLElement implements HHForm {
             eventNameEventBusMap.set(eventName, null)
         }
 
-        // Build up component events
-        this.targetComponent.baseShape.getComponents().forEach((component) => {
-            let componentEvents = huahuoEngine.getEvent(component).getEvents()
-            for (let eventName of componentEvents) {
-                eventNameEventBusMap.set(eventName, component)
+        if(this.targetComponent.baseShape){
+            // Build up component events
+            this.targetComponent.baseShape.getComponents().forEach((component) => {
+                let componentEvents = huahuoEngine.getEvent(component).getEvents()
+                for (let eventName of componentEvents) {
+                    eventNameEventBusMap.set(eventName, component)
+                }
+            })
+
+            // Build up self events.
+            let localEvents = huahuoEngine.getEvent(this.targetComponent.baseShape).getEvents()
+
+            for (let eventName of localEvents) {
+                eventNameEventBusMap.set(eventName, this.targetComponent.baseShape)
             }
-        })
+        }
 
-        // Build up self events.
-        let localEvents = huahuoEngine.getEvent(this.targetComponent.baseShape).getEvents()
-
-        for (let eventName of localEvents) {
-            eventNameEventBusMap.set(eventName, this.targetComponent.baseShape)
+        let selfEvents = huahuoEngine.getEvent(this.targetComponent).getEvents()
+        for(let eventName of selfEvents){
+            eventNameEventBusMap.set(eventName, this.targetComponent)
         }
 
         let namespaceCategories = getEventCategoryMap(eventNameEventBusMap)
