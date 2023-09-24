@@ -1,8 +1,7 @@
 import {LGraph} from "litegraph.js";
-import {AbstractGraphAction, ActionDef, GraphAction} from "./GraphActions";
-import {EventEmitter} from "hhcommoncomponents";
+import {AbstractGraphAction, ActionDef, ActionParam, GraphAction} from "./GraphActions";
+import {EventEmitter, GraphEvent, PropertyType} from "hhcommoncomponents";
 import {layerUtils} from "../LayerUtils";
-import {GraphEvent} from "hhcommoncomponents";
 
 class LayerFrameActor extends AbstractGraphAction {
     layer
@@ -13,7 +12,7 @@ class LayerFrameActor extends AbstractGraphAction {
     }
 
     @GraphAction(true)
-    setFrameId(frameId: number) {
+    setFrameId(@ActionParam(PropertyType.NUMBER) frameId: number) {
         this.layer.SetCurrentFrame(frameId)
     }
 }
@@ -48,12 +47,14 @@ class LayerGraphWrapper extends EventEmitter {
     }
 
     // TODO: This should be persisted.zhi
-    selfNodes = new Array()
+    nodeIdTargetMap = new Map()
 
     linkNodeWithTarget(id: number, sourceObj) {
-        if (sourceObj == this) {
-            this.selfNodes.push(id)
-        }
+        this.nodeIdTargetMap.set(id, sourceObj)
+    }
+
+    getActionTarget(id: number){
+        return this.nodeIdTargetMap.get(id)
     }
 
     getBaseActor() {
