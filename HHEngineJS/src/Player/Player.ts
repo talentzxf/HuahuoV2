@@ -105,16 +105,24 @@ class Player extends EventEmitter {
     }
 
     @GraphEvent(true)
-    setFrameId(@EventParam(PropertyType.NUMBER) playFrameId) {
+    setFrameId(@EventParam(PropertyType.NUMBER) playFrameId, forceSync: boolean = true) {
         // Update time for all layers in the default store.
         let currentStore = huahuoEngine.GetStoreById(this.storeId)
+
+        let deltaFrameCount = playFrameId - this.currentlyPlayingFrameId
 
         let layerCount = currentStore.GetLayerCount()
         for (let layerIdx = 0; layerIdx < layerCount; layerIdx++) {
             let layer = currentStore.GetLayer(layerIdx)
-            layer.SetCurrentFrame(playFrameId)
 
-            layerUtils.executePlayFrameCallbacks(layer, playFrameId)
+            let nextFrameId = playFrameId
+            if (!forceSync) {
+                let currentLayerFrameId = layer.GetCurrentFrame();
+                nextFrameId = currentLayerFrameId + deltaFrameCount
+            }
+
+            layer.SetCurrentFrame(nextFrameId)
+            layerUtils.executePlayFrameCallbacks(layer, nextFrameId)
         }
 
         this.updateAllShapes(true)
