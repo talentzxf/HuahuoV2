@@ -32,19 +32,19 @@ class LayerGraphWrapper extends EventEmitter implements AbstractGraphAction {
     // TODO: This should be persisted.zhi
     selfNodes = new Array()
 
-    linkNodeWithTarget(id: number, sourceObj){
-        if(sourceObj == this){
+    linkNodeWithTarget(id: number, sourceObj) {
+        if (sourceObj == this) {
             this.selfNodes.push(id)
         }
     }
 
     @GraphAction(true)
-    setFrameId(frameId: number){
-
+    setFrameId(frameId: number) {
+        this.graphParams.GetLayer().SetCurrentFrame(frameId)
     }
 
     @GraphEvent(true)
-    onPlayFrame(){
+    onPlayFrame() {
     }
 
     getGraph() {
