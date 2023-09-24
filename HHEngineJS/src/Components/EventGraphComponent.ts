@@ -29,6 +29,10 @@ class EventGraphComponent extends AbstractComponent {
             this.rawObj.AddNodeIdObjectMap(nodeId, null)
     }
 
+    getBaseActor(){
+        return this.baseShape.getActor()
+    }
+
     getActionTarget(nodeId: number){
         let rawObj = this.rawObj.GetObjectByNodeId(nodeId)
 

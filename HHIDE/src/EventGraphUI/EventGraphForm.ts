@@ -224,9 +224,9 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         let ref_window = this.lcanvas.getCanvasWindow()
 
-        let baseShape = this.targetComponent.baseShape
         let _this = this
-        let actionDefs = baseShape.getActor().getActionDefs()
+        let baseActor = this.targetComponent.getBaseActor()
+        let actionDefs = baseActor.getActionDefs()
 
         let entries = []
         actionDefs.forEach((actionDef) => {
@@ -235,7 +235,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 content: actionDef.actionName,
                 has_submenu: false,
                 callback: function (value, event, mouseEvent, contextMenu) {
-                    _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, baseShape)
+                    _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, baseActor)
                 }
             }
 

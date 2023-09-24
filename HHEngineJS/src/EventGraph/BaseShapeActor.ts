@@ -21,6 +21,10 @@ class BaseShapeActor extends AbstractGraphAction{
         this.targetShape = targetShape
     }
 
+    getRawObject(){
+        return this.targetShape.getRawObject()
+    }
+
     AddActionInvoker(component: AbstractComponent){
         this.actionInvokers.add(component)
     }
