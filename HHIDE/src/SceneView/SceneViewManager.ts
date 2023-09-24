@@ -5,7 +5,7 @@ import {huahuoEngine, renderEngine2D} from "hhenginejs";
 import {undoManager} from "../RedoUndo/UndoManager";
 import {FocusSceneViewCommand} from "../RedoUndo/FocusSceneViewCommand";
 
-class SceneViewManager{
+class SceneViewManager {
     // Map from storeId->SceneView
     sceneViews: Map<string, SceneView> = new Map()
     curFocusedSceneView: SceneView = null
@@ -13,37 +13,37 @@ class SceneViewManager{
     // Map from sceneview to frameId, when switch back to this scene, we need to restore it's frameId.
     sceneViewFrameIdMap: Map<SceneView, number> = new Map()
 
-    registerSceneView(sceneView: SceneView){
+    registerSceneView(sceneView: SceneView) {
         this.sceneViews.set(sceneView.storeId, sceneView)
     }
 
-    getSceneViewFrameId(sceneView: SceneView){
+    getSceneViewFrameId(sceneView: SceneView) {
         let storeId = sceneView.storeId
         return huahuoEngine.GetStoreById(storeId).GetCurrentLayer().GetCurrentFrame()
     }
 
-    getSceneView(storeId:string){
-        if(this.sceneViews.has(storeId)){
+    getSceneView(storeId: string) {
+        if (this.sceneViews.has(storeId)) {
             return this.sceneViews.get(storeId)
         }
         return null
     }
 
-    focusSceneView(sceneView:SceneView, pushCommand = true){
+    focusSceneView(sceneView: SceneView, pushCommand = true) {
         // Do nothing if the scene has already been focused.
-        if(sceneView == this.curFocusedSceneView)
+        if (sceneView == this.curFocusedSceneView)
             return
 
         let previousSceneView = this.curFocusedSceneView
 
         // save the currently focused scene view frameId.
-        if(this.curFocusedSceneView){
+        if (this.curFocusedSceneView) {
             this.sceneViewFrameIdMap.set(this.curFocusedSceneView, this.curFocusedSceneView.animationPlayer.currentlyPlayingFrameId)
         }
 
         // restore the saved frameId
-        if(this.sceneViewFrameIdMap.has(sceneView)){
-            sceneView.animationPlayer.setFrameId(this.sceneViewFrameIdMap.get(sceneView), true)
+        if (this.sceneViewFrameIdMap.has(sceneView)) {
+            sceneView.animationPlayer.setFrameId(this.sceneViewFrameIdMap.get(sceneView), true, true)
         }
 
         this.curFocusedSceneView = sceneView
@@ -58,24 +58,24 @@ class SceneViewManager{
 
         sceneView.resetDefaultShapeDrawer()
 
-        if(pushCommand && previousSceneView != null){
+        if (pushCommand && previousSceneView != null) {
             // Have to use event to push the command, or else, there will be a cyclic dependency loop.
             huahuoEngine.dispatchEvent("HHIDE", "PushFocusSceneViewCommand", previousSceneView, this.curFocusedSceneView)
         }
 
     }
 
-    getFocusedSceneView(){
+    getFocusedSceneView() {
         return this.curFocusedSceneView
     }
 
-    removeSceneViewMap(storeId: string){
+    removeSceneViewMap(storeId: string) {
         this.sceneViews.delete(storeId)
     }
 
-    getFocusedViewAnimationPlayer(): Player{
-        let targetSceneView:SceneView = sceneViewManager.getFocusedSceneView()
-        if(targetSceneView == null) { // Currently, no scene view is focused. But Why???
+    getFocusedViewAnimationPlayer(): Player {
+        let targetSceneView: SceneView = sceneViewManager.getFocusedSceneView()
+        if (targetSceneView == null) { // Currently, no scene view is focused. But Why???
             Logger.error("No scene view is focused!")
             return null
         }

@@ -90,14 +90,17 @@ class Player extends EventEmitter {
             }
 
             if (this.lastAnimateTime < 0 || elapsedTime > 1000.0 / GlobalConfig.fps) {
-                console.log("FPS:" + 1000.0 / elapsedTime)
-                getPhysicSystem().Step(elapsedTime / 1000.0)
+                if(elapsedTime > 0){
+                    console.log("FPS:" + 1000.0 / elapsedTime)
+                    getPhysicSystem().Step(elapsedTime / 1000.0)
+                }
+
                 let store = huahuoEngine.GetStoreById(this.storeId)
                 let activeFrames = store.GetMaxFrameId() + 1;
                 let activePlayTime = activeFrames / GlobalConfig.fps;
                 let playTime = (timeStamp - this.animationStartTime + this.playStartTime * 1000.0) / 1000.0 % activePlayTime;
                 let frameId = Math.floor(playTime * GlobalConfig.fps)
-                this.setFrameId(frameId)
+                this.setFrameId(frameId, false)
                 this.lastAnimateTime = timeStamp
             }
             requestAnimationFrame(this.animationFrameStep.bind(this));
@@ -105,7 +108,7 @@ class Player extends EventEmitter {
     }
 
     @GraphEvent(true)
-    setFrameId(@EventParam(PropertyType.NUMBER) playFrameId, forceSync: boolean = true) {
+    setFrameId(@EventParam(PropertyType.NUMBER) playFrameId, forceSyncLayers: boolean = true) {
         // Update time for all layers in the default store.
         let currentStore = huahuoEngine.GetStoreById(this.storeId)
 
@@ -116,7 +119,7 @@ class Player extends EventEmitter {
             let layer = currentStore.GetLayer(layerIdx)
 
             let nextFrameId = playFrameId
-            if (!forceSync) {
+            if (!forceSyncLayers) {
                 let currentLayerFrameId = layer.GetCurrentFrame();
                 nextFrameId = currentLayerFrameId + deltaFrameCount
             }

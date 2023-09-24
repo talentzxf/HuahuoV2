@@ -36,21 +36,23 @@ class PlayerControllerX extends React.Component<any, PlayerControllerState> {
 
     render() {
         let player = sceneViewManager.getFocusedViewAnimationPlayer()
-
         this.syncStateWithPlayer()
 
         let playButton = imgButton(SVGFiles.playBtn, i18n.t("playerController.Play"), () => {
+            let player = sceneViewManager.getFocusedViewAnimationPlayer()
             player?.startPlay()
             this.syncStateWithPlayer()
             this.setState(this.state)
         })
         let stopButton = imgButton(SVGFiles.stopBtn, i18n.t("playerController.Stop"), () => {
+            let player = sceneViewManager.getFocusedViewAnimationPlayer()
             player?.stopPlay()
             this.syncStateWithPlayer()
             this.setState(this.state)
         })
 
         let pauseButton = imgButton(SVGFiles.pauseBtn, i18n.t("playerController.Pause"), () => {
+            let player = sceneViewManager.getFocusedViewAnimationPlayer()
             player?.pausePlay()
             this.syncStateWithPlayer()
             this.setState(this.state)

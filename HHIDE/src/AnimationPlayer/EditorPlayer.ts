@@ -67,11 +67,11 @@ class EditorPlayer extends Player {
             undoManager.PushCommand(new SetFrameIdCommand(this.sceneView.animationPlayer, prevFrameId, frameId))
     }
 
-    setFrameId(playFrameId, force = false) {
+    setFrameId(playFrameId, forceSyncLayers = true, force = false) {
         if (sceneViewManager.getFocusedSceneView() != this.sceneView && force == false) {
             this.pausePlay() // Lost focus, stop play
         } else {
-            super.setFrameId(playFrameId)
+            super.setFrameId(playFrameId, forceSyncLayers)
 
             playFrameId += 0.5  // Force to start at 1 for better visualization
             this.timeline.setTimeElapsed(playFrameId / GlobalConfig.fps)
