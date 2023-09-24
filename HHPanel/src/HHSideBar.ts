@@ -60,6 +60,8 @@ class HHSideBar extends HTMLElement implements MovableElement {
         titleSpan.innerText = title
         this.titleBar.appendChild(titleSpan)
 
+        this.classList.add("rounded-lg")
+
         this.insertBefore(this.titleBar, this.content)
         this.titleBar.style.display = "flex"
         this.titleBar.style.background = "#0369a1"

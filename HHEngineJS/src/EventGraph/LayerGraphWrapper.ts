@@ -1,5 +1,5 @@
 import {LGraph} from "litegraph.js";
-import {AbstractGraphAction, ActionDef} from "./GraphActions";
+import {AbstractGraphAction, ActionDef, GraphAction} from "./GraphActions";
 import {EventEmitter} from "hhcommoncomponents";
 import {layerUtils} from "../LayerUtils";
 import {GraphEvent} from "hhcommoncomponents";
@@ -36,6 +36,11 @@ class LayerGraphWrapper extends EventEmitter implements AbstractGraphAction {
         if(sourceObj == this){
             this.selfNodes.push(id)
         }
+    }
+
+    @GraphAction(true)
+    setFrameId(frameId: number){
+
     }
 
     @GraphEvent(true)
