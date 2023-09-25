@@ -90,7 +90,7 @@ class Player extends EventEmitter {
             }
 
             if (this.lastAnimateTime < 0 || elapsedTime > 1000.0 / GlobalConfig.fps) {
-                if(elapsedTime > 0){
+                if (elapsedTime > 0) {
                     console.log("FPS:" + 1000.0 / elapsedTime)
                     getPhysicSystem().Step(elapsedTime / 1000.0)
                 }
@@ -119,11 +119,14 @@ class Player extends EventEmitter {
             let layer = currentStore.GetLayer(layerIdx)
 
             let nextFrameId = playFrameId
-            if (!forceSyncLayers) {
+            if (!forceSyncLayers && deltaFrameCount > 0) {
                 let currentLayerFrameId = layer.GetCurrentFrame();
                 nextFrameId = currentLayerFrameId + deltaFrameCount
+
+                console.log("Debug Jump frame: delta:" + deltaFrameCount)
             }
 
+            console.log("Debug Jump frame: Next FrameId:" + nextFrameId)
             layer.SetCurrentFrame(nextFrameId)
             layerUtils.executePlayFrameCallbacks(layer, nextFrameId)
         }

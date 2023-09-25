@@ -57,6 +57,7 @@ class LayerUtils {
             if (this.layerFrameIdCallbacks.get(layer.ptr).has(frameId)) {
                 let fnArray = this.layerFrameIdCallbacks.get(layer.ptr).get(frameId)
                 for (let fn of fnArray) {
+                    console.log("Debug Jump frame: Executing graph of frame:" + frameId)
                     fn()
                 }
             }
