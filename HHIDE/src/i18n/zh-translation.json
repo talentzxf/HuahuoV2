@@ -72,7 +72,9 @@
     "Execute": "执行",
     "point": "点",
     "playFrameId": "帧号",
-    "onBornFrame": "回到出生帧"
+    "onBornFrame": "回到出生帧",
+    "LayerGraphWrapper": "本帧",
+    "onPlayFrame": "被播放时"
   },
   "contextmenu": {
     "sendToBack": "放到下面",

@@ -72,7 +72,9 @@
     "Execute": "Execute",
     "point": "point",
     "playFrameId": "FrameId",
-    "onBornFrame": "onBorn"
+    "onBornFrame": "onBorn",
+    "LayerGraphWrapper": "Frame",
+    "onPlayFrame": "OnPlay"
   },
   "contextmenu": {
     "sendToBack": "Send To Back",
