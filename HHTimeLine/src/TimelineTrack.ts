@@ -256,17 +256,25 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
             }
         }
 
+        let keyframeCircleRadius = this.unitCellWidth / 2 * 0.5
+
         // Draw key frame indicator
         if (this.layer && this.layer.IsKeyFrame(inputCellId)) {
             let inputCellOffsetX = this.calculateCanvasOffsetX(inputCellId)
-
-            let keyframeCircleRadius = this.unitCellWidth / 2 * 0.5
             this.ctx.beginPath()
             this.ctx.arc(inputCellOffsetX + this.unitCellWidth / 2, this.yOffset + keyframeCircleRadius, keyframeCircleRadius, 0, 2 * Math.PI)
             this.ctx.fillStyle = "black"
             this.ctx.fill()
             this.ctx.strokeStyle = "black"
             this.ctx.stroke()
+        }
+
+        // Draw event graph indicator
+        if (this.layer && this.layer.HasEventGraph(inputCellId)) {
+            let inputCellOffsetX = this.calculateCanvasOffsetX(inputCellId)
+            this.ctx.fillStyle = "black"
+            this.ctx.font = this.unitCellWidth + "px Arial"
+            this.ctx.fillText("G", inputCellOffsetX, this.yOffset + this.unitCellHeight - 2); // Minus 2 pixels as margin.
         }
     }
 
@@ -376,7 +384,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.isSelected = false
     }
 
-    selectTrack(relativeX: number| null) {
+    selectTrack(relativeX: number | null) {
         if (!this.selectable)
             return;
 
@@ -391,16 +399,16 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
         this.isSelected = true;
 
-        if(relativeX != null){
+        if (relativeX != null) {
             let absoluteX = this.canvasStartPos + relativeX;
             let cellId = this.calculateCellIdx(absoluteX);
 
             this.selectCell(cellId)
         }
 
-        if (this.layer){
+        if (this.layer) {
             let store = this.layer.GetObjectStore()
-            if(store != null)
+            if (store != null)
                 store.SetCurrentLayer(this.layer)
         }
 

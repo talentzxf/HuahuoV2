@@ -189,6 +189,8 @@ class SceneView extends HTMLElement {
 
         let frameEventGraphWrapperObject = huahuoEngine.getWrappedGraphObjectForLayer(currentLayer, frameId, true)
         eventGraphForm.setTargetComponent(frameEventGraphWrapperObject)
+
+        this.timeline.redrawCell(currentLayer, frameId)
     }
 
     onWheel(evt: WheelEvent) {
