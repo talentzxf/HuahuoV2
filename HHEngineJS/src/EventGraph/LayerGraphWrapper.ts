@@ -2,6 +2,7 @@ import {LGraph} from "litegraph.js";
 import {AbstractGraphAction, ActionDef, ActionParam, GraphAction} from "./GraphActions";
 import {EventEmitter, GraphEvent, PropertyType} from "hhcommoncomponents";
 import {layerUtils} from "../LayerUtils";
+import {huahuoEngine} from "../EngineAPI";
 
 class LayerFrameActor extends AbstractGraphAction {
     layer
@@ -12,8 +13,12 @@ class LayerFrameActor extends AbstractGraphAction {
     }
 
     @GraphAction(true)
-    setFrameId(@ActionParam(PropertyType.NUMBER) frameId: number) {
-        this.layer.SetCurrentFrame(frameId)
+    setFrameId(@ActionParam(PropertyType.NUMBER) frameId: number, @ActionParam(PropertyType.BOOLEAN) isGlobal: boolean = false) {
+        if (isGlobal) {
+            huahuoEngine.getActivePlayer().setFrameId(frameId)
+        } else {
+            this.layer.SetCurrentFrame(frameId)
+        }
     }
 }
 
@@ -53,7 +58,7 @@ class LayerGraphWrapper extends EventEmitter {
         this.nodeIdTargetMap.set(id, sourceObj)
     }
 
-    getActionTarget(id: number){
+    getActionTarget(id: number) {
         return this.nodeIdTargetMap.get(id)
     }
 

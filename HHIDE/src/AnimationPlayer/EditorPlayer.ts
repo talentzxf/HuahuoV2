@@ -73,6 +73,7 @@ class EditorPlayer extends Player {
         } else {
             super.setFrameId(playFrameId, forceSyncLayers)
 
+            console.log("Debug Jump Frame Set Timeline Elapsed:" + playFrameId)
             playFrameId += 0.5  // Force to start at 1 for better visualization
             this.timeline.setTimeElapsed(playFrameId / GlobalConfig.fps)
 
@@ -81,10 +82,10 @@ class EditorPlayer extends Player {
     }
 
     // If something is changed, TryAddKeyFrame event will be triggered.
-    onTryAddKeyFrame(args){
+    onTryAddKeyFrame(args) {
         let layerUpdatedEventArgs = Module.wrapPointer(args, Module.LayerUpdatedEventHandlerArgs)
         let layer = layerUpdatedEventArgs.GetLayer()
-        if(layer != null){
+        if (layer != null) {
             this.timeline.selectLayer(layer)
 
             this.timeline.redrawCanvas()
@@ -98,7 +99,7 @@ class EditorPlayer extends Player {
         // let frameId = keyframeChangedArgs.GetFrameId()
 
         // Check if this event belongs to this EditorPlayer.
-        if (this.sceneView.storeId == layer.GetObjectStore().GetStoreId()){
+        if (this.sceneView.storeId == layer.GetObjectStore().GetStoreId()) {
             let maxFrameId = layer.GetObjectStore().GetMaxFrameId()
             if (maxFrameId >= 0) {
                 this.timeline.setMaxCellId(maxFrameId + 1)
@@ -136,7 +137,7 @@ class EditorPlayer extends Player {
         this.timeline.redrawCanvas()
     }
 
-    onFileLoaded(fileName: string){
+    onFileLoaded(fileName: string) {
         this.onMaxFrameUpdated()
     }
 }

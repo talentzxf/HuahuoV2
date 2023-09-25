@@ -25,14 +25,14 @@ class ActionNode extends AbstractNode {
         this.executedSlot = this.addOutput("Executed", LiteGraph.EVENT)
     }
 
-    setReturnSlot(returnValueInfo: ReturnValueInfo){
-        if(returnValueInfo){
+    setReturnSlot(returnValueInfo: ReturnValueInfo) {
+        if (returnValueInfo) {
             this.properties.returnValueInfo = {
                 valueName: returnValueInfo.valueName,
                 valueType: returnValueInfo.valueType
             }
 
-            if(returnValueInfo != null){
+            if (returnValueInfo != null) {
                 let returnValueName = returnValueInfo.valueName
                 let returnValueType = returnValueInfo.valueType
 
@@ -51,7 +51,7 @@ class ActionNode extends AbstractNode {
 
     onAction(action, param) {
         // Player is not playing and this action should only run when playing. Return.
-        if(!huahuoEngine.getActivePlayer().isPlaying && this.properties.onlyRunWhenPlaing)
+        if (!huahuoEngine.getActivePlayer().isPlaying && this.properties.onlyRunWhenPlaing)
             return
 
         console.log("Invoking action node:" + this.properties.actionName)
@@ -61,7 +61,7 @@ class ActionNode extends AbstractNode {
         for (let paramIdx = 0; paramIdx <= this.properties.maxParamIdx; paramIdx++) {
             let slot = this.properties.paramIdxSlotMap[paramIdx]
             if (slot) {
-                let inputData = this.getInputDataByName(slot.name)
+                let inputData = this.getInputDataByName(slot.name, true)
                 callBackParams.push(inputData)
             } else {
                 callBackParams.push(null)
@@ -71,10 +71,10 @@ class ActionNode extends AbstractNode {
         let actionTarget = this.getEventGraphComponent().getActionTarget(this.id)
 
         let func = actionTarget[this.properties.actionName]
-        if (func){
+        if (func) {
             let functionResult = func.apply(actionTarget, callBackParams)
 
-            if(this.properties.returnValueInfo){
+            if (this.properties.returnValueInfo) {
                 let outputSlotIndex = this.findOutputSlot(this.properties.returnValueInfo.valueName)
                 this.setOutputData(outputSlotIndex, functionResult)
             }

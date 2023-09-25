@@ -26,8 +26,6 @@ class Player extends EventEmitter {
     _isInEditor: boolean = true
     layerShapesManager: LayerShapesManager;
 
-    playStartTime: number = 0
-
     public currentlyPlayingFrameId: number = 0
 
     set isInEditor(val: boolean) {
@@ -91,15 +89,15 @@ class Player extends EventEmitter {
 
             if (this.lastAnimateTime < 0 || elapsedTime > 1000.0 / GlobalConfig.fps) {
                 if (elapsedTime > 0) {
-                    console.log("FPS:" + 1000.0 / elapsedTime)
                     getPhysicSystem().Step(elapsedTime / 1000.0)
                 }
 
                 let store = huahuoEngine.GetStoreById(this.storeId)
                 let activeFrames = store.GetMaxFrameId() + 1;
-                let activePlayTime = activeFrames / GlobalConfig.fps;
-                let playTime = (timeStamp - this.animationStartTime + this.playStartTime * 1000.0) / 1000.0 % activePlayTime;
-                let frameId = Math.floor(playTime * GlobalConfig.fps)
+
+                let deltaFrames = elapsedTime / GlobalConfig.fps
+                let frameId = Math.floor(this.currentlyPlayingFrameId + deltaFrames + activeFrames) % activeFrames
+                console.log("Debug Jump Frame: deltaFrames:" + deltaFrames + ",frameId" + frameId)
                 this.setFrameId(frameId, false)
                 this.lastAnimateTime = timeStamp
             }
@@ -109,6 +107,8 @@ class Player extends EventEmitter {
 
     @GraphEvent(true)
     setFrameId(@EventParam(PropertyType.NUMBER) playFrameId, forceSyncLayers: boolean = true) {
+        this.currentlyPlayingFrameId = playFrameId
+
         // Update time for all layers in the default store.
         let currentStore = huahuoEngine.GetStoreById(this.storeId)
 
@@ -117,25 +117,27 @@ class Player extends EventEmitter {
         let layerCount = currentStore.GetLayerCount()
         for (let layerIdx = 0; layerIdx < layerCount; layerIdx++) {
             let layer = currentStore.GetLayer(layerIdx)
+            let currentLayerFrameId = layer.GetCurrentFrame()
 
             let nextFrameId = playFrameId
             if (!forceSyncLayers && deltaFrameCount > 0) {
                 let currentLayerFrameId = layer.GetCurrentFrame();
                 nextFrameId = currentLayerFrameId + deltaFrameCount
-
-                console.log("Debug Jump frame: delta:" + deltaFrameCount)
             }
 
-            console.log("Debug Jump frame: Next FrameId:" + nextFrameId)
-            layer.SetCurrentFrame(nextFrameId)
-            layerUtils.executePlayFrameCallbacks(layer, nextFrameId)
+            if (nextFrameId != layer.GetCurrentFrame()) { // Only setFrameId when current frameId is not equal to the nextFrameId, to avoid infinite recursion.
+                console.log("Debug Jump Frame: nextFrameId:" + nextFrameId)
+                layer.SetCurrentFrame(nextFrameId)
+
+                for (let frameId = currentLayerFrameId + 1; frameId <= nextFrameId; frameId++) {
+                    layerUtils.executePlayFrameCallbacks(layer, nextFrameId)
+                }
+            }
         }
 
         this.updateAllShapes(true)
 
         getNailManager().update()
-
-        this.currentlyPlayingFrameId = playFrameId
     }
 
     startPlay() {
@@ -144,7 +146,7 @@ class Player extends EventEmitter {
         }
 
         let store = huahuoEngine.GetStoreById(this.storeId)
-        this.playStartTime = store.GetCurrentLayer().GetCurrentFrame() / GlobalConfig.fps
+        this.currentlyPlayingFrameId = store.GetCurrentLayer().GetCurrentFrame()
         this.lastAnimateTime = -1
         this.animationFrame = requestAnimationFrame(this.animationFrameStep.bind(this));
         this.isPlaying = true
