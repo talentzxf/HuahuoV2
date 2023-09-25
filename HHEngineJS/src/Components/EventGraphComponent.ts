@@ -58,7 +58,7 @@ class EventGraphComponent extends AbstractComponent {
         }
     }
 
-    getEventBus(nodeId: number){
+    getEventBusForNode(nodeId: number){
         let rawObj = this.rawObj.GetObjectByNodeId(nodeId)
         if(rawObj == null || !IsValidWrappedObject(rawObj))
             return eventBus

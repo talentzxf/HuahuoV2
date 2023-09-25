@@ -33,7 +33,7 @@ class EventNode extends AbstractNode {
     // TODO: The event bus might not be the global one.
     setupEvent(fullEventName: string, title = null) {
 
-        let targetEventBus = this.getEventGraphComponent().getEventBus(this.id)
+        let targetEventBus = this.getEventGraphComponent().getEventBusForNode(this.id)
 
         let eventNameMeta = splitFullEventName(fullEventName)
         if (this.properties.fullEventName && this.currentEventHandler > 0) {

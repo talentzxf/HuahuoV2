@@ -1,6 +1,6 @@
 import {LGraph} from "litegraph.js";
 import {AbstractGraphAction, ActionDef, ActionParam, GraphAction} from "./GraphActions";
-import {EventEmitter, GraphEvent, PropertyType} from "hhcommoncomponents";
+import {eventBus, EventEmitter, GraphEvent, PropertyType} from "hhcommoncomponents";
 import {layerUtils} from "../LayerUtils";
 import {huahuoEngine} from "../EngineAPI";
 
@@ -14,10 +14,17 @@ class LayerFrameActor extends AbstractGraphAction {
 
     @GraphAction(true)
     setFrameId(@ActionParam(PropertyType.NUMBER) frameId: number, @ActionParam(PropertyType.BOOLEAN) isGlobal: boolean = false) {
+        if (frameId <= 0) {
+            console.error("Can't set less than 1 frameId")
+            return
+        }
+
+        let actualFrameId = frameId - 1
+
         if (isGlobal) {
-            huahuoEngine.getActivePlayer().setFrameId(frameId)
+            huahuoEngine.getActivePlayer().setFrameId(actualFrameId)
         } else {
-            this.layer.SetCurrentFrame(frameId)
+            this.layer.SetCurrentFrame(actualFrameId)
         }
     }
 }
@@ -81,6 +88,15 @@ class LayerGraphWrapper extends EventEmitter {
 
     getActionDefs(): Array<ActionDef> {
         return undefined;
+    }
+
+    getEventBusForNode(nodeId: number) {
+        let eventSource = this.nodeIdTargetMap.get(nodeId)
+        if(eventSource == null){
+            return eventBus
+        }
+
+        return eventSource.getEventBus()
     }
 }
 
