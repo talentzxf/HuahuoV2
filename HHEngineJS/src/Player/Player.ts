@@ -128,6 +128,11 @@ class Player extends EventEmitter {
 
             if (nextFrameId != layer.GetCurrentFrame()) { // Only setFrameId when current frameId is not equal to the nextFrameId, to avoid infinite recursion.
                 console.log("Debug Jump Frame: nextFrameId:" + nextFrameId)
+
+                if (!forceSyncLayers && layer.IsStopFrame(currentLayerFrameId)) {
+                    continue
+                }
+
                 layer.SetCurrentFrame(nextFrameId)
 
                 for (let frameId = currentLayerFrameId + 1; frameId <= nextFrameId; frameId++) {
