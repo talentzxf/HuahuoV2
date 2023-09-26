@@ -40,6 +40,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
     private selectedCellBgStyle: string = "cyan"
     private cellStrokeStyle: string = "black"
+    private stopFrameStyle: string = "rgb(238, 147, 32, 0.8)"
     private cellFontStyle: string = "black"
 
     private trackName: string;
@@ -264,6 +265,13 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
             }
         }
 
+        // Draw stop frame
+        if (this.layer && this.layer.IsStopFrame(inputCellId)) {
+            let inputCellOffsetX = this.calculateCanvasOffsetX(inputCellId)
+            this.ctx.fillStyle = this.stopFrameStyle
+            this.ctx.fillRect(inputCellOffsetX, this.yOffset, this.unitCellWidth, this.unitCellHeight)
+        }
+
         let keyframeCircleRadius = this.unitCellWidth / 2 * 0.5
 
         // Draw key frame indicator
@@ -284,6 +292,8 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
             this.ctx.font = this.unitCellWidth + "px Arial"
             this.ctx.fillText("G", inputCellOffsetX, this.yOffset + this.unitCellHeight - 2); // Minus 2 pixels as margin.
         }
+
+
     }
 
     addOnClickFunc(xMin, xMax, onclickFunc) {
@@ -376,6 +386,19 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
     getCurrentCellId() {
         return Math.floor(this.elapsedTime * GlobalConfig.fps)
+    }
+
+    isCurrentCellFrameStop() {
+        let frameId = this.getCurrentCellId()
+        return this.layer && this.layer.IsStopFrame(frameId)
+    }
+
+    unsetCurrentCellFrameStop() {
+        this.layer?.RemoveStopFrame(this.getCurrentCellId())
+    }
+
+    setCurrentCellFrameStop() {
+        this.layer?.AddStopFrame(this.getCurrentCellId())
     }
 
     drawTimelineIndicator() {

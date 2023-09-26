@@ -44,6 +44,10 @@ class HHTimeline extends HTMLElement {
         return this.timelineTracks[idx]
     }
 
+    public getSelectedTrack(): TimelineTrack{
+        return this.getTrack(this.selectedTrackSeqId)
+    }
+
     connectedCallback() {
         if(!this.isInited) {
 
