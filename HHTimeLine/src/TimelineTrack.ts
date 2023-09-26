@@ -48,7 +48,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
     private yOffset: number;
 
-    private elapsedTime: number = 0.0; // In seconds.
+    private _elapsedTime: number = 0.0; // In seconds.
 
     private checkBoxImg = new Image()
 
@@ -133,7 +133,15 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     }
 
     setElapsedTime(elapsedTime) {
-        this.elapsedTime = elapsedTime
+        this._elapsedTime = elapsedTime
+    }
+
+    private get elapsedTime() {
+        if (this.layer) {
+            return (this.layer.GetCurrentFrame() + 0.5) / GlobalConfig.fps
+        }
+
+        return this._elapsedTime
     }
 
     getYOffset(): number {
