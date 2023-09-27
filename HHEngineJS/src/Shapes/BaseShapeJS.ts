@@ -1201,7 +1201,7 @@ abstract class BaseShapeJS {
         this.getPropertySheet().setProperties(properties)
     }
 
-    resetAction() {
+    reset() {
         this.getActor().reset()
         for (let component of this.customComponents) {
             if (component != null)

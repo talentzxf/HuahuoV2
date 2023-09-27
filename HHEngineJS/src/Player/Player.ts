@@ -183,7 +183,7 @@ class Player extends EventEmitter {
 
     resetActions() {
         this.layerShapesManager.forEachShapeInStore((shape: BaseShapeJS) => {
-            shape.resetAction()
+            shape.reset()
         })
     }
 }

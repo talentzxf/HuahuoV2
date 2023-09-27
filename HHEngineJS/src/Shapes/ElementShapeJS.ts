@@ -92,12 +92,26 @@ class ElementShapeJS extends BaseShapeJS {
         this.rawObj.SetBornFrameId(val)
     }
 
+    lastLayerFrame: Map<object, number> = new Map
+
+    getLayerLastFrameId(layer) {
+        if (!this.lastLayerFrame.has(layer)) {
+            return -1
+        }
+
+        return this.lastLayerFrame.get(layer)
+    }
+
+    setLayerFrame(layer, frameId) {
+        this.lastLayerFrame.set(layer, frameId)
+    }
+
     calculateLocalFrame() {
         let currentFrame = this.getLayer().GetCurrentFrame()
         let bornFrame = this.bornFrameId
         let maxFrames = huahuoEngine.getStoreMaxFrames(this.storeId)
 
-        if(maxFrames == 0){
+        if (maxFrames == 0) {
             return 0;
         }
 
@@ -115,6 +129,7 @@ class ElementShapeJS extends BaseShapeJS {
             layer.SetCurrentFrame(previousFrame)
         }
     }
+
     override preparePaperItem(force: boolean = false) {
         super.preparePaperItem(force)
 
@@ -131,11 +146,32 @@ class ElementShapeJS extends BaseShapeJS {
             }
 
             let currentLocalFrame = this.calculateLocalFrame()
+
+            let storeMaxFrameId = huahuoEngine.getStoreMaxFrames(this.storeId)
             this.layerShapesManager.forEachLayerInStore((layer) => {
                 this.saveLayerFrame(layer, layer.GetCurrentFrame())
 
+                let lastLayerFrame = this.getLayerLastFrameId(layer)
+                let targetFrameId = currentLocalFrame
 
-                layer.SetCurrentFrame(currentLocalFrame)
+                let compensateForStopFrame = false
+                if (lastLayerFrame >= 0) {
+                    for (let frameId = (lastLayerFrame + 1 + storeMaxFrameId) % storeMaxFrameId;
+                         frameId != currentLocalFrame; frameId = (frameId + 1 + storeMaxFrameId) % storeMaxFrameId) {
+                        if (layer.IsStopFrame(frameId)) {
+                            targetFrameId = frameId
+                            compensateForStopFrame = true
+                            break;
+                        }
+                    }
+                }
+
+                layer.SetCurrentFrame(targetFrameId)
+                if (compensateForStopFrame) {
+                    this.setLayerFrame(layer, (targetFrameId - 1 + storeMaxFrameId) % storeMaxFrameId)
+                } else {
+                    this.setLayerFrame(layer, targetFrameId)
+                }
             })
 
             this.layerShapesManager.loadShapesFromStore(this)
@@ -168,7 +204,6 @@ class ElementShapeJS extends BaseShapeJS {
     }
 
 
-
     update(force: boolean = false) {
         if (Utils.isValidGUID(this.storeId)) { // If the storeId is less than 0, the shape has not been inited.
             super.update(force)
@@ -195,7 +230,7 @@ class ElementShapeJS extends BaseShapeJS {
             // 2. Add the shape into current layer of this store. And it will be loaded by the element.
             huahuoEngine.GetCurrentLayer().AddShapeInternal(shape.getRawObject())
 
-            if(shape.getRawObject().GetTypeName() == shapeName){
+            if (shape.getRawObject().GetTypeName() == shapeName) {
                 let maxFrameId = huahuoEngine.GetStoreById((shape as ElementShapeJS).storeId).GetMaxFrameId()
 
                 let currentStore = huahuoEngine.GetStoreById(this.storeId)
@@ -216,7 +251,7 @@ class ElementShapeJS extends BaseShapeJS {
         huahuoEngine.dispatchEvent("HHEngine", "onEditElement", this)
     }
 
-    onUploadElement(){
+    onUploadElement() {
         huahuoEngine.dispatchEvent("HHEngine", "onUploadElement", this)
     }
 
@@ -229,17 +264,17 @@ class ElementShapeJS extends BaseShapeJS {
     }
 
     getPlaySpeed() {
-        if(this.elementController == null)
+        if (this.elementController == null)
             return 1.0
 
         return this.elementController.playSpeed
     }
 
 
-
     additionalPropertyAdded: boolean = false
-    getPropertySheet(){
-        if(!this.additionalPropertyAdded){
+
+    getPropertySheet() {
+        if (!this.additionalPropertyAdded) {
             this.additionalPropertyAdded = true
             this.propertySheet.addProperty({
                 key: "inspector.editElement",
@@ -252,13 +287,19 @@ class ElementShapeJS extends BaseShapeJS {
             this.propertySheet.addProperty({
                 key: "inspector.uploadElement",
                 type: PropertyType.BUTTON,
-                config:{
+                config: {
                     action: this.onUploadElement.bind(this)
                 }
             })
         }
 
         return super.getPropertySheet()
+    }
+
+    reset() {
+        this.lastLayerFrame.clear()
+
+        super.reset()
     }
 }
 
