@@ -86,7 +86,9 @@
     "createNewTrack": "创建新轨道",
     "groupAsElement": "转换为组件",
     "markAsAnimationEnd": "设为动画结束帧",
-    "editFrameEventGraph": "编辑帧事件图"
+    "editFrameEventGraph": "编辑帧事件图",
+    "setAsStopFrame": "设置为停止帧",
+    "unsetAsStopFrame": "取消设置为停止帧"
   },
   "statusbar": {
     "mousePosition": "鼠标位置:{{mouseX}},{{mouseY}}",

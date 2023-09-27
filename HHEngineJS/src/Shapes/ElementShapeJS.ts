@@ -134,6 +134,7 @@ class ElementShapeJS extends BaseShapeJS {
             this.layerShapesManager.forEachLayerInStore((layer) => {
                 this.saveLayerFrame(layer, layer.GetCurrentFrame())
 
+
                 layer.SetCurrentFrame(currentLocalFrame)
             })
 

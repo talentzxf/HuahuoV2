@@ -155,10 +155,10 @@ class SceneView extends HTMLElement {
                 itemName: () => {
                     let selectedTrack = _this.timeline.getSelectedTrack()
                     if (selectedTrack.isCurrentCellFrameStop()) {
-                        return "Unset StopFrame"
+                        return i18n.t("contextMenu.unsetAsStopFrame")
                     }
 
-                    return "Set StopFrame"
+                    return i18n.t("contextMenu.setAsStopFrame")
                 },
                 onclick: function (e) {
                     let selectedTrack = _this.timeline.getSelectedTrack()

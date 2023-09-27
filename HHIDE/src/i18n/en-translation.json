@@ -86,7 +86,9 @@
     "createNewTrack": "Create New Track",
     "groupAsElement": "Convert to Element",
     "markAsAnimationEnd": "Mark as Animation End",
-    "editFrameEventGraph": "Edit Frame Event Graph"
+    "editFrameEventGraph": "Edit Frame Event Graph",
+    "setAsStopFrame": "Set as Stop Frame",
+    "unsetAsStopFrame": "Unset Stop Frame"
   },
   "statusbar": {
     "mousePosition": "Mouse position:{{mouseX}},{{mouseY}}",
