@@ -1,20 +1,26 @@
-import {BaseShapeJS} from "hhenginejs"
+import {BaseShapeJS, huahuoEngine, paper} from "hhenginejs"
 import {BaseShapeDrawer} from "./BaseShapeDrawer";
-import {Vector2, pointsNear, pointsNearHorizontal, pointsNearVertical,
-    relaxRectangle, ContextMenu, HHToast} from "hhcommoncomponents"
-import {paper} from "hhenginejs";
+import {
+    ContextMenu,
+    HHToast,
+    pointsNear,
+    pointsNearHorizontal,
+    pointsNearVertical,
+    relaxRectangle,
+    Vector2
+} from "hhcommoncomponents"
 import {
     shapeHorizontalScaleHandler,
     shapeScaleHandler,
-    ShapeScaleHandler, shapeVerticalScaleHandler
+    ShapeScaleHandler,
+    shapeVerticalScaleHandler
 } from "../TransformHandlers/ShapeScaleHandler";
 import {ShapeTranslateMorphBase} from "../TransformHandlers/ShapeTranslateMorphBase";
 import {TransformHandlerMap} from "../TransformHandlers/TransformHandlerMap";
 import {shapeRotateHandler} from "../TransformHandlers/ShapeRotateHandler";
-import {IDEEventBus, EventNames} from "../Events/GlobalEvents";
+import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {elementCreator} from "../SceneView/ElementCreator";
-import {HHContent} from "hhpanel"
-import {findParentContent} from "hhpanel";
+import {findParentContent, HHContent} from "hhpanel"
 import {objectDeleter} from "./ObjectDeleter";
 import {clearPrompt, setPrompt} from "../init";
 import {CommandArrayCommand} from "../RedoUndo/CommandArrayCommand";
@@ -84,15 +90,18 @@ class ShapeSelector extends BaseShapeDrawer {
     duplicateShape() {
         console.log("Trying to duplicate shape")
 
+        let currentFrame = huahuoEngine.GetCurrentLayer().GetCurrentFrame()
+
         let duplicatedShapes = new Set<BaseShapeJS>()
         for (let shape of this.selectedShapes) {
             console.log("Duplicating shape")
             let duplicatedShape = shape.duplicate();
+            duplicatedShape.bornFrameId = currentFrame
 
             // Offset the shape a little to avoid covering the original shape.
             let position = duplicatedShape.position
-            position.x += Math.floor( Math.random() * 5 - 10 )
-            position.y += Math.floor( Math.random() * 5 - 10 )
+            position.x += Math.floor(Math.random() * 5 - 10)
+            position.y += Math.floor(Math.random() * 5 - 10)
 
             duplicatedShape.position = position
 
@@ -105,7 +114,7 @@ class ShapeSelector extends BaseShapeDrawer {
         }
 
         this.clearSelection()
-        for(let shape of duplicatedShapes){
+        for (let shape of duplicatedShapes) {
             this.selectObject(shape)
         }
     }
@@ -162,15 +171,15 @@ class ShapeSelector extends BaseShapeDrawer {
         IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onShapeSelected.bind(this))
     }
 
-    groupAsElement(){
-        if(this.selectedShapes == null || this.selectedShapes.size == 0){
+    groupAsElement() {
+        if (this.selectedShapes == null || this.selectedShapes.size == 0) {
             HHToast.warn("No shape selected, can't create element")
             return
         }
 
         // Calculate the center of all the selected elements.
-        let newCenterPosition = new paper.Point(0,0)
-        for(let shape of this.selectedShapes){
+        let newCenterPosition = new paper.Point(0, 0)
+        for (let shape of this.selectedShapes) {
             let shapeCenter = shape.shapePosition
             newCenterPosition.x += shapeCenter.x
             newCenterPosition.y += shapeCenter.y
@@ -180,9 +189,9 @@ class ShapeSelector extends BaseShapeDrawer {
         newCenterPosition.y /= this.selectedShapes.size
 
         let element = elementCreator.createElement(this.selectedShapes)
-        if(element){
+        if (element) {
             this.selectedShapes.clear()
-            if(element)
+            if (element)
                 this.selectedShapes.add(element) // Only select this element
 
             element.pivotPosition = newCenterPosition
@@ -264,7 +273,7 @@ class ShapeSelector extends BaseShapeDrawer {
         // Single click, perform hit test.
         let hitResultArray = paper.project.hitTestAll(hitPoint, this.hitOptions)
 
-        for(let hitResult of hitResultArray){
+        for (let hitResult of hitResultArray) {
             if (hitResult) {
                 let hitItem = hitResult.item;
                 if (itemSelectable(hitResult.item)) {
@@ -280,7 +289,7 @@ class ShapeSelector extends BaseShapeDrawer {
                     } else { // If the object has already been selected, we might need to do something based on the hittype.
 
                         let hitType = hitResult.type
-                        if(this.hitTypeSeletable(hitResult.item, hitType)){
+                        if (this.hitTypeSeletable(hitResult.item, hitType)) {
                             this.transformHandler = this.transformHandlerMap.getHandler(hitType)
 
                             if (this.transformHandler)
@@ -355,12 +364,12 @@ class ShapeSelector extends BaseShapeDrawer {
         let targetPos = new paper.Point(pos.x, pos.y)
 
         let targetShape = this.selectedShapes.values().next().value
-        if(targetShape == null || targetShape.paperShape == null){
+        if (targetShape == null || targetShape.paperShape == null) {
             this.selectedShapes.delete(targetShape)
             return
         }
 
-        if(!(targetShape instanceof BaseShapeJS)){
+        if (!(targetShape instanceof BaseShapeJS)) {
             return
         }
 
@@ -389,15 +398,14 @@ class ShapeSelector extends BaseShapeDrawer {
 
             // Four edges.
             else if ((pointsNearHorizontal(targetPos, bounds.topLeft.y, VERYNEARMARGIN)
-                  || pointsNearHorizontal(targetPos, bounds.bottomLeft.y, VERYNEARMARGIN))
-                && targetPos.x >= bounds.topLeft.x && targetPos.x <= bounds.topRight.x){
+                    || pointsNearHorizontal(targetPos, bounds.bottomLeft.y, VERYNEARMARGIN))
+                && targetPos.x >= bounds.topLeft.x && targetPos.x <= bounds.topRight.x) {
                 this.canvas.style.cursor = "ns-resize"
                 this.setTransformHandler(this.selectedShapes, pos, shapeVerticalScaleHandler)
                 return
-            }
-            else if ((pointsNearVertical(targetPos, bounds.topLeft.x, VERYNEARMARGIN)
-                ||   pointsNearVertical(targetPos, bounds.topRight.x, VERYNEARMARGIN)
-                && targetPos.y >= bounds.topLeft.y && targetPos.y <= bounds.bottomLeft.y)){
+            } else if ((pointsNearVertical(targetPos, bounds.topLeft.x, VERYNEARMARGIN)
+                || pointsNearVertical(targetPos, bounds.topRight.x, VERYNEARMARGIN)
+                && targetPos.y >= bounds.topLeft.y && targetPos.y <= bounds.bottomLeft.y)) {
                 this.canvas.style.cursor = "ew-resize"
                 this.setTransformHandler(this.selectedShapes, pos, shapeHorizontalScaleHandler)
                 return
@@ -415,7 +423,7 @@ class ShapeSelector extends BaseShapeDrawer {
         }
 
         // If we reached here and the transform handler has not been set, it definite shouldn't be the ShapeScaleHandler.
-        if(this.transformHandler == null || this.transformHandler instanceof ShapeScaleHandler){
+        if (this.transformHandler == null || this.transformHandler instanceof ShapeScaleHandler) {
             this.canvas.style.cursor = "default"
             this.transformHandler = null
         }
@@ -453,9 +461,8 @@ class ShapeSelector extends BaseShapeDrawer {
     }
 
 
-
-    hitTypeSeletable(item, type){
-        if(!itemSelectable(item)) // Defensive coding, check whether the item is hitable again
+    hitTypeSeletable(item, type) {
+        if (!itemSelectable(item)) // Defensive coding, check whether the item is hitable again
             return false
 
         return item.data.meta.hitTypeSelectable(type)
@@ -490,7 +497,7 @@ class ShapeSelector extends BaseShapeDrawer {
                         let shapeBoundingBox = shape.getBounds()
                         let selectionRectBoundingBox = this.selectRectangle.getBounds()
                         if (shapeBoundingBox.intersects(selectionRectBoundingBox)) {
-                            if(itemSelectable(shape)){
+                            if (itemSelectable(shape)) {
                                 this.selectObject(shape.data.meta)
                                 // this.setTransformHandler(this.selectedShapes, pos)
                             }
@@ -515,7 +522,7 @@ class ShapeSelector extends BaseShapeDrawer {
     }
 
     onShowRotationIndicator(evt) {
-        if(evt.event.buttons == 1)
+        if (evt.event.buttons == 1)
             return
 
         console.log("Set cursor as rotation")
@@ -525,12 +532,12 @@ class ShapeSelector extends BaseShapeDrawer {
         evt.stopPropagation()
     }
 
-    onHideRotationIndicator(evt){
+    onHideRotationIndicator(evt) {
         // Is dragging, ignore
-        if(evt.event.buttons == 1)
+        if (evt.event.buttons == 1)
             return
 
-        if(this.transformHandler == shapeRotateHandler){
+        if (this.transformHandler == shapeRotateHandler) {
             this.canvas.style.cursor = "default"
             this.transformHandler = null
         }

@@ -130,7 +130,7 @@ class ComponentProxyHandler {
             config: {
                 children: [],
                 enabler: () => {
-                    thisComponent.enableComponent()
+                    thisComponent.enableComponent(true)
                 },
                 disabler: () => {
                     thisComponent.disableComponent()

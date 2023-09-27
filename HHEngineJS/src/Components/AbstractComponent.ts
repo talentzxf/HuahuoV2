@@ -168,8 +168,6 @@ abstract class AbstractComponent extends EventEmitter {
 
         // I don't like this, but baseShape will be null in some cases???  Have to manual fix here....
         this.rawObj.SetBaseShape(baseShape.getRawObject())
-        if (!this.isMirage)
-            this.enableComponent() // Enable the component after baseShape is set.
     }
 
     afterUpdate(force: boolean = false) {
@@ -211,6 +209,7 @@ abstract class AbstractComponent extends EventEmitter {
 
     enableComponent() {
         this.rawObj.SetBooleanValue("isActive", true)
+
         this.onComponentEnabled()
 
         // Something might be changed, so we need to refresh the shape.
