@@ -61,6 +61,7 @@ class HHSideBar extends HTMLElement implements MovableElement {
         this.titleBar.appendChild(titleSpan)
 
         this.classList.add("rounded-lg")
+        this.classList.add("overflow-hidden")
 
         this.insertBefore(this.titleBar, this.content)
         this.titleBar.style.display = "flex"
