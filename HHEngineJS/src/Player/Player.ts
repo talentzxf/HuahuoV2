@@ -95,10 +95,13 @@ class Player extends EventEmitter {
                 let store = huahuoEngine.GetStoreById(this.storeId)
                 let activeFrames = store.GetMaxFrameId() + 1;
 
-                let deltaFrames = elapsedTime / GlobalConfig.fps
-                let frameId = Math.floor(this.currentlyPlayingFrameId + deltaFrames + activeFrames) % activeFrames
-                console.log("Debug Jump Frame: deltaFrames:" + deltaFrames + ",frameId" + frameId)
-                this.setFrameId(frameId, false)
+                if (activeFrames) {
+                    let deltaFrames = elapsedTime / GlobalConfig.fps
+                    let frameId = Math.floor(this.currentlyPlayingFrameId + deltaFrames + activeFrames) % activeFrames
+                    console.log("Debug Jump Frame: deltaFrames:" + deltaFrames + ",frameId" + frameId)
+                    this.setFrameId(frameId, false)
+                }
+
                 this.lastAnimateTime = timeStamp
             }
             requestAnimationFrame(this.animationFrameStep.bind(this));
@@ -106,39 +109,18 @@ class Player extends EventEmitter {
     }
 
     @GraphEvent(true)
-    setFrameId(@EventParam(PropertyType.NUMBER) playFrameId, forceSyncLayers: boolean = true) {
+    setFrameId(@EventParam(PropertyType.NUMBER) playFrameId, forceSyncLayers: boolean = true, isForward: boolean = true) {
         let lastPlayingFrameId = this.currentlyPlayingFrameId
         this.currentlyPlayingFrameId = playFrameId
 
         // Update time for all layers in the default store.
         let currentStore = huahuoEngine.GetStoreById(this.storeId)
 
-        let deltaFrameCount = playFrameId - lastPlayingFrameId
-
         let layerCount = currentStore.GetLayerCount()
         for (let layerIdx = 0; layerIdx < layerCount; layerIdx++) {
             let layer = currentStore.GetLayer(layerIdx)
-            let currentLayerFrameId = layer.GetCurrentFrame()
 
-            let nextFrameId = playFrameId
-            if (!forceSyncLayers && deltaFrameCount > 0) {
-                let currentLayerFrameId = layer.GetCurrentFrame();
-                nextFrameId = currentLayerFrameId + deltaFrameCount
-            }
-
-            if (nextFrameId != layer.GetCurrentFrame()) { // Only setFrameId when current frameId is not equal to the nextFrameId, to avoid infinite recursion.
-                console.log("Debug Jump Frame: nextFrameId:" + nextFrameId)
-
-                if (!forceSyncLayers && layer.IsStopFrame(currentLayerFrameId)) {
-                    continue
-                }
-
-                layer.SetCurrentFrame(nextFrameId)
-
-                for (let frameId = currentLayerFrameId + 1; frameId <= nextFrameId; frameId++) {
-                    layerUtils.executePlayFrameCallbacks(layer, nextFrameId)
-                }
-            }
+            layerUtils.advanceLayerFrameId(layer, playFrameId, forceSyncLayers, lastPlayingFrameId, isForward)
         }
 
         this.updateAllShapes(true)

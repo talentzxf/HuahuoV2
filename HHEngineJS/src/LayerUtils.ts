@@ -1,5 +1,5 @@
 import {huahuoEngine} from "./EngineAPI";
-import {Logger} from "hhcommoncomponents";
+import {IsValidWrappedObject, Logger} from "hhcommoncomponents";
 import {LayerGraphWrapper} from "./EventGraph/LayerGraphWrapper";
 
 class LayerUtils {
@@ -74,6 +74,52 @@ class LayerUtils {
         }
 
         this.layerFrameIdCallbacks.get(layer.ptr).get(frameId).push(callback)
+    }
+
+    uniformFrameId(frameId, maxFrameId) {
+        return ((frameId + maxFrameId) % maxFrameId + maxFrameId) % maxFrameId
+    }
+
+    advanceLayerFrameId(layer, globalTargetFrameId, forceSync: boolean = true, globalPrevFrameId = -1, isForward = true) {
+        if (!IsValidWrappedObject(layer))
+            return
+
+        if (globalTargetFrameId == globalPrevFrameId)
+            return
+
+        let totalFrames = layer.GetObjectStore().GetMaxFrameId() + 1
+
+        if (totalFrames == 0)
+            return
+
+        let currentLayerFrame = layer.GetCurrentFrame()
+
+        let nextFrameId = globalTargetFrameId
+        if (!forceSync) { // If not force sync, will update the frame count by delta.
+            if (layer.IsStopFrame(currentLayerFrame))
+                return
+
+            let deltaCount = -1
+            if (isForward) {
+                deltaCount = this.uniformFrameId(globalTargetFrameId - globalPrevFrameId, totalFrames)
+            } else {
+                deltaCount = this.uniformFrameId(globalPrevFrameId - globalTargetFrameId, totalFrames)
+            }
+
+            nextFrameId = this.uniformFrameId(currentLayerFrame + (isForward ? deltaCount : -deltaCount), totalFrames)
+        }
+
+        if (layer.GetCurrentFrame() != nextFrameId) {
+            layer.SetCurrentFrame(nextFrameId)
+
+            if (!forceSync) { // Only execute callback when it's not a forceSync. Because executing callback might impact currentFrame.
+                let frameId = currentLayerFrame
+                do {
+                    frameId = this.uniformFrameId(isForward ? frameId + 1 : frameId - 1, totalFrames)
+                    this.executePlayFrameCallbacks(layer, frameId)
+                } while (frameId != nextFrameId)
+            }
+        }
     }
 }
 
