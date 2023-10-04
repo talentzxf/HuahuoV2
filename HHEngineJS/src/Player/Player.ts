@@ -120,7 +120,7 @@ class Player extends EventEmitter {
         for (let layerIdx = 0; layerIdx < layerCount; layerIdx++) {
             let layer = currentStore.GetLayer(layerIdx)
 
-            layerUtils.advanceLayerFrameId(layer, playFrameId, forceSyncLayers, lastPlayingFrameId, isForward)
+            layerUtils.advanceLayerFrameId(layer, playFrameId, layer.GetCurrentFrame(), forceSyncLayers, lastPlayingFrameId, isForward)
         }
 
         this.updateAllShapes(true)

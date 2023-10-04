@@ -5,6 +5,7 @@ import {clzObjectFactory} from "../CppClassObjectFactory";
 import {PropertyType} from "hhcommoncomponents";
 import {ElementController} from "../Components/ElementController";
 import {Utils} from "./Utils";
+import {layerUtils} from "../LayerUtils";
 
 let shapeName = "ElementShape"
 
@@ -23,6 +24,8 @@ class ElementShapeJS extends BaseShapeJS {
     layerShapesManager: LayerShapesManager
 
     layerFrameMap: Map<any, number> = new Map();
+
+    prevLocalFrame: number = -1
 
     constructor(rawObj) {
         super(rawObj);
@@ -109,13 +112,13 @@ class ElementShapeJS extends BaseShapeJS {
     calculateLocalFrame() {
         let currentFrame = this.getLayer().GetCurrentFrame()
         let bornFrame = this.bornFrameId
-        let maxFrames = huahuoEngine.getStoreMaxFrames(this.storeId)
+        let totalFrameCount = huahuoEngine.getStoreMaxFrames(this.storeId) + 1
 
-        if (maxFrames == 0) {
+        if (totalFrameCount == 0) {
             return 0;
         }
 
-        return (((currentFrame - bornFrame) * this.getPlaySpeed()) % maxFrames + maxFrames) % maxFrames
+        return layerUtils.uniformFrameId((currentFrame - bornFrame) * this.getPlaySpeed(), totalFrameCount)
     }
 
     saveLayerFrame(layer, frame) {
@@ -139,40 +142,28 @@ class ElementShapeJS extends BaseShapeJS {
         try {
             huahuoEngine.GetDefaultObjectStoreManager().SetDefaultStoreByIndex(this.storeId);
 
-            let store = defaultStoreManager.GetCurrentStore()
-
             if (this.layerShapesManager == null) {
                 this.layerShapesManager = new LayerShapesManager(this.storeId)
             }
 
             let currentLocalFrame = this.calculateLocalFrame()
+            if (this.prevLocalFrame < 0) {
+                this.prevLocalFrame = currentLocalFrame
+            }
 
-            let storeMaxFrameId = huahuoEngine.getStoreMaxFrames(this.storeId)
             this.layerShapesManager.forEachLayerInStore((layer) => {
                 this.saveLayerFrame(layer, layer.GetCurrentFrame())
 
                 let lastLayerFrame = this.getLayerLastFrameId(layer)
-                let targetFrameId = currentLocalFrame
 
-                let compensateForStopFrame = false
-                if (lastLayerFrame >= 0) {
-                    for (let frameId = (lastLayerFrame + 1 + storeMaxFrameId) % storeMaxFrameId;
-                         frameId != currentLocalFrame; frameId = (frameId + 1 + storeMaxFrameId) % storeMaxFrameId) {
-                        if (layer.IsStopFrame(frameId)) {
-                            targetFrameId = frameId
-                            compensateForStopFrame = true
-                            break;
-                        }
-                    }
-                }
+                let forceSync = huahuoEngine.getActivePlayer().isPlaying == false
 
-                layer.SetCurrentFrame(targetFrameId)
-                if (compensateForStopFrame) {
-                    this.setLayerFrame(layer, (targetFrameId - 1 + storeMaxFrameId) % storeMaxFrameId)
-                } else {
-                    this.setLayerFrame(layer, targetFrameId)
+                if(layerUtils.advanceLayerFrameId(layer, currentLocalFrame, lastLayerFrame, forceSync, this.prevLocalFrame, this.getPlaySpeed() > 0)){
+                    this.setLayerFrame(layer, layer.GetCurrentFrame())
                 }
             })
+
+            this.prevLocalFrame = currentLocalFrame
 
             this.layerShapesManager.loadShapesFromStore(this)
 
@@ -298,7 +289,7 @@ class ElementShapeJS extends BaseShapeJS {
 
     reset() {
         this.lastLayerFrame.clear()
-
+        this.prevLocalFrame = -1
         super.reset()
     }
 }

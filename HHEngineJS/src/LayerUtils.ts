@@ -80,24 +80,26 @@ class LayerUtils {
         return ((frameId + maxFrameId) % maxFrameId + maxFrameId) % maxFrameId
     }
 
-    advanceLayerFrameId(layer, globalTargetFrameId, forceSync: boolean = true, globalPrevFrameId = -1, isForward = true) {
+    // Return true -- The lay is set to the target frameId.
+    // Return false -- The lay is not set to the target frameId because of various reasons.
+    advanceLayerFrameId(layer, globalTargetFrameId, currentLayerFrame, forceSync: boolean = true, globalPrevFrameId = -1, isForward = true) {
         if (!IsValidWrappedObject(layer))
-            return
+            return false
 
         if (globalTargetFrameId == globalPrevFrameId)
-            return
+            return false
 
         let totalFrames = layer.GetObjectStore().GetMaxFrameId() + 1
 
         if (totalFrames == 0)
-            return
-
-        let currentLayerFrame = layer.GetCurrentFrame()
+            return false
 
         let nextFrameId = globalTargetFrameId
         if (!forceSync) { // If not force sync, will update the frame count by delta.
-            if (layer.IsStopFrame(currentLayerFrame))
-                return
+            if (layer.IsStopFrame(currentLayerFrame)) {
+                layer.SetCurrentFrame(currentLayerFrame) // Stop there.
+                return false
+            }
 
             let deltaCount = -1
             if (isForward) {
@@ -120,6 +122,8 @@ class LayerUtils {
                 } while (frameId != nextFrameId)
             }
         }
+
+        return true
     }
 }
 
