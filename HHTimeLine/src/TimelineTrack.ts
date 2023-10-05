@@ -54,6 +54,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     private checkBoxImg = new Image()
 
     private icons: Array<HTMLImageElement>;
+    private onNameClickedCallback: Function = null
 
     private trackId: uuidv4
 
@@ -61,6 +62,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
     // Left, Right, onClickFunction
     private iconClickFuncArray: Array<[number, number, Function]> = new Array();
+    private iconMouseMoveFuncArray: Array<[number, number, Function]> = new Array();
 
     public IgnoreDuringLoad() {
         return false
@@ -131,6 +133,10 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
     setIcons(icons: Array<HTMLImageElement>) {
         this.icons = icons
+    }
+
+    setOnNameClickedCallback(callback: Function) {
+        this.onNameClickedCallback = callback
     }
 
     setElapsedTime(elapsedTime) {
@@ -296,6 +302,15 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
     }
 
+    addOnMouseMoveFunc(xMin, xMax, onmouseMoveFunc) {
+        for (let funcTuple of this.iconMouseMoveFuncArray) {
+            if (funcTuple[2] == onmouseMoveFunc)
+                return;
+        }
+
+        this.iconMouseMoveFuncArray.push([xMin, xMax, onmouseMoveFunc])
+    }
+
     addOnClickFunc(xMin, xMax, onclickFunc) {
         for (let funcTuple of this.iconClickFuncArray) {
             if (funcTuple[2] == onclickFunc)
@@ -303,6 +318,17 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         }
 
         this.iconClickFuncArray.push([xMin, xMax, onclickFunc])
+    }
+
+    onNameClicked() {
+        if (this.onNameClickedCallback) {
+            this.onNameClickedCallback(this.layer)
+        }
+    }
+
+    bindedOnNameClicked: Function = null
+    nameMouseEnter: Function = () => {
+        this.ctx.canvas.style.cursor = "pointer"
     }
 
     drawTrack(canvasStartPos: number, canvasEndPos: number, maxCellId: number = -1) {
@@ -328,6 +354,13 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         let textYOffset = this.yOffset + this.trackNameSize + (this.unitCellHeight - this.trackNameSize) * 0.5
 
         this.ctx.fillText(this.trackName, xOffset, textYOffset)
+
+        if (this.bindedOnNameClicked == null) {
+            this.bindedOnNameClicked = this.onNameClicked.bind(this)
+        }
+
+        this.addOnMouseMoveFunc(xOffset, imgXOffset, this.nameMouseEnter)
+        this.addOnClickFunc(xOffset, imgXOffset, this.bindedOnNameClicked)
 
         if (this.isSelected) {
 
@@ -415,7 +448,37 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.isSelected = false
     }
 
-    selectTrack(relativeX: number | null) {
+    handleMouseMove(relativeX: number) {
+        let handled = false
+        for (let funcTuple of this.iconMouseMoveFuncArray) {
+            let min = funcTuple[0]
+            let max = funcTuple[1]
+            if (relativeX > min && relativeX < max) {
+                if (funcTuple[2]) {
+                    funcTuple[2](this.layer)
+                    handled = true
+                }
+            }
+        }
+
+        if (!handled) {
+            this.onMouseLeave()
+        }
+    }
+
+    onMouseMove(relativeX: number) {
+        this.handleMouseMove(relativeX)
+    }
+
+    onMouseEnter(relativeX: number) {
+        this.handleMouseMove(relativeX)
+    }
+
+    onMouseLeave() {
+        this.ctx.canvas.style.cursor = "default"
+    }
+
+    clickedTrack(relativeX: number | null) {
         if (!this.selectable)
             return;
 

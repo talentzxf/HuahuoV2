@@ -190,7 +190,10 @@ class SceneView extends HTMLElement {
                 let layer = currentStore.GetLayer(layerId)
                 let eyeIcon = this.createEyeIcon()
                 this.timeline.setLayerIcons(layer, [eyeIcon])
+
+                this.timeline.setLayerSetNameCallback(layer, this.setLayerNameCallback.bind(this))
             }
+
             this.timeline.reloadTracks()
         }
 
@@ -199,6 +202,10 @@ class SceneView extends HTMLElement {
             this.animationPlayer = new EditorPlayer(this)
             huahuoEngine.setActivePlayer(this.animationPlayer)
         }
+    }
+
+    setLayerNameCallback(layer) {
+
     }
 
     openFrameEventGraphForm() {
@@ -275,6 +282,8 @@ class SceneView extends HTMLElement {
         let eyeIcon = this.createEyeIcon()
         this.timeline.reloadTracks()
         let track = this.timeline.addNewTrack(null, [eyeIcon])
+
+        this.timeline.setLayerSetNameCallback(track.getLayer(), this.setLayerNameCallback.bind(this))
         this.timeline.selectTrack(track.getSeqId(), null)
     }
 

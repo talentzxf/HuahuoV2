@@ -38,18 +38,18 @@ class HHTimeline extends HTMLElement {
 
     private maxCellId: number = -1;
 
-    public getTrack(idx): TimelineTrack{
-        if(idx > this.timelineTracks.length - 1)
+    public getTrack(idx): TimelineTrack {
+        if (idx > this.timelineTracks.length - 1)
             return null
         return this.timelineTracks[idx]
     }
 
-    public getSelectedTrack(): TimelineTrack{
+    public getSelectedTrack(): TimelineTrack {
         return this.getTrack(this.selectedTrackSeqId)
     }
 
     connectedCallback() {
-        if(!this.isInited) {
+        if (!this.isInited) {
 
             // canvasScrollContainer wraps canvasContainer wraps cavnas.
             // Because canvas has a width limit. So the canvas can't be very big: https://www.tutorialspoint.com/Maximum-size-of-a-canvas-element-in-HTML#:~:text=All%20web%20browsers%20limit%20the,allowable%20area%20is%20268%2C435%2C456%20pixels.
@@ -81,6 +81,8 @@ class HHTimeline extends HTMLElement {
             this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this))
             this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this))
             this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this))
+            this.canvas.addEventListener("mouseenter", this.onMouseEnter.bind(this))
+            this.canvas.addEventListener("mouseleave", this.onMouseLeave.bind(this))
 
             this.canvas.addEventListener('contextmenu', this.contextMenu.onContextMenu.bind(this.contextMenu))
             this.setTimeElapsed(0.5 / GlobalConfig.fps)
@@ -94,7 +96,7 @@ class HHTimeline extends HTMLElement {
         }
     }
 
-    setMaxCellId(maxCellId){
+    setMaxCellId(maxCellId) {
         this.maxCellId = maxCellId
     }
 
@@ -135,25 +137,39 @@ class HHTimeline extends HTMLElement {
             if (this.layerIconMap.has(layer)) {
                 icons = this.layerIconMap.get(layer)
             }
-            this.addNewTrack(layer, icons)
+            let track = this.addNewTrack(layer, icons)
+
+            let setNameCallback = this.layerSetNameCallbackMap.get(layer)
+            if (setNameCallback) {
+                track.setOnNameClickedCallback(setNameCallback)
+            }
         }
 
         this.redrawCanvas()
     }
 
-    setLayerIcons(layer, icons){
+    layerSetNameCallbackMap = new Map
+
+    setLayerSetNameCallback(layer, setNameCallback) {
+        let track = this.getTrackFromLayer(layer)
+        track.setOnNameClickedCallback(setNameCallback)
+
+        this.layerSetNameCallbackMap.set(layer, setNameCallback)
+    }
+
+    setLayerIcons(layer, icons) {
 
         let candidateIcons = icons
 
         let currentIcons = this.layerIconMap.get(layer)
-        if(currentIcons != null && currentIcons.length > 0){
+        if (currentIcons != null && currentIcons.length > 0) {
             candidateIcons.concat(currentIcons) // TODO: Is add twice a good idea??
         }
 
         this.layerIconMap.set(layer, candidateIcons)
 
         let track = this.getTrackFromLayer(layer)
-        if(track){
+        if (track) {
             track.setIcons(candidateIcons)
         }
     }
@@ -226,7 +242,45 @@ class HHTimeline extends HTMLElement {
         }
     }
 
+    mouseOverTrackSeqId = -1;
+
+    triggerTrackMouseEnter(evt: MouseEvent) {
+        let trackSeqId = this.calculateTrackSeqId(evt.offsetY)
+        if (trackSeqId >= 0 || trackSeqId < this.timelineTracks.length) {
+            if (this.mouseOverTrackSeqId != trackSeqId) {
+                this.timelineTracks[trackSeqId].onMouseEnter(evt.offsetX)
+            }
+        }
+
+        if (this.mouseOverTrackSeqId >= 0 && this.mouseOverTrackSeqId != trackSeqId) {
+            this.timelineTracks[this.mouseOverTrackSeqId].onMouseLeave()
+        }
+        this.mouseOverTrackSeqId = trackSeqId
+    }
+
+    onMouseEnter(evt: MouseEvent) {
+        this.triggerTrackMouseEnter(evt)
+    }
+
+    onMouseLeave() {
+        if (this.mouseOverTrackSeqId >= 0 && this.mouseOverTrackSeqId < this.timelineTracks.length) {
+            this.timelineTracks[this.mouseOverTrackSeqId].onMouseLeave()
+        }
+
+        this.mouseOverTrackSeqId = -1
+    }
+
+    trackMouseMove(evt) {
+        let trackSeqId = this.calculateTrackSeqId(evt.offsetY)
+        if (trackSeqId >= 0 || trackSeqId < this.timelineTracks.length) {
+            this.timelineTracks[trackSeqId].onMouseMove(evt.offsetX)
+        }
+    }
+
     onMouseMove(evt: MouseEvent) {
+        this.triggerTrackMouseEnter(evt)
+        this.trackMouseMove(evt)
+
         if (evt.buttons != 1) {
             this.isSelectingRangeCell = false;
         } else {
@@ -253,6 +307,7 @@ class HHTimeline extends HTMLElement {
             if (track.hasYOffset(offsetY))
                 return track.getSeqId()
         }
+        return -1
     }
 
     isTrackSeqIdValid(seqId: number): boolean {
@@ -262,14 +317,14 @@ class HHTimeline extends HTMLElement {
         return true
     }
 
-    selectLayer(layer){
+    selectLayer(layer) {
         let track = this.getTrackFromLayer(layer)
-        if(track != null)
+        if (track != null)
             this.selectTrack(track.getSeqId(), null)
     }
 
-    selectTrack(trackSeqId, offsetX){
-        this.timelineTracks[trackSeqId].selectTrack(offsetX);
+    selectTrack(trackSeqId, offsetX) {
+        this.timelineTracks[trackSeqId].clickedTrack(offsetX);
 
         if (this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId) {
             this.timelineTracks[this.selectedTrackSeqId].unSelectTrack();

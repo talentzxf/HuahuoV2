@@ -91,8 +91,9 @@ class LayerUtils {
 
         let totalFrames = layer.GetObjectStore().GetMaxFrameId() + 1
 
-        if (totalFrames == 0)
-            return false
+        if (totalFrames == 0){ // If currently no frame, enter force sync mode.
+            forceSync = true
+        }
 
         let nextFrameId = globalTargetFrameId
         if (!forceSync) { // If not force sync, will update the frame count by delta.
