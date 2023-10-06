@@ -24,6 +24,8 @@ function allReadyExecute(fn: Function) {
     )
 }
 
+let MAXNAMELENGTH = 15
+
 @CustomElement({
     selector: "hh-sceneview"
 })
@@ -205,10 +207,21 @@ class SceneView extends HTMLElement {
     }
 
     setLayerNameCallback(layer) {
-        let layerName = window.prompt("Please enter the new layer name")
-        if(layerName != null){
-            layer.SetName(layerName)
-            this.timeline.reloadTracks()
+        let exitSetLayerName = false
+
+        while (!exitSetLayerName) {
+            let layerName = window.prompt("Please enter the new layer name (<=" + MAXNAMELENGTH + ")")
+            if (layerName != null) {
+                if (layerName.length <= MAXNAMELENGTH) {
+                    layer.SetName(layerName)
+                    this.timeline.reloadTracks()
+                    exitSetLayerName = true
+                } else {
+                    window.alert("Can't input layer name >= " + MAXNAMELENGTH)
+                }
+            } else {
+                exitSetLayerName = true
+            }
         }
     }
 

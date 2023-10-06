@@ -15,12 +15,15 @@ interface TimelineTrackEvent {
     'cellClicked': (track: TimeLineTrack, cellId: number) => void;
 }
 
+let ICONWIDTH = 15
+let ICONHEIGHT = 15
+
 class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     static defaultUnitCellWidth: number = 20;
     static defaultUnitCellHeight: number = 30;
 
-    protected iconWidth: number = 15
-    protected iconHeight: number = 15
+    protected iconWidth: number = ICONWIDTH
+    protected iconHeight: number = ICONHEIGHT
     protected unitCellWidth: number = -1;
     protected unitCellHeight: number = -1;
     protected selectable: boolean = true;
@@ -569,4 +572,4 @@ class TitleTimelineTrack extends TimelineTrack {
     }
 }
 
-export {TimelineTrack, TitleTimelineTrack, TimelineTrackEventNames}
+export {TimelineTrack, TitleTimelineTrack, TimelineTrackEventNames, ICONWIDTH, ICONHEIGHT}

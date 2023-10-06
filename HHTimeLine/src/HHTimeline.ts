@@ -1,4 +1,4 @@
-import {TimelineTrack, TimelineTrackEventNames, TitleTimelineTrack} from "./TimelineTrack";
+import {ICONWIDTH, TimelineTrack, TimelineTrackEventNames, TitleTimelineTrack} from "./TimelineTrack";
 import {ContextMenu, CustomElement, Logger} from "hhcommoncomponents";
 import {GlobalConfig} from "hhenginejs";
 import {TimelineEventNames} from "./HHTimelineEvents";
@@ -423,6 +423,8 @@ class HHTimeline extends HTMLElement {
         for (let track of this.timelineTracks) {
             maxTrackNameLength = Math.max(maxTrackNameLength, track.getTitleLength())
         }
+
+        maxTrackNameLength += ICONWIDTH
 
         for (let track of this.timelineTracks) {
             track.drawTrack(this.canvasStartPos - maxTrackNameLength, this.canvasEndPos, this.maxCellId);
