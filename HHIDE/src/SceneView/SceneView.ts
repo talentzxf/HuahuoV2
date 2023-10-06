@@ -205,7 +205,11 @@ class SceneView extends HTMLElement {
     }
 
     setLayerNameCallback(layer) {
-
+        let layerName = window.prompt("Please enter the new layer name")
+        if(layerName != null){
+            layer.SetName(layerName)
+            this.timeline.reloadTracks()
+        }
     }
 
     openFrameEventGraphForm() {
