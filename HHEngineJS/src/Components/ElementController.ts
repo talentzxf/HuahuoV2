@@ -1,6 +1,9 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
-import {GraphAction} from "../EventGraph/GraphActions";
+import {ActionParam, GraphAction} from "../EventGraph/GraphActions";
+import {PropertyType} from "hhcommoncomponents";
+import {ElementShapeJS} from "../Shapes/ElementShapeJS";
+import {HHToast} from "hhcommoncomponents";
 
 @Component({compatibleShapes: ["ElementShapeJS"], maxCount: 1})
 class ElementController extends AbstractComponent {
@@ -8,9 +11,15 @@ class ElementController extends AbstractComponent {
     playSpeed: number;
 
     @GraphAction(true)
-    setFrameId(){
-
+    setFrameId(@ActionParam(PropertyType.NUMBER) playFrameId) {
+        if (playFrameId <= 0) {
+            HHToast("Invalid argument:" + playFrameId)
+            return
+        }
+        let elementShape = this.baseShape as ElementShapeJS
+        elementShape.setPlayerFrameId(playFrameId - 1) // The UI frameId starts from 1, but internally starts from 0.
     }
 }
+
 export {ElementController}
 

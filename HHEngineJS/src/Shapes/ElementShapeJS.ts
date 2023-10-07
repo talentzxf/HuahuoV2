@@ -133,6 +133,12 @@ class ElementShapeJS extends BaseShapeJS {
         }
     }
 
+    setPlayerFrameId(frameId) {
+        this.layerShapesManager.forEachLayerInStore((layer) => {
+            this.setLayerFrame(layer, frameId)
+        })
+    }
+
     override preparePaperItem(force: boolean = false) {
         super.preparePaperItem(force)
 
@@ -158,7 +164,7 @@ class ElementShapeJS extends BaseShapeJS {
 
                 let forceSync = huahuoEngine.getActivePlayer().isPlaying == false
 
-                if(layerUtils.advanceLayerFrameId(layer, currentLocalFrame, lastLayerFrame, forceSync, this.prevLocalFrame, this.getPlaySpeed() > 0)){
+                if (layerUtils.advanceLayerFrameId(layer, currentLocalFrame, lastLayerFrame, forceSync, this.prevLocalFrame, this.getPlaySpeed() > 0)) {
                     this.setLayerFrame(layer, layer.GetCurrentFrame())
                 }
             })
