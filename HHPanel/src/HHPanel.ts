@@ -17,7 +17,7 @@ enum PanelEventNames {
     selector: 'hh-panel',
     template: `<template>
         <div style="display: flex; flex-direction: column; height: 100%; width: 100%">
-            <div class="title_tabs nav nav-tabs">
+            <div class="title_tabs nav nav-tabs divide-x divide-slate-400/25">
             </div>
             <div class="panel_contents" style="flex-basis: 100%;">
             </div>

@@ -86,8 +86,8 @@ class LayerUtils {
         if (!IsValidWrappedObject(layer))
             return false
 
-        if (globalTargetFrameId == globalPrevFrameId)
-            return false
+        // if (globalTargetFrameId == globalPrevFrameId)
+        //     return false
 
         let totalFrames = layer.GetObjectStore().GetMaxFrameId() + 1
 
