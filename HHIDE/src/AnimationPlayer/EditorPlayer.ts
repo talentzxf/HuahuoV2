@@ -73,7 +73,7 @@ class EditorPlayer extends Player {
         } else {
             super.setFrameId(playFrameId, forceSyncLayers)
 
-            console.log("Debug Jump Frame Set Timeline Elapsed:" + playFrameId)
+            // console.log("Debug Jump Frame Set Timeline Elapsed:" + playFrameId)
             playFrameId += 0.5  // Force to start at 1 for better visualization
             this.timeline.setTimeElapsed(playFrameId / GlobalConfig.fps)
 

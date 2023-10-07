@@ -98,7 +98,7 @@ class Player extends EventEmitter {
                 if (activeFrames) {
                     let deltaFrames = elapsedTime / GlobalConfig.fps
                     let frameId = Math.floor(this.currentlyPlayingFrameId + deltaFrames + activeFrames) % activeFrames
-                    console.log("Debug Jump Frame: deltaFrames:" + deltaFrames + ",frameId" + frameId)
+                    //console.log("Debug Jump Frame: deltaFrames:" + deltaFrames + ",frameId" + frameId)
                     this.setFrameId(frameId, false)
                 }
 

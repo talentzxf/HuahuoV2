@@ -48,7 +48,7 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> implements Prop
             if (ele) {
                 reactElements.push(ele)
             } else {
-                console.warn("Unknown generator:" + element.property.key + " type index:" + element.property.type)
+                // console.warn("Unknown generator:" + element.property.key + " type index:" + element.property.type)
             }
         }
 

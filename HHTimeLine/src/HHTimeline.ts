@@ -412,7 +412,7 @@ class HHTimeline extends HTMLElement {
     }
 
     redrawCanvas() {
-        console.log("TimeLine: Redraw canvas!!!!" + this.canvasWidth + "," + this.canvasHeight)
+        // console.log("TimeLine: Redraw canvas!!!!" + this.canvasWidth + "," + this.canvasHeight)
         this.updateStartEndPos()
 
         // Clear bg
