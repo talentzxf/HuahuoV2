@@ -185,14 +185,14 @@ class SceneView extends HTMLElement {
         if (layerCount == 0)
             this.createNewTrack()
         else {
+            this.timeline.reloadTracks()
+
             // Set up icons. In some cases, layers are created else where (like in elementCreator) and icons are not setup during layer creation
             for (let layerId = 0; layerId < layerCount; layerId++) {
                 let layer = currentStore.GetLayer(layerId)
 
                 timelineUtils.initLayerTrack(this.timeline, layer)
             }
-
-            this.timeline.reloadTracks()
         }
 
 

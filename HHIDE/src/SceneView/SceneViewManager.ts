@@ -37,7 +37,7 @@ class SceneViewManager {
         let previousSceneView = this.curFocusedSceneView
 
         // save the currently focused scene view frameId.
-        if (this.curFocusedSceneView) {
+        if (this.curFocusedSceneView && this.curFocusedSceneView.animationPlayer != null) {
             this.sceneViewFrameIdMap.set(this.curFocusedSceneView, this.curFocusedSceneView.animationPlayer.currentlyPlayingFrameId)
         }
 
