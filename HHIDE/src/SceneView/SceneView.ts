@@ -9,10 +9,10 @@ import {EditorPlayer} from "../AnimationPlayer/EditorPlayer";
 import {fileLoader} from "./FileLoader";
 import {findParentContent, findParentPanel, HHSideBar} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
-import {SVGFiles} from "../Utilities/Svgs";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {formManager} from "../Utilities/FormManager";
 import {EventGraphForm} from "../EventGraphUI/EventGraphForm";
+import {timelineUtils} from "../Utilities/TimelineUtils";
 
 function allReadyExecute(fn: Function) {
     i18n.ExecuteAfterInited(
@@ -23,8 +23,6 @@ function allReadyExecute(fn: Function) {
         }
     )
 }
-
-let MAXNAMELENGTH = 15
 
 @CustomElement({
     selector: "hh-sceneview"
@@ -190,10 +188,8 @@ class SceneView extends HTMLElement {
             // Set up icons. In some cases, layers are created else where (like in elementCreator) and icons are not setup during layer creation
             for (let layerId = 0; layerId < layerCount; layerId++) {
                 let layer = currentStore.GetLayer(layerId)
-                let eyeIcon = this.createEyeIcon()
-                this.timeline.setLayerIcons(layer, [eyeIcon])
 
-                this.timeline.setLayerSetNameCallback(layer, this.setLayerNameCallback.bind(this))
+                timelineUtils.initLayerTrack(this.timeline, layer)
             }
 
             this.timeline.reloadTracks()
@@ -203,25 +199,6 @@ class SceneView extends HTMLElement {
         if (this.animationPlayer == null) {
             this.animationPlayer = new EditorPlayer(this)
             huahuoEngine.setActivePlayer(this.animationPlayer)
-        }
-    }
-
-    setLayerNameCallback(layer) {
-        let exitSetLayerName = false
-
-        while (!exitSetLayerName) {
-            let layerName = window.prompt("Please enter the new layer name (<=" + MAXNAMELENGTH + ")")
-            if (layerName != null) {
-                if (layerName.length <= MAXNAMELENGTH) {
-                    layer.SetName(layerName)
-                    this.timeline.reloadTracks()
-                    exitSetLayerName = true
-                } else {
-                    window.alert("Can't input layer name >= " + MAXNAMELENGTH)
-                }
-            } else {
-                exitSetLayerName = true
-            }
         }
     }
 
@@ -273,34 +250,12 @@ class SceneView extends HTMLElement {
         firstTrack.getLayer().GetObjectStore().UpdateMaxFrameId(cellId, true)
     }
 
-    createEyeIcon() {
-        let _this = this
-        let eyeIcon = new Image()
-        eyeIcon.src = SVGFiles.eyeSvg
-        eyeIcon["onIconClicked"] = function (layer) {
-            let currentlyVisible = layer.GetIsVisible()
-            if (currentlyVisible) { // Currently visible
-                eyeIcon.src = SVGFiles.eyeSlashSvg
-            } else {
-                eyeIcon.src = SVGFiles.eyeSvg
-            }
-
-            layer.SetIsVisible(!currentlyVisible)
-        }
-
-        eyeIcon.onload = function () {
-            _this.timeline.reloadTracks()
-        }
-
-        return eyeIcon
-    }
 
     createNewTrack() {
-        let eyeIcon = this.createEyeIcon()
-        this.timeline.reloadTracks()
-        let track = this.timeline.addNewTrack(null, [eyeIcon])
+        let track = this.timeline.addNewTrack()
+        let layer = track.getLayer()
+        timelineUtils.initLayerTrack(this.timeline, layer)
 
-        this.timeline.setLayerSetNameCallback(track.getLayer(), this.setLayerNameCallback.bind(this))
         this.timeline.selectTrack(track.getSeqId(), null)
     }
 

@@ -6,6 +6,7 @@ import {gzipSync, gunzipSync} from "fflate"
 import {SceneView} from "../SceneView/SceneView";
 import {saveAs} from 'file-saver';
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
+import {timelineUtils} from "../Utilities/TimelineUtils";
 
 declare var Module: any
 
@@ -49,7 +50,13 @@ class ProjectManager {
         let result = Module.LoadStoreFileCompletely(storeMemoryFile);
         if (result == 0) { // TODO: Should send out event
             let timeline: HHTimeline = document.querySelector("hh-timeline")
-            timeline.reloadTracks();
+            timeline.reloadTracks()
+
+            let store = huahuoEngine.GetCurrentStore()
+            for (let layerIdx = 0; layerIdx < store.GetLayerCount(); layerIdx++) {
+                let layer = store.GetLayer(layerIdx)
+                timelineUtils.initLayerTrack(timeline, layer)
+            }
             HHToast.info(i18n.t("toast.openProjectSucceeded"))
         } else {
             HHToast.error(i18n.t("toast.openProjectFailed"))
@@ -61,11 +68,11 @@ class ProjectManager {
         huahuoEngine.getActivePlayer().updateAllShapes(true)
     }
 
-    getProjectData(){
+    getProjectData() {
         let mainSceneView: SceneView = document.querySelector("#mainScene")
         let oldStoreId = huahuoEngine.GetCurrentStoreId()
 
-        try{
+        try {
             let mainSceneViewCanvas = mainSceneView.canvas
 
             renderEngine2D.saveProjectCanvasWH(mainSceneViewCanvas.width, mainSceneViewCanvas.height)
