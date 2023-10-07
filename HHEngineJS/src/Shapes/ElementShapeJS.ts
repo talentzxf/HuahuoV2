@@ -296,6 +296,12 @@ class ElementShapeJS extends BaseShapeJS {
     reset() {
         this.lastLayerFrame.clear()
         this.prevLocalFrame = -1
+
+        // Reset all shapes.
+        this.layerShapesManager.forEachShapeInStore((shape: BaseShapeJS) => {
+            shape.reset()
+        })
+
         super.reset()
     }
 }

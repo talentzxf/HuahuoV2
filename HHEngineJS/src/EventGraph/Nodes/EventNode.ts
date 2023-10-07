@@ -22,6 +22,10 @@ class EventNode extends AbstractNode {
         })
     }
 
+    onExecute() {
+        console.log("On Execute!!!")
+    }
+
     addParameterIndexSlotMap(paramIdx, outputSlot) {
         this.getParamMap()[paramIdx] = outputSlot
     }
