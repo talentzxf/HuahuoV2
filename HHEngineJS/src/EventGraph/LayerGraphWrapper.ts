@@ -1,5 +1,5 @@
 import {LGraph} from "litegraph.js";
-import {AbstractGraphAction, ActionDef, ActionParam, GraphAction} from "./GraphActions";
+import {AbstractGraphAction, ActionDef, ActionParam, GraphAction, NodeTargetType} from "./GraphActions";
 import {eventBus, EventEmitter, GraphEvent, PropertyType} from "hhcommoncomponents";
 import {layerUtils} from "../LayerUtils";
 import {huahuoEngine} from "../EngineAPI";
@@ -60,8 +60,10 @@ class LayerGraphWrapper extends EventEmitter {
 
     // TODO: This should be persisted.zhi
     nodeIdTargetMap = new Map()
+    nodeTargetTypeMap = new Map()
 
-    linkNodeWithTarget(id: number, sourceObj) {
+    linkNodeWithTarget(id: number, targetType: NodeTargetType, sourceObj) {
+        this.nodeTargetTypeMap.set(id, targetType)
         this.nodeIdTargetMap.set(id, sourceObj)
     }
 

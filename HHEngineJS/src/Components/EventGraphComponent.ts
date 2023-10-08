@@ -7,6 +7,7 @@ import {capitalizeFirstLetter, eventBus, IsValidWrappedObject} from "hhcommoncom
 import {EventNode} from "../EventGraph/Nodes/EventNode";
 import {ActionNode} from "../EventGraph/Nodes/ActionNode";
 import {setupLGraph} from "../EventGraph/LGraphSetup";
+import {NodeTargetType} from "../EventGraph/GraphActions";
 
 declare var Module: any;
 
@@ -22,11 +23,11 @@ class EventGraphComponent extends AbstractComponent {
     graph: LGraph
 
     // If shape is null, this node is listening to global event.
-    linkNodeWithTarget(nodeId: number, actionTarget: BaseShapeJS | AbstractComponent) {
+    linkNodeWithTarget(nodeId: number, type: NodeTargetType, actionTarget: BaseShapeJS | AbstractComponent) {
         if (actionTarget != null)
-            this.rawObj.AddNodeIdObjectMap(nodeId, actionTarget.getRawObject())
+            this.rawObj.AddNodeIdObjectMap(nodeId, type, actionTarget.getRawObject())
         else
-            this.rawObj.AddNodeIdObjectMap(nodeId, null)
+            this.rawObj.AddNodeIdObjectMap(nodeId, type, null)
     }
 
     getBaseActor() {

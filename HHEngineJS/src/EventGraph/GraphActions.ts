@@ -1,6 +1,15 @@
 import {getParameterNameAtIdx} from "hhcommoncomponents";
 import {PropertyType} from "hhcommoncomponents";
+
 const graphActionSymbol = Symbol("graphAction")
+
+enum NodeTargetType {
+    SHAPE = "SHAPE",
+    COMPONENT = "COMPONENT",
+    GRAPHCOMPONENT = "GRAPHCOMPONENT",
+    PLAYER = "PLAYER",
+    CANVAS = "CANVAS"
+}
 
 class ActionParamDef {
     paramName: string
@@ -84,10 +93,10 @@ abstract class AbstractGraphAction {
     }
 }
 
-class ComponentActions{
+class ComponentActions {
     targetComponent: Object
 
-    getActionDefs(): Array<ActionDef>{
+    getActionDefs(): Array<ActionDef> {
         return getActions(this.targetComponent) as Array<ActionDef>
     }
 
@@ -103,4 +112,4 @@ class ComponentActions{
     }
 }
 
-export {AbstractGraphAction, ActionDef, ActionParam, GraphAction, ComponentActions, ReturnValueInfo}
+export {AbstractGraphAction, ActionDef, ActionParam, GraphAction, ComponentActions, ReturnValueInfo, NodeTargetType}
