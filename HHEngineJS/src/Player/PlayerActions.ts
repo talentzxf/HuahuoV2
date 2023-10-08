@@ -2,8 +2,10 @@ import {AbstractGraphAction, ActionParam, GraphAction} from "../EventGraph/Graph
 import {HHToast, PropertyType} from "hhcommoncomponents"
 
 class PlayerActions extends AbstractGraphAction {
-    constructor() {
+    baseShape
+    constructor(baseShape) {
         super()
+        this.baseShape = baseShape
     }
 
     @GraphAction()
