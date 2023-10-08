@@ -74,7 +74,8 @@
     "playFrameId": "FrameId",
     "onBornFrame": "onBorn",
     "LayerGraphWrapper": "Frame",
-    "onPlayFrame": "OnPlay"
+    "onPlayFrame": "OnPlay",
+    "addPlayerActions": "Add Player Actions"
   },
   "contextmenu": {
     "sendToBack": "Send To Back",

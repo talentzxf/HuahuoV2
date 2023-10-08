@@ -15,6 +15,7 @@ import {
     renderEngine2D
 } from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
+import {PlayerActions} from "hhenginejs";
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -213,6 +214,35 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
             new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
         }
+    }
+
+    playerActionMenu(node, options, e, prev_menu, callback) {
+        if (!this.lcanvas)
+            return
+
+        if (!this.lcanvas.graph)
+            return
+
+        let ref_window = this.lcanvas.getCanvasWindow()
+
+        let _this = this
+
+        let baseActor = new PlayerActions()
+        let actionDefs = baseActor.getActionDefs()
+
+        let entries = []
+        actionDefs.forEach((actionDef)=>{
+            let entry = {
+                value: "actions/actionNode",
+                content: actionDef.actionName,
+                has_submenu: false,
+                callback: function (value, event, mouseEvent, contextMenu) {
+                    _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, baseActor)
+                }
+            }
+        })
+
+        new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
     }
 
     actionMenu(node, options, e, prev_menu, callback) {
@@ -476,6 +506,11 @@ class EventGraphForm extends HTMLElement implements HHForm {
                         content: i18n.t("eventgraph.addGraphAction"),
                         has_submenu: true,
                         callback: _this.actionMenu.bind(_this)
+                    },
+                    {
+                        content: i18n.t("eventgraph.addPlayerActions"),
+                        has_submenu: true,
+                        callback: _this.playerActionMenu.bind(this)
                     },
                     {
                         content: i18n.t("eventgraph.addComponentGraphAction"),

@@ -1,14 +1,12 @@
 import {GlobalConfig} from "../GlobalConfig";
 import {huahuoEngine} from "../EngineAPI";
 import {LayerShapesManager} from "./LayerShapesManager";
-import {IsValidWrappedObject, GraphEvent} from "hhcommoncomponents";
+import {EventEmitter, EventParam, GraphEvent, IsValidWrappedObject, PropertyType} from "hhcommoncomponents";
 import {getNailManager} from '../IK/GetNailManager'
-import {EventParam} from "hhcommoncomponents";
-import {PropertyType, EventEmitter} from "hhcommoncomponents";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {getPhysicSystem} from "../PhysicsSystem/PhysicsSystem";
-import {LGraph} from "litegraph.js";
 import {layerUtils} from "../LayerUtils";
+
 
 class Player extends EventEmitter {
     animationFrame = -1

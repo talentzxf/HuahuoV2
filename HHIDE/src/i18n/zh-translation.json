@@ -74,7 +74,8 @@
     "playFrameId": "帧号",
     "onBornFrame": "回到出生帧",
     "LayerGraphWrapper": "本帧",
-    "onPlayFrame": "被播放时"
+    "onPlayFrame": "被播放时",
+    "addPlayerActions": "播放器动作"
   },
   "contextmenu": {
     "sendToBack": "放到下面",

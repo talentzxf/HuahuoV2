@@ -28,6 +28,7 @@ import {Vec2MathOperationNode} from "./EventGraph/UtilityNodes/Vec2MathOperation
 import {Vec2MathNumberMultiply} from "./EventGraph/UtilityNodes/Vec2MathNumberMultiply";
 import {Vector2NumberNode} from "./EventGraph/UtilityNodes/Vector2NumberNode";
 import {ConstVec2Node} from "./EventGraph/UtilityNodes/ConstVec2Node";
+import {PlayerActions} from "./Player/PlayerActions";
 
 import {StarMirrorShapeJS} from "./Shapes/StarMirrorShapeJS";
 import {Utils} from "./Shapes/Utils";
@@ -146,5 +147,6 @@ export {
     AbstractComponent,
     PropertyCategory,
     PropertyDef,
-    getLiteGraphTypeFromPropertyType
+    getLiteGraphTypeFromPropertyType,
+    PlayerActions
 }
