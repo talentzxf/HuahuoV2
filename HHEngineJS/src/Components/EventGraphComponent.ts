@@ -9,7 +9,6 @@ import {ActionNode} from "../EventGraph/Nodes/ActionNode";
 import {setupLGraph} from "../EventGraph/LGraphSetup";
 import {NodeTargetType} from "../EventGraph/GraphActions";
 import {PlayerActions} from "../Player/PlayerActions";
-import {Player} from "../Player/Player";
 
 declare var Module: any;
 
@@ -22,7 +21,7 @@ class EventGraphComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.customField)
     eventGraph
 
-    graph: LGraph
+    graph: LGraph = null
 
     // If shape is null, this node is listening to global event.
     linkNodeWithTarget(nodeId: number, type: NodeTargetType, actionTarget: BaseShapeJS | AbstractComponent) {
@@ -111,10 +110,7 @@ class EventGraphComponent extends AbstractComponent {
             this[setterName](propertyValue)
     }
 
-    constructor(rawObj?, isMirage: boolean = false) {
-        let needLoad = rawObj ? true : false;
-        super(rawObj, isMirage);
-
+    createGraph() {
         this.graph = new LGraph()
         if (this.eventGraphJSON && this.eventGraphJSON.length > 0) {
             let data = JSON.parse(this.eventGraphJSON)
@@ -127,17 +123,15 @@ class EventGraphComponent extends AbstractComponent {
         this.graph["getInputValueFunction"] = this.getInputValueFunction.bind(this)
         this.graph["setInputValueFunction"] = this.setInputValueFunction.bind(this)
 
-        if (needLoad) {
-            let eventNodes = this.graph.findNodesByType(EventNode.getType())
-            for (let node of eventNodes) {
-                let eventNode = node as EventNode
-                eventNode.setEventGraphComponent(this)
-            }
+        let eventNodes = this.graph.findNodesByType(EventNode.getType())
+        for (let node of eventNodes) {
+            let eventNode = node as EventNode
+            eventNode.setEventGraphComponent(this)
+        }
 
-            let actionNodes = this.graph.findNodesByType(ActionNode.getType())
-            for (let actionNode of actionNodes) {
-                (actionNode as ActionNode).setEventGraphComponent(this)
-            }
+        let actionNodes = this.graph.findNodesByType(ActionNode.getType())
+        for (let actionNode of actionNodes) {
+            (actionNode as ActionNode).setEventGraphComponent(this)
         }
     }
 
@@ -147,6 +141,10 @@ class EventGraphComponent extends AbstractComponent {
 
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
+
+        if(this.graph == null){
+            this.createGraph()
+        }
 
         if (huahuoEngine.getActivePlayer().isPlaying) {
             this.graph.start()
@@ -164,6 +162,7 @@ class EventGraphComponent extends AbstractComponent {
             eventNode.reset()
         }
 
+        this.graph = null
     }
 }
 

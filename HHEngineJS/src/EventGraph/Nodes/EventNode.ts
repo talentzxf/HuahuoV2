@@ -1,8 +1,7 @@
 import {LiteGraph, SerializedLGraphNode} from "litegraph.js";
-import {splitFullEventName} from "hhcommoncomponents";
+import {i18n, splitFullEventName} from "hhcommoncomponents";
 import {AbstractNode} from "./AbstractNode";
 import {huahuoEngine} from "../../EngineAPI";
-import {i18n} from "hhcommoncomponents";
 
 class EventNode extends AbstractNode {
     title = "EventNode"
@@ -24,8 +23,19 @@ class EventNode extends AbstractNode {
 
     eventHasBeenSet: boolean = false
 
+    unsubscribeEvent(){
+        let fullEventName = this.properties.fullEventName
+        let eventNameMeta = splitFullEventName(fullEventName)
+
+        let targetEventBus = this.getEventGraphComponent().getEventBusForNode(this.id)
+        if (this.properties.fullEventName && this.currentEventHandler > 0) {
+            targetEventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, this.currentEventHandler)
+        }
+    }
+
     reset() {
         this.eventHasBeenSet = false
+        this.unsubscribeEvent()
     }
 
     onExecute() {
@@ -51,13 +61,12 @@ class EventNode extends AbstractNode {
 
     // TODO: The event bus might not be the global one.
     setupEvent() {
+        this.unsubscribeEvent()
+
         let fullEventName = this.properties.fullEventName
         let eventNameMeta = splitFullEventName(fullEventName)
 
         let targetEventBus = this.getEventGraphComponent().getEventBusForNode(this.id)
-        if (this.properties.fullEventName && this.currentEventHandler > 0) {
-            targetEventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, this.currentEventHandler)
-        }
 
         let _this = this
         this.currentEventHandler = targetEventBus.addEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, (params) => {
