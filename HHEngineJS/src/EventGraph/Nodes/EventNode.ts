@@ -22,8 +22,18 @@ class EventNode extends AbstractNode {
         })
     }
 
+    eventHasBeenSet: boolean = false
+
+    reset() {
+        this.eventHasBeenSet = false
+    }
+
     onExecute() {
-        // console.log("On Execute!!!")
+        if (!this.eventHasBeenSet) {
+            this.setupEvent()
+
+            this.eventHasBeenSet = true
+        }
     }
 
     addParameterIndexSlotMap(paramIdx, outputSlot) {
@@ -34,18 +44,21 @@ class EventNode extends AbstractNode {
         return this.properties.paramIdxOutputSlotMap
     }
 
+    setFullEventName(fullEventName: string, title = null) {
+        this.properties.fullEventName = fullEventName
+        this.title = title || fullEventName
+    }
+
     // TODO: The event bus might not be the global one.
-    setupEvent(fullEventName: string, title = null) {
+    setupEvent() {
+        let fullEventName = this.properties.fullEventName
+        let eventNameMeta = splitFullEventName(fullEventName)
 
         let targetEventBus = this.getEventGraphComponent().getEventBusForNode(this.id)
-
-        let eventNameMeta = splitFullEventName(fullEventName)
         if (this.properties.fullEventName && this.currentEventHandler > 0) {
             targetEventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, this.currentEventHandler)
         }
 
-        this.properties.fullEventName = fullEventName
-        this.title = title || fullEventName
         let _this = this
         this.currentEventHandler = targetEventBus.addEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, (params) => {
             if (!huahuoEngine.getActivePlayer().isPlaying) // Do not trigger when player is not playing.

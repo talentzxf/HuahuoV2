@@ -122,7 +122,6 @@ class EventGraphComponent extends AbstractComponent {
             for (let node of eventNodes) {
                 let eventNode = node as EventNode
                 eventNode.setEventGraphComponent(this)
-                eventNode.setupEvent(eventNode.properties.fullEventName)
             }
 
             let actionNodes = this.graph.findNodesByType(ActionNode.getType())
@@ -144,6 +143,17 @@ class EventGraphComponent extends AbstractComponent {
         } else {
             this.graph.stop()
         }
+    }
+
+    reset() {
+        super.reset();
+
+        let eventNodes = this.graph.findNodesByType(EventNode.getType())
+        for (let node of eventNodes) {
+            let eventNode = node as EventNode
+            eventNode.reset()
+        }
+
     }
 }
 

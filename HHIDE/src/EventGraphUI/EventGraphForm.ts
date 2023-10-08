@@ -272,7 +272,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
             eventNameEventBusMap.set(eventName, null)
         }
 
-        if(this.targetComponent.baseShape){
+        if (this.targetComponent.baseShape) {
             // Build up component events
             this.targetComponent.baseShape.getComponents().forEach((component) => {
                 let componentEvents = huahuoEngine.getEvent(component).getEvents()
@@ -290,7 +290,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         }
 
         let selfEvents = huahuoEngine.getEvent(this.targetComponent).getEvents()
-        for(let eventName of selfEvents){
+        for (let eventName of selfEvents) {
             eventNameEventBusMap.set(eventName, this.targetComponent)
         }
 
@@ -348,7 +348,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                                             resultTitle += ":"
                                     }
 
-                                    node.setupEvent(fullEventName, resultTitle)
+                                    node.setFullEventName(fullEventName, resultTitle)
                                 }
 
                                 if (callback)
