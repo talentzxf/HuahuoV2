@@ -2,6 +2,10 @@ import {AbstractGraphAction, ActionParam, GraphAction} from "../EventGraph/Graph
 import {HHToast, PropertyType} from "hhcommoncomponents"
 
 class PlayerActions extends AbstractGraphAction {
+    constructor() {
+        super()
+    }
+
     @GraphAction()
     jumpToFrame(@ActionParam(PropertyType.NUMBER) frameId) {
         if (frameId <= 0) {

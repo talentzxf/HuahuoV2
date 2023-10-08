@@ -238,9 +238,10 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 content: actionDef.actionName,
                 has_submenu: false,
                 callback: function (value, event, mouseEvent, contextMenu) {
-                    _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, baseActor, NodeTargetType.PLAYER)
+                    _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, null, NodeTargetType.PLAYER)
                 }
             }
+            entries.push(entry)
         })
 
         new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
@@ -517,7 +518,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                     {
                         content: i18n.t("eventgraph.addPlayerActions"),
                         has_submenu: true,
-                        callback: _this.playerActionMenu.bind(this)
+                        callback: _this.playerActionMenu.bind(_this)
                     },
                     {
                         content: i18n.t("eventgraph.addComponentGraphAction"),

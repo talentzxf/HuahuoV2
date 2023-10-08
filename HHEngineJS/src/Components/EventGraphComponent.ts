@@ -8,6 +8,7 @@ import {EventNode} from "../EventGraph/Nodes/EventNode";
 import {ActionNode} from "../EventGraph/Nodes/ActionNode";
 import {setupLGraph} from "../EventGraph/LGraphSetup";
 import {NodeTargetType} from "../EventGraph/GraphActions";
+import {PlayerActions} from "../Player/PlayerActions";
 
 declare var Module: any;
 
@@ -34,8 +35,19 @@ class EventGraphComponent extends AbstractComponent {
         return this.baseShape.getActor()
     }
 
+    cachedPlayerAction
+
     getActionTarget(nodeId: number) {
         let rawObj = this.rawObj.GetObjectByNodeId(nodeId)
+
+        let objType = this.rawObj.GetNodeIdObjectType(nodeId)
+        if (objType == NodeTargetType.PLAYER) {
+            if (this.cachedPlayerAction == null) {
+                this.cachedPlayerAction = new PlayerActions()
+            }
+
+            return this.cachedPlayerAction
+        }
 
         let rawObjType = rawObj.GetType()
         let baseShapeType = rawObjType.FindTypeByName("BaseShape")
