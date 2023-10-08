@@ -21,7 +21,8 @@ class EventGraphComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.customField)
     eventGraph
 
-    graph: LGraph = null
+    needReloadGraph = true
+    graph: LGraph = new LGraph()
 
     // If shape is null, this node is listening to global event.
     linkNodeWithTarget(nodeId: number, type: NodeTargetType, actionTarget: BaseShapeJS | AbstractComponent) {
@@ -90,8 +91,11 @@ class EventGraphComponent extends AbstractComponent {
 
     saveGraph() {
         let graphString = JSON.stringify(this.graph.serialize())
-        if (this.eventGraphJSON != graphString)
+        if (this.eventGraphJSON != graphString){
             this.eventGraphJSON = graphString
+
+            this.needReloadGraph = true // After save, need reload the graph.
+        }
     }
 
     getInputValueFunction(propertyName) {
@@ -110,28 +114,31 @@ class EventGraphComponent extends AbstractComponent {
             this[setterName](propertyValue)
     }
 
-    createGraph() {
-        this.graph = new LGraph()
-        if (this.eventGraphJSON && this.eventGraphJSON.length > 0) {
-            let data = JSON.parse(this.eventGraphJSON)
-            this.graph.configure(data)
-        }
+    reloadGraph() {
+        if (this.needReloadGraph) {
+            if (this.eventGraphJSON && this.eventGraphJSON.length > 0) {
+                let data = JSON.parse(this.eventGraphJSON)
+                this.graph.configure(data)
+            }
 
-        // this.graph.start()
-        this.graph["onAfterChange"] = this.saveGraph.bind(this)
+            // this.graph.start()
+            this.graph["onAfterChange"] = this.saveGraph.bind(this)
 
-        this.graph["getInputValueFunction"] = this.getInputValueFunction.bind(this)
-        this.graph["setInputValueFunction"] = this.setInputValueFunction.bind(this)
+            this.graph["getInputValueFunction"] = this.getInputValueFunction.bind(this)
+            this.graph["setInputValueFunction"] = this.setInputValueFunction.bind(this)
 
-        let eventNodes = this.graph.findNodesByType(EventNode.getType())
-        for (let node of eventNodes) {
-            let eventNode = node as EventNode
-            eventNode.setEventGraphComponent(this)
-        }
+            let eventNodes = this.graph.findNodesByType(EventNode.getType())
+            for (let node of eventNodes) {
+                let eventNode = node as EventNode
+                eventNode.setEventGraphComponent(this)
+            }
 
-        let actionNodes = this.graph.findNodesByType(ActionNode.getType())
-        for (let actionNode of actionNodes) {
-            (actionNode as ActionNode).setEventGraphComponent(this)
+            let actionNodes = this.graph.findNodesByType(ActionNode.getType())
+            for (let actionNode of actionNodes) {
+                (actionNode as ActionNode).setEventGraphComponent(this)
+            }
+
+            this.needReloadGraph = false
         }
     }
 
@@ -142,9 +149,7 @@ class EventGraphComponent extends AbstractComponent {
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
-        if(this.graph == null){
-            this.createGraph()
-        }
+        this.reloadGraph()
 
         if (huahuoEngine.getActivePlayer().isPlaying) {
             this.graph.start()
@@ -162,7 +167,7 @@ class EventGraphComponent extends AbstractComponent {
             eventNode.reset()
         }
 
-        this.graph = null
+        this.needReloadGraph = true
     }
 }
 

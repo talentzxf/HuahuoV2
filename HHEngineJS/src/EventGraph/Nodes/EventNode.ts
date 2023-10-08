@@ -94,11 +94,7 @@ class EventNode extends AbstractNode {
     }
 
     onRemoved() {
-        let targetEventBus = this.getEventGraphComponent().getEventBus(this.id)
-
-        let eventNameMeta = splitFullEventName(this.properties.fullEventName)
-        targetEventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, this.currentEventHandler)
-        huahuoEngine.getEventBus().removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, this.currentEventHandler)
+        this.unsubscribeEvent()
     }
 
     // This function will be called after s/l from file.
