@@ -30,6 +30,9 @@ class LayerUtils {
     getWrappedGraphObjectForLayer(layer, frameId, createIfNotExist = false) {
         let frameEventGraph = layer.GetFrameEventGraphParam(frameId, createIfNotExist)
 
+        if (!IsValidWrappedObject(frameEventGraph))
+            return null
+
         if (null == this.layerGraphWrapperObjMap) {
             this.layerGraphWrapperObjMap = new Map()
         }
@@ -48,6 +51,18 @@ class LayerUtils {
         }
 
         return frameIdGraphMap.get(frameId)
+    }
+
+    reset() {
+        if (this.layerGraphWrapperObjMap) {
+            this.layerGraphWrapperObjMap.forEach((layerWrapperMap) => {
+                if (layerWrapperMap) {
+                    layerWrapperMap.forEach((wrapper: LayerGraphWrapper) => {
+                        wrapper.reset()
+                    })
+                }
+            })
+        }
     }
 
     layerFrameIdCallbacks = new Map
@@ -86,12 +101,15 @@ class LayerUtils {
         if (!IsValidWrappedObject(layer))
             return false
 
+        // get the wrapped object so it will execute the addPlayFrameCallbacks event.
+        huahuoEngine.getWrappedGraphObjectForLayer(layer, globalTargetFrameId, false)
+
         // if (globalTargetFrameId == globalPrevFrameId)
         //     return false
 
         let totalFrames = layer.GetObjectStore().GetMaxFrameId() + 1
 
-        if (totalFrames == 0){ // If currently no frame, enter force sync mode.
+        if (totalFrames == 0) { // If currently no frame, enter force sync mode.
             forceSync = true
         }
 

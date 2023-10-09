@@ -105,7 +105,7 @@ class ElementShapeJS extends BaseShapeJS {
         return this.lastLayerFrame.get(layer)
     }
 
-    setLayerFrame(layer, frameId) {
+    setLastLayerFrame(layer, frameId) {
         this.lastLayerFrame.set(layer, frameId)
     }
 
@@ -135,7 +135,7 @@ class ElementShapeJS extends BaseShapeJS {
 
     setPlayerFrameId(frameId) {
         this.layerShapesManager.forEachLayerInStore((layer) => {
-            this.setLayerFrame(layer, frameId)
+            this.setLastLayerFrame(layer, frameId)
         })
     }
 
@@ -165,7 +165,7 @@ class ElementShapeJS extends BaseShapeJS {
                 let forceSync = huahuoEngine.getActivePlayer().isPlaying == false
 
                 if (layerUtils.advanceLayerFrameId(layer, currentLocalFrame, lastLayerFrame, forceSync, this.prevLocalFrame, this.getPlaySpeed() > 0)) {
-                    this.setLayerFrame(layer, layer.GetCurrentFrame())
+                    this.setLastLayerFrame(layer, layer.GetCurrentFrame())
                 }
             })
 

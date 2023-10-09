@@ -61,8 +61,7 @@ class ActionNode extends AbstractNode {
         let baseShape = this.eventGraphComponent.baseShape
         switch(targetType){
             case NodeTargetType.SHAPE:
-                baseShape.getActor().AddActionInvoker(this.eventGraphComponent)
-                return baseShape.getActor()
+                return this.eventGraphComponent.getBaseActor()
             case NodeTargetType.COMPONENT:
                 let componentIdx = additionalInfo["componentId"]
                 let componentRawObj = baseShape.getRawObject().GetFrameStateByIdx(componentIdx)

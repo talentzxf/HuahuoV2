@@ -64,6 +64,7 @@ class LayerGraphWrapper extends EventEmitter {
 
     @GraphEvent(true)
     onPlayFrame() {
+        this.graph.start() // Won't rerun cause there's an if inside the start function of the graph.
     }
 
     getGraph() {
@@ -77,6 +78,10 @@ class LayerGraphWrapper extends EventEmitter {
 
     getActionDefs(): Array<ActionDef> {
         return undefined;
+    }
+
+    reset(){
+        this.graph.stop()
     }
 }
 

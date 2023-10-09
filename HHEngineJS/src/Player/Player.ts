@@ -156,6 +156,7 @@ class Player extends EventEmitter {
         this.pausePlay()
         this.setFrameId(0) // Reset to frame 0
         this.resetActions()
+        layerUtils.reset()
         getPhysicSystem().Reset()
 
         this.isPaused = false
