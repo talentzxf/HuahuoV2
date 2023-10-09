@@ -2,6 +2,7 @@ import {LiteGraph} from "litegraph.js";
 import {GetShapeComponentNode} from "./Nodes/GetShapeComponentNode";
 import {PropertyDef} from "../Components/PropertySheetBuilder";
 import {SetComponentPropertyNode} from "./Nodes/SetComponentPropertyNode";
+import {ActionNode} from "./Nodes/ActionNode";
 
 let componentNamePropertiesMap: Map<string, Array<PropertyDef>> = new Map<string, Array<PropertyDef>>()
 
@@ -19,6 +20,9 @@ function setupLGraph() {
 
     // @ts-ignore
     LiteGraph.slot_types_default_out["component"] = [SetComponentPropertyNode.getType()]
+
+    // @ts-ignore
+    LiteGraph.slot_types_default_out[LiteGraph.EVENT] = [ActionNode.getType()]
 }
 
 export {setupLGraph, addComponentProperties, getComponentProperties}
