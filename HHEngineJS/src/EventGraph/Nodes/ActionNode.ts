@@ -67,9 +67,9 @@ class ActionNode extends AbstractNode {
                 let componentIdx = additionalInfo["componentId"]
                 let componentRawObj = baseShape.getRawObject().GetFrameStateByIdx(componentIdx)
                 let component = baseShape.getComponentByRawObj(componentRawObj)
-                return component.getActor()
+                return component
             case NodeTargetType.GRAPHCOMPONENT:
-                return this.eventGraphComponent.getActor()
+                return this.eventGraphComponent
             case NodeTargetType.PLAYER:
                 return this.eventGraphComponent.playerAction
             default:

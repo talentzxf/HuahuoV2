@@ -182,6 +182,10 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
     hasComponentActionMenu(): boolean {
         let baseShape = this.targetComponent.baseShape
+        if (baseShape == null) {
+            return false
+        }
+
         let components = baseShape.getComponents()
         if (components.length > 0) {
             for (let component of components) {
@@ -245,16 +249,19 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         let entries = [
             {
-                content: i18n.t("eventgraph.addShapeActions"),
+                content: i18n.t("eventgraph.addActions"),
                 has_submenu: true,
                 callback: _this.shapeActionMenu.bind(_this)
-            },
-            {
+            }
+        ]
+
+        if (this.targetComponent.hasOwnProperty("playerAction")) {
+            entries.push({
                 content: i18n.t("eventgraph.addPlayerActions"),
                 has_submenu: true,
                 callback: _this.playerActionMenu.bind(_this)
-            }
-        ]
+            })
+        }
 
         if (this.hasComponentActionMenu()) {
             entries.push({

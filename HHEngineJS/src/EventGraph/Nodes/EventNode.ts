@@ -74,7 +74,7 @@ class EventNode extends AbstractNode {
         let baseShape = this.eventGraphComponent.baseShape
         switch (targetType) {
             case NodeTargetType.SHAPE:
-                return baseShape.getEventBus()
+                return huahuoEngine.getEvent(baseShape).getEventBus()
             case NodeTargetType.PLAYER:
             case NodeTargetType.CANVAS:
                 return eventBus;
@@ -82,9 +82,9 @@ class EventNode extends AbstractNode {
                 let componentIdx = additionalInfo["componentId"]
                 let componentRawObj = baseShape.getRawObject().GetFrameStateByIdx(componentIdx)
                 let component = baseShape.getComponentByRawObj(componentRawObj)
-                return component.getEventBus()
+                return huahuoEngine.getEvent(component).getEventBus()
             case NodeTargetType.GRAPHCOMPONENT:
-                return this.eventGraphComponent.getEventBus()
+                return huahuoEngine.getEvent(this.eventGraphComponent).getEventBus()
             default:
                 console.warn("Target type is not defined!!!")
         }
