@@ -152,7 +152,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         document.removeEventListener("mousemove", this.onDrag.bind(this))
     }
 
-    actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef: ActionDef, actionTarget, type: NodeTargetType) {
+    actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef: ActionDef, type: NodeTargetType, additionalInfo = null) {
         let first_event = contextMenu.getFirstEvent();
         let graph = this.lcanvas.graph
         let lcanvas = this.lcanvas
@@ -169,8 +169,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
             node.pos = lcanvas.convertEventToCanvasOffset(first_event)
             lcanvas.graph.add(node)
 
-            // TODO: Whatif we need to perform action on another object?
-            this.targetComponent.linkNodeWithTarget(node.id, type, actionTarget)
+            node.setEventTargetType(type, additionalInfo)
             node.setEventGraphComponent(this.targetComponent)
             node.setActionDef(actionDef)
         }
@@ -218,7 +217,9 @@ class EventGraphForm extends HTMLElement implements HHForm {
                         content: component.getTypeName() + "/" + actionDef.actionName,
                         has_submenu: false,
                         callback: function (value, event, mouseEvent, contextMenu) {
-                            _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, component, NodeTargetType.COMPONENT)
+                            _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, NodeTargetType.COMPONENT, {
+                                componentId: component.getRawObject().GetIdxInShape()
+                            })
                         }
                     }
 
@@ -287,7 +288,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 content: actionDef.actionName,
                 has_submenu: false,
                 callback: function (value, event, mouseEvent, contextMenu) {
-                    _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, null, NodeTargetType.PLAYER)
+                    _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, NodeTargetType.PLAYER)
                 }
             }
             entries.push(entry)
@@ -316,7 +317,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 content: actionDef.actionName,
                 has_submenu: false,
                 callback: function (value, event, mouseEvent, contextMenu) {
-                    _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, baseActor, NodeTargetType.SHAPE)
+                    _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, NodeTargetType.SHAPE)
                 }
             }
 
@@ -338,21 +339,19 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         // Map from the event name to the object that triggers the event.
         // If the value is null, the event is triggered in global eventBus.
-        let eventNameEventBusMap = new Map
         let eventNameTypeMap = new Map
+        let eventNameAdditionalInfoMap = new Map
 
         let player = huahuoEngine.getActivePlayer()
         // Build up player events
         let events = player.getEventBus().getAllEvents()
         for (let eventName of events) {
-            eventNameEventBusMap.set(eventName, null)
             eventNameTypeMap.set(eventName, NodeTargetType.PLAYER)
         }
 
         // Build up renderEngine events
         let renderEngineEvents = renderEngine2D.getEventBus().getAllEvents()
         for (let eventName of renderEngineEvents) {
-            eventNameEventBusMap.set(eventName, null)
             eventNameTypeMap.set(eventName, NodeTargetType.CANVAS)
         }
 
@@ -361,7 +360,9 @@ class EventGraphForm extends HTMLElement implements HHForm {
             this.targetComponent.baseShape.getComponents().forEach((component) => {
                 let componentEvents = huahuoEngine.getEvent(component).getEvents()
                 for (let eventName of componentEvents) {
-                    eventNameEventBusMap.set(eventName, component)
+                    eventNameAdditionalInfoMap.set(eventName, {
+                        "componentId": component.getRawObject().GetIdxInShape()
+                    })
                     eventNameTypeMap.set(eventName, NodeTargetType.COMPONENT)
                 }
             })
@@ -370,18 +371,16 @@ class EventGraphForm extends HTMLElement implements HHForm {
             let localEvents = huahuoEngine.getEvent(this.targetComponent.baseShape).getEvents()
 
             for (let eventName of localEvents) {
-                eventNameEventBusMap.set(eventName, this.targetComponent.baseShape)
                 eventNameTypeMap.set(eventName, NodeTargetType.SHAPE)
             }
         }
 
         let selfEvents = huahuoEngine.getEvent(this.targetComponent).getEvents()
         for (let eventName of selfEvents) {
-            eventNameEventBusMap.set(eventName, this.targetComponent)
             eventNameTypeMap.set(eventName, NodeTargetType.GRAPHCOMPONENT)
         }
 
-        let namespaceCategories = getEventCategoryMap(eventNameEventBusMap, eventNameTypeMap)
+        let namespaceCategories = getEventCategoryMap(eventNameTypeMap, eventNameAdditionalInfoMap)
 
         let entries = []
 
@@ -421,7 +420,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                                     node.pos = lcanvas.convertEventToCanvasOffset(first_event)
                                     lcanvas.graph.add(node)
 
-                                    _this.targetComponent.linkNodeWithTarget(node.id, eventObject["eventType"], eventObject["eventSource"],)
+                                    node.setEventTargetType(eventObject["eventType"], eventObject["additionalInfo"])
                                     node.setEventGraphComponent(_this.targetComponent)
 
                                     let splitedStrings: string[] = fullEventName.split(":")

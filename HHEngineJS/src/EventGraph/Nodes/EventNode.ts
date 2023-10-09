@@ -2,6 +2,8 @@ import {LiteGraph, SerializedLGraphNode} from "litegraph.js";
 import {i18n, splitFullEventName} from "hhcommoncomponents";
 import {AbstractNode} from "./AbstractNode";
 import {huahuoEngine} from "../../EngineAPI";
+import {NodeTargetType} from "../GraphActions";
+import {eventBus} from "hhcommoncomponents";
 
 class EventNode extends AbstractNode {
     title = "EventNode"
@@ -27,7 +29,7 @@ class EventNode extends AbstractNode {
         let fullEventName = this.properties.fullEventName
         let eventNameMeta = splitFullEventName(fullEventName)
 
-        let targetEventBus = this.getEventGraphComponent().getEventBusForNode(this.id)
+        let targetEventBus = this.getTargetEventBus()
         if (this.properties.fullEventName && this.currentEventHandler > 0) {
             targetEventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, this.currentEventHandler)
             this.currentEventHandler = -1
@@ -60,14 +62,41 @@ class EventNode extends AbstractNode {
         this.title = title || fullEventName
     }
 
-    // TODO: The event bus might not be the global one.
+    getTargetEventBus() {
+        let targetType = this.properties["targetTypeInfo"].type
+        if (targetType == null) {
+            console.error("Node is not inited???")
+            return
+        }
+
+        let additionalInfo = this.properties["targetTypeInfo"].additionalInfo
+
+        let baseShape = this.eventGraphComponent.baseShape
+        switch (targetType) {
+            case NodeTargetType.SHAPE:
+                return baseShape.getEventBus()
+            case NodeTargetType.PLAYER:
+            case NodeTargetType.CANVAS:
+                return eventBus;
+            case NodeTargetType.COMPONENT:
+                let componentIdx = additionalInfo["componentId"]
+                let componentRawObj = baseShape.getRawObject().GetFrameStateByIdx(componentIdx)
+                let component = baseShape.getComponentByRawObj(componentRawObj)
+                return component.getEventBus()
+            case NodeTargetType.GRAPHCOMPONENT:
+                return this.eventGraphComponent.getEventBus()
+            default:
+                console.warn("Target type is not defined!!!")
+        }
+    }
+
     setupEvent() {
         this.unsubscribeEvent()
 
         let fullEventName = this.properties.fullEventName
         let eventNameMeta = splitFullEventName(fullEventName)
 
-        let targetEventBus = this.getEventGraphComponent().getEventBusForNode(this.id)
+        let targetEventBus = this.getTargetEventBus()
 
         let _this = this
         this.currentEventHandler = targetEventBus.addEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, (params) => {

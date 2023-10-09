@@ -1,16 +1,25 @@
 import {LGraphNode} from "litegraph.js";
+import {NodeTargetType} from "../GraphActions";
 
-class AbstractNode extends LGraphNode{
+class AbstractNode extends LGraphNode {
     eventGraphComponent
-    setEventGraphComponent(eventGraphComponent){
+
+    setEventGraphComponent(eventGraphComponent) {
         this.eventGraphComponent = eventGraphComponent
     }
 
-    getEventGraphComponent(){
+    getEventGraphComponent() {
         return this.eventGraphComponent
     }
 
-    static getType(): string{
+    setEventTargetType(type: NodeTargetType, additionalInfo) {
+        this.properties["targetTypeInfo"] = {
+            type: type,
+            additionalInfo: additionalInfo
+        }
+    }
+
+    static getType(): string {
         return "unknowNode"
     }
 }

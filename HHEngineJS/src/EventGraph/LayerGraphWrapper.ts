@@ -58,19 +58,6 @@ class LayerGraphWrapper extends EventEmitter {
         this.layerActor = new LayerFrameActor(layer)
     }
 
-    // TODO: This should be persisted.zhi
-    nodeIdTargetMap = new Map()
-    nodeTargetTypeMap = new Map()
-
-    linkNodeWithTarget(id: number, targetType: NodeTargetType, sourceObj) {
-        this.nodeTargetTypeMap.set(id, targetType)
-        this.nodeIdTargetMap.set(id, sourceObj)
-    }
-
-    getActionTarget(id: number) {
-        return this.nodeIdTargetMap.get(id)
-    }
-
     getBaseActor() {
         return this.layerActor
     }
@@ -90,15 +77,6 @@ class LayerGraphWrapper extends EventEmitter {
 
     getActionDefs(): Array<ActionDef> {
         return undefined;
-    }
-
-    getEventBusForNode(nodeId: number) {
-        let eventSource = this.nodeIdTargetMap.get(nodeId)
-        if(eventSource == null){
-            return eventBus
-        }
-
-        return eventSource.getEventBus()
     }
 }
 

@@ -24,70 +24,13 @@ class EventGraphComponent extends AbstractComponent {
     needReloadGraph = true
     graph: LGraph = new LGraph()
 
-    // If shape is null, this node is listening to global event.
-    linkNodeWithTarget(nodeId: number, type: NodeTargetType, actionTarget: BaseShapeJS | AbstractComponent) {
-        if (actionTarget != null)
-            this.rawObj.AddNodeIdObjectMap(nodeId, type, actionTarget.getRawObject())
-        else
-            this.rawObj.AddNodeIdObjectMap(nodeId, type, null)
-    }
-
     getBaseActor() {
         return this.baseShape.getActor()
     }
 
     playerAction = new PlayerActions(this)
 
-    getActionTarget(nodeId: number) {
-        let rawObj = this.rawObj.GetObjectByNodeId(nodeId)
 
-        let objType = this.rawObj.GetNodeIdObjectType(nodeId)
-        if (objType == NodeTargetType.PLAYER) {
-            return this.playerAction
-        }
-
-        let rawObjType = rawObj.GetType()
-        let baseShapeType = rawObjType.FindTypeByName("BaseShape")
-        let customComponentType = rawObjType.FindTypeByName("CustomComponent")
-
-        // The target object might be inside another element, need to perform recusvice search
-        if (rawObjType.IsDerivedFrom(baseShapeType)) {
-            let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj, true)
-
-            this.baseShape.getActor().AddActionInvoker(this)
-
-            return baseShapeObj.getActor()
-        } else if (rawObjType.IsDerivedFrom(customComponentType)) {
-            let customComponentRawObj = Module.wrapPointer(rawObj.ptr, Module.CustomComponent)
-            let baseShapeRawObj = customComponentRawObj.GetBaseShape()
-
-            let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(baseShapeRawObj, true)
-
-            let componentObj = baseShapeObj.getComponentByRawObj(customComponentRawObj)
-
-            return componentObj
-        }
-    }
-
-    getEventBusForNode(nodeId: number) {
-        let rawObj = this.rawObj.GetObjectByNodeId(nodeId)
-        if (rawObj == null || !IsValidWrappedObject(rawObj))
-            return eventBus
-
-        // This is a component.
-        if (rawObj.GetType().GetName() == "CustomComponent") {
-            let componentRawObj = Module.wrapPointer(rawObj.ptr, Module.CustomComponent)
-            let baseShapeRawObj = componentRawObj.GetBaseShape()
-
-            // The target object might be inside another element, need to perform recusvice search
-            let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(baseShapeRawObj, true)
-            let componentObj = baseShapeObj.getComponentByRawObj(componentRawObj)
-            return huahuoEngine.getEvent(componentObj).getEventBus()
-        }
-
-        let baseShapeObj = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj, true)
-        return huahuoEngine.getEvent(baseShapeObj).getEventBus()
-    }
 
     saveGraph() {
         let graphString = JSON.stringify(this.graph.serialize())
