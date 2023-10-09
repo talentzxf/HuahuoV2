@@ -23,7 +23,7 @@ class EventNode extends AbstractNode {
 
     eventHasBeenSet: boolean = false
 
-    unsubscribeEvent(){
+    unsubscribeEvent() {
         let fullEventName = this.properties.fullEventName
         let eventNameMeta = splitFullEventName(fullEventName)
 
@@ -85,8 +85,6 @@ class EventNode extends AbstractNode {
             }
             _this.triggerSlot(0, null, null)
             _this.setDirtyCanvas(true, true)
-
-            _this.unsubscribeEvent()
         })
     }
 
