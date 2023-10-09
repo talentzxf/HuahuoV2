@@ -30,6 +30,7 @@ class EventNode extends AbstractNode {
         let targetEventBus = this.getEventGraphComponent().getEventBusForNode(this.id)
         if (this.properties.fullEventName && this.currentEventHandler > 0) {
             targetEventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, this.currentEventHandler)
+            this.currentEventHandler = -1
         }
     }
 
@@ -85,11 +86,7 @@ class EventNode extends AbstractNode {
             _this.triggerSlot(0, null, null)
             _this.setDirtyCanvas(true, true)
 
-            // if _this.graph is null, means the node has already been deleted. Need to remove the event listener
-            // TODO: This remove should happen when the node is removed!
-            if (!_this.graph) {
-                targetEventBus.removeEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, _this.currentEventHandler)
-            }
+            _this.unsubscribeEvent()
         })
     }
 

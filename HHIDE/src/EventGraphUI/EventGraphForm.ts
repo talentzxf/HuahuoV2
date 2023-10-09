@@ -372,7 +372,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                                     node.pos = lcanvas.convertEventToCanvasOffset(first_event)
                                     lcanvas.graph.add(node)
 
-                                    _this.targetComponent.linkNodeWithTarget(node.id, eventObject["eventSourceType"], eventObject["eventSource"], )
+                                    _this.targetComponent.linkNodeWithTarget(node.id, eventObject["eventType"], eventObject["eventSource"], )
                                     node.setEventGraphComponent(_this.targetComponent)
 
                                     let splitedStrings: string[] = fullEventName.split(":")
