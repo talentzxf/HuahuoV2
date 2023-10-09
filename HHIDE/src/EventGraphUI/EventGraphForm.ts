@@ -152,7 +152,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         document.removeEventListener("mousemove", this.onDrag.bind(this))
     }
 
-    actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef: ActionDef, actionTarget, type:NodeTargetType) {
+    actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef: ActionDef, actionTarget, type: NodeTargetType) {
         let first_event = contextMenu.getFirstEvent();
         let graph = this.lcanvas.graph
         let lcanvas = this.lcanvas
@@ -179,6 +179,20 @@ class EventGraphForm extends HTMLElement implements HHForm {
             callback(node)
 
         graph.afterChange()
+    }
+
+    hasComponentActionMenu(): boolean {
+        let baseShape = this.targetComponent.baseShape
+        let components = baseShape.getComponents()
+        if (components.length > 0) {
+            for (let component of components) {
+                for (let actionDef of component.getActionDefs()) {
+                    return true
+                }
+            }
+        }
+
+        return false
     }
 
     componentActionMenu(node, options, e, prev_menu, callback) {
@@ -217,6 +231,41 @@ class EventGraphForm extends HTMLElement implements HHForm {
         }
     }
 
+    actionMenu(node, options, e, prev_menu, callback) {
+        if (!this.lcanvas)
+            return
+
+        if (!this.lcanvas.graph)
+            return
+
+        let ref_window = this.lcanvas.getCanvasWindow()
+
+        let _this = this
+
+        let entries = [
+            {
+                content: i18n.t("eventgraph.addShapeActions"),
+                has_submenu: true,
+                callback: _this.shapeActionMenu.bind(_this)
+            },
+            {
+                content: i18n.t("eventgraph.addPlayerActions"),
+                has_submenu: true,
+                callback: _this.playerActionMenu.bind(_this)
+            }
+        ]
+
+        if (this.hasComponentActionMenu()) {
+            entries.push({
+                content: i18n.t("eventgraph.addComponentGraphAction"),
+                has_submenu: true,
+                callback: _this.componentActionMenu.bind(_this)
+            })
+        }
+
+        new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
+    }
+
     playerActionMenu(node, options, e, prev_menu, callback) {
         if (!this.lcanvas)
             return
@@ -232,7 +281,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         let actionDefs = baseActor.getActionDefs()
 
         let entries = []
-        actionDefs.forEach((actionDef)=>{
+        actionDefs.forEach((actionDef) => {
             let entry = {
                 value: "actions/actionNode",
                 content: actionDef.actionName,
@@ -247,7 +296,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
     }
 
-    actionMenu(node, options, e, prev_menu, callback) {
+    shapeActionMenu(node, options, e, prev_menu, callback) {
         if (!this.lcanvas)
             return
 
@@ -372,7 +421,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                                     node.pos = lcanvas.convertEventToCanvasOffset(first_event)
                                     lcanvas.graph.add(node)
 
-                                    _this.targetComponent.linkNodeWithTarget(node.id, eventObject["eventType"], eventObject["eventSource"], )
+                                    _this.targetComponent.linkNodeWithTarget(node.id, eventObject["eventType"], eventObject["eventSource"],)
                                     node.setEventGraphComponent(_this.targetComponent)
 
                                     let splitedStrings: string[] = fullEventName.split(":")
@@ -515,16 +564,6 @@ class EventGraphForm extends HTMLElement implements HHForm {
                         has_submenu: true,
                         callback: _this.actionMenu.bind(_this)
                     },
-                    {
-                        content: i18n.t("eventgraph.addPlayerActions"),
-                        has_submenu: true,
-                        callback: _this.playerActionMenu.bind(_this)
-                    },
-                    {
-                        content: i18n.t("eventgraph.addComponentGraphAction"),
-                        has_submenu: true,
-                        callback: _this.componentActionMenu.bind(_this)
-                    }
                 ]
 
                 return options

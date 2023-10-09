@@ -75,6 +75,7 @@
     "onBornFrame": "onBorn",
     "LayerGraphWrapper": "Frame",
     "onPlayFrame": "OnPlay",
+    "addShapeActions": "Add Shape Actions",
     "addPlayerActions": "Add Player Actions"
   },
   "contextmenu": {

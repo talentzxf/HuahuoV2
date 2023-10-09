@@ -20,11 +20,6 @@ function setupLGraph() {
 
     // @ts-ignore
     LiteGraph.slot_types_default_out["component"] = [SetComponentPropertyNode.getType()]
-
-    // @ts-ignore
-    LiteGraph.slot_types_default_out["_event_"] = [ActionNode.getType()].concat(LiteGraph.slot_types_default_out["_event_"]).filter((v) => {
-        return v ? true : false
-    })
 }
 
 export {setupLGraph, addComponentProperties, getComponentProperties}

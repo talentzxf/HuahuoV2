@@ -75,6 +75,7 @@
     "onBornFrame": "回到出生帧",
     "LayerGraphWrapper": "本帧",
     "onPlayFrame": "被播放时",
+    "addShapeActions": "形状动作",
     "addPlayerActions": "播放器动作"
   },
   "contextmenu": {
