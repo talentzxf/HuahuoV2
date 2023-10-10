@@ -263,7 +263,7 @@ class SceneView extends HTMLElement {
 
         let track = this.timeline.addNewTrack(null, null, currentFrameId)
         track.mergeCells(0, track.frameCount)
-        
+
         let layer = track.getLayer()
         timelineUtils.initLayerTrack(this.timeline, layer)
         this.timeline.selectTrack(track.getSeqId(), null)

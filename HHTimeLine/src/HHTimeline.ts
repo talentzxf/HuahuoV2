@@ -347,16 +347,19 @@ class HHTimeline extends HTMLElement {
             return;
         }
 
+        if (this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId) {
+            this.timelineTracks[this.selectedTrackSeqId].clearSelect();
+        }
+
         let shiftPressed = evt.shiftKey;
         if (!shiftPressed || this.selectedTrackSeqId < 0) {
-            if (this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId) {
-                this.timelineTracks[this.selectedTrackSeqId].clearSelect();
-            }
-
             // If right click, don't reset range.
             this.selectTrack(trackSeqId, evt.offsetX, evt.button != 2)
         } else {
-            this.timelineTracks[trackSeqId].rangeSelect(evt.offsetX);
+            if(trackSeqId == this.selectedTrackSeqId)
+                this.timelineTracks[trackSeqId].rangeSelect(evt.offsetX);
+            else
+                this.selectTrack(trackSeqId, evt.offsetX, evt.button != 2) // Even if shift pressed, if select another track, select the other track.
         }
 
         this.redrawCanvas()
