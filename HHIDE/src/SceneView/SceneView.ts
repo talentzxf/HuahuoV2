@@ -258,10 +258,12 @@ class SceneView extends HTMLElement {
     createNewTrack() {
         let currentFrameId = -1
         // During startup, we need to creating first layer before creating player.
-        if(huahuoEngine.getActivePlayer())
+        if (huahuoEngine.getActivePlayer())
             currentFrameId = huahuoEngine.getActivePlayer().currentlyPlayingFrameId
 
         let track = this.timeline.addNewTrack(null, null, currentFrameId)
+        track.mergeCells(0, track.frameCount)
+        
         let layer = track.getLayer()
         timelineUtils.initLayerTrack(this.timeline, layer)
         this.timeline.selectTrack(track.getSeqId(), null)

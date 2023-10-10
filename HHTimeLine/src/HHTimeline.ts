@@ -191,8 +191,6 @@ class HHTimeline extends HTMLElement {
         this.timelineTracks.push(track)
         this.totalTrackHeight += track.getCellHeight()
 
-        track.mergeCells(0, this.frameCount)
-
         this.Resize();
         this.redrawCanvas()
 
