@@ -330,11 +330,11 @@ class HHTimeline extends HTMLElement {
     selectLayer(layer) {
         let track = this.getTrackFromLayer(layer)
         if (track != null)
-            this.selectTrack(track.getSeqId(), null)
+            this.selectTrack(track.getSeqId(), null, true)
     }
 
-    selectTrack(trackSeqId, offsetX) {
-        this.timelineTracks[trackSeqId].clickedTrack(offsetX);
+    selectTrack(trackSeqId, offsetX, resetRangeSelect: boolean) {
+        this.timelineTracks[trackSeqId].clickedTrack(offsetX, resetRangeSelect);
 
         if (this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId) {
             this.timelineTracks[this.selectedTrackSeqId].unSelectTrack();
@@ -351,11 +351,12 @@ class HHTimeline extends HTMLElement {
 
         let shiftPressed = evt.shiftKey;
         if (!shiftPressed || this.selectedTrackSeqId < 0) {
-            if (this.selectedTrackSeqId >= 0) {
+            if (this.selectedTrackSeqId >= 0 && this.selectedTrackSeqId != trackSeqId) {
                 this.timelineTracks[this.selectedTrackSeqId].clearSelect();
             }
 
-            this.selectTrack(trackSeqId, evt.offsetX)
+            // If right click, don't reset range.
+            this.selectTrack(trackSeqId, evt.offsetX, evt.button != 2)
         } else {
             this.timelineTracks[trackSeqId].rangeSelect(evt.offsetX);
         }

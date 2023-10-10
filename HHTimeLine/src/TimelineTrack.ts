@@ -91,6 +91,8 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
                 if (!layer) { // Create a new layer.
                     layer = huahuoEngine.GetCurrentStore().CreateLayer(_this.getId())
                     layer.SetName(_this.getName())
+                    if (frameId >= 0)
+                        layer.SetCurrentFrame(frameId)
                 } else { // Load from persisted Cpp obj
                     _this.trackName = layer.GetName()
                 }
@@ -192,10 +194,10 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         return this.sequenceId
     }
 
-    splitSelectedCell(){
-        if(this.isValidCellId(this.clickedCell)){
+    splitSelectedCell() {
+        if (this.isValidCellId(this.clickedCell)) {
             this.cellManager.SplitCell(this.clickedCell)
-        }else{
+        } else {
             Logger.warn("Invalid cell selection.")
         }
     }
@@ -489,7 +491,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.ctx.canvas.style.cursor = "default"
     }
 
-    clickedTrack(relativeX: number | null) {
+    clickedTrack(relativeX: number | null, resetRangeSelect: boolean) {
         if (!this.selectable)
             return;
 
@@ -508,7 +510,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
             let absoluteX = this.canvasStartPos + relativeX;
             let cellId = this.calculateCellIdx(absoluteX);
 
-            this.selectCell(cellId)
+            this.selectCell(cellId, resetRangeSelect)
         }
 
         if (this.layer) {
@@ -520,14 +522,17 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
     }
 
     clickedCell = -1
-    selectCell(cellId) {
+
+    selectCell(cellId, resetRangeSelect) {
         if (this.isValidCellId(cellId)) {
             this.clickedCell = cellId
 
-            let spanHeadCellId = this.cellManager.GetSpanHead(cellId)
+            if (resetRangeSelect) {
+                let spanHeadCellId = this.cellManager.GetSpanHead(cellId)
 
-            this.selectedCellStart = spanHeadCellId;
-            this.selectedCellEnd = spanHeadCellId;
+                this.selectedCellStart = spanHeadCellId;
+                this.selectedCellEnd = spanHeadCellId;
+            }
 
             this.emit(TimelineTrackEventNames.CELLCLICKED, this, cellId)
         }

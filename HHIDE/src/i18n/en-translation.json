@@ -84,6 +84,7 @@
     "duplicate": "Duplicate",
     "createNewElement": "Create New Element",
     "delete": "Delete",
+    "splitCells": "Split cells",
     "mergecells": "Merge selected cells",
     "createNewTrack": "Create New Track",
     "groupAsElement": "Convert to Element",
