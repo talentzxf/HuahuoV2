@@ -136,6 +136,10 @@ class SceneView extends HTMLElement {
         let _this = this
         this.timeline.contextMenu.setItems([
             {
+                itemName: i18n.t("contextmenu.splitCells"),
+                onclick: _this.timeline.splitCell.bind(_this.timeline)
+            },
+            {
                 itemName: i18n.t("contextmenu.mergecells"),
                 onclick: _this.timeline.mergeCells.bind(_this.timeline)
             },

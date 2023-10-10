@@ -192,6 +192,14 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         return this.sequenceId
     }
 
+    splitSelectedCell(){
+        if(this.isValidCellId(this.clickedCell)){
+            this.cellManager.SplitCell(this.clickedCell)
+        }else{
+            Logger.warn("Invalid cell selection.")
+        }
+    }
+
     mergeCells(startCellId: number, endCellId: number) {
         if (!this.isValidCellId(startCellId) || !this.isValidCellId(endCellId)) {
             Logger.error("Trying to merge invalid cells")
@@ -511,8 +519,11 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
 
     }
 
+    clickedCell = -1
     selectCell(cellId) {
         if (this.isValidCellId(cellId)) {
+            this.clickedCell = cellId
+
             let spanHeadCellId = this.cellManager.GetSpanHead(cellId)
 
             this.selectedCellStart = spanHeadCellId;

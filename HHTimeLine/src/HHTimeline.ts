@@ -224,6 +224,16 @@ class HHTimeline extends HTMLElement {
         this.dispatchEvent(customEvent)
     }
 
+    splitCell(){
+        // TODO: Save this command in the Undo stack...
+        if (this.isTrackSeqIdValid(this.selectedTrackSeqId)) {
+            this.timelineTracks[this.selectedTrackSeqId].splitSelectedCell()
+            this.redrawCanvas()
+        } else {
+            Logger.error("Error seqId when trying to merge cells:" + this.selectedTrackSeqId)
+        }
+    }
+
     mergeCells() {
         // TODO: Save this command in the Undo stack...
         if (this.isTrackSeqIdValid(this.selectedTrackSeqId)) {
