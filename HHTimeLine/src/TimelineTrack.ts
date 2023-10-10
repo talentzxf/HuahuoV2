@@ -71,7 +71,7 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         return false
     }
 
-    constructor(sequenceId: number, frameCount: number, ctx: CanvasRenderingContext2D, yOffset = 0, layer = null, trackName: string = "NoNameTrack") {
+    constructor(sequenceId: number, frameCount: number, ctx: CanvasRenderingContext2D, yOffset = 0, layer = null, trackName: string = "NoNameTrack", frameId: number = -1) {
         super();
         this.sequenceId = sequenceId;
         this.trackName = trackName;
