@@ -13,19 +13,14 @@ class LayerFrameActor extends AbstractGraphAction {
     }
 
     @GraphAction(true)
-    setFrameId(@ActionParam(PropertyType.NUMBER) frameId: number, @ActionParam(PropertyType.BOOLEAN) isGlobal: boolean = false) {
+    setFrameId(@ActionParam(PropertyType.NUMBER) frameId: number) {
         if (frameId <= 0) {
             console.error("Can't set less than 1 frameId")
             return
         }
 
         let actualFrameId = frameId - 1
-
-        if (isGlobal) {
-            huahuoEngine.getActivePlayer().setFrameId(actualFrameId)
-        } else {
-            this.layer.SetCurrentFrame(actualFrameId)
-        }
+        this.layer.SetCurrentFrame(actualFrameId)
     }
 }
 
@@ -80,7 +75,7 @@ class LayerGraphWrapper extends EventEmitter {
         return undefined;
     }
 
-    reset(){
+    reset() {
         this.graph.stop()
     }
 }
