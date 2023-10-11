@@ -152,7 +152,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         document.removeEventListener("mousemove", this.onDrag.bind(this))
     }
 
-    actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef: ActionDef, type: NodeTargetType, additionalInfo = null) {
+    actionCallBack(value, event, mouseEvent, contextMenu, extraOptions, actionDef: ActionDef, type: NodeTargetType, additionalInfo = null) {
         let first_event = contextMenu.getFirstEvent();
         let graph = this.lcanvas.graph
         let lcanvas = this.lcanvas
@@ -172,10 +172,18 @@ class EventGraphForm extends HTMLElement implements HHForm {
             node.setEventTargetType(type, additionalInfo)
             node.setEventGraphComponent(this.targetComponent)
             node.setActionDef(actionDef)
-        }
 
-        if (callback)
-            callback(node)
+            if (extraOptions) {
+                if (extraOptions.isFrom) {
+                    extraOptions.nodeFrom.connectByType(extraOptions.iSlotConn, node, extraOptions.fromSlotType);
+                } else {
+                    if (extraOptions.nodeTo) {
+                        extraOptions.nodeTo.connectByTypeOutput(extraOptions.iSlotConn, node, extraOptions.fromSlotType);
+                    }
+                }
+            }
+
+        }
 
         graph.afterChange()
     }
@@ -198,7 +206,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         return false
     }
 
-    componentActionMenu(node, options, e, prev_menu, callback) {
+    componentActionMenu(node, options, e, prev_menu, extraOptions) {
         if (!this.lcanvas)
             return
 
@@ -221,7 +229,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                         content: component.getTypeName() + "/" + actionDef.actionName,
                         has_submenu: false,
                         callback: function (value, event, mouseEvent, contextMenu) {
-                            _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, NodeTargetType.COMPONENT, {
+                            _this.actionCallBack(value, event, mouseEvent, contextMenu, extraOptions, actionDef, NodeTargetType.COMPONENT, {
                                 componentId: component.getRawObject().GetIdxInShape()
                             })
                         }
@@ -236,7 +244,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         }
     }
 
-    actionMenu(node, options, e, prev_menu, callback) {
+    actionMenu(node, options, e, prev_menu, extraOptions = null) {
         if (!this.lcanvas)
             return
 
@@ -251,7 +259,10 @@ class EventGraphForm extends HTMLElement implements HHForm {
             {
                 content: i18n.t("eventgraph.addActions"),
                 has_submenu: true,
-                callback: _this.shapeActionMenu.bind(_this)
+                callback: (node, options, e, prev_menu, myExtraOptions) => {
+                    let resultExtraOptions = Object.assign({}, myExtraOptions, extraOptions)
+                    _this.shapeActionMenu(node, options, e, prev_menu, resultExtraOptions)
+                }
             }
         ]
 
@@ -259,7 +270,10 @@ class EventGraphForm extends HTMLElement implements HHForm {
             entries.push({
                 content: i18n.t("eventgraph.addPlayerActions"),
                 has_submenu: true,
-                callback: _this.playerActionMenu.bind(_this)
+                callback: (node, options, e, prev_menu, myExtraOptions) => {
+                    let resultExtraOptions = Object.assign({}, myExtraOptions, extraOptions)
+                    _this.playerActionMenu(node, options, e, prev_menu, resultExtraOptions)
+                }
             })
         }
 
@@ -267,14 +281,17 @@ class EventGraphForm extends HTMLElement implements HHForm {
             entries.push({
                 content: i18n.t("eventgraph.addComponentGraphAction"),
                 has_submenu: true,
-                callback: _this.componentActionMenu.bind(_this)
+                callback: (node, options, e, prev_menu, myExtraOptions) => {
+                    let resultExtraOptions = Object.assign({}, myExtraOptions, extraOptions)
+                    _this.componentActionMenu(node, options, e, prev_menu, resultExtraOptions)
+                }
             })
         }
 
         new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
     }
 
-    playerActionMenu(node, options, e, prev_menu, callback) {
+    playerActionMenu(node, options, e, prev_menu, extraOptions) {
         if (!this.lcanvas)
             return
 
@@ -295,7 +312,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 content: actionDef.actionName,
                 has_submenu: false,
                 callback: function (value, event, mouseEvent, contextMenu) {
-                    _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, NodeTargetType.PLAYER)
+                    _this.actionCallBack(value, event, mouseEvent, contextMenu, extraOptions, actionDef, NodeTargetType.PLAYER)
                 }
             }
             entries.push(entry)
@@ -304,7 +321,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
     }
 
-    shapeActionMenu(node, options, e, prev_menu, callback) {
+    shapeActionMenu(node, options, e, prev_menu, extraOptions) {
         if (!this.lcanvas)
             return
 
@@ -324,7 +341,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 content: actionDef.actionName,
                 has_submenu: false,
                 callback: function (value, event, mouseEvent, contextMenu) {
-                    _this.actionCallBack(value, event, mouseEvent, contextMenu, callback, actionDef, NodeTargetType.SHAPE)
+                    _this.actionCallBack(value, event, mouseEvent, contextMenu, extraOptions, actionDef, NodeTargetType.SHAPE)
                 }
             }
 
@@ -558,6 +575,12 @@ class EventGraphForm extends HTMLElement implements HHForm {
         if (this.lcanvas == null) {
             this.lcanvas = new LGraphCanvas(canvas, graph, {autoresize: false})
             let _this = this
+            let actionMenuOption = {
+                content: i18n.t("eventgraph.addGraphAction"),
+                has_submenu: true,
+                callback: _this.actionMenu.bind(_this)
+            }
+
             this.lcanvas.getExtraMenuOptions = function () {
                 let options = [
                     {
@@ -565,12 +588,9 @@ class EventGraphForm extends HTMLElement implements HHForm {
                         has_submenu: true,
                         callback: _this.eventListenerMenu.bind(_this)
                     },
-                    {
-                        content: i18n.t("eventgraph.addGraphAction"),
-                        has_submenu: true,
-                        callback: _this.actionMenu.bind(_this)
-                    },
                 ]
+
+                options.push(actionMenuOption)
 
                 return options
             }
@@ -591,6 +611,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
             LiteGraph["release_link_on_empty_shows_menu"] = true
 
             this.lcanvas.title_texts.GraphInputs = i18n.t("eventgraph.GraphInputs")
+
+            this.lcanvas.slot_types_default_out["_event_"] = [actionMenuOption]
 
         } else
             this.lcanvas.setGraph(graph)

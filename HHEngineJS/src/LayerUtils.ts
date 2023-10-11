@@ -15,7 +15,6 @@ class LayerUtils {
                 layer.AddShapeInternal(shape.getRawObject())
                 console.log(layer.GetTimeLineCellManager().GetSpanHead(20))
 
-
                 shape.isPermanent = true
                 shape.isDeleted = false
 
