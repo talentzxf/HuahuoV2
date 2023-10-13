@@ -25,7 +25,7 @@ class ConstVec2Node extends AbstractNode {
     }
 
     static getType(): string {
-        return "math3d/constVec2"
+        return "math/constVec2"
     }
 }
 
