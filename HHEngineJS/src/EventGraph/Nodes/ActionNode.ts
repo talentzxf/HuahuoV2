@@ -58,19 +58,19 @@ class ActionNode extends AbstractNode {
 
         let additionalInfo = this.properties["targetTypeInfo"].additionalInfo
 
-        let baseShape = this.eventGraphComponent.baseShape
+        let baseShape = this.getBaseShape()
         switch(targetType){
             case NodeTargetType.SHAPE:
-                return this.eventGraphComponent.getBaseActor()
+                return this.getEventGraphComponent().getBaseActor()
             case NodeTargetType.COMPONENT:
                 let componentIdx = additionalInfo["componentId"]
                 let componentRawObj = baseShape.getRawObject().GetFrameStateByIdx(componentIdx)
                 let component = baseShape.getComponentByRawObj(componentRawObj)
                 return component
             case NodeTargetType.GRAPHCOMPONENT:
-                return this.eventGraphComponent
+                return this.getEventGraphComponent()
             case NodeTargetType.PLAYER:
-                return this.eventGraphComponent.playerAction
+                return this.getEventGraphComponent().playerAction
             default:
                 console.warn("Action is not defined!!!")
         }

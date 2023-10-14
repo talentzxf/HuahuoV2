@@ -30,7 +30,11 @@ class EventGraphComponent extends AbstractComponent {
 
     playerAction = new PlayerActions(this)
 
+    constructor(rawObj?) {
+        super(rawObj);
 
+        this.graph["component"] = this
+    }
 
     saveGraph() {
         let graphString = JSON.stringify(this.graph.serialize())
@@ -69,17 +73,6 @@ class EventGraphComponent extends AbstractComponent {
 
             this.graph["getInputValueFunction"] = this.getInputValueFunction.bind(this)
             this.graph["setInputValueFunction"] = this.setInputValueFunction.bind(this)
-
-            let eventNodes = this.graph.findNodesByType(EventNode.getType())
-            for (let node of eventNodes) {
-                let eventNode = node as EventNode
-                eventNode.setEventGraphComponent(this)
-            }
-
-            let actionNodes = this.graph.findNodesByType(ActionNode.getType())
-            for (let actionNode of actionNodes) {
-                (actionNode as ActionNode).setEventGraphComponent(this)
-            }
 
             this.needReloadGraph = false
         }

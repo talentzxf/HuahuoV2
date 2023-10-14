@@ -36,6 +36,9 @@ class GetShapeComponentNode extends AbstractNode {
 
     onAction(action, param) {
         let inputShape = this.getInputData(this.findInputSlot(this.inputShapeSlot.name))
+        if (inputShape == null) {
+            inputShape = this.getBaseShape()
+        }
         let component = inputShape.getComponentByTypeName(this.properties.componentTypeName)
 
         let outputComponentSlot = this.findOutputSlot(this.componentOutputSlot.name)
