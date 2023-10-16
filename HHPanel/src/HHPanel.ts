@@ -16,9 +16,11 @@ enum PanelEventNames {
 @CustomElement({
     selector: 'hh-panel',
     template: `<template>
-        <div style="display: flex; flex-direction: column; height: 100%; width: 100%">
-            <div class="title_tabs nav nav-tabs divide-x divide-slate-400/25">
-            </div>
+        <div id="title_content_container" style="display: flex; flex-direction: column; height: 100%; width: 100%">
+            <div id="title_container">
+                <div class="title_tabs nav nav-tabs divide-x divide-slate-400/25">
+                </div>
+            </div>            
             <div class="panel_contents" style="flex-basis: 100%;">
             </div>
         </div>
@@ -312,6 +314,16 @@ class HHPanel extends HTMLElement {
             _this.selectTab(0)
 
         TabMover.getInstance().AddFront(this.onTitleMoving.bind(this))
+
+        if (this.getAttribute("title-direction") == "vertical") {
+            this._tabs.style.transform = "rotate(90deg)"
+
+            let title_content_container = this.querySelector("#title_content_container") as HTMLDivElement
+            title_content_container.style.flexDirection = "row"
+            let title_container = this.querySelector("#title_container") as HTMLDivElement
+            title_container.style.width = this._tabs.clientHeight + "px"
+            title_container.style.height = this._tabs.clientWidth + "px"
+        }
 
         // let nextSibling = DomHelper.getNextSiblingElementByName(this, ["hh-panel"])
         // if (nextSibling) {
