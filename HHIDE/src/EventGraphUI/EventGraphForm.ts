@@ -170,7 +170,6 @@ class EventGraphForm extends HTMLElement implements HHForm {
             lcanvas.graph.add(node)
 
             node.setEventTargetType(type, additionalInfo)
-            node.setEventGraphComponent(this.targetComponent)
             node.setActionDef(actionDef)
 
             if (extraOptions) {
@@ -445,7 +444,6 @@ class EventGraphForm extends HTMLElement implements HHForm {
                                     lcanvas.graph.add(node)
 
                                     node.setEventTargetType(eventObject["eventType"], eventObject["additionalInfo"])
-                                    node.setEventGraphComponent(_this.targetComponent)
 
                                     let splitedStrings: string[] = fullEventName.split(":")
                                     let resultTitle = ""

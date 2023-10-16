@@ -1,15 +1,14 @@
 import {LGraphNode} from "litegraph.js";
 import {NodeTargetType} from "../GraphActions";
+import {huahuoEngine} from "../../EngineAPI";
 
 class AbstractNode extends LGraphNode {
-    eventGraphComponent
-
-    setEventGraphComponent(eventGraphComponent) {
-        this.eventGraphComponent = eventGraphComponent
+    getEventGraphComponent() {
+        return this.graph["component"]
     }
 
-    getEventGraphComponent() {
-        return this.eventGraphComponent
+    getBaseShape() {
+        return this.graph["component"].baseShape
     }
 
     setEventTargetType(type: NodeTargetType, additionalInfo) {

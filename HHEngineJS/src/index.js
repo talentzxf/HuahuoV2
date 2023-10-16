@@ -26,6 +26,7 @@ import {EventNode} from "./EventGraph/Nodes/EventNode";
 import {ActionNode} from "./EventGraph/Nodes/ActionNode";
 import {Vec2MathOperationNode} from "./EventGraph/UtilityNodes/Vec2MathOperationNode";
 import {Vec2MathNumberMultiply} from "./EventGraph/UtilityNodes/Vec2MathNumberMultiply";
+import {SetCursorShapeNode} from "./EventGraph/UtilityNodes/SetCursorShapeNode";
 import {Vector2NumberNode} from "./EventGraph/UtilityNodes/Vector2NumberNode";
 import {ConstVec2Node} from "./EventGraph/UtilityNodes/ConstVec2Node";
 import {PlayerActions} from "./Player/PlayerActions";
@@ -141,6 +142,7 @@ export {
     Vec2MathNumberMultiply,
     ConstVec2Node,
     Vector2NumberNode,
+    SetCursorShapeNode,
     LGraphCanvas,
     LiteGraph,
     StarMirrorShapeJS,
