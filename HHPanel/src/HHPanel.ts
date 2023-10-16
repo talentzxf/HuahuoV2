@@ -267,6 +267,21 @@ class HHPanel extends HTMLElement {
         titleSpan.setContent(node)
         titleSpan.setParentPanel(this)
         this._tabs.appendChild(titleSpan)
+
+        if (this.getAttribute("title-direction") == "vertical") {
+            this._tabs.style.transform = "rotate(90deg)"
+
+            let title_content_container = this.querySelector("#title_content_container") as HTMLDivElement
+            title_content_container.style.flexDirection = "row"
+            let title_container = this.querySelector("#title_container") as HTMLDivElement
+            title_container.style.width = this._tabs.clientHeight + "px"
+            title_container.style.height = this._tabs.clientWidth + "px"
+
+            let hhTitles = this.querySelectorAll("hh-title")
+            for (let hhTitle of hhTitles) {
+                (hhTitle as HHTitle).setIsVertical(true)
+            }
+        }
         return tabId;
     }
 
@@ -314,16 +329,6 @@ class HHPanel extends HTMLElement {
             _this.selectTab(0)
 
         TabMover.getInstance().AddFront(this.onTitleMoving.bind(this))
-
-        if (this.getAttribute("title-direction") == "vertical") {
-            this._tabs.style.transform = "rotate(90deg)"
-
-            let title_content_container = this.querySelector("#title_content_container") as HTMLDivElement
-            title_content_container.style.flexDirection = "row"
-            let title_container = this.querySelector("#title_container") as HTMLDivElement
-            title_container.style.width = this._tabs.clientHeight + "px"
-            title_container.style.height = this._tabs.clientWidth + "px"
-        }
 
         // let nextSibling = DomHelper.getNextSiblingElementByName(this, ["hh-panel"])
         // if (nextSibling) {

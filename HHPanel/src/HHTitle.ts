@@ -22,6 +22,8 @@ class HHTitle extends HTMLElement implements MovableElement {
 
     private inited: boolean = false;
 
+    private isVertical: boolean = false
+
     static get tabIndex() {
         return ['tabindex']
     }
@@ -30,6 +32,10 @@ class HHTitle extends HTMLElement implements MovableElement {
         super();
 
         this.addEventListener("mousedown", this.mouseDown)
+    }
+
+    setIsVertical(isVertical: boolean) {
+        this.isVertical = isVertical
     }
 
     getContent(): HHContent {
@@ -51,7 +57,9 @@ class HHTitle extends HTMLElement implements MovableElement {
         this.startPos = new Vector2D(evt.clientX, evt.clientY)
         this.startMoving = true
         this.isMoving = false
-        this.startElePos = new Vector2D(this.offsetLeft, this.offsetTop);
+        // this.startElePos = new Vector2D(this.offsetLeft, this.offsetTop);
+        let boundingRect = this.getBoundingClientRect()
+        this.startElePos = new Vector2D(boundingRect.left, boundingRect.top)
         document.onmousemove = this.mouseMove.bind(this)
         document.onmouseup = this.mouseMove.bind(this)
     }
@@ -140,9 +148,22 @@ class HHTitle extends HTMLElement implements MovableElement {
     }
 
     setScrPos(x: number, y: number) {
-        this.setStylePosition("absolute")
-        this.style.left = x + "px"
-        this.style.top = y + "px"
+        this.setStylePosition("fixed")
+
+        let computedStyle = getComputedStyle(this)
+
+        let transformMatrix = new DOMMatrix()
+        let currentElement: HTMLElement = this
+        while(currentElement){
+            let computedStyle = getComputedStyle(currentElement)
+            transformMatrix = transformMatrix.multiply(new DOMMatrix(computedStyle.transform))
+            currentElement = currentElement.parentElement
+        }
+
+        let transformedPoint = new DOMPoint(x, y).matrixTransform(transformMatrix.inverse())
+
+        this.style.left = transformedPoint.x + "px"
+        this.style.top = transformedPoint.y + "px"
     }
 
     setMarginLeft(marginLeft: number) {
