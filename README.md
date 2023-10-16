@@ -15,7 +15,7 @@ Build:
 Short term todos:
 1. Expose element properties to the outer layer.
 2. Add tree view of the element structure.
-3. GeneratorComponent, set interval for each sha![img.png](img.png)pe.
+3. GeneratorComponent, set interval for each shape.
 4. Layer property inspector
 5. Typescript component.
 6. Touch input.
