@@ -1,7 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
+let webpackExport = {
     mode: 'development',
     entry: "./src/index.js",
     output: {
@@ -22,9 +22,7 @@ module.exports = {
             },
         ]
     },
-    externals: {
-        "hhcommoncomponents": "hhcommoncomponents"
-    },
+
     resolve: {
         extensions: ['.tsx', '.ts', '.js']
     },
@@ -43,3 +41,13 @@ module.exports = {
         }),
     ]
 };
+
+if (process.env.WEBPACK_DEV_SERVER) {
+    webpackExport = Object.assign(webpackExport, {
+        externals: {
+            "hhcommoncomponents": "hhcommoncomponents"
+        },
+    })
+}
+
+module.exports = webpackExport

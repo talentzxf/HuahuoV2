@@ -1,7 +1,6 @@
 import {CustomElement} from "hhcommoncomponents";
 import {HHTitle} from "./HHTitle";
 
-
 @CustomElement({
     selector: "hh-content",
 })
