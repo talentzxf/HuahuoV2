@@ -13,14 +13,16 @@ Build:
 7. npm run start
 
 Short term todos:
-1. GeneratorComponent, set interval for each shape.
-2. Layer property inspector
-3. Typescript component.
-4. Touch input.
-5. Mobile view
-6. Dedicated draw view.
-7. Brushes.
-8. ......
+1. Expose element properties to the outer layer.
+2. Add tree view of the element structure.
+3. GeneratorComponent, set interval for each sha![img.png](img.png)pe.
+4. Layer property inspector
+5. Typescript component.
+6. Touch input.
+7. Mobile view
+8. Dedicated draw view.
+9. Brushes.
+10......
 
 TODOs:
 1. Onion skin view.
