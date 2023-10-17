@@ -59,10 +59,10 @@ function init() {
             let inspectorRoot = createRoot(inspectorDiv)
             let inspectorElement = React.createElement(InspectorX, {
                 closePanel: () => {
-                    findParentSideBar(inspectorDiv).hide()
+                    // findParentSideBar(inspectorDiv).hide()
                 },
                 openPanel: () => {
-                    findParentSideBar(inspectorDiv).show()
+                    // findParentSideBar(inspectorDiv).show()
                 }
             })
             inspectorRoot.render(inspectorElement)

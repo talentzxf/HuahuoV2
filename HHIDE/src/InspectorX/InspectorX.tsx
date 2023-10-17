@@ -240,7 +240,9 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
 
     render() {
         return (
-            <div className="w-full overflow-auto resize">
+            // <div className="w-full overflow-auto resize">
+            <div className="w-full overflow-auto min-w-[300px]">
+                {this.state.selectedObject == null && <span> Please select something to start working</span>}
                 {this.createButtonGroup()}
                 {this.createComponentGroup()}
             </div>

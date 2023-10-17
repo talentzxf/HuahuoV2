@@ -127,12 +127,12 @@
             </hh-sidebar-content>
         </hh-sidebar>
 
-        <hh-sidebar initDockStatus="left-top">
-            <hh-sidebar-content title="Properties">
-                <!--                <hh-inspector></hh-inspector>-->
-                <div id="hh-inspector"></div>
-            </hh-sidebar-content>
-        </hh-sidebar>
+        <!--        <hh-sidebar initDockStatus="left-top">-->
+        <!--            <hh-sidebar-content title="Properties">-->
+        <!--                &lt;!&ndash;                <hh-inspector></hh-inspector>&ndash;&gt;-->
+        <!--                <div id="hh-inspector"></div>-->
+        <!--            </hh-sidebar-content>-->
+        <!--        </hh-sidebar>-->
 
         <hh-sidebar initDockStatus="right-bottom">
             <hh-sidebar-content title="HistoryCommands">
@@ -140,7 +140,15 @@
             </hh-sidebar-content>
         </hh-sidebar>
 
-        <hh-container direction="column">
+        <hh-container direction="row" hasSplitter="true">
+            <hh-container>
+                <hh-panel title-direction="vertical">
+                    <hh-content title="Properties">
+                        <div id="hh-inspector"></div>
+                    </hh-content>
+                </hh-panel>
+            </hh-container>
+
             <hh-container direction="row">
                 <hh-panel content-style="flex-basis:100%; display:flex; align-items: stretch">
                     <hh-content closable="false" title="scene"
