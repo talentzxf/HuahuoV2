@@ -16,7 +16,7 @@ enum PanelEventNames {
 @CustomElement({
     selector: 'hh-panel',
     template: `<template>
-        <div id="title_content_container" style="display: flex; flex-direction: column; height: 100%; width: 100%">
+        <div id="title_content_container" style="display: flex; flex-direction: column;">
             <div id="title_container">
                 <div class="title_tabs nav nav-tabs divide-x divide-slate-400/25">
                 </div>
@@ -268,21 +268,22 @@ class HHPanel extends HTMLElement {
         titleSpan.setParentPanel(this)
         this._tabs.appendChild(titleSpan)
 
-        if (this.getAttribute("title-direction") == "vertical") {
-            this._tabs.style.transform = "rotate(90deg)"
-
-            let title_content_container = this.querySelector("#title_content_container") as HTMLDivElement
-            title_content_container.style.flexDirection = "row"
-            let title_container = this.querySelector("#title_container") as HTMLDivElement
-            title_container.style.width = this._tabs.clientHeight + "px"
-            title_container.style.height = this._tabs.clientWidth + "px"
-
-            let hhTitles = this.querySelectorAll("hh-title")
-            for (let hhTitle of hhTitles) {
-                (hhTitle as HHTitle).setIsVertical(true)
-            }
-        }
         return tabId;
+    }
+
+    onResize() {
+        this._tabs.style.transform = "rotate(90deg)"
+
+        let title_content_container = this.querySelector("#title_content_container") as HTMLDivElement
+        title_content_container.style.flexDirection = "row"
+        let title_container = this.querySelector("#title_container") as HTMLDivElement
+        title_container.style.width = this._tabs.clientHeight + "px"
+        title_container.style.height = this._tabs.clientWidth + "px"
+
+        let hhTitles = this.querySelectorAll("hh-title")
+        for (let hhTitle of hhTitles) {
+            (hhTitle as HHTitle).setIsVertical(true)
+        }
     }
 
     initPanel() {
@@ -336,6 +337,11 @@ class HHPanel extends HTMLElement {
         //     splitter.setAttribute("direction", this.parentElement.style.flexDirection)
         //     this.parentElement.insertBefore(splitter, nextSibling)
         // }
+
+        if (this.getAttribute("title-direction") == "vertical") {
+            let resizeObserver = new ResizeObserver(this.onResize.bind(this))
+            resizeObserver.observe(this._tabs)
+        }
     }
 
     connectedCallback() {

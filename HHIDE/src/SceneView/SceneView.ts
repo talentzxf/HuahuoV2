@@ -7,7 +7,7 @@ import {ResizeObserver} from 'resize-observer';
 import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
 import {EditorPlayer} from "../AnimationPlayer/EditorPlayer";
 import {fileLoader} from "./FileLoader";
-import {findParentContent, findParentPanel, HHSideBar} from "hhpanel";
+import {findParentContent, findParentPanel, HHSideBar, findParentContainer} from "hhpanel";
 import {sceneViewManager} from "./SceneViewManager";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {formManager} from "../Utilities/FormManager";
@@ -349,6 +349,14 @@ class SceneView extends HTMLElement {
             for (let sidebar of sidebars) {
                 (sidebar as HHSideBar).refreshDockables()
             }
+
+            // setTimeout(() => {
+            //     let parentContainer = findParentContainer(this)
+            //     if (parentContainer) {
+            //         let grandParentContainer = findParentContainer(parentContainer)
+            //         grandParentContainer.distributeChildrenEvenly()
+            //     }
+            // })
         }
     }
 
