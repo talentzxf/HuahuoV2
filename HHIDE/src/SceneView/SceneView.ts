@@ -436,6 +436,33 @@ class SceneView extends HTMLElement {
         this.canvas.style.cursor = "default"
     }
 
+    fixPanelWidthIssue(panel) {
+        // Not sure why, but sometimes the parent width is incorrect. Need to manual fix here.
+
+        if (panel == null) {
+            return
+        }
+
+        let panelParentContainer = findParentContainer(panel)
+        if (panelParentContainer == null)
+            return
+
+        let grandParentContainer = findParentContainer(panelParentContainer)
+        if (grandParentContainer == null)
+            return
+
+        let totalWidth = grandParentContainer.clientWidth
+        let remainingWidth = totalWidth
+        for (let childIdx = 0; childIdx < grandParentContainer.children.length; childIdx++) {
+            let childEle = grandParentContainer.children[childIdx]
+            if (childEle == panelParentContainer)
+                continue;
+            remainingWidth -= childEle.offsetWidth
+        }
+
+        panelParentContainer.style.width = remainingWidth + "px"
+    }
+
     OnResize() {
         if (window.getComputedStyle(this.parentElement).display == "none")
             return;
@@ -445,6 +472,8 @@ class SceneView extends HTMLElement {
 
         if (panel == null)  // The scene view might has already been closed
             return;
+
+        this.fixPanelWidthIssue(panel);
 
         // TODO: Move this into HHPanel??
         let panelWidth = panel.clientWidth
