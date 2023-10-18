@@ -460,7 +460,7 @@ class SceneView extends HTMLElement {
             remainingWidth -= childEle.offsetWidth
         }
 
-        panelParentContainer.style.width = remainingWidth + "px"
+        panelParentContainer.style.width = remainingWidth/totalWidth * 100.0 + "%"
     }
 
     OnResize() {
