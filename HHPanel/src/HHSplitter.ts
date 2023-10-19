@@ -42,15 +42,20 @@ class HHSplitter extends HTMLElement {
     mouseUp() {
         document.onmousemove = null
         this.prevPos = null
+        this.isMoving = false
     }
+
+    isMoving = false
 
     mouseDown(evt: MouseEvent) {
         document.onmousemove = this.mouseMove.bind(this)
         this.prevPos = new Vector2D(evt.clientX, evt.clientY)
+
+        this.isMoving = true
     }
 
     mouseMove(evt: MouseEvent) {
-        if (evt.buttons == 1) {
+        if (evt.buttons == 1 && this.isMoving) {
             let offset = -1
             if(this.isColumn)
                 offset = evt.clientY - this.prevPos.Y
@@ -63,6 +68,8 @@ class HHSplitter extends HTMLElement {
 
             evt.preventDefault()
             evt.stopPropagation()
+        } else {
+            this.mouseUp()
         }
     }
 
