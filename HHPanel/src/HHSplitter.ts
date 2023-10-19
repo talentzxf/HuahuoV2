@@ -20,27 +20,29 @@ class HHSplitter extends HTMLElement {
         this.addEventListener('mouseup', this.mouseUp)
     }
 
-    resetSize(){
+    resetSize() {
         let spliterDiv = this.querySelector("div")
-        spliterDiv.style.width = this.isColumn? '100%':'5px';
-        spliterDiv.style.height = this.isColumn? '5px':'100%'
+        spliterDiv.style.width = this.isColumn ? '100%' : '5px';
+        spliterDiv.style.height = this.isColumn ? '5px' : '100%'
     }
-    connectedCallback(){
+
+    connectedCallback() {
         this.resetSize()
     }
 
-    private get isColumn(): boolean{
+    private get isColumn(): boolean {
         return this.getAttribute("direction") == "column"
     }
 
-    private attributeChangedCallback(name: String, oldValue: any, newValue: any){
-        if(name == "direction"){
+    private attributeChangedCallback(name: String, oldValue: any, newValue: any) {
+        if (name == "direction") {
             this.resetSize()
         }
     }
 
     mouseUp() {
         document.onmousemove = null
+        document.onmouseup = null
         this.prevPos = null
         this.isMoving = false
     }
@@ -49,6 +51,7 @@ class HHSplitter extends HTMLElement {
 
     mouseDown(evt: MouseEvent) {
         document.onmousemove = this.mouseMove.bind(this)
+        document.onmouseup = this.mouseUp.bind(this)
         this.prevPos = new Vector2D(evt.clientX, evt.clientY)
 
         this.isMoving = true
@@ -57,7 +60,7 @@ class HHSplitter extends HTMLElement {
     mouseMove(evt: MouseEvent) {
         if (evt.buttons == 1 && this.isMoving) {
             let offset = -1
-            if(this.isColumn)
+            if (this.isColumn)
                 offset = evt.clientY - this.prevPos.Y
             else
                 offset = evt.clientX - this.prevPos.X

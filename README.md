@@ -29,4 +29,5 @@ TODOs:
 2. Bone Animation
 3. AIGC !!!!
 4. SDK to let user make own components.
+5. SDK to embed Huahuo project into other websites.
  

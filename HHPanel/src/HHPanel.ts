@@ -16,7 +16,7 @@ enum PanelEventNames {
 @CustomElement({
     selector: 'hh-panel',
     template: `<template>
-        <div id="title_content_container" style="display: flex; flex-direction: column;">
+        <div id="title_content_container" style="display: flex; flex-direction: column; width: 100%">
             <div id="title_container">
                 <div class="title_tabs nav nav-tabs divide-x divide-slate-400/25">
                 </div>
