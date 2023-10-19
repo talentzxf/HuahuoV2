@@ -22,7 +22,7 @@ Short term todos:
 7. Mobile view
 8. Dedicated draw view.
 9. Brushes.
-10......
+10. .....
 
 TODOs:
 1. Onion skin view.
