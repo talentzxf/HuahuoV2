@@ -50,7 +50,8 @@ class StringPropertyX extends React.Component<PropertyProps, StringPropertyState
                 return (
                     <div>
                         <input className={CSSUtils.getInputStyle()}
-                               value={textValue} onChange={this.onTextChanged.bind(this)}>
+                               value={textValue} onChange={this.onTextChanged.bind(this)}
+                               maxLength={this.props.property.maxLength != null && this.props.property.maxLength > 0 ? this.props.property.maxLength : null}>
                         </input>
                     </div>
                 )

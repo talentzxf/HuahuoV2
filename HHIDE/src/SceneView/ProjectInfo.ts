@@ -24,6 +24,18 @@ class ProjectInfo {
         this.inited = false
     }
 
+    getProjectName(){
+        return this.name
+    }
+
+    SetProjectName(projectName: string){
+        this.name = projectName
+
+        for(let cbFunc of this.callBackFunctions){
+            cbFunc()
+        }
+    }
+
     Setup(name:string, description:string, coverPageBinary:Blob){
         this.name = name
         this.description = description.trim()

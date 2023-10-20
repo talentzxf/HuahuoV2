@@ -20,8 +20,13 @@ class PropertyEntry extends React.Component<PropertyEntryProps, PropertyEntrySta
     render() {
         let {property, noDefaultTitle, children, ...rest} = this.props
 
+        let className = this.props.className || this.getDefaultClassName()
+        if (property.singleLine) {
+            className += " col-span-2"
+        }
+
         return (
-            <div className={this.props.className || this.getDefaultClassName()} {...rest}>
+            <div className={className} {...rest}>
                 {
                     !noDefaultTitle && property.key &&
                     <span className="px-1 mx-1">{i18n.t(property.key)}</span>

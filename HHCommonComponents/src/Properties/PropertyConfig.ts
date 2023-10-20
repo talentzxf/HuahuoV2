@@ -52,6 +52,7 @@ class ComponentProperty extends PropertyConfig {
 
 class StringProperty extends PropertyConfig {
     options: []
+    maxLength: -1
 }
 
 export {

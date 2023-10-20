@@ -664,7 +664,8 @@ abstract class BaseShapeJS {
             key: "inspector.Name",
             type: PropertyType.STRING,
             getter: this.getName.bind(this),
-            setter: this.setName.bind(this)
+            setter: this.setName.bind(this),
+            maxLength: 10
         })
 
         let _this = this

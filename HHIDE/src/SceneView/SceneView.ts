@@ -13,6 +13,8 @@ import {CSSUtils} from "../Utilities/CSSUtils";
 import {formManager} from "../Utilities/FormManager";
 import {EventGraphForm} from "../EventGraphUI/EventGraphForm";
 import {timelineUtils} from "../Utilities/TimelineUtils";
+import {PropertySheet, PropertyType} from "hhcommoncomponents";
+import {projectInfo} from "./ProjectInfo";
 
 function allReadyExecute(fn: Function) {
     i18n.ExecuteAfterInited(
@@ -460,7 +462,7 @@ class SceneView extends HTMLElement {
             remainingWidth -= childEle.offsetWidth
         }
 
-        panelParentContainer.style.width = remainingWidth/totalWidth * 100.0 + "%"
+        panelParentContainer.style.width = remainingWidth / totalWidth * 100.0 + "%"
     }
 
     OnResize() {
@@ -533,6 +535,31 @@ class SceneView extends HTMLElement {
             renderEngine2D.setDefaultCanvas(previousCanvas)
     }
 
+    propertySheet: PropertySheet
+
+    getPropertySheet() {
+        let config = {
+            key: "inspector.BaseProperties",
+            type: PropertyType.COMPONENT,
+            config: {
+                children: []
+            }
+        }
+
+        config.config.children.push({
+            key: "inspector.ProjectName",
+            type: PropertyType.STRING,
+            getter: projectInfo.getProjectName.bind(projectInfo),
+            setter: projectInfo.SetProjectName.bind(projectInfo),
+            maxLength: 10,
+            singleLine: true
+        })
+
+        this.propertySheet = new PropertySheet()
+        this.propertySheet.addProperty(config)
+
+        return this.propertySheet
+    }
 }
 
 export {SceneView}

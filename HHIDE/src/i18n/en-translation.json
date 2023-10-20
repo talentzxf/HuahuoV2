@@ -112,6 +112,7 @@
   "Motor": "Motor",
   "ObjectGenerator": "Object Generator",
   "inspector": {
+    "ProjectName": "Project Name",
     "CurveInputPrompt": "FrameId:{{frameId}}, value:{{value}}",
     "Smooth": "Smooth",
     "Sharpen": "Sharpen",

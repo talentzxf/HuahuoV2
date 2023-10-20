@@ -31,6 +31,7 @@ class Property {
     unregisterValueChangeFunc?: Function
     targetObject?: object
     config: PropertyConfig
+    singleLine: boolean
 }
 
 class PropertySheet {

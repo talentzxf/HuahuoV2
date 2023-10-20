@@ -7,6 +7,7 @@ import {formManager} from "../Utilities/FormManager";
 import {huahuoEngine} from "hhenginejs";
 import {ComponentListFormX} from "./ComponentListFormX";
 import "./PropertyTypes"
+import {sceneViewManager} from "../SceneView/SceneViewManager";
 
 function getBtnClz() {
     let btnClz = CSSUtils.getButtonClass("teal")
@@ -61,9 +62,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
     }
 }
 
-type InspectorProps = {
-
-}
+type InspectorProps = {}
 
 type InspectorState = {
     selectedObject: any
@@ -84,7 +83,11 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
     }
 
     unselectObjects() {
+        setTimeout(() => {
+            this.state.property = sceneViewManager.getFocusedSceneView().getPropertySheet()
 
+            this.setState(this.state)
+        })
     }
 
     componentChanged(targetObj: any) {
@@ -241,7 +244,8 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         return (
             // <div className="w-full overflow-auto resize">
             <div className="w-full overflow-auto">
-                {this.state.selectedObject == null && <span> Please select something to start working</span>}
+                {this.state.selectedObject == null && this.state.property == null &&
+                    <span> Please select something to start working</span>}
                 {this.createButtonGroup()}
                 {this.createComponentGroup()}
             </div>

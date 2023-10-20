@@ -22,10 +22,8 @@ class PlayerControllerX extends React.Component<any, PlayerControllerState> {
     }
 
     projectInfoChanged() {
-        if (projectInfo.inited) {
-            this.state.projectName = projectInfo.name
-            this.setState(this.state)
-        }
+        this.state.projectName = projectInfo.name
+        this.setState(this.state)
     }
 
     syncStateWithPlayer() {
@@ -59,12 +57,12 @@ class PlayerControllerX extends React.Component<any, PlayerControllerState> {
         })
 
         return (
-            <div className="flex flex-row-reverse">
+            <div className="flex flex-row">
+                <span className="w-[50%]">{this.state.projectName}</span>
                 <div className="flex flex-row w-[50%]">
                     {this.state.isPlaying ? pauseButton : playButton}
                     {this.state.isPlaying ? (this.state.isPaused ? playButton : stopButton) : null}
                 </div>
-                <span className="w-[50%]">{this.state.projectName}</span>
             </div>
         )
     }
