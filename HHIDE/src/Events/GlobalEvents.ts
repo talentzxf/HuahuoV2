@@ -4,7 +4,6 @@
 // import {HHContent} from "hhpanel";
 //
 
-import {eventBus} from "hhcommoncomponents"
 import {huahuoEngine} from "hhenginejs";
 
 enum EventNames{

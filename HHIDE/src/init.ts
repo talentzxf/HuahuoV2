@@ -57,14 +57,7 @@ function init() {
             // Attach inspector from react
             let inspectorDiv = document.getElementById("hh-inspector")
             let inspectorRoot = createRoot(inspectorDiv)
-            let inspectorElement = React.createElement(InspectorX, {
-                closePanel: () => {
-                    // findParentSideBar(inspectorDiv).hide()
-                },
-                openPanel: () => {
-                    // findParentSideBar(inspectorDiv).show()
-                }
-            })
+            let inspectorElement = React.createElement(InspectorX)
             inspectorRoot.render(inspectorElement)
         })
     })

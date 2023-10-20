@@ -6,7 +6,6 @@ import {HHTimeline} from "hhtimeline";
 import {NavTree} from "./UIComponents/NavTree"
 import {DrawToolBar} from "./UIComponents/DrawToolBar";
 import {SceneView} from "./SceneView/SceneView";
-import {Inspector} from "./Inspector/Inspector";
 import {BaseForm} from "./UIComponents/BaseForm"
 
 import {RegisterForm} from "./Identity/RegisterForm";

@@ -6,6 +6,7 @@ import {GetPropertyReactGenerator} from "./BasePropertyX";
 import {formManager} from "../Utilities/FormManager";
 import {huahuoEngine} from "hhenginejs";
 import {ComponentListFormX} from "./ComponentListFormX";
+import "./PropertyTypes"
 
 function getBtnClz() {
     let btnClz = CSSUtils.getButtonClass("teal")
@@ -61,8 +62,7 @@ class ToggleButton extends React.Component<ToggleButtonProps, ToggleButtonState>
 }
 
 type InspectorProps = {
-    closePanel: Function
-    openPanel: Function
+
 }
 
 type InspectorState = {
@@ -77,7 +77,6 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
     }
 
     onItemSelected(property: PropertySheet, targetObj: any) {
-        this.props?.openPanel()
         this.state.selectedObject = targetObj
         this.state.property = property == null ? targetObj.getPropertySheet() : property
 
@@ -85,7 +84,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
     }
 
     unselectObjects() {
-        this.props?.closePanel()
+
     }
 
     componentChanged(targetObj: any) {
@@ -97,7 +96,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
     }
 
     objectDeleted(targetObj) {
-        this.props?.closePanel()
+        this.unselectObjects()
     }
 
     componentDidMount() {
@@ -107,7 +106,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         IDEEventBus.getInstance().on(EventNames.CELLCLICKED, this.timelineCellClicked.bind(this))
         IDEEventBus.getInstance().on(EventNames.OBJECTDELETED, this.objectDeleted.bind(this))
 
-        this.props?.closePanel()
+        this.unselectObjects()
     }
 
     componentElementRefs = []
@@ -206,7 +205,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         let componentElements = []
         let propertySheet = this.state.property
         if (propertySheet == null) {
-            this.props.closePanel()
+            this.unselectObjects()
             return null
         }
 
