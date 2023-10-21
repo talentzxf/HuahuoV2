@@ -10,7 +10,7 @@ type FloatPropertyState = {
     value: number
 }
 
-class FloatPropertyX extends React.Component<PropertyProps, FloatPropertyState> implements PropertyChangeListener{
+class FloatPropertyX extends React.Component<PropertyProps, FloatPropertyState> implements PropertyChangeListener {
     state: FloatPropertyState = {
         value: -1.0
     }
@@ -29,7 +29,7 @@ class FloatPropertyX extends React.Component<PropertyProps, FloatPropertyState> 
         this.setState(this.state)
     }
 
-    onValueChanged(val){
+    onValueChanged(val) {
         this.state.value = Number(Number(val.toFixed(2)))
         this.setState(this.state)
     }
@@ -37,7 +37,7 @@ class FloatPropertyX extends React.Component<PropertyProps, FloatPropertyState> 
     render() {
         let property = this.props.property
 
-        if(Math.abs(property.getter() - this.state.value) > eps){
+        if (Math.abs(property.getter() - this.state.value) > eps) {
             this.state.value = Number(Number(property.getter().toFixed(2)))
         }
 
@@ -46,7 +46,7 @@ class FloatPropertyX extends React.Component<PropertyProps, FloatPropertyState> 
         return (
             <PropertyEntry property={property}>
                 <div>
-                    <input className={CSSUtils.getInputStyle("w-20")}
+                    <input className={CSSUtils.getInputStyle("w-full")}
                            step={property?.config?.step || 1.0} min={property?.config?.min || null}
                            max={property?.config?.max || null}
                            type={property?.config?.elementType || "number"} value={this.state.value}
