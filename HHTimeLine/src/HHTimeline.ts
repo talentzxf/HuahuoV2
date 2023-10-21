@@ -48,6 +48,10 @@ class HHTimeline extends HTMLElement {
         return this.getTrack(this.selectedTrackSeqId)
     }
 
+    public getFrameCount(){
+        return this.frameCount
+    }
+
     connectedCallback() {
         if (!this.isInited) {
 

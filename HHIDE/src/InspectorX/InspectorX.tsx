@@ -84,6 +84,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
 
     unselectObjects() {
         setTimeout(() => {
+            this.state.selectedObject = null
             this.state.property = sceneViewManager.getFocusedSceneView().getPropertySheet()
 
             this.setState(this.state)
@@ -130,7 +131,10 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
 
     addComponent() {
         let componentNames = huahuoEngine.getAllCompatibleComponents(this.state.selectedObject)
-        formManager.openReactForm(ComponentListFormX, {componentNames: componentNames, targetObject: this.state.selectedObject})
+        formManager.openReactForm(ComponentListFormX, {
+            componentNames: componentNames,
+            targetObject: this.state.selectedObject
+        })
     }
 
     moreThan2Components() {

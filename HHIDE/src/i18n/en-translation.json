@@ -112,6 +112,8 @@
   "Motor": "Motor",
   "ObjectGenerator": "Object Generator",
   "inspector": {
+    "TotalFrames": "Total Frames",
+    "FPS": "FPS",
     "ProjectName": "Project Name",
     "ProjectProperties": "Project Properties",
     "CurveInputPrompt": "FrameId:{{frameId}}, value:{{value}}",

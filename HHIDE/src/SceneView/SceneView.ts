@@ -15,6 +15,7 @@ import {EventGraphForm} from "../EventGraphUI/EventGraphForm";
 import {timelineUtils} from "../Utilities/TimelineUtils";
 import {PropertySheet, PropertyType} from "hhcommoncomponents";
 import {projectInfo} from "./ProjectInfo";
+import {GlobalConfig} from "hhenginejs";
 
 function allReadyExecute(fn: Function) {
     i18n.ExecuteAfterInited(
@@ -553,6 +554,22 @@ class SceneView extends HTMLElement {
             setter: projectInfo.SetProjectName.bind(projectInfo),
             maxLength: 10,
             singleLine: true
+        })
+
+        propertySheet.config.children.push({
+            key: "inspector.FPS",
+            type: PropertyType.NUMBER,
+            getter: () => {
+                return GlobalConfig.fps
+            }
+        })
+
+        propertySheet.config.children.push({
+            key:"inspector.TotalFrames",
+            type: PropertyType.NUMBER,
+            getter: ()=>{
+                return this.timeline.frameCount
+            }
         })
 
         this.propertySheet = new PropertySheet()
