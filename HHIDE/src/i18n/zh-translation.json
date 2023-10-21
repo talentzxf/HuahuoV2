@@ -113,6 +113,7 @@
   "ObjectGenerator": "形状生成器",
   "inspector": {
     "ProjectName": "项目名称",
+    "ProjectProperties": "项目属性",
     "CurveInputPrompt": "关键帧:{{frameId}}, 值:{{value}}",
     "Smooth": "平滑特征点",
     "Sharpen": "尖锐化特征点",

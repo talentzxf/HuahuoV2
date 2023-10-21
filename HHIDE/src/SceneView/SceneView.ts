@@ -538,15 +538,15 @@ class SceneView extends HTMLElement {
     propertySheet: PropertySheet
 
     getPropertySheet() {
-        let config = {
-            key: "inspector.BaseProperties",
+        let propertySheet = {
+            key: "inspector.ProjectProperties",
             type: PropertyType.COMPONENT,
             config: {
                 children: []
             }
         }
 
-        config.config.children.push({
+        propertySheet.config.children.push({
             key: "inspector.ProjectName",
             type: PropertyType.STRING,
             getter: projectInfo.getProjectName.bind(projectInfo),
@@ -556,7 +556,7 @@ class SceneView extends HTMLElement {
         })
 
         this.propertySheet = new PropertySheet()
-        this.propertySheet.addProperty(config)
+        this.propertySheet.addProperty(propertySheet)
 
         return this.propertySheet
     }

@@ -113,6 +113,7 @@
   "ObjectGenerator": "Object Generator",
   "inspector": {
     "ProjectName": "Project Name",
+    "ProjectProperties": "Project Properties",
     "CurveInputPrompt": "FrameId:{{frameId}}, value:{{value}}",
     "Smooth": "Smooth",
     "Sharpen": "Sharpen",
