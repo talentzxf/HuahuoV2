@@ -16,6 +16,8 @@ interface RenderEngine2D {
     resize(canvas: HTMLCanvasElement, width: number, height: number): void
 
     getContentWH(canvasWidth, canvasHeight):[number, number];
+
+    setBgColor(bgColor);
 }
 
 export {RenderEngine2D}

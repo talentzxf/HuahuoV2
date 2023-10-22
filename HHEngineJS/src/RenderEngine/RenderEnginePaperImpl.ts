@@ -82,6 +82,15 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
         })
     }
 
+    setBgColor(bgColor) {
+        this.bgFillColor = new paper.Color(bgColor.red, bgColor.green, bgColor.blue, bgColor.alpha)
+        this.bgRectangle.fillColor = this.bgFillColor
+    }
+
+    getBgColor() {
+        return this.bgFillColor
+    }
+
     public getContentWH(canvasWidth, canvasHeight): [number, number] {
         let returnWidth = canvasWidth
         let returnHeight = canvasWidth / this.aspectRatio
@@ -117,6 +126,9 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
         }
     }
 
+    bgFillColor = new paper.Color("white")
+    bgRectangle
+
     public clearBackground() {
 
         let canvasWidth = view.element.width
@@ -131,8 +143,8 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
         let [contentWidth, contentHeight] = this.getContentWH(canvasWidth, canvasHeight)
         let xOffset = (canvasWidth - contentWidth) / 2
         let yOffset = (canvasHeight - contentHeight) / 2
-        let contentRect = this.createViewRectangle(xOffset, yOffset, contentWidth, contentHeight, "white")
-        contentRect.sendToBack()
+        this.bgRectangle = this.createViewRectangle(xOffset, yOffset, contentWidth, contentHeight, this.bgFillColor)
+        this.bgRectangle.sendToBack()
         this.restoreContentLayer()
     }
 

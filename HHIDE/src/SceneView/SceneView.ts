@@ -582,10 +582,10 @@ class SceneView extends HTMLElement {
                         key: "inspector.BgColor",
                         type: PropertyType.COLOR,
                         getter: function () {
-                            return "#FF00FF00"
+                            return renderEngine2D.getBgColor()
                         },
                         setter: function (newColor) {
-                            console.log(newColor)
+                            renderEngine2D.setBgColor(newColor)
                         }
                     },
                     {

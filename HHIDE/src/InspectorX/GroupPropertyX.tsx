@@ -54,6 +54,7 @@ class GroupPropertyX extends React.Component<PropertyProps, any> {
 
                 let reactElement = React.createElement(contentGenerator, contentProps)
                 let reactElementDiv = React.createElement("div", {
+                    key: index,
                     style: divStyle
                 }, reactElement)
 
