@@ -589,8 +589,13 @@ class SceneView extends HTMLElement {
                         }
                     },
                     {
-                        key:"inspector.BgFile",
-                        type: PropertyType.BUTTON
+                        key: "inspector.BgFile",
+                        type: PropertyType.BUTTON,
+                        config: {
+                            action: () => {
+
+                            }
+                        }
                     }
                 ]
             }
