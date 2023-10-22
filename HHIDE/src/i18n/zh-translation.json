@@ -112,8 +112,9 @@
   "Motor": "马达组件",
   "ObjectGenerator": "形状生成器",
   "inspector": {
-    "BgColor": "Color",
-    "BgFile": "File",
+    "AspectRatio": "宽高比",
+    "BgColor": "颜色",
+    "BgFile": "图片文件",
     "TotalFrames": "总帧数",
     "Background": "背景",
     "FPS": "帧每秒",

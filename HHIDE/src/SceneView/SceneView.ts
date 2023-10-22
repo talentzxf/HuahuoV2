@@ -573,6 +573,14 @@ class SceneView extends HTMLElement {
         })
 
         propertySheet.config.children.push({
+            key: "inspector.AspectRatio",
+            type: PropertyType.NUMBER,
+            getter: () => {
+                return renderEngine2D.getAspectRatio()
+            }
+        })
+
+        propertySheet.config.children.push({
             key: "inspector.Background",
             type: PropertyType.GROUP,
             singleLine: true,
@@ -593,7 +601,7 @@ class SceneView extends HTMLElement {
                         type: PropertyType.BUTTON,
                         config: {
                             action: () => {
-
+                                window.alert("Not implemented!")
                             }
                         }
                     }

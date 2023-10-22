@@ -18,6 +18,8 @@ interface RenderEngine2D {
     getContentWH(canvasWidth, canvasHeight):[number, number];
 
     setBgColor(bgColor);
+
+    getAspectRatio()
 }
 
 export {RenderEngine2D}
