@@ -112,7 +112,10 @@
   "Motor": "Motor",
   "ObjectGenerator": "Object Generator",
   "inspector": {
+    "BgColor": "Color",
+    "BgFile": "File",
     "TotalFrames": "Total Frames",
+    "Background": "Background",
     "FPS": "FPS",
     "ProjectName": "Project Name",
     "ProjectProperties": "Project Properties",

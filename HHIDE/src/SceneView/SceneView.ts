@@ -565,10 +565,34 @@ class SceneView extends HTMLElement {
         })
 
         propertySheet.config.children.push({
-            key:"inspector.TotalFrames",
+            key: "inspector.TotalFrames",
             type: PropertyType.NUMBER,
-            getter: ()=>{
+            getter: () => {
                 return this.timeline.frameCount
+            }
+        })
+
+        propertySheet.config.children.push({
+            key: "inspector.Background",
+            type: PropertyType.GROUP,
+            singleLine: true,
+            config: {
+                children: [
+                    {
+                        key: "inspector.BgColor",
+                        type: PropertyType.COLOR,
+                        getter: function () {
+                            return "#FF00FF00"
+                        },
+                        setter: function (newColor) {
+                            console.log(newColor)
+                        }
+                    },
+                    {
+                        key:"inspector.BgFile",
+                        type: PropertyType.BUTTON
+                    }
+                ]
             }
         })
 

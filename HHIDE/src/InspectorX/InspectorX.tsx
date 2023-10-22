@@ -250,7 +250,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
             <div className="w-full overflow-auto">
                 {this.state.selectedObject == null && this.state.property == null &&
                     <span> Please select something to start working</span>}
-                {this.createButtonGroup()}
+                {this.state.selectedObject != null && this.createButtonGroup()}
                 {this.createComponentGroup()}
             </div>
         )

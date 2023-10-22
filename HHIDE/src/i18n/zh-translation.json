@@ -112,7 +112,10 @@
   "Motor": "马达组件",
   "ObjectGenerator": "形状生成器",
   "inspector": {
+    "BgColor": "Color",
+    "BgFile": "File",
     "TotalFrames": "总帧数",
+    "Background": "背景",
     "FPS": "帧每秒",
     "ProjectName": "项目名称",
     "ProjectProperties": "项目属性",
