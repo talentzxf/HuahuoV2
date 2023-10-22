@@ -710,6 +710,7 @@ abstract class BaseShapeJS {
             key: "inspector.property.keyframes",
             type: PropertyType.GROUP,
             targetObject: this,
+            singleLine: true,
             config: {
                 children: [
                     transformFrameStateSheet,
