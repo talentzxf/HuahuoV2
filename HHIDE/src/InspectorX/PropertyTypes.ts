@@ -1,6 +1,5 @@
 import {RegisterDivGenerator} from "../Inspector/BasePropertyDivGenerator";
 import {PropertyType} from "HHCommonComponents"
-import {groupPropertyDivGenerator} from "../Inspector/GroupPropertyDivGenerator";
 import {panelPropertyDivGenerator} from "../Inspector/PanelPropertyDivGenerator";
 import {booleanPropertyDivGenerator} from "../Inspector/BooleanPropertyDivGenerator";
 import {keyFramesPropertyDivGenerator} from "../Inspector/KeyFramesPropertyDivGenerator";
