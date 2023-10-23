@@ -1,5 +1,7 @@
 import * as React from "react"
 import {v4 as uuidv4} from 'uuid';
+import {sceneViewManager} from "../SceneView/SceneViewManager";
+import {huahuoEngine} from "hhenginejs";
 
 interface HierarchyItemProps extends React.HTMLAttributes<HTMLDivElement> {
     title: string
@@ -125,33 +127,26 @@ class HierarchyX extends React.Component<any, HierarchyState> {
     }
 
     render() {
+        let focusedSceneView = sceneViewManager.getFocusedSceneView()
+        let store = huahuoEngine.GetStoreById(focusedSceneView.storeId)
+
+        let items = []
+
+        for (let layerId = 0; layerId < store.GetLayerCount(); layerId++) {
+            let layer = store.GetLayer(layerId)
+            let layerItem = <HierarchyItem key={layerId} title={layer.GetName()} regSetter={this.regSetter.bind(this)}
+                                           onClick={this.onItemClicked.bind(this)}/>
+
+            items.push(layerItem)
+        }
+
         return (
             <div style={{
                 overflow: "hidden"
             }}>
                 <HierarchyItem title="Root" hierarchyDepth={0} regSetter={this.regSetter.bind(this)}
                                onClick={this.onItemClicked.bind(this)}>
-                    <HierarchyItem title="layer1" regSetter={this.regSetter.bind(this)}
-                                   onClick={this.onItemClicked.bind(this)}>
-                        <HierarchyItem title="shape1" regSetter={this.regSetter.bind(this)}
-                                       onClick={this.onItemClicked.bind(this)}/>
-                        <HierarchyItem title="shape2" regSetter={this.regSetter.bind(this)}
-                                       onClick={this.onItemClicked.bind(this)}/>
-                    </HierarchyItem>
-                    <HierarchyItem title="layer2" regSetter={this.regSetter.bind(this)}
-                                   onClick={this.onItemClicked.bind(this)}>
-                        <HierarchyItem title="shape21" regSetter={this.regSetter.bind(this)}
-                                       onClick={this.onItemClicked.bind(this)}/>
-                        <HierarchyItem title="shape22" regSetter={this.regSetter.bind(this)}
-                                       onClick={this.onItemClicked.bind(this)}/>
-                    </HierarchyItem>
-                    <HierarchyItem title="layer3" regSetter={this.regSetter.bind(this)}
-                                   onClick={this.onItemClicked.bind(this)}>
-                        <HierarchyItem title="shape31" regSetter={this.regSetter.bind(this)}
-                                       onClick={this.onItemClicked.bind(this)}/>
-                        <HierarchyItem title="shape32" regSetter={this.regSetter.bind(this)}
-                                       onClick={this.onItemClicked.bind(this)}/>
-                    </HierarchyItem>
+                    {items}
                 </HierarchyItem>
             </div>)
     }
