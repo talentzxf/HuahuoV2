@@ -70,8 +70,9 @@ class HierarchyItem extends React.Component<HierarchyItemProps, HierarchyItemSta
                     {
                         totalChildrenCount >= 1 && (
                             <svg style={{
-                                display: "inline"
-                            }} className={"hover:scale-125"}
+                                display: "inline",
+                                transform: this.state.isOpened ? null : "rotate(-90deg)"
+                            }} className={"hover:scale-125 transition-all ease-in-out duration-75"}
                                  onClick={this.triangleClicked.bind(this)}
                                  xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 13 10">
                                 <polygon points="2 1, 12 1, 7 9"></polygon>
@@ -83,8 +84,10 @@ class HierarchyItem extends React.Component<HierarchyItemProps, HierarchyItemSta
                 </div>
 
                 {
-                    this.state.isOpened && totalChildrenCount >= 1 && (
-                        <div>
+                    totalChildrenCount >= 1 && (
+                        <div style={{
+                            display: this.state.isOpened ? "block" : "none"
+                        }}>
                             {modifiedChildren}
                         </div>)
                 }
