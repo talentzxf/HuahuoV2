@@ -6,7 +6,6 @@ const eps = 0.01
 
 interface PropertyEntryProps extends React.HTMLAttributes<HTMLDivElement> {
     property: Property,
-    children,
     noDefaultTitle?: boolean
 }
 
