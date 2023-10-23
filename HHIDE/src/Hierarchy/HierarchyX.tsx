@@ -2,6 +2,8 @@ import * as React from "react"
 import {v4 as uuidv4} from 'uuid';
 import {sceneViewManager} from "../SceneView/SceneViewManager";
 import {huahuoEngine} from "hhenginejs";
+import {projectInfo} from "../SceneView/ProjectInfo";
+import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 
 interface HierarchyItemProps extends React.HTMLAttributes<HTMLDivElement> {
     title: string
@@ -105,6 +107,12 @@ class HierarchyX extends React.Component<any, HierarchyState> {
 
     setters = new Array
 
+    componentDidMount() {
+        IDEEventBus.getInstance().on(EventNames.OBJECTADDED, () => {
+            this.forceUpdate()
+        })
+    }
+
     regSetter(uuid, setter) {
         this.setters.push({
             uuid: uuid,
@@ -134,8 +142,20 @@ class HierarchyX extends React.Component<any, HierarchyState> {
 
         for (let layerId = 0; layerId < store.GetLayerCount(); layerId++) {
             let layer = store.GetLayer(layerId)
-            let layerItem = <HierarchyItem key={layerId} title={layer.GetName()} regSetter={this.regSetter.bind(this)}
-                                           onClick={this.onItemClicked.bind(this)}/>
+
+            let shapeItems = []
+            for (let shapeIdx = 0; shapeIdx < layer.GetShapeCount(); shapeIdx++) {
+                let shape = layer.GetShapeAtIndex(shapeIdx)
+                let shapeItem = <HierarchyItem title={shape.GetName()} regSetter={this.regSetter.bind(this)}
+                                               onClick={this.onItemClicked.bind(this)}/>
+                shapeItems.push(shapeItem)
+            }
+
+            let layerItem =
+                <HierarchyItem key={layerId} title={layer.GetName()} regSetter={this.regSetter.bind(this)}
+                               onClick={this.onItemClicked.bind(this)}>
+                    {shapeItems}
+                </HierarchyItem>
 
             items.push(layerItem)
         }
@@ -144,7 +164,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
             <div style={{
                 overflow: "hidden"
             }}>
-                <HierarchyItem title="Root" hierarchyDepth={0} regSetter={this.regSetter.bind(this)}
+                <HierarchyItem title={projectInfo.name} hierarchyDepth={0} regSetter={this.regSetter.bind(this)}
                                onClick={this.onItemClicked.bind(this)}>
                     {items}
                 </HierarchyItem>
