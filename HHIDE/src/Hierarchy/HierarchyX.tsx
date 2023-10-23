@@ -9,12 +9,14 @@ interface HierarchyItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
 type HierarchyItemState = {
     selected: boolean,
+    isOpened: boolean
     uuid: string
 }
 
 class HierarchyItem extends React.Component<HierarchyItemProps, HierarchyItemState> {
     state: HierarchyItemState = {
         selected: false,
+        isOpened: true,
         uuid: uuidv4()
     }
 
@@ -27,6 +29,11 @@ class HierarchyItem extends React.Component<HierarchyItemProps, HierarchyItemSta
 
     componentDidMount() {
         this.props.regSetter(this.state.uuid, this.setSelected.bind(this))
+    }
+
+    triangleClicked() {
+        this.state.isOpened = !this.state.isOpened
+        this.setState(this.state)
     }
 
     render() {
@@ -47,7 +54,7 @@ class HierarchyItem extends React.Component<HierarchyItemProps, HierarchyItemSta
         index = 0
         let tabs = []
         for (let i = 0; i < this.props.hierarchyDepth; i++) {
-            tabs.push(<span key={index++}>&emsp;</span>)
+            tabs.push(<span key={index++}>&emsp;&emsp;</span>)
         }
 
         return (
@@ -60,11 +67,23 @@ class HierarchyItem extends React.Component<HierarchyItemProps, HierarchyItemSta
             }}>
                 <div className={this.state.selected ? "bg-blue-300" : ""}>
                     {tabs}
+                    {
+                        totalChildrenCount >= 1 && (
+                            <svg style={{
+                                display: "inline"
+                            }} className={"hover:scale-125"}
+                                 onClick={this.triangleClicked.bind(this)}
+                                 xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 13 10">
+                                <polygon points="2 1, 12 1, 7 9"></polygon>
+                            </svg>
+                        )
+                    }
+                    {' '}
                     {this.props.title || "Unknown Item"}
                 </div>
 
                 {
-                    totalChildrenCount >= 1 && (
+                    this.state.isOpened && totalChildrenCount >= 1 && (
                         <div>
                             {modifiedChildren}
                         </div>)
