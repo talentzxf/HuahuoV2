@@ -12,7 +12,7 @@ import {formManager} from "../Utilities/FormManager";
 import {UploadElementForm} from "../UIComponents/UploadElementForm";
 import {EditorShapeProxy} from "../ShapeDrawers/EditorShapeProxy";
 
-declare var Module:any;
+declare var Module: any;
 
 class ElementCreator {
     sceneView: SceneView
@@ -45,14 +45,14 @@ class ElementCreator {
         })
     }
 
-    editElement(element){
+    editElement(element) {
         this.openElementEditTab(element)
     }
 
-    uploadElement(element){
+    uploadElement(element) {
         let uploadElementForm = formManager.openForm(UploadElementForm)
         uploadElementForm.setStore(element.storeId, element.name)
-        uploadElementForm.onOKAction = (isShareable, isEditable)=>{
+        uploadElementForm.onOKAction = (isShareable, isEditable) => {
 
             let store = huahuoEngine.GetStoreById(element.storeId)
             let storeMeta = store.GetMetaData()
@@ -81,7 +81,7 @@ class ElementCreator {
             elementCreator.dispatchElementChange(newShape.bornStoreId)
         })
 
-        newShape.registerComponentValueChangeHandler( ()=>{
+        newShape.registerComponentValueChangeHandler(() => {
             elementCreator.dispatchElementChange(newShape.bornStoreId)
         })
     }
@@ -124,6 +124,10 @@ class ElementCreator {
         let content: HHContent = e.detail.content
 
         let sceneview = content.querySelector("hh-sceneview")
+        if (sceneview == null) // This is not the editor sceneview
+        {
+            return
+        }
 
         this.sceneView = sceneview
         this.sceneViewPanel = findParentPanel(this.sceneView)
@@ -191,10 +195,10 @@ class ElementCreator {
         let currentLayer = huahuoEngine.GetCurrentLayer()
         currentLayer.addShape(newElementShape)
 
-        if(!storeId){
+        if (!storeId) {
             let newStore = huahuoEngine.GetDefaultObjectStoreManager().CreateStore();
             newElementShape.storeId = newStore.GetStoreId()
-        }else{
+        } else {
             newElementShape.storeId = storeId
         }
 
@@ -212,25 +216,25 @@ class ElementCreator {
     }
 
     createElement(shapes: Set<BaseShapeJS>): ElementShapeJS {
-        if(shapes.size == 0)
+        if (shapes.size == 0)
             return
 
         let prevStoreId = huahuoEngine.GetCurrentStoreId()
 
         let allRelatedShapes = new Set<BaseShapeJS>()
 
-        for(let shape of shapes){
+        for (let shape of shapes) {
             allRelatedShapes.add(shape)
             let referencedShapes = new Set()
             shape.getReferencedShapes(referencedShapes)
-            for(let referencedShape of referencedShapes){
-                if(referencedShape != null)
+            for (let referencedShape of referencedShapes) {
+                if (referencedShape != null)
                     allRelatedShapes.add(referencedShape)
             }
         }
 
-        if(allRelatedShapes.size > shapes.size){
-            if(!window.confirm("Some shapes are referenced, do you want to move them all to the element?")){
+        if (allRelatedShapes.size > shapes.size) {
+            if (!window.confirm("Some shapes are referenced, do you want to move them all to the element?")) {
                 return
             }
 
@@ -297,7 +301,7 @@ class ElementCreator {
         }
     }
 
-    OnRootStoreAdded(args){
+    OnRootStoreAdded(args) {
         let objectStoreAddedEvent = Module.wrapPointer(args, Module.ObjectStoreAddedEvent)
         let store = objectStoreAddedEvent.GetStore()
         console.log("Root Store added!!!")

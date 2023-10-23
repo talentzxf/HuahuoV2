@@ -6,6 +6,7 @@ import {createRoot} from "react-dom/client"
 import {findParentSideBar} from "hhpanel"
 import * as React from "react"
 import {InspectorX} from "./InspectorX/InspectorX";
+import {HierarchyX} from "./Hierarchy/HierarchyX";
 
 function showMainDiv() {
     let loadingElement = document.querySelector("#loading") as HTMLDivElement
@@ -40,6 +41,13 @@ function clearPrompt() {
     setPrompt("  ")
 }
 
+function createReactComponent(divName, reactComponent) {
+    let div = document.getElementById(divName)
+    let root = createRoot(div)
+    let element = React.createElement(reactComponent)
+    root.render(element)
+}
+
 function init() {
     huahuoEngine.ExecuteAfterInited(() => {
         i18n.ExecuteAfterInited(() => {
@@ -55,10 +63,10 @@ function init() {
             })
 
             // Attach inspector from react
-            let inspectorDiv = document.getElementById("hh-inspector")
-            let inspectorRoot = createRoot(inspectorDiv)
-            let inspectorElement = React.createElement(InspectorX)
-            inspectorRoot.render(inspectorElement)
+            createReactComponent("hh-inspector", InspectorX)
+
+            // Attach hierarchy from react
+            createReactComponent("hh-hierarchy", HierarchyX)
         })
     })
 }
