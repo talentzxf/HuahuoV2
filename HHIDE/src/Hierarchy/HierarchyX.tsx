@@ -163,7 +163,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
 
         return (
             <div style={{
-                overflow: "hidden"
+                overflow: "auto"
             }}>
                 <HierarchyItem title={projectInfo.name} hierarchyDepth={0} regSetter={this.regSetter.bind(this)}
                                onClick={this.onItemClicked.bind(this)}>

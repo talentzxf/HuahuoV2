@@ -21,7 +21,7 @@ enum PanelEventNames {
                 <div class="title_tabs nav nav-tabs divide-x divide-slate-400/25">
                 </div>
             </div>            
-            <div class="panel_contents" style="flex-basis: 100%;">
+            <div class="panel_contents" style="width: 100%">            
             </div>
         </div>
     </template>`,
@@ -279,6 +279,9 @@ class HHPanel extends HTMLElement {
         let title_container = this.querySelector("#title_container") as HTMLDivElement
         title_container.style.width = this._tabs.clientHeight + "px"
         title_container.style.height = this._tabs.clientWidth + "px"
+
+        let content_container = this.querySelector(".panel_contents") as HTMLDivElement
+        content_container.style.width = "calc(100% - " + this._tabs.clientHeight + "px)";
 
         let hhTitles = this.querySelectorAll("hh-title")
         for (let hhTitle of hhTitles) {
