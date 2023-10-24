@@ -69,7 +69,7 @@ class HierarchyItem extends React.Component<HierarchyItemProps, HierarchyItemSta
             }} data-uuid={this.state.uuid} onClick={(e) => {
                 this.props.onClick(e)
             }}>
-                <div className={this.state.selected ? "bg-blue-300" : ""}>
+                <div className={"whitespace-nowrap " + (this.state.selected ? "bg-blue-300" : "")}>
                     {tabs}
                     {
                         totalChildrenCount >= 1 && (
