@@ -30,7 +30,7 @@ class HHEventBus {
     handlerIdHandlerMap: Map<number, Function> = new Map()
     eventHandlerIdMap: Map<string, Set<number>> = new Map()
     eventHandlerParamArrayMap: Map<string, EventParamDef[]> = new Map()
-    namespaceHandlerIdMap: Map<string, Set<number>> = new Map()
+    namespaceHandlerIdMap: Map<string, Set<number>> = new Map() // Whatever events happened in this namespace will trigger these wildcard handlers.
 
     public getAllEvents() {
         return this.eventHandlerIdMap.keys()
@@ -66,35 +66,60 @@ class HHEventBus {
     }
 
     addEventHandler(namespace: string, evtName: string, handler: Function): number {
-        let fullEventName = getFullEventName(namespace, evtName)
-        if (!this.eventHandlerIdMap.has(fullEventName)) {
-            this.registerEvent(namespace, evtName)
+
+        let handlerIdArray = null
+        if (evtName === "*") {
+            if (!this.namespaceHandlerIdMap.has(namespace)) {
+                this.namespaceHandlerIdMap.set(namespace, new Set<number>())
+            }
+            handlerIdArray = this.namespaceHandlerIdMap.get(namespace)
+        } else {
+            let fullEventName = getFullEventName(namespace, evtName)
+            if (!this.eventHandlerIdMap.has(fullEventName)) {
+                this.registerEvent(namespace, evtName)
+            }
+
+            handlerIdArray = this.eventHandlerIdMap.get(fullEventName)
         }
 
-        let handlerIdArray = this.eventHandlerIdMap.get(fullEventName)
-        let handlerId = this.maxHandlerId++
-        this.handlerIdHandlerMap.set(handlerId, handler)
+        if (handlerIdArray != null) {
+            let handlerId = this.maxHandlerId++
 
-        handlerIdArray.add(handlerId)
-        return handlerId
+            this.handlerIdHandlerMap.set(handlerId, handler)
+            handlerIdArray.add(handlerId)
+            return handlerId
+        }
+        return -1;
+    }
+
+    private _triggerEvent(handlerId, ...evtParams) {
+        if (!this.handlerIdHandlerMap.has(handlerId)) {
+            // throw new EventBusException("Can't find this handlerId:" + handlerId + " for event:" + fullEventName)
+            return false
+        }
+
+        let func = this.handlerIdHandlerMap.get(handlerId)
+        func(...evtParams)
+        return true
     }
 
     triggerEvent(namespace: string, evtName: string, ...evtParams) {
         let fullEventName = getFullEventName(namespace, evtName)
-        if (!this.eventHandlerIdMap.has(fullEventName)) {
-            return
+        if (this.eventHandlerIdMap.has(fullEventName)) {
+            let handlerIdArray = this.eventHandlerIdMap.get(fullEventName)
+            for (let handlerId of handlerIdArray) {
+                if (!this._triggerEvent(handlerId, ...evtParams)) {
+                    console.error("Can't find this handlerId:" + handlerId + " for event:" + fullEventName)
+                }
+            }
         }
 
-        let handlerIdArray = this.eventHandlerIdMap.get(fullEventName)
-        for (let handlerId of handlerIdArray) {
-            if (!this.handlerIdHandlerMap.has(handlerId)) {
-                // throw new EventBusException("Can't find this handlerId:" + handlerId + " for event:" + fullEventName)
-                console.error("Can't find this handlerId:" + handlerId + " for event:" + fullEventName)
-                continue
+        if (this.namespaceHandlerIdMap.has(namespace)) {
+            for (let handlerId of this.namespaceHandlerIdMap.get(namespace)) {
+                if (!this._triggerEvent(handlerId, ...evtParams)) {
+                    console.error("Can't find this handlerId:" + handlerId + " for event:" + fullEventName)
+                }
             }
-
-            let func = this.handlerIdHandlerMap.get(handlerId)
-            func(...evtParams)
         }
     }
 }

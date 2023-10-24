@@ -108,7 +108,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
     setters = new Array
 
     componentDidMount() {
-        IDEEventBus.getInstance().on(EventNames.OBJECTADDED, () => {
+        IDEEventBus.getInstance().on("*", () => {
             this.forceUpdate()
         })
     }
@@ -116,7 +116,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
     regSetter(uuid, setter) {
         this.setters.push({
             uuid: uuid,
-            setter: setter
+            setIsSelected: setter
         })
     }
 
@@ -125,9 +125,9 @@ class HierarchyX extends React.Component<any, HierarchyState> {
         if (uuid) {
             this.setters.forEach((obj) => {
                 if (uuid === obj.uuid) {
-                    obj.setter(true)
+                    obj.setIsSelected(true)
                 } else {
-                    obj.setter(false)
+                    obj.setIsSelected(false)
                 }
             })
             e.stopPropagation()
@@ -146,7 +146,8 @@ class HierarchyX extends React.Component<any, HierarchyState> {
             let shapeItems = []
             for (let shapeIdx = 0; shapeIdx < layer.GetShapeCount(); shapeIdx++) {
                 let shape = layer.GetShapeAtIndex(shapeIdx)
-                let shapeItem = <HierarchyItem title={shape.GetName()} regSetter={this.regSetter.bind(this)}
+                let shapeItem = <HierarchyItem key={shapeIdx} title={shape.GetName()}
+                                               regSetter={this.regSetter.bind(this)}
                                                onClick={this.onItemClicked.bind(this)}/>
                 shapeItems.push(shapeItem)
             }
