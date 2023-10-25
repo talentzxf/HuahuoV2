@@ -1,6 +1,7 @@
 import {AbstractComponent, Component} from "./AbstractComponent";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {clzObjectFactory} from "../CppClassObjectFactory";
+import {GetObjPtr} from "hhcommoncomponents";
 
 /**
  * GroupComponent is a special Component. It's responsibility is to store other components.
@@ -50,7 +51,7 @@ class GroupComponent extends AbstractComponent {
 
     getComponentByRawObj(componentRawObj) {
         return this.subComponents.find((component) => {
-            return component.rawObj.ptr == componentRawObj.ptr
+            return GetObjPtr(component) == GetObjPtr(componentRawObj)
         })
     }
 

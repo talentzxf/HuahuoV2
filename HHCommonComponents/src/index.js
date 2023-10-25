@@ -25,7 +25,7 @@ import "./i18ninitializer"
 import {HHToast} from "./Toast/Toast";
 import {eventBus, GraphEvent} from "./EventBus/EventBus";
 import {mirrorPoint} from "./Math/MathFunctions";
-import {IsValidWrappedObject} from "./WrappedObjectUtils"
+import {IsValidWrappedObject, GetObjPtr} from "./WrappedObjectUtils"
 import {
     CustomFieldConfig,
     CustomFieldContentDivGenerator,
@@ -44,7 +44,7 @@ export {
     i18n, ContextMenu, CustomElement, Logger, Vector2, pointsNear, pointsNearVertical, pointsNearHorizontal,
     relaxRectangle, PropertySheet, Property, PropertyType, getMimeTypeFromDataURI,
     dataURItoBlob, HHToast, getFileNameFromGZip, eventBus, mirrorPoint,
-    IsValidWrappedObject, getMethodsAndVariables,
+    IsValidWrappedObject, GetObjPtr, getMethodsAndVariables,
     CustomFieldContentDivGenerator, CustomFieldConfig,
     GraphEvent, EventParam, EventEmitter, getParameterNameAtIdx,
     getFullEventName, splitFullEventName, ShapeArrayProperty,

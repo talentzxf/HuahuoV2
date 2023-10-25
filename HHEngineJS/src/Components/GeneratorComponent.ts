@@ -1,8 +1,7 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
-import {FloatPropertyConfig} from "hhcommoncomponents";
+import {FloatPropertyConfig, GetObjPtr, IsValidWrappedObject} from "hhcommoncomponents";
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
-import {IsValidWrappedObject} from "hhcommoncomponents";
 
 //TODO: Move all these non default components into another sub-project
 @Component()
@@ -13,7 +12,7 @@ class GeneratorComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateFloat, 0.1, {min: 0.01, max: 1.0, step: 0.01} as FloatPropertyConfig)
     generateInterval
 
-    // BaseShape.rawObj.ptr -> Mirages array.
+    // BaseShape ObjPtr -> Mirages array.
     targetShapeGeneratedShapeArrayMap: Map<number, Array<any>> = new Map<number, Array<any>>()
 
     paperShapeGroup: paper.Group
@@ -38,12 +37,12 @@ class GeneratorComponent extends AbstractComponent {
             if (targetShape == null || !IsValidWrappedObject(targetShape.rawObj)) // The shape might not be loaded yet. But in next cycle, it should have been loaded.
                 continue
 
-            usedShapes.add(targetShape.rawObj.ptr)
+            usedShapes.add(GetObjPtr(targetShape))
 
-            let mirageShapeArray = this.targetShapeGeneratedShapeArrayMap.get(targetShape.rawObj.ptr)
+            let mirageShapeArray = this.targetShapeGeneratedShapeArrayMap.get(GetObjPtr(targetShape))
             if (mirageShapeArray == null) {
                 mirageShapeArray = new Array<any>()
-                this.targetShapeGeneratedShapeArrayMap.set(targetShape.rawObj.ptr, mirageShapeArray)
+                this.targetShapeGeneratedShapeArrayMap.set(GetObjPtr(targetShape), mirageShapeArray)
             }
 
             let baseShapeJS = this.baseShape.paperShape

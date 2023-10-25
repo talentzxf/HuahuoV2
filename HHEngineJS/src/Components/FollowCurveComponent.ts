@@ -1,9 +1,7 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
-import {ShapeArrayProperty} from "hhcommoncomponents";
+import {FloatPropertyConfig, GetObjPtr, ShapeArrayProperty} from "hhcommoncomponents";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
-import {huahuoEngine} from "../EngineAPI";
-import {IsValidWrappedObject, FloatPropertyConfig} from "hhcommoncomponents";
 
 @Component({compatibleShapes: ["BaseShapeJS"], maxCount: 1})
 class FollowCurveComponent extends AbstractComponent {
@@ -25,7 +23,7 @@ class FollowCurveComponent extends AbstractComponent {
     }
 
     onTargetShapeChanged(followShape: BaseShapeJS){
-        if(this.targetShape.getRawObject().ptr == followShape.getRawObject().ptr)
+        if(GetObjPtr(this.targetShape) == GetObjPtr(followShape))
             return
 
         if(this.targetShape && this.valueChangeHandlerId > 0){

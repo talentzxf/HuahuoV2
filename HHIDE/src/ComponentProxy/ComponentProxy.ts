@@ -1,9 +1,5 @@
-import {AbstractComponent} from "hhenginejs";
-import {getMethodsAndVariables} from "hhcommoncomponents";
-import {huahuoEngine} from "hhenginejs";
-import {PropertyCategory, PropertyDef} from "hhenginejs";
-import {PropertyType} from "hhcommoncomponents";
-import {CustomFieldConfig} from "hhcommoncomponents";
+import {AbstractComponent, huahuoEngine, PropertyCategory, PropertyDef} from "hhenginejs";
+import {CustomFieldConfig, getMethodsAndVariables, GetObjPtr, PropertyType} from "hhcommoncomponents";
 import {propertySheetFactory} from "./PropertySheetBuilderFactory";
 
 // Key is: className#fieldName
@@ -92,7 +88,7 @@ class ComponentProxyHandler {
         let properties = propertySheet.getProperties()
         properties.forEach(
             (entry, index) => {
-                if (entry.hasOwnProperty("rawObjPtr") && entry["rawObjPtr"] == thisComponent.rawObj.ptr) {
+                if (entry.hasOwnProperty("rawObjPtr") && entry["rawObjPtr"] == GetObjPtr(thisComponent)) {
                     properties[index] = thisComponent.getPropertySheet()
                 }
             })

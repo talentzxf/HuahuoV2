@@ -3,8 +3,7 @@ import {PropertyCategory} from "./PropertySheetBuilder";
 import {createDuplication} from "./MirrorComponent";
 import * as paper from "paper";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
-import {FloatPropertyConfig} from "hhcommoncomponents";
-import {BaseShapeActor} from "../EventGraph/BaseShapeActor";
+import {FloatPropertyConfig, GetObjPtr} from "hhcommoncomponents";
 
 class ClonedShapeEntry{
     shape: BaseShapeJS
@@ -58,7 +57,7 @@ class StarMirrorComponent extends AbstractComponent{
     }
 
     getMirroredShapeArray(targetShape: BaseShapeJS):Array<BaseShapeJS>{
-        let rawPtr = targetShape.getRawObject().ptr
+        let rawPtr = GetObjPtr(targetShape)
 
         if(!this.targetShapeMirroredShapeSetMap.has(rawPtr)){
             this.targetShapeMirroredShapeSetMap.set(rawPtr, new Array<BaseShapeJS>())
@@ -149,7 +148,7 @@ class StarMirrorComponent extends AbstractComponent{
                                 this.mirroredShapeShapeEntryMap.delete(mirroredShape)
                                 mirroredShape.removePaperObj()
                             }
-                            this.targetShapeMirroredShapeSetMap.set(targetShape.getRawObject().ptr, new Array())
+                            this.targetShapeMirroredShapeSetMap.set(GetObjPtr(targetShape), new Array())
                         }
 
                         this.updateMirroredShapeArray(targetShape)

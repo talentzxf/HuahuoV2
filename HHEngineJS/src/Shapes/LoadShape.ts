@@ -1,6 +1,7 @@
 import {huahuoEngine} from "../EngineAPI";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {Utils} from "./Utils";
+import {GetObjPtr} from "hhcommoncomponents";
 
 declare var Module: any;
 
@@ -15,7 +16,7 @@ function LoadShapeFromCppShape(rawShapeObj, awake: boolean = true, addToLayer: b
 
     if(addToLayer){
         let layer = jsShape.getLayer()
-        huahuoEngine.getActivePlayer().getLayerShapes(layer).set(jsShape.getRawObject().ptr, jsShape)
+        huahuoEngine.getActivePlayer().getLayerShapes(layer).set(GetObjPtr(jsShape), jsShape)
     }
 
     jsShape.isMirage = isMirage

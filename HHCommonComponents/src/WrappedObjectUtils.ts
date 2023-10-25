@@ -1,14 +1,24 @@
-declare var WrapperObject:any
+declare var WrapperObject: any
 
-function IsValidWrappedObject(obj):Boolean{
-    if(!obj) return false
-    if(!obj.hasOwnProperty('ptr')) return false
-    if(!(obj instanceof WrapperObject))
+function GetObjPtr(obj) {
+    if (obj.hasOwnProperty("ptr")) {
+        return obj.ptr
+    }
+    if (obj.hasOwnProperty("rawObj"))
+        return obj.rawObj.ptr
+
+    return null
+}
+
+function IsValidWrappedObject(obj): Boolean {
+    if (!obj) return false
+    if (!obj.hasOwnProperty('ptr')) return false
+    if (!(obj instanceof WrapperObject))
         return false
-    if(!obj.ptr)
+    if (!obj.ptr)
         return false
 
     return true
 }
 
-export {IsValidWrappedObject}
+export {IsValidWrappedObject, GetObjPtr}

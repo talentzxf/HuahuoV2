@@ -1,6 +1,5 @@
 import {huahuoEngine} from "../EngineAPI";
-import {Vector2} from "hhcommoncomponents";
-import {PropertySheet, PropertyType, Logger} from "hhcommoncomponents"
+import {GetObjPtr, Logger, PropertySheet, PropertyType, Vector2} from "hhcommoncomponents";
 import * as paper from "paper";
 import {ValueChangeHandler} from "./ValueChangeHandler";
 import {AbstractComponent} from "../Components/AbstractComponent";
@@ -102,7 +101,7 @@ abstract class BaseShapeJS {
     componentValueChangeHandlers: Array<Function> = new Array()
 
     addComponent(component: AbstractComponent, persistentTheComponent: boolean = true) {
-        if (this.customComponentMap.has(component.rawObj.ptr)) {
+        if (this.customComponentMap.has(GetObjPtr(component))) {
             return
         }
 
@@ -110,7 +109,7 @@ abstract class BaseShapeJS {
             this.rawObj.AddFrameState(component.rawObj)
         }
 
-        this.customComponentMap.set(component.rawObj.ptr, component)
+        this.customComponentMap.set(GetObjPtr(component), component)
         component.setBaseShape(this)
 
         let _this = this
@@ -315,7 +314,7 @@ abstract class BaseShapeJS {
         let newRawObj = huahuoEngine.DuplicateObject(this.rawObj)
         let shapeLayer = newRawObj.GetLayer()
 
-        let newShapeObj = huahuoEngine.getActivePlayer().getLayerShapes(shapeLayer).get(newRawObj.ptr)
+        let newShapeObj = huahuoEngine.getActivePlayer().getLayerShapes(shapeLayer).get(GetObjPtr(newRawObj))
         return newShapeObj
     }
 
@@ -787,7 +786,7 @@ abstract class BaseShapeJS {
 
     getComponentByRawObj(componentRawObj) {
         for (let component of this.customComponents) {
-            if (component != null && component.rawObj.ptr == componentRawObj.ptr)
+            if (component != null && GetObjPtr(component) == GetObjPtr(componentRawObj))
                 return component
         }
         return null
@@ -908,7 +907,7 @@ abstract class BaseShapeJS {
         for (let idx = 0; idx < componentCount; idx++) {
             let componentRawObj = this.rawObj.GetFrameState(idx)
 
-            if (!this.customComponentMap.has(componentRawObj.ptr)) {
+            if (!this.customComponentMap.has(GetObjPtr(componentRawObj))) {
                 let component = null
 
                 let componentConstructor = clzObjectFactory.GetClassConstructor(componentRawObj.GetTypeName())
@@ -918,7 +917,7 @@ abstract class BaseShapeJS {
                     this.addComponent(component, false)
                 }
 
-                this.customComponentMap.set(componentRawObj.ptr, component)
+                this.customComponentMap.set(GetObjPtr(componentRawObj), component)
             }
         }
 
@@ -1184,7 +1183,7 @@ abstract class BaseShapeJS {
     }
 
     removeComponent(component: AbstractComponent) {
-        this.customComponentMap.delete(component.rawObj.ptr)
+        this.customComponentMap.delete(GetObjPtr(component))
         component.rawObj.DetachFromCurrentShape()
 
 
@@ -1193,7 +1192,7 @@ abstract class BaseShapeJS {
         let _this = this
 
         properties = properties.filter(function (entry) {
-            if (entry.hasOwnProperty("rawObjPtr") && entry["rawObjPtr"] == component.rawObj.ptr) {
+            if (entry.hasOwnProperty("rawObjPtr") && entry["rawObjPtr"] == GetObjPtr(component)) {
                 return false;
             }
 

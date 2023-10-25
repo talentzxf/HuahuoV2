@@ -1,10 +1,9 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
-import {mirrorPoint} from "hhcommoncomponents";
+import {GetObjPtr, mirrorPoint, ShapeArrayProperty} from "hhcommoncomponents";
 import * as paper from "paper"
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
-import {ShapeArrayProperty} from "hhcommoncomponents";
 
 function createDuplication(targetShape, baseShape){
     /*
@@ -73,7 +72,7 @@ class MirrorComponent extends AbstractComponent {
 
     duplicateShape(shape){
         let duplicatedShape = createDuplication(shape, this.baseShape)
-        this.targetShapeMirroredShapeMap.set(shape.rawObj.ptr, duplicatedShape)
+        this.targetShapeMirroredShapeMap.set(GetObjPtr(shape), duplicatedShape)
 
         this.paperShapeGroup.addChild(duplicatedShape.paperItem)
 
@@ -149,11 +148,11 @@ class MirrorComponent extends AbstractComponent {
                 // Check if all target shapes are mirrored
                 for (let targetShape of this.targetShapeArray) {
                     if(targetShape != null){ // Target shape might be null if the target shape has not been loaded yet.
-                        if (!this.targetShapeMirroredShapeMap.has(targetShape.rawObj.ptr)) {
+                        if (!this.targetShapeMirroredShapeMap.has(GetObjPtr(targetShape))) {
                             this.duplicateShape(targetShape)
                         }
 
-                        let duplicatedShape = this.targetShapeMirroredShapeMap.get(targetShape.rawObj.ptr)
+                        let duplicatedShape = this.targetShapeMirroredShapeMap.get(GetObjPtr(targetShape))
                         if(duplicatedShape.getBornStoreId() != this.baseShape.getBornStoreId()){
                             duplicatedShape.removePaperObj()
                             duplicatedShape = this.duplicateShape(targetShape)

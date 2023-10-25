@@ -1,9 +1,9 @@
 import {huahuoEngine} from "../EngineAPI";
-import {IsValidWrappedObject} from "hhcommoncomponents";
+import {GetObjPtr, IsValidWrappedObject} from "hhcommoncomponents";
 
-const eps:number = 0.001;
+const eps: number = 0.001;
 
-enum PropertyCategory{
+enum PropertyCategory {
     interpolateFloat,
     interpolateColor,
     interpolateVector2,  // vector2 is just vector3 with z = 0
@@ -18,19 +18,23 @@ enum PropertyCategory{
     boolean
 }
 
-abstract class CppValueOperator{
+abstract class CppValueOperator {
     rawObj
+
     constructor(rawObj) {
         this.rawObj = rawObj
     }
 
     abstract registerField(fieldName: string, initValue)
+
     abstract getField(fieldName: string)
+
     abstract setField(fieldName: string, val)
+
     abstract isEqual(v1, v2)
 }
 
-class BooleanFloatOperator extends CppValueOperator{
+class BooleanFloatOperator extends CppValueOperator {
     getField(fieldName: string) {
         return this.rawObj["GetBooleanValue"](fieldName);
     }
@@ -39,7 +43,7 @@ class BooleanFloatOperator extends CppValueOperator{
         this.rawObj["RegisterBooleanValue"](fieldName, initValue);
     }
 
-    setField(fieldName:string, val){
+    setField(fieldName: string, val) {
         this.rawObj["SetBooleanValue"](fieldName, val)
 
         return this.rawObj["GetBooleanValue"](fieldName) == val
@@ -50,7 +54,7 @@ class BooleanFloatOperator extends CppValueOperator{
     }
 }
 
-class InterpolateFloatOperator extends CppValueOperator{
+class InterpolateFloatOperator extends CppValueOperator {
     getField(fieldName) {
         return this.rawObj["GetFloatValue"](fieldName)
     }
@@ -66,21 +70,21 @@ class InterpolateFloatOperator extends CppValueOperator{
         return true;
     }
 
-    isEqual(val1, val2){
+    isEqual(val1, val2) {
         return Math.abs(val1 - val2) < eps
     }
 }
 
-class InterpolateColorOperator extends CppValueOperator{
+class InterpolateColorOperator extends CppValueOperator {
     getField(fieldName) {
         let cppColor = this.rawObj["GetColorValue"](fieldName)
         return new paper.Color(cppColor.r, cppColor.g, cppColor.b, cppColor.a)
     }
 
     registerField(fieldName, initValue) {
-        if(initValue["random"] == null || initValue["random"] == "false"){
+        if (initValue["random"] == null || initValue["random"] == "false") {
             this.rawObj["RegisterColorValue"](fieldName, initValue.r, initValue.g, initValue.b, initValue.a)
-        }else{
+        } else {
             let r = Math.random()
             let g = Math.random()
             let b = Math.random()
@@ -97,27 +101,27 @@ class InterpolateColorOperator extends CppValueOperator{
     }
 
     isEqual(v1, v2) {
-        let differenceSquare:number = (v1.red - v2.red)**2 + (v1.green - v2.green)**2 +
-            (v1.blue - v2.blue)**2 + (v1.alpha - v2.alpha)**2
-        if(Math.abs(differenceSquare) < eps**2)
+        let differenceSquare: number = (v1.red - v2.red) ** 2 + (v1.green - v2.green) ** 2 +
+            (v1.blue - v2.blue) ** 2 + (v1.alpha - v2.alpha) ** 2
+        if (Math.abs(differenceSquare) < eps ** 2)
             return true
         return false
     }
 }
 
-class InterpolateVector2Operator extends CppValueOperator{
+class InterpolateVector2Operator extends CppValueOperator {
     getField(fieldName: string) {
         return this.rawObj["GetVector3Value"](fieldName)
     }
 
     isEqual(v1, v2) {
-        if(Math.abs(v1.x - v2.x) <= eps && Math.abs(v1.y - v2.y) <= eps)
+        if (Math.abs(v1.x - v2.x) <= eps && Math.abs(v1.y - v2.y) <= eps)
             return true
         return false
     }
 
     registerField(fieldName: string, initValue) {
-        if(!initValue){
+        if (!initValue) {
             initValue = {
                 x: 0.0,
                 y: 0.0
@@ -127,9 +131,9 @@ class InterpolateVector2Operator extends CppValueOperator{
     }
 
     setField(fieldName: string, vals) {
-        if(Array.isArray(vals)){
+        if (Array.isArray(vals)) {
             this.rawObj["SetVector3Value"](fieldName, vals[0], vals[1], 0.0)
-        }else{
+        } else {
             this.rawObj["SetVector3Value"](fieldName, vals.x, vals.y, 0.0)
         }
 
@@ -138,19 +142,19 @@ class InterpolateVector2Operator extends CppValueOperator{
     }
 }
 
-class InterpolateVector3Operator extends CppValueOperator{
+class InterpolateVector3Operator extends CppValueOperator {
     getField(fieldName: string) {
         return this.rawObj["GetVector3Value"](fieldName)
     }
 
     isEqual(v1, v2) {
-        if(Math.abs(v1.x - v2.x) <= eps && Math.abs(v1.y - v2.y) <= eps && Math.abs(v1.z - v2.z) <= eps)
+        if (Math.abs(v1.x - v2.x) <= eps && Math.abs(v1.y - v2.y) <= eps && Math.abs(v1.z - v2.z) <= eps)
             return true
         return false
     }
 
     registerField(fieldName: string, initValue) {
-        if(!initValue){
+        if (!initValue) {
             initValue = {
                 x: 0.0,
                 y: 0.0,
@@ -161,9 +165,9 @@ class InterpolateVector3Operator extends CppValueOperator{
     }
 
     setField(fieldName: string, vals) {
-        if(Array.isArray(vals)){
+        if (Array.isArray(vals)) {
             this.rawObj["SetVector3Value"](fieldName, vals[0], vals[1], vals[2])
-        }else{
+        } else {
             this.rawObj["SetVector3Value"](fieldName, vals.x, vals.y, vals.z)
         }
 
@@ -172,13 +176,13 @@ class InterpolateVector3Operator extends CppValueOperator{
     }
 }
 
-class StringValueOperator extends CppValueOperator{
+class StringValueOperator extends CppValueOperator {
     getField(fieldName: string) {
         return this.rawObj["GetStringValue"](fieldName)
     }
 
     isEqual(v1, v2) {
-        if(v1 == v2)
+        if (v1 == v2)
             return true
         return false
     }
@@ -197,17 +201,17 @@ class StringValueOperator extends CppValueOperator{
 class ShapeValueOperator extends CppValueOperator {
     getField(fieldName: string) {
         let rawObj = this.rawObj["GetShapeValue"](fieldName);
-        if(IsValidWrappedObject(rawObj)){
+        if (IsValidWrappedObject(rawObj)) {
             return huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj)
         }
         return null;
     }
 
     isEqual(v1, v2) {
-        if(v1 == null || v2 == null)
+        if (v1 == null || v2 == null)
             return false
 
-        return v1.rawObj.ptr == v2.rawObj.ptr
+        return GetObjPtr(v1) == GetObjPtr(v2)
     }
 
     registerField(fieldName: string, initValue) {
@@ -215,8 +219,8 @@ class ShapeValueOperator extends CppValueOperator {
     }
 
     setField(fieldName: string, val) {
-        if(val != null){
-            if(this.rawObj.GetBaseShape().ptr == val.rawObj.ptr){
+        if (val != null) {
+            if (GetObjPtr(this.rawObj.GetBaseShape()) == GetObjPtr(val)) {
                 return false
             }
         }
@@ -227,8 +231,8 @@ class ShapeValueOperator extends CppValueOperator {
 
 }
 
-function buildOperator(type, rawObj): CppValueOperator{
-    switch(type){ // TODO: Get rid of switch-case
+function buildOperator(type, rawObj): CppValueOperator {
+    switch (type) { // TODO: Get rid of switch-case
         case PropertyCategory.interpolateFloat:
             return new InterpolateFloatOperator(rawObj)
         case PropertyCategory.interpolateColor:
@@ -248,11 +252,11 @@ function buildOperator(type, rawObj): CppValueOperator{
     return null
 }
 
-class PropertyDef{
+class PropertyDef {
     key: string
     type: PropertyCategory
     config: object
-    initValue: object|number
+    initValue: object | number
     hide: boolean = false
 }
 

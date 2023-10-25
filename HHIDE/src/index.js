@@ -3,7 +3,6 @@ import {HHPanel} from 'hhpanel'
 import {HHContent} from 'hhpanel'
 import {HHTitle} from "hhpanel";
 import {HHTimeline} from "hhtimeline";
-import {NavTree} from "./UIComponents/NavTree"
 import {DrawToolBar} from "./UIComponents/DrawToolBar";
 import {SceneView} from "./SceneView/SceneView";
 import {BaseForm} from "./UIComponents/BaseForm"

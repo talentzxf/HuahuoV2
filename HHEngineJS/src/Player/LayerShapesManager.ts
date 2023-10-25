@@ -1,6 +1,6 @@
 import {huahuoEngine} from "../EngineAPI";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
-import {Logger} from "hhcommoncomponents"
+import {GetObjPtr, Logger} from "hhcommoncomponents"
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 import {ElementShapeJS} from "../Shapes/ElementShapeJS";
 
@@ -17,7 +17,7 @@ class LayerShapesManager {
             Logger.error("Can't find layer!");
         } else {
             let shapesMap = this.layerShapes.get(layer)
-            shapesMap.delete(obj.ptr)
+            shapesMap.delete(GetObjPtr(obj))
         }
     }
 
@@ -75,8 +75,8 @@ class LayerShapesManager {
             let layer = store.GetLayer(i)
             let shapes = this.getLayerShapes(layer)
 
-            if (shapes.has(rawObj.ptr)) {
-                return shapes.get(rawObj.ptr)
+            if (shapes.has(GetObjPtr(rawObj))) {
+                return shapes.get(GetObjPtr(rawObj))
             }
 
             if (recursive) { // Shape might be an element, need to look for the shape recursively.
@@ -113,9 +113,9 @@ class LayerShapesManager {
                 layerShapeCount++
                 let baseShape = layer.GetShapeAtIndex(shapeId)
                 let shape = null
-                if (!shapes.has(baseShape.ptr)) { // TODO: This is duplicated with LoadShape.ts.
+                if (!shapes.has(GetObjPtr(baseShape))) { // TODO: This is duplicated with LoadShape.ts.
                     let jsShape = LoadShapeFromCppShape(baseShape)
-                    shapes.set(baseShape.ptr, jsShape)
+                    shapes.set(GetObjPtr(baseShape), jsShape)
                     if (parent)
                         jsShape.setParent(parent)
                     shape = jsShape

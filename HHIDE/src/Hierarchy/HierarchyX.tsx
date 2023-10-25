@@ -4,11 +4,13 @@ import {sceneViewManager} from "../SceneView/SceneViewManager";
 import {huahuoEngine} from "hhenginejs";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
+import {PropertySheet, GetObjPtr} from "hhcommoncomponents";
 
 interface HierarchyItemProps extends React.HTMLAttributes<HTMLDivElement> {
     title: string
     hierarchyDepth?: number,
-    regSetter: Function
+    regSetter: Function,
+    targetObj?: any
 }
 
 type HierarchyItemState = {
@@ -32,7 +34,7 @@ class HierarchyItem extends React.Component<HierarchyItemProps, HierarchyItemSta
     }
 
     componentDidMount() {
-        this.props.regSetter(this.state.uuid, this.setSelected.bind(this))
+        this.props.regSetter(this.state.uuid, this.setSelected.bind(this), this.props.targetObj)
     }
 
     triangleClicked() {
@@ -106,14 +108,36 @@ class HierarchyX extends React.Component<any, HierarchyState> {
     state: HierarchyState = {}
 
     setters = new Array
+    objUUIDMap = new Map
 
     componentDidMount() {
+        IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
+
         IDEEventBus.getInstance().on("*", () => {
             this.forceUpdate()
         })
     }
 
-    regSetter(uuid, setter) {
+    selectItemByUUID(uuid) {
+        this.setters.forEach((obj) => {
+            if (uuid === obj.uuid) {
+                obj.setIsSelected(true)
+            } else {
+                obj.setIsSelected(false)
+            }
+        })
+    }
+
+    onItemSelected(property: PropertySheet, targetObj: any) {
+        let objUUID = this.objUUIDMap.get(GetObjPtr(targetObj))
+        this.selectItemByUUID(objUUID)
+    }
+
+    regSetter(uuid, setter, targetObj = null) {
+        if (targetObj != null) {
+            this.objUUIDMap.set(GetObjPtr(targetObj), uuid)
+        }
+
         this.setters.push({
             uuid: uuid,
             setIsSelected: setter
@@ -123,13 +147,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
     onItemClicked(e) {
         let uuid = e.currentTarget.dataset?.uuid
         if (uuid) {
-            this.setters.forEach((obj) => {
-                if (uuid === obj.uuid) {
-                    obj.setIsSelected(true)
-                } else {
-                    obj.setIsSelected(false)
-                }
-            })
+            this.selectItemByUUID(uuid)
             e.stopPropagation()
         }
     }
@@ -148,7 +166,8 @@ class HierarchyX extends React.Component<any, HierarchyState> {
                 let shape = layer.GetShapeAtIndex(shapeIdx)
                 let shapeItem = <HierarchyItem key={shapeIdx} title={shape.GetName()}
                                                regSetter={this.regSetter.bind(this)}
-                                               onClick={this.onItemClicked.bind(this)}/>
+                                               onClick={this.onItemClicked.bind(this)}
+                                               targetObj={shape}/>
                 shapeItems.push(shapeItem)
             }
 

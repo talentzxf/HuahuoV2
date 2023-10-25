@@ -1,5 +1,5 @@
 import {huahuoEngine} from "./EngineAPI";
-import {IsValidWrappedObject, Logger} from "hhcommoncomponents";
+import {GetObjPtr, IsValidWrappedObject, Logger} from "hhcommoncomponents";
 import {LayerGraphWrapper} from "./EventGraph/LayerGraphWrapper";
 
 class LayerUtils {
@@ -19,7 +19,7 @@ class LayerUtils {
                 shape.isDeleted = false
 
                 if (huahuoEngine.getActivePlayer()) {
-                    huahuoEngine.getActivePlayer().getLayerShapes(layer).set(shape.getRawObject().ptr, shape)
+                    huahuoEngine.getActivePlayer().getLayerShapes(layer).set(GetObjPtr(shape), shape)
                 }
 
                 huahuoEngine.hasShape = true
@@ -72,9 +72,9 @@ class LayerUtils {
     layerFrameIdCallbacks = new Map
 
     executePlayFrameCallbacks(layer, frameId) {
-        if (this.layerFrameIdCallbacks.has(layer.ptr)) {
-            if (this.layerFrameIdCallbacks.get(layer.ptr).has(frameId)) {
-                let fnArray = this.layerFrameIdCallbacks.get(layer.ptr).get(frameId)
+        if (this.layerFrameIdCallbacks.has(GetObjPtr(layer))) {
+            if (this.layerFrameIdCallbacks.get(GetObjPtr(layer)).has(frameId)) {
+                let fnArray = this.layerFrameIdCallbacks.get(GetObjPtr(layer)).get(frameId)
                 for (let fn of fnArray) {
                     // console.log("Debug Jump frame: Executing graph of frame:" + frameId)
                     fn()
@@ -84,15 +84,15 @@ class LayerUtils {
     }
 
     addPlayFrameCallbacks(layer, frameId, callback) {
-        if (!this.layerFrameIdCallbacks.has(layer.ptr)) {
-            this.layerFrameIdCallbacks.set(layer.ptr, new Map)
+        if (!this.layerFrameIdCallbacks.has(GetObjPtr(layer))) {
+            this.layerFrameIdCallbacks.set(GetObjPtr(layer), new Map)
         }
 
-        if (!this.layerFrameIdCallbacks.get(layer.ptr).has(frameId)) {
-            this.layerFrameIdCallbacks.get(layer.ptr).set(frameId, new Array)
+        if (!this.layerFrameIdCallbacks.get(GetObjPtr(layer)).has(frameId)) {
+            this.layerFrameIdCallbacks.get(GetObjPtr(layer)).set(frameId, new Array)
         }
 
-        this.layerFrameIdCallbacks.get(layer.ptr).get(frameId).push(callback)
+        this.layerFrameIdCallbacks.get(GetObjPtr(layer)).get(frameId).push(callback)
     }
 
     uniformFrameId(frameId, maxFrameId) {
