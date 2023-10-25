@@ -15,7 +15,8 @@ enum EventNames{
     CELLCLICKED = "cellClicked",
     OBJECTADDED = "objectAdded",
     OBJECTDELETED = "objectDeleted",
-    FILELOADED = "fileLoaded"
+    FILELOADED = "fileLoaded",
+    PROJECTINFOUPDATED = "projectInfoUpdated"
 }
 
 class IDEEventBus {

@@ -3,6 +3,7 @@ import {projectInfo} from "../SceneView/ProjectInfo";
 import {imgButton} from "../UIComponents/MainMenuX";
 import {SVGFiles} from "../Utilities/Svgs";
 import {sceneViewManager} from "../SceneView/SceneViewManager";
+import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 
 type PlayerControllerState = {
     projectName: string
@@ -18,7 +19,7 @@ class PlayerControllerX extends React.Component<any, PlayerControllerState> {
     }
 
     componentDidMount() {
-        projectInfo.addOnChangedCallback(this.projectInfoChanged.bind(this))
+        IDEEventBus.getInstance().on(EventNames.PROJECTINFOUPDATED, this.projectInfoChanged.bind(this))
     }
 
     projectInfoChanged() {

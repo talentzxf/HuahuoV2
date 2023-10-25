@@ -2,6 +2,7 @@
 // Project == Store. (Should be consolidate these two terms??)
 import {sceneViewManager} from "./SceneViewManager";
 import {SnapshotUtils} from "../Utilities/SnapshotUtils";
+import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 
 class ProjectInfo {
     id: number;
@@ -9,8 +10,6 @@ class ProjectInfo {
     description: string;
     coverPage: Blob // Image of the cover page.
     inited: boolean = false
-
-    callBackFunctions: Array<Function> = new Array()
 
     constructor() {
         this.Clear()
@@ -31,9 +30,7 @@ class ProjectInfo {
     SetProjectName(projectName: string){
         this.name = projectName
 
-        for(let cbFunc of this.callBackFunctions){
-            cbFunc()
-        }
+        IDEEventBus.getInstance().emit(EventNames.PROJECTINFOUPDATED)
     }
 
     Setup(name:string, description:string, coverPageBinary:Blob){
@@ -42,13 +39,7 @@ class ProjectInfo {
         this.coverPage = coverPageBinary
         this.inited = true
 
-        for(let cbFunc of this.callBackFunctions){
-            cbFunc()
-        }
-    }
-
-    addOnChangedCallback(cbFunc: Function){
-        this.callBackFunctions.push(cbFunc)
+        IDEEventBus.getInstance().emit(EventNames.PROJECTINFOUPDATED)
     }
 
     updateCoverPage(){
