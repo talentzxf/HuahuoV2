@@ -148,6 +148,16 @@ class HierarchyX extends React.Component<any, HierarchyState> {
             uuid: uuid,
             setIsSelected: setter
         })
+
+        if (targetObj) {
+            let targetObjJS = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(targetObj)
+            if (targetObjJS != null)
+                targetObjJS.registerValueChangeHandler("name")(this.onShapeNameChanged.bind(this))
+        }
+    }
+
+    onShapeNameChanged() {
+        this.forceUpdate()
     }
 
     onItemClicked(e) {

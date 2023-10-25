@@ -626,6 +626,8 @@ abstract class BaseShapeJS {
 
     setName(name: string) {
         this.name = name
+
+        this.valueChangeHandler.callHandlers("name", this.name)
     }
 
     getBornFrame() {
@@ -664,7 +666,9 @@ abstract class BaseShapeJS {
             type: PropertyType.STRING,
             getter: this.getName.bind(this),
             setter: this.setName.bind(this),
-            maxLength: 10
+            registerValueChangeFunc: this.valueChangeHandler.registerValueChangeHandler("name"),
+            unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("name"),
+            maxLength: 20
         })
 
         let _this = this
