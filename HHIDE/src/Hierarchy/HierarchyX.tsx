@@ -40,6 +40,10 @@ class HierarchyItem extends React.Component<HierarchyItemProps, HierarchyItemSta
         this.props.regSetter(this.state.uuid, this.setSelected.bind(this), this.props.targetObj)
     }
 
+    componentDidUpdate(prevProps: Readonly<HierarchyItemProps>, prevState: Readonly<HierarchyItemState>, snapshot?: any) {
+        this.props.regSetter(this.state.uuid, this.setSelected.bind(this), this.props.targetObj)
+    }
+
     triangleClicked() {
         this.state.isOpened = !this.state.isOpened
         this.setState(this.state)
