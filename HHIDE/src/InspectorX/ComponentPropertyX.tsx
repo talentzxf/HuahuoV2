@@ -49,8 +49,11 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
 
         if (!this.state.isTransitioning) {
             if (this.state.isOpen && this.state.contentHeight != this.contentRef.current.scrollHeight) {
-                this.state.contentHeight = this.contentRef.current.scrollHeight
-                this.setState(this.state)
+
+                if(this.contentRef.current.scrollHeight > 0){ // If the scrollHeight is 0, maybe just means we switched to another tab.
+                    this.state.contentHeight = this.contentRef.current.scrollHeight
+                    this.setState(this.state)
+                }
             }
         }
     }
