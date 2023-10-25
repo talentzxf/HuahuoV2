@@ -222,8 +222,6 @@ class ShapeSelector extends BaseShapeDrawer {
 
             for (let shape of this.selectedShapes) {
                 commands.push(new DeleteShapeCommand(shape.getLayer(), shape))
-
-                IDEEventBus.getInstance().emit(EventNames.OBJECTDELETED, shape)
             }
 
             let commandArray: CommandArrayCommand = new CommandArrayCommand(commands);

@@ -19,6 +19,7 @@ class CreateShapeCommand extends UndoableCommand {
 
     _UnDoCommand() {
         this.targetShape.remove()
+        IDEEventBus.getInstance().emit(EventNames.OBJECTDELETED, this.targetShape)
     }
 
     GetType(): string {
