@@ -181,10 +181,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
         }
     }
 
-    render() {
-        let focusedSceneView = sceneViewManager.getFocusedSceneView()
-        let store = huahuoEngine.GetStoreById(focusedSceneView.storeId)
-
+    getHierarchyItemsForStore(store) {
         let items = []
 
         for (let layerId = 0; layerId < store.GetLayerCount(); layerId++) {
@@ -193,10 +190,8 @@ class HierarchyX extends React.Component<any, HierarchyState> {
             let shapeItems = []
             for (let shapeIdx = 0; shapeIdx < layer.GetShapeCount(); shapeIdx++) {
                 let shape = layer.GetShapeAtIndex(shapeIdx)
-                let shapeItem = <HierarchyItem key={shapeIdx} title={shape.GetName()}
-                                               regSetter={this.regSetter.bind(this)}
-                                               onClick={this.onItemClicked.bind(this)}
-                                               targetObj={shape}/>
+
+                let shapeItem = this.getHierarchyItemForShape(shape, shapeIdx)
                 shapeItems.push(shapeItem)
             }
 
@@ -208,6 +203,37 @@ class HierarchyX extends React.Component<any, HierarchyState> {
 
             items.push(layerItem)
         }
+        return items
+    }
+
+    getHierarchyItemForShape(rawObj, key = -1) {
+
+        if (rawObj.GetTypeName() != "ElementShape") {
+            return <HierarchyItem key={key} title={rawObj.GetName()}
+                                  regSetter={this.regSetter.bind(this)}
+                                  onClick={this.onItemClicked.bind(this)}
+                                  targetObj={rawObj}/>
+        } else {
+            let elementShapeRawObj = Module.wrapPointer(GetObjPtr(rawObj), Module.ElementShape)
+
+            let storeId = elementShapeRawObj.GetElementStoreId()
+            let store = huahuoEngine.GetStoreById(storeId)
+
+            let innerItems = this.getHierarchyItemsForStore(store)
+
+            return <HierarchyItem key={key} title={rawObj.GetName()}
+                                  regSetter={this.regSetter.bind(this)}
+                                  onClick={this.onItemClicked.bind(this)}
+                                  targetObj={rawObj}>
+                {innerItems}
+            </HierarchyItem>
+        }
+    }
+
+    render() {
+        let focusedSceneView = sceneViewManager.getFocusedSceneView()
+        let store = huahuoEngine.GetStoreById(focusedSceneView.storeId)
+
 
         return (
             <div style={{
@@ -215,7 +241,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
             }}>
                 <HierarchyItem title={projectInfo.name} hierarchyDepth={0} regSetter={this.regSetter.bind(this)}
                                onClick={this.onItemClicked.bind(this)}>
-                    {items}
+                    {this.getHierarchyItemsForStore(store)}
                 </HierarchyItem>
             </div>)
     }
