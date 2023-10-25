@@ -1,10 +1,13 @@
 import * as React from "react"
 import {v4 as uuidv4} from 'uuid';
 import {sceneViewManager} from "../SceneView/SceneViewManager";
-import {huahuoEngine} from "hhenginejs";
+import {huahuoEngine, BaseShapeJS} from "hhenginejs";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
-import {PropertySheet, GetObjPtr} from "hhcommoncomponents";
+import {GetObjPtr, IsValidWrappedObject, PropertySheet} from "hhcommoncomponents";
+import {shapeSelector} from "../ShapeDrawers/Shapes";
+
+declare var Module: any
 
 interface HierarchyItemProps extends React.HTMLAttributes<HTMLDivElement> {
     title: string
@@ -110,6 +113,8 @@ class HierarchyX extends React.Component<any, HierarchyState> {
     setters = new Array
     objUUIDMap = new Map
 
+    uuidObjMap = new Map
+
     componentDidMount() {
         IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
 
@@ -136,6 +141,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
     regSetter(uuid, setter, targetObj = null) {
         if (targetObj != null) {
             this.objUUIDMap.set(GetObjPtr(targetObj), uuid)
+            this.uuidObjMap.set(uuid, GetObjPtr(targetObj))
         }
 
         this.setters.push({
@@ -148,6 +154,15 @@ class HierarchyX extends React.Component<any, HierarchyState> {
         let uuid = e.currentTarget.dataset?.uuid
         if (uuid) {
             this.selectItemByUUID(uuid)
+
+            let rawObjPtr = this.uuidObjMap.get(uuid)
+            let rawObj = Module.wrapPointer(rawObjPtr)
+            if (IsValidWrappedObject(rawObj)) {
+                let jsShape: BaseShapeJS = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj) as BaseShapeJS;
+
+                shapeSelector.clearSelection()
+                shapeSelector.selectObject(jsShape)
+            }
             e.stopPropagation()
         }
     }

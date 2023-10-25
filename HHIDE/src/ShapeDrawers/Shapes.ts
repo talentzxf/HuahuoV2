@@ -32,15 +32,16 @@ let experimentalShapes = [
     new ParticleSystemDrawer()
 ]
 
-if(huahuoProperties["huahuo.experimentalFeatures.enable"] == "true"){
+if (huahuoProperties["huahuo.experimentalFeatures.enable"] == "true") {
     shapes = shapes.concat(experimentalShapes)
 }
 
-let defaultShapeDrawerArray = shapes.filter(drawer=>{
-    if(drawer.isDefaultDrawer()) return true
+let defaultShapeDrawerArray = shapes.filter(drawer => {
+    if (drawer.isDefaultDrawer()) return true
     return false
 })
 
-let defaultShapeDrawer: ShapeSelector = defaultShapeDrawerArray.length == 0 ? null: defaultShapeDrawerArray[0] as ShapeSelector
+let defaultShapeDrawer: ShapeSelector = defaultShapeDrawerArray.length == 0 ? null : defaultShapeDrawerArray[0] as ShapeSelector
+let shapeSelector = defaultShapeDrawer as ShapeSelector
 
-export {shapes, defaultShapeDrawer}
+export {shapes, defaultShapeDrawer, shapeSelector}
