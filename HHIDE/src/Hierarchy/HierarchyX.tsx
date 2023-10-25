@@ -154,7 +154,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
         })
 
         if (targetObj) {
-            let targetObjJS = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(targetObj)
+            let targetObjJS = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(targetObj, true)
             if (targetObjJS != null)
                 targetObjJS.registerValueChangeHandler("name")(this.onShapeNameChanged.bind(this))
         }
@@ -172,7 +172,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
             let rawObjPtr = this.uuidObjMap.get(uuid)
             let rawObj = Module.wrapPointer(rawObjPtr)
             if (IsValidWrappedObject(rawObj)) {
-                let jsShape: BaseShapeJS = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj) as BaseShapeJS;
+                let jsShape: BaseShapeJS = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj, true) as BaseShapeJS;
 
                 shapeSelector.clearSelection()
                 shapeSelector.selectObject(jsShape)
