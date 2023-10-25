@@ -5,7 +5,7 @@ import {GetObjPtr, mirrorPoint, ShapeArrayProperty} from "hhcommoncomponents";
 import * as paper from "paper"
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
 
-function createDuplication(targetShape, baseShape){
+function createDuplication(targetShape, baseShape) {
     /*
     let duplicatedShape = targetShape.duplicate()
     // Move the position to the target position.
@@ -22,14 +22,15 @@ function createDuplication(targetShape, baseShape){
     let duplicatedShape = LoadShapeFromCppShape(rawObj, true, false, true)
     duplicatedShape.setSelectedMeta(baseShape)
 
-    duplicatedShape.registerValueChangeHandler("*")(()=>{
-        targetShape.update(true) // update the original shape.
+    duplicatedShape.registerValueChangeHandler("*")((val) => {
+        if (val != null) // if no value is set, means the shape of the targetShape is not changed because this is just a notification event. No need to do anything.
+            targetShape.update(true) // update the original shape.
     })
 
     return duplicatedShape
 }
 
-@Component({compatibleShapes:["MirrorShapeJS"], maxCount:1})
+@Component({compatibleShapes: ["MirrorShapeJS"], maxCount: 1})
 class MirrorComponent extends AbstractComponent {
 
     @PropertyValue(PropertyCategory.shapeArray, null, {allowDuplication: false} as ShapeArrayProperty)
@@ -64,44 +65,44 @@ class MirrorComponent extends AbstractComponent {
         super.setBaseShape(baseShape);
 
         let baseShapeSegments = this.baseShape.getSegments()
-        if(baseShapeSegments != null && baseShapeSegments.length == 2) {
+        if (baseShapeSegments != null && baseShapeSegments.length == 2) {
             this.p1 = this.baseShape.getSegments()[0].point
             this.p2 = this.baseShape.getSegments()[1].point
         }
     }
 
-    duplicateShape(shape){
+    duplicateShape(shape) {
         let duplicatedShape = createDuplication(shape, this.baseShape)
         this.targetShapeMirroredShapeMap.set(GetObjPtr(shape), duplicatedShape)
 
         this.paperShapeGroup.addChild(duplicatedShape.paperItem)
 
         let _this = this
-        duplicatedShape.getParent = function(){
+        duplicatedShape.getParent = function () {
             return _this.baseShape.getParent()
         }
 
         Object.defineProperty(duplicatedShape, "position", {
-            get: function (){
+            get: function () {
                 let position = new paper.Point(duplicatedShape.pivotPosition.x, duplicatedShape.pivotPosition.y)
 
                 return _this.paperShapeGroup.localToGlobal(position)
             },
-            set: function (val){
+            set: function (val) {
                 let newPosition = _this.paperShapeGroup.globalToLocal(val)
                 duplicatedShape.setParentLocalPosition(newPosition)
             }
         })
 
 
-        shape.registerValueChangeHandler("*")(()=>{
+        shape.registerValueChangeHandler("*")(() => {
             duplicatedShape.update(true)
         })
         return duplicatedShape
     }
 
-    cleanUp(){
-        for(let [targetShapePtr, mirroredShape] of this.targetShapeMirroredShapeMap){
+    cleanUp() {
+        for (let [targetShapePtr, mirroredShape] of this.targetShapeMirroredShapeMap) {
             mirroredShape.removePaperObj()
         }
 
@@ -111,24 +112,24 @@ class MirrorComponent extends AbstractComponent {
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
-        if(this.baseShape.isVisible()){
+        if (this.baseShape.isVisible()) {
             let baseShapeParent = this.baseShape.paperShape.parent
-            if(baseShapeParent != null && this.paperShapeGroup.parent != baseShapeParent)
+            if (baseShapeParent != null && this.paperShapeGroup.parent != baseShapeParent)
                 baseShapeParent.addChild(this.paperShapeGroup)
 
             let segments = this.baseShape.getSegments()
 
-            if(segments == null || segments.length != 2){ // The base shape is not ready!
+            if (segments == null || segments.length != 2) { // The base shape is not ready!
                 return;
             }
 
             // Update p1 and p2 according to the updated position.
-            this.p1 = this.baseShape.localToParent( segments[0].point )
-            this.p2 = this.baseShape.localToParent( segments[1].point )
+            this.p1 = this.baseShape.localToParent(segments[0].point)
+            this.p2 = this.baseShape.localToParent(segments[1].point)
 
             // Rotate the coordinate
-            let mirroredX = mirrorPoint(new paper.Point(1,0), this.p1, this.p2)
-            let mirroredZero = mirrorPoint(new paper.Point(0,0), this.p1, this.p2)
+            let mirroredX = mirrorPoint(new paper.Point(1, 0), this.p1, this.p2)
+            let mirroredZero = mirrorPoint(new paper.Point(0, 0), this.p1, this.p2)
 
             let radian = -Math.atan2(mirroredX.y - mirroredZero.y, mirroredX.x - mirroredZero.x)
 
@@ -136,10 +137,10 @@ class MirrorComponent extends AbstractComponent {
             this.paperShapeGroup.scaling.y = -1
 
             // Convert to angle
-            this.paperShapeGroup.rotation = -radian/ Math.PI * 180
+            this.paperShapeGroup.rotation = -radian / Math.PI * 180
 
             // Get the current offset of the group shape.
-            let offset = this.paperShapeGroup.position.subtract(this.paperShapeGroup.localToParent(new paper.Point(0,0)))
+            let offset = this.paperShapeGroup.position.subtract(this.paperShapeGroup.localToParent(new paper.Point(0, 0)))
 
             let newPosition = mirroredZero.add(offset)
             this.paperShapeGroup.position = newPosition
@@ -147,26 +148,26 @@ class MirrorComponent extends AbstractComponent {
             if (this.targetShapeArray) {
                 // Check if all target shapes are mirrored
                 for (let targetShape of this.targetShapeArray) {
-                    if(targetShape != null){ // Target shape might be null if the target shape has not been loaded yet.
+                    if (targetShape != null) { // Target shape might be null if the target shape has not been loaded yet.
                         if (!this.targetShapeMirroredShapeMap.has(GetObjPtr(targetShape))) {
                             this.duplicateShape(targetShape)
                         }
 
                         let duplicatedShape = this.targetShapeMirroredShapeMap.get(GetObjPtr(targetShape))
-                        if(duplicatedShape.getBornStoreId() != this.baseShape.getBornStoreId()){
+                        if (duplicatedShape.getBornStoreId() != this.baseShape.getBornStoreId()) {
                             duplicatedShape.removePaperObj()
                             duplicatedShape = this.duplicateShape(targetShape)
                         }
 
                         duplicatedShape.paperShape.visible = targetShape.paperShape.visible
 
-                        if(force){
+                        if (force) {
                             duplicatedShape.update(force)
                         }
                     }
                 }
             }
-        }else{
+        } else {
             this.setInvisible()
         }
     }
@@ -175,7 +176,7 @@ class MirrorComponent extends AbstractComponent {
     setInvisible() {
         super.setInvisible();
 
-        this.targetShapeMirroredShapeMap.forEach((duplicatedShape: BaseShapeJS)=>{
+        this.targetShapeMirroredShapeMap.forEach((duplicatedShape: BaseShapeJS) => {
             duplicatedShape.paperShape.visible = false
             duplicatedShape.selected = false
         })
