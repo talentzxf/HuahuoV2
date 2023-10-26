@@ -19,7 +19,8 @@
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.9.0",
-    "hhcommoncomponents": "file:../HHCommonComponents"
+    "hhcommoncomponents": "file:../HHCommonComponents",
+    "hhenginejs": "file:../HHEngineJS"
   },
   "peerDependencies": {
     "hhcommoncomponents": "file:../HHCommonComponents",

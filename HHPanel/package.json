@@ -17,7 +17,8 @@
     "typescript": "^4.5.5",
     "webpack": "^5.66.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.7.3"
+    "webpack-dev-server": "^4.7.3",
+    "hhcommoncomponents": "file:../HHCommonComponents"
   },
   "peerDependencies": {
     "hhcommoncomponents": "file:../HHCommonComponents"
