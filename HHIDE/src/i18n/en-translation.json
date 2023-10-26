@@ -48,6 +48,7 @@
   "ProjectDescription": "Project Description",
   "ProjectPreview": "Project Preview",
   "allElements": "All Elements",
+  "UnnamedProject": "Unnamed Project",
   "playerController": {
     "Play": "Play",
     "Stop": "Stop",

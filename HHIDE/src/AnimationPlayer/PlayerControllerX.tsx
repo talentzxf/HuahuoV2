@@ -13,7 +13,7 @@ type PlayerControllerState = {
 
 class PlayerControllerX extends React.Component<any, PlayerControllerState> {
     state: PlayerControllerState = {
-        projectName: "Unknown Project",
+        projectName: i18n.t("UnnamedProject"),
         isPlaying: false,
         isPaused: false
     }

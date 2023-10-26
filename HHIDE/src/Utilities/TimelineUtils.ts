@@ -1,4 +1,5 @@
 import {SVGFiles} from "./Svgs";
+import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 
 let MAXNAMELENGTH = 15
 
@@ -35,6 +36,7 @@ class TimelineUtils {
                 if (layerName != null) {
                     if (layerName.length <= MAXNAMELENGTH) {
                         layer.SetName(layerName)
+                        IDEEventBus.getInstance().emit(EventNames.LAYERINFOUPDATED, layer)
                         timeline.reloadTracks()
                         exitSetLayerName = true
                     } else {

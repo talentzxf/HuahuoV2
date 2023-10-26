@@ -239,7 +239,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
             <div style={{
                 overflow: "auto"
             }}>
-                <HierarchyItem title={projectInfo.name} hierarchyDepth={0} regSetter={this.regSetter.bind(this)}
+                <HierarchyItem title={projectInfo.name || i18n.t("UnnamedProject")} hierarchyDepth={0} regSetter={this.regSetter.bind(this)}
                                onClick={this.onItemClicked.bind(this)}>
                     {this.getHierarchyItemsForStore(store)}
                 </HierarchyItem>

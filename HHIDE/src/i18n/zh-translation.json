@@ -48,6 +48,7 @@
   "ProjectDescription": "项目描述",
   "ProjectPreview": "项目预览",
   "allElements": "所有可用组件",
+  "UnnamedProject": "未命名项目",
   "playerController": {
     "Play": "播放",
     "Stop": "停止",

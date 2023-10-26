@@ -16,7 +16,9 @@ enum EventNames{
     OBJECTADDED = "objectAdded",
     OBJECTDELETED = "objectDeleted",
     FILELOADED = "fileLoaded",
-    PROJECTINFOUPDATED = "projectInfoUpdated"
+    PROJECTINFOUPDATED = "projectInfoUpdated",
+    LAYERINFOUPDATED = "layerInfoUpdated",
+    NEWTRACKADDED = "newTrackAdded"
 }
 
 class IDEEventBus {

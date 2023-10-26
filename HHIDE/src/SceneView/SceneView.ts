@@ -260,7 +260,7 @@ class SceneView extends HTMLElement {
 
     createNewTrack() {
         let currentFrameId = -1
-        // During startup, we need to creating first layer before creating player.
+        // During startup, we need to create first layer before creating player.
         if (huahuoEngine.getActivePlayer())
             currentFrameId = huahuoEngine.getActivePlayer().currentlyPlayingFrameId
 
@@ -270,6 +270,8 @@ class SceneView extends HTMLElement {
         let layer = track.getLayer()
         timelineUtils.initLayerTrack(this.timeline, layer)
         this.timeline.selectTrack(track.getSeqId(), null)
+
+        IDEEventBus.getInstance().emit(EventNames.NEWTRACKADDED)
     }
 
     createGizmos() {
