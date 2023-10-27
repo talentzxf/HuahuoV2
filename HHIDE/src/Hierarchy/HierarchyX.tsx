@@ -1,11 +1,12 @@
 import * as React from "react"
 import {v4 as uuidv4} from 'uuid';
 import {sceneViewManager} from "../SceneView/SceneViewManager";
-import {huahuoEngine, BaseShapeJS} from "hhenginejs";
+import {BaseShapeJS, huahuoEngine} from "hhenginejs";
 import {projectInfo} from "../SceneView/ProjectInfo";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {GetObjPtr, IsValidWrappedObject, PropertySheet} from "hhcommoncomponents";
 import {shapeSelector} from "../ShapeDrawers/Shapes";
+import {TimelineEventNames} from "hhtimeline"
 
 declare var Module: any
 
@@ -125,6 +126,19 @@ class HierarchyX extends React.Component<any, HierarchyState> {
         IDEEventBus.getInstance().on("*", () => {
             this.forceUpdate()
         })
+
+        let focusedSceneView = sceneViewManager.getFocusedSceneView()
+        focusedSceneView.timeline.addEventListener(TimelineEventNames.TRACKCELLCLICKED, this.onTimelineClicked.bind(this))
+    }
+
+    onTimelineClicked(evt) {
+        let track = evt.detail?.track
+        if (track) {
+            let layer = track.getLayer()
+
+            let objUUID = this.objUUIDMap.get(GetObjPtr(layer))
+            this.selectItemByUUID(objUUID)
+        }
     }
 
     selectItemByUUID(uuid) {
@@ -173,9 +187,10 @@ class HierarchyX extends React.Component<any, HierarchyState> {
             let rawObj = Module.wrapPointer(rawObjPtr)
             if (IsValidWrappedObject(rawObj)) {
                 let jsShape: BaseShapeJS = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj, true) as BaseShapeJS;
-
-                shapeSelector.clearSelection()
-                shapeSelector.selectObject(jsShape)
+                if(jsShape){ // If this is a shape. Select it in shapeSelector.
+                    shapeSelector.clearSelection()
+                    shapeSelector.selectObject(jsShape)
+                }
             }
             e.stopPropagation()
         }
@@ -197,7 +212,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
 
             let layerItem =
                 <HierarchyItem key={layerId} title={layer.GetName()} regSetter={this.regSetter.bind(this)}
-                               onClick={this.onItemClicked.bind(this)}>
+                               onClick={this.onItemClicked.bind(this)} targetObj={layer}>
                     {shapeItems}
                 </HierarchyItem>
 
@@ -234,12 +249,12 @@ class HierarchyX extends React.Component<any, HierarchyState> {
         let focusedSceneView = sceneViewManager.getFocusedSceneView()
         let store = huahuoEngine.GetStoreById(focusedSceneView.storeId)
 
-
         return (
             <div style={{
                 overflow: "auto"
             }}>
-                <HierarchyItem title={projectInfo.name || i18n.t("UnnamedProject")} hierarchyDepth={0} regSetter={this.regSetter.bind(this)}
+                <HierarchyItem title={projectInfo.name || i18n.t("UnnamedProject")} hierarchyDepth={0}
+                               regSetter={this.regSetter.bind(this)}
                                onClick={this.onItemClicked.bind(this)}>
                     {this.getHierarchyItemsForStore(store)}
                 </HierarchyItem>
