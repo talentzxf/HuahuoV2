@@ -90,7 +90,6 @@
     "createNewTrack": "Create New Track",
     "groupAsElement": "Convert to Element",
     "markAsAnimationEnd": "Mark as Animation End",
-    "editFrameEventGraph": "Edit Frame Event Graph",
     "setAsStopFrame": "Set as Stop Frame",
     "unsetAsStopFrame": "Unset Stop Frame"
   },
@@ -113,6 +112,10 @@
   "Motor": "Motor",
   "ObjectGenerator": "Object Generator",
   "inspector": {
+    "editFrameEventGraph": "Edit Frame Event Graph",
+    "frameId": "FrameId",
+    "layerCellProperty": "Layer Cell Property",
+    "LayerName": "Layer Name",
     "AspectRatio": "Aspect Ratio",
     "BgColor": "Color",
     "BgFile": "File",

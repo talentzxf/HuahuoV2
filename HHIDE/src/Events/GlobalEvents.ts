@@ -12,7 +12,7 @@ enum EventNames{
     OBJECTSELECTED = "objectSelected",
     UNSELECTOBJECTS = "unselectObjects",
     COMPONENTCHANGED = "componentAdded",
-    CELLCLICKED = "cellClicked",
+    PLAYFRAME = "playFrame",
     OBJECTADDED = "objectAdded",
     OBJECTDELETED = "objectDeleted",
     FILELOADED = "fileLoaded",

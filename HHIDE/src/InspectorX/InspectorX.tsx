@@ -95,7 +95,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         this.forceUpdate()
     }
 
-    timelineCellClicked() {
+    onPlayFrame() {
         this.forceUpdate()
     }
 
@@ -107,7 +107,7 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
         IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
         IDEEventBus.getInstance().on(EventNames.UNSELECTOBJECTS, this.unselectObjects.bind(this))
         IDEEventBus.getInstance().on(EventNames.COMPONENTCHANGED, this.componentChanged.bind(this))
-        IDEEventBus.getInstance().on(EventNames.CELLCLICKED, this.timelineCellClicked.bind(this))
+        IDEEventBus.getInstance().on(EventNames.PLAYFRAME, this.onPlayFrame.bind(this))
         IDEEventBus.getInstance().on(EventNames.OBJECTDELETED, this.objectDeleted.bind(this))
 
         this.unselectObjects()

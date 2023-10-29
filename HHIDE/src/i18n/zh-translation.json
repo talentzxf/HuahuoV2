@@ -90,7 +90,6 @@
     "createNewTrack": "创建新轨道",
     "groupAsElement": "转换为组件",
     "markAsAnimationEnd": "设为动画结束帧",
-    "editFrameEventGraph": "编辑帧事件图",
     "setAsStopFrame": "设置为停止帧",
     "unsetAsStopFrame": "取消设置为停止帧"
   },
@@ -113,6 +112,10 @@
   "Motor": "马达组件",
   "ObjectGenerator": "形状生成器",
   "inspector": {
+    "editFrameEventGraph": "编辑帧事件图",
+    "frameId": "帧Id",
+    "layerCellProperty": "层单元格属性",
+    "LayerName": "层名字",
     "AspectRatio": "宽高比",
     "BgColor": "颜色",
     "BgFile": "图片文件",

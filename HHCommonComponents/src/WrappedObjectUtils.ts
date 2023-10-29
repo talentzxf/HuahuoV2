@@ -1,6 +1,9 @@
 declare var WrapperObject: any
 
 function GetObjPtr(obj) {
+    if (obj == null)
+        return null
+
     if (obj.hasOwnProperty("ptr")) {
         return obj.ptr
     }

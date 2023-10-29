@@ -4,7 +4,7 @@ import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {BaseShapeDrawer} from "../ShapeDrawers/BaseShapeDrawer";
 import {HHTimeline} from "hhtimeline"
 import {ResizeObserver} from 'resize-observer';
-import {defaultShapeDrawer} from "../ShapeDrawers/Shapes";
+import {defaultShapeDrawer, shapeSelector} from "../ShapeDrawers/Shapes";
 import {EditorPlayer} from "../AnimationPlayer/EditorPlayer";
 import {fileLoader} from "./FileLoader";
 import {findParentContent, findParentPanel, HHSideBar, findParentContainer} from "hhpanel";
@@ -16,6 +16,8 @@ import {timelineUtils} from "../Utilities/TimelineUtils";
 import {PropertySheet, PropertyType} from "hhcommoncomponents";
 import {projectInfo} from "./ProjectInfo";
 import {GlobalConfig} from "hhenginejs";
+import {TimelineEventNames} from "hhtimeline"
+import {EditorLayerUtils} from "./Layer";
 
 function allReadyExecute(fn: Function) {
     i18n.ExecuteAfterInited(
@@ -131,8 +133,22 @@ class SceneView extends HTMLElement {
         this.canvas.addEventListener("dblclick", this.onDbClick.bind(this))
 
 
-        if (this.timeline == null)
+        if (this.timeline == null) {
             this.timeline = document.createElement("hh-timeline") as HHTimeline
+
+            this.timeline.addEventListener(TimelineEventNames.TRACKCELLCLICKED, (e) => {
+
+                if(!shapeSelector.isSelectedSomething()){
+                    let detail = e.detail
+
+                    let layer = e.detail.track.getLayer()
+                    let cellId = e.detail.cellId
+
+                    IDEEventBus.getInstance().emit(EventNames.OBJECTSELECTED, EditorLayerUtils.buildLayerCellProperties(layer, cellId), null)
+                }
+            })
+        }
+
 
         this.canvasContainer.insertBefore(this.timeline, this.canvas)
 
@@ -150,12 +166,6 @@ class SceneView extends HTMLElement {
                 itemName: i18n.t("contextmenu.createNewTrack"),
                 onclick: function (e) {
                     _this.createNewTrack()
-                }
-            },
-            {
-                itemName: i18n.t("contextmenu.editFrameEventGraph"),
-                onclick: function (e) {
-                    _this.openFrameEventGraphForm()
                 }
             },
             {
@@ -209,17 +219,7 @@ class SceneView extends HTMLElement {
         }
     }
 
-    openFrameEventGraphForm() {
-        let eventGraphForm = formManager.openForm(EventGraphForm)
 
-        let currentLayer = huahuoEngine.GetCurrentLayer()
-        let frameId = currentLayer.GetCurrentFrame()
-
-        let frameEventGraphWrapperObject = huahuoEngine.getWrappedGraphObjectForLayer(currentLayer, frameId, true)
-        eventGraphForm.setTargetComponent(frameEventGraphWrapperObject)
-
-        this.timeline.redrawCell(currentLayer, frameId)
-    }
 
     onWheel(evt: WheelEvent) {
         if (evt.ctrlKey) {

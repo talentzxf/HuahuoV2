@@ -198,6 +198,18 @@ class ShapeSelector extends BaseShapeDrawer {
         }
     }
 
+    isSelectedSomething(){
+        if(this.selectedSegment != null){
+            return true
+        }
+
+        if(this.selectedShapes.size != 0){
+            return true
+        }
+
+        return false
+    }
+
     onShapeSelected(property, targetObj: any) {
         console.log("Something selected")
         if (targetObj instanceof paper.Segment) {

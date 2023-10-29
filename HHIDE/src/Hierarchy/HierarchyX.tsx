@@ -119,7 +119,6 @@ class HierarchyX extends React.Component<any, HierarchyState> {
     objUUIDMap = new Map
 
     uuidObjMap = new Map
-
     componentDidMount() {
         IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
 
@@ -152,8 +151,10 @@ class HierarchyX extends React.Component<any, HierarchyState> {
     }
 
     onItemSelected(property: PropertySheet, targetObj: any) {
-        let objUUID = this.objUUIDMap.get(GetObjPtr(targetObj))
-        this.selectItemByUUID(objUUID)
+        if(targetObj != null){
+            let objUUID = this.objUUIDMap.get(GetObjPtr(targetObj))
+            this.selectItemByUUID(objUUID)
+        }
     }
 
     regSetter(uuid, setter, targetObj = null) {

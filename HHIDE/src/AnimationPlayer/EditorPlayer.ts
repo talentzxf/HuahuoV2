@@ -77,7 +77,7 @@ class EditorPlayer extends Player {
             playFrameId += 0.5  // Force to start at 1 for better visualization
             this.timeline.setTimeElapsed(playFrameId / GlobalConfig.fps)
 
-            IDEEventBus.getInstance().emit(EventNames.CELLCLICKED, playFrameId)
+            IDEEventBus.getInstance().emit(EventNames.PLAYFRAME, playFrameId)
         }
     }
 

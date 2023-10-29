@@ -2,6 +2,21 @@ import {CreateShapeCommand} from "../RedoUndo/CreateShapeCommand";
 import {undoManager} from "../RedoUndo/UndoManager";
 import {elementCreator} from "./ElementCreator";
 import {BaseShapeJS, huahuoEngine} from "hhenginejs";
+import {PropertySheet, PropertyType} from "hhcommoncomponents";
+import {formManager} from "../Utilities/FormManager";
+import {EventGraphForm} from "../EventGraphUI/EventGraphForm";
+
+function openFrameEventGraphForm() {
+    let eventGraphForm = formManager.openForm(EventGraphForm)
+
+    let currentLayer = huahuoEngine.GetCurrentLayer()
+    let frameId = currentLayer.GetCurrentFrame()
+
+    let frameEventGraphWrapperObject = huahuoEngine.getWrappedGraphObjectForLayer(currentLayer, frameId, true)
+    eventGraphForm.setTargetComponent(frameEventGraphWrapperObject)
+
+    huahuoEngine.getFocusedSceneView().timeline.redrawCell(currentLayer, frameId)
+}
 
 class EditorLayerUtils {
     static addShapeToCurrentLayer(shape: BaseShapeJS) {
@@ -15,6 +30,43 @@ class EditorLayerUtils {
         undoManager.PushCommand(createShapeCommand)
 
         elementCreator.dispatchElementChange(shape.getBornStoreId())
+    }
+
+    static buildLayerCellProperties(layer, cellId) {
+        let property = {
+            key: "inspector.layerCellProperty",
+            type: PropertyType.COMPONENT,
+            config: {
+                children: []
+            }
+        }
+
+        property.config.children.push({
+            key: "inspector.LayerName",
+            type: PropertyType.STRING,
+            getter: layer.GetName.bind(layer)
+        })
+
+        property.config.children.push({
+            key: "inspector.frameId",
+            type: PropertyType.NUMBER,
+            getter: () => {
+                return cellId + 1
+            }
+        })
+
+        property.config.children.push({
+            key: "inspector.editFrameEventGraph",
+            type: PropertyType.BUTTON,
+            config: {
+                action: openFrameEventGraphForm
+            }
+        })
+
+        let propertySheet = new PropertySheet()
+        propertySheet.addProperty(property)
+
+        return propertySheet
     }
 }
 
