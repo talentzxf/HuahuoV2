@@ -14,9 +14,8 @@ Build:
 
 Short term todos:
 1. Expose element properties to the outer layer.
-2. Add tree view of the element structure.
+2. Camera component.
 3. GeneratorComponent, set interval for each shape.
-4. Layer property inspector
 5. Typescript component.
 6. Touch input.
 7. Mobile view
@@ -24,6 +23,10 @@ Short term todos:
 9. Brushes.
 10. .....
 
+Done:
+1. Add tree view of the element structure.
+2. Layer property inspector
+3. 
 TODOs:
 1. Onion skin view.
 2. Bone Animation
