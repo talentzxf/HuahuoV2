@@ -434,19 +434,6 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         return Math.floor(this.elapsedTime * GlobalConfig.fps)
     }
 
-    isCurrentCellFrameStop() {
-        let frameId = this.getCurrentCellId()
-        return this.layer && this.layer.IsStopFrame(frameId)
-    }
-
-    unsetCurrentCellFrameStop() {
-        this.layer?.RemoveStopFrame(this.getCurrentCellId())
-    }
-
-    setCurrentCellFrameStop() {
-        this.layer?.AddStopFrame(this.getCurrentCellId())
-    }
-
     drawTimelineIndicator() {
         // Draw the red time line indicator
         let offsetX = this.calculateCanvasOffsetX(this.elapsedTime * GlobalConfig.fps)

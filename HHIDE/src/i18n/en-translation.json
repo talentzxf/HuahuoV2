@@ -89,9 +89,7 @@
     "mergecells": "Merge selected cells",
     "createNewTrack": "Create New Track",
     "groupAsElement": "Convert to Element",
-    "markAsAnimationEnd": "Mark as Animation End",
-    "setAsStopFrame": "Set as Stop Frame",
-    "unsetAsStopFrame": "Unset Stop Frame"
+    "markAsAnimationEnd": "Mark as Animation End"
   },
   "statusbar": {
     "mousePosition": "Mouse position:{{mouseX}},{{mouseY}}",
@@ -112,6 +110,8 @@
   "Motor": "Motor",
   "ObjectGenerator": "Object Generator",
   "inspector": {
+    "setAsStopFrame": "Set as Stop Frame",
+    "unsetAsStopFrame": "Unset Stop Frame",
     "editFrameEventGraph": "Edit Frame Event Graph",
     "frameId": "FrameId",
     "layerCellProperty": "Layer Cell Property",

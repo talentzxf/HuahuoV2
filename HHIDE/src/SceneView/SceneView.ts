@@ -169,26 +169,6 @@ class SceneView extends HTMLElement {
                 }
             },
             {
-                itemName: () => {
-                    let selectedTrack = _this.timeline.getSelectedTrack()
-                    if (selectedTrack.isCurrentCellFrameStop()) {
-                        return i18n.t("contextmenu.unsetAsStopFrame")
-                    }
-
-                    return i18n.t("contextmenu.setAsStopFrame")
-                },
-                onclick: function (e) {
-                    let selectedTrack = _this.timeline.getSelectedTrack()
-                    if (selectedTrack.isCurrentCellFrameStop()) {
-                        selectedTrack.unsetCurrentCellFrameStop()
-                    } else {
-                        selectedTrack.setCurrentCellFrameStop()
-                    }
-
-                    _this.timeline.redrawCanvas()
-                }
-            },
-            {
                 itemName: i18n.t("contextmenu.markAsAnimationEnd"),
                 onclick: function (e) {
                     _this.markAsAnimationEnd(_this.timeline)

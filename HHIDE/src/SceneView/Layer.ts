@@ -5,6 +5,7 @@ import {BaseShapeJS, huahuoEngine} from "hhenginejs";
 import {PropertySheet, PropertyType} from "hhcommoncomponents";
 import {formManager} from "../Utilities/FormManager";
 import {EventGraphForm} from "../EventGraphUI/EventGraphForm";
+import {sceneViewManager} from "./SceneViewManager";
 
 function openFrameEventGraphForm() {
     let eventGraphForm = formManager.openForm(EventGraphForm)
@@ -32,7 +33,7 @@ class EditorLayerUtils {
         elementCreator.dispatchElementChange(shape.getBornStoreId())
     }
 
-    static buildLayerCellProperties(layer, cellId) {
+    static buildLayerCellProperties(layer, frameId) {
         let property = {
             key: "inspector.layerCellProperty",
             type: PropertyType.COMPONENT,
@@ -51,7 +52,7 @@ class EditorLayerUtils {
             key: "inspector.frameId",
             type: PropertyType.NUMBER,
             getter: () => {
-                return cellId + 1
+                return frameId + 1
             }
         })
 
@@ -60,6 +61,26 @@ class EditorLayerUtils {
             type: PropertyType.BUTTON,
             config: {
                 action: openFrameEventGraphForm
+            }
+        })
+
+        property.config.children.push({
+            key: () => {
+                if (layer.IsStopFrame(frameId))
+                    return "inspector.unsetAsStopFrame"
+                return "inspector.setAsStopFrame"
+            },
+            type: PropertyType.BUTTON,
+            config: {
+                action: () => {
+                    if (layer.IsStopFrame(frameId)) {
+                        layer.RemoveStopFrame(frameId)
+                    } else {
+                        layer.AddStopFrame(frameId)
+                    }
+
+                    sceneViewManager.getFocusedSceneView().timeline.redrawCell(layer, frameId)
+                }
             }
         })
 
