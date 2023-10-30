@@ -13,7 +13,8 @@ Build:
 7. npm run start
 
 Short term todos:
-1. Expose element properties to the outer layer.
+1. Optimize build size.
+2. Expose element properties to the outer layer.
 2. Camera component.
 3. GeneratorComponent, set interval for each shape.
 5. Typescript component.

@@ -13,7 +13,7 @@ buildComponent(){
   rm -rf ./package-lock.json
   npm install
 
-  if [ $buildProd == "true" ] && [ $1 == "HHIDE" ]; then
+  if [ $buildProd == "true" ]; then
     echo "npm run buildProd"
     npm run buildProd
   else

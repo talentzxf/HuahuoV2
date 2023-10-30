@@ -5,6 +5,8 @@
   "main": "./dist/hhenginejs.bundle",
   "scripts": {
     "build": "webpack",
+    "buildProd": "webpack --env production",
+    "profile": "webpack --profile --json",
     "start": "webpack serve --open --env goal=local"
   },
   "author": "vincentzhang",

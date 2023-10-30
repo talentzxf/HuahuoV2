@@ -50,4 +50,9 @@ if (process.env.WEBPACK_DEV_SERVER) {
     })
 }
 
-module.exports = webpackExport
+module.exports = (env)=>{
+    if(env.production){
+        webpackExport.mode = "production"
+    }
+    return webpackExport
+}

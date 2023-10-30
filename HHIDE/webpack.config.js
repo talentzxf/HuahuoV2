@@ -7,8 +7,10 @@ const FileManagerPlugin = require("filemanager-webpack-plugin")
 let moduleExports = (env) => {
 
     let propertyFile = "./conf/hhide.default.properties"
+    let mode = "development"
     if (env.production) {
         propertyFile = "./conf/hhide.prod.properties"
+        mode = "production"
     }
 
     let destinationPath = path.resolve(__dirname, 'dist')
@@ -18,7 +20,7 @@ let moduleExports = (env) => {
     let destinationApiFolder = destinationPath + "\\" + "clientApi"
 
     return {
-        mode: "development",
+        mode: mode,
         entry: ['./src/index.js'],
         devtool: 'inline-source-map',
         output: {
@@ -146,7 +148,7 @@ let moduleExports = (env) => {
                 // inject: false
             }),
             // new MiniCssExtractPlugin()
-        ]
+        ],
     };
 
 }

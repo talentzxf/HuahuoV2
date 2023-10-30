@@ -65,6 +65,10 @@ function setupWebpack(env) {
         webpackConfig.entry = ["./src/index.js", "./test/test.js"]
     }
 
+    if(env.production){
+        webpackConfig.mode = "production"
+    }
+
     return webpackConfig
 }
 

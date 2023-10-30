@@ -5,6 +5,7 @@
   "main": "./dist/hhcommoncomponents.bundle",
   "scripts": {
     "build": "webpack",
+    "buildProd": "webpack --env production",
     "start": "webpack serve --open"
   },
   "author": "vincentzhang",

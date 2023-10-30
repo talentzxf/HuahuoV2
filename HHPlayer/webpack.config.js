@@ -5,8 +5,10 @@ const FileManagerPlugin = require("filemanager-webpack-plugin")
 
 module.exports = (env) => {
     let propertyFile = "./conf/hhplayer.default.properties"
+    let mode = "development"
     if(env.production){
         propertyFile = "./conf/hhplayer.prod.properties"
+        mode = "production"
     }
 
     let destinationPath = path.resolve(__dirname, 'dist')
@@ -14,7 +16,7 @@ module.exports = (env) => {
     let destinationPropertyFile = destinationPath + "/hhplayer.properties"
 
     return {
-        mode: "development",
+        mode: mode,
         entry: ['./src/index.js'],
         output: {
             filename: 'main.js',
