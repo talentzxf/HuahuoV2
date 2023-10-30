@@ -145,21 +145,51 @@ class HHPanel extends HTMLElement {
         let contentRD: Vector2D = contentRect.getRightDown()
         let shadowWidth = contentRect.width / 2
         let shadowHeight = contentRect.height / 2
+
+        let allowedDirections = 0b1111 // LEFT,RIGHT,UP,DOWN
+        let splitDirectionStr = this.getAttribute("split-direction")
+        if (splitDirectionStr) {
+            let splitDirections = splitDirectionStr.split(",")
+            allowedDirections = 0b0000
+            for (let splitDirection of splitDirections) {
+                switch (splitDirection) {
+                    case "left":
+                        allowedDirections |= 0b1000
+                        break;
+                    case "right":
+                        allowedDirections |= 0b0100
+                        break;
+                    case "up":
+                        allowedDirections |= 0b0010
+                        break;
+                    case "down":
+                        allowedDirections |= 0b0001
+                        break;
+                    case "horizontal":
+                        allowedDirections |= 0b0011
+                        break;
+                    case "veritical":
+                        allowedDirections |= 0b1100
+                        break;
+                }
+            }
+        }
+
         if (contentRect.overlap(targetRect)) {
             let shadowPanelRect: Rect2D
 
-            if ((targetPos.X - contentLU.X) < contentRect.width * ShadowPanelManager.Bar) {  // LEFT
+            if ((targetPos.X - contentLU.X) < contentRect.width * ShadowPanelManager.Bar && (allowedDirections & 0b1000)) {  // LEFT
                 shadowPanelRect = new Rect2D(contentLU.X, contentLU.Y,
                     contentLU.X + shadowWidth, contentRD.Y);
                 OccupiedTitleManager.getInstance().setShadowCandidate(this, SplitPanelDir.LEFT)
-            } else if (contentRD.X - targetPos.X < contentRect.width * ShadowPanelManager.Bar) {  // RIGHT
+            } else if (contentRD.X - targetPos.X < contentRect.width * ShadowPanelManager.Bar && (allowedDirections & 0b0100)) {  // RIGHT
                 shadowPanelRect = new Rect2D(contentLU.X + shadowWidth, contentLU.Y,
                     contentRD.X, contentRD.Y)
                 OccupiedTitleManager.getInstance().setShadowCandidate(this, SplitPanelDir.RIGHT)
-            } else if (targetPos.Y - contentLU.Y < contentRect.height * ShadowPanelManager.Bar) {  // UP
+            } else if (targetPos.Y - contentLU.Y < contentRect.height * ShadowPanelManager.Bar && (allowedDirections & 0b0010)) {  // UP
                 shadowPanelRect = new Rect2D(contentLU.X, contentLU.Y, contentRD.X, contentLU.Y + shadowHeight)
                 OccupiedTitleManager.getInstance().setShadowCandidate(this, SplitPanelDir.UP)
-            } else if (contentRD.Y - targetPos.Y < contentRect.height * ShadowPanelManager.Bar) {  // DOWN
+            } else if (contentRD.Y - targetPos.Y < contentRect.height * ShadowPanelManager.Bar && (allowedDirections & 0b0001)) {  // DOWN
                 shadowPanelRect = new Rect2D(contentLU.X, contentLU.Y + shadowHeight, contentRD.X, contentRD.Y)
                 OccupiedTitleManager.getInstance().setShadowCandidate(this, SplitPanelDir.DOWN)
             } else {
@@ -271,7 +301,7 @@ class HHPanel extends HTMLElement {
         return tabId;
     }
 
-    onResize() {
+    onVerticalResize() {
         this._tabs.style.transform = "rotate(90deg)"
 
         let title_content_container = this.querySelector("#title_content_container") as HTMLDivElement
@@ -342,7 +372,7 @@ class HHPanel extends HTMLElement {
         // }
 
         if (this.getAttribute("title-direction") == "vertical") {
-            let resizeObserver = new ResizeObserver(this.onResize.bind(this))
+            let resizeObserver = new ResizeObserver(this.onVerticalResize.bind(this))
             resizeObserver.observe(this._tabs)
         }
     }
