@@ -27,4 +27,5 @@ buildComponent HHEngineJS
 buildComponent HHPanel
 buildComponent HHTimeLine
 buildComponent HHIDE
+buildComponent HHPlayer
 
