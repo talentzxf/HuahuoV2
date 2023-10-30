@@ -22,7 +22,7 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
     private isPlayer = false
     private aspectRatio: number = 4 / 3  //  W:H = 4:3
 
-    getAspectRatio(){
+    getAspectRatio() {
         return this.aspectRatio
     }
 
@@ -304,7 +304,7 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
         view.center = shape.position
     }
 
-    setViewPosition(position){
+    setViewPosition(position) {
         view.center = position
     }
 
@@ -313,4 +313,10 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
     }
 }
 
-export {RenderEnginePaperJs}
+let renderEngine2D = window["renderEngine2D"]
+if (renderEngine2D == null) {
+    renderEngine2D = new RenderEnginePaperJs()
+    window["renderEngine2D"] = renderEngine2D
+}
+
+export {RenderEnginePaperJs, renderEngine2D}

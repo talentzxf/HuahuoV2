@@ -6,7 +6,7 @@ import {getNailManager} from '../IK/GetNailManager'
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {getPhysicSystem} from "../PhysicsSystem/PhysicsSystem";
 import {layerUtils} from "../LayerUtils";
-import {renderEngine2D} from "../index";
+import {renderEngine2D} from "../RenderEngine/RenderEnginePaperImpl";
 
 
 class Player extends EventEmitter {

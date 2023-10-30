@@ -52,17 +52,13 @@ import {RadialGradientComponent} from "./Components/RadialGradientComponent"
 import {FollowCurveComponent} from "./Components/FollowCurveComponent";
 import {RigidBody} from "./Components/Physics/RigidBody";
 import {Camera2D} from "./Components/Camera2D";
+import {renderEngine2D} from "./RenderEngine/RenderEnginePaperImpl"
 
 import "./Shapes/LoadShape"
 
 import {ValueChangeHandler} from "./Shapes/ValueChangeHandler";
 import * as paper from "paper"
 
-let renderEngine2D = window["renderEngine2D"]
-if(renderEngine2D == null){
-    renderEngine2D = new RenderEnginePaperJs()
-    window["renderEngine2D"] = renderEngine2D
-}
 
 function InitWASM() {
     if (typeof Module != 'undefined') {
@@ -158,5 +154,6 @@ export {
     PropertyDef,
     getLiteGraphTypeFromPropertyType,
     PlayerActions,
-    NodeTargetType
+    NodeTargetType,
+
 }
