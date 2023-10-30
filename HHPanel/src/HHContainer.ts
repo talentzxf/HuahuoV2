@@ -41,8 +41,7 @@ class HHContainer extends HTMLElement {
 
     connectedCallback() {
         this.style.display = "flex"
-        this.style.overflowY = "auto"
-
+        
         if (this.size != "fit-content") {
             if (this.style.width == "") {
                 this.style.width = "100%"
