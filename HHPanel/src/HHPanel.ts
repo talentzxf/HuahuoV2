@@ -16,11 +16,11 @@ enum PanelEventNames {
 @CustomElement({
     selector: 'hh-panel',
     template: `<template>
-        <div id="title_content_container" style="display: flex; flex-direction: column; width: 100%">
+        <div id="title_content_container" style="display: flex; flex-direction: column; width: 100%; height: 100%">
             <div id="title_container">
                 <div class="title_tabs nav nav-tabs divide-x divide-slate-400/25">
                 </div>
-            </div>            
+            </div>
             <div class="panel_contents" style="width: 100%">            
             </div>
         </div>
@@ -97,8 +97,18 @@ class HHPanel extends HTMLElement {
         return found
     }
 
+    canDropTitleIntoPanel(title: HHTitle) {
+        let titleIsVertical = this.getAttribute("title-direction") == "vertical"
+        if (titleIsVertical != title.isVertical()) {
+            return false
+        }
+
+        return true
+    }
+
     handleTitleBar(ele: HHTitle, targetPos: Vector2D) {
         let tabs = this._tabs;
+
 
         let targetRect = new Rect2D(targetPos.X, targetPos.Y, targetPos.X + ele.offsetWidth, targetPos.Y + ele.offsetHeight);
         let titleBarRect = Rect2D.fromDomRect(tabs.getBoundingClientRect())
@@ -136,7 +146,7 @@ class HHPanel extends HTMLElement {
         // This is the last of the parent title group and is intersecting with this panel.
         if (ele.parentElement.querySelectorAll("hh-title").length <= 1
             && this == ele.getParentPanel())
-            return;
+            return false;
         let contents = this._contents
         let contentRect = Rect2D.fromDomRect(contents.getBoundingClientRect())
         let targetRect = new Rect2D(targetPos.X, targetPos.Y, targetPos.X + ele.offsetWidth, targetPos.Y + ele.offsetHeight);
@@ -208,6 +218,11 @@ class HHPanel extends HTMLElement {
 
     onTitleMoving(param: TabMoveParam) {
         let ele = param.ele as HHTitle;
+
+        if (!this.canDropTitleIntoPanel(ele)) {
+            return false
+        }
+
         let targetPos = param.targetPos;
         if (this.handleTitleBar(ele, targetPos)
             || this.handleContents(ele, targetPos))

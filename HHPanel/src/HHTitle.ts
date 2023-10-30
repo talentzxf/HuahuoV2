@@ -22,7 +22,7 @@ class HHTitle extends HTMLElement implements MovableElement {
 
     private inited: boolean = false;
 
-    private isVertical: boolean = false
+    private _isVertical: boolean = false
 
     static get tabIndex() {
         return ['tabindex']
@@ -35,7 +35,11 @@ class HHTitle extends HTMLElement implements MovableElement {
     }
 
     setIsVertical(isVertical: boolean) {
-        this.isVertical = isVertical
+        this._isVertical = isVertical
+    }
+
+    isVertical(){
+        return this._isVertical
     }
 
     getContent(): HHContent {

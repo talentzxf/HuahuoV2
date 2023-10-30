@@ -118,6 +118,11 @@ class OccupiedTitleManager {
 
         let panelContainer = this.createContainer("column", containerWidth, containerHeight)
         let newPanel = document.createElement('hh-panel') as HHPanel
+
+        if (title.isVertical()) {
+            newPanel.setAttribute("title-direction", "vertical")
+        }
+
         newPanel.id = "newPanel"
         newPanel.style.width = "100%"
         newPanel.style.height = "100%"
@@ -151,12 +156,12 @@ class OccupiedTitleManager {
 
         // After split, recalculate child container width.
         let isColumn = TypeIsColumn(this.mSplitPanelDir)
-        let totalSize = isColumn?newParentContainer.clientHeight:newParentContainer.clientWidth
+        let totalSize = isColumn ? newParentContainer.clientHeight : newParentContainer.clientWidth
         let childContainers = DomHelper.getChildElements(newParentContainer, ["hh-container"])
-        let totalSizeWithoutSplitters = totalSize - (childContainers.length - 1 ) * (isColumn? newSplitter.offsetHeight:newSplitter.offsetWidth)
+        let totalSizeWithoutSplitters = totalSize - (childContainers.length - 1) * (isColumn ? newSplitter.offsetHeight : newSplitter.offsetWidth)
 
-        let eachContainterSize = totalSizeWithoutSplitters/childContainers.length
-        let sizePercentage = (100.0* eachContainterSize / totalSize) + "%"
+        let eachContainterSize = totalSizeWithoutSplitters / childContainers.length
+        let sizePercentage = (100.0 * eachContainterSize / totalSize) + "%"
         childContainers.forEach((container) => {
             if (isColumn) {
                 container.style.height = sizePercentage
