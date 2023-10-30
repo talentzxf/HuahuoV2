@@ -20,6 +20,8 @@ interface RenderEngine2D {
     setBgColor(bgColor);
 
     getAspectRatio()
+
+    focusShape(shape)
 }
 
 export {RenderEngine2D}

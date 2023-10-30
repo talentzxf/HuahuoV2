@@ -284,7 +284,7 @@ class HHTimeline extends HTMLElement {
 
     trackMouseMove(evt) {
         let trackSeqId = this.calculateTrackSeqId(evt.offsetY)
-        if (trackSeqId >= 0 || trackSeqId < this.timelineTracks.length) {
+        if (trackSeqId >= 0 && trackSeqId < this.timelineTracks.length) {
             this.timelineTracks[trackSeqId].onMouseMove(evt.offsetX)
         }
     }

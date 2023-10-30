@@ -7,6 +7,7 @@ import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
 import {GetObjPtr, IsValidWrappedObject, PropertySheet} from "hhcommoncomponents";
 import {shapeSelector} from "../ShapeDrawers/Shapes";
 import {TimelineEventNames} from "hhtimeline"
+import {renderEngine2D} from "hhenginejs";
 
 declare var Module: any
 
@@ -77,8 +78,14 @@ class HierarchyItem extends React.Component<HierarchyItemProps, HierarchyItemSta
                 left: "0px",
                 top: "0px"
             }} data-uuid={this.state.uuid} onClick={(e) => {
-                this.props.onClick(e)
-            }}>
+                if (this.props.onClick && this.props.onClick instanceof Function)
+                    this.props.onClick(e)
+            }} onDoubleClick={
+                (e) => {
+                    if (this.props.onDoubleClick && this.props.onDoubleClick instanceof Function)
+                        this.props.onDoubleClick(e)
+                }
+            }>
                 <div className={"whitespace-nowrap " + (this.state.selected ? "bg-blue-300" : "")}>
                     {tabs}
                     {
@@ -119,6 +126,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
     objUUIDMap = new Map
 
     uuidObjMap = new Map
+
     componentDidMount() {
         IDEEventBus.getInstance().on(EventNames.OBJECTSELECTED, this.onItemSelected.bind(this))
 
@@ -151,7 +159,7 @@ class HierarchyX extends React.Component<any, HierarchyState> {
     }
 
     onItemSelected(property: PropertySheet, targetObj: any) {
-        if(targetObj != null){
+        if (targetObj != null) {
             let objUUID = this.objUUIDMap.get(GetObjPtr(targetObj))
             this.selectItemByUUID(objUUID)
         }
@@ -179,19 +187,37 @@ class HierarchyX extends React.Component<any, HierarchyState> {
         this.forceUpdate()
     }
 
+    getJSShapeFromUUID(uuid) {
+        let rawObjPtr = this.uuidObjMap.get(uuid)
+        let rawObj = Module.wrapPointer(rawObjPtr)
+        if (IsValidWrappedObject(rawObj)) {
+            return huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj, true) as BaseShapeJS;
+        }
+
+        return null
+    }
+
+    onItemDoubleClicked(e) {
+        let uuid = e.currentTarget.dataset?.uuid
+        if (uuid) {
+            this.selectItemByUUID(uuid)
+
+            let jsShape = this.getJSShapeFromUUID(uuid)
+            if (jsShape) {
+                renderEngine2D.focusShape(jsShape)
+            }
+        }
+    }
+
     onItemClicked(e) {
         let uuid = e.currentTarget.dataset?.uuid
         if (uuid) {
             this.selectItemByUUID(uuid)
 
-            let rawObjPtr = this.uuidObjMap.get(uuid)
-            let rawObj = Module.wrapPointer(rawObjPtr)
-            if (IsValidWrappedObject(rawObj)) {
-                let jsShape: BaseShapeJS = huahuoEngine.getActivePlayer().getJSShapeFromRawShape(rawObj, true) as BaseShapeJS;
-                if(jsShape){ // If this is a shape. Select it in shapeSelector.
-                    shapeSelector.clearSelection()
-                    shapeSelector.selectObject(jsShape)
-                }
+            let jsShape = this.getJSShapeFromUUID(uuid)
+            if (jsShape) { // If this is a shape. Select it in shapeSelector.
+                shapeSelector.clearSelection()
+                shapeSelector.selectObject(jsShape)
             }
             e.stopPropagation()
         }
@@ -224,26 +250,24 @@ class HierarchyX extends React.Component<any, HierarchyState> {
 
     getHierarchyItemForShape(rawObj, key = -1) {
 
-        if (rawObj.GetTypeName() != "ElementShape") {
-            return <HierarchyItem key={key} title={rawObj.GetName()}
-                                  regSetter={this.regSetter.bind(this)}
-                                  onClick={this.onItemClicked.bind(this)}
-                                  targetObj={rawObj}/>
-        } else {
+        let innerItems = []
+
+        if (rawObj.GetTypeName() == "ElementShape") {
             let elementShapeRawObj = Module.wrapPointer(GetObjPtr(rawObj), Module.ElementShape)
 
             let storeId = elementShapeRawObj.GetElementStoreId()
             let store = huahuoEngine.GetStoreById(storeId)
 
-            let innerItems = this.getHierarchyItemsForStore(store)
-
-            return <HierarchyItem key={key} title={rawObj.GetName()}
-                                  regSetter={this.regSetter.bind(this)}
-                                  onClick={this.onItemClicked.bind(this)}
-                                  targetObj={rawObj}>
-                {innerItems}
-            </HierarchyItem>
+            innerItems = this.getHierarchyItemsForStore(store)
         }
+
+        return <HierarchyItem key={key} title={rawObj.GetName()}
+                              regSetter={this.regSetter.bind(this)}
+                              onClick={this.onItemClicked.bind(this)}
+                              onDoubleClick={this.onItemDoubleClicked.bind(this)}
+                              targetObj={rawObj}>
+            {innerItems}
+        </HierarchyItem>
     }
 
     render() {
