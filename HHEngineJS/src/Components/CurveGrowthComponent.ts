@@ -1,7 +1,6 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {FloatPropertyConfig} from "hhcommoncomponents";
-import {CurveShapeJS} from "../Shapes/CurveShapeJS";
 
 @Component({compatibleShapes: ["CurveShapeJS"], maxCount: 1})
 class CurveGrowthComponent extends AbstractComponent {

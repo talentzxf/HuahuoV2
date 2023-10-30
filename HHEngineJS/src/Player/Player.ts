@@ -6,6 +6,7 @@ import {getNailManager} from '../IK/GetNailManager'
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {getPhysicSystem} from "../PhysicsSystem/PhysicsSystem";
 import {layerUtils} from "../LayerUtils";
+import {renderEngine2D} from "../index";
 
 
 class Player extends EventEmitter {
@@ -158,6 +159,8 @@ class Player extends EventEmitter {
         this.resetActions()
         layerUtils.reset()
         getPhysicSystem().Reset()
+
+        renderEngine2D.zoomReset()
 
         this.isPaused = false
     }

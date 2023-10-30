@@ -22,6 +22,8 @@ interface RenderEngine2D {
     getAspectRatio()
 
     focusShape(shape)
+
+    setViewPosition(position)
 }
 
 export {RenderEngine2D}

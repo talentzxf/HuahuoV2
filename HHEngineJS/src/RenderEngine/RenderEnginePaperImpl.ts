@@ -304,6 +304,10 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
         view.center = shape.position
     }
 
+    setViewPosition(position){
+        view.center = position
+    }
+
     public getGlobalPosition(viewX: number, viewY: number): paper.Point {
         return this.getProject().view.viewToProject(new paper.Point(viewX, viewY))
     }
