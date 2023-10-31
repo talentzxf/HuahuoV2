@@ -140,17 +140,24 @@
         </hh-sidebar>
 
         <hh-container id="scene_left_side_bar" direction="row" hasSplitter="true">
-            <hh-container id="left_side_bar" size="fit-content" style="min-width: 350px">
-                <hh-panel title-direction="vertical" split-direction="horizontal">
-                    <hh-content closable="false" title="Properties">
-                        <div id="hh-inspector"></div>
-                    </hh-content>
-                    <hh-content closable="false" title="ElementHirearchy">
-                        <div id="hh-hierarchy">
-                            Hierarchy!!
-                        </div>
-                    </hh-content>
-                </hh-panel>
+            <hh-container id="left_side_bar" style="min-width: 350px" direction="column" hasSplitter="true">
+                <hh-container id="left_top_side_bar"
+                              style="overflow-y: auto">
+                    <hh-panel title-direction="vertical" split-direction="horizontal">
+                        <hh-content closable="false" title="Properties">
+                            <div id="hh-inspector"></div>
+                        </hh-content>
+                    </hh-panel>
+                </hh-container>
+                <hh-container id="left_down_side_bar" style="overflow-y: auto">
+                    <hh-panel title-direction="vertical" split-direction="horizontal">
+                        <hh-content closable="false" title="ElementHirearchy">
+                            <div id="hh-hierarchy">
+                                Hierarchy!!
+                            </div>
+                        </hh-content>
+                    </hh-panel>
+                </hh-container>
             </hh-container>
 
             <hh-container id="main_scene_view_container" direction="row">
