@@ -164,6 +164,7 @@
     "Unfollow": "UnFollow",
     "select": "Select",
     "property": {
+      "margin": "margin",
       "growth": "growth",
       "targetShapeArray": "Target Shapes",
       "strokeWidth": "StrokeWidth",

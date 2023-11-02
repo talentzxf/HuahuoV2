@@ -26,7 +26,7 @@ interface RenderEngine2D {
 
     setViewPosition(position)
 
-    createViewRectangle()
+    createViewRectangle(bgColor)
 
     getCameraBox(): CameraBox
 }

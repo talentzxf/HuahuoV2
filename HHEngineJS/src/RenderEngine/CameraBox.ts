@@ -14,13 +14,23 @@ class CameraBox {
 
     private get rectangle() {
         if (this._rectangle == null) {
-            this._rectangle = this._renderEngine.createViewRectangle()
+            this._rectangle = this._renderEngine.createViewRectangle(new paper.Color("red"))
             this._rectangle.strokeColor = new paper.Color("black")
 
-            this._rectangle.scaling = new paper.Point(this.margin, this.margin)
+            if (this.margin > 0.0) {
+                this._rectangle.scaling = new paper.Point(this.margin, this.margin)
+            }
+
+            this._rectangle.bringToFront()
         }
 
         return this._rectangle
+    }
+
+    setMargin(margin) {
+        this.margin = margin
+
+        this.rectangle.scaling = new paper.Point(this.margin, this.margin)
     }
 
     show() {

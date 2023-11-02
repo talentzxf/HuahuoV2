@@ -164,6 +164,7 @@
     "Unfollow": "不贴边",
     "select": "选择",
     "property": {
+      "margin": "边缘比例",
       "growth": "生长系数",
       "targetShapeArray": "目标形状",
       "strokeWidth": "描边宽度",
