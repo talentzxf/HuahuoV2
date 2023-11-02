@@ -7,6 +7,8 @@ class Camera2D extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateFloat, 0.0, {min: 0.0, max: 1.0, step: 0.01} as FloatPropertyConfig)
     margin
 
+    _rectangle
+
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 

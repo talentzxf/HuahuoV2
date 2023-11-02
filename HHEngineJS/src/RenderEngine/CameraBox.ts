@@ -1,4 +1,5 @@
 import {RenderEngine2D} from "./RenderEngine2D";
+import * as paper from "paper"
 
 class CameraBox {
     _rectangle: paper.Path.Rectangle
@@ -6,7 +7,7 @@ class CameraBox {
 
     // 0.0 -- No margin at all. Viewport's position the same as the focus target.
     // 1.0 -- Viewport will go with the
-    margin: 0.0
+    margin: 0.5
 
     constructor(renderEngine) {
         this._renderEngine = renderEngine
@@ -15,7 +16,7 @@ class CameraBox {
     private get rectangle() {
         if (this._rectangle == null) {
             this._rectangle = this._renderEngine.createViewRectangle(new paper.Color("red"))
-            this._rectangle.strokeColor = new paper.Color("black")
+            this._rectangle.applyMatrix = false
 
             if (this.margin > 0.0) {
                 this._rectangle.scaling = new paper.Point(this.margin, this.margin)
