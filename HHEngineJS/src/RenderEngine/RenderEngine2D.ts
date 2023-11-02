@@ -1,4 +1,5 @@
 import {Vector2} from "hhcommoncomponents"
+import {CameraBox} from "./CameraBox";
 
 interface RenderEngine2D {
     init(canvas): void;
@@ -15,7 +16,7 @@ interface RenderEngine2D {
 
     resize(canvas: HTMLCanvasElement, width: number, height: number): void
 
-    getContentWH(canvasWidth, canvasHeight):[number, number];
+    getContentWH(canvasWidth, canvasHeight): [number, number];
 
     setBgColor(bgColor);
 
@@ -24,6 +25,10 @@ interface RenderEngine2D {
     focusShape(shape)
 
     setViewPosition(position)
+
+    createViewRectangle()
+
+    getCameraBox(): CameraBox
 }
 
 export {RenderEngine2D}

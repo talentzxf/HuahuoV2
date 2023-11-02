@@ -5,6 +5,7 @@ import {RenderEngine2D} from "./RenderEngine2D";
 import {huahuoEngine} from "../EngineAPI";
 import {GraphEvent, EventParam, PropertyType} from "hhcommoncomponents";
 import {EventEmitter} from "hhcommoncomponents";
+import {CameraBox} from "./CameraBox";
 
 let bgLayerName = "background"
 let contentLayerName = "content"
@@ -71,7 +72,7 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
         this.contentLayer.activate()
     }
 
-    private createViewRectangle(x, y, w, h, fillColor) {
+    private _createViewRectangle(x, y, w, h, fillColor) {
         this.activateBgLayer()
         // Convert all points from view->project coordinate
         let leftUp = view.viewToProject(new paper.Point(x, y))
@@ -133,21 +134,33 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
     bgFillColor = new paper.Color("white")
     bgRectangle
 
-    public clearBackground() {
+    cameraBox: CameraBox = null
 
+    getCameraBox(): CameraBox {
+        if (this.cameraBox == null) {
+            this.cameraBox = new CameraBox(this)
+        }
+
+        return this.cameraBox
+    }
+
+    public createViewRectangle(bgColor = this.bgFillColor) {
         let canvasWidth = view.element.width
         let canvasHeight = view.element.height
-
         // Logger.debug("Canvas width:" + canvasWidth + ",height:" + canvasHeight)
+        let [contentWidth, contentHeight] = this.getContentWH(canvasWidth, canvasHeight)
+        let xOffset = (canvasWidth - contentWidth) / 2
+        let yOffset = (canvasHeight - contentHeight) / 2
 
+        return this._createViewRectangle(xOffset, yOffset, contentWidth, contentHeight, bgColor)
+    }
+
+    public clearBackground() {
         if (this.bgLayer) {
             this.bgLayer.removeChildren()
         }
 
-        let [contentWidth, contentHeight] = this.getContentWH(canvasWidth, canvasHeight)
-        let xOffset = (canvasWidth - contentWidth) / 2
-        let yOffset = (canvasHeight - contentHeight) / 2
-        this.bgRectangle = this.createViewRectangle(xOffset, yOffset, contentWidth, contentHeight, this.bgFillColor)
+        this.bgRectangle = this.createViewRectangle()
         this.bgRectangle.sendToBack()
         this.restoreContentLayer()
     }
@@ -306,6 +319,8 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
 
     setViewPosition(position) {
         view.center = position
+
+        this.bgRectangle.position = position
     }
 
     public getGlobalPosition(viewX: number, viewY: number): paper.Point {
