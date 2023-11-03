@@ -126,6 +126,13 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
 
         if (this.originalViewPosition.has(view)) {
             view.center = this.originalViewPosition.get(view)
+
+            this.bgRectangle.position = this.originalViewPosition.get(view)
+
+            if(this.cameraBox){
+                this.cameraBox.reset(view.center)
+            }
+
         } else {
             view.center = new paper.Point(0, 0)
         }
@@ -318,9 +325,8 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
     }
 
     setViewPosition(position) {
-        view.center = position
-
-        this.bgRectangle.position = position
+        view.center = this.cameraBox.getViewCenterPosition(position)
+        this.bgRectangle.position = view.center
     }
 
     public getGlobalPosition(viewX: number, viewY: number): paper.Point {

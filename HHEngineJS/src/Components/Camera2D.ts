@@ -4,7 +4,7 @@ import {FloatPropertyConfig} from "hhcommoncomponents";
 
 @Component()
 class Camera2D extends AbstractComponent {
-    @PropertyValue(PropertyCategory.interpolateFloat, 0.0, {min: 0.0, max: 1.0, step: 0.01} as FloatPropertyConfig)
+    @PropertyValue(PropertyCategory.interpolateFloat, 0.5, {min: 0.0, max: 1.0, step: 0.01} as FloatPropertyConfig)
     margin
 
     _rectangle
@@ -13,7 +13,7 @@ class Camera2D extends AbstractComponent {
         super.afterUpdate(force);
 
         if (huahuoEngine.getActivePlayer().isPlaying){ // Only Focus when playing.
-            renderEngine2D.getCameraBox().hide()
+            // renderEngine2D.getCameraBox().hide()
             renderEngine2D.setViewPosition(this.baseShape.position)
         }
         else{ // Show margin box.
