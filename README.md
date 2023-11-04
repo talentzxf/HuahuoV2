@@ -32,6 +32,7 @@ TODOs:
 1. Onion skin view.
 2. Bone Animation
 3. AIGC !!!!
-4. SDK to let user make own components.
-5. SDK to embed Huahuo project into other websites.
+4. Unity Player
+5. SDK to let user make own components.
+6. SDK to embed Huahuo project into other websites.
  
