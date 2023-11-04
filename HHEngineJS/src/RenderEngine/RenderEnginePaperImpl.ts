@@ -1,16 +1,15 @@
 import * as paper from "paper"
-import {view} from "paper";
+import {view} from "paper"
 import {Logger, Vector2} from "hhcommoncomponents"
 import {RenderEngine2D} from "./RenderEngine2D";
 import {huahuoEngine} from "../EngineAPI";
-import {GraphEvent, EventParam, PropertyType} from "hhcommoncomponents";
-import {EventEmitter} from "hhcommoncomponents";
 import {CameraBox} from "./CameraBox";
+import {CanvasEventEmitter} from "./CanvasEventEmitter";
 
 let bgLayerName = "background"
 let contentLayerName = "content"
 
-class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
+class RenderEnginePaperJs implements RenderEngine2D {
 
     // From canvas to project index
     private canvasPaperMap: Map<HTMLCanvasElement, number> = new Map()
@@ -25,10 +24,6 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
 
     getAspectRatio() {
         return this.aspectRatio
-    }
-
-    getEventEmitterName() {
-        return "Canvas"
     }
 
     getInitCanvasWH(): [number, number] {
@@ -129,7 +124,7 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
 
             this.bgRectangle.position = this.originalViewPosition.get(view)
 
-            if(this.cameraBox){
+            if (this.cameraBox) {
                 this.cameraBox.reset(view.center)
             }
 
@@ -177,6 +172,25 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
         return new Vector2(worldPos.x, worldPos.y)
     }
 
+    canvasEventEmitter = new CanvasEventEmitter()
+
+    initCanvasEventListener() {
+        view.onMouseMove = (evt: paper.MouseEvent) => {
+            this.canvasEventEmitter.onMouseMove(evt.point)
+        }
+
+        view.onMouseDown = (evt: paper.MouseEvent) => {
+            this.canvasEventEmitter.onMouseDown(evt.point)
+        }
+
+        view.onMouseUp = (evt: paper.MouseEvent) => {
+            this.canvasEventEmitter.onMouseUp(evt.point)
+        }
+
+        let canvas = this.getDefaultCanvas()
+        canvas.addEventListener("keyup", )
+    }
+
     public init(canvas: HTMLCanvasElement, isPlayer: boolean = false) {
         console.log("Initing paper!!!!")
         if (this.canvasPaperMap.get(canvas)) {
@@ -193,32 +207,7 @@ class RenderEnginePaperJs extends EventEmitter implements RenderEngine2D {
 
         this.canvasPaperMap.set(canvas, paper.project.index)
 
-        view.onMouseMove = (evt: paper.MouseEvent) => {
-            this.onMouseMove(evt.point)
-        }
-
-        view.onMouseDown = (evt: paper.MouseEvent) => {
-            this.onMouseDown(evt.point)
-        }
-
-        view.onMouseUp = (evt: paper.MouseEvent) => {
-            this.onMouseUp(evt.point)
-        }
-    }
-
-    @GraphEvent(true)
-    onMouseMove(@EventParam(PropertyType.VECTOR2) point: paper.Point) {
-
-    }
-
-    @GraphEvent(true)
-    onMouseDown(@EventParam(PropertyType.VECTOR2) point: paper.Point) {
-
-    }
-
-    @GraphEvent(true)
-    onMouseUp(@EventParam(PropertyType.VECTOR2) point: paper.Point) {
-
+        this.initCanvasEventListener()
     }
 
     saveProjectCanvasWH(width, height) {
