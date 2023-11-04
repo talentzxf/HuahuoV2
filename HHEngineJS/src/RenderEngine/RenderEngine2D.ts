@@ -29,6 +29,8 @@ interface RenderEngine2D {
     createViewRectangle(bgColor)
 
     getCameraBox(): CameraBox
+
+    getEventBus()
 }
 
 export {RenderEngine2D}

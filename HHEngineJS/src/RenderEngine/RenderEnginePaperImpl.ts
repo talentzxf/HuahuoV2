@@ -138,6 +138,10 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
     cameraBox: CameraBox = null
 
+    getEventBus(){
+        return this.canvasEventEmitter.getEventBus()
+    }
+
     getCameraBox(): CameraBox {
         if (this.cameraBox == null) {
             this.cameraBox = new CameraBox(this)
@@ -187,8 +191,13 @@ class RenderEnginePaperJs implements RenderEngine2D {
             this.canvasEventEmitter.onMouseUp(evt.point)
         }
 
-        let canvas = this.getDefaultCanvas()
-        canvas.addEventListener("keyup", )
+        document.addEventListener("keyup", (evt)=>{
+            this.canvasEventEmitter.onKeyUp(evt.key, evt.code)
+        })
+
+        document.addEventListener("keydown", (evt)=>{
+            this.canvasEventEmitter.onKeyDown(evt.key, evt.code)
+        })
     }
 
     public init(canvas: HTMLCanvasElement, isPlayer: boolean = false) {

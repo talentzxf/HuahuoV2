@@ -20,6 +20,16 @@ class CanvasEventEmitter extends EventEmitter {
     onMouseUp(@EventParam(PropertyType.VECTOR2) point: paper.Point) {
 
     }
+
+    @GraphEvent(true)
+    onKeyUp(@EventParam(PropertyType.STRING) key: string, @EventParam(PropertyType.STRING) code){
+
+    }
+
+    @GraphEvent(true)
+    onKeyDown(@EventParam(PropertyType.STRING) key: string, @EventParam(PropertyType.STRING) code){
+
+    }
 }
 
 export {CanvasEventEmitter}
