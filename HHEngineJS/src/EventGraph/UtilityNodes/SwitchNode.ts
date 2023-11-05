@@ -7,6 +7,10 @@ class SwitchNode extends AbstractNode {
 
     inputWidget
 
+    properties = {
+        options : {}
+    }
+
     constructor() {
         super();
         this.inputWidget = this.addInput("input", "string")
