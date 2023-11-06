@@ -21,7 +21,7 @@ class SwitchNode extends AbstractNode {
                 if (output.name == defaultNodeName) {
                     continue
                 }
-                
+
                 if (!optionArrayValue.includes(output.name)) {
                     let slotId = this.findOutputSlot(output.name);
                     this.removeOutput(slotId);
@@ -56,6 +56,11 @@ class SwitchNode extends AbstractNode {
         // If none matched, execute this slot.
         this.addOutput(defaultNodeName, LiteGraph.EVENT)
         this.inputWidget = this.addInput("input", "string")
+    }
+
+    onAction(action, param) {
+        let inputString = this.getInputDataByName("input")
+
     }
 
     static getType(): string {

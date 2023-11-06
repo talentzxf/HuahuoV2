@@ -80,7 +80,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
             "}" +
             "</style>"
 
-        this.containerDiv.innerHTML += "<form id='eventGraphContainer' class='litegraph litegraph-editor'> " +
+        this.containerDiv.innerHTML += "<form id='eventGraphContainer' class='litegraph litegraph-editor'" +
+            " style='width: fit-content; padding: 10px'> " +
             "   <div style='display: flex; flex-direction: row-reverse'>" +
             "       <div id='closeBtn' >" +
             "           <img class='far fa-circle-xmark'>" +
@@ -89,8 +90,6 @@ class EventGraphForm extends HTMLElement implements HHForm {
             "</form>"
 
         let form = this.containerDiv.querySelector("form")
-        form.style.width = CANVAS_WIDTH * 1.2 + "px"
-
         this.closeBtn = this.containerDiv.querySelector("#closeBtn")
         this.closeBtn.onclick = this.closeForm.bind(this)
 
@@ -104,6 +103,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         let resetScaleButton = document.createElement("button")
         resetScaleButton.innerText = i18n.t(eventGraphPrefix + "resetScale")
         resetScaleButton.style.width = "100px"
+        resetScaleButton.style.padding = "0px"
         this.appendChild(this.containerDiv)
 
         let _this = this
