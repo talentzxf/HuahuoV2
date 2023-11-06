@@ -60,7 +60,20 @@ class SwitchNode extends AbstractNode {
 
     onAction(action, param) {
         let inputString = this.getInputDataByName("input")
+        let executed = false
+        for(let output of this.outputs){
+            if(output.name == inputString){
+                executed = true
 
+                let slotId = this.findOutputSlot(output.name)
+                this.triggerSlot(slotId, null, null)
+            }
+        }
+
+        if(!executed){
+            let defaultSlot = this.findOutputSlot(defaultNodeName)
+            this.triggerSlot(defaultSlot, null, null)
+        }
     }
 
     static getType(): string {
