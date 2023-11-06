@@ -30,6 +30,9 @@ Done:
 3. 
 TODOs:
 1. Onion skin view.
+2. https://convai.com/
+2. Live2D !!!
+   3. CubismSdkForWeb-4-r.7
 2. Bone Animation
 3. AIGC !!!!
 4. Unity Player
