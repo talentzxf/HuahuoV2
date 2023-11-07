@@ -49,7 +49,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 oldGraph.onInputNodeCreated = null
                 oldGraph.onInputNodeRemoved = null
 
-                for (let valueChangeHandler of this.valueChangeHandlerIds) {
+                for (let [nodeId, valueChangeHandler] of this.nodeIdvalueChangeHandlerIdMap) {
                     this.targetComponent.unregisterValueChangeHandlerFromAllValues(valueChangeHandler)
                 }
             }
@@ -479,6 +479,10 @@ class EventGraphForm extends HTMLElement implements HHForm {
     }
 
     onInputAdded(inputName: string, inputType: string) {
+        if (this.targetComponent.hasOwnProperty(inputName)) {
+            console.log("Input " + inputName + " already existed!")
+            return;
+        }
         console.log("Input added")
         // TODO: Switch - case?? Looks stupid, need to seed some more elegant way to do this.
         switch (inputType) {
@@ -506,7 +510,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
         console.log("Input removed")
     }
 
-    valueChangeHandlerIds: Array<number> = new Array
+    // From NodeId -> HandlerId map.
+    nodeIdvalueChangeHandlerIdMap: Map<number, number> = new Map
 
     setNodeValue(node, value) {
         node.graph.beforeChange()
@@ -524,22 +529,26 @@ class EventGraphForm extends HTMLElement implements HHForm {
     onInputNodeCreated(node) {
         let propertyName = node.properties.name
 
+        let nodeId = node.id
+
         let _this = this
         if (this.targetComponent.hasOwnProperty(propertyName)) {
             let valueChangeHandlerId = this.targetComponent.registerValueChangeHandler(propertyName, (value) => {
-                _this.setNodeValue(node, value)
+                let inputNode = _this.targetComponent.graph.getNodeById(nodeId)
+                if (inputNode != null)
+                    _this.setNodeValue(inputNode, value)
+                else{
+                    let valueChangeHandler = this.nodeIdvalueChangeHandlerIdMap.get(node.id)
+                    this.targetComponent.unregisterValueChangeHandlerFromAllValues(valueChangeHandler)
+                }
             })
 
-            this.valueChangeHandlerIds.push(valueChangeHandlerId)
+            this.nodeIdvalueChangeHandlerIdMap.set(nodeId, valueChangeHandlerId)
 
             if (node.properties.value != this.targetComponent[propertyName]) {
                 this.setNodeValue(node, this.targetComponent[propertyName])
             }
         }
-    }
-
-    onInputNodeRemoved(node) {
-        console.log("Input node removed:" + node)
     }
 
     setFrameIdHandler = -1
@@ -562,7 +571,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         graph.onInputRemoved = this.onInputRemoved.bind(this)
 
         graph.onInputNodeCreated = this.onInputNodeCreated.bind(this)
-        graph.onInputNodeRemoved = this.onInputNodeRemoved.bind(this)
+        // graph.onInputNodeRemoved = this.onInputNodeRemoved.bind(this)
 
         // Bind all current input nodes
         let inputNodes = graph.findNodesByType("graph/input")

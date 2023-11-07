@@ -22,6 +22,8 @@ class EventGraphComponent extends AbstractComponent {
     eventGraph
 
     needReloadGraph = true
+    reloading = false
+
     graph: LGraph = new LGraph()
 
     getBaseActor() {
@@ -37,6 +39,9 @@ class EventGraphComponent extends AbstractComponent {
     }
 
     saveGraph() {
+        if(this.reloading) // During reloading, no need to trigger save.
+            return
+
         let graphString = JSON.stringify(this.graph.serialize())
         if (this.eventGraphJSON != graphString){
             this.eventGraphJSON = graphString
@@ -64,8 +69,10 @@ class EventGraphComponent extends AbstractComponent {
     reloadGraph() {
         if (this.needReloadGraph) {
             if (this.eventGraphJSON && this.eventGraphJSON.length > 0) {
+                this.reloading = true
                 let data = JSON.parse(this.eventGraphJSON)
                 this.graph.configure(data)
+                this.reloading = false
             }
 
             // this.graph.start()

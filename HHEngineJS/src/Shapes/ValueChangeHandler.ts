@@ -62,13 +62,23 @@ class ValueChangeHandler {
         }.bind(this)
     }
 
-    unregisterValueChangeHandlerFromAllValues(handlerId) {
+    private _unregisterValueChangeHandlerFromAllValues(handlerId) {
         for (let [valueName, valueChangeHandlerMap] of this.valueChangeHandlersMap) {
             valueChangeHandlerMap.delete(handlerId)
         }
 
-        if(this.valueChangeHandlersPreProcessorMap.has(handlerId)){
+        if (this.valueChangeHandlersPreProcessorMap.has(handlerId)) {
             this.valueChangeHandlersPreProcessorMap.delete(handlerId)
+        }
+    }
+
+    unregisterValueChangeHandlerFromAllValues(handlerIds) {
+        if (handlerIds instanceof Array) {
+            for (let id of handlerIds) {
+                this._unregisterValueChangeHandlerFromAllValues(id)
+            }
+        } else {
+            this._unregisterValueChangeHandlerFromAllValues(handlerIds)
         }
     }
 
