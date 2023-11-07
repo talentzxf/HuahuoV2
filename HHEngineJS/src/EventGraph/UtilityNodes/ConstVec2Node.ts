@@ -19,7 +19,6 @@ class ConstVec2Node extends AbstractNode {
         this.xWidget = this.addWidget("number", "valueX", this.properties.x, (v) => {
             _this.properties.x = v
             _this.graph.afterChange(_this)
-
         })
         this.yWidget = this.addWidget("number", "valueY", this.properties.y, (v) => {
             _this.properties.y = v

@@ -63,7 +63,7 @@ class RenderEnginePaperJs implements RenderEngine2D {
         this.bgLayer.activate()
     }
 
-    private restoreContentLayer() {
+    private activateContentLayer() {
         this.contentLayer.activate()
     }
 
@@ -73,13 +73,16 @@ class RenderEnginePaperJs implements RenderEngine2D {
         let leftUp = view.viewToProject(new paper.Point(x, y))
         let rightDown = view.viewToProject(new paper.Point(x + w, y + h))
 
-        return new paper.Path.Rectangle({
+        let returnRect = new paper.Path.Rectangle({
             point: [leftUp.x, leftUp.y],
             size: [rightDown.x - leftUp.x, rightDown.y - leftUp.y],
             strokeColor: 'white',
             fillColor: fillColor,
             selected: false
         })
+
+        this.activateContentLayer()
+        return returnRect
     }
 
     setBgColor(bgColor) {
@@ -138,7 +141,7 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
     cameraBox: CameraBox = null
 
-    getEventBus(){
+    getEventBus() {
         return this.canvasEventEmitter.getEventBus()
     }
 
@@ -168,7 +171,7 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
         this.bgRectangle = this.createViewRectangle()
         this.bgRectangle.sendToBack()
-        this.restoreContentLayer()
+        this.activateContentLayer()
     }
 
     public getWorldPosFromView(x: number, y: number): Vector2 {
@@ -191,11 +194,11 @@ class RenderEnginePaperJs implements RenderEngine2D {
             this.canvasEventEmitter.onMouseUp(evt.point)
         }
 
-        document.addEventListener("keyup", (evt)=>{
+        document.addEventListener("keyup", (evt) => {
             this.canvasEventEmitter.onKeyUp(evt.key, evt.code)
         })
 
-        document.addEventListener("keydown", (evt)=>{
+        document.addEventListener("keydown", (evt) => {
             this.canvasEventEmitter.onKeyDown(evt.key, evt.code)
         })
     }
