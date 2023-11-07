@@ -247,11 +247,20 @@ class InspectorX extends React.Component<InspectorProps, InspectorState> {
     render() {
         return (
             // <div className="w-full overflow-auto resize">
-            <div className="w-full overflow-auto">
-                {this.state.selectedObject == null && this.state.property == null &&
-                    <span> Please select something to start working</span>}
-                {this.state.selectedObject != null && this.createButtonGroup()}
-                {this.createComponentGroup()}
+            // Use this trick to make child always doesn't affect parent height.
+            <div style={{
+                position: "relative"
+            }}>
+                <div className="w-full overflow-auto" style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0
+                }}>
+                    {this.state.selectedObject == null && this.state.property == null &&
+                        <span> Please select something to start working</span>}
+                    {this.state.selectedObject != null && this.createButtonGroup()}
+                    {this.createComponentGroup()}
+                </div>
             </div>
         )
     }
