@@ -534,7 +534,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         let _this = this
         if (this.targetComponent.hasOwnProperty(propertyName)) {
             let valueChangeHandlerId = this.targetComponent.registerValueChangeHandler(propertyName, (value) => {
-                let inputNode = _this.targetComponent.graph.getNodeById(nodeId)
+                let inputNode = _this.targetComponent.getGraph().getNodeById(nodeId)
                 if (inputNode != null)
                     _this.setNodeValue(inputNode, value)
                 else{
