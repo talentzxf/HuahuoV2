@@ -2,6 +2,7 @@ import {Logger} from "hhcommoncomponents"
 import axios from "axios";
 import {userInfo} from "../Identity/UserInfo";
 import huahuoProperties from "/dist/hhide.properties";
+import engineProperties from "/dist/engine.properties"
 import {HHToast} from "hhcommoncomponents";
 
 import {
@@ -73,7 +74,8 @@ class RestApi {
     }
 
     async uploadElement(data: Blob, fileName: string, storeId: string, isShareable = true, isEditable = true){
-        return this.fileController.uploadFileForm(fileName, data, true, true, this.getAuthHeader()).then((response)=>{
+        let engineVersion = engineProperties["engine.version"]
+        return this.fileController.uploadFileForm(fileName,engineVersion, data, true, true, this.getAuthHeader()).then((response)=>{
             if(response && response.data){
                 let fileId = response.data.fileId
 
@@ -83,7 +85,8 @@ class RestApi {
     }
 
     async uploadProject(data: Blob, fileName: string) {
-        return this.fileController.uploadFileForm(fileName, data, true, false, this.getAuthHeader())
+        let engineVersion = engineProperties["engine.version"]
+        return this.fileController.uploadFileForm(fileName, engineVersion, data, true, false, this.getAuthHeader())
     }
 
     async uploadProjectCoverPage(fileId, data: Blob, fileName, isElement: boolean = false) {
