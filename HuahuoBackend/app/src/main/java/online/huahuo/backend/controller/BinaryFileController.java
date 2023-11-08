@@ -62,13 +62,14 @@ public class BinaryFileController {
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public BinaryFileCallStatus uploadFile(@RequestParam MultipartFile file,
                                            @RequestParam String fileName,
+                                           @RequestParam String engineVersion,
                                            @RequestParam(required = false, defaultValue = "true") Boolean forceOverride,
                                            @RequestParam(required = false, defaultValue = "false") Boolean isElement
     ) throws IOException, NoSuchAlgorithmException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        BinaryFileDB fileDB = storageService.store(username, file, fileName, forceOverride, isElement);
+        BinaryFileDB fileDB = storageService.store(username, file, fileName, engineVersion, forceOverride, isElement);
         return new BinaryFileCallStatus(fileDB.getId(), true, "File uploaded successfully!");
     }
 

@@ -38,15 +38,14 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public BinaryFileDB store(String path, MultipartFile file, String fileName, Boolean forceOverride, Boolean isElement) throws IOException, NoSuchAlgorithmException {
+    public BinaryFileDB store(String path, MultipartFile file, String fileName, String engineVersion, Boolean forceOverride, Boolean isElement) throws IOException, NoSuchAlgorithmException {
         FileType fileType = isElement ? FileType.ELEMENT : FileType.PROJECT;
 
         BinaryFileStatus fileStatus = BinaryFileStatus.INACTIVE;
         String absoluteFilePath = null;
-        if(file != null){
+        if (file != null) {
             String savePath = getPath() + path + File.separator + fileType + File.separator;
             absoluteFilePath = savePath + fileName + HUAHUO_POSTFIX;
-
 
             if (!forceOverride) { // Don't override if the file exists and forceOverride = false.
                 if (new File(absoluteFilePath).exists()) {
@@ -72,11 +71,13 @@ public class StorageServiceImpl implements StorageService {
 
         // TODO: Read the version from the file.
         if (fileDB == null)
-            fileDB = new BinaryFileDB(fileName, "0.0.1", username, absoluteFilePath, fileHash, "", fileType);
+            fileDB = new BinaryFileDB(fileName, engineVersion, 1, username, absoluteFilePath, fileHash, "", fileType);
         else {
+            fileDB.setEngineVersion(engineVersion);
             fileDB.setFullPath(absoluteFilePath);
             fileDB.setChecksum(fileHash);
             fileDB.setModifiedTime(new Date());
+            fileDB.setVersion(fileDB.getVersion() + 1);
         }
 
         fileDB.setStatus(fileStatus);
