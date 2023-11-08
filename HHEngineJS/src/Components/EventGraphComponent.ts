@@ -100,7 +100,7 @@ class EventGraphComponent extends AbstractComponent {
                 this.graph.configure(data)
                 this.reloading = false
 
-                let totalInputCount = this.graph.inputs.getLength()
+                let totalInputCount = this.graph.inputs.length
                 for (let inputIdx = 0; totalInputCount < totalInputCount; totalInputCount++) {
                     let inputValue = this.graph.inputs.getInput(inputIdx)
                     this.addInput(inputValue.name, inputValue.type)

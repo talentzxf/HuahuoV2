@@ -54,7 +54,11 @@
     "Stop": "停止",
     "Pause": "暂停"
   },
+  "copySucceeded": "成功复制到剪贴板",
+  "copyFailed": "复制到剪贴板失败",
   "eventgraph": {
+    "copy": "复制事件图",
+    "paste": "黏贴事件图",
     "resetScale": "重置缩放",
     "addEventListener": "监听事件",
     "addGraphAction": "执行动作",

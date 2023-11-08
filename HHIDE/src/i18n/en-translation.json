@@ -54,7 +54,11 @@
     "Stop": "Stop",
     "Pause": "Pause"
   },
+  "copySucceeded": "Successfully copied to clipboard",
+  "copyFailed": "Failed to copy to clipboard",
   "eventgraph": {
+    "copy": "Copy Graph",
+    "paste": "Paste Graph",
     "resetScale": "Reset Scale",
     "addEventListener": "Add Event Receiver",
     "addGraphAction": "Add Graph Action",

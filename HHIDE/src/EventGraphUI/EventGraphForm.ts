@@ -1,5 +1,5 @@
 import {HHForm} from "../Utilities/HHForm";
-import {CustomElement, getFullEventName} from "hhcommoncomponents";
+import {CustomElement, getFullEventName, HHToast} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {getEventCategoryMap} from "./Utils"
 import {
@@ -11,9 +11,6 @@ import {
     LGraphCanvas,
     LiteGraph,
     NodeTargetType,
-    PlayerActions,
-    PropertyCategory,
-    PropertyDef,
     renderEngine2D
 } from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
@@ -64,6 +61,16 @@ class EventGraphForm extends HTMLElement implements HHForm {
         this.style.display = "none"
     }
 
+    createToolButton(text) {
+        let button = document.createElement("button")
+        button.innerText = text
+        button.style.width = "100px"
+        button.style.padding = "0px"
+        button.style.margin = "1px"
+        button.style.border = "1px solid gray"
+        return button
+    }
+
     connectedCallback() {
         this.style.position = "absolute"
         this.style.top = "50%"
@@ -100,11 +107,10 @@ class EventGraphForm extends HTMLElement implements HHForm {
         this.canvas.style.height = CANVAS_HEIGHT + "px"
         form.appendChild(this.canvas)
 
-        let resetScaleButton = document.createElement("button")
-        resetScaleButton.innerText = i18n.t(eventGraphPrefix + "resetScale")
-        resetScaleButton.style.width = "100px"
-        resetScaleButton.style.padding = "0px"
+
         this.appendChild(this.containerDiv)
+
+        let resetScaleButton = this.createToolButton(i18n.t(eventGraphPrefix + "resetScale"))
 
         let _this = this
         resetScaleButton.onclick = function (e) {
@@ -114,6 +120,32 @@ class EventGraphForm extends HTMLElement implements HHForm {
         }
 
         form.appendChild(resetScaleButton)
+
+        let copyGraphButton = this.createToolButton(i18n.t(eventGraphPrefix + "copy"))
+
+        copyGraphButton.onclick = function (e) {
+            let graphString = JSON.stringify(_this.lcanvas.graph.serialize())
+            navigator.clipboard.writeText(graphString).then(() => {
+                HHToast.info(i18n.t("copySucceeded"))
+            }).catch(err => {
+                HHToast.info(i18n.t("copyFailed"))
+            })
+            e.preventDefault()
+        }
+        form.appendChild(copyGraphButton)
+
+        let pasteGraphButton = this.createToolButton(i18n.t(eventGraphPrefix + "paste"))
+        pasteGraphButton.onclick = function (e) {
+            navigator.clipboard.readText().then((text) => {
+                _this.targetComponent.eventGraphJSON = text
+                _this.targetComponent.needReloadGraph = true
+                _this.targetComponent.afterUpdate()
+                _this.setTargetComponent(_this.targetComponent)
+            })
+            e.preventDefault()
+        }
+
+        form.appendChild(pasteGraphButton)
 
         this.addEventListener("mousedown", this.onMouseDown.bind(this))
         this.addEventListener("mouseup", this.onMouseUp.bind(this))
@@ -519,7 +551,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 let inputNode = _this.targetComponent.getGraph().getNodeById(nodeId)
                 if (inputNode != null)
                     _this.setNodeValue(inputNode, value)
-                else{
+                else {
                     let valueChangeHandler = this.nodeIdvalueChangeHandlerIdMap.get(node.id)
                     this.targetComponent.unregisterValueChangeHandlerFromAllValues(valueChangeHandler)
                 }
