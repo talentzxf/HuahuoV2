@@ -479,29 +479,11 @@ class EventGraphForm extends HTMLElement implements HHForm {
     }
 
     onInputAdded(inputName: string, inputType: string) {
-        if (this.targetComponent.hasOwnProperty(inputName)) {
-            console.log("Input " + inputName + " already existed!")
+        if (!this.targetComponent.addInput(inputName, inputType)) {
             return;
-        }
-        console.log("Input added")
-        // TODO: Switch - case?? Looks stupid, need to seed some more elegant way to do this.
-        switch (inputType) {
-            case "number":
-                let propertyDef: PropertyDef = {
-                    key: inputName,
-                    type: PropertyCategory.interpolateFloat,
-                    initValue: 0.0,
-                    hide: false
-                }
-                this.targetComponent.addProperty(propertyDef, true)
-                break;
-            default:
-                console.log("Unknown property:" + inputType)
-                break;
         }
 
         this.targetComponent.updateComponentPropertySheet(this.targetComponent.baseShape.getPropertySheet())
-
         // Refresh the component inspector
         IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, this.targetComponent.baseShape)
     }
