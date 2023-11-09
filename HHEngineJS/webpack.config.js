@@ -24,7 +24,15 @@ let webpackConfig = {
             {
                 test: /\.css$/i,
                 use: ["style-loader", "css-loader"]
-            }
+            },
+            {
+                test: /\.properties$/i,
+                use: [
+                    {
+                        loader: 'properties-file/webpack-loader',
+                    },
+                ],
+            },
         ]
     },
     resolve: {
@@ -66,7 +74,7 @@ function setupWebpack(env) {
         webpackConfig.entry = ["./src/index.js", "./test/test.js"]
     }
 
-    if(env.production){
+    if (env.production) {
         webpackConfig.mode = "production"
     }
 

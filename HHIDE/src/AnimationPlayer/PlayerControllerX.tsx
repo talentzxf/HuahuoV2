@@ -4,6 +4,7 @@ import {imgButton} from "../UIComponents/MainMenuX";
 import {SVGFiles} from "../Utilities/Svgs";
 import {sceneViewManager} from "../SceneView/SceneViewManager";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
+import {huahuoEngine} from "hhenginejs";
 
 type PlayerControllerState = {
     projectName: string
@@ -59,7 +60,14 @@ class PlayerControllerX extends React.Component<any, PlayerControllerState> {
 
         return (
             <div className="flex flex-row">
-                <span className="w-[50%]">{this.state.projectName}</span>
+                <span className="w-[50%] flex flex-col">
+                    <span>{this.state.projectName}</span>
+                    <span>
+                        {
+                            "Engine-Version:" + huahuoEngine.getEngineVersion()
+                        }
+                    </span>
+                </span>
                 <div className="flex flex-row w-[50%]">
                     {this.state.isPlaying ? pauseButton : playButton}
                     {this.state.isPlaying ? (this.state.isPaused ? playButton : stopButton) : null}
