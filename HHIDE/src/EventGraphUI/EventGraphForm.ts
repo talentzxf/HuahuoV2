@@ -106,10 +106,18 @@ class EventGraphForm extends HTMLElement implements HHForm {
         this.canvas.style.width = CANVAS_WIDTH + "px"
         this.canvas.style.height = CANVAS_HEIGHT + "px"
         form.appendChild(this.canvas)
-
-
         this.appendChild(this.containerDiv)
 
+        let buttonsContainer = document.createElement("div")
+        buttonsContainer.style.width = "100%"
+        form.appendChild(buttonsContainer)
+        this.createButtons(buttonsContainer)
+
+        this.addEventListener("mousedown", this.onMouseDown.bind(this))
+        this.addEventListener("mouseup", this.onMouseUp.bind(this))
+    }
+
+    createButtons(parentDiv) {
         let resetScaleButton = this.createToolButton(i18n.t(eventGraphPrefix + "resetScale"))
 
         let _this = this
@@ -119,7 +127,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
             e.preventDefault()
         }
 
-        form.appendChild(resetScaleButton)
+        parentDiv.appendChild(resetScaleButton)
 
         let copyGraphButton = this.createToolButton(i18n.t(eventGraphPrefix + "copy"))
 
@@ -132,7 +140,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
             })
             e.preventDefault()
         }
-        form.appendChild(copyGraphButton)
+        parentDiv.appendChild(copyGraphButton)
 
         let pasteGraphButton = this.createToolButton(i18n.t(eventGraphPrefix + "paste"))
         pasteGraphButton.onclick = function (e) {
@@ -145,10 +153,17 @@ class EventGraphForm extends HTMLElement implements HHForm {
             e.preventDefault()
         }
 
-        form.appendChild(pasteGraphButton)
+        parentDiv.appendChild(pasteGraphButton)
 
-        this.addEventListener("mousedown", this.onMouseDown.bind(this))
-        this.addEventListener("mouseup", this.onMouseUp.bind(this))
+        let placeHolder = document.createElement("div")
+        placeHolder.style.width = "100%"
+        parentDiv.appendChild(placeHolder)
+
+        let eventGraphLibBtn = this.createToolButton(i18n.t(eventGraphPrefix + "lib"))
+        parentDiv.appendChild(eventGraphLibBtn)
+
+        let uploadEventGraphBtn = this.createToolButton(i18n.t(eventGraphPrefix + "upload"))
+        parentDiv.appendChild(uploadEventGraphBtn)
     }
 
     isDragging: boolean = false
