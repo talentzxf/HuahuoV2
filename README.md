@@ -34,6 +34,7 @@ TODOs:
 2. Live2D !!!
    3. CubismSdkForWeb-4-r.7
 2. Bone Animation
+3. Play video (Better leverage Bilibili or Youtube video sources. No need to host by myself.)
 3. AIGC !!!!
 4. Unity Player
 5. SDK to let user make own components.
@@ -42,4 +43,5 @@ TODOs:
    1. Daily jobs?
    2. Achievement system?
    3. Make the tutorial a game like thing??
+   4. Vtuber to make the tutorial.
  
