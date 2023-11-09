@@ -2,7 +2,6 @@ import {Logger} from "hhcommoncomponents"
 import axios from "axios";
 import {userInfo} from "../Identity/UserInfo";
 import huahuoProperties from "/dist/hhide.properties";
-import engineProperties from "/dist/engine.properties"
 import {HHToast} from "hhcommoncomponents";
 
 import {
@@ -10,6 +9,7 @@ import {
     LoginStatus, UserDB, UserDBRoleEnum, UserDBStatusEnum,
     ElementControllerApi
 } from "../../dist/clientApi/index"
+import {huahuoEngine} from "hhenginejs";
 
 
 // TODO: Use Swagger to generate the API class
@@ -69,14 +69,14 @@ class RestApi {
         return this.baseUrl + previewURLTemplate
     }
 
-    async createElement(fileName, isElement){
+    async createElement(fileName, isElement) {
         return this.elementController.createElement(fileName, isElement)
     }
 
-    async uploadElement(data: Blob, fileName: string, storeId: string, isShareable = true, isEditable = true){
-        let engineVersion = engineProperties["engine.version"]
-        return this.fileController.uploadFileForm(fileName,engineVersion, data, true, true, this.getAuthHeader()).then((response)=>{
-            if(response && response.data){
+    async uploadElement(data: Blob, fileName: string, storeId: string, isShareable = true, isEditable = true) {
+        let engineVersion = huahuoEngine.getEngineVersion()
+        return this.fileController.uploadFileForm(fileName, engineVersion, data, true, true, this.getAuthHeader()).then((response) => {
+            if (response && response.data) {
                 let fileId = response.data.fileId
 
                 return this.elementController.createElement(storeId, fileId, isEditable, isShareable, this.getAuthHeader())
@@ -85,7 +85,7 @@ class RestApi {
     }
 
     async uploadProject(data: Blob, fileName: string) {
-        let engineVersion = engineProperties["engine.version"]
+        let engineVersion = huahuoEngine.getEngineVersion()
         return this.fileController.uploadFileForm(fileName, engineVersion, data, true, false, this.getAuthHeader())
     }
 

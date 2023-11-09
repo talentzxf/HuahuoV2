@@ -100,7 +100,6 @@ let moduleExports = (env) => {
                 patterns: [
                     {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to: "wasm"},
                     {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
-                    {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/engine.properties", to: "conf"},
                     {from: "./svgs", to: "svgs"},
                     {from: "./src/i18n", to: "i18n"},
                     {from: "./src/test_lgraph.html", to: "test_lgraph.html"},

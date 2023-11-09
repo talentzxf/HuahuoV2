@@ -3,6 +3,7 @@ import {ToolBarX} from "./ToolBarX";
 import {EditorToolBarX} from "./EditorToolBarX";
 import {PlayerControllerX} from "../AnimationPlayer/PlayerControllerX";
 import {UserInfoBarX} from "../Identity/UserInfoBarX";
+import {huahuoEngine} from "hhenginejs/dist/src";
 
 function getButtonClz() {
     return "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold " +
@@ -33,6 +34,11 @@ class MainMenuX extends React.Component<any, any> {
                 </div>
                 <div className="w-[30%]">
                     <PlayerControllerX></PlayerControllerX>
+                </div>
+                <div className="w-[10%]">
+                    {
+                        "HuaHuo Engine. Version:" + huahuoEngine.getEngineVersion()
+                    }
                 </div>
                 <div className="w-full">
                     <UserInfoBarX></UserInfoBarX>

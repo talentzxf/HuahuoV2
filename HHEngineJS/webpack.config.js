@@ -48,6 +48,7 @@ let webpackConfig = {
             patterns: [
                 {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to: "wasm"},
                 {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
+                {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/engine.properties", to: "conf"},
                 {from: "./test/test.js", to: "./"},
             ],
         }),
