@@ -14,6 +14,7 @@ Build:
 
 Short term todos:
 1. Optimize build size.
+2. Auto line layout (detour all the blocks) in Node Graph.
 2. Expose element properties to the outer layer.
 2. Camera component.
 3. GeneratorComponent, set interval for each shape.
