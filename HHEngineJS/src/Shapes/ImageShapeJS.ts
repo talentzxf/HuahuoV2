@@ -200,10 +200,15 @@ class ImageShapeJS extends AbstractMediaShapeJS {
         return this.worldFrameAnimationFrameMap.size;
     }
 
+    // TODO: Save this into Cpp
     margins = [0.0, 0.0, 0.0, 0.0]
 
     getMargins() {
         return this.margins;
+    }
+
+    updateMargin(idx, value){
+        this.margins[idx] = value
     }
 
     afterWASMReady() {
@@ -233,7 +238,8 @@ class ImageShapeJS extends AbstractMediaShapeJS {
                         return "inspector.imageBottom"
                 }
             },
-            getter: this.getMargins.bind(this)
+            getter: this.getMargins.bind(this),
+            updater: this.updateMargin.bind(this)
         })
 
         this.propertySheet.addProperty(extendedProperties)

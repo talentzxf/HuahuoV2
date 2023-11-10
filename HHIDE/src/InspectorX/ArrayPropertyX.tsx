@@ -29,7 +29,7 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> implements Prop
             }
 
             if (property.updater != null && property.updater instanceof Function) {
-                property.setter = (val) => {
+                props.property["setter"] = (val) => {
                     return property.updater(idx, val)
                 }
             }
