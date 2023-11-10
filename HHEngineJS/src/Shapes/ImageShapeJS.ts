@@ -7,6 +7,10 @@ import {huahuoEngine} from "../EngineAPI";
 
 let shapeName = "ImageShape"
 
+class ImageSpriteController {
+
+}
+
 class ImageShapeJS extends AbstractMediaShapeJS {
 
     static createImageShape(rawObj) {
@@ -194,6 +198,45 @@ class ImageShapeJS extends AbstractMediaShapeJS {
 
     getFrames() {
         return this.worldFrameAnimationFrameMap.size;
+    }
+
+    margins = [0.0, 0.0, 0.0, 0.0]
+
+    getMargins() {
+        return this.margins;
+    }
+
+    afterWASMReady() {
+        super.afterWASMReady()
+
+        let extendedProperties = {
+            key: "inspector.extendedProperties",
+            type: PropertyType.COMPONENT,
+            config: {
+                children: []
+            }
+        }
+
+        extendedProperties.config.children.push({
+            key: "inspector.imageMargin",
+            type: PropertyType.ARRAY,
+            elementType: PropertyType.NUMBER,
+            getLabel: (idx) => {
+                switch (idx) {
+                    case 0:
+                        return "inspector.imageTop";
+                    case 1:
+                        return "inspector.imageLeft";
+                    case 2:
+                        return "inspector.imageRight";
+                    case 3:
+                        return "inspector.imageBottom"
+                }
+            },
+            getter: this.getMargins.bind(this)
+        })
+
+        this.propertySheet.addProperty(extendedProperties)
     }
 }
 

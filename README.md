@@ -40,7 +40,8 @@ TODOs:
 4. Unity Player
 5. SDK to let user make own components.
 6. SDK to embed Huahuo project into other websites.
-7. Tutorial to let people know Huahuo???
+7. Switch scenes. 
+8. Tutorial to let people know Huahuo???
    1. Daily jobs?
    2. Achievement system?
    3. Make the tutorial a game like thing??

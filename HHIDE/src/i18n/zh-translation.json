@@ -116,6 +116,12 @@
   "Motor": "马达组件",
   "ObjectGenerator": "形状生成器",
   "inspector": {
+    "imageMargin": "边界",
+    "imageLeft": "左",
+    "imageRight": "右",
+    "imageTop": "上",
+    "imageBottom": "下",
+    "extendedProperties": "拓展属性",
     "setAsStopFrame": "设置为停止帧",
     "unsetAsStopFrame": "取消设置为停止帧",
     "editFrameEventGraph": "编辑帧事件图",

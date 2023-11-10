@@ -116,6 +116,12 @@
   "Motor": "Motor",
   "ObjectGenerator": "Object Generator",
   "inspector": {
+    "imageMargin": "Margin",
+    "imageLeft": "Left",
+    "imageRight": "Right",
+    "imageTop": "Top",
+    "imageBottom": "Bottom",
+    "extendedProperties": "Extended Properties",
     "setAsStopFrame": "Set as Stop Frame",
     "unsetAsStopFrame": "Unset Stop Frame",
     "editFrameEventGraph": "Edit Frame Event Graph",
