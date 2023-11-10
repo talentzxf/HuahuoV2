@@ -14,7 +14,7 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> implements Prop
         this.forceUpdate()
     }
 
-    createReactNode(childElement, idx) {
+    createReactNode(idx) {
         let property = this.props.property
         let elementType = property.elementType
         let generator = GetPropertyReactGenerator(elementType)
@@ -23,7 +23,7 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> implements Prop
                 key: idx,
                 property: {
                     getter: () => {
-                        return childElement
+                        return property.getter()[idx]
                     }
                 }
             }
@@ -54,7 +54,7 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> implements Prop
                 label = <span>{i18n.t(property.getLabel(idx))}</span>
             }
 
-            let ele = this.createReactNode(element, idx)
+            let ele = this.createReactNode(idx)
             if (ele) {
                 if (label != null) {
                     reactElements.push(<div style={{display: "flex", alignItems: "center"}}

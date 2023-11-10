@@ -207,8 +207,15 @@ class ImageShapeJS extends AbstractMediaShapeJS {
         return this.margins;
     }
 
-    updateMargin(idx, value){
+    updateMargin(idx, value) {
         this.margins[idx] = value
+
+        let imageShape = this.paperItem as paper.Raster
+        let newImageWidth = imageShape.width * (100.0 - this.margins[0]) / 100.0
+        let newImageHeight = imageShape.height * (100.0 - this.margins[1]) / 100.0
+
+        let newShape = imageShape.getSubRaster(new paper.Rectangle(0, 0, newImageWidth, newImageHeight))
+        this.paperItem = newShape
     }
 
     afterWASMReady() {
