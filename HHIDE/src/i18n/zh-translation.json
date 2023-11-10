@@ -57,6 +57,8 @@
   "copySucceeded": "成功复制到剪贴板",
   "copyFailed": "复制到剪贴板失败",
   "eventgraph": {
+    "lib": "事件图库",
+    "upload": "上传",
     "copy": "复制事件图",
     "paste": "黏贴事件图",
     "resetScale": "重置缩放",

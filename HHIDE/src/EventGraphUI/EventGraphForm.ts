@@ -160,9 +160,17 @@ class EventGraphForm extends HTMLElement implements HHForm {
         parentDiv.appendChild(placeHolder)
 
         let eventGraphLibBtn = this.createToolButton(i18n.t(eventGraphPrefix + "lib"))
+        eventGraphLibBtn.addEventListener("click", (e) => {
+            HHToast.warn("Not implemented!")
+            e.preventDefault()
+        })
         parentDiv.appendChild(eventGraphLibBtn)
 
         let uploadEventGraphBtn = this.createToolButton(i18n.t(eventGraphPrefix + "upload"))
+        uploadEventGraphBtn.addEventListener("click", (e) => {
+            HHToast.warn("Not implemented!")
+            e.preventDefault()
+        })
         parentDiv.appendChild(uploadEventGraphBtn)
     }
 

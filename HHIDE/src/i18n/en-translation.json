@@ -57,6 +57,8 @@
   "copySucceeded": "Successfully copied to clipboard",
   "copyFailed": "Failed to copy to clipboard",
   "eventgraph": {
+    "lib": "Event Graph Lib",
+    "upload": "Upload",
     "copy": "Copy Graph",
     "paste": "Paste Graph",
     "resetScale": "Reset Scale",
