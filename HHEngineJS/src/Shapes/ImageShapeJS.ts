@@ -4,6 +4,7 @@ import {GlobalConfig} from "../GlobalConfig"
 import {AbstractMediaShapeJS} from "./AbstractMediaShapeJS";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {huahuoEngine} from "../EngineAPI";
+import {Dims} from "../ImageModifiers/ImageModifier";
 
 let shapeName = "ImageShape"
 
@@ -26,7 +27,7 @@ class ImageShapeJS extends AbstractMediaShapeJS {
 
     resourceMD5: string
 
-    firstFrameDims
+    firstFrameDims = new Dims()
 
     set isAnimation(isAnimation: boolean) {
         this.rawObj.SetIsAnimation(isAnimation)
@@ -47,6 +48,11 @@ class ImageShapeJS extends AbstractMediaShapeJS {
 
         if (this.paperItem) {
             let raster = this.paperItem as paper.Raster
+            raster.onLoad = () => {
+                this.firstFrameDims.width = raster.width
+                this.firstFrameDims.height = raster.height
+            }
+
             raster.source = this.data
         }
     }
@@ -73,8 +79,8 @@ class ImageShapeJS extends AbstractMediaShapeJS {
             let lastWorldFrame = -1
 
             this.firstFrameDims = this.frames[0].dims
-            gifCanvas.width = this.frames[0].dims.width
-            gifCanvas.height = this.frames[1].dims.height
+            gifCanvas.width = this.firstFrameDims.width
+            gifCanvas.height = this.firstFrameDims.height
 
             let needDisposal = false
             for (let frame of this.frames) {
@@ -131,6 +137,12 @@ class ImageShapeJS extends AbstractMediaShapeJS {
         let tempShape = new _paper.Raster()
         tempShape.data.meta = this
         tempShape.position = _paper.view.center
+
+        tempShape.onLoad = () => {
+            this.firstFrameDims.width = tempShape.width
+            this.firstFrameDims.height = tempShape.height
+        }
+
         tempShape.source = this.data // If it's gif, the first frame will be showed here.
         tempShape.fillColor = new _paper.Color("red")
 
@@ -200,7 +212,7 @@ class ImageShapeJS extends AbstractMediaShapeJS {
         return this.worldFrameAnimationFrameMap.size;
     }
 
-    // TODO: Save this into Cpp
+    // TODO: Do we need to keep the image modifiers in the Cpp for future interpolate??
     margins = [0.0, 0.0, 0.0, 0.0]
 
     getMargins() {
@@ -211,10 +223,14 @@ class ImageShapeJS extends AbstractMediaShapeJS {
         this.margins[idx] = value
 
         let imageShape = this.paperItem as paper.Raster
-        let newImageWidth = imageShape.width * (100.0 - this.margins[0]) / 100.0
-        let newImageHeight = imageShape.height * (100.0 - this.margins[1]) / 100.0
+
+        let newImageWidth = this.firstFrameDims.width * (100.0 - this.margins[0]) / 100.0
+        let newImageHeight = this.firstFrameDims.width * (100.0 - this.margins[1]) / 100.0
 
         let newShape = imageShape.getSubRaster(new paper.Rectangle(0, 0, newImageWidth, newImageHeight))
+        newShape.data.meta = this
+
+        this.paperItem.replaceWith(newShape)
         this.paperItem = newShape
     }
 
