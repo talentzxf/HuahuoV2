@@ -20,10 +20,10 @@ class ImageModifier extends AbstractComponent {
         } else {
             let imageShape = this.baseShape as ImageShapeJS
             // @ts-ignore
-            let originalRaster = imageShape.getOriginalRaster()
+            let originalImageCtx = imageShape.getOriginaglImageCtx()
 
-            let originalWidth = originalRaster.width
-            let originalHeight = originalRaster.height
+            let originalWidth = originalImageCtx.canvas.width
+            let originalHeight = originalImageCtx.canvas.height
 
             let top = originalHeight / 2 * this.imageTop / 100.0
             let left = originalWidth / 2 * this.imageLeft / 100.0
@@ -42,22 +42,8 @@ class ImageModifier extends AbstractComponent {
             let imgRect = new paper.Rectangle(left, top, resultWidth, resultHeight)
             let zeroPoint = new paper.Point(left, top)
             imageRaster.clear()
-            imageRaster.setImageData(originalRaster.getImageData(imgRect), zeroPoint)
+            imageRaster.setImageData(originalImageCtx.getImageData(imgRect.left, imgRect.top, imgRect.width, imgRect.height), zeroPoint)
         }
-        // this.modifiedDims.top = this.firstFrameDims.height / 2 * this.margins[0] / 100.0
-        // this.modifiedDims.left = this.firstFrameDims.width / 2 * this.margins[1] / 100.0
-        //
-        // let remainWidth = this.firstFrameDims.width - this.modifiedDims.left
-        // let rightMargin = this.firstFrameDims.width / 2 * this.margins[2] / 100.0
-        // this.modifiedDims.width = remainWidth - rightMargin
-        //
-        // let remainHeight = this.firstFrameDims.height - this.modifiedDims.top
-        // let bottomMargin = this.firstFrameDims.height / 2 * this.margins[3] / 100.0
-        // this.modifiedDims.height = remainHeight - bottomMargin
-        //
-        // let newShape = this.originallyShape.getSubRaster(new paper.Rectangle(this.modifiedDims.left, this.modifiedDims.top,
-        //     this.modifiedDims.width, this.modifiedDims.height))
-        // newShape.data.meta = this
     }
 }
 

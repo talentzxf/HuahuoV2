@@ -6,6 +6,7 @@ import {clzObjectFactory} from "../CppClassObjectFactory";
 import {huahuoEngine} from "../EngineAPI";
 import {Dims} from "../ImageModifiers/ImageModifier";
 import {ImageModifier} from "../Components/ImageModifier";
+import Raster = paper.Raster;
 
 let shapeName = "ImageShape"
 
@@ -177,25 +178,27 @@ class ImageShapeJS extends AbstractMediaShapeJS {
         }
     }
 
-    private originalRaster = null
+    private originalCanvasCtx: CanvasRenderingContext2D = null
 
-    public getOriginalRaster(): paper.Raster { // Call this only from the ImageModifier. Or else it might be changed!
-        // If this is animation. It will be updated every frame. So it's the originalFrame
-        if (this.isAnimation) {
-            this.originalRaster = this.paperItem.clone()
-        } else {
-            if (this.originalRaster == null) { // If not, save the originalRaster if this is not changed.
-                this.originalRaster = this.paperItem.clone()
-            }
+    private _getOriginalImageCtx(){
+        if(this.originalCanvasCtx == null){
+            let canvas:HTMLCanvasElement = document.createElement("canvas")
+            canvas.width = this.firstFrameDims.width
+            canvas.height = this.firstFrameDims.height
+            this.originalCanvasCtx = canvas.getContext("2d")
         }
 
-        this.originalRaster.selected = false
-        this.originalRaster.visible = false
-        let layer = this.originalRaster.layer
-        if (this.originalRaster.index != null)
-            layer.removeChildren(this.originalRaster.index)
-        this.originalRaster.data = null
-        return this.originalRaster
+        return this.originalCanvasCtx
+    }
+
+    public getOriginaglImageCtx(): CanvasRenderingContext2D { // Call this only from the ImageModifier. Or else it might be changed!
+        // If this is animation. It will be updated every frame. So it's the originalFrame
+        if (this.isAnimation || this.originalCanvasCtx == null) {
+            // @ts-ignore
+            this._getOriginalImageCtx().putImageData((this.paperItem as Raster).getImageData(), 0, 0)
+        }
+
+        return this.originalCanvasCtx
     }
 
     afterUpdate(force: boolean = false) {
