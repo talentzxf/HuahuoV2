@@ -177,6 +177,27 @@ class ImageShapeJS extends AbstractMediaShapeJS {
         }
     }
 
+    private originalRaster = null
+
+    public getOriginalRaster(): paper.Raster { // Call this only from the ImageModifier. Or else it might be changed!
+        // If this is animation. It will be updated every frame. So it's the originalFrame
+        if (this.isAnimation) {
+            this.originalRaster = this.paperItem.clone()
+        } else {
+            if (this.originalRaster == null) { // If not, save the originalRaster if this is not changed.
+                this.originalRaster = this.paperItem.clone()
+            }
+        }
+
+        this.originalRaster.selected = false
+        this.originalRaster.visible = false
+        let layer = this.originalRaster.layer
+        if (this.originalRaster.index != null)
+            layer.removeChildren(this.originalRaster.index)
+        this.originalRaster.data = null
+        return this.originalRaster
+    }
+
     afterUpdate(force: boolean = false) {
         if (!this.isLoaded()) {
             return
