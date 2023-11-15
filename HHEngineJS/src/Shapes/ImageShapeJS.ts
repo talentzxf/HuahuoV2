@@ -8,10 +8,6 @@ import {Dims} from "../ImageModifiers/ImageModifier";
 
 let shapeName = "ImageShape"
 
-class ImageSpriteController {
-
-}
-
 class ImageShapeJS extends AbstractMediaShapeJS {
 
     static createImageShape(rawObj) {
@@ -198,10 +194,10 @@ class ImageShapeJS extends AbstractMediaShapeJS {
                 let raster = this.paperItem as paper.Raster
                 raster.clear()
 
-                let dims = this.firstFrameDims
+                let dims = this.modifiedDims ? this.modifiedDims : this.firstFrameDims
                 let frameImageData = raster.createImageData(new paper.Size(dims.width, dims.height))
                 frameImageData.data.set(frame["realImageData"])
-                raster.setImageData(frameImageData, new paper.Point(0, 0))
+                raster.setImageData(frameImageData, new paper.Point(dims.left, dims.top))
 
                 this.lastAnimationFrame = playingAnimationFrameId
             }
@@ -213,21 +209,40 @@ class ImageShapeJS extends AbstractMediaShapeJS {
     }
 
     // TODO: Do we need to keep the image modifiers in the Cpp for future interpolate??
+    // TOP;LEFT;RIGHT;DOWN
     margins = [0.0, 0.0, 0.0, 0.0]
 
     getMargins() {
         return this.margins;
     }
 
+    originallyShape = null
+    modifiedDims: Dims = null
+
     updateMargin(idx, value) {
         this.margins[idx] = value
 
-        let imageShape = this.paperItem as paper.Raster
+        if (this.originallyShape == null) {
+            this.originallyShape = this.paperItem as paper.Raster
+        }
 
-        let newImageWidth = this.firstFrameDims.width * (100.0 - this.margins[0]) / 100.0
-        let newImageHeight = this.firstFrameDims.width * (100.0 - this.margins[1]) / 100.0
+        if (this.modifiedDims == null) {
+            this.modifiedDims = new Dims()
+        }
 
-        let newShape = imageShape.getSubRaster(new paper.Rectangle(0, 0, newImageWidth, newImageHeight))
+        this.modifiedDims.top = this.firstFrameDims.height / 2 * this.margins[0] / 100.0
+        this.modifiedDims.left = this.firstFrameDims.width / 2 * this.margins[1] / 100.0
+
+        let remainWidth = this.firstFrameDims.width - this.modifiedDims.left
+        let rightMargin = this.firstFrameDims.width / 2 * this.margins[2] / 100.0
+        this.modifiedDims.width = remainWidth - rightMargin
+
+        let remainHeight = this.firstFrameDims.height - this.modifiedDims.top
+        let bottomMargin = this.firstFrameDims.height / 2 * this.margins[3] / 100.0
+        this.modifiedDims.height = remainHeight - bottomMargin
+
+        let newShape = this.originallyShape.getSubRaster(new paper.Rectangle(this.modifiedDims.left, this.modifiedDims.top,
+            this.modifiedDims.width, this.modifiedDims.height))
         newShape.data.meta = this
 
         this.paperItem.replaceWith(newShape)
