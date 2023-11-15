@@ -116,11 +116,6 @@
   "Motor": "马达组件",
   "ObjectGenerator": "形状生成器",
   "inspector": {
-    "imageMargin": "边界",
-    "imageLeft": "左(%)",
-    "imageRight": "右(%)",
-    "imageTop": "上(%)",
-    "imageBottom": "下(%)",
     "extendedProperties": "拓展属性",
     "setAsStopFrame": "设置为停止帧",
     "unsetAsStopFrame": "取消设置为停止帧",
@@ -176,6 +171,10 @@
     "Unfollow": "不贴边",
     "select": "选择",
     "property": {
+      "imageLeft": "左(%)",
+      "imageRight": "右(%)",
+      "imageTop": "上(%)",
+      "imageBottom": "下(%)",
       "margin": "边缘比例",
       "growth": "生长系数",
       "targetShapeArray": "目标形状",

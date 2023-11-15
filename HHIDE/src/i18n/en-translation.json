@@ -116,11 +116,6 @@
   "Motor": "Motor",
   "ObjectGenerator": "Object Generator",
   "inspector": {
-    "imageMargin": "Margin",
-    "imageLeft": "Left(%)",
-    "imageRight": "Right(%)",
-    "imageTop": "Top(%)",
-    "imageBottom": "Bottom(%)",
     "extendedProperties": "Extended Properties",
     "setAsStopFrame": "Set as Stop Frame",
     "unsetAsStopFrame": "Unset Stop Frame",
@@ -176,6 +171,10 @@
     "Unfollow": "UnFollow",
     "select": "Select",
     "property": {
+      "imageLeft": "left(%)",
+      "imageRight": "right(%)",
+      "imageTop": "up(%)",
+      "imageBottom": "bottom(%)",
       "margin": "margin",
       "growth": "growth",
       "targetShapeArray": "Target Shapes",

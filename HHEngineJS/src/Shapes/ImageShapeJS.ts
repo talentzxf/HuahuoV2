@@ -5,6 +5,7 @@ import {AbstractMediaShapeJS} from "./AbstractMediaShapeJS";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {huahuoEngine} from "../EngineAPI";
 import {Dims} from "../ImageModifiers/ImageModifier";
+import {ImageModifier} from "../Components/ImageModifier";
 
 let shapeName = "ImageShape"
 
@@ -194,7 +195,7 @@ class ImageShapeJS extends AbstractMediaShapeJS {
                 let raster = this.paperItem as paper.Raster
                 raster.clear()
 
-                let dims = this.modifiedDims ? this.modifiedDims : this.firstFrameDims
+                let dims = this.firstFrameDims
                 let frameImageData = raster.createImageData(new paper.Size(dims.width, dims.height))
                 frameImageData.data.set(frame["realImageData"])
                 raster.setImageData(frameImageData, new paper.Point(dims.left, dims.top))
@@ -208,79 +209,10 @@ class ImageShapeJS extends AbstractMediaShapeJS {
         return this.worldFrameAnimationFrameMap.size;
     }
 
-    // TODO: Do we need to keep the image modifiers in the Cpp for future interpolate??
-    // TOP;LEFT;RIGHT;DOWN
-    margins = [0.0, 0.0, 0.0, 0.0]
+    initShapeFromEditor() {
+        super.initShapeFromEditor();
 
-    getMargins() {
-        return this.margins;
-    }
-
-    originallyShape = null
-    modifiedDims: Dims = null
-
-    updateMargin(idx, value) {
-        this.margins[idx] = value
-
-        if (this.originallyShape == null) {
-            this.originallyShape = this.paperItem as paper.Raster
-        }
-
-        if (this.modifiedDims == null) {
-            this.modifiedDims = new Dims()
-        }
-
-        this.modifiedDims.top = this.firstFrameDims.height / 2 * this.margins[0] / 100.0
-        this.modifiedDims.left = this.firstFrameDims.width / 2 * this.margins[1] / 100.0
-
-        let remainWidth = this.firstFrameDims.width - this.modifiedDims.left
-        let rightMargin = this.firstFrameDims.width / 2 * this.margins[2] / 100.0
-        this.modifiedDims.width = remainWidth - rightMargin
-
-        let remainHeight = this.firstFrameDims.height - this.modifiedDims.top
-        let bottomMargin = this.firstFrameDims.height / 2 * this.margins[3] / 100.0
-        this.modifiedDims.height = remainHeight - bottomMargin
-
-        let newShape = this.originallyShape.getSubRaster(new paper.Rectangle(this.modifiedDims.left, this.modifiedDims.top,
-            this.modifiedDims.width, this.modifiedDims.height))
-        newShape.data.meta = this
-
-        this.paperItem.replaceWith(newShape)
-        this.paperItem = newShape
-    }
-
-    afterWASMReady() {
-        super.afterWASMReady()
-
-        let extendedProperties = {
-            key: "inspector.extendedProperties",
-            type: PropertyType.COMPONENT,
-            config: {
-                children: []
-            }
-        }
-
-        extendedProperties.config.children.push({
-            key: "inspector.imageMargin",
-            type: PropertyType.ARRAY,
-            elementType: PropertyType.NUMBER,
-            getLabel: (idx) => {
-                switch (idx) {
-                    case 0:
-                        return "inspector.imageTop";
-                    case 1:
-                        return "inspector.imageLeft";
-                    case 2:
-                        return "inspector.imageRight";
-                    case 3:
-                        return "inspector.imageBottom"
-                }
-            },
-            getter: this.getMargins.bind(this),
-            updater: this.updateMargin.bind(this)
-        })
-
-        this.propertySheet.addProperty(extendedProperties)
+        this.addComponent(new ImageModifier())
     }
 }
 
