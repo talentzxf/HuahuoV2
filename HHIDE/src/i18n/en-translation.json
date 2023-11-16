@@ -171,6 +171,8 @@
     "Unfollow": "UnFollow",
     "select": "Select",
     "property": {
+      "rowCount":"Row Count",
+      "colCount":"Column Count",
       "imageLeft": "left(%)",
       "imageRight": "right(%)",
       "imageTop": "up(%)",

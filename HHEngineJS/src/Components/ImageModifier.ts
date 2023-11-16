@@ -3,6 +3,7 @@ import {PropertyCategory} from "./PropertySheetBuilder";
 import {FloatPropertyConfig} from "hhcommoncomponents/dist/src/Properties/PropertyConfig";
 import {ImageShapeJS} from "../Shapes/ImageShapeJS";
 
+// TODO: Add more filters.
 @Component({compatibleShapes: ["ImageShapeJS"], maxCount: 1})
 class ImageModifier extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateFloat, 0.0, {min: 0.0, max: 100.0, step: 1.0} as FloatPropertyConfig)

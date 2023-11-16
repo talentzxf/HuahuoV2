@@ -171,6 +171,8 @@
     "Unfollow": "不贴边",
     "select": "选择",
     "property": {
+      "rowCount":"行数",
+      "colCount":"列数",
       "imageLeft": "左(%)",
       "imageRight": "右(%)",
       "imageTop": "上(%)",

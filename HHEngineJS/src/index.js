@@ -53,6 +53,7 @@ import {RadialGradientComponent} from "./Components/RadialGradientComponent"
 import {FollowCurveComponent} from "./Components/FollowCurveComponent";
 import {RigidBody} from "./Components/Physics/RigidBody";
 import {Camera2D} from "./Components/Camera2D";
+import {ImageSpriteController} from "./Components/ImageSpriteController";
 import {renderEngine2D} from "./RenderEngine/RenderEnginePaperImpl"
 
 import "./Shapes/LoadShape"
@@ -130,6 +131,7 @@ export {
     FollowCurveComponent,
     RadialGradientComponent,
     GeneratorComponent,
+    ImageSpriteController,
     RigidBody,
     Motor,
     ObjectGenerator,
