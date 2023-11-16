@@ -48,6 +48,9 @@ class ImageShapeJS extends AbstractMediaShapeJS {
             raster.onLoad = () => {
                 this.firstFrameDims.width = raster.width
                 this.firstFrameDims.height = raster.height
+
+                // Force update, so some component logic can be executed.
+                this.update(true)
             }
 
             raster.source = this.data

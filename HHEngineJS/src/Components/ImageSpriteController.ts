@@ -19,6 +19,12 @@ class ImageSpriteController extends AbstractComponent {
     }
 
     needUpdate() {
+        // The image is not ready yet.
+        // @ts-ignore
+        if (!this.baseShape.paperShape.loaded) {
+            return false;
+        }
+
         if (this.lastFrameId < 0) {
             return true
         }
@@ -55,6 +61,11 @@ class ImageSpriteController extends AbstractComponent {
 
             let spriteWidth = originalWidth / this.colCount
             let spriteHeight = originalHeight / this.rowCount
+
+            // @ts-ignore
+            imageShape.paperItem.width = spriteWidth
+            // @ts-ignore
+            imageShape.paperItem.height = spriteHeight
 
             let localFrameId = this.calculateLocalFrame()
             let coordY = Math.floor(localFrameId / this.colCount)
