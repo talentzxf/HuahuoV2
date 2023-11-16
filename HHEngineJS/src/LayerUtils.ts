@@ -96,7 +96,7 @@ class LayerUtils {
     }
 
     uniformFrameId(frameId, maxFrameId) {
-        return ((frameId + maxFrameId) % maxFrameId + maxFrameId) % maxFrameId
+        return Math.floor(((frameId + maxFrameId) % maxFrameId + maxFrameId) % maxFrameId)
     }
 
     // Return true -- The lay is set to the target frameId.
