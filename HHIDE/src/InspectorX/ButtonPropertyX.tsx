@@ -18,6 +18,10 @@ class ButtonPropertyX extends React.Component<PropertyProps, ButtonPropertyState
         if (property.key instanceof Function) {
             this.state.title = property.key()
         }
+
+        setTimeout(()=>{
+            this.setState(this.state)
+        })
     }
 
     componentDidMount() {

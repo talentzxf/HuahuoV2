@@ -16,7 +16,7 @@ function openFrameEventGraphForm() {
     let frameEventGraphWrapperObject = huahuoEngine.getWrappedGraphObjectForLayer(currentLayer, frameId, true)
     eventGraphForm.setTargetComponent(frameEventGraphWrapperObject)
 
-    huahuoEngine.getFocusedSceneView().timeline.redrawCell(currentLayer, frameId)
+    huahuoEngine.getFocusedSceneView().timeline.redrawCanvas()
 }
 
 class EditorLayerUtils {
@@ -79,7 +79,7 @@ class EditorLayerUtils {
                         layer.AddStopFrame(frameId)
                     }
 
-                    sceneViewManager.getFocusedSceneView().timeline.redrawCell(layer, frameId)
+                    sceneViewManager.getFocusedSceneView().timeline.redrawCanvas()
                 }
             }
         })
