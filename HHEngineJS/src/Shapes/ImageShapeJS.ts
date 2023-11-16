@@ -4,7 +4,6 @@ import {GlobalConfig} from "../GlobalConfig"
 import {AbstractMediaShapeJS} from "./AbstractMediaShapeJS";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {huahuoEngine} from "../EngineAPI";
-import {Dims} from "../ImageModifiers/ImageModifier";
 import {ImageModifier} from "../Components/ImageModifier";
 import Raster = paper.Raster;
 
@@ -25,7 +24,7 @@ class ImageShapeJS extends AbstractMediaShapeJS {
 
     resourceMD5: string
 
-    firstFrameDims = new Dims()
+    firstFrameDims = new paper.Rectangle(-1, -1, -1, -1)
 
     set isAnimation(isAnimation: boolean) {
         this.rawObj.SetIsAnimation(isAnimation)
@@ -76,7 +75,7 @@ class ImageShapeJS extends AbstractMediaShapeJS {
             let animationFrameId = 0
             let lastWorldFrame = -1
 
-            this.firstFrameDims = this.frames[0].dims
+            this.firstFrameDims = new paper.Rectangle(this.frames[0].dims)
             gifCanvas.width = this.firstFrameDims.width
             gifCanvas.height = this.firstFrameDims.height
 
