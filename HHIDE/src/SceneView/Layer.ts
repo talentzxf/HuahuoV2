@@ -57,6 +57,26 @@ class EditorLayerUtils {
         })
 
         property.config.children.push({
+            key: "inspector.nextFrameId",
+            type: PropertyType.NUMBER,
+            getter: () => {
+                frameId + 2
+            }
+        })
+
+        property.config.children.push({
+            key: "inspector.setFrameIdAlias",
+            type: PropertyType.STRING,
+            getter: () => {
+                return layer.GetFrameAliasById(frameId)
+            },
+            setter: (frameName) => {
+                layer.SetFrameIdAlias(frameId, frameName)
+                sceneViewManager.getFocusedSceneView().timeline.redrawCanvas()
+            }
+        })
+
+        property.config.children.push({
             key: "inspector.editFrameEventGraph",
             type: PropertyType.BUTTON,
             config: {

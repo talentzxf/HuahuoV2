@@ -116,6 +116,8 @@
   "Motor": "Motor",
   "ObjectGenerator": "Object Generator",
   "inspector": {
+    "setFrameIdAlias": "Set Frame Name",
+    "nextFrameId": "Next FrameId",
     "extendedProperties": "Extended Properties",
     "setAsStopFrame": "Set as Stop Frame",
     "unsetAsStopFrame": "Unset Stop Frame",

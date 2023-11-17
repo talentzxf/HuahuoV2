@@ -116,6 +116,8 @@
   "Motor": "马达组件",
   "ObjectGenerator": "形状生成器",
   "inspector": {
+    "setFrameIdAlias": "设置帧名字",
+    "nextFrameId": "下一帧",
     "extendedProperties": "拓展属性",
     "setAsStopFrame": "设置为停止帧",
     "unsetAsStopFrame": "取消设置为停止帧",
