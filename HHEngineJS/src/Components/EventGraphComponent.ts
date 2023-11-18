@@ -1,5 +1,5 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
-import {PropertyCategory} from "./PropertySheetBuilder";
+import {PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {LGraph} from "litegraph.js";
 import {huahuoEngine} from "../EngineAPI";
@@ -22,6 +22,8 @@ class EventGraphComponent extends AbstractComponent {
     eventGraph
 
     needReloadGraph = true
+    reloading = false
+
     graph: LGraph = new LGraph()
 
     getBaseActor() {
@@ -37,8 +39,11 @@ class EventGraphComponent extends AbstractComponent {
     }
 
     saveGraph() {
+        if (this.reloading) // During reloading, no need to trigger save.
+            return
+
         let graphString = JSON.stringify(this.graph.serialize())
-        if (this.eventGraphJSON != graphString){
+        if (this.eventGraphJSON != graphString) {
             this.eventGraphJSON = graphString
 
             this.needReloadGraph = true // After save, need reload the graph.
@@ -61,11 +66,45 @@ class EventGraphComponent extends AbstractComponent {
             this[setterName](propertyValue)
     }
 
+    addInput(inputName: string, inputType: string) {
+        if (this.hasOwnProperty(inputName)) {
+            console.log("Input " + inputName + " already existed!")
+            return false;
+        }
+        console.log("Input added")
+        // TODO: Switch - case?? Looks stupid, need to seed some more elegant way to do this.
+        switch (inputType) {
+            case "number":
+                let propertyDef: PropertyDef = {
+                    key: inputName,
+                    type: PropertyCategory.interpolateFloat,
+                    initValue: 0.0,
+                    hide: false,
+                    config: null
+                }
+                this.addProperty(propertyDef, true)
+                break;
+            default:
+                console.log("Unknown property:" + inputType)
+                break;
+        }
+
+        return true
+    }
+
     reloadGraph() {
         if (this.needReloadGraph) {
             if (this.eventGraphJSON && this.eventGraphJSON.length > 0) {
+                this.reloading = true
                 let data = JSON.parse(this.eventGraphJSON)
                 this.graph.configure(data)
+                this.reloading = false
+
+                let totalInputCount = this.graph.inputs.length
+                for (let inputIdx = 0; totalInputCount < totalInputCount; totalInputCount++) {
+                    let inputValue = this.graph.inputs.getInput(inputIdx)
+                    this.addInput(inputValue.name, inputValue.type)
+                }
             }
 
             // this.graph.start()

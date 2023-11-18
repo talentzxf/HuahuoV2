@@ -6,6 +6,7 @@ import * as ti from "taichi.js/dist/taichi"
 import {BaseShapeEvents} from "./EventGraph/BaseShapeEvents";
 import {BaseShapeJS} from "./Shapes/BaseShapeJS";
 import {layerUtils} from "./LayerUtils";
+import engineProperties from "../dist/conf/engine.properties"
 // import * as ti from "taichi.js/dist/taichi.dev"
 
 
@@ -273,6 +274,9 @@ class EngineAPI {
         return layerUtils.getWrappedGraphObjectForLayer(layer, frameId, createIfNotExist)
     }
 
+    getEngineVersion(){
+        return engineProperties["engine.version"]
+    }
     get defaultFrameCount() {
         return 1000;
     }

@@ -3,25 +3,24 @@ import {EventGraphComponent} from "hhenginejs";
 import {formManager} from "../../Utilities/FormManager";
 import {EventGraphForm} from "../../EventGraphUI/EventGraphForm";
 
-class EventGraphEditorDivGenerator implements CustomFieldContentDivGenerator{
+class EventGraphEditorDivGenerator implements CustomFieldContentDivGenerator {
     targetComponent: EventGraphComponent
 
     constructor(targetComponent) {
         this.targetComponent = targetComponent
     }
 
-    openGraphEditor(){
+    openGraphEditor() {
         let eventGraphForm = formManager.openForm(EventGraphForm) as EventGraphForm
         eventGraphForm.setTargetComponent(this.targetComponent)
     }
 
-    generateDiv(property: Property){
-        let button = document.createElement("input")
-        button.type = "button"
-        button.value = i18n.t("edit")
-        button.onclick = this.openGraphEditor.bind(this)
-
-        return button
+    generateDiv(property: Property) {
+        let editButton = document.createElement("input")
+        editButton.type = "button"
+        editButton.value = i18n.t("edit")
+        editButton.onclick = this.openGraphEditor.bind(this)
+        return editButton
     }
 }
 

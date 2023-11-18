@@ -54,7 +54,13 @@
     "Stop": "Stop",
     "Pause": "Pause"
   },
+  "copySucceeded": "Successfully copied to clipboard",
+  "copyFailed": "Failed to copy to clipboard",
   "eventgraph": {
+    "lib": "Event Graph Lib",
+    "upload": "Upload",
+    "copy": "Copy Graph",
+    "paste": "Paste Graph",
     "resetScale": "Reset Scale",
     "addEventListener": "Add Event Receiver",
     "addGraphAction": "Add Graph Action",
@@ -110,6 +116,9 @@
   "Motor": "Motor",
   "ObjectGenerator": "Object Generator",
   "inspector": {
+    "setFrameIdAlias": "Set Frame Name",
+    "nextFrameId": "Next FrameId",
+    "extendedProperties": "Extended Properties",
     "setAsStopFrame": "Set as Stop Frame",
     "unsetAsStopFrame": "Unset Stop Frame",
     "editFrameEventGraph": "Edit Frame Event Graph",
@@ -164,6 +173,12 @@
     "Unfollow": "UnFollow",
     "select": "Select",
     "property": {
+      "rowCount":"Row Count",
+      "colCount":"Column Count",
+      "imageLeft": "left(%)",
+      "imageRight": "right(%)",
+      "imageTop": "up(%)",
+      "imageBottom": "bottom(%)",
       "margin": "margin",
       "growth": "growth",
       "targetShapeArray": "Target Shapes",

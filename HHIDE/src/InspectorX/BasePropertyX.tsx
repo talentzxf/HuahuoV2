@@ -28,7 +28,7 @@ class PropertyEntry extends React.Component<PropertyEntryProps, PropertyEntrySta
             <div className={className} {...rest}>
                 {
                     !noDefaultTitle && property.key &&
-                    <span className="px-1 mx-1">{i18n.t(property.key)}</span>
+                    <span className="px-1 mx-1 w-fit">{i18n.t(property.key)}</span>
                 }
                 {children}
             </div>

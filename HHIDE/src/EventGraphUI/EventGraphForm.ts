@@ -1,5 +1,5 @@
 import {HHForm} from "../Utilities/HHForm";
-import {CustomElement, getFullEventName} from "hhcommoncomponents";
+import {CustomElement, getFullEventName, HHToast} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {getEventCategoryMap} from "./Utils"
 import {
@@ -11,9 +11,6 @@ import {
     LGraphCanvas,
     LiteGraph,
     NodeTargetType,
-    PlayerActions,
-    PropertyCategory,
-    PropertyDef,
     renderEngine2D
 } from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
@@ -49,7 +46,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
                 oldGraph.onInputNodeCreated = null
                 oldGraph.onInputNodeRemoved = null
 
-                for (let valueChangeHandler of this.valueChangeHandlerIds) {
+                for (let [nodeId, valueChangeHandler] of this.nodeIdvalueChangeHandlerIdMap) {
                     this.targetComponent.unregisterValueChangeHandlerFromAllValues(valueChangeHandler)
                 }
             }
@@ -62,6 +59,16 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
     closeForm() {
         this.style.display = "none"
+    }
+
+    createToolButton(text) {
+        let button = document.createElement("button")
+        button.innerText = text
+        button.style.width = "100px"
+        button.style.padding = "0px"
+        button.style.margin = "1px"
+        button.style.border = "1px solid gray"
+        return button
     }
 
     connectedCallback() {
@@ -80,7 +87,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
             "}" +
             "</style>"
 
-        this.containerDiv.innerHTML += "<form id='eventGraphContainer' class='litegraph litegraph-editor'> " +
+        this.containerDiv.innerHTML += "<form id='eventGraphContainer' class='litegraph litegraph-editor'" +
+            " style='width: fit-content; padding: 10px'> " +
             "   <div style='display: flex; flex-direction: row-reverse'>" +
             "       <div id='closeBtn' >" +
             "           <img class='far fa-circle-xmark'>" +
@@ -89,8 +97,6 @@ class EventGraphForm extends HTMLElement implements HHForm {
             "</form>"
 
         let form = this.containerDiv.querySelector("form")
-        form.style.width = CANVAS_WIDTH * 1.2 + "px"
-
         this.closeBtn = this.containerDiv.querySelector("#closeBtn")
         this.closeBtn.onclick = this.closeForm.bind(this)
 
@@ -100,11 +106,19 @@ class EventGraphForm extends HTMLElement implements HHForm {
         this.canvas.style.width = CANVAS_WIDTH + "px"
         this.canvas.style.height = CANVAS_HEIGHT + "px"
         form.appendChild(this.canvas)
-
-        let resetScaleButton = document.createElement("button")
-        resetScaleButton.innerText = i18n.t(eventGraphPrefix + "resetScale")
-        resetScaleButton.style.width = "100px"
         this.appendChild(this.containerDiv)
+
+        let buttonsContainer = document.createElement("div")
+        buttonsContainer.style.width = "100%"
+        form.appendChild(buttonsContainer)
+        this.createButtons(buttonsContainer)
+
+        this.addEventListener("mousedown", this.onMouseDown.bind(this))
+        this.addEventListener("mouseup", this.onMouseUp.bind(this))
+    }
+
+    createButtons(parentDiv) {
+        let resetScaleButton = this.createToolButton(i18n.t(eventGraphPrefix + "resetScale"))
 
         let _this = this
         resetScaleButton.onclick = function (e) {
@@ -113,10 +127,51 @@ class EventGraphForm extends HTMLElement implements HHForm {
             e.preventDefault()
         }
 
-        form.appendChild(resetScaleButton)
+        parentDiv.appendChild(resetScaleButton)
 
-        this.addEventListener("mousedown", this.onMouseDown.bind(this))
-        this.addEventListener("mouseup", this.onMouseUp.bind(this))
+        let copyGraphButton = this.createToolButton(i18n.t(eventGraphPrefix + "copy"))
+
+        copyGraphButton.onclick = function (e) {
+            let graphString = JSON.stringify(_this.lcanvas.graph.serialize())
+            navigator.clipboard.writeText(graphString).then(() => {
+                HHToast.info(i18n.t("copySucceeded"))
+            }).catch(err => {
+                HHToast.info(i18n.t("copyFailed"))
+            })
+            e.preventDefault()
+        }
+        parentDiv.appendChild(copyGraphButton)
+
+        let pasteGraphButton = this.createToolButton(i18n.t(eventGraphPrefix + "paste"))
+        pasteGraphButton.onclick = function (e) {
+            navigator.clipboard.readText().then((text) => {
+                _this.targetComponent.eventGraphJSON = text
+                _this.targetComponent.needReloadGraph = true
+                _this.targetComponent.afterUpdate()
+                _this.setTargetComponent(_this.targetComponent)
+            })
+            e.preventDefault()
+        }
+
+        parentDiv.appendChild(pasteGraphButton)
+
+        let placeHolder = document.createElement("div")
+        placeHolder.style.width = "100%"
+        parentDiv.appendChild(placeHolder)
+
+        let eventGraphLibBtn = this.createToolButton(i18n.t(eventGraphPrefix + "lib"))
+        eventGraphLibBtn.addEventListener("click", (e) => {
+            HHToast.warn("Not implemented!")
+            e.preventDefault()
+        })
+        parentDiv.appendChild(eventGraphLibBtn)
+
+        let uploadEventGraphBtn = this.createToolButton(i18n.t(eventGraphPrefix + "upload"))
+        uploadEventGraphBtn.addEventListener("click", (e) => {
+            HHToast.warn("Not implemented!")
+            e.preventDefault()
+        })
+        parentDiv.appendChild(uploadEventGraphBtn)
     }
 
     isDragging: boolean = false
@@ -479,25 +534,11 @@ class EventGraphForm extends HTMLElement implements HHForm {
     }
 
     onInputAdded(inputName: string, inputType: string) {
-        console.log("Input added")
-        // TODO: Switch - case?? Looks stupid, need to seed some more elegant way to do this.
-        switch (inputType) {
-            case "number":
-                let propertyDef: PropertyDef = {
-                    key: inputName,
-                    type: PropertyCategory.interpolateFloat,
-                    initValue: 0.0,
-                    hide: false
-                }
-                this.targetComponent.addProperty(propertyDef, true)
-                break;
-            default:
-                console.log("Unknown property:" + inputType)
-                break;
+        if (!this.targetComponent.addInput(inputName, inputType)) {
+            return;
         }
 
         this.targetComponent.updateComponentPropertySheet(this.targetComponent.baseShape.getPropertySheet())
-
         // Refresh the component inspector
         IDEEventBus.getInstance().emit(EventNames.COMPONENTCHANGED, this.targetComponent.baseShape)
     }
@@ -506,7 +547,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
         console.log("Input removed")
     }
 
-    valueChangeHandlerIds: Array<number> = new Array
+    // From NodeId -> HandlerId map.
+    nodeIdvalueChangeHandlerIdMap: Map<number, number> = new Map
 
     setNodeValue(node, value) {
         node.graph.beforeChange()
@@ -524,22 +566,26 @@ class EventGraphForm extends HTMLElement implements HHForm {
     onInputNodeCreated(node) {
         let propertyName = node.properties.name
 
+        let nodeId = node.id
+
         let _this = this
         if (this.targetComponent.hasOwnProperty(propertyName)) {
             let valueChangeHandlerId = this.targetComponent.registerValueChangeHandler(propertyName, (value) => {
-                _this.setNodeValue(node, value)
+                let inputNode = _this.targetComponent.getGraph().getNodeById(nodeId)
+                if (inputNode != null)
+                    _this.setNodeValue(inputNode, value)
+                else {
+                    let valueChangeHandler = this.nodeIdvalueChangeHandlerIdMap.get(node.id)
+                    this.targetComponent.unregisterValueChangeHandlerFromAllValues(valueChangeHandler)
+                }
             })
 
-            this.valueChangeHandlerIds.push(valueChangeHandlerId)
+            this.nodeIdvalueChangeHandlerIdMap.set(nodeId, valueChangeHandlerId)
 
             if (node.properties.value != this.targetComponent[propertyName]) {
                 this.setNodeValue(node, this.targetComponent[propertyName])
             }
         }
-    }
-
-    onInputNodeRemoved(node) {
-        console.log("Input node removed:" + node)
     }
 
     setFrameIdHandler = -1
@@ -562,7 +608,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         graph.onInputRemoved = this.onInputRemoved.bind(this)
 
         graph.onInputNodeCreated = this.onInputNodeCreated.bind(this)
-        graph.onInputNodeRemoved = this.onInputNodeRemoved.bind(this)
+        // graph.onInputNodeRemoved = this.onInputNodeRemoved.bind(this)
 
         // Bind all current input nodes
         let inputNodes = graph.findNodesByType("graph/input")

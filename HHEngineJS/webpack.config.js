@@ -24,7 +24,15 @@ let webpackConfig = {
             {
                 test: /\.css$/i,
                 use: ["style-loader", "css-loader"]
-            }
+            },
+            {
+                test: /\.properties$/i,
+                use: [
+                    {
+                        loader: 'properties-file/webpack-loader',
+                    },
+                ],
+            },
         ]
     },
     resolve: {
@@ -48,6 +56,7 @@ let webpackConfig = {
             patterns: [
                 {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/HuaHuoEngineV2.wasm", to: "wasm"},
                 {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/HuaHuoEngineV2.js", to: "wasm"},
+                {from: "../HuahuoEngines/HuaHuoEngineV2/emcmake/engine.properties", to: "conf"},
                 {from: "./test/test.js", to: "./"},
             ],
         }),
@@ -65,7 +74,7 @@ function setupWebpack(env) {
         webpackConfig.entry = ["./src/index.js", "./test/test.js"]
     }
 
-    if(env.production){
+    if (env.production) {
         webpackConfig.mode = "production"
     }
 

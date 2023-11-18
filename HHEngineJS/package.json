@@ -18,6 +18,7 @@
     "html-webpack-plugin": "^5.5.3",
     "litegraph.js": "file:../Libs/litegraph.js",
     "paper": "^0.12.15",
+    "properties-file": "^2.0.9",
     "reflect-metadata": "^0.1.13",
     "taichi.js": "file:../Libs/taichi.js",
     "ts-loader": "^9.3.0",

@@ -14,6 +14,7 @@ Build:
 
 Short term todos:
 1. Optimize build size.
+2. Auto line layout (detour all the blocks) in Node Graph.
 2. Expose element properties to the outer layer.
 2. Camera component.
 3. GeneratorComponent, set interval for each shape.
@@ -30,9 +31,19 @@ Done:
 3. 
 TODOs:
 1. Onion skin view.
+2. https://convai.com/
+2. Live2D !!!
+   3. CubismSdkForWeb-4-r.7
 2. Bone Animation
+3. Play video (Better leverage Bilibili or Youtube video sources. No need to host by myself.)
 3. AIGC !!!!
 4. Unity Player
 5. SDK to let user make own components.
 6. SDK to embed Huahuo project into other websites.
+7. Switch scenes. 
+8. Tutorial to let people know Huahuo???
+   1. Daily jobs?
+   2. Achievement system?
+   3. Make the tutorial a game like thing??
+   4. Vtuber to make the tutorial.
  

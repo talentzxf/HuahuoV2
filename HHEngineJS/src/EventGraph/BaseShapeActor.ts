@@ -77,7 +77,11 @@ class BaseShapeActor extends AbstractGraphAction{
         if(dir == null || isNaN(dir.x) || isNaN(dir.y))
             return
 
-        this.position = this.position.add(dir.multiply(speed))
+        if(!(dir instanceof paper.Point)){
+            dir = new paper.Point(dir)
+        }
+
+        this.position = this.targetShape.position.add(dir.multiply(speed))
 
         this.isPositionValid = true
     }
@@ -87,7 +91,7 @@ class BaseShapeActor extends AbstractGraphAction{
         if(isNaN(degree))
             return
 
-        this.rotation += degree
+        this.rotation = this.targetShape.rotation + degree
 
         this.isRotationValid = true
     }

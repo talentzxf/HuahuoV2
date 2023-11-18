@@ -4,6 +4,8 @@ import {GlobalConfig} from "../GlobalConfig"
 import {AbstractMediaShapeJS} from "./AbstractMediaShapeJS";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {huahuoEngine} from "../EngineAPI";
+import {ImageModifier} from "../Components/ImageModifier";
+import Raster = paper.Raster;
 
 let shapeName = "ImageShape"
 
@@ -22,7 +24,7 @@ class ImageShapeJS extends AbstractMediaShapeJS {
 
     resourceMD5: string
 
-    firstFrameDims
+    firstFrameDims = new paper.Rectangle(-1, -1, -1, -1)
 
     set isAnimation(isAnimation: boolean) {
         this.rawObj.SetIsAnimation(isAnimation)
@@ -43,6 +45,14 @@ class ImageShapeJS extends AbstractMediaShapeJS {
 
         if (this.paperItem) {
             let raster = this.paperItem as paper.Raster
+            raster.onLoad = () => {
+                this.firstFrameDims.width = raster.width
+                this.firstFrameDims.height = raster.height
+
+                // Force update, so some component logic can be executed.
+                this.update(true)
+            }
+
             raster.source = this.data
         }
     }
@@ -68,9 +78,9 @@ class ImageShapeJS extends AbstractMediaShapeJS {
             let animationFrameId = 0
             let lastWorldFrame = -1
 
-            this.firstFrameDims = this.frames[0].dims
-            gifCanvas.width = this.frames[0].dims.width
-            gifCanvas.height = this.frames[1].dims.height
+            this.firstFrameDims = new paper.Rectangle(this.frames[0].dims)
+            gifCanvas.width = this.firstFrameDims.width
+            gifCanvas.height = this.firstFrameDims.height
 
             let needDisposal = false
             for (let frame of this.frames) {
@@ -127,6 +137,12 @@ class ImageShapeJS extends AbstractMediaShapeJS {
         let tempShape = new _paper.Raster()
         tempShape.data.meta = this
         tempShape.position = _paper.view.center
+
+        tempShape.onLoad = () => {
+            this.firstFrameDims.width = tempShape.width
+            this.firstFrameDims.height = tempShape.height
+        }
+
         tempShape.source = this.data // If it's gif, the first frame will be showed here.
         tempShape.fillColor = new _paper.Color("red")
 
@@ -164,6 +180,29 @@ class ImageShapeJS extends AbstractMediaShapeJS {
         }
     }
 
+    private originalCanvasCtx: CanvasRenderingContext2D = null
+
+    private _getOriginalImageCtx(){
+        if(this.originalCanvasCtx == null){
+            let canvas:HTMLCanvasElement = document.createElement("canvas")
+            canvas.width = this.firstFrameDims.width
+            canvas.height = this.firstFrameDims.height
+            this.originalCanvasCtx = canvas.getContext("2d")
+        }
+
+        return this.originalCanvasCtx
+    }
+
+    public getOriginaglImageCtx(): CanvasRenderingContext2D { // Call this only from the ImageModifier. Or else it might be changed!
+        // If this is animation. It will be updated every frame. So it's the originalFrame
+        if (this.isAnimation || this.originalCanvasCtx == null) {
+            // @ts-ignore
+            this._getOriginalImageCtx().putImageData((this.paperItem as Raster).getImageData(), 0, 0)
+        }
+
+        return this.originalCanvasCtx
+    }
+
     afterUpdate(force: boolean = false) {
         if (!this.isLoaded()) {
             return
@@ -185,7 +224,7 @@ class ImageShapeJS extends AbstractMediaShapeJS {
                 let dims = this.firstFrameDims
                 let frameImageData = raster.createImageData(new paper.Size(dims.width, dims.height))
                 frameImageData.data.set(frame["realImageData"])
-                raster.setImageData(frameImageData, new paper.Point(0, 0))
+                raster.setImageData(frameImageData, new paper.Point(dims.left, dims.top))
 
                 this.lastAnimationFrame = playingAnimationFrameId
             }
@@ -194,6 +233,12 @@ class ImageShapeJS extends AbstractMediaShapeJS {
 
     getFrames() {
         return this.worldFrameAnimationFrameMap.size;
+    }
+
+    initShapeFromEditor() {
+        super.initShapeFromEditor();
+
+        this.addComponent(new ImageModifier())
     }
 }
 

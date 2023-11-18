@@ -28,7 +28,7 @@ class MainMenuX extends React.Component<any, any> {
                 <div className="w-[20%]">
                     <ToolBarX></ToolBarX>
                 </div>
-                <div className="w-[20%]">
+                <div className="w-[20%] px-5">
                     <EditorToolBarX></EditorToolBarX>
                 </div>
                 <div className="w-[30%]">

@@ -23,7 +23,8 @@ public class BinaryFileDB {
     private Long id;
 
     private String name;
-    private String version;
+    private Integer version; // The file version. Start from 1.
+    private String engineVersion; // The engine version when the file is created.
 
     private String createdBy;
     private String description;
@@ -45,9 +46,10 @@ public class BinaryFileDB {
     private FileType fileType;
 
 
-    public BinaryFileDB(String name, String version, String createdBy,
+    public BinaryFileDB(String name, String engineVersion, Integer version, String createdBy,
                         String fullPath, String checksum, String description, FileType fileType){
         this.name = name;
+        this.engineVersion = engineVersion;
         this.version = version;
         this.fullPath = fullPath;
         this.checksum = checksum;

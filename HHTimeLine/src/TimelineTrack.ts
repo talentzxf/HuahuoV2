@@ -298,10 +298,14 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
             let inputCellOffsetX = this.calculateCanvasOffsetX(inputCellId)
             this.ctx.beginPath()
             this.ctx.arc(inputCellOffsetX + this.unitCellWidth / 2, this.yOffset + keyframeCircleRadius, keyframeCircleRadius, 0, 2 * Math.PI)
-            this.ctx.fillStyle = "black"
-            this.ctx.fill()
             this.ctx.strokeStyle = "black"
             this.ctx.stroke()
+        }
+
+        let frameName = this.layer.GetFrameAliasById(inputCellId)
+        if(frameName != null){
+            let inputCellOffsetX = this.calculateCanvasOffsetX(inputCellId)
+            this.ctx.fillText(frameName[0], inputCellOffsetX, this.yOffset + this.unitCellWidth)
         }
 
         // Draw event graph indicator

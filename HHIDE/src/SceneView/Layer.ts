@@ -16,7 +16,7 @@ function openFrameEventGraphForm() {
     let frameEventGraphWrapperObject = huahuoEngine.getWrappedGraphObjectForLayer(currentLayer, frameId, true)
     eventGraphForm.setTargetComponent(frameEventGraphWrapperObject)
 
-    huahuoEngine.getFocusedSceneView().timeline.redrawCell(currentLayer, frameId)
+    huahuoEngine.getFocusedSceneView().timeline.redrawCanvas()
 }
 
 class EditorLayerUtils {
@@ -57,6 +57,26 @@ class EditorLayerUtils {
         })
 
         property.config.children.push({
+            key: "inspector.nextFrameId",
+            type: PropertyType.NUMBER,
+            getter: () => {
+                frameId + 2
+            }
+        })
+
+        property.config.children.push({
+            key: "inspector.setFrameIdAlias",
+            type: PropertyType.STRING,
+            getter: () => {
+                return layer.GetFrameAliasById(frameId)
+            },
+            setter: (frameName) => {
+                layer.SetFrameIdAlias(frameId, frameName)
+                sceneViewManager.getFocusedSceneView().timeline.redrawCanvas()
+            }
+        })
+
+        property.config.children.push({
             key: "inspector.editFrameEventGraph",
             type: PropertyType.BUTTON,
             config: {
@@ -79,7 +99,7 @@ class EditorLayerUtils {
                         layer.AddStopFrame(frameId)
                     }
 
-                    sceneViewManager.getFocusedSceneView().timeline.redrawCell(layer, frameId)
+                    sceneViewManager.getFocusedSceneView().timeline.redrawCanvas()
                 }
             }
         })

@@ -14,22 +14,27 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> implements Prop
         this.forceUpdate()
     }
 
-    createReactNode(childElement, idx) {
+    createReactNode(idx) {
         let property = this.props.property
         let elementType = property.elementType
         let generator = GetPropertyReactGenerator(elementType)
         if (generator) {
-            return React.createElement(generator, {
+            let props = {
                 key: idx,
                 property: {
-                    setter: (shape) => {
-                        return property.updater(idx, shape)
-                    },
                     getter: () => {
-                        return childElement
+                        return property.getter()[idx]
                     }
                 }
-            })
+            }
+
+            if (property.updater != null && property.updater instanceof Function) {
+                props.property["setter"] = (val) => {
+                    return property.updater(idx, val)
+                }
+            }
+
+            return React.createElement(generator, props)
         }
 
         return null
@@ -44,17 +49,32 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> implements Prop
         let reactElements = []
         let childElements = property.getter()
         for (let element of childElements) {
-            let ele = this.createReactNode(element, idx++)
+            let label = null
+            if (property.getLabel && property.getLabel instanceof Function) {
+                label = <span>{i18n.t(property.getLabel(idx))}</span>
+            }
+
+            let ele = this.createReactNode(idx)
             if (ele) {
-                reactElements.push(ele)
+                if (label != null) {
+                    reactElements.push(<div style={{display: "flex", alignItems: "center"}}
+                                            key={idx}>{label} {ele} </div>)
+                } else {
+                    reactElements.push(ele)
+                }
             } else {
                 // console.warn("Unknown generator:" + element.property.key + " type index:" + element.property.type)
             }
+            idx++
         }
 
         return (
             <PropertyEntry className="col-span-2" property={property}>
-                <button className={CSSUtils.getButtonClass("indigo")} onClick={this.onClicked.bind(this)}>+</button>
+                {
+                    property.inserter != null && property.inserter instanceof Function &&
+                    <button className={CSSUtils.getButtonClass("indigo")} onClick={this.onClicked.bind(this)}>+</button>
+                }
+
                 <div className="grid grid-cols-2 gap-2">
                     {
                         reactElements

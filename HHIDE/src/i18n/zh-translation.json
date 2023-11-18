@@ -54,7 +54,13 @@
     "Stop": "停止",
     "Pause": "暂停"
   },
+  "copySucceeded": "成功复制到剪贴板",
+  "copyFailed": "复制到剪贴板失败",
   "eventgraph": {
+    "lib": "事件图库",
+    "upload": "上传",
+    "copy": "复制事件图",
+    "paste": "黏贴事件图",
     "resetScale": "重置缩放",
     "addEventListener": "监听事件",
     "addGraphAction": "执行动作",
@@ -110,6 +116,9 @@
   "Motor": "马达组件",
   "ObjectGenerator": "形状生成器",
   "inspector": {
+    "setFrameIdAlias": "设置帧名字",
+    "nextFrameId": "下一帧",
+    "extendedProperties": "拓展属性",
     "setAsStopFrame": "设置为停止帧",
     "unsetAsStopFrame": "取消设置为停止帧",
     "editFrameEventGraph": "编辑帧事件图",
@@ -164,6 +173,12 @@
     "Unfollow": "不贴边",
     "select": "选择",
     "property": {
+      "rowCount":"行数",
+      "colCount":"列数",
+      "imageLeft": "左(%)",
+      "imageRight": "右(%)",
+      "imageTop": "上(%)",
+      "imageBottom": "下(%)",
       "margin": "边缘比例",
       "growth": "生长系数",
       "targetShapeArray": "目标形状",

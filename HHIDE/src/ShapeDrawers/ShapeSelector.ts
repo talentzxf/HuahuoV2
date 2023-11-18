@@ -134,7 +134,7 @@ class ShapeSelector extends BaseShapeDrawer {
             if (!_this.contextMenuInitedMap.get(canvas)) {
                 _this.canvas.addEventListener("contextmenu", _this.contextMenu.onContextMenu.bind(_this.contextMenu))
 
-                _this.contextMenu.setItems([
+                let contextMenuItems = [
                     {
                         itemName: i18n.t("contextmenu.sendToBack"),
                         onclick: _this.sendSelectedToBack.bind(_this)
@@ -159,7 +159,9 @@ class ShapeSelector extends BaseShapeDrawer {
                         itemName: i18n.t("contextmenu.delete"),
                         onclick: _this.deleteSelectedObj.bind(_this)
                     }
-                ])
+                ]
+
+                _this.contextMenu.setItems(contextMenuItems)
 
                 // Setup other short cuts.
                 let parentContent = findParentContent(_this.canvas)
