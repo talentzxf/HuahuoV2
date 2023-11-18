@@ -78,6 +78,7 @@ class ImageSpriteController extends AbstractComponent {
             let imageRaster = imageShape.paperItem as paper.Raster
             let imgRect = new paper.Rectangle(spriteLeft, spriteTop, spriteWidth, spriteHeight)
             imageRaster.clear()
+            // @ts-ignore
             imageRaster.setImageData(originalImageCtx.getImageData(imgRect.left, imgRect.top, imgRect.width, imgRect.height), new paper.Point(0, 0))
         }
     }

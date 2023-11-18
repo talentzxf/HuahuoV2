@@ -65,13 +65,13 @@ class EditorLayerUtils {
         })
 
         property.config.children.push({
-            key: "inspector.setFrameIdAlias",
+            key: "inspector.setFrameName",
             type: PropertyType.STRING,
             getter: () => {
-                return layer.GetFrameAliasById(frameId)
+                return layer.GetFrameNameById(frameId)
             },
             setter: (frameName) => {
-                layer.SetFrameIdAlias(frameId, frameName)
+                layer.SetFrameName(frameId, frameName)
                 sceneViewManager.getFocusedSceneView().timeline.redrawCanvas()
             }
         })

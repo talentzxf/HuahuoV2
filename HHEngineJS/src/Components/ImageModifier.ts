@@ -59,6 +59,7 @@ class ImageModifier extends AbstractComponent {
                 let imgRect = new paper.Rectangle(left, top, resultWidth, resultHeight)
                 let zeroPoint = new paper.Point(left, top)
                 imageRaster.clear()
+                // @ts-ignore
                 imageRaster.setImageData(originalImageCtx.getImageData(imgRect.left, imgRect.top, imgRect.width, imgRect.height), zeroPoint)
 
                 this.prevImageRect = imgRect

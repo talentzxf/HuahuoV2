@@ -182,9 +182,9 @@ class ImageShapeJS extends AbstractMediaShapeJS {
 
     private originalCanvasCtx: CanvasRenderingContext2D = null
 
-    private _getOriginalImageCtx(){
-        if(this.originalCanvasCtx == null){
-            let canvas:HTMLCanvasElement = document.createElement("canvas")
+    private _getOriginalImageCtx() {
+        if (this.originalCanvasCtx == null) {
+            let canvas: HTMLCanvasElement = document.createElement("canvas")
             canvas.width = this.firstFrameDims.width
             canvas.height = this.firstFrameDims.height
             this.originalCanvasCtx = canvas.getContext("2d")
@@ -224,6 +224,7 @@ class ImageShapeJS extends AbstractMediaShapeJS {
                 let dims = this.firstFrameDims
                 let frameImageData = raster.createImageData(new paper.Size(dims.width, dims.height))
                 frameImageData.data.set(frame["realImageData"])
+                // @ts-ignore
                 raster.setImageData(frameImageData, new paper.Point(dims.left, dims.top))
 
                 this.lastAnimationFrame = playingAnimationFrameId
