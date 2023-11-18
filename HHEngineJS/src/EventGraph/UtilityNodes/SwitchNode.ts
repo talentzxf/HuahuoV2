@@ -8,7 +8,7 @@ class SwitchNode extends AbstractNode {
     inputWidget
 
     properties = {
-        options : {}
+        options: []
     }
 
     constructor() {
@@ -19,6 +19,10 @@ class SwitchNode extends AbstractNode {
     static getType(): string {
         return "logic/switch"
     }
+}
+
+SwitchNode["@options"] = {
+    type: "array"
 }
 
 LiteGraph.registerNodeType(SwitchNode.getType(), SwitchNode)
