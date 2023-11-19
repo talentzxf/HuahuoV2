@@ -60,7 +60,11 @@ class EditorLayerUtils {
             key: "inspector.nextFrameId",
             type: PropertyType.NUMBER,
             getter: () => {
-                frameId + 2
+                let nextFrameId = layer.GetNextFrameId(frameId)
+                return nextFrameId;
+            },
+            setter: (val) => {
+                layer.SetNextFrameId(frameId, val - 1)
             }
         })
 

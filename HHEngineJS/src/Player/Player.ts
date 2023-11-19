@@ -16,7 +16,7 @@ class Player extends EventEmitter {
     lastAnimateTime = -1
 
     // isPlaying == false && isPaused == false.  The animation stop at the beginning
-    // isPlaying == false && isPaused == true.   The animation stopped at a certain frame.
+    // isPlaying == false && isPaused == true.   The animation stopped at a certain frame.P
     // isPlaying == true && isPaused == false.   The animation is playing.
     // isPlaying == true && isPaused == true.  Illegal state.
     isPlaying: boolean = false

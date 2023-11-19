@@ -291,32 +291,41 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
             this.ctx.fillRect(inputCellOffsetX, this.yOffset, this.unitCellWidth, this.unitCellHeight)
         }
 
-        let keyframeCircleRadius = this.unitCellWidth / 2 * 0.5
+        let keyframeCircleRadius = this.unitCellWidth / 4
+
+        let inputCellOffsetX = this.calculateCanvasOffsetX(inputCellId)
 
         // Draw key frame indicator
         if (this.layer && this.layer.IsKeyFrame(inputCellId)) {
-            let inputCellOffsetX = this.calculateCanvasOffsetX(inputCellId)
             this.ctx.beginPath()
             this.ctx.arc(inputCellOffsetX + this.unitCellWidth / 2, this.yOffset + keyframeCircleRadius, keyframeCircleRadius, 0, 2 * Math.PI)
             this.ctx.strokeStyle = "black"
             this.ctx.stroke()
         }
 
-        let frameName = this.layer.GetFrameAliasById(inputCellId)
-        if(frameName != null){
-            let inputCellOffsetX = this.calculateCanvasOffsetX(inputCellId)
-            this.ctx.fillText(frameName[0], inputCellOffsetX, this.yOffset + this.unitCellWidth)
-        }
+        let prevTextAlign = this.ctx.textAlign
+        let prevBaseLine = this.ctx.textBaseline
+
+        this.ctx.textAlign = "center"
+        this.ctx.textBaseline = "middle"
 
         // Draw event graph indicator
         if (this.layer && this.layer.HasEventGraph(inputCellId)) {
-            let inputCellOffsetX = this.calculateCanvasOffsetX(inputCellId)
-            this.ctx.fillStyle = "black"
-            this.ctx.font = this.unitCellWidth + "px Arial"
-            this.ctx.fillText("G", inputCellOffsetX, this.yOffset + this.unitCellHeight - 2); // Minus 2 pixels as margin.
+            this.ctx.fillStyle = "rgb(255, 165, 0)"
+            this.ctx.font = this.unitCellWidth / 2 + "px Arial"
+            this.ctx.fillText("G", inputCellOffsetX + this.unitCellWidth / 2, this.yOffset + keyframeCircleRadius);
         }
 
 
+        let frameName = this.layer?.GetFrameNameById(inputCellId)
+        if (frameName != null && frameName.length > 0) {
+            this.ctx.fillStyle = "rgb(0, 0, 139)"
+            this.ctx.font = "bold " + this.unitCellWidth * 0.9 + "px Arial"
+            this.ctx.fillText(frameName[0], inputCellOffsetX + this.unitCellWidth / 2, this.yOffset + this.unitCellHeight - this.unitCellWidth / 2)
+        }
+
+        this.ctx.textAlign = prevTextAlign
+        this.ctx.textBaseline = prevBaseLine
     }
 
     addOnMouseMoveFunc(xMin, xMax, onmouseMoveFunc) {
