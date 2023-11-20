@@ -68,6 +68,7 @@ class EditorLayerUtils {
             },
             setter: (val) => {
                 layer.SetNextFrameId(frameId, val - 1)
+                sceneViewManager.getFocusedSceneView().timeline.redrawCanvas()
             }
         })
 

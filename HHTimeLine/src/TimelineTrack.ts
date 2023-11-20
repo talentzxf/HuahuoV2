@@ -243,6 +243,41 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         return relativeOffsetX;
     }
 
+    drawLineWithArrow(startX, startY, endX, endY){
+        let prevLineWidth = this.ctx.lineWidth
+        let prevStrokeStyle = this.ctx.strokeStyle
+
+        this.ctx.beginPath()
+        this.ctx.moveTo(startX, startY)
+        this.ctx.lineTo(endX, endY)
+        this.ctx.strokeStyle = "black"
+        this.ctx.lineWidth = 2
+        this.ctx.stroke()
+
+        const arrowAngle = Math.PI/6
+        const arrowLength = this.unitCellWidth / 4;
+
+        this.ctx.beginPath()
+        const angle = Math.atan2(endY - startY, endX - startX);
+        this.ctx.moveTo(endX, endY);
+        this.ctx.lineTo(
+            endX - arrowLength * Math.cos(angle - arrowAngle),
+            endY - arrowLength * Math.sin(angle - arrowAngle)
+        );
+        this.ctx.moveTo(endX, endY);
+        this.ctx.lineTo(
+            endX - arrowLength * Math.cos(angle + arrowAngle),
+            endY - arrowLength * Math.sin(angle + arrowAngle)
+        );
+        this.ctx.strokeStyle = 'black';
+        this.ctx.lineWidth = 2;
+        this.ctx.stroke();
+
+        this.ctx.lineWidth = prevLineWidth
+        this.ctx.strokeStyle = prevStrokeStyle
+
+    }
+
     drawCell(cellId: number, forceDraw: boolean = false) {
         if (!this.isValidCellId(cellId)) { // Invalid cell or the layer is still initing.
             return;
@@ -284,50 +319,61 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
             }
         }
 
-        // Draw stop frame
-        if (this.layer && this.layer.IsStopFrame(inputCellId)) {
+        if(this.layer != null){
+            // Draw stop frame
+            if (this.layer.IsStopFrame(inputCellId)) {
+                let inputCellOffsetX = this.calculateCanvasOffsetX(inputCellId)
+                this.ctx.fillStyle = this.stopFrameStyle
+                this.ctx.fillRect(inputCellOffsetX, this.yOffset, this.unitCellWidth, this.unitCellHeight)
+            }
+
+            let keyframeCircleRadius = this.unitCellWidth / 4
+
             let inputCellOffsetX = this.calculateCanvasOffsetX(inputCellId)
-            this.ctx.fillStyle = this.stopFrameStyle
-            this.ctx.fillRect(inputCellOffsetX, this.yOffset, this.unitCellWidth, this.unitCellHeight)
+
+            // Draw key frame indicator
+            if (this.layer.IsKeyFrame(inputCellId)) {
+                this.ctx.beginPath()
+                this.ctx.arc(inputCellOffsetX + this.unitCellWidth / 2, this.yOffset + keyframeCircleRadius, keyframeCircleRadius, 0, 2 * Math.PI)
+                this.ctx.strokeStyle = "black"
+                this.ctx.stroke()
+            }
+
+            let prevTextAlign = this.ctx.textAlign
+            let prevBaseLine = this.ctx.textBaseline
+
+            this.ctx.textAlign = "center"
+            this.ctx.textBaseline = "middle"
+
+            let nextFrameId = this.layer.GetNextFrameId(cellId)
+            if( nextFrameId >= 0 && nextFrameId != cellId + 1){
+                let startX = inputCellOffsetX
+                let startY = this.yOffset + keyframeCircleRadius
+
+                let endX = this.calculateCanvasOffsetX(nextFrameId)
+                let endY = startY // Vertical line, Y won't change.
+
+                this.drawLineWithArrow(startX, startY, endX + this.unitCellWidth, endY)
+            }
+
+            // Draw event graph indicator
+            if (this.layer.HasEventGraph(inputCellId)) {
+                this.ctx.fillStyle = "rgb(255, 165, 0)"
+                this.ctx.font = this.unitCellWidth / 2 + "px Arial"
+                this.ctx.fillText("G", inputCellOffsetX + this.unitCellWidth / 2, this.yOffset + keyframeCircleRadius);
+            }
+
+
+            let frameName = this.layer.GetFrameNameById(inputCellId)
+            if (frameName != null && frameName.length > 0) {
+                this.ctx.fillStyle = "rgb(0, 0, 139)"
+                this.ctx.font = "bold " + this.unitCellWidth * 0.9 + "px Arial"
+                this.ctx.fillText(frameName[0], inputCellOffsetX + this.unitCellWidth / 2, this.yOffset + this.unitCellHeight - this.unitCellWidth / 2)
+            }
+
+            this.ctx.textAlign = prevTextAlign
+            this.ctx.textBaseline = prevBaseLine
         }
-
-        let keyframeCircleRadius = this.unitCellWidth / 4
-
-        let inputCellOffsetX = this.calculateCanvasOffsetX(inputCellId)
-
-        // Draw key frame indicator
-        if (this.layer && this.layer.IsKeyFrame(inputCellId)) {
-            this.ctx.beginPath()
-            this.ctx.arc(inputCellOffsetX + this.unitCellWidth / 2, this.yOffset + keyframeCircleRadius, keyframeCircleRadius, 0, 2 * Math.PI)
-            this.ctx.strokeStyle = "black"
-            this.ctx.stroke()
-        }
-
-        let prevTextAlign = this.ctx.textAlign
-        let prevBaseLine = this.ctx.textBaseline
-
-        this.ctx.textAlign = "center"
-        this.ctx.textBaseline = "middle"
-
-        if(this.layer.)
-
-        // Draw event graph indicator
-        if (this.layer && this.layer.HasEventGraph(inputCellId)) {
-            this.ctx.fillStyle = "rgb(255, 165, 0)"
-            this.ctx.font = this.unitCellWidth / 2 + "px Arial"
-            this.ctx.fillText("G", inputCellOffsetX + this.unitCellWidth / 2, this.yOffset + keyframeCircleRadius);
-        }
-
-
-        let frameName = this.layer?.GetFrameNameById(inputCellId)
-        if (frameName != null && frameName.length > 0) {
-            this.ctx.fillStyle = "rgb(0, 0, 139)"
-            this.ctx.font = "bold " + this.unitCellWidth * 0.9 + "px Arial"
-            this.ctx.fillText(frameName[0], inputCellOffsetX + this.unitCellWidth / 2, this.yOffset + this.unitCellHeight - this.unitCellWidth / 2)
-        }
-
-        this.ctx.textAlign = prevTextAlign
-        this.ctx.textBaseline = prevBaseLine
     }
 
     addOnMouseMoveFunc(xMin, xMax, onmouseMoveFunc) {
