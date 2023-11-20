@@ -309,6 +309,8 @@ class TimelineTrack extends TypedEmitter<TimelineTrackEvent> {
         this.ctx.textAlign = "center"
         this.ctx.textBaseline = "middle"
 
+        if(this.layer.)
+
         // Draw event graph indicator
         if (this.layer && this.layer.HasEventGraph(inputCellId)) {
             this.ctx.fillStyle = "rgb(255, 165, 0)"

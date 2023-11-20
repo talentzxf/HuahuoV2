@@ -61,7 +61,10 @@ class EditorLayerUtils {
             type: PropertyType.NUMBER,
             getter: () => {
                 let nextFrameId = layer.GetNextFrameId(frameId)
-                return nextFrameId;
+                if(nextFrameId == -1){
+                    nextFrameId = frameId + 1
+                }
+                return nextFrameId + 1;
             },
             setter: (val) => {
                 layer.SetNextFrameId(frameId, val - 1)

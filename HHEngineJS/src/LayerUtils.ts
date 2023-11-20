@@ -124,14 +124,18 @@ class LayerUtils {
                 return false
             }
 
-            let deltaCount = -1
-            if (isForward) {
-                deltaCount = this.uniformFrameId(globalTargetFrameId - globalPrevFrameId, totalFrames)
+            if (layer.GetNextFrameId(currentLayerFrame) >= 0) {
+                nextFrameId = layer.GetNextFrameId(currentLayerFrame)
             } else {
-                deltaCount = this.uniformFrameId(globalPrevFrameId - globalTargetFrameId, totalFrames)
-            }
+                let deltaCount = -1
+                if (isForward) {
+                    deltaCount = this.uniformFrameId(globalTargetFrameId - globalPrevFrameId, totalFrames)
+                } else {
+                    deltaCount = this.uniformFrameId(globalPrevFrameId - globalTargetFrameId, totalFrames)
+                }
 
-            nextFrameId = this.uniformFrameId(currentLayerFrame + (isForward ? deltaCount : -deltaCount), totalFrames)
+                nextFrameId = this.uniformFrameId(currentLayerFrame + (isForward ? deltaCount : -deltaCount), totalFrames)
+            }
         }
 
         if (layer.GetCurrentFrame() != nextFrameId) {
