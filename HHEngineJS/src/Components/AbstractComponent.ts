@@ -2,7 +2,7 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import "reflect-metadata"
 import {ValueChangeHandler} from "../Shapes/ValueChangeHandler";
 import {PropertyCategory, PropertyDef} from "./PropertySheetBuilder";
-import {EventEmitter, PropertyConfig} from "hhcommoncomponents";
+import {EventEmitter, getFieldNameFromGetterName, PropertyConfig} from "hhcommoncomponents";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {ComponentConfig} from "./ComponentConfig";
 import {defaultVariableProcessor} from "./VariableHandlers/DefaultVariableProcessor";
@@ -13,7 +13,6 @@ import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariable
 import {ComponentActions} from "../EventGraph/GraphActions";
 import {addComponentProperties} from "../EventGraph/LGraphSetup";
 import {ComponentActor} from "./ComponentActor";
-import {getFieldNameFromGetterName} from "hhcommoncomponents/dist/src";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;

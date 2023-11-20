@@ -13,7 +13,7 @@ function getFieldNameFromGetterName(str){
     }
 
     let fieldName = str.substring(3)
-    fieldName[0] = fieldName[0].toLowerCase()
+    fieldName = fieldName[0].toLowerCase() + fieldName.substring(1)
 
     return fieldName
 }
