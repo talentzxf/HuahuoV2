@@ -2,6 +2,7 @@ import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {ImageShapeJS} from "../Shapes/ImageShapeJS";
 import {layerUtils} from "../LayerUtils";
+import {GetterProperty} from "hhcommoncomponents";
 
 @Component({compatibleShapes: ["ImageShapeJS"], maxCount: 1})
 class ImageSpriteController extends AbstractComponent {
@@ -11,6 +12,11 @@ class ImageSpriteController extends AbstractComponent {
     colCount
     @PropertyValue(PropertyCategory.interpolateFloat, 1.0)
     playSpeed
+
+    @PropertyValue(PropertyCategory.interpolateFloat, null, {observedFields: ["rowCount", "colCount", "playSpeed"]} as GetterProperty)
+    getTotalFrameCount() {
+        return Math.floor(this.rowCount * this.colCount / this.playSpeed)
+    }
 
     lastFrameId = -1
 

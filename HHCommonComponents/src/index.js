@@ -30,9 +30,10 @@ import {
     CustomFieldConfig,
     CustomFieldContentDivGenerator,
     ShapeArrayProperty,
-    StringProperty
+    StringProperty,
+    GetterProperty
 } from "./Properties/PropertyConfig";
-import {capitalizeFirstLetter} from "./Properties/Utils";
+import {capitalizeFirstLetter, getFieldNameFromGetterName} from "./Properties/Utils";
 
 if (!window.i18n) {
     window.i18n = new I18nHandler()
@@ -45,9 +46,9 @@ export {
     relaxRectangle, PropertySheet, Property, PropertyType, getMimeTypeFromDataURI,
     dataURItoBlob, HHToast, getFileNameFromGZip, eventBus, mirrorPoint,
     IsValidWrappedObject, GetObjPtr, getMethodsAndVariables,
-    CustomFieldContentDivGenerator, CustomFieldConfig,
+    CustomFieldContentDivGenerator, CustomFieldConfig, GetterProperty,
     GraphEvent, EventParam, EventEmitter, getParameterNameAtIdx,
     getFullEventName, splitFullEventName, ShapeArrayProperty,
-    capitalizeFirstLetter, StringProperty, radToDeg, degToRad, CustomFieldContentXGenerator
+    capitalizeFirstLetter, getFieldNameFromGetterName, StringProperty, radToDeg, degToRad, CustomFieldContentXGenerator
 }
 

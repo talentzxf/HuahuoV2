@@ -13,6 +13,7 @@ import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariable
 import {ComponentActions} from "../EventGraph/GraphActions";
 import {addComponentProperties} from "../EventGraph/LGraphSetup";
 import {ComponentActor} from "./ComponentActor";
+import {getFieldNameFromGetterName} from "hhcommoncomponents/dist/src";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -27,9 +28,10 @@ function getProperties(target): Array<PropertyDef> {
     return properties
 }
 
-function PropertyValue(category: PropertyCategory, initValue = null, config?: PropertyConfig, hide: boolean = false) {
-    return function (target: object, propertyKey: string) {
+function PropertyValue(category: PropertyCategory, initValue = null, config: PropertyConfig = null, hide: boolean = false) {
+    return function (target: object, propertyKey: string, descriptor: PropertyDescriptor = null) {
         let properties = getProperties(target)
+
         let propertyEntry: PropertyDef = {
             key: propertyKey,
             type: category,
@@ -37,8 +39,13 @@ function PropertyValue(category: PropertyCategory, initValue = null, config?: Pr
             config: config,
             hide: hide
         }
-        properties.push(propertyEntry)
 
+        if (descriptor != null && typeof descriptor.value === "function") {
+            propertyEntry["key"] = getFieldNameFromGetterName(propertyKey)
+            propertyEntry["isFunction"] = true
+        }
+
+        properties.push(propertyEntry)
         addComponentProperties(target.constructor.name, properties)
     }
 }
@@ -95,6 +102,10 @@ abstract class AbstractComponent extends EventEmitter {
     }
 
     addProperty(propertyEntry: PropertyDef, needAppendInMeta: boolean = false) {
+        if (propertyEntry.hasOwnProperty("isFunction") && propertyEntry["isFunction"] == true) {
+            return
+        }
+
         if (needAppendInMeta) {
             let currentProperties = getProperties(this)
             currentProperties.push(propertyEntry)

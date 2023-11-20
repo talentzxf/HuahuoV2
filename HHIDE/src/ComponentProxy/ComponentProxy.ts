@@ -105,8 +105,9 @@ class ComponentProxyHandler {
             let thisComponent: AbstractComponent = this.getProxy(this)
 
             let myPropertySheet = this.getPropertySheet()
-            if (myPropertySheet)
+            if (myPropertySheet){
                 propertySheet.addProperty(myPropertySheet)
+            }
         }
     }
 

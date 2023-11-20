@@ -50,13 +50,17 @@ class ComponentProperty extends PropertyConfig {
     isActive: Function
 }
 
+class GetterProperty extends PropertyConfig {
+    observedFields: []
+}
+
 class StringProperty extends PropertyConfig {
     options: []
     maxLength: -1
 }
 
 export {
-    PropertyConfig, FloatPropertyConfig, ActionPropertyConfig,
+    PropertyConfig, FloatPropertyConfig, ActionPropertyConfig,GetterProperty,
     SubComponentArrayProperty, CustomFieldConfig, CustomFieldContentDivGenerator,
     ComponentProperty, ShapeArrayProperty, StringProperty, CustomFieldContentXGenerator
 }
