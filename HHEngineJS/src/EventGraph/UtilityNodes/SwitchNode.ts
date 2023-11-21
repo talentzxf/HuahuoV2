@@ -81,10 +81,6 @@ class SwitchNode extends AbstractNode {
     }
 }
 
-SwitchNode["@options"] = {
-    type: "array"
-}
-
 LiteGraph.registerNodeType(SwitchNode.getType(), SwitchNode)
 
 export {SwitchNode}

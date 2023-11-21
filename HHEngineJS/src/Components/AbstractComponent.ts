@@ -113,7 +113,7 @@ abstract class AbstractComponent extends EventEmitter {
                         newResult = this[currentGetter]()
                     }
                 }
-                
+
                 this.valueChangeHandler.callHandlers(fieldName, newResult)
             }
         }
