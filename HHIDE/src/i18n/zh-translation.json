@@ -173,6 +173,7 @@
     "Unfollow": "不贴边",
     "select": "选择",
     "property": {
+      "totalFrameCount": "总帧数",
       "rowCount":"行数",
       "colCount":"列数",
       "imageLeft": "左(%)",

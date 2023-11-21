@@ -13,6 +13,7 @@ import {customFieldVariableHandler} from "./VariableHandlers/CustomFieldVariable
 import {ComponentActions} from "../EventGraph/GraphActions";
 import {addComponentProperties} from "../EventGraph/LGraphSetup";
 import {ComponentActor} from "./ComponentActor";
+import {capitalizeFirstLetter} from "hhcommoncomponents";
 
 const metaDataKey = Symbol("objectProperties")
 declare var Module: any;
@@ -78,10 +79,11 @@ abstract class AbstractComponent extends EventEmitter {
     // If this component belongs to a mirage shape, it should also be mirage.
     isMirage: boolean = false
 
+    observedFields: Map<string, Set<string>> = new Map
+
     // Not sure why, but if we define variable here, will enter infinite loop.
     // @PropertyValue(PropertyCategory.boolean, false)
     // isActive
-
     protected valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
 
     getRawObject() {
@@ -98,9 +100,38 @@ abstract class AbstractComponent extends EventEmitter {
 
     callHandlers(propertyName: string, val: any) {
         this.valueChangeHandler.callHandlers(propertyName, val)
+
+        if (this.observedFields.has(propertyName)) {
+            for (let fieldName of this.observedFields.get(propertyName)) {
+                let newResult = null
+
+                if (this.hasOwnProperty(fieldName)) {
+                    newResult = this[fieldName]
+                } else {
+                    let currentGetter = "get" + capitalizeFirstLetter(fieldName)
+                    if (this[currentGetter] && typeof this[currentGetter] == "function") {
+                        newResult = this[currentGetter]()
+                    }
+                }
+                
+                this.valueChangeHandler.callHandlers(fieldName, newResult)
+            }
+        }
     }
 
     addProperty(propertyEntry: PropertyDef, needAppendInMeta: boolean = false) {
+        // @ts-ignore
+        let observedFields = propertyEntry?.config?.observedFields
+        if (observedFields != null) {
+            for (let field of observedFields) {
+                if (!this.observedFields.has(field)) {
+                    this.observedFields.set(field, new Set<string>())
+                }
+
+                this.observedFields.get(field).add(propertyEntry.key)
+            }
+        }
+
         if (propertyEntry.hasOwnProperty("isFunction") && propertyEntry["isFunction"] == true) {
             return
         }

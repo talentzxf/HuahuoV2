@@ -173,6 +173,7 @@
     "Unfollow": "UnFollow",
     "select": "Select",
     "property": {
+      "totalFrameCount": "Total Frame Count",
       "rowCount":"Row Count",
       "colCount":"Column Count",
       "imageLeft": "left(%)",
