@@ -109,6 +109,10 @@ class Player extends EventEmitter {
 
     @GraphEvent(true)
     setFrameId(@EventParam(PropertyType.NUMBER) playFrameId, forceSyncLayers: boolean = true, isForward: boolean = true) {
+        if(!Number.isInteger(playFrameId)){
+            throw "playFrameId:" + playFrameId + " is not a number!!"
+        }
+
         let lastPlayingFrameId = this.currentlyPlayingFrameId
         this.currentlyPlayingFrameId = playFrameId
 
