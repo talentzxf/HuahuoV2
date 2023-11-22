@@ -2,6 +2,8 @@ import {AbstractNode} from "../Nodes/AbstractNode";
 import {LiteGraph} from "litegraph.js";
 
 let defaultNodeName = "Default"
+let executedNodeName = "Executed"
+let retainNodes = [defaultNodeName, executedNodeName]
 
 class SwitchNode extends AbstractNode {
     title = "Switch Node"
@@ -18,7 +20,7 @@ class SwitchNode extends AbstractNode {
         let outputNodes = this.outputs;
         if (outputNodes != null && outputNodes.length > 0) {
             for (let output of outputNodes) {
-                if (output.name == defaultNodeName) {
+                if (retainNodes.includes(output.name)) {
                     continue
                 }
 
@@ -52,6 +54,7 @@ class SwitchNode extends AbstractNode {
     constructor() {
         super();
         this.addInput("Execute", LiteGraph.EVENT)
+        this.addOutput(executedNodeName, LiteGraph.EVENT)
 
         // If none matched, execute this slot.
         this.addOutput(defaultNodeName, LiteGraph.EVENT)
@@ -61,8 +64,8 @@ class SwitchNode extends AbstractNode {
     onAction(action, param) {
         let inputString = this.getInputDataByName("input")
         let executed = false
-        for(let output of this.outputs){
-            if(output.name == inputString){
+        for (let output of this.outputs) {
+            if (output.name == inputString) {
                 executed = true
 
                 let slotId = this.findOutputSlot(output.name)
@@ -70,10 +73,12 @@ class SwitchNode extends AbstractNode {
             }
         }
 
-        if(!executed){
+        if (!executed) {
             let defaultSlot = this.findOutputSlot(defaultNodeName)
             this.triggerSlot(defaultSlot, null, null)
         }
+
+        this.triggerSlot(0, null, null)
     }
 
     static getType(): string {

@@ -1,4 +1,3 @@
-import {RenderEnginePaperJs} from "./RenderEngine/RenderEnginePaperImpl";
 import {LineShapeJS} from "./Shapes/LineShapeJS"
 import {CircleShapeJS} from "./Shapes/CircleShapeJS"
 import {RectangleJS} from "./Shapes/RectangleJS";
@@ -20,6 +19,8 @@ import {ParticleSystemJS} from "./Shapes/ParticleSystemJS";
 import {ParticleSystemRenderer} from "./Components/ParticleSystemRenderer";
 import {Particles} from "./ParticleSystem/Particles";
 import {BaseShapeActor} from "./EventGraph/BaseShapeActor";
+import {VariableNode} from "./EventGraph/UtilityNodes/VariableNode";
+import {CompareNode} from "./EventGraph/UtilityNodes/CompareNode"
 import {GetShapeComponentNode} from "./EventGraph/Nodes/GetShapeComponentNode";
 import {SetComponentPropertyNode} from "./EventGraph/Nodes/SetComponentPropertyNode"
 import {EventNode} from "./EventGraph/Nodes/EventNode";
@@ -142,6 +143,8 @@ export {
     EventNode,
     ActionNode,
     SwitchNode,
+    VariableNode,
+    CompareNode,
     GetShapeComponentNode,
     SetComponentPropertyNode,
     Vec2MathOperationNode,
