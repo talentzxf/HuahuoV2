@@ -13,7 +13,7 @@ class ElementController extends AbstractComponent {
     @GraphAction(true)
     setFrameId(@ActionParam(PropertyType.NUMBER) playFrameId) {
         if (playFrameId <= 0) {
-            HHToast("Invalid argument:" + playFrameId)
+            HHToast.error("Invalid argument:" + playFrameId)
             return
         }
         let elementShape = this.baseShape as ElementShapeJS

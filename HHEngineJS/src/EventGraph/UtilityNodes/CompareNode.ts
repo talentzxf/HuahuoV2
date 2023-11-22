@@ -2,7 +2,7 @@ import {AbstractNode} from "../Nodes/AbstractNode";
 import {LiteGraph} from "litegraph.js";
 
 class CompareNode extends AbstractNode {
-    title = "Compare Node"
+    title = "Compare"
     desc = "evaluates condition between A and B"
 
     compareValues(): boolean {

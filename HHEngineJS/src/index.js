@@ -31,6 +31,7 @@ import {SetCursorShapeNode} from "./EventGraph/UtilityNodes/SetCursorShapeNode";
 import {Vector2NumberNode} from "./EventGraph/UtilityNodes/Vector2NumberNode";
 import {ConstVec2Node} from "./EventGraph/UtilityNodes/ConstVec2Node";
 import {SwitchNode} from "./EventGraph/UtilityNodes/SwitchNode";
+import {ConstStringArrayNode} from "./EventGraph/UtilityNodes/ConstStringArrayNode";
 import {PlayerActions} from "./Player/PlayerActions";
 import {NodeTargetType} from "./EventGraph/GraphActions";
 
@@ -148,6 +149,7 @@ export {
     GetShapeComponentNode,
     SetComponentPropertyNode,
     Vec2MathOperationNode,
+    ConstStringArrayNode,
     Vec2MathNumberMultiply,
     ConstVec2Node,
     Vector2NumberNode,
