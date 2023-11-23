@@ -5,6 +5,7 @@ import {ValueChangeHandler} from "./ValueChangeHandler";
 import {AbstractComponent} from "../Components/AbstractComponent";
 import {BaseShapeActor} from "../EventGraph/BaseShapeActor";
 import {clzObjectFactory} from "../CppClassObjectFactory";
+import {IsValidWrappedObject} from "hhcommoncomponents";
 
 let BASIC_COMPONENTS = "BasicComponents"
 
@@ -545,11 +546,14 @@ abstract class BaseShapeJS {
 
             Logger.info("BaseShapeJS: Submitted execute method")
             huahuoEngine.ExecuteAfterInited(() => {
+                // layer is null when the shape is newly created, it will be set later!!
+                _this.rawObj = Module.BaseShape.prototype.CreateShape(_this.getShapeName());
 
-                Logger.info("BaseShapeJS: Executing raw obj creation method")
-                let layer = huahuoEngine.GetCurrentLayer() // Create the shape in the current layer.
-                _this.rawObj = Module.BaseShape.prototype.CreateShape(_this.getShapeName(), layer);
-
+                let bornFrameId = huahuoEngine.GetCurrentLayer().GetCurrentFrame()
+                if(IsValidWrappedObject(_this.getLayer())){
+                    bornFrameId = _this.getLayer().GetCurrentFrame()
+                }
+                
                 _this.rawObj.SetBornFrameId(_this.getLayer().GetCurrentFrame())
                 Logger.info("BaseShapeJS: Executing afterWASMReady")
                 _this.afterWASMReady();
