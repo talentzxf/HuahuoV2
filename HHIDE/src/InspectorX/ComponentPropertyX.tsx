@@ -1,6 +1,5 @@
 import * as React from "react";
-import {GetPropertyReactGenerator, PropertyEntry, PropertyProps, registerPropertyChangeListener} from "./BasePropertyX";
-import {PropertyChangeListener} from "./PropertyChangeListener";
+import {GetPropertyReactGenerator, PropertyEntry, PropertyProps} from "./BasePropertyX";
 import {i18n} from "hhcommoncomponents";
 
 // Implement Accordion: https://css-tricks.com/using-css-transitions-auto-dimensions/
@@ -116,7 +115,7 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
                 })
                 childElements.push(childReactElement)
             } else {
-                // console.warn("Unknown generator:" + childProperty.key + " type index:" + childProperty.type)
+                console.warn("Unknown generator:" + childProperty.key + " type index:" + childProperty.type)
             }
         }
 

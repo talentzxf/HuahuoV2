@@ -1,11 +1,11 @@
-import {PropertyType, dataURItoBlob} from "hhcommoncomponents"
-import {parseGIF, decompressFrames, ParsedFrame} from "gifuct-js";
+import {dataURItoBlob, PropertyType} from "hhcommoncomponents"
+import {decompressFrames, ParsedFrame, parseGIF} from "gifuct-js";
 import {GlobalConfig} from "../GlobalConfig"
 import {AbstractMediaShapeJS} from "./AbstractMediaShapeJS";
 import {clzObjectFactory} from "../CppClassObjectFactory";
 import {huahuoEngine} from "../EngineAPI";
-import {ImageModifier} from "../Components/ImageModifier";
 import Raster = paper.Raster;
+import {ImageModifier} from "../Components/ImageModifier";
 
 let shapeName = "ImageShape"
 
@@ -170,13 +170,15 @@ class ImageShapeJS extends AbstractMediaShapeJS {
         super.appendProperties()
 
         if (this.isAnimation) {
-            // Position
-            this.propertySheet.addProperty({
-                key: "inspector.image.Frames",
-                type: PropertyType.STRING,
-                getter: this.getFrames.bind(this)
-            });
 
+            let baseProperty = this.propertySheet.getProperty("inspector.BaseProperties")
+            if (baseProperty != null) {
+                baseProperty.config.children.push({
+                    key: "inspector.image.Frames",
+                    type: PropertyType.STRING,
+                    getter: this.getFrames.bind(this)
+                })
+            }
         }
     }
 

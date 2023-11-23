@@ -18,6 +18,7 @@ import {CustomFieldPropertyX} from "./CustomFieldPropertyX";
 import {ButtonPropertyX} from "./ButtonPropertyX";
 import {ColorStopArrayPropertyX} from "./ColorStopArrayPropertyX";
 import {GroupPropertyX} from "./GroupPropertyX";
+import {KeyFramePropertyX} from "./KeyFramePropertyX";
 
 // Avoid being imported twice.
 // TODO: Any less dirty approach ??
@@ -28,6 +29,7 @@ if (!window["IsTypesRegistered"]) {
     RegisterDivGenerator(PropertyType.KEYFRAMES, keyFramesPropertyDivGenerator)
     RegisterDivGenerator(PropertyType.SUBCOMPONENTARRAY, subComponentsDivGenerator)
 
+    RegisterReactGenerator(PropertyType.KEYFRAMES, KeyFramePropertyX)
     RegisterReactGenerator(PropertyType.GROUP, GroupPropertyX)
     RegisterReactGenerator(PropertyType.COLOR, ColorPropertyX)
     RegisterReactGenerator(PropertyType.BUTTON, ButtonPropertyX)

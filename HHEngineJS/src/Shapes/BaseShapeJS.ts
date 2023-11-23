@@ -713,7 +713,7 @@ abstract class BaseShapeJS {
             unregisterValueChangeFunc: this.valueChangeHandler.unregisterValueChangeHandler("scaling")
         })
 
-        let transformFrameStateSheet = this.getComponentConfigSheet(BASIC_COMPONENTS)
+        let transformFrameStateSheet = this.getComponentKeyFramesPropertyConfig(BASIC_COMPONENTS)
         componentConfigSheet.config.children.push({
             key: "inspector.property.keyframes",
             type: PropertyType.GROUP,
@@ -729,7 +729,7 @@ abstract class BaseShapeJS {
         this.propertySheet.addProperty(componentConfigSheet)
     }
 
-    getComponentConfigSheet(componentName): object {
+    getComponentKeyFramesPropertyConfig(componentName): object {
         let _this = this
         if (componentName == BASIC_COMPONENTS) {
             return {

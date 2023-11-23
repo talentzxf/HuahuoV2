@@ -74,13 +74,17 @@ abstract class AbstractMediaShapeJS extends BaseShapeJS {
 
     appendProperties() {
         let _this = this
-        this.propertySheet.addProperty({
-            key: "inspector.media.filename",
-            type: PropertyType.STRING,
-            getter: () => {
-                return _this.rawObj.GetFileName()
-            }
-        })
+
+        let baseProperty = this.propertySheet.getProperty("inspector.BaseProperties")
+        if (baseProperty != null) {
+            baseProperty.config.children.push({
+                key: "inspector.media.filename",
+                type: PropertyType.STRING,
+                getter: () => {
+                    return _this.rawObj.GetFileName()
+                }
+            })
+        }
     }
 
     abstract onDataLoaded();
