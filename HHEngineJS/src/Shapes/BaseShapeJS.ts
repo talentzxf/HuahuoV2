@@ -547,7 +547,8 @@ abstract class BaseShapeJS {
             huahuoEngine.ExecuteAfterInited(() => {
 
                 Logger.info("BaseShapeJS: Executing raw obj creation method")
-                _this.rawObj = Module.BaseShape.prototype.CreateShape(_this.getShapeName());
+                let layer = huahuoEngine.GetCurrentLayer() // Create the shape in the current layer.
+                _this.rawObj = Module.BaseShape.prototype.CreateShape(_this.getShapeName(), layer);
 
                 _this.rawObj.SetBornFrameId(_this.getLayer().GetCurrentFrame())
                 Logger.info("BaseShapeJS: Executing afterWASMReady")
