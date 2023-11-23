@@ -1,6 +1,7 @@
 import * as React from "react"
 import {PropertyEntry, PropertyProps} from "./BasePropertyX";
 import {CSSUtils} from "../Utilities/CSSUtils";
+import {paper} from "hhenginejs"
 
 const canvasWidth = 200
 const canvasHeight = 50
@@ -17,8 +18,30 @@ class KeyFramePropertyX extends React.Component<PropertyProps, KeyFramePropertyS
         showDetails: false
     }
 
-    constructor() {
-        super();
+    projectId: number = -1
+    bgRectangle
+    canvasRef
+    constructor(props) {
+        super(props);
+
+        this.canvasRef = React.createRef()
+    }
+
+    refresh(){
+
+    }
+
+    componentDidMount() {
+        if(this.projectId == -1){
+            let previousProject = paper.project
+            paper.setup(this.canvasRef.current)
+            this.projectId = paper.project.index
+
+            this.bgRectangle = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(canvasWidth, canvasHeight))
+            this.bgRectangle.fillColor = new paper.Color("lightgray")
+            this.refresh()
+            previousProject.activate();
+        }
     }
 
     render() {
@@ -34,7 +57,11 @@ class KeyFramePropertyX extends React.Component<PropertyProps, KeyFramePropertyS
             {
                 this.state.showDetails && <canvas width={canvasWidth} height={canvasHeight} style={{
                     width: canvasWidth + "px",
-                    height: canvasHeight + "px"
+                    height: canvasHeight + "px",
+                    position: "absolute",
+                    zIndex: 1,
+                    background: "white",
+                    border: "1px solid black"
                 }}></canvas>
             }
         </PropertyEntry>
