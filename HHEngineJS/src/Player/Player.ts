@@ -75,6 +75,17 @@ class Player extends EventEmitter {
         return this.layerShapesManager.getJSShapeFromRawShape(rawObj, recursive)
     }
 
+    private prevPlaySpeed = 1.0
+    private playSpeed = 1.0
+
+    setPlaySpeed(newSpeed){
+        this.playSpeed = newSpeed
+    }
+
+    getPlaySpeed(){
+        return this.playSpeed
+    }
+
     animationFrameStep(timeStamp) {
         if (this.isPlaying) {
             if (this.animationStartTime < 0) {
@@ -96,7 +107,7 @@ class Player extends EventEmitter {
 
                 if (activeFrames) {
                     let deltaFrames = elapsedTime / GlobalConfig.fps
-                    let frameId = Math.floor(this.currentlyPlayingFrameId + deltaFrames + activeFrames) % activeFrames
+                    let frameId = Math.floor(this.currentlyPlayingFrameId + deltaFrames * this.playSpeed + activeFrames) % activeFrames
                     //console.log("Debug Jump Frame: deltaFrames:" + deltaFrames + ",frameId" + frameId)
                     this.setFrameId(frameId, false)
                 }
@@ -142,6 +153,8 @@ class Player extends EventEmitter {
         this.animationFrame = requestAnimationFrame(this.animationFrameStep.bind(this));
         this.isPlaying = true
         this.isPaused = false
+
+        this.prevPlaySpeed = this.playSpeed
     }
 
     @GraphEvent(true)
@@ -166,6 +179,7 @@ class Player extends EventEmitter {
 
         renderEngine2D.zoomReset()
 
+        this.playSpeed = this.prevPlaySpeed
         this.isPaused = false
     }
 
