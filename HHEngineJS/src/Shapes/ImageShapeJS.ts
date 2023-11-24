@@ -123,7 +123,7 @@ class ImageShapeJS extends AbstractMediaShapeJS {
 
             this.animationLoaded = true
 
-            let maxFrameId = this.bornFrameId + this.worldFrameAnimationFrameMap.size
+            let maxFrameId = this.bornFrameId + this.worldFrameAnimationFrameMap.size - 1
             // Update the max frame of the layer.
             let store = huahuoEngine.GetStoreById(this.getBornStoreId())
             store.UpdateMaxFrameId(maxFrameId)

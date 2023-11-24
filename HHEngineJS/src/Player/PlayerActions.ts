@@ -43,11 +43,12 @@ class PlayerActions extends AbstractGraphAction {
             }
         }
 
+        console.log("Jump to frame:" + realFrameId)
+
         // If the shape is within an element, we need to control the elements' element controller.
         // If not, we need to control the actionPlayer.
 
         if (this.isWithInElement()) {
-
             this.getElementController().setFrameId(realFrameId + 1) // As element controller also receive UI frameId, set UI frameId here.
         } else {
             huahuoEngine.getActivePlayer().setFrameId(realFrameId)

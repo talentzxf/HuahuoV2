@@ -4,6 +4,7 @@ import {AbstractNode} from "./AbstractNode";
 import {huahuoEngine} from "../../EngineAPI";
 import {NodeTargetType} from "../GraphActions";
 import {eventBus} from "hhcommoncomponents";
+import {renderEngine2D} from "../../RenderEngine/RenderEnginePaperImpl";
 
 class EventNode extends AbstractNode {
     title = "EventNode"
@@ -100,6 +101,12 @@ class EventNode extends AbstractNode {
 
         let _this = this
         this.currentEventHandler = targetEventBus.addEventHandler(eventNameMeta.namespace, eventNameMeta.eventName, (params) => {
+            // Check if this project is currently active.
+            if(_this.getEventGraphComponent().baseShape.paperItem.project != renderEngine2D.getProject()){
+                _this.reset()
+                return
+            }
+
             if (!huahuoEngine.getActivePlayer().isPlaying) // Do not trigger when player is not playing.
                 return
 

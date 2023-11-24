@@ -187,6 +187,8 @@ class ElementShapeJS extends BaseShapeJS {
                 if (layerUtils.advanceLayerFrameId(layer, currentLocalFrame, lastLayerFrame, forceSync, this.prevLocalFrame, this.getPlaySpeed() > 0)) {
                     this.setLastLayerFrame(layer, layer.GetCurrentFrame())
                 }
+
+                console.log("Element frameId:" + layer.GetCurrentFrame()) // For debug purpose.
             })
 
             this.prevLocalFrame = currentLocalFrame
