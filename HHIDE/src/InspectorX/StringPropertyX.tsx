@@ -37,10 +37,11 @@ class StringPropertyX extends React.Component<PropertyProps, StringPropertyState
         } else {
             if (property.config && property.config.options && property.config.options.length > 0) {
                 return (
-                    <select onChange={this.onTextChanged.bind(this)}>
+                    <select onChange={this.onTextChanged.bind(this)} defaultValue={textValue}>
                         {
                             property.config.options.map((option: string, idx: number) => {
-                                return (<option key={idx} value={option}>{option}</option>)
+                                return (
+                                    <option key={idx} value={option}>{option}</option>)
                             })
                         }
                     </select>
