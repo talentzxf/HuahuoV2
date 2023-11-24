@@ -1,13 +1,10 @@
 import * as React from "react"
 import {PropertyEntry, PropertyProps} from "./BasePropertyX";
 import {CSSUtils} from "../Utilities/CSSUtils";
-import {paper} from "hhenginejs"
+import {IntArrayX} from "./IntArrayX";
 
 const canvasWidth = 200
 const canvasHeight = 50
-const penOffset = 10
-const textMargin = 5
-const spanRectHeight = 5
 
 type KeyFramePropertyState = {
     showDetails: boolean
@@ -18,51 +15,40 @@ class KeyFramePropertyX extends React.Component<PropertyProps, KeyFramePropertyS
         showDetails: false
     }
 
-    projectId: number = -1
-    bgRectangle
-    canvasRef
-    constructor(props) {
-        super(props);
+    keyFrameEditor() {
+        let property = this.props.property
 
-        this.canvasRef = React.createRef()
-    }
+        return <div className="flex flex-col absolute z-10 border-solid bg-gray-500 shadow rounded p-1" style={{
+            left: "calc( 50% - " + canvasWidth / 2 + "px",
+            top: "50%"
+        }}>
+            <div className="w-full flex bg-primary-300">
+                <span className="w-full">
+                    {i18n.t(property.key)}
+                </span>
+                <button className={CSSUtils.getButtonClass("primary") + " m-0.5 px-1 py-0.5 rounded text-xs"}
+                        onClick={(evt) => {
+                            this.state.showDetails = false
+                            this.setState(this.state)
+                            evt.preventDefault()
+                        }}>X
+                </button>
+            </div>
+            <IntArrayX width={canvasWidth} height={canvasHeight} property={property}></IntArrayX>
+        </div>
 
-    refresh(){
-
-    }
-
-    componentDidMount() {
-        if(this.projectId == -1){
-            let previousProject = paper.project
-            paper.setup(this.canvasRef.current)
-            this.projectId = paper.project.index
-
-            this.bgRectangle = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(canvasWidth, canvasHeight))
-            this.bgRectangle.fillColor = new paper.Color("lightgray")
-            this.refresh()
-            previousProject.activate();
-        }
     }
 
     render() {
         let property = this.props.property
-
-        let keyFrames = property.getter()
-
         return <PropertyEntry property={property}>
-            <button className={CSSUtils.getButtonClass("primary") + " px-1 rounded"} onClick={() => {
+            <button className={CSSUtils.getButtonClass("primary") + " px-1 rounded"} onClick={(evt) => {
                 this.state.showDetails = !this.state.showDetails
                 this.setState(this.state)
-            }}>{this.state.showDetails ? "^" : "v"}</button>
+                evt.preventDefault()
+            }}>{i18n.t("edit")}</button>
             {
-                this.state.showDetails && <canvas width={canvasWidth} height={canvasHeight} style={{
-                    width: canvasWidth + "px",
-                    height: canvasHeight + "px",
-                    position: "absolute",
-                    zIndex: 1,
-                    background: "white",
-                    border: "1px solid black"
-                }}></canvas>
+                this.state.showDetails && this.keyFrameEditor()
             }
         </PropertyEntry>
     }
