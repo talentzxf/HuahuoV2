@@ -105,12 +105,32 @@ class ElementShapeJS extends BaseShapeJS {
         return this.lastLayerFrame.get(layer)
     }
 
+    getPlaySpeed() {
+        if (this.elementController == null)
+            return 1.0
+
+        return this.elementController.playSpeed
+    }
+
+    getPlayMode(){
+        if (this.elementController == null)
+            return "playWithGlobal"
+
+        return this.elementController.playMode
+    }
+
     setLastLayerFrame(layer, frameId) {
         this.lastLayerFrame.set(layer, frameId)
     }
 
     calculateLocalFrame() {
         let currentFrame = this.getLayer().GetCurrentFrame()
+        switch(this.getPlayMode()){
+            case "playLocally":
+                currentFrame = huahuoEngine.getActivePlayer().getAnimationFrame()
+                break;
+        }
+
         let bornFrame = this.bornFrameId
         let totalFrameCount = huahuoEngine.getStoreMaxFrames(this.storeId) + 1
 
@@ -259,14 +279,6 @@ class ElementShapeJS extends BaseShapeJS {
             this._elementController = this.getComponentByTypeName("ElementController")
         return this._elementController
     }
-
-    getPlaySpeed() {
-        if (this.elementController == null)
-            return 1.0
-
-        return this.elementController.playSpeed
-    }
-
 
     additionalPropertyAdded: boolean = false
 

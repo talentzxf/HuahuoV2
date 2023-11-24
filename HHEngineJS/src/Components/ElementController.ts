@@ -1,14 +1,17 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {ActionParam, GraphAction} from "../EventGraph/GraphActions";
-import {PropertyType} from "hhcommoncomponents";
+import {HHToast, PropertyType} from "hhcommoncomponents";
 import {ElementShapeJS} from "../Shapes/ElementShapeJS";
-import {HHToast} from "hhcommoncomponents";
+import {StringProperty} from "hhcommoncomponents";
 
 @Component({compatibleShapes: ["ElementShapeJS"], maxCount: 1})
 class ElementController extends AbstractComponent {
     @PropertyValue(PropertyCategory.interpolateFloat, 1.0)
     playSpeed: number;
+
+    @PropertyValue(PropertyCategory.stringValue, "playWithGlobal", {options:["playWithGlobal", "playLocally"]} as StringProperty)
+    playMode: string
 
     @GraphAction(true)
     setFrameId(@ActionParam(PropertyType.NUMBER) playFrameId) {
@@ -18,6 +21,10 @@ class ElementController extends AbstractComponent {
         }
         let elementShape = this.baseShape as ElementShapeJS
         elementShape.setPlayerFrameId(playFrameId - 1) // The UI frameId starts from 1, but internally starts from 0.
+    }
+
+    reset() {
+        super.reset()
     }
 }
 

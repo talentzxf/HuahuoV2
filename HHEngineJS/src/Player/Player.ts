@@ -13,6 +13,7 @@ class Player extends EventEmitter {
     animationFrame = -1
     animationStartTime = -1
 
+    currentTimeStamp = -1
     lastAnimateTime = -1
 
     // isPlaying == false && isPaused == false.  The animation stop at the beginning
@@ -86,7 +87,16 @@ class Player extends EventEmitter {
         return this.playSpeed
     }
 
+    getAnimationFrame(){
+        if(this.currentTimeStamp < 0 || this.animationStartTime < 0)
+            return -1
+
+        return (this.currentTimeStamp - this.animationStartTime)/GlobalConfig.fps
+    }
+
     animationFrameStep(timeStamp) {
+        this.currentTimeStamp = timeStamp
+
         if (this.isPlaying) {
             if (this.animationStartTime < 0) {
                 this.animationStartTime = timeStamp
@@ -162,6 +172,7 @@ class Player extends EventEmitter {
         if (this.animationFrame) {
             cancelAnimationFrame(this.animationFrame)
             this.animationStartTime = -1
+            this.currentTimeStamp = -1
         } else {
             console.log("Error, animation frame is invalid");
         }

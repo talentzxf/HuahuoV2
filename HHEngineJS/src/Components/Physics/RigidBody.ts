@@ -14,7 +14,7 @@ let physicsToHuahuoScale = GlobalConfig.physicsToHuahuoScale
 @Component({compatibleShapes: ["BaseSolidShape"], maxCount: 1})
 class RigidBody extends AbstractComponent {
     private body: b2Body
-
+N
     @PropertyValue(PropertyCategory.stringValue, "dynamic", {options: ["dynamic", "kinematic", "static"]} as StringProperty)
     rigidBodyType
 
