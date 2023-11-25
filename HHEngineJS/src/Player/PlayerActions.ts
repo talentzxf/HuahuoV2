@@ -38,6 +38,8 @@ class PlayerActions extends AbstractGraphAction {
         if (isNaN(realFrameId) || realFrameId < 0) {
             realFrameId = this.graphComponent.baseShape.getLayer().GetFrameIdByName(frameName)
 
+            console.log("Jump to frameName:" + frameName)
+
             if (realFrameId < 0) {
                 HHToast.warn("Invalid param")
             }

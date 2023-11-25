@@ -124,17 +124,30 @@ class LayerUtils {
                 return false
             }
 
-            if (layer.GetNextFrameId(currentLayerFrame) >= 0) {
-                nextFrameId = layer.GetNextFrameId(currentLayerFrame)
+            let deltaCount = -1
+            if (isForward) {
+                deltaCount = this.uniformFrameId(globalTargetFrameId - globalPrevFrameId, totalFrames)
             } else {
-                let deltaCount = -1
-                if (isForward) {
-                    deltaCount = this.uniformFrameId(globalTargetFrameId - globalPrevFrameId, totalFrames)
-                } else {
-                    deltaCount = this.uniformFrameId(globalPrevFrameId - globalTargetFrameId, totalFrames)
-                }
+                deltaCount = this.uniformFrameId(globalPrevFrameId - globalTargetFrameId, totalFrames)
+            }
 
-                nextFrameId = this.uniformFrameId(currentLayerFrame + (isForward ? deltaCount : -deltaCount), totalFrames)
+            let jumped = false
+            let forwardSignal = isForward ? 1 : -1
+
+            for (let deltaFrameId = 0; deltaFrameId != deltaCount + 1; deltaFrameId++) {
+                let candidateFrameId = this.uniformFrameId(currentLayerFrame + deltaFrameId * forwardSignal, totalFrames)
+                console.log("CurrentLayerFrame:" + currentLayerFrame + ", Checking:" + candidateFrameId + ",forwardSignal:" + forwardSignal)
+                let candidateNextFrameId = layer.GetNextFrameId(candidateFrameId)
+                if (candidateNextFrameId >= 0) {
+                    console.log("Decided jump to:" + candidateNextFrameId)
+                    nextFrameId = candidateNextFrameId
+                    jumped = true
+                    break
+                }
+            }
+
+            if (!jumped) {
+                nextFrameId = this.uniformFrameId(currentLayerFrame + deltaCount * forwardSignal, totalFrames)
             }
         }
 

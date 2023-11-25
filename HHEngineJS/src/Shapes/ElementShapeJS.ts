@@ -184,8 +184,10 @@ class ElementShapeJS extends BaseShapeJS {
 
                 let forceSync = huahuoEngine.getActivePlayer().isPlaying == false
 
-                if (layerUtils.advanceLayerFrameId(layer, currentLocalFrame, lastLayerFrame, forceSync, this.prevLocalFrame, this.getPlaySpeed() > 0)) {
-                    this.setLastLayerFrame(layer, layer.GetCurrentFrame())
+                if(this.getPlaySpeed() != 0 ){ // If play speed = 0, no need to foward frame.
+                    if (layerUtils.advanceLayerFrameId(layer, currentLocalFrame, lastLayerFrame, forceSync, this.prevLocalFrame, this.getPlaySpeed() > 0)) {
+                        this.setLastLayerFrame(layer, layer.GetCurrentFrame())
+                    }
                 }
 
                 console.log("Element frameId:" + layer.GetCurrentFrame()) // For debug purpose.
