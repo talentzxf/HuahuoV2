@@ -136,10 +136,8 @@ class LayerUtils {
 
             for (let deltaFrameId = 0; deltaFrameId != deltaCount + 1; deltaFrameId++) {
                 let candidateFrameId = this.uniformFrameId(currentLayerFrame + deltaFrameId * forwardSignal, totalFrames)
-                console.log("CurrentLayerFrame:" + currentLayerFrame + ", Checking:" + candidateFrameId + ",forwardSignal:" + forwardSignal)
                 let candidateNextFrameId = layer.GetNextFrameId(candidateFrameId)
                 if (candidateNextFrameId >= 0) {
-                    console.log("Decided jump to:" + candidateNextFrameId)
                     nextFrameId = candidateNextFrameId
                     jumped = true
                     break
