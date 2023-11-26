@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es5",                    /* 指定 ECMAScript 目标版本 */
+    "module": "commonjs",               /* 指定模块系统 */
+    "strict": true,                     /* 启用所有严格类型检查选项 */
+    "esModuleInterop": true,            /* 启用默认的导入模块交互方式 */
+    "skipLibCheck": true,               /* 跳过声明文件的检查 */
+    "forceConsistentCasingInFileNames": true, /* 强制文件名大小写一致性 */
+    "outDir": "./dist",                 /* 输出目录 */
+    "rootDir": "./src",                 /* 源文件目录 */
+    "strictNullChecks": true            /* 开启严格的 null 检查 */
+  },
+  "include": [
+    "./src/**/*.ts"                    /* 要包含的文件或者目录 */
+  ],
+  "exclude": [
+    "node_modules"                     /* 要排除的文件或者目录 */
+  ]
+}
