@@ -112,7 +112,7 @@ class ElementShapeJS extends BaseShapeJS {
         return this.elementController.playSpeed
     }
 
-    getPlayMode(){
+    getPlayMode() {
         if (this.elementController == null)
             return "playWithGlobal"
 
@@ -125,7 +125,7 @@ class ElementShapeJS extends BaseShapeJS {
 
     calculateLocalFrame() {
         let currentFrame = this.getLayer().GetCurrentFrame()
-        switch(this.getPlayMode()){
+        switch (this.getPlayMode()) {
             case "playLocally":
                 currentFrame = huahuoEngine.getActivePlayer().getAnimationFrame()
                 break;
@@ -162,6 +162,9 @@ class ElementShapeJS extends BaseShapeJS {
     override preparePaperItem(force: boolean = false) {
         super.preparePaperItem(force)
 
+        if (this.getPlaySpeed() == 0)
+            return
+
         let defaultStoreManager = huahuoEngine.GetDefaultObjectStoreManager()
         let previousStoreIdx = defaultStoreManager.GetCurrentStore().GetStoreId();
 
@@ -184,13 +187,9 @@ class ElementShapeJS extends BaseShapeJS {
 
                 let forceSync = huahuoEngine.getActivePlayer().isPlaying == false
 
-                if(this.getPlaySpeed() != 0 ){ // If play speed = 0, no need to foward frame.
-                    if (layerUtils.advanceLayerFrameId(layer, currentLocalFrame, lastLayerFrame, forceSync, this.prevLocalFrame, this.getPlaySpeed() > 0)) {
-                        this.setLastLayerFrame(layer, layer.GetCurrentFrame())
-                    }
+                if (layerUtils.advanceLayerFrameId(layer, currentLocalFrame, lastLayerFrame, forceSync, this.prevLocalFrame, this.getPlaySpeed() > 0)) {
+                    this.setLastLayerFrame(layer, layer.GetCurrentFrame())
                 }
-
-                console.log("Element frameId:" + layer.GetCurrentFrame()) // For debug purpose.
             })
 
             this.prevLocalFrame = currentLocalFrame
