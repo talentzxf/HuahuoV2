@@ -173,6 +173,7 @@
     "Unfollow": "UnFollow",
     "select": "Select",
     "property": {
+      "sourceCode": "Source Code",
       "playMode": "Play Mode",
       "totalFrameCount": "Total Frame Count",
       "rowCount":"Row Count",

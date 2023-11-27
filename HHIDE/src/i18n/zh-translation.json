@@ -173,6 +173,7 @@
     "Unfollow": "不贴边",
     "select": "选择",
     "property": {
+      "sourceCode": "代码",
       "playMode": "播放模式",
       "totalFrameCount": "总帧数",
       "rowCount":"行数",

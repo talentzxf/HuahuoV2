@@ -6,7 +6,8 @@ const eps = 0.01
 
 interface PropertyEntryProps extends React.HTMLAttributes<HTMLDivElement> {
     property: Property,
-    noDefaultTitle?: boolean
+    noDefaultTitle?: boolean,
+    singleLine?: boolean
 }
 
 type PropertyEntryState = {}
@@ -20,7 +21,7 @@ class PropertyEntry extends React.Component<PropertyEntryProps, PropertyEntrySta
         let {property, noDefaultTitle, children, ...rest} = this.props
 
         let className = this.props.className || this.getDefaultClassName()
-        if (property.singleLine) {
+        if (this.props.singleLine || property.singleLine) {
             className += " col-span-2"
         }
 

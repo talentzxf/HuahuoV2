@@ -57,6 +57,7 @@ class GetterProperty extends PropertyConfig {
 class StringProperty extends PropertyConfig {
     options: []
     maxLength: -1
+    textArea: false
 }
 
 export {

@@ -15,6 +15,7 @@
     "@box2d/core": "^0.10.0",
     "@webgpu/types": "^0.1.26",
     "gifuct-js": "^2.1.2",
+    "hhcommoncomponents": "file:../HHCommonComponents",
     "html-webpack-plugin": "^5.5.3",
     "litegraph.js": "file:../Libs/litegraph.js",
     "paper": "^0.12.15",
@@ -28,12 +29,10 @@
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.15.1",
-    "hhcommoncomponents": "file:../HHCommonComponents"
+    "copy-webpack-plugin": "^11.0.0",
+    "crypto-js": "^4.2.0"
   },
   "peerDependencies": {
     "hhcommoncomponents": "file:../HHCommonComponents"
-  },
-  "dependencies": {
-    "copy-webpack-plugin": "^11.0.0"
   }
 }

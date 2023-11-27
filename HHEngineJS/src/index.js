@@ -47,6 +47,7 @@ import {LGraphCanvas, LiteGraph} from "litegraph.js";
 // All non-default components
 import {CurveGrowthComponent} from "./Components/CurveGrowthComponent";
 import {EventGraphComponent} from "./Components/EventGraphComponent";
+import {CodeComponent} from "./Components/CodeComponent";
 import {Motor} from "./Components/Motor";
 import {GeneratorComponent} from "./Components/GeneratorComponent";
 import {ObjectGenerator} from "./Components/ObjectGenerator";
@@ -133,6 +134,7 @@ export {
     FollowCurveComponent,
     RadialGradientComponent,
     GeneratorComponent,
+    CodeComponent,
     ImageSpriteController,
     RigidBody,
     Motor,
