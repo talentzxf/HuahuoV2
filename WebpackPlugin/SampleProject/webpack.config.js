@@ -1,5 +1,6 @@
 // webpack.config.js
 const path = require('path');
+const hhwebpackPlugin = require('hhwebpackplugin')
 
 module.exports = {
     entry: './src/index.ts', // 入口文件路径
@@ -19,4 +20,7 @@ module.exports = {
             },
         ],
     },
+    plugins:[
+        new hhwebpackPlugin.HuahuoWebpackPlugin()
+    ]
 };

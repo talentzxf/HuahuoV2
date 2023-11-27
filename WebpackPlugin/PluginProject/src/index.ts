@@ -1,3 +1,3 @@
 import {HuahuoWebpackPlugin} from "./HuahuoWebpackPlugin";
 
-module.exports = HuahuoWebpackPlugin
+export {HuahuoWebpackPlugin}
