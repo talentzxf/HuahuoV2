@@ -2,7 +2,7 @@ import {EventEmitter, EventParam, GraphEvent, PropertyType} from "hhcommoncompon
 import * as paper from "paper"
 
 class CanvasEventEmitter extends EventEmitter {
-    getEventEmitterName() {
+    static getEventEmitterName() {
         return "Canvas"
     }
 
