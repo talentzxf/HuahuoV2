@@ -2,6 +2,7 @@
 package-lock.json
 node_modules/
 /dist/
+*/**/dist/
 
 */**/package-lock.json
 */package-lock.json
