@@ -7,15 +7,34 @@ import {CanvasEventEmitter} from "../RenderEngine/CanvasEventEmitter";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {BaseShapeActor} from "../EventGraph/BaseShapeActor";
 
+
+// Example:
+// class Handler{
+//     construct(shapeActor, eventRegisters){
+//         this.shapeActor = shapeActor
+//         this.eventRegisters = eventRegisters
+//
+//         console.log("HiHi")
+//     }
+//
+//     onStart(){
+//         console.log("onStart")
+//     }
+//
+//     onUpdate(){
+//         console.log("onUpdate")
+//     }
+// }
+
 class UserDefinedClass {
     constructor(shape: BaseShapeActor, eventRegisterFunctions: object) {
     }
 
-    onStart(){
+    onStart() {
 
     }
 
-    onUpdate(){
+    onUpdate() {
 
     }
 }
@@ -27,41 +46,73 @@ class CodeComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.stringValue, "", {textArea: true} as StringProperty)
     sourceCode
 
-    userClassFunction: UserDefinedConstructor
     userClassObject: UserDefinedClass
     codeChecksum: string = ""
 
     startExecuted = false
 
     events = {}
-    registerCanvasEvent(eventName, callback){
-        let eventId = renderEngine2D.getEventBus().addEventHandler(CanvasEventEmitter.getEventEmitterName(), eventName, (param)=>{
+
+    registerCanvasEvent(eventName, callback) {
+        let eventId = renderEngine2D.getEventBus().addEventHandler(CanvasEventEmitter.getEventEmitterName(), eventName, (param) => {
             callback(param)
         })
+    }
+
+    isChecksumEqual(checksum1, checksum2) {
+        if (!checksum1.hasOwnProperty("sigBytes") || !checksum1.hasOwnProperty("words")
+            || !checksum2.hasOwnProperty("sigBytes") || !checksum1.hasOwnProperty("words")) {
+            return false
+        }
+
+        if (!(checksum1["words"] instanceof Array) || !(checksum2["words"] instanceof Array))
+            return false
+
+        if (checksum1["words"].length != checksum2["words"].length)
+            return false
+
+        let word1 = checksum1["words"]
+        let word2 = checksum2["words"]
+        for (let idx = 0; idx < word1.length; idx++) {
+            if (word1[idx] != word2[idx])
+                return false
+        }
+
+        return true
     }
 
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
         let compileOK = true
-        try{
+        try {
             let checkSum = sha256(this.sourceCode)
-            if(this.userClassFunction == null || this.codeChecksum != checkSum) {
-                this.userClassFunction = (new Function(this.sourceCode))() as UserDefinedConstructor
+            if (this.userClassObject == null || !this.isChecksumEqual(this.codeChecksum, checkSum)) {
+                let classConstructor = null
 
-                this.userClassObject = new this.userClassFunction(this.baseShape.getActor(), {
+                function RegisterClass(clz) {
+                    classConstructor = clz
+                }
+
+                function GetUserClass() {
+                    return classConstructor
+                }
+
+                (new Function('RegisterClass', this.sourceCode))(RegisterClass)
+                let userClassConstructor = GetUserClass()
+                this.userClassObject = new userClassConstructor(this.baseShape.getActor(), {
                     registerCanvasEvent: this.registerCanvasEvent.bind(this)
                 })
 
                 this.userClassObject.onStart()
                 this.codeChecksum = checkSum
             }
-        }catch (e){
+        } catch (e) {
             console.log("Compile error:", e)
             compileOK = false
         }
 
-        if(compileOK){
+        if (compileOK) {
             this.userClassObject.onUpdate()
         }
     }

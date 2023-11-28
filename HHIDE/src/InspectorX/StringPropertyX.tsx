@@ -48,14 +48,14 @@ class StringPropertyX extends React.Component<PropertyProps, StringPropertyState
                 )
 
             } else {
-                if(property?.config?.textArea){
+                if (property?.config?.textArea) {
                     return (<div>
                         <textarea className={CSSUtils.getInputStyle("w-[90%]")}
-                               value={textValue} onChange={this.onTextChanged.bind(this)}
-                               maxLength={this.props.property.maxLength != null && this.props.property.maxLength > 0 ? this.props.property.maxLength : null}>
+                                  value={textValue} onChange={this.onTextChanged.bind(this)}
+                                  maxLength={this.props.property.maxLength != null && this.props.property.maxLength > 0 ? this.props.property.maxLength : null}>
                         </textarea>
                     </div>)
-                }else{
+                } else {
                     return (
                         <div>
                             <input className={CSSUtils.getInputStyle("w-[90%]")}
@@ -73,7 +73,7 @@ class StringPropertyX extends React.Component<PropertyProps, StringPropertyState
         registerPropertyChangeListener(this, this.props.property)
 
         return (
-            <PropertyEntry property={this.props.property} singleLine={this.props.property.config?.textArea == true}>
+            <PropertyEntry property={this.props.property} singleline={ (this.props.property.config?.textArea == true).toString()}>
                 {
                     this.getContent()
                 }
