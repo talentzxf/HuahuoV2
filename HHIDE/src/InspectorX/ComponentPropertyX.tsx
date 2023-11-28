@@ -1,6 +1,7 @@
 import * as React from "react";
 import {GetPropertyReactGenerator, PropertyEntry, PropertyProps} from "./BasePropertyX";
 import {i18n} from "hhcommoncomponents";
+import {CSSUtils} from "../Utilities/CSSUtils";
 
 // Implement Accordion: https://css-tricks.com/using-css-transitions-auto-dimensions/
 
@@ -125,12 +126,15 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
             <PropertyEntry
                 className="flex flex-col w-full first:rounded-t-lg last:rounded-b-lg border border-neutral-200 bg-white"
                 property={this.props.property}
-                noDefaultTitle={true}>
+                noDefaultTitle={true}
+                >
 
-                <button className="hover:bg-blue-300 bg-blue-100 w-full focus:ring-4 focus:ring-cyan-300 focus:border-cyan-200 text-left
+                <div className="flex flex-row hover:bg-blue-300 bg-blue-100 w-full focus:ring-4 focus:ring-cyan-300 focus:border-cyan-200 text-left
             focus:outline-none" onClick={this.onClick.bind(this)}>
-                    {propertyKey}
-                </button>
+                    <div className="w-full"> {propertyKey} </div>
+                    <div className="w-full" />
+                    <div className={CSSUtils.getButtonClass("teal")}>Disable</div>
+                </div>
 
                 {
                     (
