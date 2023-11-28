@@ -141,6 +141,10 @@ class RenderEnginePaperJs implements RenderEngine2D {
 
     cameraBox: CameraBox = null
 
+    getEventEmitterName(){
+        return this.canvasEventEmitter.getEventEmitterName()
+    }
+
     getEventBus() {
         // @ts-ignore
         return this.canvasEventEmitter.getEventBus()

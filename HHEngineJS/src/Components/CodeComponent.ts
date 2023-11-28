@@ -5,25 +5,8 @@ import {renderEngine2D} from "../RenderEngine/RenderEnginePaperImpl";
 import {CanvasEventEmitter} from "../RenderEngine/CanvasEventEmitter";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {BaseShapeActor} from "../EventGraph/BaseShapeActor";
+import {HHEventBus} from "hhcommoncomponents";
 
-
-// Example:
-// class Handler{
-//     construct(shapeActor, eventRegisters){
-//         this.shapeActor = shapeActor
-//         this.eventRegisters = eventRegisters
-//
-//         console.log("HiHi")
-//     }
-//
-//     onStart(){
-//         console.log("onStart")
-//     }
-//
-//     onUpdate(){
-//         console.log("onUpdate")
-//     }
-// }
 
 class UserDefinedClass {
     constructor(shape: BaseShapeActor, eventRegisterFunctions: object) {
@@ -55,10 +38,23 @@ class CodeComponent extends AbstractComponent {
 
     events = {}
 
+    eventMap: Map<HHEventBus, Set<number>> = new Map()
+
+    getEventSet(eventBus: HHEventBus) {
+        if (!this.eventMap.has(eventBus)) {
+            this.eventMap.set(eventBus, new Set())
+        }
+
+        return this.eventMap.get(eventBus)
+    }
+
     registerCanvasEvent(eventName, callback) {
-        let eventId = renderEngine2D.getEventBus().addEventHandler(CanvasEventEmitter.getEventEmitterName(), eventName, (param) => {
+        let canvasEventBus = renderEngine2D.getEventBus()
+        let eventId = canvasEventBus.addEventHandler(renderEngine2D.getEventEmitterName(), eventName, (param) => {
             callback(param)
         })
+
+        this.getEventSet(renderEngine2D.getEventBus()).add(eventId)
     }
 
     isChecksumEqual(checksum1, checksum2) {
@@ -83,10 +79,12 @@ class CodeComponent extends AbstractComponent {
         return true
     }
 
+    onStartExecuted = false
+
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
-        if(this.sourceCode == null || this.sourceCode.length == 0)
+        if (this.sourceCode == null || this.sourceCode.length == 0)
             return
 
         let compileOK = true
@@ -109,7 +107,6 @@ class CodeComponent extends AbstractComponent {
                     registerCanvasEvent: this.registerCanvasEvent.bind(this)
                 })
 
-                this.userClassObject.onStart()
                 this.codeChecksum = checkSum
             }
         } catch (e) {
@@ -118,12 +115,28 @@ class CodeComponent extends AbstractComponent {
         }
 
         if (compileOK) {
-            this.userClassObject.onUpdate()
+            if(!this.onStartExecuted){
+                if (this.userClassObject.onStart){
+                    this.userClassObject.onStart()
+
+                    this.onStartExecuted = true
+                }
+            }
+
+            if (this.userClassObject.onUpdate)
+                this.userClassObject.onUpdate()
         }
     }
 
     reset() {
         super.reset();
+        this.onStartExecuted = false
+
+        for(let [eventBus, eventSet] of this.eventMap){
+            for(let handlerId of eventSet){
+                eventBus.removeEventHandlerFromAllEvents(handlerId)
+            }
+        }
     }
 }
 

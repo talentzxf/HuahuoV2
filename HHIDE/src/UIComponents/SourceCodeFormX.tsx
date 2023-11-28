@@ -19,7 +19,7 @@ type SourceCodeFormXState = {
 }
 
 let exampleCode = "class Handler{\n" +
-    "\tconstruct(shapeActor, eventRegisters: object){\n" +
+    "\tconstructor(shapeActor, eventRegisters){\n" +
     "\t\tthis.shapeActor = shapeActor\n" +
     "\t\tthis.eventRegisters = eventRegisters\n" +
     "\t\t\n" +

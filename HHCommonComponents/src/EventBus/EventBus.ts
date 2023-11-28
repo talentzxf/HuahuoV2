@@ -55,6 +55,20 @@ class HHEventBus {
         return this.eventHandlerParamArrayMap.get(fullEventName)
     }
 
+    removeEventHandlerFromAllEvents(handlerId: number){
+        if (this.handlerIdHandlerMap.has(handlerId)) {
+            this.handlerIdHandlerMap.delete(handlerId)
+
+            for(let [fullEventName, handlerIdSet] of this.eventHandlerIdMap){
+                if(handlerIdSet.has(handlerId)){
+                    handlerIdSet.delete(handlerId)
+                }
+            }
+        } else {
+            console.warn("Trying to remove an nonexistence handlerId:" + handlerId)
+        }
+    }
+
     removeEventHandler(namespace: string, evtName: string, handlerId: number) {
         if (this.handlerIdHandlerMap.has(handlerId)) {
             this.handlerIdHandlerMap.delete(handlerId)
