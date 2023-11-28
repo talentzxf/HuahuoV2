@@ -19,11 +19,11 @@ type SourceCodeFormXState = {
 }
 
 let exampleCode = "class Handler{\n" +
-    "\tconstruct(shapeActor, eventRegisters){\n" +
+    "\tconstruct(shapeActor, eventRegisters: object){\n" +
     "\t\tthis.shapeActor = shapeActor\n" +
     "\t\tthis.eventRegisters = eventRegisters\n" +
     "\t\t\n" +
-    "\t\tconsole.log(\"HiHi\")\n" +
+    "\t\tconsole.log(\"on class constructor\")\n" +
     "\t}\n" +
     "\t\n" +
     "\tonStart(){\n" +
@@ -139,7 +139,7 @@ class SourceCodeFormX extends React.Component<SourceCodeFormXProps, any> {
                             <CloseBtn onclick={
                                 () => {
                                     this.saveCode()
-                                    
+
                                     if(this.monacoEditor)
                                         this.monacoEditor.dispose()
 
