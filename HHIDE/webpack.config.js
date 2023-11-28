@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const FileManagerPlugin = require("filemanager-webpack-plugin")
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin")
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 let moduleExports = (env) => {
@@ -148,6 +149,9 @@ let moduleExports = (env) => {
                 template: 'src/index.ejs',
                 // inject: false
             }),
+            new MonacoWebpackPlugin({
+                languages: ['javascript', 'css', 'html', 'typescript', 'json']
+            })
             // new MiniCssExtractPlugin()
         ],
     };

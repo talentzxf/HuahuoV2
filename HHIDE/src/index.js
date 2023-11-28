@@ -11,6 +11,7 @@ import {RegisterForm} from "./Identity/RegisterForm";
 import {binaryFileUploader} from "./RESTApis/BinaryFileUploader";
 import {HHHistoryCommandList} from "./UIComponents/HHHistoryCommandList"
 import {EventGraphEditorX} from "./InspectorX/CustomFieldReactGenerator/EventGraphEditorX"
+import {SourceCodeEditorX} from "./InspectorX/CustomFieldReactGenerator/SourceCodeEditorX";
 import {SelectIconForm} from "./Inspector/CustomFieldDivGenerators/SelectIconForm";
 import {EventNode} from "../../HHEngineJS/src/EventGraph/Nodes/EventNode";
 import {ActionNode} from "../../HHEngineJS/src/EventGraph/Nodes/ActionNode";

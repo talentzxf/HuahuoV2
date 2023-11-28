@@ -1,7 +1,6 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import sha256 from 'crypto-js/sha256';
-import {StringProperty} from "hhcommoncomponents";
 import {renderEngine2D} from "../RenderEngine/RenderEnginePaperImpl";
 import {CanvasEventEmitter} from "../RenderEngine/CanvasEventEmitter";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
@@ -43,8 +42,11 @@ type UserDefinedConstructor = new (shape: BaseShapeActor, eventRegisterFunctions
 
 @Component({compatibleShapes: ["BaseShapeJS"]})
 class CodeComponent extends AbstractComponent {
-    @PropertyValue(PropertyCategory.stringValue, "", {textArea: true} as StringProperty)
+    @PropertyValue(PropertyCategory.stringValue, "", /*{textArea: true} as StringProperty*/ null, true)
     sourceCode
+
+    @PropertyValue(PropertyCategory.customField)
+    editSourceCode
 
     userClassObject: UserDefinedClass
     codeChecksum: string = ""
@@ -83,6 +85,9 @@ class CodeComponent extends AbstractComponent {
 
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
+
+        if(this.sourceCode == null || this.sourceCode.length == 0)
+            return
 
         let compileOK = true
         try {
