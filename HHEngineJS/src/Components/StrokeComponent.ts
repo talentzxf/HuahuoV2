@@ -13,6 +13,10 @@ class StrokeComponent extends AbstractComponent{
 
     isBuiltIn = true
 
+    canBeDisabled(): boolean {
+        return false
+    }
+
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 

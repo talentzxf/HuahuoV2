@@ -8,10 +8,19 @@ class FillColorComponent extends AbstractComponent{
 
     isBuiltIn = true
 
+    canBeDisabled(): boolean {
+        return false
+    }
+
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
-        this.baseShape.paperShape.fillColor = this.fillColor
+        if(this.baseShape.getActor().isFillColorValid){
+            this.baseShape.paperShape.fillColor = this.baseShape.getActor().fillColor
+        }else{
+            this.baseShape.paperShape.fillColor = this.fillColor
+        }
+
     }
 }
 

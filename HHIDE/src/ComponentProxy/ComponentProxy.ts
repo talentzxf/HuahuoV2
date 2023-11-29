@@ -125,7 +125,12 @@ class ComponentProxyHandler {
             type: PropertyType.COMPONENT,
             targetObject: thisComponent.baseShape,
             config: {
-                children: [],
+                children: []
+            }
+        }
+
+        if(thisComponent.canBeDisabled()){
+            Object.assign(componentConfigSheet.config, {
                 enabler: () => {
                     thisComponent.enableComponent(true)
                 },
@@ -135,7 +140,7 @@ class ComponentProxyHandler {
                 isActive: () => {
                     return thisComponent.isComponentActive()
                 }
-            }
+            })
         }
 
         if (!thisComponent.isBuiltIn) { //BuiltIn components can't be deleted.

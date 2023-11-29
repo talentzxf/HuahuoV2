@@ -2,8 +2,8 @@ import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import {StringProperty} from "hhcommoncomponents";
 
-@Component({compatibleShapes:["BaseSolidShape"], maxCount: 1})
-class RadialGradientComponent extends AbstractComponent{
+@Component({compatibleShapes: ["BaseSolidShape"], maxCount: 1})
+class RadialGradientComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.colorStopArray)
     gradientColorArray
 
@@ -13,15 +13,23 @@ class RadialGradientComponent extends AbstractComponent{
     @PropertyValue(PropertyCategory.interpolateVector2, {x: 0.0, y: 0.0})
     destinationPosition
 
-    @PropertyValue(PropertyCategory.stringValue, "radial", {options:["radial", "linear"]} as StringProperty)
+    @PropertyValue(PropertyCategory.stringValue, "radial", {options: ["radial", "linear"]} as StringProperty)
     gradientType
 
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
+        if (this.isComponentActive()) {
+            this.onComponentEnabled()
+        } else {
+            this.onComponentDisabled()
+        }
+    }
+
+    onComponentEnabled() {
         // TODO: Sort first??
         let stops = []
-        for(let colorStop of this.gradientColorArray){
+        for (let colorStop of this.gradientColorArray) {
             let color = new paper.Color(colorStop.r, colorStop.g, colorStop.b, colorStop.a)
             let value = colorStop.value
 
@@ -30,7 +38,7 @@ class RadialGradientComponent extends AbstractComponent{
 
         let _this = this
         let fillColorConfig = {
-            gradient:{
+            gradient: {
                 stops: stops,
                 radial: true
             },
@@ -38,13 +46,17 @@ class RadialGradientComponent extends AbstractComponent{
             destination: _this.baseShape.bounds.rightCenter.add(this.destinationPosition)
         }
 
-        if(this.gradientType == "linear"){
+        if (this.gradientType == "linear") {
             fillColorConfig.gradient.radial = false
-        }else{
+        } else {
             fillColorConfig.gradient.radial = true
         }
 
-        this.baseShape.paperShape.fillColor = new paper.Color(fillColorConfig)
+        this.baseShape.getActor().setFillColor(new paper.Color(fillColorConfig))
+    }
+
+    onComponentDisabled() {
+        this.baseShape.getActor().setFillColor(null)
     }
 }
 

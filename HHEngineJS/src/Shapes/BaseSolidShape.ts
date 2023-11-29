@@ -9,6 +9,14 @@ abstract class BaseSolidShape extends BaseShapeJS {
         this.addComponent(new StrokeComponent())
         this.addComponent(new FillColorComponent())
     }
+
+    afterUpdate(force: boolean = false) {
+        super.afterUpdate(force);
+
+        if(this.getActor().isFillColorValid){
+            this.paperItem.fillColor = this.getActor().fillColor
+        }
+    }
 }
 
 export {BaseSolidShape}

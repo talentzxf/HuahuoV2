@@ -4,14 +4,17 @@ import {PropertyType} from "hhcommoncomponents"
 import {Vector2} from "hhcommoncomponents"
 import {AbstractComponent} from "../Components/AbstractComponent";
 
-class BaseShapeActor extends AbstractGraphAction{
-    targetShape:BaseShapeJS
+class BaseShapeActor extends AbstractGraphAction {
+    targetShape: BaseShapeJS
+
+    fillColor: paper.Color = null
+    isFillColorValid: boolean = false
 
     position: Vector2 = new Vector2()
-    isPositionValid:boolean = false
+    isPositionValid: boolean = false
 
     rotation = 0
-    isRotationValid:boolean = false
+    isRotationValid: boolean = false
 
     actionInvokers: Set<AbstractComponent> = new Set<AbstractComponent>()
 
@@ -21,18 +24,18 @@ class BaseShapeActor extends AbstractGraphAction{
         this.targetShape = targetShape
     }
 
-    getRawObject(){
+    getRawObject() {
         return this.targetShape.getRawObject()
     }
 
-    AddActionInvoker(component: AbstractComponent){
+    AddActionInvoker(component: AbstractComponent) {
         this.actionInvokers.add(component)
     }
 
-    RemoveActionInvoker(component: AbstractComponent){
+    RemoveActionInvoker(component: AbstractComponent) {
         this.actionInvokers.delete(component)
 
-        if(this.actionInvokers.size == 0){
+        if (this.actionInvokers.size == 0) {
             this.reset()
         }
     }
@@ -41,21 +44,22 @@ class BaseShapeActor extends AbstractGraphAction{
         valueName: "position",
         valueType: "vec2"
     } as ReturnValueInfo)
-    GetPosition(){
+    GetPosition() {
         return this.targetShape.position
     }
 
     @GraphAction()
-    reset(){
+    reset() {
         this.rotation = 0.0
         this.position = new Vector2()
         this.isRotationValid = false
         this.isPositionValid = false
+        this.isFillColorValid = false
     }
 
     @GraphAction()
-    setPosition(@ActionParam(PropertyType.NUMBER) x:number, @ActionParam(PropertyType.NUMBER) y:number){
-        if(isNaN(x) || isNaN(y))
+    setPosition(@ActionParam(PropertyType.NUMBER) x: number, @ActionParam(PropertyType.NUMBER) y: number) {
+        if (isNaN(x) || isNaN(y))
             return
 
         this.position.x = x
@@ -65,19 +69,30 @@ class BaseShapeActor extends AbstractGraphAction{
     }
 
     @GraphAction()
-    setRotation(@ActionParam(PropertyType.NUMBER) degree: number){
-        if(isNaN(degree))
+    setRotation(@ActionParam(PropertyType.NUMBER) degree: number) {
+        if (isNaN(degree))
             return
         this.rotation = degree
         this.isRotationValid = true
     }
 
     @GraphAction()
-    move(@ActionParam(PropertyType.VECTOR2) dir: paper.Point, @ActionParam(PropertyType.NUMBER) speed: number = 1.0){
-        if(dir == null || isNaN(dir.x) || isNaN(dir.y))
+    setFillColor(@ActionParam(PropertyType.COLOR) fillColor: paper.Color) {
+        if (fillColor == null) {
+            this.fillColor = null
+            this.isFillColorValid = false
+        } else {
+            this.fillColor = fillColor
+            this.isFillColorValid = true
+        }
+    }
+
+    @GraphAction()
+    move(@ActionParam(PropertyType.VECTOR2) dir: paper.Point, @ActionParam(PropertyType.NUMBER) speed: number = 1.0) {
+        if (dir == null || isNaN(dir.x) || isNaN(dir.y))
             return
 
-        if(!(dir instanceof paper.Point)){
+        if (!(dir instanceof paper.Point)) {
             dir = new paper.Point(dir)
         }
 
@@ -87,8 +102,8 @@ class BaseShapeActor extends AbstractGraphAction{
     }
 
     @GraphAction()
-    rotateShape(@ActionParam(PropertyType.NUMBER) degree){
-        if(isNaN(degree))
+    rotateShape(@ActionParam(PropertyType.NUMBER) degree) {
+        if (isNaN(degree))
             return
 
         this.rotation = this.targetShape.rotation + degree
@@ -97,8 +112,8 @@ class BaseShapeActor extends AbstractGraphAction{
     }
 
     @GraphAction()
-    lookAt(@ActionParam(PropertyType.VECTOR2) targetPoint){
-        if(targetPoint == null || isNaN(targetPoint.x) || isNaN(targetPoint.y)){
+    lookAt(@ActionParam(PropertyType.VECTOR2) targetPoint) {
+        if (targetPoint == null || isNaN(targetPoint.x) || isNaN(targetPoint.y)) {
             return
         }
 
@@ -111,4 +126,4 @@ class BaseShapeActor extends AbstractGraphAction{
     }
 }
 
-export {BaseShapeActor }
+export {BaseShapeActor}

@@ -116,6 +116,8 @@
   "Motor": "马达组件",
   "ObjectGenerator": "形状生成器",
   "inspector": {
+    "disable": "禁用",
+    "enable": "开启",
     "setFrameName": "帧名字",
     "nextFrameId": "下一帧",
     "extendedProperties": "拓展属性",

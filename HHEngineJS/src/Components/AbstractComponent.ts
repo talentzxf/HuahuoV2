@@ -66,6 +66,10 @@ abstract class AbstractComponent extends EventEmitter {
         return metaDataKey
     }
 
+    canBeDisabled(){
+        return true
+    }
+
     actor: ComponentActor = new ComponentActor()
 
     componentActions: ComponentActions

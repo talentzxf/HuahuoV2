@@ -116,6 +116,8 @@
   "Motor": "Motor",
   "ObjectGenerator": "Object Generator",
   "inspector": {
+    "disable": "Disable",
+    "enable": "Enable",
     "setFrameName": "Frame Name",
     "nextFrameId": "Next FrameId",
     "extendedProperties": "Extended Properties",
