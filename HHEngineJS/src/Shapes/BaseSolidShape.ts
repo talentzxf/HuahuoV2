@@ -8,7 +8,7 @@ abstract class BaseSolidShape extends BaseShapeJS {
 
         this.addComponent(new StrokeComponent())
         this.addComponent(new FillColorComponent())
-        this.addComponent(new SegmentComponent())
+        // this.addComponent(new SegmentComponent())
     }
 
     afterUpdate(force: boolean = false) {

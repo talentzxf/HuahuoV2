@@ -26,7 +26,7 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         document.body.addEventListener("keyup", this.onKeyUp.bind(this))
     }
 
-    getCurSegment(){
+    getCurSegment() {
         return this.curSegment
     }
 
@@ -73,7 +73,7 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
         if (hitResult != null && hitResult.segment != null) {
             this.setSegment(hitResult.segment)
 
-            if(showInspector)
+            if (showInspector)
                 this.showInspector()
         }
 
@@ -108,22 +108,28 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
 
     protected setupPropertySheet(propertySheet: PropertySheet) {
         let _this = this
+        let componentProperty = {
+            key: "Segment",
+            type: PropertyType.COMPONENT,
+            config: {
+                children: []
+            }
+        }
 
-        propertySheet.addProperty(
-            {
-                key: "point",
-                type: PropertyType.VECTOR2,
-                getter: this.getPropertyGetter("point").bind(this),
-                setter: this.getPropertySetter("point").bind(this),
-                registerValueChangeFunc: (func)=>{
-                    _this.registerValueChangeHandler("point")((segment)=>{
-                        func(segment.point)
-                    })
-                },
-                unregisterValueChangeFunc: this.unregisterValueChangeHandler("point")
-            })
+        componentProperty.config.children.push({
+            key: "point",
+            type: PropertyType.VECTOR2,
+            getter: this.getPropertyGetter("point").bind(this),
+            setter: this.getPropertySetter("point").bind(this),
+            registerValueChangeFunc: (func) => {
+                _this.registerValueChangeHandler("point")((segment) => {
+                    func(segment.point)
+                })
+            },
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("point")
+        })
 
-        propertySheet.addProperty({
+        componentProperty.config.children.push({
             key: "handleIn",
             type: PropertyType.VECTOR2,
             getter: this.getPropertyGetter("handleIn").bind(this),
@@ -131,17 +137,17 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
             registerValueChangeFunc: this.registerValueChangeHandler("handleIn"),
             unregisterValueChangeFunc: this.unregisterValueChangeHandler("handleIn")
         })
-        propertySheet.addProperty(
-            {
-                key: "handleOut",
-                type: PropertyType.VECTOR2,
-                getter: this.getPropertyGetter("handleOut").bind(this),
-                setter: this.getPropertySetter("handleOut").bind(this),
-                registerValueChangeFunc: this.registerValueChangeHandler("handleOut"),
-                unregisterValueChangeFunc: this.unregisterValueChangeHandler("handleOut")
-            })
 
-        propertySheet.addProperty({
+        componentProperty.config.children.push({
+            key: "handleOut",
+            type: PropertyType.VECTOR2,
+            getter: this.getPropertyGetter("handleOut").bind(this),
+            setter: this.getPropertySetter("handleOut").bind(this),
+            registerValueChangeFunc: this.registerValueChangeHandler("handleOut"),
+            unregisterValueChangeFunc: this.unregisterValueChangeHandler("handleOut")
+        })
+
+        componentProperty.config.children.push({
             key: "Smooth",
             type: PropertyType.BUTTON,
             config: {
@@ -149,13 +155,15 @@ class ShapeMorphHandler extends ShapeTranslateMorphBase {
             }
         })
 
-        propertySheet.addProperty({
+        componentProperty.config.children.push({
             key: "Sharpen",
             type: PropertyType.BUTTON,
             config: {
                 action: this.sharpenSegment.bind(this)
             }
         })
+
+        propertySheet.addProperty(componentProperty)
     }
 
     sharpenSegment() {
@@ -213,9 +221,9 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
 
     valueChangeHandlerMap: Map<string, Function> = new Map<string, Function>()
 
-    beginMove(startPos, hitResult, showInspector:boolean = true) {
+    beginMove(startPos, hitResult, showInspector: boolean = true) {
         super.beginMove(startPos, hitResult, showInspector);
-        if(hitResult == null)
+        if (hitResult == null)
             return
 
         if (hitResult.type == "handle-in")
@@ -258,7 +266,7 @@ class ShapeHandlerMoveHandler extends ShapeMorphHandler {
 class ShapeInsertSegmentHandler extends ShapeMorphHandler {
     beginMove(startPos, hitResult = null, showInspector: boolean = true) {
         super.beginMove(startPos);
-        if(this.targetShape.isLocked())
+        if (this.targetShape.isLocked())
             return
 
         if (!this.targetShape.isSegmentSeletable())
@@ -270,7 +278,7 @@ class ShapeInsertSegmentHandler extends ShapeMorphHandler {
 
         undoManager.PushCommand(shapeSegmentInsertCommand)
 
-        if(showInspector)
+        if (showInspector)
             this.showInspector()
 
         this.valueChangeHandler.callHandlers("insertSegment", this.curSegment)
@@ -280,5 +288,7 @@ class ShapeInsertSegmentHandler extends ShapeMorphHandler {
 let shapeHandlerMoveHandler = new ShapeHandlerMoveHandler()
 let shapeMorphHandler = new ShapeMorphHandler()
 let shapeInsertSegmentHandler = new ShapeInsertSegmentHandler()
-export {shapeMorphHandler, shapeHandlerMoveHandler, shapeInsertSegmentHandler,
-    ShapeMorphHandler, ShapeInsertSegmentHandler, ShapeHandlerMoveHandler}
+export {
+    shapeMorphHandler, shapeHandlerMoveHandler, shapeInsertSegmentHandler,
+    ShapeMorphHandler, ShapeInsertSegmentHandler, ShapeHandlerMoveHandler
+}
