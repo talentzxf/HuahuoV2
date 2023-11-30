@@ -11,10 +11,12 @@ type ComponentPropertyState = {
     isTransitioning: boolean
 }
 
+let defaultContentHeight = 10000
+
 class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropertyState> {
     state: ComponentPropertyState = {
         isOpen: true,
-        contentHeight: 10000,
+        contentHeight: defaultContentHeight,
         isTransitioning: false
     }
 
@@ -29,7 +31,10 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
 
     openSection() {
         this.state.isOpen = true
-        this.state.contentHeight = this.contentRef.current.scrollHeight
+        if(this.contentRef.current)
+            this.state.contentHeight = this.contentRef.current.scrollHeight
+        else
+            this.state.contentHeight = defaultContentHeight
         this.state.isTransitioning = true
 
         this.setState(this.state)
