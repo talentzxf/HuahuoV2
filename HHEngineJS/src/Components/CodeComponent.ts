@@ -2,26 +2,12 @@ import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
 import sha256 from 'crypto-js/sha256';
 import {renderEngine2D} from "../RenderEngine/RenderEnginePaperImpl";
-import {CanvasEventEmitter} from "../RenderEngine/CanvasEventEmitter";
 import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {BaseShapeActor} from "../EventGraph/BaseShapeActor";
 import {HHEventBus} from "hhcommoncomponents";
+import {UserDefinedComponent} from "./UserDefinedComponent";
 
-
-class UserDefinedClass {
-    constructor(shape: BaseShapeActor, eventRegisterFunctions: object) {
-    }
-
-    onStart() {
-
-    }
-
-    onUpdate() {
-
-    }
-}
-
-type UserDefinedConstructor = new (shape: BaseShapeActor, eventRegisterFunctions: object) => UserDefinedClass
+type UserDefinedConstructor = new (shape: BaseShapeActor, eventRegisterFunctions: object) => UserDefinedComponent
 
 @Component({compatibleShapes: ["BaseShapeJS"]})
 class CodeComponent extends AbstractComponent {
@@ -31,7 +17,7 @@ class CodeComponent extends AbstractComponent {
     @PropertyValue(PropertyCategory.customField)
     editSourceCode
 
-    userClassObject: UserDefinedClass
+    userClassObject: UserDefinedComponent
     codeChecksum: string = ""
 
     startExecuted = false
@@ -136,6 +122,10 @@ class CodeComponent extends AbstractComponent {
             for(let handlerId of eventSet){
                 eventBus.removeEventHandlerFromAllEvents(handlerId)
             }
+        }
+
+        if(this.userClassObject){
+            this.userClassObject.onReset()
         }
     }
 }

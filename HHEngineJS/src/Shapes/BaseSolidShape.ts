@@ -12,10 +12,6 @@ abstract class BaseSolidShape extends BaseShapeJS {
 
     afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
-
-        if(this.getActor().isFillColorValid){
-            this.paperItem.fillColor = this.getActor().fillColor
-        }
     }
 }
 

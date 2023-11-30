@@ -15,12 +15,7 @@ class FillColorComponent extends AbstractComponent{
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
-        if(this.baseShape.getActor().isFillColorValid){
-            this.baseShape.paperShape.fillColor = this.baseShape.getActor().fillColor
-        }else{
-            this.baseShape.paperShape.fillColor = this.fillColor
-        }
-
+        this.baseShape.paperShape.fillColor = this.fillColor
     }
 }
 

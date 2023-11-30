@@ -7,9 +7,6 @@ import {AbstractComponent} from "../Components/AbstractComponent";
 class BaseShapeActor extends AbstractGraphAction {
     targetShape: BaseShapeJS
 
-    fillColor: paper.Color = null
-    isFillColorValid: boolean = false
-
     position: Vector2 = new Vector2()
     isPositionValid: boolean = false
 
@@ -54,7 +51,6 @@ class BaseShapeActor extends AbstractGraphAction {
         this.position = new Vector2()
         this.isRotationValid = false
         this.isPositionValid = false
-        this.isFillColorValid = false
     }
 
     @GraphAction()
@@ -74,17 +70,6 @@ class BaseShapeActor extends AbstractGraphAction {
             return
         this.rotation = degree
         this.isRotationValid = true
-    }
-
-    @GraphAction()
-    setFillColor(@ActionParam(PropertyType.COLOR) fillColor: paper.Color) {
-        if (fillColor == null) {
-            this.fillColor = null
-            this.isFillColorValid = false
-        } else {
-            this.fillColor = fillColor
-            this.isFillColorValid = true
-        }
     }
 
     @GraphAction()

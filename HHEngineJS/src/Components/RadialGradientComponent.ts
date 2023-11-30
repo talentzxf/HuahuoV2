@@ -20,13 +20,11 @@ class RadialGradientComponent extends AbstractComponent {
         super.afterUpdate(force);
 
         if (this.isComponentActive()) {
-            this.onComponentEnabled()
-        } else {
-            this.onComponentDisabled()
+            this.updateShapeColor()
         }
     }
 
-    onComponentEnabled() {
+    updateShapeColor() {
         // TODO: Sort first??
         let stops = []
         for (let colorStop of this.gradientColorArray) {
@@ -52,11 +50,7 @@ class RadialGradientComponent extends AbstractComponent {
             fillColorConfig.gradient.radial = true
         }
 
-        this.baseShape.getActor().setFillColor(new paper.Color(fillColorConfig))
-    }
-
-    onComponentDisabled() {
-        this.baseShape.getActor().setFillColor(null)
+        this.baseShape.paperShape.fillColor = new paper.Color(fillColorConfig)
     }
 }
 
