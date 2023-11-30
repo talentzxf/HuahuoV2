@@ -8,10 +8,10 @@ class BaseShapeActor extends AbstractGraphAction {
     targetShape: BaseShapeJS
 
     position: Vector2 = new Vector2()
-    isPositionValid: boolean = false
+    _isPositionValid: boolean = false
 
     rotation = 0
-    isRotationValid: boolean = false
+    _isRotationValid: boolean = false
 
     actionInvokers: Set<AbstractComponent> = new Set<AbstractComponent>()
 
@@ -19,6 +19,18 @@ class BaseShapeActor extends AbstractGraphAction {
         super();
 
         this.targetShape = targetShape
+    }
+
+    get isRotationValid() {
+        if (this.targetShape.isResetting)
+            return false
+        return this._isRotationValid
+    }
+
+    get isPositionValid() {
+        if (this.targetShape.isResetting)
+            return false
+        return this._isPositionValid
     }
 
     getRawObject() {
@@ -49,31 +61,40 @@ class BaseShapeActor extends AbstractGraphAction {
     reset() {
         this.rotation = 0.0
         this.position = new Vector2()
-        this.isRotationValid = false
-        this.isPositionValid = false
+        this._isRotationValid = false
+        this._isPositionValid = false
     }
 
     @GraphAction()
     setPosition(@ActionParam(PropertyType.NUMBER) x: number, @ActionParam(PropertyType.NUMBER) y: number) {
+        if(this.targetShape.isResetting)
+            return
+
         if (isNaN(x) || isNaN(y))
             return
 
         this.position.x = x
         this.position.y = y
 
-        this.isPositionValid = true
+        this._isPositionValid = true
     }
 
     @GraphAction()
     setRotation(@ActionParam(PropertyType.NUMBER) degree: number) {
+        if(this.targetShape.isResetting)
+            return
+
         if (isNaN(degree))
             return
         this.rotation = degree
-        this.isRotationValid = true
+        this._isRotationValid = true
     }
 
     @GraphAction()
     move(@ActionParam(PropertyType.VECTOR2) dir: paper.Point, @ActionParam(PropertyType.NUMBER) speed: number = 1.0) {
+        if(this.targetShape.isResetting)
+            return
+
         if (dir == null || isNaN(dir.x) || isNaN(dir.y))
             return
 
@@ -83,21 +104,27 @@ class BaseShapeActor extends AbstractGraphAction {
 
         this.position = this.targetShape.position.add(dir.multiply(speed))
 
-        this.isPositionValid = true
+        this._isPositionValid = true
     }
 
     @GraphAction()
     rotateShape(@ActionParam(PropertyType.NUMBER) degree) {
+        if(this.targetShape.isResetting)
+            return
+
         if (isNaN(degree))
             return
 
         this.rotation = this.targetShape.rotation + degree
 
-        this.isRotationValid = true
+        this._isRotationValid = true
     }
 
     @GraphAction()
     lookAt(@ActionParam(PropertyType.VECTOR2) targetPoint) {
+        if(this.targetShape.isResetting)
+            return
+
         if (targetPoint == null || isNaN(targetPoint.x) || isNaN(targetPoint.y)) {
             return
         }
@@ -106,8 +133,7 @@ class BaseShapeActor extends AbstractGraphAction {
         let degree = targetPoint.subtract(curShapePosition).angle
 
         this.rotation = degree
-        this.isRotationValid = true
-
+        this._isRotationValid = true
     }
 }
 

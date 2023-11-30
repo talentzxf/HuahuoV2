@@ -6,6 +6,7 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {BaseShapeActor} from "../EventGraph/BaseShapeActor";
 import {HHEventBus} from "hhcommoncomponents";
 import {UserDefinedComponent} from "./UserDefinedComponent";
+import {huahuoEngine} from "../EngineAPI";
 
 type UserDefinedConstructor = new (shape: BaseShapeActor, eventRegisterFunctions: object) => UserDefinedComponent
 
@@ -37,7 +38,7 @@ class CodeComponent extends AbstractComponent {
     registerCanvasEvent(eventName, callback) {
         let canvasEventBus = renderEngine2D.getEventBus()
         let eventId = canvasEventBus.addEventHandler(renderEngine2D.getEventEmitterName(), eventName, (param) => {
-            callback(param)
+            callback(...param)
         })
 
         this.getEventSet(renderEngine2D.getEventBus()).add(eventId)
@@ -75,6 +76,10 @@ class CodeComponent extends AbstractComponent {
 
         if(this.baseShape.isResetting) // The shape is being resetting. No need to execute the update.
             return
+
+        if(!huahuoEngine.getActivePlayer().isPlaying){
+            return
+        }
 
         let compileOK = true
         try {
@@ -124,6 +129,7 @@ class CodeComponent extends AbstractComponent {
         for (let [eventBus, eventSet] of this.eventMap) {
             for (let handlerId of eventSet) {
                 eventBus.removeEventHandlerFromAllEvents(handlerId)
+                eventSet.delete(handlerId)
             }
         }
 
