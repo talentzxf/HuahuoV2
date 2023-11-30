@@ -323,7 +323,7 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
         }
 
         paper.view.size.width = this.canvasRef.current.width
-        
+
         let penIndex = 0
 
         let stops = []
