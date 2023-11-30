@@ -73,6 +73,9 @@ class CodeComponent extends AbstractComponent {
         if (this.sourceCode == null || this.sourceCode.length == 0)
             return
 
+        if(this.baseShape.isResetting) // The shape is being resetting. No need to execute the update.
+            return
+
         let compileOK = true
         try {
             let checkSum = sha256(this.sourceCode)
@@ -101,15 +104,15 @@ class CodeComponent extends AbstractComponent {
         }
 
         if (compileOK) {
-            if(!this.onStartExecuted){
-                if (this.userClassObject.onStart){
+            if (!this.onStartExecuted) {
+                if (this.userClassObject?.onStart) {
                     this.userClassObject.onStart()
 
                     this.onStartExecuted = true
                 }
             }
 
-            if (this.userClassObject.onUpdate)
+            if (this.userClassObject?.onUpdate)
                 this.userClassObject.onUpdate()
         }
     }
@@ -118,13 +121,13 @@ class CodeComponent extends AbstractComponent {
         super.reset();
         this.onStartExecuted = false
 
-        for(let [eventBus, eventSet] of this.eventMap){
-            for(let handlerId of eventSet){
+        for (let [eventBus, eventSet] of this.eventMap) {
+            for (let handlerId of eventSet) {
                 eventBus.removeEventHandlerFromAllEvents(handlerId)
             }
         }
 
-        if(this.userClassObject){
+        if (this.userClassObject && this.userClassObject.hasOwnProperty("onReset") && this.userClassObject.onReset instanceof Function) {
             this.userClassObject.onReset()
         }
     }

@@ -1211,7 +1211,10 @@ abstract class BaseShapeJS {
         this.getPropertySheet().setProperties(properties)
     }
 
+    isResetting: boolean = false
+
     reset() {
+        this.isResetting = true
         this.getActor().reset()
         for (let component of this.customComponents) {
             if (component != null)
@@ -1219,6 +1222,7 @@ abstract class BaseShapeJS {
         }
 
         this.update()
+        this.isResetting = false
     }
 }
 
