@@ -10,13 +10,14 @@ import {ColorPropertyX} from "./ColorPropertyX";
 import {ArrayDeleteCommand} from "../RedoUndo/ArrayDeleteCommand";
 import {HHToast} from "hhcommoncomponents";
 import {ArrayInsertCommand} from "../RedoUndo/ArrayInsertCommand";
+import {ResizeObserver} from "resize-observer";
 
 const rectangleOffset = 10
-const canvasWidth = 400
 const canvasHeight = 20
+const defaultCanvasWidth = 300
 
-const rectangleWidth = 300
 const rectangleHeight = 20
+const defaultRectangleWidth = defaultCanvasWidth * 0.9
 
 class Pen {
     colorStop: ColorStop
@@ -56,13 +57,18 @@ class Pen {
         return this._selected
     }
 
-    constructor(colorStop?: ColorStop) {
+    rectangleWidthGetter: Function
 
+    constructor(colorStop?: ColorStop, getRectangleWidth = () => {
+        return defaultRectangleWidth
+    }) {
         [this.paperGroup, this.penBody, this.penCap] = createPenShape()
 
         this.selected = false
 
         this.interceptPaperFunctions()
+
+        this.rectangleWidthGetter = getRectangleWidth
 
         if (colorStop)
             this.setColorStop(colorStop)
@@ -73,7 +79,7 @@ class Pen {
     setColorStop(colorStop) {
         this.colorStop = colorStop
         this.penBody.fillColor = new paper.Color(colorStop.r, colorStop.g, colorStop.b, colorStop.a)
-        this.paperGroup.position = new paper.Point(colorStop.value * rectangleWidth, rectangleHeight / 2)
+        this.paperGroup.position = new paper.Point(colorStop.value * this.rectangleWidthGetter(), rectangleHeight / 2)
     }
 
     hide() {
@@ -128,22 +134,27 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
 
     canvasRef: React.RefObject<any>
     propertyRef: React.RefObject<any>
+    outerDivRef: React.RefObject<any>
     rectangle: paper.Path.Rectangle
 
     pens: Array<Pen> = new Array<Pen>()
 
     selectedPen: Pen = null
+    resizeObserver: ResizeObserver
+
+    rectangleWidth: number = defaultRectangleWidth
 
     constructor(props) {
         super(props);
 
         this.canvasRef = React.createRef()
         this.propertyRef = React.createRef()
+        this.outerDivRef = React.createRef()
     }
 
     onRectangleClicked(evt: MouseEvent) {
         let clickPoint = evt["point"]
-        let value = clickPoint.x / rectangleWidth
+        let value = clickPoint.x / this.rectangleWidth
 
         let arrayInsertCommand = new ArrayInsertCommand(
             () => {
@@ -162,14 +173,13 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
         if (this.canvasRef.current == null)
             return
 
-        let property = this.props.property
         let previousPaperProject = paper.project
         paper.setup(this.canvasRef.current)
         let projectId = paper.project.index
         canvasPaperProjectMap.set(this.canvasRef.current, projectId)
         paper.project.view.translate(new paper.Point(rectangleOffset, 0))
 
-        this.rectangle = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(rectangleWidth, rectangleHeight))
+        this.rectangle = new paper.Path.Rectangle(new paper.Point(0, 0), new paper.Point(this.rectangleWidth, rectangleHeight))
         this.rectangle.onClick = this.onRectangleClicked.bind(this)
         this.refresh()
         previousPaperProject.activate()
@@ -180,12 +190,26 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
 
         this.documentMouseDownFunction = this.onDocumentMouseDown.bind(this)
         document.addEventListener("mousedown", this.documentMouseDownFunction)
+
+        this.resizeObserver = new ResizeObserver((entry) => {
+            if (this.canvasRef.current) {
+                this.canvasRef.current.width = this.canvasRef.current.clientWidth
+                this.refresh()
+            }
+        })
+
+        this.resizeObserver.observe(this.outerDivRef.current)
     }
 
     componentWillUnmount() {
         if (this.documentMouseDownFunction)
             document.removeEventListener("mousedown", this.documentMouseDownFunction)
         this.onLoseFocus()
+
+        if (this.propertyRef.current) {
+            this.resizeObserver.unobserve(this.outerDivRef.current)
+            this.resizeObserver.disconnect()
+        }
     }
 
     onDocumentMouseDown(e: MouseEvent) {
@@ -256,7 +280,7 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
         this.selectPen(pen)
 
         let colorStop = pen.colorStop
-        let deltaPortion = (evt["delta"].x / rectangleWidth)
+        let deltaPortion = (evt["delta"].x / this.rectangleWidth)
 
         let oldValue = colorStop.value
 
@@ -282,6 +306,10 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
             return
         }
 
+        this.rectangleWidth = this.canvasRef.current.clientWidth * 0.9
+        this.rectangle.segments[2].point.x = this.rectangleWidth
+        this.rectangle.segments[3].point.x = this.rectangleWidth
+
         let colorStopArray = this.props.property.getter()
         let projectId = canvasPaperProjectMap.get(this.canvasRef.current)
         if (projectId == null) // Won't update the canvas when first mounted (paper.project has not been created yet).
@@ -294,6 +322,8 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
             paper.projects[projectId].activate()
         }
 
+        paper.view.size.width = this.canvasRef.current.width
+        
         let penIndex = 0
 
         let stops = []
@@ -308,7 +338,9 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
                 pen = this.pens[penIndex]
                 pen.show()
             } else { // Create new pen.
-                pen = new Pen(colorStop)
+                pen = new Pen(colorStop, () => {
+                    return this.rectangleWidth
+                })
 
                 pen.paperGroup.onClick = this.onPenClicked.bind(this)
                 pen.paperGroup.onMouseDrag = this.onPenMouseDrag.bind(this)
@@ -449,20 +481,22 @@ class ColorStopArrayPropertyX extends React.Component<PropertyProps, ColorStopAr
 
         return (
             <PropertyEntry ref={this.propertyRef} className="col-span-2" property={this.props.property}>
-                <label className="mx-1 px-1">{this.state.colorTitle}</label>
-                <ColorPropertyX property={{
-                    getter: () => {
-                        if (this.selectedPen && this.selectedPen.penBody)
-                            return this.selectedPen.penBody.fillColor
-                        return unselectedPenCapColor
-                    },
-                    setter: this.colorStopColorChanged.bind(this)
-                }}></ColorPropertyX>
-                <canvas ref={this.canvasRef}
-                        width={canvasWidth} height={canvasHeight} style={{
-                    width: canvasWidth + "px",
-                    height: canvasHeight + "px"
-                }}></canvas>
+                <div ref={this.outerDivRef}>
+                    <label className="mx-1 px-1">{this.state.colorTitle}</label>
+                    <ColorPropertyX property={{
+                        getter: () => {
+                            if (this.selectedPen && this.selectedPen.penBody)
+                                return this.selectedPen.penBody.fillColor
+                            return unselectedPenCapColor
+                        },
+                        setter: this.colorStopColorChanged.bind(this)
+                    }}></ColorPropertyX>
+                    <canvas ref={this.canvasRef}
+                            width={defaultCanvasWidth} height={canvasHeight} style={{
+                        width: "100%",
+                        height: canvasHeight + "px"
+                    }}></canvas>
+                </div>
             </PropertyEntry>)
     }
 }

@@ -1,6 +1,7 @@
 import {ValueChangeHandler} from "hhenginejs";
 import {PropertyCategory, PropertyDef} from "hhenginejs";
 import {capitalizeFirstLetter, PropertyType} from "hhcommoncomponents"
+
 const propertyPrefix = "inspector.property."
 
 class PropertySheetFactory {
@@ -33,13 +34,17 @@ class PropertySheetFactory {
         this.categoryTypeMap.set(PropertyCategory.stringValue, PropertyType.STRING)
     }
 
-    createEntryByNameAndCategory(propertyName, category: PropertyCategory, hide:boolean = false) {
+    createEntryByNameAndCategory(propertyName, category: PropertyCategory, hide: boolean = false, singleLine: boolean = false) {
         let propertyDef = {
             key: propertyPrefix + propertyName,
         }
 
-        if(hide){
+        if (hide) {
             propertyDef["hide"] = true
+        }
+
+        if (singleLine) {
+            propertyDef["singleLine"] = true
         }
 
         let propertyType = this.categoryTypeMap.get(category)
@@ -54,7 +59,8 @@ class PropertySheetFactory {
     createEntry(component, propertyMeta: PropertyDef, valueChangeHandler: ValueChangeHandler) {
         let fieldName = propertyMeta["key"]
 
-        let propertyDef = this.createEntryByNameAndCategory(propertyMeta["key"], propertyMeta.type, propertyMeta.hide)
+        let propertyDef = this.createEntryByNameAndCategory(propertyMeta["key"], propertyMeta.type,
+            propertyMeta.hide, propertyMeta.singleLine)
 
         let isCustomField = propertyMeta.type == PropertyCategory.customField
         if (!isCustomField) {
@@ -91,20 +97,20 @@ class PropertySheetFactory {
         propertyDef["registerValueChangeFunc"] = valueChangeHandler.registerValueChangeHandler(fieldName)
         propertyDef["unregisterValueChangeFunc"] = valueChangeHandler.unregisterValueChangeHandler(fieldName)
 
-        if(propertyMeta.type == PropertyCategory.interpolateFloat){
-            if(!propertyDef.hasOwnProperty("config") || propertyDef["config"] == null){
+        if (propertyMeta.type == PropertyCategory.interpolateFloat) {
+            if (!propertyDef.hasOwnProperty("config") || propertyDef["config"] == null) {
                 propertyDef["config"] = {}
             }
-            propertyDef["config"]["getKeyFrameCurve"] = ()=>{
+            propertyDef["config"]["getKeyFrameCurve"] = () => {
                 return component.getKeyFrameCurve(fieldName)
             }
         }
 
-        if(propertyMeta.type == PropertyCategory.interpolateVector2){
-            if(!propertyDef.hasOwnProperty("config") || propertyDef["config"] == null){
+        if (propertyMeta.type == PropertyCategory.interpolateVector2) {
+            if (!propertyDef.hasOwnProperty("config") || propertyDef["config"] == null) {
                 propertyDef["config"] = {}
             }
-            propertyDef["config"]["getKeyFrameCurves"] = ()=>{
+            propertyDef["config"]["getKeyFrameCurves"] = () => {
                 return component.getVector2KeyFrameCurves(fieldName)
             }
         }

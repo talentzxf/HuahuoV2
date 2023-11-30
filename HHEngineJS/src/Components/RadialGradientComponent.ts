@@ -1,10 +1,10 @@
 import {AbstractComponent, Component, PropertyValue} from "./AbstractComponent";
 import {PropertyCategory} from "./PropertySheetBuilder";
-import {StringProperty} from "hhcommoncomponents";
+import {PropertyConfig, StringProperty} from "hhcommoncomponents";
 
 @Component({compatibleShapes: ["BaseSolidShape"], maxCount: 1})
 class RadialGradientComponent extends AbstractComponent {
-    @PropertyValue(PropertyCategory.colorStopArray)
+    @PropertyValue(PropertyCategory.colorStopArray, null, null, false, true)
     gradientColorArray
 
     @PropertyValue(PropertyCategory.interpolateVector2, {x: 0.0, y: 0.0})

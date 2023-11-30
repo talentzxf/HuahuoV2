@@ -258,6 +258,7 @@ class PropertyDef {
     config: object
     initValue: object | number
     hide: boolean = false
+    singleLine?: boolean = false
 }
 
 export {PropertyCategory, PropertyDef, buildOperator}

@@ -28,7 +28,7 @@ function getProperties(target): Array<PropertyDef> {
     return properties
 }
 
-function PropertyValue(category: PropertyCategory, initValue = null, config: PropertyConfig = null, hide: boolean = false) {
+function PropertyValue(category: PropertyCategory, initValue = null, config: PropertyConfig = null, hide: boolean = false, singleLine = false) {
     return function (target: object, propertyKey: string, descriptor: PropertyDescriptor = null) {
         let properties = getProperties(target)
 
@@ -37,7 +37,8 @@ function PropertyValue(category: PropertyCategory, initValue = null, config: Pro
             type: category,
             initValue: initValue,
             config: config,
-            hide: hide
+            hide: hide,
+            singleLine: singleLine
         }
 
         if (descriptor != null && typeof descriptor.value === "function") {
