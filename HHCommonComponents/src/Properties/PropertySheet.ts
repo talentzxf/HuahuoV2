@@ -13,6 +13,7 @@ enum PropertyType {
     SHAPE,
     ARRAY,
     COMPONENT,
+    SEGMENT,
     COLORSTOPARRAY,
     KEYFRAMES,
     SUBCOMPONENTARRAY,

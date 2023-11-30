@@ -18,7 +18,14 @@ abstract class BaseSolidShape extends BaseShapeJS {
             key: "Segment",
             type: PropertyType.COMPONENT,
             config: {
-                children: []
+                children: [{
+                    key: "Segments",
+                    type: PropertyType.ARRAY,
+                    elementType: PropertyType.SEGMENT,
+                    getter: () => {
+                        return this.getSegments()
+                    }
+                }]
             }
         }
 

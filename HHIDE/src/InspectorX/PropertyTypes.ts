@@ -19,6 +19,7 @@ import {ButtonPropertyX} from "./ButtonPropertyX";
 import {ColorStopArrayPropertyX} from "./ColorStopArrayPropertyX";
 import {GroupPropertyX} from "./GroupPropertyX";
 import {KeyFramePropertyX} from "./KeyFramePropertyX";
+import {SegmentPropertyX} from "./SegmentPropertyX";
 
 // Avoid being imported twice.
 // TODO: Any less dirty approach ??
@@ -34,6 +35,7 @@ if (!window["IsTypesRegistered"]) {
     RegisterReactGenerator(PropertyType.COLOR, ColorPropertyX)
     RegisterReactGenerator(PropertyType.BUTTON, ButtonPropertyX)
     RegisterReactGenerator(PropertyType.COMPONENT, ComponentPropertyX)
+    RegisterReactGenerator(PropertyType.SEGMENT, SegmentPropertyX)
     RegisterReactGenerator(PropertyType.PANEL, PanelPropertyX)
     RegisterReactGenerator(PropertyType.STRING, StringPropertyX)
     RegisterReactGenerator(PropertyType.NUMBER, FloatPropertyX)
