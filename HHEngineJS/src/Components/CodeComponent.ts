@@ -21,8 +21,6 @@ class CodeComponent extends AbstractComponent {
     userClassObject: UserDefinedComponent
     codeChecksum: string = ""
 
-    startExecuted = false
-
     events = {}
 
     eventMap: Map<HHEventBus, Set<number>> = new Map()
