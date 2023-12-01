@@ -21,6 +21,7 @@ class ArrayPropertyX extends React.Component<PropertyProps, any> implements Prop
         if (generator) {
             let props = {
                 key: idx,
+                idx: idx,
                 property: {
                     getter: () => {
                         return property.getter()[idx]

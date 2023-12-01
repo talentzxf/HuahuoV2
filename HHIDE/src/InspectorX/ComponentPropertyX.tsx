@@ -31,7 +31,7 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
 
     openSection() {
         this.state.isOpen = true
-        if(this.contentRef.current)
+        if (this.contentRef.current)
             this.state.contentHeight = this.contentRef.current.scrollHeight
         else
             this.state.contentHeight = defaultContentHeight
@@ -125,7 +125,11 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
             }
         }
 
-        let propertyKey = i18n.t(this.props.property.key)
+        let propertyKey = null
+
+        if (this.props.property.hasOwnProperty("key")) {
+            propertyKey = i18n.t(this.props.property.key)
+        }
 
         return (
             <PropertyEntry
@@ -133,10 +137,12 @@ class ComponentPropertyX extends React.Component<PropertyProps, ComponentPropert
                 property={this.props.property}
                 noDefaultTitle={true}
             >
-
                 <div className="flex flex-row hover:bg-blue-300 bg-blue-100 w-full focus:ring-4 focus:ring-cyan-300 focus:border-cyan-200 text-left
             focus:outline-none cursor-pointer select-none align-baseline" onClick={this.onClick.bind(this)}>
-                    <div className="w-full mx-1 flex-1"> {propertyKey} </div>
+                    {
+                        propertyKey != null && <div className="w-full mx-1 flex-1"> {propertyKey} </div>
+                    }
+
                     {
                         this.props.property?.config?.enabler && this.props.property?.config?.isActive &&
                         <div className={CSSUtils.getButtonClass("teal") + " rounded mx-1 px-1"} onClick={(e) => {
