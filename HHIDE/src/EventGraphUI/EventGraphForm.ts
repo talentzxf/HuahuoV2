@@ -420,7 +420,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
             })
 
             let segmentEntry = {
-                content: i18n.t("eventgraph.addSegmentActions"),
+                content: i18n.t("eventgraph.segmentActions"),
                 has_submenu: true,
                 callback: (node, options, e, prev_menu, myExtraOptions) => {
                     new LiteGraph.ContextMenu(segmentEntries, {event: e, parentMenu: prev_menu}, ref_window)

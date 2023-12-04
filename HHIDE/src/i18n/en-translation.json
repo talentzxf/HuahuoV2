@@ -57,6 +57,7 @@
   "copySucceeded": "Successfully copied to clipboard",
   "copyFailed": "Failed to copy to clipboard",
   "eventgraph": {
+    "segmentActions": "Segment Actions",
     "lib": "Event Graph Lib",
     "upload": "Upload",
     "copy": "Copy Graph",
@@ -74,7 +75,7 @@
     "onMouseLeave": "Mouse Leave",
     "onMouseEnter": "Mouse Enter",
     "onMouseUp": "Mouse Up",
-    "setFrameId": "FrameChange",
+    "setFrameId": "PlayFrame",
     "pausePlay": "Pause Play",
     "Execute": "Execute",
     "point": "point",

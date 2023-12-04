@@ -7,6 +7,7 @@ enum NodeTargetType {
     SHAPE = "SHAPE",
     COMPONENT = "COMPONENT",
     GRAPHCOMPONENT = "GRAPHCOMPONENT",
+    SEGMENT = "SEGMENT",
     PLAYER = "PLAYER",
     CANVAS = "CANVAS"
 }

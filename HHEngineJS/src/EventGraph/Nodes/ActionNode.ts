@@ -3,6 +3,18 @@ import {AbstractNode} from "./AbstractNode";
 import {ActionDef, NodeTargetType, ReturnValueInfo} from "../GraphActions";
 import {huahuoEngine} from "../../EngineAPI";
 import {getLiteGraphTypeFromPropertyType} from "../GraphUtils";
+import {PropertyType} from "hhcommoncomponents";
+
+function convertData(val, inputType, outputType) {
+    if (inputType == "vec2" && outputType == PropertyType.VECTOR2) {
+        return {
+            x: val[0],
+            y: val[1]
+        }
+    }
+
+    return val
+}
 
 class ActionNode extends AbstractNode {
     title = "ActionNode"
@@ -13,6 +25,7 @@ class ActionNode extends AbstractNode {
         actionName: "unknownAction",
         paramIdxSlotMap: {},
         maxParamIdx: -1, // -1 means no parameter.
+        paramDefs: {},
         onlyRunWhenPlaing: false,
         returnValueInfo: null
     }
@@ -45,13 +58,17 @@ class ActionNode extends AbstractNode {
         this.title = actionDef.actionName
         this.properties.actionName = actionDef.actionName
         this.properties.onlyRunWhenPlaing = actionDef.onlyRunWhenPlaing
+        for(let paramDef of actionDef.paramDefs){
+            this.properties.paramDefs[paramDef.paramIndex] = paramDef
+        }
+
 
         this.setReturnSlot(actionDef.returnValueInfo)
     }
 
-    getTargetActor(){
+    getTargetActor() {
         let targetType = this.properties["targetTypeInfo"].type
-        if(targetType == null){
+        if (targetType == null) {
             console.error("Node is not inited???")
             return
         }
@@ -59,7 +76,7 @@ class ActionNode extends AbstractNode {
         let additionalInfo = this.properties["targetTypeInfo"].additionalInfo
 
         let baseShape = this.getBaseShape()
-        switch(targetType){
+        switch (targetType) {
             case NodeTargetType.SHAPE:
                 return this.getEventGraphComponent().getBaseActor()
             case NodeTargetType.COMPONENT:
@@ -71,6 +88,8 @@ class ActionNode extends AbstractNode {
                 return this.getEventGraphComponent()
             case NodeTargetType.PLAYER:
                 return this.getEventGraphComponent().playerAction
+            case NodeTargetType.SEGMENT:
+                return this.getEventGraphComponent().getBaseActor().getSegmentActor()
             default:
                 console.warn("Action is not defined!!!")
         }
@@ -89,7 +108,9 @@ class ActionNode extends AbstractNode {
             let slot = this.properties.paramIdxSlotMap[paramIdx]
             if (slot) {
                 let inputData = this.getInputDataByName(slot.name, true)
-                callBackParams.push(inputData)
+
+                let outputType = this.properties.paramDefs[paramIdx].paramType
+                callBackParams.push(convertData(inputData, slot.type, outputType))
             } else {
                 callBackParams.push(null)
             }

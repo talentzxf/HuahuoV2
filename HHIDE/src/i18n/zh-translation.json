@@ -57,6 +57,7 @@
   "copySucceeded": "成功复制到剪贴板",
   "copyFailed": "复制到剪贴板失败",
   "eventgraph": {
+    "segmentActions": "关键点动作",
     "lib": "事件图库",
     "upload": "上传",
     "copy": "复制事件图",
@@ -74,7 +75,7 @@
     "onMouseLeave": "鼠标离开",
     "onMouseEnter": "鼠标进入",
     "onMouseUp": "鼠标松开",
-    "setFrameId": "设置帧",
+    "setFrameId": "播放帧",
     "pausePlay": "暂停播放",
     "Execute": "执行",
     "point": "点",

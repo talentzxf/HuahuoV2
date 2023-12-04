@@ -54,7 +54,7 @@ class BaseShapeActor extends AbstractGraphAction {
 
     getSegmentActor(): ShapeSegmentActor{
         if(this.segmentActor == null){
-            if(this.targetShape.hasOwnProperty("getSegments")){
+            if('getSegments' in this.targetShape && typeof this.targetShape["getSegments"] === "function"){
                 this.segmentActor = new ShapeSegmentActor()
             }
         }
@@ -76,6 +76,10 @@ class BaseShapeActor extends AbstractGraphAction {
         this.position = new Vector2()
         this._isRotationValid = false
         this._isPositionValid = false
+
+        if(this.getSegmentActor()){
+            this.getSegmentActor().reset()
+        }
     }
 
     @GraphAction()

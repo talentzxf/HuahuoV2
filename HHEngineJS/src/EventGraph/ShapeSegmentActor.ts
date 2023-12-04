@@ -44,6 +44,13 @@ class ShapeSegmentActor extends AbstractGraphAction{
     setHandleOut(@ActionParam(PropertyType.NUMBER) idx, @ActionParam(PropertyType.VECTOR2) handleOut){
         this.handleOutMap.set(idx, handleOut)
     }
+
+    @GraphAction()
+    reset() {
+        this.pointMap.clear()
+        this.handleInMap.clear()
+        this.handleOutMap.clear()
+    }
 }
 
 export {ShapeSegmentActor}
