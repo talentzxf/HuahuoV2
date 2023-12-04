@@ -14,6 +14,7 @@ import {
     renderEngine2D
 } from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
+import {fas} from "@fortawesome/free-solid-svg-icons";
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -401,6 +402,33 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
             entries.push(entry)
         })
+
+        if (baseActor.getSegmentActor()) {
+            let segmentActions = baseActor.getSegmentActor().getActionDefs()
+            let segmentEntries = []
+            segmentActions.forEach((actionDef) => {
+                let entry = {
+                    value: "actions/actionNode",
+                    content: actionDef.actionName,
+                    has_submenu: false,
+                    callback: function (value, event, mouseEvent, contextMenu) {
+                        _this.actionCallBack(value, event, mouseEvent, contextMenu, extraOptions, actionDef, NodeTargetType.SEGMENT)
+                    }
+                }
+
+                segmentEntries.push(entry)
+            })
+
+            let segmentEntry = {
+                content: i18n.t("eventgraph.addSegmentActions"),
+                has_submenu: true,
+                callback: (node, options, e, prev_menu, myExtraOptions) => {
+                    new LiteGraph.ContextMenu(segmentEntries, {event: e, parentMenu: prev_menu}, ref_window)
+                }
+            }
+
+            entries.push(segmentEntry)
+        }
 
         new LiteGraph.ContextMenu(entries, {event: e, parentMenu: prev_menu}, ref_window)
     }

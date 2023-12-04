@@ -3,17 +3,20 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {PropertyType} from "hhcommoncomponents"
 import {Vector2} from "hhcommoncomponents"
 import {AbstractComponent} from "../Components/AbstractComponent";
+import {ShapeSegmentActor} from "./ShapeSegmentActor";
 
 class BaseShapeActor extends AbstractGraphAction {
-    targetShape: BaseShapeJS
+    private targetShape: BaseShapeJS
 
     position: Vector2 = new Vector2()
-    _isPositionValid: boolean = false
+    private _isPositionValid: boolean = false
 
     rotation = 0
-    _isRotationValid: boolean = false
+    private _isRotationValid: boolean = false
 
-    actionInvokers: Set<AbstractComponent> = new Set<AbstractComponent>()
+    private segmentActor = null
+
+    private actionInvokers: Set<AbstractComponent> = new Set<AbstractComponent>()
 
     constructor(targetShape: BaseShapeJS) {
         super();
@@ -47,6 +50,16 @@ class BaseShapeActor extends AbstractGraphAction {
         if (this.actionInvokers.size == 0) {
             this.reset()
         }
+    }
+
+    getSegmentActor(): ShapeSegmentActor{
+        if(this.segmentActor == null){
+            if(this.targetShape.hasOwnProperty("getSegments")){
+                this.segmentActor = new ShapeSegmentActor()
+            }
+        }
+
+        return this.segmentActor
     }
 
     @GraphAction(true, {

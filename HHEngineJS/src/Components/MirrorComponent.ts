@@ -4,6 +4,7 @@ import {BaseShapeJS} from "../Shapes/BaseShapeJS";
 import {GetObjPtr, mirrorPoint, ShapeArrayProperty} from "hhcommoncomponents";
 import * as paper from "paper"
 import {LoadShapeFromCppShape} from "../Shapes/LoadShape";
+import {MirrorShapeJS} from "../Shapes/MirrorShapeJS";
 
 function createDuplication(targetShape, baseShape) {
     /*
@@ -64,10 +65,12 @@ class MirrorComponent extends AbstractComponent {
     setBaseShape(baseShape: BaseShapeJS) {
         super.setBaseShape(baseShape);
 
-        let baseShapeSegments = this.baseShape.getSegments()
+        let baseMirrorShape = this.baseShape as MirrorShapeJS
+
+        let baseShapeSegments = baseMirrorShape.getSegments()
         if (baseShapeSegments != null && baseShapeSegments.length == 2) {
-            this.p1 = this.baseShape.getSegments()[0].point
-            this.p2 = this.baseShape.getSegments()[1].point
+            this.p1 = baseMirrorShape.getSegments()[0].point
+            this.p2 = baseMirrorShape.getSegments()[1].point
         }
     }
 
@@ -112,12 +115,14 @@ class MirrorComponent extends AbstractComponent {
     override afterUpdate(force: boolean = false) {
         super.afterUpdate(force);
 
+        let baseMirrorShape = this.baseShape as MirrorShapeJS
+
         if (this.baseShape.isVisible()) {
             let baseShapeParent = this.baseShape.paperShape.parent
             if (baseShapeParent != null && this.paperShapeGroup.parent != baseShapeParent)
                 baseShapeParent.addChild(this.paperShapeGroup)
 
-            let segments = this.baseShape.getSegments()
+            let segments = baseMirrorShape.getSegments()
 
             if (segments == null || segments.length != 2) { // The base shape is not ready!
                 return;

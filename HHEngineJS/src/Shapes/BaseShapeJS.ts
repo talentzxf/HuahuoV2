@@ -1,11 +1,10 @@
 import {huahuoEngine} from "../EngineAPI";
-import {GetObjPtr, Logger, PropertySheet, PropertyType, Vector2} from "hhcommoncomponents";
+import {GetObjPtr, IsValidWrappedObject, Logger, PropertySheet, PropertyType} from "hhcommoncomponents";
 import * as paper from "paper";
 import {ValueChangeHandler} from "./ValueChangeHandler";
 import {AbstractComponent} from "../Components/AbstractComponent";
 import {BaseShapeActor} from "../EventGraph/BaseShapeActor";
 import {clzObjectFactory} from "../CppClassObjectFactory";
-import {IsValidWrappedObject} from "hhcommoncomponents";
 
 let BASIC_COMPONENTS = "BasicComponents"
 
@@ -52,7 +51,7 @@ abstract class BaseShapeJS {
         return this.customComponentMap.values();
     }
 
-    public getActor() {
+    public getActor():BaseShapeActor {
         return this.actor
     }
 
@@ -438,101 +437,8 @@ abstract class BaseShapeJS {
         return window.paper
     }
 
-    setSegmentProperty(idx, property, value) {
-        let segment = this.paperShape.segments[idx]
-        let currentValue = this.paperShape.segments[idx][property]
-
-        if (Math.abs(currentValue - value) < eps)
-            return
-        this.paperShape.segments[idx][property] = value
-        this.store()
-
-        this.callHandlers("segments", {idx: idx, property: property, value: value})
-    }
-
-    restoreFrameSegmentsBuffer(frameSegmentsBuffer) {
-        for (let keyframeObj of frameSegmentsBuffer) {
-            let frameId = keyframeObj["frameId"]
-            let segments = keyframeObj["segments"]
-            for (let segmentIdx = 0; segmentIdx < segments.length; segmentIdx++) {
-                this.storeSegments(segments, frameId)
-            }
-        }
-
-        this.update(true)
-
-        this.callHandlers("segments", null)
-    }
-
-    getFrameIdSegmentsBuffer() {
-        let frameSegments = []
-        let keyFrameCount = this.rawObj.GetSegmentKeyFrameCount()
-
-        for (let keyFrameIdx = 0; keyFrameIdx < keyFrameCount; keyFrameIdx++) {
-            let segmentKeyFrame = this.rawObj.GetSegmentKeyFrameAtKeyFrameIndex(keyFrameIdx);
-            let segmentCount = segmentKeyFrame.GetTotalSegments()
-
-            let frameObj = {
-                frameId: segmentKeyFrame.GetFrameId(),
-                segments: []
-            }
-            for (let segmentIdx = 0; segmentIdx < segmentCount; segmentIdx++) {
-                let newSegmentBuffer = {
-                    point: Vector2.fromObj(segmentKeyFrame.GetPosition(segmentIdx)),
-                    handleIn: Vector2.fromObj(segmentKeyFrame.GetHandleIn(segmentIdx)),
-                    handleOut: Vector2.fromObj(segmentKeyFrame.GetHandleOut(segmentIdx))
-                }
-
-                frameObj.segments.push(newSegmentBuffer)
-            }
-
-            frameSegments.push(frameObj)
-        }
-
-        return frameSegments
-    }
-
-    getSegmentsBuffer(segments, keyFrameId = null) {
-        let segmentBuffer = []
-        if (keyFrameId == null) {
-            for (let id = 0; id < segments.length; id++) {
-                segmentBuffer[6 * id] = segments[id].point.x
-                segmentBuffer[6 * id + 1] = segments[id].point.y
-                segmentBuffer[6 * id + 2] = segments[id].handleIn.x
-                segmentBuffer[6 * id + 3] = segments[id].handleIn.y
-                segmentBuffer[6 * id + 4] = segments[id].handleOut.x
-                segmentBuffer[6 * id + 5] = segments[id].handleOut.y
-            }
-        }
-
-        return segmentBuffer
-    }
-
-    storeSegments(segments, keyframeId = null) {
-
-        let segmentBuffer = this.getSegmentsBuffer(segments)
-
-        if (keyframeId == null) // Set the current frame.
-            this.rawObj.SetSegments(segmentBuffer, segments.length)
-        else
-            this.rawObj.SetSegmentsAtFrame(segmentBuffer, segments.length, keyframeId)
-    }
-
-    // This might be overridden by CurveShape. Because we want to implement the growth factor.
-    getSegments() {
-        if (!this.paperShape)
-            return null;
-
-        return this.paperShape.segments
-    }
-
     // TODO: Do we really need a store ????
     store() {
-        let segments = this.getSegments()
-        if (segments) {
-            this.storeSegments(segments)
-        }
-
         // Store index
         let index = this.paperItem.index
         if (index != this.rawObj.GetIndex()) { // If index changed, all the shapes in the same layer might also be changed.
@@ -550,10 +456,10 @@ abstract class BaseShapeJS {
                 _this.rawObj = Module.BaseShape.prototype.CreateShape(_this.getShapeName());
 
                 let bornFrameId = huahuoEngine.GetCurrentLayer().GetCurrentFrame()
-                if(IsValidWrappedObject(_this.getLayer())){
+                if (IsValidWrappedObject(_this.getLayer())) {
                     bornFrameId = _this.getLayer().GetCurrentFrame()
                 }
-                
+
                 _this.rawObj.SetBornFrameId(_this.getLayer().GetCurrentFrame())
                 Logger.info("BaseShapeJS: Executing afterWASMReady")
                 _this.afterWASMReady();
@@ -937,92 +843,6 @@ abstract class BaseShapeJS {
         return this.rawObj.GetTypeName()
     }
 
-    insertSegment(localPos: paper.Point) { // Need to add segments in all keyframes
-        let keyFrameCount = this.rawObj.GetSegmentKeyFrameCount()
-        if (keyFrameCount <= 0)
-            return;
-
-        let newObj = new paper.Path() // Clone the object at keyFrameIdx and add new segment and save.
-        newObj.applyMatrix = false
-        newObj.visible = false
-        newObj.closed = true
-
-        // TODO: 1.Merge this with applySegments??
-        // TODO: 2.Add a clone method.
-        for (let keyFrameIdx = 0; keyFrameIdx < keyFrameCount; keyFrameIdx++) {
-            let segmentKeyFrame = this.rawObj.GetSegmentKeyFrameAtKeyFrameIndex(keyFrameIdx);
-            let segmentCount = segmentKeyFrame.GetTotalSegments()
-            for (let segmentIdx = 0; segmentIdx < segmentCount; segmentIdx++) {
-                let position = segmentKeyFrame.GetPosition(segmentIdx)
-                let handleIn = segmentKeyFrame.GetHandleIn(segmentIdx)
-                let handleOut = segmentKeyFrame.GetHandleOut(segmentIdx)
-
-                let positionPoint = new paper.Point(position.x, position.y)
-                let handleInPoint = new paper.Point(handleIn.x, handleIn.y)
-                let handleOutPoint = new paper.Point(handleOut.x, handleOut.y)
-
-                let newSegment = new paper.Segment(positionPoint, handleInPoint, handleOutPoint)
-                newObj.add(newSegment)
-            }
-
-            let nearestPoint = newObj.getNearestPoint(localPos)
-            let offset = newObj.getOffsetOf(nearestPoint)
-
-            while (!newObj.divideAt(offset)) {
-                offset += 0.01 // Hit the corner points, offset a little and divide again.
-            }
-
-            this.storeSegments(newObj.segments, segmentKeyFrame.GetFrameId())
-            newObj.removeSegments()
-        }
-
-        newObj.remove()
-
-        this.callHandlers("segment", null)
-    }
-
-    removeSegment(segment) {
-        // Update all frames.
-        this.rawObj.RemoveSegment(segment.index)
-
-        segment.remove()
-
-        this.callHandlers("segment", null)
-    }
-
-    applySegments() {
-        let segmentCount = this.rawObj.GetSegmentCount();
-        if (segmentCount > 0 && this.paperShape.segments != null) {
-            let currentSegmentCount = this.paperShape.segments.length
-            let createSegments = false
-            if (currentSegmentCount != segmentCount) {
-                this.paperShape.removeSegments()
-                createSegments = true
-            }
-
-            for (let i = 0; i < segmentCount; i++) {
-                let position = this.rawObj.GetSegmentPosition(i);
-                let handleIn = this.rawObj.GetSegmentHandleIn(i);
-                let handleOut = this.rawObj.GetSegmentHandleOut(i);
-
-                let positionPoint = new paper.Point(position.x, position.y)
-                let handleInPoint = new paper.Point(handleIn.x, handleIn.y)
-                let handleOutPoint = new paper.Point(handleOut.x, handleOut.y)
-
-                if (createSegments) {
-                    this.paperShape.insert(i, new paper.Segment(positionPoint, handleInPoint, handleOutPoint))
-                } else {
-                    this.paperShape.segments[i].point = positionPoint
-                    this.paperShape.segments[i].handleIn = handleInPoint
-                    this.paperShape.segments[i].handleOut = handleOutPoint
-                }
-            }
-            return true
-        }
-
-        return false
-    }
-
     backCalculateZeroPoint(localPos: paper.Point, globalPos: paper.Point, radian: number) {
         /*
         let OB = localPos.x + localPos.y * Math.tan(radian)
@@ -1072,8 +892,6 @@ abstract class BaseShapeJS {
     }
 
     afterUpdate(force: boolean = false) {
-        this.applySegments()
-
         // Reset the rotation.
         this.paperItem.rotation = this.rotation;
 
@@ -1226,4 +1044,4 @@ abstract class BaseShapeJS {
     }
 }
 
-export {BaseShapeJS}
+export {BaseShapeJS, eps}
