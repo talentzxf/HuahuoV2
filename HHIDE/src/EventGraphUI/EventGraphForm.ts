@@ -1,5 +1,5 @@
 import {HHForm} from "../Utilities/HHForm";
-import {CustomElement, getFullEventName, HHToast} from "hhcommoncomponents";
+import {capitalizeFirstLetter, CustomElement, getFullEventName, HHToast} from "hhcommoncomponents";
 import {CSSUtils} from "../Utilities/CSSUtils";
 import {getEventCategoryMap} from "./Utils"
 import {
@@ -14,7 +14,8 @@ import {
     renderEngine2D
 } from "hhenginejs";
 import {EventNames, IDEEventBus} from "../Events/GlobalEvents";
-import {fas} from "@fortawesome/free-solid-svg-icons";
+import {getProperties} from "hhenginejs";
+import {propertySheetFactory} from "../ComponentProxy/PropertySheetBuilderFactory";
 
 let CANVAS_WIDTH = 800
 let CANVAS_HEIGHT = 600
@@ -243,6 +244,26 @@ class EventGraphForm extends HTMLElement implements HHForm {
         graph.afterChange()
     }
 
+    getComponentActionDefs(component) {
+        let componentActionDefs = component.getActionDefs()
+
+        let properties = getProperties(component)
+
+        let propertyActionDefs = []
+        for (let property of properties) {
+            let actionDef = new ActionDef()
+            actionDef.actionName = "get" + capitalizeFirstLetter(property.key)
+            actionDef.returnValueInfo = {
+                valueName: property.key,
+                valueType: propertySheetFactory.getPropertyTypeFromPropertyCategory(property.type)
+            }
+            actionDef.paramDefs = []
+            propertyActionDefs.push(actionDef)
+        }
+
+        return propertyActionDefs.concat(componentActionDefs)
+    }
+
     hasComponentActionMenu(): boolean {
         let baseShape = this.targetComponent.baseShape
         if (baseShape == null) {
@@ -252,7 +273,7 @@ class EventGraphForm extends HTMLElement implements HHForm {
         let components = baseShape.getComponents()
         if (components.length > 0) {
             for (let component of components) {
-                for (let actionDef of component.getActionDefs()) {
+                for (let actionDef of this.getComponentActionDefs(component)) {
                     return true
                 }
             }
@@ -278,7 +299,8 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         if (components.length > 0) {
             for (let component of components) {
-                component.getActionDefs().forEach((actionDef) => {
+                let componentActions = this.getComponentActionDefs(component)
+                componentActions.forEach((actionDef) => {
                     let entry = {
                         value: "actions/actionNode",
                         content: component.getTypeName() + "/" + actionDef.actionName,

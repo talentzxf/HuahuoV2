@@ -34,6 +34,8 @@ import {SwitchNode} from "./EventGraph/UtilityNodes/SwitchNode";
 import {ConstStringArrayNode} from "./EventGraph/UtilityNodes/ConstStringArrayNode";
 import {PlayerActions} from "./Player/PlayerActions";
 import {NodeTargetType} from "./EventGraph/GraphActions";
+import {getProperties} from "./Components/AbstractComponent";
+import {ActionDef} from "./EventGraph/GraphActions";
 
 import {StarMirrorShapeJS} from "./Shapes/StarMirrorShapeJS";
 import {Utils} from "./Shapes/Utils";
@@ -166,5 +168,6 @@ export {
     getLiteGraphTypeFromPropertyType,
     PlayerActions,
     NodeTargetType,
-
+    getProperties,
+    ActionDef
 }

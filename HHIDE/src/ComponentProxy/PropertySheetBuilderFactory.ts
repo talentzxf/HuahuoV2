@@ -34,6 +34,10 @@ class PropertySheetFactory {
         this.categoryTypeMap.set(PropertyCategory.stringValue, PropertyType.STRING)
     }
 
+    getPropertyTypeFromPropertyCategory(propertyCategory: PropertyCategory){
+        return this.categoryTypeMap.get(propertyCategory)
+    }
+
     createEntryByNameAndCategory(propertyName, category: PropertyCategory, hide: boolean = false, singleLine: boolean = false) {
         let propertyDef = {
             key: propertyPrefix + propertyName,

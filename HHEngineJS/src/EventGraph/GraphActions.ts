@@ -1,5 +1,4 @@
-import {getParameterNameAtIdx} from "hhcommoncomponents";
-import {PropertyType} from "hhcommoncomponents";
+import {getParameterNameAtIdx, PropertyType} from "hhcommoncomponents";
 
 const graphActionSymbol = Symbol("graphAction")
 
@@ -26,7 +25,7 @@ class ReturnValueInfo {
 class ActionDef {
     actionName: string
     paramDefs: ActionParamDef[]
-    onlyRunWhenPlaing: boolean = false
+    onlyRunWhenPlaying: boolean = false
     returnValueInfo: ReturnValueInfo | null
 }
 
@@ -40,13 +39,13 @@ function getActions(target): object[] {
     return properties
 }
 
-function GraphAction(onlyRunWhenPlaing = false, returnValueInfo: ReturnValueInfo | null = null) {
+function GraphAction(onlyRunWhenPlaying = false, returnValueInfo: ReturnValueInfo | null = null) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         let actions = getActions(target)
         let actionDef: ActionDef = {
             actionName: propertyKey,
             paramDefs: [],
-            onlyRunWhenPlaing: onlyRunWhenPlaing,
+            onlyRunWhenPlaying: onlyRunWhenPlaying,
             returnValueInfo: returnValueInfo
         }
         actions.push(actionDef)

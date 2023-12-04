@@ -55,7 +55,7 @@ class BaseShapeActor extends AbstractGraphAction {
     getSegmentActor(): ShapeSegmentActor{
         if(this.segmentActor == null){
             if('getSegments' in this.targetShape && typeof this.targetShape["getSegments"] === "function"){
-                this.segmentActor = new ShapeSegmentActor()
+                this.segmentActor = new ShapeSegmentActor(this.targetShape)
             }
         }
 

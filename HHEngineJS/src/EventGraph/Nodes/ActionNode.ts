@@ -26,7 +26,7 @@ class ActionNode extends AbstractNode {
         paramIdxSlotMap: {},
         maxParamIdx: -1, // -1 means no parameter.
         paramDefs: {},
-        onlyRunWhenPlaing: false,
+        onlyRunWhenPlaying: false,
         returnValueInfo: null
     }
 
@@ -57,7 +57,7 @@ class ActionNode extends AbstractNode {
     setActionDef(actionDef: ActionDef) {
         this.title = actionDef.actionName
         this.properties.actionName = actionDef.actionName
-        this.properties.onlyRunWhenPlaing = actionDef.onlyRunWhenPlaing
+        this.properties.onlyRunWhenPlaying = actionDef.onlyRunWhenPlaying
         for(let paramDef of actionDef.paramDefs){
             this.properties.paramDefs[paramDef.paramIndex] = paramDef
         }
@@ -97,7 +97,7 @@ class ActionNode extends AbstractNode {
 
     onAction(action, param) {
         // Player is not playing and this action should only run when playing. Return.
-        if (!huahuoEngine.getActivePlayer().isPlaying && this.properties.onlyRunWhenPlaing)
+        if (!huahuoEngine.getActivePlayer().isPlaying && this.properties.onlyRunWhenPlaying)
             return
 
         console.log("Invoking action node:" + this.properties.actionName)

@@ -6,6 +6,14 @@ class ShapeSegmentActor extends AbstractGraphAction{
     handleInMap : Map<number, paper.Point> = new Map
     handleOutMap: Map<number, paper.Point> = new Map
 
+    targetShape = null
+
+    constructor(targetShape) {
+        super();
+
+        this.targetShape = targetShape
+    }
+
     isPointValid(idx){
         return this.pointMap.has(idx)
     }
@@ -50,6 +58,10 @@ class ShapeSegmentActor extends AbstractGraphAction{
         this.pointMap.clear()
         this.handleInMap.clear()
         this.handleOutMap.clear()
+    }
+
+    getSegmentCount(){
+        return this.targetShape.getSegments().length
     }
 }
 
