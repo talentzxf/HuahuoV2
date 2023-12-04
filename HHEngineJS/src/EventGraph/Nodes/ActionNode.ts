@@ -34,8 +34,8 @@ class ActionNode extends AbstractNode {
 
     constructor() {
         super();
-        this.addInput("Execute", LiteGraph.EVENT)
-        this.executedSlot = this.addOutput("Executed", LiteGraph.EVENT)
+        this.addInput("", LiteGraph.EVENT)
+        this.executedSlot = this.addOutput("", LiteGraph.EVENT)
     }
 
     setReturnSlot(returnValueInfo: ReturnValueInfo) {
