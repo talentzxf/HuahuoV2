@@ -62,7 +62,6 @@ class ActionNode extends AbstractNode {
             this.properties.paramDefs[paramDef.paramIndex] = paramDef
         }
 
-
         this.setReturnSlot(actionDef.returnValueInfo)
     }
 
@@ -83,7 +82,7 @@ class ActionNode extends AbstractNode {
                 let componentIdx = additionalInfo["componentId"]
                 let componentRawObj = baseShape.getRawObject().GetFrameStateByIdx(componentIdx)
                 let component = baseShape.getComponentByRawObj(componentRawObj)
-                return component
+                return component.getActor()
             case NodeTargetType.GRAPHCOMPONENT:
                 return this.getEventGraphComponent()
             case NodeTargetType.PLAYER:

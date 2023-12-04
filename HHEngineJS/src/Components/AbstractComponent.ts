@@ -71,7 +71,7 @@ abstract class AbstractComponent extends EventEmitter {
         return true
     }
 
-    actor: ComponentActor = new ComponentActor()
+    private actor: ComponentActor = new ComponentActor(this)
 
     componentActions: ComponentActions
 
@@ -90,6 +90,11 @@ abstract class AbstractComponent extends EventEmitter {
     // @PropertyValue(PropertyCategory.boolean, false)
     // isActive
     protected valueChangeHandler: ValueChangeHandler = new ValueChangeHandler()
+
+    getActor(){
+
+        return this.actor
+    }
 
     getRawObject() {
         return this.rawObj

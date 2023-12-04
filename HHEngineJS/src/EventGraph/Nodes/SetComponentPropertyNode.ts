@@ -39,7 +39,7 @@ class SetComponentPropertyNode extends AbstractNode {
 
         if (inputParameterValue != null) {
             let convertedParameterValue = convertGraphValueToComponentValue(inputParameterValue, parameterSlot.type)
-            inputComponent.actor.setField(this.properties.propertyName, convertedParameterValue)
+            inputComponent.getActor().setField(this.properties.propertyName, convertedParameterValue)
         }
     }
 

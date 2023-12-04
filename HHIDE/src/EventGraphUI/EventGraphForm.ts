@@ -251,14 +251,31 @@ class EventGraphForm extends HTMLElement implements HHForm {
 
         let propertyActionDefs = []
         for (let property of properties) {
+            if (property.hide) {
+                continue
+            }
+
+            let propertyType = propertySheetFactory.getPropertyTypeFromPropertyCategory(property.type)
+
+            // Getters
             let actionDef = new ActionDef()
             actionDef.actionName = "get" + capitalizeFirstLetter(property.key)
             actionDef.returnValueInfo = {
                 valueName: property.key,
-                valueType: propertySheetFactory.getPropertyTypeFromPropertyCategory(property.type)
+                valueType: propertyType
             }
             actionDef.paramDefs = []
             propertyActionDefs.push(actionDef)
+
+            // Setters
+            let setterActionDef = new ActionDef()
+            setterActionDef.actionName = "set" + capitalizeFirstLetter(property.key)
+            setterActionDef.paramDefs = [{
+                paramName: "value",
+                paramType: propertyType,
+                paramIndex: 0
+            }]
+            propertyActionDefs.push(setterActionDef)
         }
 
         return propertyActionDefs.concat(componentActionDefs)

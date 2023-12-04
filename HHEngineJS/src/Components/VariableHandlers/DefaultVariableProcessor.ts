@@ -13,8 +13,8 @@ class DefaultVariableProcessor{
 
         internalProcessComponent(component, fieldName, {
             getter: ()=>{
-                if(component.actor.hasField(fieldName))
-                    return component.actor.getField(fieldName)
+                if(component.getActor().hasField(fieldName))
+                    return component.getActor().getField(fieldName)
                 return operator.getField(fieldName)
             },
             setter: (val)=>{
