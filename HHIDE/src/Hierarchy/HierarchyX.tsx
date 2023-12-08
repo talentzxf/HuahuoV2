@@ -287,4 +287,4 @@ class HierarchyX extends React.Component<any, HierarchyState> {
     }
 }
 
-export {HierarchyX}
+export {HierarchyX, HierarchyItem}

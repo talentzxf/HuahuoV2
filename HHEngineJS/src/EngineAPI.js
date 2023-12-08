@@ -270,6 +270,10 @@ class EngineAPI {
         return layerUtils.getWrappedGraphObjectForLayer(layer, frameId, createIfNotExist)
     }
 
+    getRootFolder(){
+        return this.cppEngine.GetMemFileManager().GetRootFolder()
+    }
+
     getEngineVersion(){
         return engineProperties["engine.version"]
     }

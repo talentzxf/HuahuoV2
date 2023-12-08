@@ -7,6 +7,7 @@ import {findParentSideBar} from "hhpanel"
 import * as React from "react"
 import {InspectorX} from "./InspectorX/InspectorX";
 import {HierarchyX} from "./Hierarchy/HierarchyX";
+import {FileExplorerX} from "./FileExplorer/FileExplorerX";
 
 function showMainDiv() {
     let loadingElement = document.querySelector("#loading") as HTMLDivElement
@@ -67,6 +68,8 @@ function init() {
 
             // Attach hierarchy from react
             createReactComponent("hh-hierarchy", HierarchyX)
+
+            createReactComponent("hh-file-explorer", FileExplorerX)
         })
     })
 }
