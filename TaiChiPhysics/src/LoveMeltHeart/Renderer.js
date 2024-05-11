@@ -167,10 +167,11 @@ class Renderer {
 
                 let bgImageData = context.getImageData(0, 0, this.bgImg.width, this.bgImg.height)
 
-                this.bgImage = ti.Vector.field(4, ti.i32, [this.bgImg.width, this.bgImg.height])
+                this.bgImage = ti.Vector.field(4, ti.i32, [this.bgImg.height, this.bgImg.width])
                 this.bgImage.fromArray1D(bgImageData.data)
 
                 let bgImageSize = [this.bgImg.width, this.bgImg.height]
+                console.log("BgSize:" + bgImageSize[0] + "," + bgImageSize[1])
                 ti.addToKernelScope({
                     bgImage: this.bgImage,
                     bgImageSize: bgImageSize
@@ -211,9 +212,9 @@ class Renderer {
 
                     let whratio = bgImageSize[1] / bgImageSize[0]
                     let originalBgImageCoordinate = [texture_coordinate[0] * bgImageSize[0], texture_coordinate[1] * bgImageSize[1]]
+
                     image[I] = [25 / 255, 39 / 255, 77 / 255, 1.0];
                     raw_bg_image[I] = image[I]
-
 
                     let originalConvertedBgImageCoordinate = [bgImageSize[1] - originalBgImageCoordinate[1], originalBgImageCoordinate[0] * whratio]
                     let convertedBgImageCoordinate = i32(originalConvertedBgImageCoordinate)
